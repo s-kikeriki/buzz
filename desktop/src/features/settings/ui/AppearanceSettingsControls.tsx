@@ -162,8 +162,9 @@ export function SidebarDisplaySettings() {
             className="text-sm font-normal text-muted-foreground/70"
             data-settings-subcopy
           >
-            Orders every list in the sidebar. A section you have set from its
-            own menu keeps that order.
+            Orders every list in the sidebar. Recent also floats the sections
+            themselves, so dragging them waits for A–Z. A section you have set
+            from its own menu keeps that order.
           </p>
         </div>
         <SegmentedControl

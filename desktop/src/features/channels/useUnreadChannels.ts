@@ -7,6 +7,7 @@ import {
   countUnreadAppBadgeObservedEvents,
   countUnreadHighPriorityObservedEvents,
   countUnreadObservedEvents,
+  countUnreadThreadObservedEvents,
   hasUnreadTopLevelObservedEvent,
   makeObservedUnreadEvent,
   observedUnreadEventReadAt,
@@ -802,6 +803,7 @@ export function useUnreadChannels(
           topLevelUnreadChannelIds: new Set<string>(),
           highPriorityUnreadChannelIds: new Set<string>(),
           unreadChannelCounts: new Map<string, number>(),
+          unreadThreadCounts: new Map<string, number>(),
           unreadChannelNotificationCount: 0,
         };
       }
@@ -810,6 +812,7 @@ export function useUnreadChannels(
       const topLevelUnread = new Set<string>();
       const highPriority = new Set<string>();
       const counts = new Map<string, number>();
+      const threadCounts = new Map<string, number>();
       let unreadChannelNotificationCount = 0;
 
       for (const channel of channels) {
@@ -844,6 +847,7 @@ export function useUnreadChannels(
           unread.add(channel.id);
           topLevelUnread.add(channel.id);
           if (channel.channelType === "dm") counts.set(channel.id, 1);
+          threadCounts.set(channel.id, 1);
           unreadChannelNotificationCount += 1;
           continue;
         }
@@ -872,6 +876,20 @@ export function useUnreadChannels(
             readAtForObservedEvent,
           );
         counts.set(channel.id, unreadCount);
+        // The channel is unread, so at least one thread is. Flooring at 1
+        // keeps a section's rolled-up count consistent with the unread dot
+        // when the native store predates `threadCount`.
+        threadCounts.set(
+          channel.id,
+          Math.max(
+            nativeProjection?.threadCount ??
+              countUnreadThreadObservedEvents(
+                observedEvents,
+                readAtForObservedEvent,
+              ),
+            1,
+          ),
+        );
         unreadChannelNotificationCount += appBadgeCount;
 
         // DM channels: any unread DM is high-priority. Non-DM: high-priority
@@ -887,6 +905,7 @@ export function useUnreadChannels(
         topLevelUnreadChannelIds: topLevelUnread,
         highPriorityUnreadChannelIds: highPriority,
         unreadChannelCounts: counts,
+        unreadThreadCounts: threadCounts,
         unreadChannelNotificationCount,
       };
     }, [
@@ -907,6 +926,7 @@ export function useUnreadChannels(
     rawUnread.highPriorityUnreadChannelIds,
   );
   const unreadChannelCounts = useStableMap(rawUnread.unreadChannelCounts);
+  const unreadThreadCounts = useStableMap(rawUnread.unreadThreadCounts);
   const unreadChannelNotificationCount =
     rawUnread.unreadChannelNotificationCount;
 
@@ -966,6 +986,7 @@ export function useUnreadChannels(
     unreadChannelIds,
     topLevelUnreadChannelIds,
     unreadChannelCounts,
+    unreadThreadCounts,
     highPriorityUnreadChannelIds,
     unreadChannelNotificationCount,
     markAllChannelsRead,

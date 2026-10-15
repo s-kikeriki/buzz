@@ -132,6 +132,9 @@ pub(crate) struct ChannelProjection {
     app_badge_count: u64,
     top_level_unread: bool,
     high_priority_count: u64,
+    /// Distinct threads holding at least one unread event. A thread is the
+    /// event's root, or the event itself when it is a root.
+    thread_count: u64,
 }
 
 #[derive(Debug, Serialize)]
@@ -340,6 +343,9 @@ fn projections(tx: &Transaction<'_>, scope: &str) -> Result<Vec<ChannelProjectio
         .collect::<Result<_, _>>()
         .map_err(|e| format!("read unread markers: {e}"))?;
     let mut by_channel: HashMap<String, ChannelProjection> = HashMap::new();
+    // Thread keys already counted per channel, so a thread with several unread
+    // replies still adds one to `thread_count`.
+    let mut threads_by_channel: HashMap<String, HashSet<String>> = HashMap::new();
     let mut latest_stmt = tx
         .prepare("SELECT channel_id,created_at FROM channel_latest WHERE scope=?1")
         .map_err(|e| format!("prepare channel latest: {e}"))?;
@@ -360,6 +366,7 @@ fn projections(tx: &Transaction<'_>, scope: &str) -> Result<Vec<ChannelProjectio
                 app_badge_count: 0,
                 top_level_unread: false,
                 high_priority_count: 0,
+                thread_count: 0,
             },
         );
     }
@@ -387,6 +394,10 @@ fn projections(tx: &Transaction<'_>, scope: &str) -> Result<Vec<ChannelProjectio
         if created <= read_at {
             continue;
         }
+        let is_new_thread = threads_by_channel
+            .entry(channel.clone())
+            .or_default()
+            .insert(root.clone().unwrap_or_else(|| id.clone()));
         let entry = by_channel
             .entry(channel.clone())
             .or_insert(ChannelProjection {
@@ -397,6 +408,7 @@ fn projections(tx: &Transaction<'_>, scope: &str) -> Result<Vec<ChannelProjectio
                 app_badge_count: 0,
                 top_level_unread: false,
                 high_priority_count: 0,
+                thread_count: 0,
             });
         entry.latest = entry.latest.max(created);
         entry.count += 1;
@@ -404,6 +416,7 @@ fn projections(tx: &Transaction<'_>, scope: &str) -> Result<Vec<ChannelProjectio
         entry.app_badge_count += u64::from(app);
         entry.top_level_unread |= root.is_none();
         entry.high_priority_count += u64::from(high);
+        entry.thread_count += u64::from(is_new_thread);
     }
     let mut result: Vec<_> = by_channel.into_values().collect();
     result.sort_by(|a, b| a.channel_id.cmp(&b.channel_id));
@@ -717,6 +730,44 @@ mod tests {
         tx.commit().unwrap();
     }
     #[test]
+    fn thread_count_collapses_replies_and_counts_roots_separately() {
+        let (_d, mut conn) = db();
+        let tx = conn.transaction().unwrap();
+        let key = scope().key();
+        ensure_scope(&tx, &key).unwrap();
+        let now = chrono::Utc::now().timestamp() as u64;
+        // Two replies in one thread, one reply in a second thread, and one
+        // unread root of its own: three threads, four events.
+        for (id, root) in [
+            ("r1", Some("t1")),
+            ("r2", Some("t1")),
+            ("r3", Some("t2")),
+            ("top", None),
+        ] {
+            upsert_event(
+                &tx,
+                &key,
+                &IngestEvent {
+                    channel_id: "ch".into(),
+                    id: id.into(),
+                    created_at: now,
+                    root_id: root.map(Into::into),
+                    high_priority: false,
+                    counts_toward_badge: true,
+                    counts_toward_app_badge: false,
+                },
+            )
+            .unwrap();
+        }
+        let p = projections(&tx, &key).unwrap();
+        assert_eq!(p[0].count, 4);
+        assert_eq!(
+            p[0].thread_count, 3,
+            "two replies in one thread must count once, and a root counts as its own thread"
+        );
+        tx.commit().unwrap();
+    }
+    #[test]
     fn latest_anchor_survives_without_a_notify_event_and_seed_is_one_shot() {
         let (_d, mut conn) = db();
         let tx = conn.transaction().unwrap();
@@ -874,11 +925,12 @@ mod tests {
                 app_badge_count: 1,
                 top_level_unread: true,
                 high_priority_count: 0,
+                thread_count: 2,
             }],
             removed: vec!["old".into()],
         })
         .unwrap();
-        let expected = serde_json::json!({"kind":"delta","scope":{"pubkey":"PK","relayUrl":"wss://relay/"},"generation":"gen","baseRevision":4,"revision":5,"ackedSequence":7,"upserts":[{"channelId":"ch","latest":42,"count":2,"badgeCount":1,"appBadgeCount":1,"topLevelUnread":true,"highPriorityCount":0}],"removed":["old"]});
+        let expected = serde_json::json!({"kind":"delta","scope":{"pubkey":"PK","relayUrl":"wss://relay/"},"generation":"gen","baseRevision":4,"revision":5,"ackedSequence":7,"upserts":[{"channelId":"ch","latest":42,"count":2,"badgeCount":1,"appBadgeCount":1,"topLevelUnread":true,"highPriorityCount":0,"threadCount":2}],"removed":["old"]});
         assert_eq!(actual, expected);
     }
 }

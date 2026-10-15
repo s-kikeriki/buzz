@@ -44,6 +44,7 @@ import {
   SidebarMenuItem,
 } from "@/shared/ui/sidebar";
 import { ChannelMenuButton } from "@/features/sidebar/ui/SidebarSection";
+import { SectionUnreadThreadCount } from "@/features/sidebar/ui/SectionUnreadThreadCount";
 import { ChannelContextMenuItems } from "@/features/sidebar/ui/ChannelContextMenu";
 import { deferMenuAction } from "@/features/sidebar/ui/sidebarMenuHelpers";
 import {
@@ -319,6 +320,7 @@ function ChannelSectionHeader({
   title,
   testId,
   actions,
+  unreadThreadCount = 0,
 }: {
   contentId: string;
   isCollapsed: boolean;
@@ -326,6 +328,7 @@ function ChannelSectionHeader({
   title: string;
   testId: string;
   actions: React.ReactNode;
+  unreadThreadCount?: number;
 }) {
   return (
     <div className="relative">
@@ -347,6 +350,10 @@ function ChannelSectionHeader({
               )}
             />
           </span>
+          <SectionUnreadThreadCount
+            count={unreadThreadCount}
+            sectionLabel={title}
+          />
         </button>
       </SidebarGroupLabel>
       <div className="absolute right-1 top-1/2 z-10 flex -translate-y-1/2 items-center gap-0.5">
@@ -383,6 +390,7 @@ export function ChannelGroupSection({
   actionsTestId,
   title,
   unreadChannelIds,
+  unreadThreadCount,
   sections,
   assignments,
   onAssignChannel,
@@ -430,6 +438,8 @@ export function ChannelGroupSection({
   actionsTestId?: string;
   title: string;
   unreadChannelIds: ReadonlySet<string>;
+  /** Unread threads across this grouping's channels. */
+  unreadThreadCount?: number;
   hasUnread?: boolean;
   onMarkAllRead?: () => void;
   sections?: ChannelSection[];
@@ -520,6 +530,7 @@ export function ChannelGroupSection({
         onToggleCollapsed={onToggleCollapsed}
         title={title}
         testId={listTestId}
+        unreadThreadCount={unreadThreadCount}
         actions={
           <>
             {showQuickCreate && (onQuickCreateClick ?? onCreateClick) ? (
@@ -591,6 +602,8 @@ export function CustomChannelSection({
   section,
   channels,
   hasUnread,
+  unreadThreadCount,
+  canReorder = true,
   isCollapsed,
   isActiveChannel,
   activeWorkingByChannelId,
@@ -629,6 +642,13 @@ export function CustomChannelSection({
   section: ChannelSection;
   channels: Channel[];
   hasUnread: boolean;
+  /** Unread threads in this section, its subsections rolled in. */
+  unreadThreadCount?: number;
+  /**
+   * False while the sidebar orders sections by recency: dragging a section and
+   * Move up/down would write an order nothing renders, so they are withdrawn.
+   */
+  canReorder?: boolean;
   isCollapsed: boolean;
   isActiveChannel: boolean;
   activeWorkingByChannelId?: ReadonlyMap<string, ActiveChannelTurnSummary>;
@@ -674,7 +694,10 @@ export function CustomChannelSection({
   const isSubsection = Boolean(section.parentId);
 
   return (
-    <SectionDragShell sectionId={section.id} sortable={!isSubsection}>
+    <SectionDragShell
+      sectionId={section.id}
+      sortable={!isSubsection && canReorder}
+    >
       {({ dragHandleProps, isDragging }) => (
         <DroppableSectionBody sectionId={section.id}>
           <SidebarGroup
@@ -734,6 +757,10 @@ export function CustomChannelSection({
                           )}
                         />
                       </span>
+                      <SectionUnreadThreadCount
+                        count={unreadThreadCount ?? 0}
+                        sectionLabel={section.id}
+                      />
                     </button>
                   </SidebarGroupLabel>
                   <div className="absolute right-1 top-1/2 z-10 flex -translate-y-1/2 items-center gap-0.5">
@@ -751,8 +778,10 @@ export function CustomChannelSection({
                       onRenameSection={onRenameSection}
                       onCreateSubsection={onCreateSubsection}
                       onPromoteSection={onPromoteSection}
-                      onMoveSectionUp={onMoveSectionUp}
-                      onMoveSectionDown={onMoveSectionDown}
+                      onMoveSectionUp={canReorder ? onMoveSectionUp : undefined}
+                      onMoveSectionDown={
+                        canReorder ? onMoveSectionDown : undefined
+                      }
                       onDeleteSection={onDeleteSection}
                       isFirstSection={isFirst}
                       isLastSection={isLast}
@@ -779,14 +808,24 @@ export function CustomChannelSection({
                     Move out of subsection
                   </ContextMenuItem>
                 ) : null}
-                <ContextMenuItem disabled={isFirst} onClick={onMoveSectionUp}>
-                  <ArrowUp className="h-4 w-4" />
-                  Move up
-                </ContextMenuItem>
-                <ContextMenuItem disabled={isLast} onClick={onMoveSectionDown}>
-                  <ArrowDown className="h-4 w-4" />
-                  Move down
-                </ContextMenuItem>
+                {canReorder ? (
+                  <>
+                    <ContextMenuItem
+                      disabled={isFirst}
+                      onClick={onMoveSectionUp}
+                    >
+                      <ArrowUp className="h-4 w-4" />
+                      Move up
+                    </ContextMenuItem>
+                    <ContextMenuItem
+                      disabled={isLast}
+                      onClick={onMoveSectionDown}
+                    >
+                      <ArrowDown className="h-4 w-4" />
+                      Move down
+                    </ContextMenuItem>
+                  </>
+                ) : null}
                 <ContextMenuSeparator />
                 <ContextMenuItem
                   className="text-destructive focus:text-destructive"

@@ -385,6 +385,7 @@ export function AppShell() {
     unreadChannelIds,
     topLevelUnreadChannelIds,
     unreadChannelCounts,
+    unreadThreadCounts,
     highPriorityUnreadChannelIds,
     unreadChannelNotificationCount,
     getEffectiveTimestamp: getChannelReadAt,
@@ -924,6 +925,7 @@ export function AppShell() {
                           {...{ highPriorityUnreadChannelIds }}
                           previewActivityChannelIds={unreadThreadChannelIds}
                           unreadChannelCounts={unreadChannelCounts}
+                          unreadThreadCounts={unreadThreadCounts}
                           mutedChannelIds={mutedChannelIds}
                           onMuteChannel={muteChannel}
                           onUnmuteChannel={unmuteChannel}
