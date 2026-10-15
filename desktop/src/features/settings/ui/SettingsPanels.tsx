@@ -59,6 +59,7 @@ import {
   GlassBackgroundSetting,
   LinkPreviewStyleSetting,
   ProminentActiveTabSetting,
+  SidebarDisplaySettings,
   ThreadLayoutSetting,
 } from "./AppearanceSettingsControls";
 import { ChannelTemplatesSettingsCard } from "./ChannelTemplatesSettingsCard";
@@ -791,6 +792,7 @@ function ThemeSettingsCard() {
           title="Preferences"
         >
           <ConversationDisplaySettings />
+          <SidebarDisplaySettings />
           <LinkPreviewStyleSetting />
           <ThreadLayoutSetting />
         </SettingsOptionGroup>

@@ -32,6 +32,17 @@ import {
   type FontSize,
 } from "@/shared/lib/fontSizePreference";
 import {
+  previewSidebarDensity,
+  setSidebarDensity,
+  useSidebarDensity,
+  type SidebarDensity,
+} from "@/shared/lib/sidebarDensityPreference";
+import type { ChannelSortMode } from "@/features/sidebar/lib/channelSortPreference";
+import {
+  setSidebarChannelOrder,
+  useSidebarChannelOrder,
+} from "@/features/sidebar/lib/sidebarChannelOrderPreference";
+import {
   ACCENT_COLORS,
   DEFAULT_GLASS_OPACITY,
   GLASS_OPACITY_MAX,
@@ -108,6 +119,87 @@ const CONVERSATION_DENSITY_OPTIONS: readonly {
     label: "Spacious",
   },
 ];
+
+const SIDEBAR_DENSITY_OPTIONS: readonly {
+  value: SidebarDensity;
+  label: string;
+}[] = [
+  {
+    value: "compact",
+    label: "Compact",
+  },
+  {
+    value: "comfortable",
+    label: "Comfy",
+  },
+];
+
+const SIDEBAR_CHANNEL_ORDER_OPTIONS: readonly {
+  value: ChannelSortMode;
+  label: string;
+}[] = [
+  {
+    value: "recent",
+    label: "Recent",
+  },
+  {
+    value: "alpha",
+    label: "A–Z",
+  },
+];
+
+/** Sidebar-wide list order and row spacing. */
+export function SidebarDisplaySettings() {
+  const channelOrder = useSidebarChannelOrder();
+  const density = useSidebarDensity();
+
+  return (
+    <div data-testid="sidebar-display-group">
+      <SettingsOptionRow data-testid="sidebar-channel-order-row">
+        <div className="min-w-0">
+          <p className="text-sm font-medium">Sidebar order</p>
+          <p
+            className="text-sm font-normal text-muted-foreground/70"
+            data-settings-subcopy
+          >
+            Orders every list in the sidebar. A section you have set from its
+            own menu keeps that order.
+          </p>
+        </div>
+        <SegmentedControl
+          size="wide"
+          legend="Sidebar order"
+          onValueChange={setSidebarChannelOrder}
+          optionTestIdPrefix="sidebar-channel-order"
+          options={SIDEBAR_CHANNEL_ORDER_OPTIONS}
+          testId="sidebar-channel-order-control"
+          value={channelOrder}
+        />
+      </SettingsOptionRow>
+      <SettingsOptionRow data-testid="sidebar-density-row">
+        <div className="min-w-0">
+          <p className="text-sm font-medium">Sidebar density</p>
+          <p
+            className="text-sm font-normal text-muted-foreground/70"
+            data-settings-subcopy
+          >
+            Row height and the spacing around section headers
+          </p>
+        </div>
+        <SegmentedControl
+          size="wide"
+          legend="Sidebar density"
+          onPreviewChange={previewSidebarDensity}
+          onValueChange={setSidebarDensity}
+          optionTestIdPrefix="sidebar-density"
+          options={SIDEBAR_DENSITY_OPTIONS}
+          testId="sidebar-density-control"
+          value={density}
+        />
+      </SettingsOptionRow>
+    </div>
+  );
+}
 
 const FONT_SIZE_OPTIONS: readonly {
   value: FontSize;
