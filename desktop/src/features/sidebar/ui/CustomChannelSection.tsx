@@ -703,7 +703,8 @@ export function CustomChannelSection({
           <SidebarGroup
             className={cn(
               "group/sidebar-section select-none transition-[opacity,transform] duration-100 ease-out motion-reduce:transition-none",
-              isSubsection && "ml-3 border-l border-sidebar-border/60 pl-1",
+              isSubsection &&
+                "ml-3 mt-sidebar-subgroup-pull border-l border-sidebar-border/60 py-sidebar-subgroup pl-1",
               isDragging && "opacity-30",
             )}
             data-sidebar-subsection={isSubsection || undefined}
