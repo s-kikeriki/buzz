@@ -79,6 +79,9 @@ export default {
         "sidebar-row": "var(--sidebar-row-height)",
         "sidebar-stack": "var(--sidebar-row-gap)",
         "sidebar-group": "var(--sidebar-group-padding-block)",
+        "sidebar-subgroup": "var(--sidebar-subgroup-padding-block)",
+        // Cancels the sidebar stack gap above a subsection.
+        "sidebar-subgroup-pull": "calc(var(--sidebar-subgroup-padding-block) * -1)",
         "sidebar-label": "var(--sidebar-group-label-height)",
       },
       fontFamily: {

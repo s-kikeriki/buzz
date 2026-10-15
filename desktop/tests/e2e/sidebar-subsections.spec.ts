@@ -124,6 +124,87 @@ test("a subsection cannot nest another, and collapsing the parent hides it", asy
   await expect(page.getByTestId(`section-title-${alphaId}`)).toBeVisible();
 });
 
+/**
+ * The headers of the named sections, top to bottom, each with the vertical
+ * space between it and the header below. Sections float by recency, so the
+ * test reads the order off the screen instead of assuming one.
+ */
+async function headerGaps(page: Page, names: readonly string[]) {
+  const rows = [];
+  for (const name of names) {
+    const id = await sectionId(page, name);
+    // The header button, not its title span: the gap between two buttons is
+    // the section spacing itself, with no label chrome folded in.
+    const header = page
+      .getByTestId(`section-title-${id}`)
+      .locator("xpath=ancestor::button")
+      .first();
+    const box = await header.boundingBox();
+    if (!box) throw new Error(`section ${name} is not rendered`);
+    const nested = await header
+      .locator('xpath=ancestor::*[@data-sidebar-subsection="true"]')
+      .count();
+    const expanded = await header.getAttribute("aria-expanded");
+    rows.push({
+      name,
+      top: box.y,
+      bottom: box.y + box.height,
+      nested: nested > 0,
+      collapsed: expanded === "false",
+    });
+  }
+  rows.sort((a, b) => a.top - b.top);
+  return rows.slice(0, -1).map((row, index) => ({
+    upper: row,
+    lower: rows[index + 1],
+    gap: rows[index + 1].top - row.bottom,
+  }));
+}
+
+/** Collapses the named section, so nothing renders between it and the next header. */
+async function collapseSection(page: Page, name: string) {
+  await page
+    .getByTestId(`section-title-${await sectionId(page, name)}`)
+    .click();
+}
+
+test("stacked subsections sit at half the pitch of top-level sections", async ({
+  page,
+}) => {
+  await createSectionForChannel(page, "channel-random", "Work");
+  const workId = await sectionId(page, "Work");
+  await createSectionForChannel(page, "channel-engineering", "Play");
+  await createSectionForChannel(page, "channel-general", "Rest");
+  await createSubsection(page, workId, "Alpha");
+  await createSubsection(page, workId, "Beta");
+
+  // Collapsed headers stack directly on each other, which is the spacing
+  // under test. Work stays open, otherwise it hides its own subsections.
+  for (const name of ["Play", "Rest", "Alpha", "Beta"]) {
+    await collapseSection(page, name);
+  }
+
+  const pairs = await headerGaps(page, [
+    "Work",
+    "Play",
+    "Rest",
+    "Alpha",
+    "Beta",
+  ]);
+  const topLevelGap = pairs.find(
+    (pair) => pair.upper.collapsed && !pair.upper.nested && !pair.lower.nested,
+  )?.gap;
+  const subsectionGap = pairs.find(
+    (pair) => pair.upper.collapsed && pair.upper.nested && pair.lower.nested,
+  )?.gap;
+
+  expect(topLevelGap).toBeGreaterThan(0);
+  expect(subsectionGap).toBeDefined();
+  // Half, within a pixel of rounding.
+  expect(subsectionGap).toBeGreaterThan((topLevelGap ?? 0) / 2 - 1);
+  expect(subsectionGap).toBeLessThan((topLevelGap ?? 0) / 2 + 1);
+});
+
 test("moving a subsection out returns it to the top level", async ({
   page,
 }) => {
