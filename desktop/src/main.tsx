@@ -23,6 +23,8 @@ import { recoverLocalStorageQuotaOnStartup } from "@/shared/lib/localStorageQuot
 import { startLocalStorageSweep } from "@/shared/lib/localStorageSweep";
 import { initializeConversationDensityPreference } from "@/shared/lib/conversationDensityPreference";
 import { initializeFontSizePreference } from "@/shared/lib/fontSizePreference";
+import { initializeSidebarDensityPreference } from "@/shared/lib/sidebarDensityPreference";
+import { initializeSidebarChannelOrderPreference } from "@/features/sidebar/lib/sidebarChannelOrderPreference";
 
 type E2eWindow = Window & {
   __BUZZ_E2E__?: unknown;
@@ -130,6 +132,8 @@ async function bootstrap() {
   recoverLocalStorageQuotaOnStartup();
   initializeConversationDensityPreference();
   initializeFontSizePreference();
+  initializeSidebarDensityPreference();
+  initializeSidebarChannelOrderPreference();
   startLocalStorageSweep();
   await installE2eBridgeIfConfigured();
   await migrateLegacyCommunityStorageBeforeRender();
