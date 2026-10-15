@@ -22,7 +22,11 @@ export type ChannelSortStore = {
   groups: Record<string, ChannelSortMode>;
 };
 
-export const DEFAULT_SORT_MODE: ChannelSortMode = "alpha";
+/**
+ * Order a grouping takes when neither it nor the device-level Sidebar order
+ * preference says otherwise (see `sidebarChannelOrderPreference`).
+ */
+export const DEFAULT_SORT_MODE: ChannelSortMode = "recent";
 
 export function sectionSortGroupKey(sectionId: string): ChannelSortGroupKey {
   return `section:${sectionId}`;
