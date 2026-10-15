@@ -18,6 +18,11 @@ import {
   sortChannelsForSidebar,
 } from "@/features/sidebar/lib/channelSortPreference";
 import { useChannelSortPreference } from "@/features/sidebar/lib/useChannelSortPreference";
+import { useSidebarChannelOrder } from "@/features/sidebar/lib/sidebarChannelOrderPreference";
+import {
+  latestChannelActivityMs,
+  orderSectionsByRecency,
+} from "@/features/sidebar/lib/sectionRecencyOrder";
 import { useSidebarScrollLock } from "@/features/sidebar/lib/useSidebarScrollLock";
 import { isSidebarBackgroundTarget } from "@/features/sidebar/lib/sidebarBackgroundTarget";
 import {
@@ -97,6 +102,7 @@ export function AppSidebar({
   selectedChannelId,
   selectedView,
   unreadChannelCounts,
+  unreadThreadCounts,
   unreadChannelIds,
   highPriorityUnreadChannelIds,
   previewActivityChannelIds,
@@ -379,21 +385,51 @@ export function AppSidebar({
     [sectionBuckets, sectionTree],
   );
 
+  /**
+   * Unread threads across `channels`. A section header shows the sum for its
+   * own channels plus its subsections'.
+   */
+  const unreadThreadsIn = React.useCallback(
+    (channels: Channel[]) =>
+      channels.reduce(
+        (total, channel) => total + (unreadThreadCounts.get(channel.id) ?? 0),
+        0,
+      ),
+    [unreadThreadCounts],
+  );
+
+  /**
+   * Sidebar order Recent floats the sections themselves, not just the channels
+   * inside them. A computed order cannot also be dragged, so section drag and
+   * Move up/down are switched off while it is on; A–Z hands the dragged order
+   * back untouched.
+   */
+  const sectionsFloatByRecency = useSidebarChannelOrder() === "recent";
+
   /** Sidebar render order: each top-level section followed by its subsections. */
   const renderedSections = React.useMemo(() => {
+    const order = (sections: ChannelSection[]) =>
+      sectionsFloatByRecency
+        ? orderSectionsByRecency(sections, (sectionId) =>
+            latestChannelActivityMs(sectionTreeChannels(sectionId)),
+          )
+        : sections;
     const rows: {
       section: ChannelSection;
       isFirst: boolean;
       isLast: boolean;
     }[] = [];
-    for (const [index, section] of sectionTree.roots.entries()) {
+    const roots = order(sectionTree.roots);
+    for (const [index, section] of roots.entries()) {
       rows.push({
         section,
         isFirst: index === 0,
-        isLast: index === sectionTree.roots.length - 1,
+        isLast: index === roots.length - 1,
       });
       if (collapsedSections[section.id]) continue;
-      const children = sectionTree.subsectionsByParent.get(section.id) ?? [];
+      const children = order(
+        sectionTree.subsectionsByParent.get(section.id) ?? [],
+      );
       for (const [childIndex, child] of children.entries()) {
         rows.push({
           section: child,
@@ -403,7 +439,12 @@ export function AppSidebar({
       }
     }
     return rows;
-  }, [sectionTree, collapsedSections]);
+  }, [
+    collapsedSections,
+    sectionTree,
+    sectionTreeChannels,
+    sectionsFloatByRecency,
+  ]);
 
   const starredChannels = React.useMemo(() => {
     if (!starredChannelIds || starredChannelIds.size === 0) return [];
@@ -674,6 +715,7 @@ export function AppSidebar({
                       hasUnread={starredChannels.some((c) =>
                         unreadChannelIds.has(c.id),
                       )}
+                      unreadThreadCount={unreadThreadsIn(starredChannels)}
                       isCollapsed={collapsedGroups.starred}
                       isActiveChannel={selectedView === "channel"}
                       activeWorkingByChannelId={activeWorkingByChannelId}
@@ -722,6 +764,10 @@ export function AppSidebar({
                         hasUnread={sectionTreeChannels(section.id).some((c) =>
                           unreadChannelIds.has(c.id),
                         )}
+                        unreadThreadCount={unreadThreadsIn(
+                          sectionTreeChannels(section.id),
+                        )}
+                        canReorder={!sectionsFloatByRecency}
                         isCollapsed={collapsedSections[section.id] ?? false}
                         isActiveChannel={selectedView === "channel"}
                         activeWorkingByChannelId={activeWorkingByChannelId}
@@ -786,6 +832,9 @@ export function AppSidebar({
                     <ChannelGroupSection
                       draggable
                       hasUnread={unreadChannelIds.size > 0}
+                      unreadThreadCount={unreadThreadsIn(
+                        sectionBuckets.unassigned,
+                      )}
                       isCollapsed={collapsedGroups.channels}
                       isActiveChannel={selectedView === "channel"}
                       activeWorkingByChannelId={activeWorkingByChannelId}
@@ -826,6 +875,7 @@ export function AppSidebar({
                     <ChannelGroupSection
                       createLabel="New forum"
                       hasUnread={unreadChannelIds.size > 0}
+                      unreadThreadCount={unreadThreadsIn(forumChannels)}
                       isCollapsed={collapsedGroups.forums}
                       isActiveChannel={selectedView === "channel"}
                       activeWorkingByChannelId={activeWorkingByChannelId}
@@ -888,6 +938,7 @@ export function AppSidebar({
                     selectedChannelId={selectedChannelId}
                     testId="dm-list"
                     title="Direct messages"
+                    unreadThreadCount={unreadThreadsIn(sortedDirectMessages)}
                     sectionActionsOpen={dmActionsMenuOpen}
                     unreadChannelCounts={unreadChannelCounts}
                     unreadChannelIds={unreadChannelIds}

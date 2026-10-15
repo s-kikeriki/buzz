@@ -10,6 +10,8 @@ export type ObservedUnreadProjection = {
   appBadgeCount: number;
   topLevelUnread: boolean;
   highPriorityCount: number;
+  /** Distinct threads holding at least one unread event. */
+  threadCount: number;
 };
 export type ObservedUnreadMembershipSeed = {
   participatedRootIds: string[];

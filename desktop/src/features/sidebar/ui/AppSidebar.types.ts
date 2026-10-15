@@ -47,6 +47,8 @@ export type AppSidebarProps = {
     | "pulse"
     | "projects";
   unreadChannelCounts: ReadonlyMap<string, number>;
+  /** Unread threads per channel; a section header shows their sum. */
+  unreadThreadCounts: ReadonlyMap<string, number>;
   unreadChannelIds: ReadonlySet<string>;
   highPriorityUnreadChannelIds: ReadonlySet<string>;
   previewActivityChannelIds: ReadonlySet<string>;
