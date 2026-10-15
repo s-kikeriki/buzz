@@ -1,8 +1,8 @@
 import * as React from "react";
 
-import {
-  type ChannelSortGroupKey,
-  type ChannelSortMode,
+import type {
+  ChannelSortGroupKey,
+  ChannelSortMode,
 } from "./channelSortPreference";
 import { SORT_LANE } from "./channelSortSync";
 import { useSidebarChannelOrder } from "./sidebarChannelOrderPreference";

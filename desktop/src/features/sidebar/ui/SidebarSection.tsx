@@ -31,6 +31,7 @@ import {
   SidebarMenuItem,
 } from "@/shared/ui/sidebar";
 import { ChannelActivityPopover } from "@/features/sidebar/ui/ChannelActivityPopover";
+import { SectionUnreadThreadCount } from "@/features/sidebar/ui/SectionUnreadThreadCount";
 import { useAppShell } from "@/app/AppShellContext";
 import { UserNameIndicators } from "@/features/user-status/ui/UserNameIndicators";
 
@@ -388,6 +389,7 @@ export function SidebarSection({
   testId,
   unreadChannelCounts,
   unreadChannelIds,
+  unreadThreadCount,
   onHideDm,
   onMarkChannelRead,
   onMarkChannelUnread,
@@ -412,6 +414,8 @@ export function SidebarSection({
   testId: string;
   unreadChannelCounts: ReadonlyMap<string, number>;
   unreadChannelIds: ReadonlySet<string>;
+  /** Unread threads across this section's channels. */
+  unreadThreadCount?: number;
   onHideDm?: (channelId: string) => void;
   onMarkChannelRead?: (
     channelId: string,
@@ -457,6 +461,10 @@ export function SidebarSection({
                   )}
                 />
               </span>
+              <SectionUnreadThreadCount
+                count={unreadThreadCount ?? 0}
+                sectionLabel={title}
+              />
             </button>
           ) : (
             title

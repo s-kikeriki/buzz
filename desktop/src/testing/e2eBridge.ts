@@ -3484,6 +3484,7 @@ function mockObservedUnreadProjections(
   scope: MockObservedUnreadScope,
 ): ObservedUnreadProjection[] {
   const channels = new Map<string, ObservedUnreadProjection>();
+  const threadsByChannel = new Map<string, Set<string>>();
   for (const [channelId, latest] of scope.channelLatest) {
     channels.set(channelId, {
       channelId,
@@ -3493,6 +3494,7 @@ function mockObservedUnreadProjections(
       appBadgeCount: 0,
       topLevelUnread: false,
       highPriorityCount: 0,
+      threadCount: 0,
     });
   }
   for (const event of scope.events.values()) {
@@ -3515,13 +3517,23 @@ function mockObservedUnreadProjections(
       appBadgeCount: 0,
       topLevelUnread: false,
       highPriorityCount: 0,
+      threadCount: 0,
     };
+    let threads = threadsByChannel.get(event.channelId);
+    if (!threads) {
+      threads = new Set<string>();
+      threadsByChannel.set(event.channelId, threads);
+    }
+    const threadKey = event.rootId ?? event.id;
+    const isNewThread = !threads.has(threadKey);
+    threads.add(threadKey);
     projection.latest = Math.max(projection.latest, event.createdAt);
     projection.count += 1;
     projection.badgeCount += event.countsTowardBadge ? 1 : 0;
     projection.appBadgeCount += event.countsTowardAppBadge ? 1 : 0;
     projection.topLevelUnread ||= event.rootId === null;
     projection.highPriorityCount += event.highPriority ? 1 : 0;
+    projection.threadCount += isNewThread ? 1 : 0;
     channels.set(event.channelId, projection);
   }
   return [...channels.values()].sort((left, right) =>

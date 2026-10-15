@@ -78,6 +78,26 @@ export function countUnreadObservedEvents(
   return count;
 }
 
+/**
+ * Distinct threads holding at least one unread event. A reply counts towards
+ * its root, and a root counts as its own thread, so a thread with ten unread
+ * replies still adds one.
+ */
+export function countUnreadThreadObservedEvents(
+  eventsById: ReadonlyMap<string, ObservedUnreadEvent> | undefined,
+  getReadAt: (event: ObservedUnreadEvent) => number | null,
+): number {
+  if (!eventsById) return 0;
+  const threads = new Set<string>();
+  for (const event of eventsById.values()) {
+    const readAt = getReadAt(event);
+    if (readAt === null || event.createdAt > readAt) {
+      threads.add(event.rootId ?? event.id);
+    }
+  }
+  return threads.size;
+}
+
 export function hasUnreadTopLevelObservedEvent(
   eventsById: ReadonlyMap<string, ObservedUnreadEvent> | undefined,
   getReadAt: (event: ObservedUnreadEvent) => number | null,
