@@ -17,7 +17,10 @@ import {
 } from "@/features/onboarding/welcome";
 import { forceFreshOnboarding } from "@/features/onboarding/devFreshOnboarding";
 import { ensureWelcomeCanvas } from "@/features/onboarding/welcomeCanvas";
-import { ensureWelcomeTeam } from "@/features/onboarding/welcomeGuide";
+import {
+  ensureWelcomeTeam,
+  WELCOME_TEAM_ENABLED,
+} from "@/features/onboarding/welcomeGuide";
 import { useProfileQuery } from "@/features/profile/hooks";
 import { useCommunities } from "@/features/communities/useCommunities";
 import { useIdentityQuery } from "@/shared/api/hooks";
@@ -56,7 +59,9 @@ function seedWelcomeExperience(
 
   const promise = (async () => {
     try {
-      await ensureWelcomeTeam(channelId, communityScope);
+      if (WELCOME_TEAM_ENABLED) {
+        await ensureWelcomeTeam(channelId, communityScope);
+      }
       await ensureWelcomeCanvas(channelId);
       await Promise.all([
         queryClient.invalidateQueries({ queryKey: managedAgentsQueryKey }),

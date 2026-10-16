@@ -71,6 +71,16 @@ const BUILT_IN_PERSONAS: &[BuiltInPersona] = &[
     },
 ];
 
+// kikeriki fork: the bee personas are not wanted in this build. Their
+// definitions stay above so the upstream avatar and Bumble→Pollen migrations
+// keep compiling against them, but `merge_personas` never seeds them and
+// purges any copy an earlier build already wrote to the store.
+const SUPPRESSED_PERSONA_IDS: &[&str] = &["builtin:fizz", "builtin:honey", POLLEN_PERSONA_ID];
+
+pub(crate) fn is_suppressed_persona_id(id: &str) -> bool {
+    SUPPRESSED_PERSONA_IDS.contains(&id)
+}
+
 pub(crate) fn built_in_persona_avatar_url(id: &str) -> Option<&'static str> {
     BUILT_IN_PERSONAS
         .iter()
@@ -186,7 +196,18 @@ fn sort_personas(records: &mut [AgentDefinition]) {
 fn merge_personas(mut stored: Vec<AgentDefinition>, now: &str) -> (Vec<AgentDefinition>, bool) {
     let mut changed = false;
 
+    // Drop suppressed personas before anything else so the demotion and
+    // retirement loops below never see them and no seed re-adds them.
+    let before = stored.len();
+    stored.retain(|record| !is_suppressed_persona_id(&record.id));
+    if stored.len() != before {
+        changed = true;
+    }
+
     for built_in in built_in_persona_records(now) {
+        if is_suppressed_persona_id(&built_in.id) {
+            continue;
+        }
         if let Some(existing) = stored.iter_mut().find(|record| record.id == built_in.id) {
             if !existing.is_builtin {
                 existing.is_builtin = true;

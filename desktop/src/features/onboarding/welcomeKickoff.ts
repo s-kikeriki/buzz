@@ -14,6 +14,7 @@ import { resolveAgentReadiness } from "@/features/onboarding/ui/agentReadiness";
 import {
   ensureWelcomeTeam,
   pickWelcomeTeamStarterAgentForRelay,
+  WELCOME_TEAM_ENABLED,
   WELCOME_TEAM_STARTERS,
   type WelcomeTeamStarterDefinition,
   welcomeTeammateHasExpectedAccess,
@@ -559,6 +560,7 @@ export function useWelcomeKickoff(
   );
   React.useEffect(() => {
     if (
+      !WELCOME_TEAM_ENABLED ||
       !channelId ||
       !isActiveWelcome ||
       configLoading ||
