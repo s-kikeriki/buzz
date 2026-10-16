@@ -36,29 +36,26 @@ fn custom_persona(id: &str, display_name: &str) -> AgentDefinition {
 }
 
 #[test]
-fn merge_personas_adds_missing_built_ins() {
+fn merge_personas_seeds_nothing_into_an_empty_store() {
     let (records, changed) = merge_personas(Vec::new(), "2026-03-19T00:00:00Z");
 
-    assert!(changed);
-    assert_eq!(records.len(), BUILT_IN_PERSONAS.len());
-    assert!(records.iter().all(|record| record.is_builtin));
-    assert!(records
-        .iter()
-        .any(|record| record.id == "builtin:fizz" && record.runtime.is_none()));
-    let display_names: Vec<&str> = records
-        .iter()
-        .map(|record| record.display_name.as_str())
-        .collect();
-    assert_eq!(display_names, vec!["Fizz", "Honey", "Pollen"]);
-    let active_ids: Vec<&str> = records
-        .iter()
-        .filter(|record| record.is_active)
-        .map(|record| record.id.as_str())
-        .collect();
-    assert_eq!(
-        active_ids,
-        vec!["builtin:fizz", "builtin:honey", "builtin:bumble"]
+    assert!(!changed);
+    assert!(
+        records.is_empty(),
+        "every built-in persona is suppressed in this build: {records:?}"
     );
+}
+
+#[test]
+fn merge_personas_suppresses_every_built_in() {
+    // Falsifiable guard: the day a built-in is un-suppressed, this fails.
+    for persona in BUILT_IN_PERSONAS {
+        assert!(
+            super::is_suppressed_persona_id(persona.id),
+            "{} is still seeded",
+            persona.id
+        );
+    }
 }
 
 #[test]
@@ -66,52 +63,46 @@ fn merge_personas_preserves_custom_records() {
     let custom = custom_persona("custom:test", "Custom");
     let (records, changed) = merge_personas(vec![custom.clone()], "2026-03-19T00:00:00Z");
 
-    assert!(changed);
+    assert!(!changed);
     assert!(records.iter().any(|record| record.id == custom.id));
 }
 
 #[test]
-fn merge_personas_preserves_builtin_edits() {
+fn merge_personas_purges_a_stored_bee_persona_with_its_edits() {
     let mut edited_builtin = custom_persona("builtin:fizz", "My Fizz");
     edited_builtin.is_builtin = true;
     edited_builtin.is_active = true;
     edited_builtin.system_prompt = "User-edited instructions".to_string();
-    edited_builtin.name_pool = vec!["User-edited name".to_string()];
-    edited_builtin.env_vars =
-        std::collections::BTreeMap::from([("USER_SETTING".to_string(), "value".to_string())]);
 
-    let (records, changed) = merge_personas(vec![edited_builtin.clone()], "2026-03-19T00:00:00Z");
-
-    assert!(changed); // The remaining seeded built-ins are added.
-    let fizz = records
-        .iter()
-        .find(|record| record.id == "builtin:fizz")
-        .expect("fizz built-in should exist");
-    assert_eq!(fizz.display_name, edited_builtin.display_name);
-    assert_eq!(fizz.system_prompt, edited_builtin.system_prompt);
-    assert_eq!(fizz.name_pool, edited_builtin.name_pool);
-    assert_eq!(fizz.env_vars, edited_builtin.env_vars);
-    assert_eq!(fizz.is_active, edited_builtin.is_active);
-}
-
-#[test]
-fn merge_personas_restores_builtin_marker_without_resetting_edits() {
-    let mut edited_builtin = custom_persona("builtin:fizz", "My Fizz");
-    edited_builtin.is_builtin = false;
-
-    let (records, changed) = merge_personas(vec![edited_builtin], "2026-03-19T00:00:00Z");
+    let (records, changed) = merge_personas(
+        vec![edited_builtin, custom_persona("custom:test", "Custom")],
+        "2026-03-19T00:00:00Z",
+    );
 
     assert!(changed);
-    let fizz = records
-        .iter()
-        .find(|record| record.id == "builtin:fizz")
-        .expect("fizz built-in should exist");
-    assert!(fizz.is_builtin);
-    assert_eq!(fizz.display_name, "My Fizz");
+    assert!(
+        !records.iter().any(|record| record.id == "builtin:fizz"),
+        "a bee persona an earlier build stored must be removed: {records:?}"
+    );
+    assert!(records.iter().any(|record| record.id == "custom:test"));
 }
 
 #[test]
-fn merge_personas_adds_fizz_and_retires_old_builtins_for_existing_store() {
+fn merge_personas_purges_every_bee_persona_id() {
+    let stored = vec![
+        custom_persona("builtin:fizz", "Fizz"),
+        custom_persona("builtin:honey", "Honey"),
+        custom_persona("builtin:bumble", "Pollen"),
+    ];
+
+    let (records, changed) = merge_personas(stored, "2026-03-19T00:00:00Z");
+
+    assert!(changed);
+    assert!(records.is_empty(), "{records:?}");
+}
+
+#[test]
+fn merge_personas_retires_old_builtins_for_existing_store() {
     let mut legacy_builtins = vec![custom_persona("builtin:solo", "Solo")];
     for persona in &mut legacy_builtins {
         persona.is_builtin = true;
@@ -121,13 +112,6 @@ fn merge_personas_adds_fizz_and_retires_old_builtins_for_existing_store() {
     let (records, changed) = merge_personas(legacy_builtins, "2026-03-19T00:00:00Z");
 
     assert!(changed);
-    let fizz = records
-        .iter()
-        .find(|record| record.id == "builtin:fizz")
-        .expect("fizz built-in should exist");
-    assert!(fizz.is_builtin);
-    assert!(fizz.is_active);
-
     let solo = records
         .iter()
         .find(|record| record.id == "builtin:solo")

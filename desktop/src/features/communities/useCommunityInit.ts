@@ -6,6 +6,7 @@ import { relayClient } from "@/shared/api/relayClient";
 import { resetChannelMembershipWrites } from "@/shared/api/channelMembershipWrites";
 import { resetRateLimitGate } from "@/shared/api/relayRateLimitGate";
 import { readmitRelay } from "@/features/agents/managedAgentRelayCleanup";
+import { purgeRetiredStarterAgents } from "@/features/agents/lib/purgeStarterAgents";
 import {
   autoConnectDefaultRelayEnabled,
   getDefaultRelayUrl,
@@ -410,6 +411,20 @@ export function useCommunityInit(
         });
         // Prime the ref so the NEXT switch saves this community's state.
         prevCommunityIdRef.current = activeCommunity.id;
+        // Remove any bee starter agent an earlier build left on this relay.
+        // Runs per community so each relay is cleaned the first time it is
+        // applied, and costs one list call once there is nothing left.
+        void purgeRetiredStarterAgents(activeCommunity.relayUrl)
+          .then((removed) => {
+            if (removed > 0) {
+              console.info(
+                `[agents] removed ${removed} retired starter agent(s).`,
+              );
+            }
+          })
+          .catch((error) => {
+            console.warn("[agents] retired starter agent purge failed:", error);
+          });
         setResult({
           isReady: true,
           needsSetup: false,

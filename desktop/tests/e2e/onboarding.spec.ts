@@ -3572,7 +3572,9 @@ test("failed public starter channel setup does not show a retry toast", async ({
   expect(await commandCount(page, "ensure_starter_channels")).toBe(2);
 });
 
-test("first-run onboarding posts the live Fizz kickoff", async ({ page }) => {
+// This build ships no bee starter agents, so first run lands on the private
+// Welcome channel with no Welcome Team provisioned and no kickoff posted.
+test("first-run onboarding provisions no starter agents", async ({ page }) => {
   await seedActiveIdentity(page, BLANK_TYLER_IDENTITY);
   await installMockBridge(
     page,
@@ -3591,54 +3593,16 @@ test("first-run onboarding posts the live Fizz kickoff", async ({ page }) => {
   await completeProfileOnboarding(page);
 
   await expectPrivateWelcomeLanding(page);
-  // Runtime start alone cannot satisfy the kickoff's relay-presence wait.
-  const team = await waitForWelcomeTeam(page);
-  const presence = await invokeMockCommand<Record<string, string>>(
-    page,
-    "get_presence",
-    { pubkeys: team.map((agent) => agent.pubkey) },
-  );
-  expect(team.map((agent) => presence[agent.pubkey])).toEqual([
-    "offline",
-    "offline",
-    "offline",
-  ]);
-  await expect(page.getByTestId("message-timeline")).not.toContainText(
-    "Hi Morty QA, I'm Fizz. Welcome to Buzz.",
-  );
-  await publishWelcomeTeamPresence(page);
-  // Greeted by the name typed above — the @mention pill also files the opener
-  // into the new user's Inbox mentions feed.
-  await expect(page.getByTestId("message-timeline")).toContainText(
-    "Hi Morty QA, I'm Fizz. Welcome to Buzz.",
-  );
-  await expect(page.getByTestId("message-timeline")).toContainText(
-    "Honey and Pollen, introduce yourselves",
-  );
-});
-
-test("first-run onboarding lands before Welcome team bootstrap completes", async ({
-  page,
-}) => {
-  await seedActiveIdentity(page, BLANK_TYLER_IDENTITY);
-  await installMockBridge(
-    page,
-    { createManagedAgentDelayMs: 1_000 },
-    { skipOnboardingSeed: true },
-  );
-  await page.goto("/");
-
-  await page.getByTestId("onboarding-display-name").fill("Morty QA");
-  await completeProfileOnboarding(page);
-
-  await expectPrivateWelcomeLanding(page);
   await expect(page.getByTestId("app-loading-gate")).toHaveCount(0);
   await publishWelcomeTeamPresence(page);
-  await expect(page.getByTestId("message-timeline")).toContainText(
-    "Hi Morty QA, I'm Fizz. Welcome to Buzz.",
-  );
   await page.waitForTimeout(1_500);
-  expect(await commandCount(page, "create_managed_agent")).toBe(3);
+  expect(await commandCount(page, "create_managed_agent")).toBe(0);
+  await expect(page.getByTestId("message-timeline")).not.toContainText(
+    "I'm Fizz. Welcome to Buzz.",
+  );
+  await expect(page.getByTestId("message-timeline")).not.toContainText(
+    "Honey and Pollen, introduce yourselves",
+  );
 });
 
 test("existing relay profile with display name auto-skips onboarding without localStorage", async ({
