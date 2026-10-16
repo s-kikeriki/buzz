@@ -31,23 +31,28 @@ struct BuiltInTeam {
     persona_ids: &'static [&'static str],
 }
 
-const BUILT_IN_TEAMS: &[BuiltInTeam] = &[BuiltInTeam {
-    id: "builtin-team:welcome",
-    name: "Welcome Team",
-    description: Some("A friendly starter trio ready to help you plan, create, and ship."),
-    persona_ids: &["builtin:fizz", "builtin:honey", "builtin:bumble"],
-}];
+// kikeriki fork: no team ships with the app. The Welcome Team is retired
+// below with the personas it held.
+const BUILT_IN_TEAMS: &[BuiltInTeam] = &[];
 
 // Built-in teams that have been retired. A stored copy that still exactly
 // matches its seed is purged on load (the user never touched it); customized
 // copies are demoted to user-owned teams by the retirement loop in
 // merge_teams_impl.
-const RETIRED_BUILT_IN_TEAMS: &[BuiltInTeam] = &[BuiltInTeam {
-    id: "builtin-team:fizz",
-    name: "Fizz",
-    description: Some("Fizz works carefully and collaboratively."),
-    persona_ids: &["builtin:fizz"],
-}];
+const RETIRED_BUILT_IN_TEAMS: &[BuiltInTeam] = &[
+    BuiltInTeam {
+        id: "builtin-team:fizz",
+        name: "Fizz",
+        description: Some("Fizz works carefully and collaboratively."),
+        persona_ids: &["builtin:fizz"],
+    },
+    BuiltInTeam {
+        id: "builtin-team:welcome",
+        name: "Welcome Team",
+        description: Some("A friendly starter trio ready to help you plan, create, and ship."),
+        persona_ids: &["builtin:fizz", "builtin:honey", "builtin:bumble"],
+    },
+];
 
 fn built_in_team_records(built_ins: &[BuiltInTeam], now: &str) -> Vec<TeamRecord> {
     built_ins
@@ -135,6 +140,20 @@ fn merge_teams_impl(
     for record in stored.iter_mut() {
         if record.is_builtin && built_in_team_order(built_ins, &record.id).is_none() {
             record.is_builtin = false;
+            record.updated_at = now.to_string();
+            changed = true;
+        }
+    }
+
+    // A team a user customized survives the purge above. Strip any suppressed
+    // persona from it so no team is left pointing at a persona the store no
+    // longer holds.
+    for record in stored.iter_mut() {
+        let before = record.persona_ids.len();
+        record
+            .persona_ids
+            .retain(|id| !super::personas::is_suppressed_persona_id(id));
+        if record.persona_ids.len() != before {
             record.updated_at = now.to_string();
             changed = true;
         }

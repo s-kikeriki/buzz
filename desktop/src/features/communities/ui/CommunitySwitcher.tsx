@@ -2,6 +2,7 @@ import {
   Check,
   ChevronDown,
   ChevronRight,
+  Globe,
   Link2,
   MoreHorizontal,
   Plus,
@@ -105,7 +106,7 @@ export function CommunityEmojiIcon({
   }
   return (
     <span aria-hidden="true" className={className}>
-      <span className="-translate-y-px leading-normal">🐝</span>
+      <Globe className="h-3 w-3 opacity-70" />
     </span>
   );
 }
