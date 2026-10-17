@@ -46,6 +46,7 @@ import {
   MoreUnreadButton,
   preferredUnreadTarget,
 } from "@/features/sidebar/ui/MoreUnreadButton";
+import { SidebarProjectsSection } from "@/features/sidebar/ui/SidebarProjectsSection";
 import { SidebarSection } from "@/features/sidebar/ui/SidebarSection";
 import {
   ChannelGroupSection,
@@ -667,6 +668,68 @@ export function AppSidebar({
           suggestionChannels={channels}
         />
 
+        {/*
+          The pinned rail sits outside SidebarContent, so the destinations in
+          it stay on screen however far the channel list below is scrolled.
+          It is capped and scrolls on its own, so pinning many channels cannot
+          starve the list. Channels here carry no data-channel-id outside the
+          scroll root, so the unread-overflow counter correctly stops counting
+          a pinned channel as offscreen.
+        */}
+        <div
+          className="buzz-sidebar-scrollbar flex max-h-[45%] shrink-0 flex-col gap-2 overflow-y-auto overscroll-none px-[3px]"
+          data-sidebar-background
+          data-testid="sidebar-pinned-rail"
+        >
+          <AppSidebarPrimaryMenu
+            homeBadgeCount={homeBadgeCount}
+            onSelectAgents={onSelectAgents}
+            onSelectHome={onSelectHome}
+            onSelectProjects={onSelectProjects}
+            onSelectPulse={onSelectPulse}
+            onSelectWorkflows={onSelectWorkflows}
+            projectsOverviewActive={projectsOverviewActive}
+            selectedView={selectedView}
+          />
+
+          {!isLoading && starredChannels.length > 0 ? (
+            <ChannelGroupSection
+              hasUnread={starredChannels.some((c) =>
+                unreadChannelIds.has(c.id),
+              )}
+              unreadThreadCount={unreadThreadsIn(starredChannels)}
+              isCollapsed={collapsedGroups.starred}
+              isActiveChannel={selectedView === "channel"}
+              activeWorkingByChannelId={activeWorkingByChannelId}
+              items={starredChannels}
+              sortMode={sortModeFor("starred")}
+              onSortModeChange={(mode) => setSortModeFor("starred", mode)}
+              actionsTestId="section-actions-starred"
+              listTestId="starred-list"
+              onMarkAllRead={() => {
+                for (const channel of starredChannels) {
+                  onMarkChannelRead(channel.id, channel.lastMessageAt);
+                }
+              }}
+              onMarkChannelRead={onMarkChannelRead}
+              onMarkChannelUnread={onMarkChannelUnread}
+              onSelectChannel={onSelectChannel}
+              onToggleCollapsed={() => toggleCollapsedGroup("starred")}
+              selectedChannelId={selectedChannelId}
+              title="Pinned"
+              unreadChannelIds={unreadChannelIds}
+              mutedChannelIds={mutedChannelIds}
+              onMuteChannel={onMuteChannel}
+              onUnmuteChannel={onUnmuteChannel}
+              starredChannelIds={starredChannelIds}
+              onStarChannel={onStarChannel}
+              onUnstarChannel={onUnstarChannel}
+              onDeleteChannel={requestDeleteChannel}
+              onLeaveChannel={requestLeaveChannel}
+            />
+          ) : null}
+        </div>
+
         <div
           className="relative flex min-h-0 flex-1 flex-col"
           data-sidebar-background
@@ -693,16 +756,7 @@ export function AppSidebar({
               data-sidebar-background
               data-testid="sidebar-scroll-content"
             >
-              <AppSidebarPrimaryMenu
-                homeBadgeCount={homeBadgeCount}
-                onSelectAgents={onSelectAgents}
-                onSelectHome={onSelectHome}
-                onSelectProjects={onSelectProjects}
-                onSelectPulse={onSelectPulse}
-                onSelectWorkflows={onSelectWorkflows}
-                projectsOverviewActive={projectsOverviewActive}
-                selectedView={selectedView}
-              />
+              <SidebarProjectsSection />
 
               {isLoading ? (
                 <SidebarLoadingContent shape={sidebarLoadingShape} />
@@ -710,44 +764,6 @@ export function AppSidebar({
 
               {!isLoading ? (
                 <>
-                  {starredChannels.length > 0 ? (
-                    <ChannelGroupSection
-                      hasUnread={starredChannels.some((c) =>
-                        unreadChannelIds.has(c.id),
-                      )}
-                      unreadThreadCount={unreadThreadsIn(starredChannels)}
-                      isCollapsed={collapsedGroups.starred}
-                      isActiveChannel={selectedView === "channel"}
-                      activeWorkingByChannelId={activeWorkingByChannelId}
-                      items={starredChannels}
-                      sortMode={sortModeFor("starred")}
-                      onSortModeChange={(mode) =>
-                        setSortModeFor("starred", mode)
-                      }
-                      actionsTestId="section-actions-starred"
-                      listTestId="starred-list"
-                      onMarkAllRead={() => {
-                        for (const channel of starredChannels) {
-                          onMarkChannelRead(channel.id, channel.lastMessageAt);
-                        }
-                      }}
-                      onMarkChannelRead={onMarkChannelRead}
-                      onMarkChannelUnread={onMarkChannelUnread}
-                      onSelectChannel={onSelectChannel}
-                      onToggleCollapsed={() => toggleCollapsedGroup("starred")}
-                      selectedChannelId={selectedChannelId}
-                      title="Starred"
-                      unreadChannelIds={unreadChannelIds}
-                      mutedChannelIds={mutedChannelIds}
-                      onMuteChannel={onMuteChannel}
-                      onUnmuteChannel={onUnmuteChannel}
-                      starredChannelIds={starredChannelIds}
-                      onStarChannel={onStarChannel}
-                      onUnstarChannel={onUnstarChannel}
-                      onDeleteChannel={requestDeleteChannel}
-                      onLeaveChannel={requestLeaveChannel}
-                    />
-                  ) : null}
                   <SidebarDndContext
                     channels={channels}
                     sections={channelSections}

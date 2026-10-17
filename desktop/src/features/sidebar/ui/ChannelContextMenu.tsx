@@ -8,9 +8,9 @@ import {
   Copy,
   LogOut,
   LoaderCircle,
+  Pin,
+  PinOff,
   Plus,
-  Star,
-  StarOff,
   Trash2,
   TriangleAlert,
 } from "lucide-react";
@@ -321,18 +321,18 @@ export function ChannelContextMenuItems({
             }
           >
             <ContextMenuIconSlot>
-              <StarOff className="h-4 w-4" />
+              <PinOff className="h-4 w-4" />
             </ContextMenuIconSlot>
-            <span>Unstar channel</span>
+            <span>Unpin channel</span>
           </ContextMenuItem>
         ) : (
           <ContextMenuItem
             onSelect={() => deferMenuAction(() => onStarChannel?.(channel.id))}
           >
             <ContextMenuIconSlot>
-              <Star className="h-4 w-4" />
+              <Pin className="h-4 w-4" />
             </ContextMenuIconSlot>
-            <span>Star channel</span>
+            <span>Pin channel</span>
           </ContextMenuItem>
         )
       ) : null}
