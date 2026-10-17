@@ -27,6 +27,7 @@ export default defineConfig({
         "**/sidebar-offcanvas-rail.spec.ts",
         "**/sidebar-subsections.spec.ts",
         "**/sidebar-section-recency.spec.ts",
+        "**/sidebar-pinned-rail.spec.ts",
         "**/tooltip-semantics.spec.ts",
         "**/search-scope-screenshots.spec.ts",
         "**/onboarding-docked-cta-screenshots.spec.ts",

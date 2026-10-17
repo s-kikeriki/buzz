@@ -26,14 +26,14 @@ function seedStarState(
 }
 
 test.describe("channel starring", () => {
-  test("01 — context menu shows Star channel", async ({ page }) => {
+  test("01 — context menu shows Pin channel", async ({ page }) => {
     await installMockBridge(page);
     await page.goto("/");
     await page.getByTestId("channel-general").click();
     await expect(page.getByTestId("chat-title")).toHaveText("general");
 
     await page.getByTestId("channel-engineering").click({ button: "right" });
-    const starItem = page.getByRole("menuitem", { name: "Star channel" });
+    const starItem = page.getByRole("menuitem", { name: "Pin channel" });
     await expect(starItem).toBeVisible();
     await starItem.evaluate((el) =>
       Promise.all(
@@ -58,7 +58,7 @@ test.describe("channel starring", () => {
     await expect(starredList.getByTestId("channel-engineering")).toBeVisible();
   });
 
-  test("03 — context menu shows Unstar channel when starred", async ({
+  test("03 — context menu shows Unpin channel when pinned", async ({
     page,
   }) => {
     await seedStarState(page, ENGINEERING_CHANNEL_ID);
@@ -72,7 +72,7 @@ test.describe("channel starring", () => {
       .getByTestId("starred-list")
       .getByTestId("channel-engineering")
       .click({ button: "right" });
-    const unstarItem = page.getByRole("menuitem", { name: "Unstar channel" });
+    const unstarItem = page.getByRole("menuitem", { name: "Unpin channel" });
     await expect(unstarItem).toBeVisible();
     await unstarItem.evaluate((el) =>
       Promise.all(
