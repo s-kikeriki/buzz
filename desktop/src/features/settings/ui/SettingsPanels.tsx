@@ -1,3 +1,5 @@
+import { msg } from "@lingui/core/macro";
+import type { MessageDescriptor } from "@lingui/core";
 import {
   Archive,
   BellRing,
@@ -87,7 +89,8 @@ export function isSettingsSection(value: unknown): value is SettingsSection {
 
 export type SettingsSectionDescriptor = {
   value: SettingsSection;
-  label: string;
+  /** Descriptor, not a string — resolved per render by the nav. */
+  label: MessageDescriptor;
   icon: LucideIcon;
   /** If set, this section is only visible when the feature is enabled */
   featureGate?: string;
@@ -111,85 +114,85 @@ export type SettingsPanelProps = {
 export const settingsSections: SettingsSectionDescriptor[] = [
   {
     value: "appearance",
-    label: "Appearance",
+    label: msg`Appearance`,
     icon: MonitorCog,
   },
   {
     value: "profile",
-    label: "Profile",
+    label: msg`Profile`,
     icon: UserRound,
   },
   {
     value: "notifications",
-    label: "Notifications",
+    label: msg`Notifications`,
     icon: BellRing,
   },
   {
     value: "voice",
-    label: "Voice",
+    label: msg`Voice`,
     icon: Volume2,
   },
   {
     value: "experimental",
-    label: "Experiments",
+    label: msg`Experiments`,
     icon: FlaskConical,
   },
   {
     value: "agents",
-    label: "Agents",
+    label: msg`Agents`,
     icon: Bot,
     featureGate: "managed-agents",
   },
   {
     value: "channel-templates",
-    label: "Channel templates",
+    label: msg`Channel templates`,
     icon: LayoutTemplate,
     featureGate: "channel-templates",
   },
   {
     value: "compute",
-    label: "Compute",
+    label: msg`Compute`,
     icon: Cpu,
   },
   {
     value: "shortcuts",
-    label: "Shortcuts",
+    label: msg`Shortcuts`,
     icon: Keyboard,
   },
   {
     value: "hosted-communities",
-    label: "Hosted communities",
+    label: msg`Hosted communities`,
     icon: MessagesSquare,
   },
   {
     value: "community-members",
-    label: "Invites",
+    label: msg`Invites`,
     icon: Ticket,
   },
   {
     value: "relay-admin",
-    label: "Admin",
+    label: msg`Admin`,
     icon: ServerCog,
   },
   {
     value: "custom-emoji",
-    label: "Custom emoji",
+    label: msg`Custom emoji`,
     icon: Smile,
     featureGate: "custom-emoji",
   },
   {
     value: "local-archive",
-    label: "Local archive",
+    label: msg`Local archive`,
     icon: Archive,
   },
   {
     value: "mobile",
-    label: "Mobile",
+    label: msg`Mobile`,
     icon: Smartphone,
   },
   {
     value: "updates",
-    label: "Updates",
+    label: msg`Updates`,
     icon: Download,
   },
 ];

@@ -279,7 +279,7 @@ test("no-probe-before-save: admin_probe not called while rendering nav with no s
 });
 
 test("settings-nav-groups-contains-relay-admin: relay-admin is wired into Communities nav group", () => {
-  const communities = settingsNavGroups.find((g) => g.label === "Communities");
+  const communities = settingsNavGroups.find((g) => g.id === "communities");
   assert.ok(communities, "Communities group must exist");
   assert.ok(
     communities.sections.includes("relay-admin"),

@@ -1,6 +1,9 @@
 import * as React from "react";
 import { getVersion } from "@tauri-apps/api/app";
 import { AlertCircle, ArrowLeft, LoaderCircle, RefreshCw } from "lucide-react";
+import { msg } from "@lingui/core/macro";
+import type { MessageDescriptor } from "@lingui/core";
+import { Trans, useLingui } from "@lingui/react/macro";
 
 import { useMyRelayMembershipLookupQuery } from "@/features/community-members/hooks";
 import {
@@ -48,12 +51,24 @@ type SettingsViewProps = SettingsPanelProps & {
   section: SettingsSection;
 };
 
+/**
+ * Nav groups carry a stable `id` alongside their label.
+ *
+ * Tests and any other non-display lookup key on `id`. Copy is not an
+ * identifier — once `label` became a translatable descriptor, a test asserting
+ * `label === "Communities"` was asserting against English, which is both
+ * fragile and the exact confusion this sweep exists to remove.
+ */
+export type SettingsNavGroupId = "personal" | "communities" | "app";
+
 export const settingsNavGroups: Array<{
-  label: string;
+  id: SettingsNavGroupId;
+  label: MessageDescriptor;
   sections: SettingsSection[];
 }> = [
   {
-    label: "Personal",
+    id: "personal",
+    label: msg`Personal`,
     sections: [
       "profile",
       "appearance",
@@ -66,11 +81,13 @@ export const settingsNavGroups: Array<{
     ],
   },
   {
-    label: "Communities",
+    id: "communities",
+    label: msg`Communities`,
     sections: ["hosted-communities", "community-members", "relay-admin"],
   },
   {
-    label: "App",
+    id: "app",
+    label: msg`App`,
     sections: ["agents", "compute", "experimental", "mobile", "updates"],
   },
 ];
@@ -85,6 +102,8 @@ function SettingsSectionButton({
   section: (typeof settingsSections)[number];
 }) {
   const Icon = section.icon;
+  const { i18n } = useLingui();
+  const label = i18n._(section.label);
 
   return (
     <SidebarMenuItem>
@@ -93,7 +112,7 @@ function SettingsSectionButton({
         data-testid={`settings-nav-${section.value}`}
         isActive={active}
         onClick={() => onSelect(section.value)}
-        tooltip={section.label}
+        tooltip={label}
         type="button"
       >
         <Icon
@@ -104,9 +123,48 @@ function SettingsSectionButton({
               : "text-sidebar-foreground/70",
           )}
         />
-        <SidebarMenuLabel>{section.label}</SidebarMenuLabel>
+        <SidebarMenuLabel>{label}</SidebarMenuLabel>
       </SidebarMenuButton>
     </SidebarMenuItem>
+  );
+}
+
+/**
+ * One nav group. Split out so the group label can be resolved with a hook —
+ * `useLingui()` cannot be called inside the `.map()` of the parent's render.
+ */
+function SettingsNavGroup({
+  group,
+  onSectionChange,
+  section,
+}: {
+  group: {
+    id: SettingsNavGroupId;
+    label: MessageDescriptor;
+    sections: SettingsSectionDescriptor[];
+  };
+  onSectionChange: (section: SettingsSection) => void;
+  section: SettingsSection;
+}) {
+  const { i18n, t } = useLingui();
+  const label = i18n._(group.label);
+
+  return (
+    <SidebarGroup>
+      <SidebarGroupLabel>{label}</SidebarGroupLabel>
+      <SidebarGroupContent>
+        <SidebarMenu aria-label={t`${label} settings sections`}>
+          {group.sections.map((entry) => (
+            <SettingsSectionButton
+              active={entry.value === section}
+              key={entry.value}
+              onSelect={onSectionChange}
+              section={entry}
+            />
+          ))}
+        </SidebarMenu>
+      </SidebarGroupContent>
+    </SidebarGroup>
   );
 }
 
@@ -128,6 +186,8 @@ export function SettingsView({
   section,
 }: SettingsViewProps) {
   const { isMobile, open: sidebarOpen, setOpen: setSidebarOpen } = useSidebar();
+  const { t } = useLingui();
+  const backToAppLabel = t`Back to app`;
   const myMembershipQuery = useMyRelayMembershipLookupQuery();
   const featureState = useFeatureSnapshot();
   const visibleSections = React.useMemo(() => {
@@ -241,11 +301,11 @@ export function SettingsView({
               <SidebarMenuButton
                 data-testid="settings-back-to-app"
                 onClick={onClose}
-                tooltip="Back to app"
+                tooltip={backToAppLabel}
                 type="button"
               >
                 <ArrowLeft className="h-4 w-4" />
-                <span>Back to app</span>
+                <span>{backToAppLabel}</span>
               </SidebarMenuButton>
             </SidebarMenuItem>
           </SidebarMenu>
@@ -258,7 +318,7 @@ export function SettingsView({
               data-testid="community-access-loading"
             >
               <LoaderCircle className="h-3.5 w-3.5 animate-spin" />
-              Checking invite permissions…
+              <Trans>Checking invite permissions…</Trans>
             </div>
           ) : null}
           {myMembershipQuery.isError ? (
@@ -268,7 +328,7 @@ export function SettingsView({
             >
               <div className="flex items-center gap-2">
                 <AlertCircle className="h-3.5 w-3.5 text-destructive" />
-                Invite settings could not be checked.
+                <Trans>Invite settings could not be checked.</Trans>
               </div>
               <button
                 className="flex items-center gap-1.5 font-medium text-sidebar-foreground underline-offset-2 hover:underline"
@@ -276,7 +336,7 @@ export function SettingsView({
                 type="button"
               >
                 <RefreshCw className="h-3.5 w-3.5" />
-                Try again
+                <Trans>Try again</Trans>
               </button>
             </div>
           ) : null}
@@ -286,26 +346,19 @@ export function SettingsView({
               data-testid="community-access-snapshot-missing"
             >
               <AlertCircle className="mt-0.5 h-3.5 w-3.5 shrink-0 text-amber-500" />
-              Invite settings are unavailable. Relay recovery may still be in
-              progress.
+              <Trans>
+                Invite settings are unavailable. Relay recovery may still be in
+                progress.
+              </Trans>
             </div>
           ) : null}
           {visibleNavGroups.map((group) => (
-            <SidebarGroup key={group.label}>
-              <SidebarGroupLabel>{group.label}</SidebarGroupLabel>
-              <SidebarGroupContent>
-                <SidebarMenu aria-label={`${group.label} settings sections`}>
-                  {group.sections.map((entry) => (
-                    <SettingsSectionButton
-                      active={entry.value === section}
-                      key={entry.value}
-                      onSelect={onSectionChange}
-                      section={entry}
-                    />
-                  ))}
-                </SidebarMenu>
-              </SidebarGroupContent>
-            </SidebarGroup>
+            <SettingsNavGroup
+              group={group}
+              key={group.id}
+              onSectionChange={onSectionChange}
+              section={section}
+            />
           ))}
         </SidebarContent>
 
@@ -316,7 +369,7 @@ export function SettingsView({
               data-buzz-sidebar-secondary
               data-testid="settings-version"
             >
-              v{appVersion}
+              <Trans>v{appVersion}</Trans>
             </p>
           ) : null}
         </SidebarFooter>
