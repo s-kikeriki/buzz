@@ -19,6 +19,8 @@ const CONVERTED_FILES = [
   "src/features/settings/ui/AppearanceSettingsControls.tsx",
   "src/features/settings/ui/LanguageSettingsControl.tsx",
   "src/features/settings/ui/AppearanceSettingsPanel.tsx",
+  // Settings chrome: the nav rail and group headers that frame every panel.
+  "src/features/settings/ui/SettingsView.tsx",
 ];
 
 /**
