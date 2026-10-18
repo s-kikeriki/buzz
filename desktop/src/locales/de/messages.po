@@ -19,11 +19,28 @@ msgstr "(pro Community)"
 msgid "{glassOpacity}% opacity"
 msgstr "{glassOpacity} % Deckkraft"
 
+#: src/features/settings/ui/SettingsView.tsx
+msgid "{label} settings sections"
+msgstr "{label} – Einstellungsbereiche"
+
 #: src/features/settings/ui/AppearanceSettingsControls.tsx
 msgid "Accent color"
 msgstr "Akzentfarbe"
 
+#: src/features/settings/ui/SettingsPanels.tsx
+msgid "Admin"
+msgstr "Administration"
+
+#: src/features/settings/ui/SettingsPanels.tsx
+msgid "Agents"
+msgstr "Agenten"
+
+#: src/features/settings/ui/SettingsView.tsx
+msgid "App"
+msgstr "App"
+
 #: src/features/settings/ui/AppearanceSettingsPanel.tsx
+#: src/features/settings/ui/SettingsPanels.tsx
 msgid "Appearance"
 msgstr "Darstellung"
 
@@ -35,9 +52,21 @@ msgstr "Gilt für Unterhaltungen und Oberflächentexte"
 msgid "Available in the macOS desktop app."
 msgstr "Verfügbar in der macOS-Desktop-App."
 
+#: src/features/settings/ui/SettingsView.tsx
+msgid "Back to app"
+msgstr "Zurück zur App"
+
 #: src/features/settings/ui/AppearanceSettingsControls.tsx
 msgid "Blur the desktop behind navigation while keeping content solid."
 msgstr "Den Schreibtisch hinter der Navigation weichzeichnen, Inhalte bleiben deckend."
+
+#: src/features/settings/ui/SettingsPanels.tsx
+msgid "Channel templates"
+msgstr "Kanalvorlagen"
+
+#: src/features/settings/ui/SettingsView.tsx
+msgid "Checking invite permissions…"
+msgstr "Einladungsberechtigungen werden geprüft …"
 
 #: src/features/settings/ui/AppearanceSettingsPanel.tsx
 msgid "Choose how {productName} looks and feels."
@@ -59,13 +88,25 @@ msgstr "Farbmodus"
 msgid "Comfy"
 msgstr "Bequem"
 
+#: src/features/settings/ui/SettingsView.tsx
+msgid "Communities"
+msgstr "Communitys"
+
 #: src/features/settings/ui/AppearanceSettingsControls.tsx
 msgid "Compact"
 msgstr "Kompakt"
 
+#: src/features/settings/ui/SettingsPanels.tsx
+msgid "Compute"
+msgstr "Rechenleistung"
+
 #: src/features/settings/ui/AppearanceSettingsControls.tsx
 msgid "Conversation density"
 msgstr "Dichte der Unterhaltungen"
+
+#: src/features/settings/ui/SettingsPanels.tsx
+msgid "Custom emoji"
+msgstr "Eigene Emojis"
 
 #: src/features/settings/ui/AppearanceSettingsPanel.tsx
 msgid "Dark"
@@ -74,6 +115,10 @@ msgstr "Dunkel"
 #: src/features/settings/ui/AppearanceSettingsControls.tsx
 msgid "Default"
 msgstr "Standard"
+
+#: src/features/settings/ui/SettingsPanels.tsx
+msgid "Experiments"
+msgstr "Experimente"
 
 #: src/features/settings/ui/AppearanceSettingsControls.tsx
 msgid "Focus"
@@ -103,9 +148,25 @@ msgstr "Deckkraft des Glases"
 msgid "Highlights from this release: refreshed conversation layout, quicker link handling, and readability improvements."
 msgstr "Highlights dieser Version: überarbeitetes Layout für Unterhaltungen, schnellere Linkverarbeitung und bessere Lesbarkeit."
 
+#: src/features/settings/ui/SettingsPanels.tsx
+msgid "Hosted communities"
+msgstr "Gehostete Communitys"
+
 #: src/features/settings/ui/AppearanceSettingsControls.tsx
 msgid "I added a longer message so you can compare line height and text spacing."
 msgstr "Ich habe eine längere Nachricht hinzugefügt, damit du Zeilenhöhe und Textabstände vergleichen kannst."
+
+#: src/features/settings/ui/SettingsView.tsx
+msgid "Invite settings are unavailable. Relay recovery may still be in progress."
+msgstr "Einladungseinstellungen sind nicht verfügbar. Die Relay-Wiederherstellung läuft möglicherweise noch."
+
+#: src/features/settings/ui/SettingsView.tsx
+msgid "Invite settings could not be checked."
+msgstr "Einladungseinstellungen konnten nicht geprüft werden."
+
+#: src/features/settings/ui/SettingsPanels.tsx
+msgid "Invites"
+msgstr "Einladungen"
 
 #: src/features/settings/ui/LanguageSettingsControl.tsx
 msgid "Language"
@@ -131,9 +192,25 @@ msgstr "Hell"
 msgid "Link previews"
 msgstr "Linkvorschauen"
 
+#: src/features/settings/ui/SettingsPanels.tsx
+msgid "Local archive"
+msgstr "Lokales Archiv"
+
 #: src/features/settings/ui/AppearanceSettingsControls.tsx
 msgid "Lower values reveal more of the desktop blur."
 msgstr "Niedrigere Werte lassen mehr vom weichgezeichneten Schreibtisch durchscheinen."
+
+#: src/features/settings/ui/SettingsPanels.tsx
+msgid "Mobile"
+msgstr "Mobil"
+
+#: src/features/settings/ui/SettingsPanels.tsx
+msgid "Notifications"
+msgstr "Benachrichtigungen"
+
+#: src/features/settings/ui/SettingsView.tsx
+msgid "Personal"
+msgstr "Persönlich"
 
 #: src/features/settings/ui/AppearanceSettingsPanel.tsx
 msgid "Preferences"
@@ -147,6 +224,10 @@ msgstr "Vorschau"
 msgid "Product updates — a fresh look at conversations"
 msgstr "Produkt-Updates — ein frischer Blick auf Unterhaltungen"
 
+#: src/features/settings/ui/SettingsPanels.tsx
+msgid "Profile"
+msgstr "Profil"
+
 #: src/features/settings/ui/AppearanceSettingsControls.tsx
 msgid "Prominent active tab"
 msgstr "Hervorgehobener aktiver Tab"
@@ -158,6 +239,10 @@ msgstr "Deckkraft des Glases zurücksetzen"
 #: src/features/settings/ui/AppearanceSettingsControls.tsx
 msgid "Rich"
 msgstr "Ausführlich"
+
+#: src/features/settings/ui/SettingsPanels.tsx
+msgid "Shortcuts"
+msgstr "Tastenkürzel"
 
 #: src/features/settings/ui/AppearanceSettingsControls.tsx
 msgid "Small cards with a thumbnail"
@@ -219,6 +304,22 @@ msgstr "Threads öffnen sich in einem Seitenbereich neben dem Kanal"
 msgid "Threads open over the channel"
 msgstr "Threads öffnen sich über dem Kanal"
 
+#: src/features/settings/ui/SettingsView.tsx
+msgid "Try again"
+msgstr "Erneut versuchen"
+
+#: src/features/settings/ui/SettingsPanels.tsx
+msgid "Updates"
+msgstr "Updates"
+
 #: src/features/settings/ui/AppearanceSettingsControls.tsx
 msgid "Use {colorName} accent"
 msgstr "Akzentfarbe {colorName} verwenden"
+
+#: src/features/settings/ui/SettingsView.tsx
+msgid "v{appVersion}"
+msgstr "v{appVersion}"
+
+#: src/features/settings/ui/SettingsPanels.tsx
+msgid "Voice"
+msgstr "Sprache"

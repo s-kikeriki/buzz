@@ -19,11 +19,28 @@ msgstr ""
 msgid "{glassOpacity}% opacity"
 msgstr ""
 
+#: src/features/settings/ui/SettingsView.tsx
+msgid "{label} settings sections"
+msgstr ""
+
 #: src/features/settings/ui/AppearanceSettingsControls.tsx
 msgid "Accent color"
 msgstr ""
 
+#: src/features/settings/ui/SettingsPanels.tsx
+msgid "Admin"
+msgstr ""
+
+#: src/features/settings/ui/SettingsPanels.tsx
+msgid "Agents"
+msgstr ""
+
+#: src/features/settings/ui/SettingsView.tsx
+msgid "App"
+msgstr ""
+
 #: src/features/settings/ui/AppearanceSettingsPanel.tsx
+#: src/features/settings/ui/SettingsPanels.tsx
 msgid "Appearance"
 msgstr ""
 
@@ -35,8 +52,20 @@ msgstr ""
 msgid "Available in the macOS desktop app."
 msgstr ""
 
+#: src/features/settings/ui/SettingsView.tsx
+msgid "Back to app"
+msgstr ""
+
 #: src/features/settings/ui/AppearanceSettingsControls.tsx
 msgid "Blur the desktop behind navigation while keeping content solid."
+msgstr ""
+
+#: src/features/settings/ui/SettingsPanels.tsx
+msgid "Channel templates"
+msgstr ""
+
+#: src/features/settings/ui/SettingsView.tsx
+msgid "Checking invite permissions…"
 msgstr ""
 
 #: src/features/settings/ui/AppearanceSettingsPanel.tsx
@@ -59,12 +88,24 @@ msgstr ""
 msgid "Comfy"
 msgstr ""
 
+#: src/features/settings/ui/SettingsView.tsx
+msgid "Communities"
+msgstr ""
+
 #: src/features/settings/ui/AppearanceSettingsControls.tsx
 msgid "Compact"
 msgstr ""
 
+#: src/features/settings/ui/SettingsPanels.tsx
+msgid "Compute"
+msgstr ""
+
 #: src/features/settings/ui/AppearanceSettingsControls.tsx
 msgid "Conversation density"
+msgstr ""
+
+#: src/features/settings/ui/SettingsPanels.tsx
+msgid "Custom emoji"
 msgstr ""
 
 #: src/features/settings/ui/AppearanceSettingsPanel.tsx
@@ -73,6 +114,10 @@ msgstr ""
 
 #: src/features/settings/ui/AppearanceSettingsControls.tsx
 msgid "Default"
+msgstr ""
+
+#: src/features/settings/ui/SettingsPanels.tsx
+msgid "Experiments"
 msgstr ""
 
 #: src/features/settings/ui/AppearanceSettingsControls.tsx
@@ -103,8 +148,24 @@ msgstr ""
 msgid "Highlights from this release: refreshed conversation layout, quicker link handling, and readability improvements."
 msgstr ""
 
+#: src/features/settings/ui/SettingsPanels.tsx
+msgid "Hosted communities"
+msgstr ""
+
 #: src/features/settings/ui/AppearanceSettingsControls.tsx
 msgid "I added a longer message so you can compare line height and text spacing."
+msgstr ""
+
+#: src/features/settings/ui/SettingsView.tsx
+msgid "Invite settings are unavailable. Relay recovery may still be in progress."
+msgstr ""
+
+#: src/features/settings/ui/SettingsView.tsx
+msgid "Invite settings could not be checked."
+msgstr ""
+
+#: src/features/settings/ui/SettingsPanels.tsx
+msgid "Invites"
 msgstr ""
 
 #: src/features/settings/ui/LanguageSettingsControl.tsx
@@ -131,8 +192,24 @@ msgstr ""
 msgid "Link previews"
 msgstr ""
 
+#: src/features/settings/ui/SettingsPanels.tsx
+msgid "Local archive"
+msgstr ""
+
 #: src/features/settings/ui/AppearanceSettingsControls.tsx
 msgid "Lower values reveal more of the desktop blur."
+msgstr ""
+
+#: src/features/settings/ui/SettingsPanels.tsx
+msgid "Mobile"
+msgstr ""
+
+#: src/features/settings/ui/SettingsPanels.tsx
+msgid "Notifications"
+msgstr ""
+
+#: src/features/settings/ui/SettingsView.tsx
+msgid "Personal"
 msgstr ""
 
 #: src/features/settings/ui/AppearanceSettingsPanel.tsx
@@ -147,6 +224,10 @@ msgstr ""
 msgid "Product updates — a fresh look at conversations"
 msgstr ""
 
+#: src/features/settings/ui/SettingsPanels.tsx
+msgid "Profile"
+msgstr ""
+
 #: src/features/settings/ui/AppearanceSettingsControls.tsx
 msgid "Prominent active tab"
 msgstr ""
@@ -157,6 +238,10 @@ msgstr ""
 
 #: src/features/settings/ui/AppearanceSettingsControls.tsx
 msgid "Rich"
+msgstr ""
+
+#: src/features/settings/ui/SettingsPanels.tsx
+msgid "Shortcuts"
 msgstr ""
 
 #: src/features/settings/ui/AppearanceSettingsControls.tsx
@@ -219,6 +304,22 @@ msgstr ""
 msgid "Threads open over the channel"
 msgstr ""
 
+#: src/features/settings/ui/SettingsView.tsx
+msgid "Try again"
+msgstr ""
+
+#: src/features/settings/ui/SettingsPanels.tsx
+msgid "Updates"
+msgstr ""
+
 #: src/features/settings/ui/AppearanceSettingsControls.tsx
 msgid "Use {colorName} accent"
+msgstr ""
+
+#: src/features/settings/ui/SettingsView.tsx
+msgid "v{appVersion}"
+msgstr ""
+
+#: src/features/settings/ui/SettingsPanels.tsx
+msgid "Voice"
 msgstr ""
