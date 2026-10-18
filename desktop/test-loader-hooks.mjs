@@ -140,6 +140,36 @@ export function resolve(specifier, context, nextResolve) {
   return nextResolve(specifier, context);
 }
 
+const LINGUI_MACRO_SPECIFIERS = ["@lingui/core/macro", "@lingui/react/macro"];
+
+function hasLinguiMacroImport(source) {
+  return LINGUI_MACRO_SPECIFIERS.some((specifier) =>
+    source.includes(specifier),
+  );
+}
+
+/** A `.ts` module (no JSX) can still use `msg` / `t`; it needs the pass too. */
+function usesLinguiMacro(url) {
+  if (!url.endsWith(".ts") || url.endsWith(".d.ts")) return false;
+  try {
+    return hasLinguiMacroImport(fs.readFileSync(fileURLToPath(url), "utf8"));
+  } catch {
+    return false;
+  }
+}
+
+async function expandLinguiMacros(filePath, source) {
+  const { transformAsync } = await import("@babel/core");
+  const result = await transformAsync(source, {
+    filename: filePath,
+    babelrc: false,
+    configFile: false,
+    parserOpts: { plugins: ["typescript", "jsx"] },
+    plugins: ["@lingui/babel-plugin-lingui-macro"],
+  });
+  return result?.code ?? source;
+}
+
 export async function load(url, context, nextLoad) {
   if (url.startsWith(ASSET_URL_PREFIX)) {
     return {
@@ -180,8 +210,19 @@ export async function load(url, context, nextLoad) {
     };
   }
 
-  if (url.endsWith(".tsx")) {
-    const source = fs.readFileSync(fileURLToPath(url), "utf8");
+  if (url.endsWith(".tsx") || usesLinguiMacro(url)) {
+    const filePath = fileURLToPath(url);
+    let source = fs.readFileSync(filePath, "utf8");
+
+    // The Lingui macros are compile-time only. Vite expands them via
+    // `scripts/vite-plugin-lingui-macro.mjs`; this loader is the equivalent
+    // seam for unit tests. Without it, importing any converted module throws
+    // `Cannot find package 'babel-plugin-macros'` — the macro entrypoints are
+    // runtime stubs that exist only to fail loudly when untransformed.
+    if (hasLinguiMacroImport(source)) {
+      source = await expandLinguiMacros(filePath, source);
+    }
+
     const transpiled = ts.transpileModule(source, {
       compilerOptions: {
         jsx: ts.JsxEmit.ReactJSX,

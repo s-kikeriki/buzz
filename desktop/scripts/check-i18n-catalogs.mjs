@@ -1,0 +1,121 @@
+import { execFile } from "node:child_process";
+import { readFile, readdir } from "node:fs/promises";
+import path from "node:path";
+import { promisify } from "node:util";
+import { fileURLToPath } from "node:url";
+
+const run = promisify(execFile);
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const projectRoot = path.resolve(__dirname, "..");
+const localesDir = path.join(projectRoot, "src", "locales");
+
+/**
+ * Catalogues must be committed in sync with the source.
+ *
+ * This is not bookkeeping. When a `<Trans>` has no catalogue entry, Lingui
+ * falls back to the message **id** — and because production builds strip the
+ * `message` property, that id is the compiled hash. The UI renders literally
+ * `2fQh92` where the label should be. It looks like data corruption, it
+ * survives review (the source still reads `msg\`Spacious\``), and no type
+ * checker or lint rule sees it.
+ *
+ * Two things are enforced:
+ *   1. `lingui extract` produces no change — every string in the source has a
+ *      catalogue entry, and no stale entry survives a deletion.
+ *   2. The source locale has no empty `msgstr` — an entry that exists but is
+ *      blank fails back to the hash in exactly the same way.
+ *
+ * German is deliberately *not* required to be complete: `fallbackLocales` maps
+ * it to English, so an untranslated string degrades to readable English rather
+ * than breaking the build mid-sweep.
+ */
+
+async function readCatalogs() {
+  const locales = await readdir(localesDir);
+  const catalogs = new Map();
+  for (const locale of locales.sort()) {
+    const file = path.join(localesDir, locale, "messages.po");
+    catalogs.set(locale, await readFile(file, "utf8"));
+  }
+  return catalogs;
+}
+
+/** Entries whose translation is blank, excluding the PO header (empty id). */
+function emptyTranslations(po) {
+  const empty = [];
+  const entries = po.split(/\n\n+/);
+  for (const entry of entries) {
+    const idMatch = entry.match(/^msgid\s+"((?:[^"\\]|\\.)*)"/m);
+    const strMatch = entry.match(/^msgstr\s+"((?:[^"\\]|\\.)*)"/m);
+    if (!idMatch || !strMatch) continue;
+    if (idMatch[1].length === 0) continue;
+    if (strMatch[1].length === 0) empty.push(idMatch[1]);
+  }
+  return empty;
+}
+
+async function main() {
+  const before = await readCatalogs();
+
+  try {
+    await run("pnpm", ["exec", "lingui", "extract", "--clean"], {
+      cwd: projectRoot,
+    });
+  } catch (error) {
+    console.error("lingui extract failed:\n");
+    console.error(error.stderr || error.stdout || error.message);
+    process.exitCode = 1;
+    return;
+  }
+
+  const after = await readCatalogs();
+  const drifted = [];
+
+  for (const [locale, contents] of after) {
+    const previous = before.get(locale);
+    if (previous === undefined) {
+      drifted.push(`${locale} (new catalogue was not committed)`);
+      continue;
+    }
+    // The header carries a creation timestamp that changes on every run; it
+    // is not drift. Compare everything after it.
+    const strip = (po) => po.replace(/^"POT-Creation-Date:.*\n/m, "");
+    if (strip(previous) !== strip(contents)) drifted.push(locale);
+  }
+
+  const sourceEmpty = emptyTranslations(after.get("en") ?? "");
+
+  if (drifted.length === 0 && sourceEmpty.length === 0) {
+    console.log(`i18n catalogues: ${after.size} locale(s) in sync.`);
+    return;
+  }
+
+  if (drifted.length > 0) {
+    console.error(
+      `Message catalogues are out of sync with the source: ${drifted.join(", ")}\n`,
+    );
+    console.error(
+      [
+        "A <Trans> or msg`` without a catalogue entry renders its compiled",
+        "hash id (e.g. `2fQh92`) instead of the label, because production",
+        "builds strip the fallback message.",
+        "",
+        "Run this and commit the result:",
+        "",
+        "  cd desktop && pnpm exec lingui extract --clean",
+        "",
+      ].join("\n"),
+    );
+  }
+
+  if (sourceEmpty.length > 0) {
+    console.error(
+      `Source locale has ${sourceEmpty.length} empty translation(s):\n`,
+    );
+    for (const id of sourceEmpty.slice(0, 20)) console.error(`  ${id}`);
+  }
+
+  process.exitCode = 1;
+}
+
+await main();
