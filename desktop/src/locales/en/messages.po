@@ -24,6 +24,10 @@ msgid "{label} settings sections"
 msgstr "{label} settings sections"
 
 #: src/features/settings/ui/AppearanceSettingsControls.tsx
+msgid "A–Z"
+msgstr "A–Z"
+
+#: src/features/settings/ui/AppearanceSettingsControls.tsx
 msgid "Accent color"
 msgstr "Accent color"
 
@@ -208,6 +212,10 @@ msgstr "Mobile"
 msgid "Notifications"
 msgstr "Notifications"
 
+#: src/features/settings/ui/AppearanceSettingsControls.tsx
+msgid "Orders every list in the sidebar. Recent also floats the sections themselves, so dragging them waits for A–Z. A section you have set from its own menu keeps that order."
+msgstr "Orders every list in the sidebar. Recent also floats the sections themselves, so dragging them waits for A–Z. A section you have set from its own menu keeps that order."
+
 #: src/features/settings/ui/SettingsView.tsx
 msgid "Personal"
 msgstr "Personal"
@@ -233,6 +241,10 @@ msgid "Prominent active tab"
 msgstr "Prominent active tab"
 
 #: src/features/settings/ui/AppearanceSettingsControls.tsx
+msgid "Recent"
+msgstr "Recent"
+
+#: src/features/settings/ui/AppearanceSettingsControls.tsx
 msgid "Reset glass opacity"
 msgstr "Reset glass opacity"
 
@@ -240,9 +252,21 @@ msgstr "Reset glass opacity"
 msgid "Rich"
 msgstr "Rich"
 
+#: src/features/settings/ui/AppearanceSettingsControls.tsx
+msgid "Row height and the spacing around section headers"
+msgstr "Row height and the spacing around section headers"
+
 #: src/features/settings/ui/SettingsPanels.tsx
 msgid "Shortcuts"
 msgstr "Shortcuts"
+
+#: src/features/settings/ui/AppearanceSettingsControls.tsx
+msgid "Sidebar density"
+msgstr "Sidebar density"
+
+#: src/features/settings/ui/AppearanceSettingsControls.tsx
+msgid "Sidebar order"
+msgstr "Sidebar order"
 
 #: src/features/settings/ui/AppearanceSettingsControls.tsx
 msgid "Small cards with a thumbnail"
