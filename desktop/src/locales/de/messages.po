@@ -24,6 +24,10 @@ msgid "{label} settings sections"
 msgstr "{label} – Einstellungsbereiche"
 
 #: src/features/settings/ui/AppearanceSettingsControls.tsx
+msgid "A–Z"
+msgstr "A–Z"
+
+#: src/features/settings/ui/AppearanceSettingsControls.tsx
 msgid "Accent color"
 msgstr "Akzentfarbe"
 
@@ -208,6 +212,10 @@ msgstr "Mobil"
 msgid "Notifications"
 msgstr "Benachrichtigungen"
 
+#: src/features/settings/ui/AppearanceSettingsControls.tsx
+msgid "Orders every list in the sidebar. Recent also floats the sections themselves, so dragging them waits for A–Z. A section you have set from its own menu keeps that order."
+msgstr "Ordnet jede Liste in der Seitenleiste. „Zuletzt“ lässt außerdem die Abschnitte selbst nach oben rücken, sodass das Verschieben per Drag-and-drop erst bei A–Z möglich ist. Ein Abschnitt, den du über sein eigenes Menü festgelegt hast, behält seine Sortierung."
+
 #: src/features/settings/ui/SettingsView.tsx
 msgid "Personal"
 msgstr "Persönlich"
@@ -233,6 +241,10 @@ msgid "Prominent active tab"
 msgstr "Hervorgehobener aktiver Tab"
 
 #: src/features/settings/ui/AppearanceSettingsControls.tsx
+msgid "Recent"
+msgstr "Zuletzt"
+
+#: src/features/settings/ui/AppearanceSettingsControls.tsx
 msgid "Reset glass opacity"
 msgstr "Deckkraft des Glases zurücksetzen"
 
@@ -240,9 +252,21 @@ msgstr "Deckkraft des Glases zurücksetzen"
 msgid "Rich"
 msgstr "Ausführlich"
 
+#: src/features/settings/ui/AppearanceSettingsControls.tsx
+msgid "Row height and the spacing around section headers"
+msgstr "Zeilenhöhe und Abstände um Abschnittsüberschriften"
+
 #: src/features/settings/ui/SettingsPanels.tsx
 msgid "Shortcuts"
 msgstr "Tastenkürzel"
+
+#: src/features/settings/ui/AppearanceSettingsControls.tsx
+msgid "Sidebar density"
+msgstr "Dichte der Seitenleiste"
+
+#: src/features/settings/ui/AppearanceSettingsControls.tsx
+msgid "Sidebar order"
+msgstr "Sortierung der Seitenleiste"
 
 #: src/features/settings/ui/AppearanceSettingsControls.tsx
 msgid "Small cards with a thumbnail"
