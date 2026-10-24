@@ -294,21 +294,45 @@ export function getCachedMediaProxyPort(): number | null {
 }
 
 /**
- * Origins of relays this workspace used to live on. A media URL on one of
- * these is treated as our own: the blob is content-addressed by sha256, so the
- * same path resolves against the current relay once the file has been uploaded
- * there. Without this, history written before a relay migration keeps pointing
- * at the old host, which stops answering as soon as the move is finished.
+ * Relay migrations this app knows about, keyed by the origin of the relay the
+ * workspace is on **now**. A media URL on one of the mapped predecessors is
+ * treated as our own: the blob is content-addressed by sha256, so the same path
+ * resolves against the current relay once the file has been uploaded there.
+ * Without this, history written before a relay migration keeps pointing at the
+ * old host, which stops answering as soon as the move is finished.
+ *
+ * Keying on the current relay is what keeps the rewrite scoped to the community
+ * that actually did the move. A flat list of predecessor origins would make
+ * *every* build claim them, so an unrelated community would resolve a
+ * `kikeriki` URL against its own relay, which has no such blob — an image that
+ * renders today would go blank.
  *
  * Only exact origins belong here, never a blanket "any host" rule — a real
  * third-party Blossom host must still pass through untouched.
  */
-const LEGACY_RELAY_ORIGINS: ReadonlySet<string> = new Set([
-  "https://kikeriki.communities.buzz.xyz",
+const LEGACY_RELAY_ORIGINS_BY_CURRENT: ReadonlyMap<
+  string,
+  ReadonlySet<string>
+> = new Map([
+  [
+    "https://relay.ki.keriki.de",
+    new Set(["https://kikeriki.communities.buzz.xyz"]) as ReadonlySet<string>,
+  ],
 ]);
 
-function isLegacyRelayOrigin(origin: string | null): boolean {
-  return origin !== null && LEGACY_RELAY_ORIGINS.has(origin);
+/**
+ * Whether `urlOrigin` is a relay the community on `currentRelayOrigin` moved
+ * off. Both arguments must already be canonicalized by {@link canonicalOrigin}.
+ */
+function isLegacyOriginForCurrentRelay(
+  urlOrigin: string | null,
+  currentRelayOrigin: string,
+): boolean {
+  if (urlOrigin === null) return false;
+  return (
+    LEGACY_RELAY_ORIGINS_BY_CURRENT.get(currentRelayOrigin)?.has(urlOrigin) ??
+    false
+  );
 }
 
 /**
@@ -340,7 +364,10 @@ export function rewriteRelayUrl(url: string): string {
   // was typed with uppercase (e.g. wss://PENDING-SEED.communities.buzz.xyz).
   if (cachedRelayOrigin) {
     const urlOrigin = canonicalOrigin(url);
-    if (urlOrigin !== cachedRelayOrigin && !isLegacyRelayOrigin(urlOrigin)) {
+    if (
+      urlOrigin !== cachedRelayOrigin &&
+      !isLegacyOriginForCurrentRelay(urlOrigin, cachedRelayOrigin)
+    ) {
       return url;
     }
   }
