@@ -43,7 +43,10 @@ function makeIcns(path, source) {
   const iconset = `${path}.iconset`;
   mkdirSync(iconset, { recursive: true });
   copyFileSync(join(icons, source), join(iconset, "icon_128x128.png"));
-  copyFileSync(join(icons, "128x128@2x.png"), join(iconset, "icon_128x128@2x.png"));
+  copyFileSync(
+    join(icons, "128x128@2x.png"),
+    join(iconset, "icon_128x128@2x.png"),
+  );
   run("iconutil", ["--convert", "icns", iconset, "--output", path]);
 }
 
@@ -98,12 +101,17 @@ function buildDmg(overrides = {}) {
   const background = join(source, ".background/background.png");
   copyFileSync(join(icons, "128x128@2x.png"), background);
   run("sips", [
-    "-s", "dpiWidth", String(backgroundDpi),
-    "-s", "dpiHeight", String(backgroundDpi),
+    "-s",
+    "dpiWidth",
+    String(backgroundDpi),
+    "-s",
+    "dpiHeight",
+    String(backgroundDpi),
     background,
   ]);
 
-  if (applicationsLink) symlinkSync("/Applications", join(source, "Applications"));
+  if (applicationsLink)
+    symlinkSync("/Applications", join(source, "Applications"));
 
   run("codesign", ["--force", "--deep", "--sign", "-", app]);
 
@@ -112,14 +120,27 @@ function buildDmg(overrides = {}) {
   // or the unstyled case below would pass for the wrong reason.
   const rw = join(dir, "read-write.dmg");
   run("hdiutil", [
-    "create", "-volname", NAME, "-srcfolder", source,
-    "-format", "UDRW", "-ov", rw,
+    "create",
+    "-volname",
+    NAME,
+    "-srcfolder",
+    source,
+    "-format",
+    "UDRW",
+    "-ov",
+    rw,
   ]);
   const mount = join(dir, "mount");
   mkdirSync(mount, { recursive: true });
   run("hdiutil", [
-    "attach", "-readwrite", "-noverify", "-noautoopen", "-nobrowse",
-    "-mountpoint", mount, rw,
+    "attach",
+    "-readwrite",
+    "-noverify",
+    "-noautoopen",
+    "-nobrowse",
+    "-mountpoint",
+    mount,
+    rw,
   ]);
   try {
     // fsync, not writeFileSync: an unflushed write is still in the page cache
@@ -146,7 +167,16 @@ function buildDmg(overrides = {}) {
 function verify(dmg, extra = []) {
   return spawnSync(
     script,
-    [dmg, "--identifier", IDENTIFIER, "--name", NAME, "--version", VERSION, ...extra],
+    [
+      dmg,
+      "--identifier",
+      IDENTIFIER,
+      "--name",
+      NAME,
+      "--version",
+      VERSION,
+      ...extra,
+    ],
     { encoding: "utf8" },
   );
 }
@@ -171,13 +201,18 @@ test("a well-formed DMG passes every check", { skip }, () => {
 // Each case below removes exactly one property of the good fixture. A check
 // that cannot be made to fail is not protecting anything.
 test("a mismatched bundle identifier fails", { skip }, () => {
-  withDmg({ identifier: "xyz.block.buzz.app.demo.other-fedcba9876543210" }, (result) => {
-    assert.equal(result.status, 1);
-    assert.match(result.stdout, /FAIL\s+CFBundleIdentifier is/);
-  });
+  withDmg(
+    { identifier: "xyz.block.buzz.app.demo.other-fedcba9876543210" },
+    (result) => {
+      assert.equal(result.status, 1);
+      assert.match(result.stdout, /FAIL\s+CFBundleIdentifier is/);
+    },
+  );
 });
 
-test("a CFBundleVersion that disagrees with the filename fails", { skip }, () => {
+test("a CFBundleVersion that disagrees with the filename fails", {
+  skip,
+}, () => {
   withDmg({ version: "20260202.0202" }, (result) => {
     assert.equal(result.status, 1);
     assert.match(result.stdout, /FAIL\s+CFBundleVersion is/);
