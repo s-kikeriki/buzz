@@ -294,6 +294,24 @@ export function getCachedMediaProxyPort(): number | null {
 }
 
 /**
+ * Origins of relays this workspace used to live on. A media URL on one of
+ * these is treated as our own: the blob is content-addressed by sha256, so the
+ * same path resolves against the current relay once the file has been uploaded
+ * there. Without this, history written before a relay migration keeps pointing
+ * at the old host, which stops answering as soon as the move is finished.
+ *
+ * Only exact origins belong here, never a blanket "any host" rule — a real
+ * third-party Blossom host must still pass through untouched.
+ */
+const LEGACY_RELAY_ORIGINS: ReadonlySet<string> = new Set([
+  "https://kikeriki.communities.buzz.xyz",
+]);
+
+function isLegacyRelayOrigin(origin: string | null): boolean {
+  return origin !== null && LEGACY_RELAY_ORIGINS.has(origin);
+}
+
+/**
  * Build the local proxy URL with an IPv4 literal. The Rust proxy binds
  * `127.0.0.1:0`, not `::1`, and some WebViews resolve `localhost` to IPv6
  * first. Matching the bind address avoids machine-dependent image failures.
@@ -322,7 +340,7 @@ export function rewriteRelayUrl(url: string): string {
   // was typed with uppercase (e.g. wss://PENDING-SEED.communities.buzz.xyz).
   if (cachedRelayOrigin) {
     const urlOrigin = canonicalOrigin(url);
-    if (urlOrigin !== cachedRelayOrigin) {
+    if (urlOrigin !== cachedRelayOrigin && !isLegacyRelayOrigin(urlOrigin)) {
       return url;
     }
   }
