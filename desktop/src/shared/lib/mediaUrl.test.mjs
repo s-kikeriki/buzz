@@ -373,3 +373,45 @@ test("rewriteRelayUrl: still passes external Blossom URLs through unchanged", as
     globalThis.window = previousWindow;
   }
 });
+
+test("rewriteRelayUrl: proxies media left behind on a previous relay origin", async () => {
+  const previousWindow = globalThis.window;
+
+  globalThis.window = {
+    __TAURI_INTERNALS__: {
+      invoke(command) {
+        if (command === "get_media_proxy_port") return Promise.resolve(54321);
+        if (command === "get_relay_http_url") {
+          return Promise.resolve("https://relay.ki.keriki.de");
+        }
+        return Promise.reject(new Error(`Unexpected command: ${command}`));
+      },
+    },
+  };
+
+  try {
+    const mediaUrl = await import(`./mediaUrl.ts?legacy=${Date.now()}`);
+    await new Promise((resolve) => setTimeout(resolve, 0));
+
+    // History written before the relay move still carries the old host. The
+    // blob is content-addressed, so it resolves against the current relay.
+    const legacyUrl = `https://kikeriki.communities.buzz.xyz/media/${HASH}.png`;
+    assert.equal(
+      mediaUrl.rewriteRelayUrl(legacyUrl),
+      mediaUrl.mediaProxyUrl(54321, `${HASH}.png`),
+    );
+
+    // A thumbnail on the old host resolves the same way.
+    const legacyThumb = `https://kikeriki.communities.buzz.xyz/media/${HASH}.thumb.jpg`;
+    assert.equal(
+      mediaUrl.rewriteRelayUrl(legacyThumb),
+      mediaUrl.mediaProxyUrl(54321, `${HASH}.thumb.jpg`),
+    );
+
+    // An unrelated Blossom host is still none of our business.
+    const externalUrl = `https://nostr.build/media/${HASH}.png`;
+    assert.equal(mediaUrl.rewriteRelayUrl(externalUrl), externalUrl);
+  } finally {
+    globalThis.window = previousWindow;
+  }
+});
