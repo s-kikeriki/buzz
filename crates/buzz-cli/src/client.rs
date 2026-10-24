@@ -34,6 +34,15 @@ pub struct BlobDescriptor {
     /// Duration in seconds for video/audio (optional).
     #[serde(skip_serializing_if = "Option::is_none")]
     pub duration: Option<f64>,
+    /// Original filename, captured client-side from the uploaded path.
+    ///
+    /// The relay never sends this — it stores blobs by hash and its descriptor
+    /// has no filename field — so it is filled in by `upload_file` after the
+    /// response is parsed, matching how Desktop carries `file.name` through its
+    /// own upload. It is the only human-readable name a receiver ever sees: the
+    /// file card's label and the save-dialog name both come from imeta.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub filename: Option<String>,
 }
 
 /// Build an `imeta` tag array from a BlobDescriptor (NIP-92 media metadata).
@@ -57,10 +66,60 @@ pub fn build_imeta_tag(d: &BlobDescriptor) -> Vec<String> {
     if let Some(dur) = d.duration {
         tag.push(format!("duration {dur}"));
     }
+    // Last, matching the field order Desktop's `buildImetaTags` emits.
+    if let Some(ref name) = d.filename {
+        tag.push(format!("filename {name}"));
+    }
     tag
 }
 
-/// MIME types accepted for upload.
+/// Escape the markdown link-label metacharacters, so a filename containing
+/// `[`, `]` or `\` still renders as one link with the correct visible text.
+/// Mirrors the same escape in Desktop's `formatImetaMediaLine`.
+fn escape_link_label(label: &str) -> String {
+    let mut out = String::with_capacity(label.len());
+    for ch in label.chars() {
+        if matches!(ch, '\\' | '[' | ']') {
+            out.push('\\');
+        }
+        out.push(ch);
+    }
+    out
+}
+
+/// Format one attachment as the markdown line appended to a message body.
+///
+/// The renderer only draws an attachment whose URL is literally present in the
+/// content, and it picks the widget from the markdown form: `![image|video]`
+/// becomes inline media, while a plain `[label](url)` link whose href matches an
+/// imeta entry with a non-media MIME is upgraded to a download file card
+/// (`resolveFileCard` in Desktop). Emitting `![image](…)` for a PDF therefore
+/// produced a broken inline image rather than a file card.
+///
+/// Mirrors Desktop's `formatImetaMediaLine`. Its composer-only cases (snapshot
+/// PNGs, packaged voice notes) have no CLI analogue and are deliberately absent.
+pub fn format_media_line(d: &BlobDescriptor) -> String {
+    if d.mime_type.starts_with("video/") {
+        return format!("\n![video]({})", d.url);
+    }
+    if d.mime_type.starts_with("image/") {
+        return format!("\n![image]({})", d.url);
+    }
+    let label = d
+        .filename
+        .as_deref()
+        .map(str::trim)
+        .filter(|name| !name.is_empty())
+        .or_else(|| d.url.rsplit('/').next().filter(|tail| !tail.is_empty()))
+        .unwrap_or("file");
+    format!("\n[{}]({})", escape_link_label(label), d.url)
+}
+
+/// MIME types that take the relay's image or video pipeline.
+///
+/// Everything else goes up the generic attachment path on the same `/upload`
+/// route (`process_file_upload` relay-side), so documents, archives, text and
+/// data are uploads too — only the deny-lists below are refused.
 const ALLOWED_MIMES: &[&str] = &[
     "image/jpeg",
     "image/png",
@@ -69,11 +128,73 @@ const ALLOWED_MIMES: &[&str] = &[
     "video/mp4",
 ];
 
+/// Types the relay refuses on the generic attachment path.
+///
+/// Mirrors `BLOCKED_FILE_MIME_TYPES` in `buzz-media`: active web content and
+/// native executables. Refusing them here saves a doomed round trip; the relay
+/// is still the authority.
+const BLOCKED_FILE_MIMES: &[&str] = &[
+    "application/xhtml+xml",
+    "image/svg+xml",
+    "application/javascript",
+    "text/javascript",
+    "application/x-msdownload",
+    "application/x-executable",
+    "application/vnd.microsoft.portable-executable",
+    "application/x-mach-binary",
+    "application/x-sharedlib",
+    "application/x-elf",
+    "application/x-msi",
+    "application/vnd.android.package-archive",
+    "application/x-apple-diskimage",
+];
+
+/// Whether the leading bytes are an ISO-BMFF `ftyp` container (MP4, M4A, MOV,
+/// HEIF, AVIF — all share the box).
+///
+/// Such a body is never refused locally: `buzz-media` owns the compatible-brand
+/// list (`looks_like_mp4_iso_bmff`) and accepts a container whose *major* brand
+/// `infer` does not recognise as long as it declares an MP4-compatible brand.
+/// Guessing from the sniffed MIME alone would refuse uploads the relay takes.
+fn looks_like_iso_bmff_container(bytes: &[u8]) -> bool {
+    bytes.len() >= 8 && &bytes[4..8] == b"ftyp"
+}
+
+/// Whether the relay will refuse this body outright, so the CLI can say so
+/// without spending the upload.
+///
+/// Two deny-lists, because the relay has two:
+///   * `BLOCKED_FILE_MIMES` — active content and executables.
+///   * Recognised media off the image/video pipeline. `validate_file_content`
+///     rejects *any* sniffed `image/`, `video/` or `audio/` type on the generic
+///     path, so a BMP, a FLAC or an MP3 has nowhere to land: the pipeline set
+///     will not take it and the attachment path will not either.
+fn refuse_locally(mime: &str, bytes: &[u8]) -> Option<String> {
+    if BLOCKED_FILE_MIMES.contains(&mime) {
+        return Some(format!("unsupported file type: {mime}"));
+    }
+    if ALLOWED_MIMES.contains(&mime) || looks_like_iso_bmff_container(bytes) {
+        return None;
+    }
+    if mime.starts_with("image/") || mime.starts_with("video/") || mime.starts_with("audio/") {
+        return Some(format!(
+            "unsupported file type: {mime} (the relay takes {} as media and \
+             refuses other recognised audio, image and video on the file path)",
+            ALLOWED_MIMES.join(", ")
+        ));
+    }
+    None
+}
+
 /// Maximum file size for image uploads (50 MB).
 const MAX_IMAGE_BYTES: u64 = 50 * 1024 * 1024;
 
 /// Maximum file size for video uploads (500 MB).
 const MAX_VIDEO_BYTES: u64 = 500 * 1024 * 1024;
+
+/// Maximum file size for generic attachments (100 MB), matching
+/// `default_max_file_bytes` in `buzz-media`.
+const MAX_FILE_BYTES: u64 = 100 * 1024 * 1024;
 
 /// Sign a NIP-98 HTTP auth event (kind:27235) and return the Authorization header value.
 ///
@@ -1221,15 +1342,17 @@ impl BuzzClient {
             .map(|t| t.mime_type().to_string())
             .unwrap_or_else(|| "application/octet-stream".to_string());
 
-        if !ALLOWED_MIMES.contains(&mime.as_str()) {
-            return Err(CliError::Usage(format!("unsupported file type: {mime}")));
+        if let Some(reason) = refuse_locally(&mime, &bytes) {
+            return Err(CliError::Usage(reason));
         }
 
-        // 3. Size check
+        // 3. Size check — the cap depends on which relay pipeline the bytes take.
         let max = if mime.starts_with("video/") {
             MAX_VIDEO_BYTES
-        } else {
+        } else if ALLOWED_MIMES.contains(&mime.as_str()) {
             MAX_IMAGE_BYTES
+        } else {
+            MAX_FILE_BYTES
         };
         if bytes.len() as u64 > max {
             return Err(CliError::Usage(format!(
@@ -1241,6 +1364,14 @@ impl BuzzClient {
 
         // 4. SHA-256
         let sha256 = hex::encode(Sha256::digest(&bytes));
+
+        // The relay stores blobs by hash and its descriptor carries no name, so
+        // the original filename has to be remembered here and stitched onto the
+        // response. Without it a file card falls back to the 64-hex URL tail.
+        let filename = std::path::Path::new(file_path)
+            .file_name()
+            .and_then(|n| n.to_str())
+            .map(str::to_string);
 
         // 5. PUT request to the BUD-02 /upload endpoint with a generous timeout.
         // Auth is signed per attempt — matches the per-attempt signing pattern in download_media.
@@ -1291,7 +1422,10 @@ impl BuzzClient {
         // (404 or 405), fall back to the legacy /media/upload endpoint.  The 404/405 switch
         // itself is not retried; only transient failures on the selected legacy endpoint are.
         match result {
-            Ok(desc) => return Ok(desc),
+            Ok(mut desc) => {
+                desc.filename = filename;
+                return Ok(desc);
+            }
             Err(CliError::Relay { status: s, body: _ })
                 if should_retry_legacy_upload(
                     reqwest::StatusCode::from_u16(s).unwrap_or(reqwest::StatusCode::NOT_FOUND),
@@ -1303,34 +1437,38 @@ impl BuzzClient {
         }
 
         let legacy_url = format!("{}/media/upload", self.relay_url);
-        self.with_retry_body(|| {
-            let upload_body = upload_body.clone();
-            let legacy_url = legacy_url.clone();
-            let mime = mime.clone();
-            let sha256 = sha256.clone();
-            async move {
-                let auth_header = sign_blossom_upload(&self.keys, &sha256, &mime, &self.relay_url)?;
-                let resp = self
-                    .with_auth_tag(
-                        self.http
-                            .put(&legacy_url)
-                            .timeout(upload_timeout)
-                            .header("Authorization", auth_header)
-                            .header("Content-Type", &mime)
-                            .header("X-SHA-256", &sha256)
-                            .body(upload_body),
-                    )
-                    .send()
-                    .await?;
-                if !resp.status().is_success() {
-                    let status = resp.status().as_u16();
-                    let body = resp.text().await.unwrap_or_default();
-                    return Err(CliError::Relay { status, body });
+        let mut desc = self
+            .with_retry_body(|| {
+                let upload_body = upload_body.clone();
+                let legacy_url = legacy_url.clone();
+                let mime = mime.clone();
+                let sha256 = sha256.clone();
+                async move {
+                    let auth_header =
+                        sign_blossom_upload(&self.keys, &sha256, &mime, &self.relay_url)?;
+                    let resp = self
+                        .with_auth_tag(
+                            self.http
+                                .put(&legacy_url)
+                                .timeout(upload_timeout)
+                                .header("Authorization", auth_header)
+                                .header("Content-Type", &mime)
+                                .header("X-SHA-256", &sha256)
+                                .body(upload_body),
+                        )
+                        .send()
+                        .await?;
+                    if !resp.status().is_success() {
+                        let status = resp.status().as_u16();
+                        let body = resp.text().await.unwrap_or_default();
+                        return Err(CliError::Relay { status, body });
+                    }
+                    resp.json::<BlobDescriptor>().await.map_err(CliError::from)
                 }
-                resp.json::<BlobDescriptor>().await.map_err(CliError::from)
-            }
-        })
-        .await
+            })
+            .await?;
+        desc.filename = filename;
+        Ok(desc)
     }
 
     /// Download a Blossom media blob using BUD-01 `t=get` auth.
@@ -2638,6 +2776,271 @@ mod tests {
         assert!(
             built.headers().get("x-auth-tag").is_none(),
             "x-auth-tag header must not be present when no auth tag is configured"
+        );
+    }
+}
+
+/// `buzz upload file` against a mock Blossom endpoint.
+///
+/// The claim under test is the one the CLI used to get wrong in both
+/// directions: a document must reach the relay, and a native executable must
+/// not — the relay refuses it, so spending the upload only wastes the round
+/// trip. Both assertions are bound to the request count, so a local gate that
+/// stops refusing (or starts over-refusing) fails here.
+#[cfg(test)]
+mod upload_file_tests {
+    use std::io::Write;
+    use std::net::SocketAddr;
+    use std::sync::atomic::{AtomicU32, Ordering};
+    use std::sync::Arc;
+    use std::sync::Mutex;
+
+    use axum::extract::{Request, State};
+    use axum::http::StatusCode;
+    use axum::routing::put;
+    use axum::Router;
+    use nostr::Keys;
+    use tokio::net::TcpListener;
+
+    use super::{build_imeta_tag, format_media_line, BlobDescriptor, BuzzClient};
+    use crate::error::CliError;
+
+    /// What the mock relay saw: one entry per `PUT /upload` it served.
+    type Seen = Arc<Mutex<Vec<String>>>;
+
+    /// A mock Blossom `/upload` that echoes a descriptor and records the
+    /// `Content-Type` of every request it received.
+    async fn upload_server() -> (String, Seen, Arc<AtomicU32>) {
+        let seen: Seen = Arc::new(Mutex::new(Vec::new()));
+        let counter = Arc::new(AtomicU32::new(0));
+        let state = (seen.clone(), counter.clone());
+
+        type S = (Seen, Arc<AtomicU32>);
+        let app = Router::new()
+            .route(
+                "/upload",
+                put(|State((seen, ctr)): State<S>, req: Request| async move {
+                    ctr.fetch_add(1, Ordering::SeqCst);
+                    let mime = req
+                        .headers()
+                        .get("content-type")
+                        .and_then(|v| v.to_str().ok())
+                        .unwrap_or("")
+                        .to_string();
+                    let sha = req
+                        .headers()
+                        .get("x-sha-256")
+                        .and_then(|v| v.to_str().ok())
+                        .unwrap_or("")
+                        .to_string();
+                    seen.lock().unwrap().push(mime.clone());
+                    // Shaped like the relay's descriptor — note it carries no
+                    // filename, which is exactly why the client must keep it.
+                    let body = serde_json::json!({
+                        "url": format!("https://relay.test/media/{sha}.pdf"),
+                        "sha256": sha,
+                        "size": 9,
+                        "type": mime,
+                        "uploaded": 0,
+                    })
+                    .to_string();
+                    (StatusCode::OK, [("content-type", "application/json")], body)
+                }),
+            )
+            .with_state(state);
+
+        let listener = TcpListener::bind("127.0.0.1:0").await.unwrap();
+        let addr: SocketAddr = listener.local_addr().unwrap();
+        tokio::spawn(async move { axum::serve(listener, app).await.unwrap() });
+        (format!("http://{addr}"), seen, counter)
+    }
+
+    fn write_temp(name: &str, bytes: &[u8]) -> (tempfile::TempDir, String) {
+        let dir = tempfile::tempdir().unwrap();
+        let path = dir.path().join(name);
+        let mut f = std::fs::File::create(&path).unwrap();
+        f.write_all(bytes).unwrap();
+        f.flush().unwrap();
+        (dir, path.to_str().unwrap().to_string())
+    }
+
+    /// Minimal PDF: `infer` keys on the `%PDF` signature.
+    fn pdf_bytes() -> Vec<u8> {
+        b"%PDF-1.4\n".to_vec()
+    }
+
+    /// Minimal 64-bit ELF header — `infer`'s executable matcher needs the
+    /// `\x7FELF` magic plus a plausible header, not just the four bytes.
+    fn elf_bytes() -> Vec<u8> {
+        let mut bytes = vec![0u8; 64];
+        bytes[..4].copy_from_slice(b"\x7FELF");
+        bytes[4] = 2; // 64-bit
+        bytes[5] = 1; // little-endian
+        bytes[6] = 1; // ELF version
+        bytes[16] = 2; // ET_EXEC
+        bytes
+    }
+
+    #[tokio::test]
+    async fn pdf_uploads_and_keeps_its_filename() {
+        let (base, seen, count) = upload_server().await;
+        let (_dir, path) = write_temp("quarterly report.pdf", &pdf_bytes());
+
+        let client = BuzzClient::new(base, Keys::generate(), None, None).unwrap();
+        let desc = client
+            .upload_file(&path)
+            .await
+            .expect("the relay takes documents on the generic file path");
+
+        assert_eq!(count.load(Ordering::SeqCst), 1, "exactly one upload");
+        assert_eq!(
+            seen.lock().unwrap().as_slice(),
+            ["application/pdf"],
+            "the sniffed MIME must be what is sent, not application/octet-stream"
+        );
+        assert_eq!(desc.mime_type, "application/pdf");
+        assert_eq!(
+            desc.filename.as_deref(),
+            Some("quarterly report.pdf"),
+            "the relay sends no filename, so the client must carry the local one"
+        );
+
+        // The receiver only ever sees these two. A missing `filename` field
+        // leaves the file card labelled with the 64-hex URL tail, and an
+        // `![image]` line renders a broken image instead of a file card.
+        assert!(
+            build_imeta_tag(&desc).contains(&"filename quarterly report.pdf".to_string()),
+            "imeta must carry the filename: {:?}",
+            build_imeta_tag(&desc)
+        );
+        assert_eq!(
+            format_media_line(&desc),
+            format!("\n[quarterly report.pdf]({})", desc.url)
+        );
+    }
+
+    #[tokio::test]
+    async fn elf_is_refused_without_spending_the_upload() {
+        let (base, _seen, count) = upload_server().await;
+        let (_dir, path) = write_temp("payload.bin", &elf_bytes());
+
+        let client = BuzzClient::new(base, Keys::generate(), None, None).unwrap();
+        let err = client
+            .upload_file(&path)
+            .await
+            .expect_err("the relay's deny-list refuses native executables");
+
+        assert!(
+            matches!(err, CliError::Usage(ref m) if m.contains("unsupported file type")),
+            "expected a usage error naming the type, got {err:?}"
+        );
+        assert_eq!(
+            count.load(Ordering::SeqCst),
+            0,
+            "a type the relay will refuse must not reach the network"
+        );
+    }
+
+    /// Recognised media that neither relay pipeline accepts. `infer` sniffs
+    /// these as `image/*` and `audio/*`, the image pipeline only takes
+    /// JPEG/PNG/GIF/WebP, and `validate_file_content` rejects any sniffed
+    /// image, video or audio on the generic path — so they have nowhere to
+    /// land and the CLI says so locally.
+    #[tokio::test]
+    async fn media_off_both_pipelines_is_refused_locally() {
+        for (name, bytes) in [
+            ("sheet.bmp", b"BM\x3a\x00\x00\x00".to_vec()),
+            ("song.flac", b"fLaC\x00\x00\x00\x22".to_vec()),
+        ] {
+            let (base, _seen, count) = upload_server().await;
+            let (_dir, path) = write_temp(name, &bytes);
+
+            let client = BuzzClient::new(base, Keys::generate(), None, None).unwrap();
+            let err = client
+                .upload_file(&path)
+                .await
+                .expect_err("neither relay pipeline accepts this");
+
+            assert!(
+                matches!(err, CliError::Usage(ref m) if m.contains("unsupported file type")),
+                "{name}: expected a usage error, got {err:?}"
+            );
+            assert_eq!(count.load(Ordering::SeqCst), 0, "{name} must not be sent");
+        }
+    }
+
+    /// An ISO-BMFF container is never refused on its sniffed MIME: `buzz-media`
+    /// owns the compatible-brand list and takes containers whose major brand
+    /// `infer` does not recognise. Guessing here would refuse valid uploads.
+    #[tokio::test]
+    async fn iso_bmff_container_is_left_to_the_relay() {
+        let mut bytes = vec![0u8; 32];
+        bytes[..4].copy_from_slice(&24u32.to_be_bytes());
+        bytes[4..8].copy_from_slice(b"ftyp");
+        bytes[8..12].copy_from_slice(b"qt  "); // a brand `infer` reads as MOV
+        bytes[12..16].copy_from_slice(&0u32.to_be_bytes());
+        bytes[16..20].copy_from_slice(b"isom"); // declared MP4-compatible
+
+        let (base, _seen, count) = upload_server().await;
+        let (_dir, path) = write_temp("clip.mov", &bytes);
+
+        let client = BuzzClient::new(base, Keys::generate(), None, None).unwrap();
+        let _ = client.upload_file(&path).await;
+        assert_eq!(
+            count.load(Ordering::SeqCst),
+            1,
+            "the brand decision belongs to the relay, not the CLI"
+        );
+    }
+
+    #[test]
+    fn media_lines_match_the_desktop_formatter() {
+        let base = BlobDescriptor {
+            url: "https://relay.test/media/aa.bin".to_string(),
+            sha256: "aa".to_string(),
+            size: 1,
+            mime_type: "application/pdf".to_string(),
+            uploaded: 0,
+            dim: None,
+            blurhash: None,
+            thumb: None,
+            duration: None,
+            filename: None,
+        };
+
+        // Inline media keeps the `![…]` form the renderer draws.
+        let image = BlobDescriptor {
+            mime_type: "image/png".to_string(),
+            filename: Some("shot.png".to_string()),
+            ..base.clone()
+        };
+        assert_eq!(
+            format_media_line(&image),
+            "\n![image](https://relay.test/media/aa.bin)"
+        );
+        let video = BlobDescriptor {
+            mime_type: "video/mp4".to_string(),
+            ..base.clone()
+        };
+        assert_eq!(
+            format_media_line(&video),
+            "\n![video](https://relay.test/media/aa.bin)"
+        );
+
+        // No filename: fall back to the URL tail, as Desktop does.
+        assert_eq!(
+            format_media_line(&base),
+            "\n[aa.bin](https://relay.test/media/aa.bin)"
+        );
+
+        // Link-label metacharacters are escaped so the link survives.
+        let awkward = BlobDescriptor {
+            filename: Some("a]b[c\\d.pdf".to_string()),
+            ..base.clone()
+        };
+        assert_eq!(
+            format_media_line(&awkward),
+            "\n[a\\]b\\[c\\\\d.pdf](https://relay.test/media/aa.bin)"
         );
     }
 }
