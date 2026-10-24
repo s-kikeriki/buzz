@@ -20,10 +20,22 @@ import { afterEach, test } from "node:test";
 import React from "react";
 import { createRoot } from "react-dom/client";
 import { act } from "react";
+import { I18nProvider } from "@lingui/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
+import { i18n } from "@/shared/i18n/i18n";
 import { SidebarProvider } from "@/shared/ui/sidebar";
 import { SettingsView, settingsNavGroups } from "./SettingsView.tsx";
+
+// ── i18n ──────────────────────────────────────────────────────────────────────
+// SettingsView calls useLingui, which throws outside an I18nProvider. The app
+// provides one at the root via AppI18nProvider; that wrapper renders null until
+// its catalogue import resolves, and the import needs the Lingui Vite plugin,
+// so activate an empty English catalogue here instead. These tests assert on
+// test ids, and with no catalogue Lingui renders the message id - the English
+// source string - so the labels stay readable either way.
+
+i18n.loadAndActivate({ locale: "en", messages: {} });
 
 // ── Browser API stubs ─────────────────────────────────────────────────────────
 // jsdom does not implement requestAnimationFrame or matchMedia. Stub them so
@@ -115,17 +127,21 @@ function mountSettingsView({
     await act(async () => {
       root.render(
         React.createElement(
-          QueryClientProvider,
-          { client: qc },
+          I18nProvider,
+          { i18n },
           React.createElement(
-            SidebarProvider,
-            {},
-            React.createElement(SettingsView, {
-              ...STUB_PROPS,
-              section,
-              onClose: () => {},
-              onSectionChange,
-            }),
+            QueryClientProvider,
+            { client: qc },
+            React.createElement(
+              SidebarProvider,
+              {},
+              React.createElement(SettingsView, {
+                ...STUB_PROPS,
+                section,
+                onClose: () => {},
+                onSectionChange,
+              }),
+            ),
           ),
         ),
       );
