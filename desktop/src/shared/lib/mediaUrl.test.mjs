@@ -373,3 +373,91 @@ test("rewriteRelayUrl: still passes external Blossom URLs through unchanged", as
     globalThis.window = previousWindow;
   }
 });
+
+test("rewriteRelayUrl: proxies media left behind on a previous relay origin", async () => {
+  const previousWindow = globalThis.window;
+
+  globalThis.window = {
+    __TAURI_INTERNALS__: {
+      invoke(command) {
+        if (command === "get_media_proxy_port") return Promise.resolve(54321);
+        if (command === "get_relay_http_url") {
+          return Promise.resolve("https://relay.ki.keriki.de");
+        }
+        return Promise.reject(new Error(`Unexpected command: ${command}`));
+      },
+    },
+  };
+
+  try {
+    const mediaUrl = await import(`./mediaUrl.ts?legacy=${Date.now()}`);
+    await new Promise((resolve) => setTimeout(resolve, 0));
+
+    // History written before the relay move still carries the old host. The
+    // blob is content-addressed, so it resolves against the current relay.
+    const legacyUrl = `https://kikeriki.communities.buzz.xyz/media/${HASH}.png`;
+    assert.equal(
+      mediaUrl.rewriteRelayUrl(legacyUrl),
+      mediaUrl.mediaProxyUrl(54321, `${HASH}.png`),
+    );
+
+    // A thumbnail on the old host resolves the same way.
+    const legacyThumb = `https://kikeriki.communities.buzz.xyz/media/${HASH}.thumb.jpg`;
+    assert.equal(
+      mediaUrl.rewriteRelayUrl(legacyThumb),
+      mediaUrl.mediaProxyUrl(54321, `${HASH}.thumb.jpg`),
+    );
+
+    // An unrelated Blossom host is still none of our business.
+    const externalUrl = `https://nostr.build/media/${HASH}.png`;
+    assert.equal(mediaUrl.rewriteRelayUrl(externalUrl), externalUrl);
+
+    // Documents are NOT covered, on either origin: RELAY_MEDIA_RE only matches
+    // the inline-media extensions, so a `.pdf` never reaches the proxy. Their
+    // download path is `download_file`, whose `validate_download_url` requires
+    // an exact current-relay origin — so a legacy-origin document is refused
+    // there, not here. Fixing that is a separate change on that gate.
+    const legacyPdf = `https://kikeriki.communities.buzz.xyz/media/${HASH}.pdf`;
+    assert.equal(mediaUrl.rewriteRelayUrl(legacyPdf), legacyPdf);
+    const currentPdf = `https://relay.ki.keriki.de/media/${HASH}.pdf`;
+    assert.equal(mediaUrl.rewriteRelayUrl(currentPdf), currentPdf);
+  } finally {
+    globalThis.window = previousWindow;
+  }
+});
+
+test("rewriteRelayUrl: a community that never moved does not claim the old origin", async () => {
+  const previousWindow = globalThis.window;
+
+  globalThis.window = {
+    __TAURI_INTERNALS__: {
+      invoke(command) {
+        if (command === "get_media_proxy_port") return Promise.resolve(54321);
+        if (command === "get_relay_http_url") {
+          return Promise.resolve("https://zeniad.communities.buzz.xyz");
+        }
+        return Promise.reject(new Error(`Unexpected command: ${command}`));
+      },
+    },
+  };
+
+  try {
+    const mediaUrl = await import(`./mediaUrl.ts?unrelated=${Date.now()}`);
+    await new Promise((resolve) => setTimeout(resolve, 0));
+
+    // The kikeriki move is keyed to the kikeriki relay. Another community's
+    // build must leave that host alone — proxying it would resolve the URL
+    // against a relay that has no such blob, blanking an image that renders.
+    const legacyUrl = `https://kikeriki.communities.buzz.xyz/media/${HASH}.png`;
+    assert.equal(mediaUrl.rewriteRelayUrl(legacyUrl), legacyUrl);
+
+    // Its own relay's media still goes through the proxy.
+    const ownUrl = `https://zeniad.communities.buzz.xyz/media/${HASH}.png`;
+    assert.equal(
+      mediaUrl.rewriteRelayUrl(ownUrl),
+      mediaUrl.mediaProxyUrl(54321, `${HASH}.png`),
+    );
+  } finally {
+    globalThis.window = previousWindow;
+  }
+});
