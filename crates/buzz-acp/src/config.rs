@@ -1264,15 +1264,14 @@ impl Config {
         // Inject CODEX_CONFIG so the @agentclientprotocol/codex-acp adapter (1.x)
         // opens the Seatbelt network sandbox for buzz-cli (an MCP subprocess). No-op
         // for non-Codex agents or unparseable relay URLs.
-        let has_generated_codex_config =
-            if let Some(network_env) =
-                codex_network_env(&agent_command, &agent_args, &args.relay_url)
-            {
-                persona_env_vars.push(network_env);
-                true
-            } else {
-                false
-            };
+        let has_generated_codex_config = if let Some(network_env) =
+            codex_network_env(&agent_command, &agent_args, &args.relay_url)
+        {
+            persona_env_vars.push(network_env);
+            true
+        } else {
+            false
+        };
 
         validate_multiple_event_handling(args.multiple_event_handling, args.dedup)?;
 
@@ -2031,7 +2030,10 @@ mod tests {
         // launcher and the runtime is named in the arguments.
         for (command, argv) in [
             ("npx", args(&["@agentclientprotocol/codex-acp"])),
-            ("npx", args(&["-y", "@agentclientprotocol/codex-acp@1.13.1"])),
+            (
+                "npx",
+                args(&["-y", "@agentclientprotocol/codex-acp@1.13.1"]),
+            ),
             ("npx", args(&["codex-acp"])),
             ("npm", args(&["exec", "@agentclientprotocol/codex-acp"])),
             ("pnpm", args(&["dlx", "@agentclientprotocol/codex-acp"])),
@@ -2042,9 +2044,7 @@ mod tests {
             ),
             (
                 "node",
-                args(&[
-                    "/Users/me/node_modules/@agentclientprotocol/codex-acp/dist/index.js",
-                ]),
+                args(&["/Users/me/node_modules/@agentclientprotocol/codex-acp/dist/index.js"]),
             ),
             (
                 "node",
@@ -2097,7 +2097,10 @@ mod tests {
         // `rfind('@')` on `@agentclientprotocol` is the scope's own sigil at
         // index 0; truncating there would leave an empty segment, and a
         // mis-split like that is how the whole spec stops matching.
-        assert_eq!(strip_package_version("@agentclientprotocol"), "@agentclientprotocol");
+        assert_eq!(
+            strip_package_version("@agentclientprotocol"),
+            "@agentclientprotocol"
+        );
         assert_eq!(strip_package_version("codex-acp@1.13.1"), "codex-acp");
         assert_eq!(strip_package_version("codex-acp"), "codex-acp");
         assert_eq!(strip_package_version("@scope/pkg@2"), "@scope/pkg");

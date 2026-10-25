@@ -119,10 +119,7 @@ mod tests {
         // The package is the runtime here; the command is a launcher.
         for (command, args) in [
             ("npx", vec!["@agentclientprotocol/codex-acp".to_string()]),
-            (
-                "node",
-                vec!["/opt/codex-acp/dist/index.js".to_string()],
-            ),
+            ("node", vec!["/opt/codex-acp/dist/index.js".to_string()]),
         ] {
             assert_eq!(
                 harness_addendum(command, &args, MCP),

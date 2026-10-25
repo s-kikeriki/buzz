@@ -51,9 +51,7 @@ globalThis.window.ResizeObserver = NoopObserver;
 const React = (await import("react")).default;
 const { act } = await import("react");
 const { createRoot } = await import("react-dom/client");
-const { AudioMessageAttachment } = await import(
-  "./AudioMessageAttachment.tsx"
-);
+const { AudioMessageAttachment } = await import("./AudioMessageAttachment.tsx");
 
 const HREF = `https://relay.example.test/media/${"a".repeat(64)}.mp3`;
 const DOWNLOAD_URL = HREF;
