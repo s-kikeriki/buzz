@@ -3,6 +3,7 @@ import { Download, FileText } from "lucide-react";
 import { toast } from "sonner";
 
 import { invokeTauri } from "@/shared/api/tauri";
+import { externalOpenWrittenName } from "@/shared/lib/externalOpenPolicy";
 import {
   Attachment,
   AttachmentAction,
@@ -31,6 +32,12 @@ import { formatFileSize } from "@/shared/ui/markdown/fileSize";
  * and gets bounced to a corporate CDN interstitial ("browser not supported").
  * The native command mirrors the image-download path. The preview path uses
  * the same URL validation and the same authenticated fetch, and writes nothing.
+ *
+ * Every name the card *shows* is the sanitized written name, matching the
+ * preview dialog. The sender's raw name still goes over IPC — the backend
+ * re-derives its own and decides what gets written — but it is never rendered:
+ * a U+202E in it reverses the text around it, so the card would advertise
+ * `invoice fdp.exe` as `invoice exe.pdf`.
  */
 export function FileCard({
   href,
@@ -47,6 +54,7 @@ export function FileCard({
   const [previewOpen, setPreviewOpen] = React.useState(false);
   const sizeLabel = size != null ? formatFileSize(size) : "";
   const kind = filePreviewKind({ filename, mime });
+  const writtenName = externalOpenWrittenName(filename);
 
   return (
     <>
@@ -56,7 +64,7 @@ export function FileCard({
             interactive element: `AttachmentActions` is already stacked above
             this (`z-20`), so each control owns exactly one accessible name. */}
         <button
-          aria-label={`Preview ${filename}`}
+          aria-label={`Preview ${writtenName}`}
           className="absolute inset-0 z-10 cursor-pointer rounded-2xl outline-hidden focus-visible:ring-1 focus-visible:ring-ring"
           data-testid="file-card-open"
           onClick={() => setPreviewOpen(true)}
@@ -66,14 +74,14 @@ export function FileCard({
           <FileText aria-hidden="true" />
         </AttachmentMedia>
         <AttachmentContent>
-          <AttachmentTitle>{filename}</AttachmentTitle>
+          <AttachmentTitle>{writtenName}</AttachmentTitle>
           {sizeLabel ? (
             <AttachmentDescription>{sizeLabel}</AttachmentDescription>
           ) : null}
         </AttachmentContent>
         <AttachmentActions>
           <AttachmentAction
-            aria-label={`Download ${filename}`}
+            aria-label={`Download ${writtenName}`}
             data-testid="file-card-download"
             onClick={() => {
               invokeTauri("download_file", { url: href, filename }).catch(

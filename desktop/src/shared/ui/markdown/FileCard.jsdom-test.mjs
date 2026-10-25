@@ -461,3 +461,69 @@ test("the card's own controls each own exactly one accessible name", async () =>
     "the card's click target must not contain another control",
   );
 });
+
+test("the card shows the sanitized name, in the title and in both labels", async () => {
+  // U+202E reverses the text that follows it, so the raw name renders as
+  // `invoice exe.pdf` — a document — while the file is `…fdp.exe`. The card is
+  // where that lie is read first: it is on screen before anything is clicked.
+  await mount({
+    filename: "invoice‮fdp.exe",
+    mime: "application/octet-stream",
+  });
+
+  const title = byTestId("file-card").querySelector(
+    "[data-slot='attachment-title']",
+  );
+  assert.ok(title, "the card must render a title");
+  assert.equal(title.textContent, "invoicefdp.exe");
+  assert.equal(
+    byTestId("file-card-open").getAttribute("aria-label"),
+    "Preview invoicefdp.exe",
+  );
+  assert.equal(
+    byTestId("file-card-download").getAttribute("aria-label"),
+    "Download invoicefdp.exe",
+  );
+
+  for (const text of [
+    title.textContent,
+    byTestId("file-card-open").getAttribute("aria-label"),
+    byTestId("file-card-download").getAttribute("aria-label"),
+  ]) {
+    assert.ok(!text.includes("‮"), "no rendered name may carry a bidi override");
+  }
+});
+
+test("the preview header agrees with the card it was opened from", async () => {
+  // Two names for one file is its own deception: the card says one thing, the
+  // dialog another, and the user reconciles them by trusting whichever is
+  // nearer. Both sides derive the same written name.
+  await mount({
+    filename: "notes‎.docx.hta",
+    mime: "application/octet-stream",
+  });
+  const cardTitle = byTestId("file-card").querySelector(
+    "[data-slot='attachment-title']",
+  ).textContent;
+
+  await click(byTestId("file-card-open"));
+
+  assert.equal(cardTitle, "notes.docx.hta");
+  assert.equal(byTestId("file-preview-name").textContent, cardTitle);
+});
+
+test("the sender's raw name still goes over IPC", async () => {
+  // The backend re-derives its own written name and decides from that. Passing
+  // it a name this side already rewrote would mean the two halves disagree
+  // about which file is being asked for — the drift this whole table exists to
+  // prevent — and would let the UI choose the bytes' destination.
+  responses.download_file = () => true;
+  const filename = "invoice‮fdp.exe";
+
+  await mount({ filename, mime: "application/octet-stream" });
+  await click(byTestId("file-card-download"));
+
+  assert.deepEqual(invocations, [
+    { command: "download_file", payload: { url: HREF, filename } },
+  ]);
+});
