@@ -1,8 +1,8 @@
 //! Shared agent capabilities. Intake and scheduling belong to each entry point;
 //! environment, credentials, adapter settings and prompt equipment belong here.
 use crate::{
-    build_mcp_servers, config::Config, current_working_directory, git, observer, pool, relay,
-    resolve_agent_owner, PromptContext,
+    build_mcp_servers, config::Config, current_working_directory, git, harness_prompt, observer,
+    pool, relay, resolve_agent_owner, PromptContext,
 };
 use anyhow::Result;
 use std::{collections::HashMap, time::Duration};
@@ -101,11 +101,16 @@ fn make_prompt_context(
             let base = base_prompt_content
                 .map(String::as_str)
                 .unwrap_or(include_str!("base_prompt.md"));
-            Some(if matches!(mode, SessionMode::Task) {
-                format!("{base}\n\n{}", include_str!("session_model_task.md"))
-            } else {
-                config.session_policy.append_session_model(base)
-            })
+            Some(harness_prompt::compose_base_prompt(
+                base,
+                if matches!(mode, SessionMode::Task) {
+                    harness_prompt::SessionModelFor::Task
+                } else {
+                    harness_prompt::SessionModelFor::Policy(config.session_policy)
+                },
+                &config.agent_command,
+                &config.mcp_command,
+            ))
         },
         heartbeat_prompt: config.heartbeat_prompt.clone(),
         cwd,
@@ -122,4 +127,71 @@ fn make_prompt_context(
         harness_name: crate::config::normalize_agent_command_identity(&config.agent_command),
         relay_url: config.relay_url.clone(),
     })
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::build_mcp_servers_tests::test_config;
+
+    /// `harness_prompt`'s own tests cover which runtimes get the addendum;
+    /// this one covers that the standing context the harness actually hands an
+    /// agent went through that function. Restoring the previous inline
+    /// composition here would leave every test in that module passing.
+    fn base_prompt_for(agent_command: &str, mcp_command: &str, mode: SessionMode) -> String {
+        let mut config = test_config();
+        config.agent_command = agent_command.into();
+        config.mcp_command = mcp_command.into();
+        let rest = relay::RestClient {
+            http: reqwest::Client::new(),
+            base_url: "http://localhost:3000".into(),
+            keys: config.keys.clone(),
+            auth_tag_json: None,
+        };
+        make_prompt_context(&config, rest, HashMap::new(), mode)
+            .expect("prompt context should build")
+            .base_prompt
+            .expect("a base prompt is configured")
+    }
+
+    const CODEX_HEADING: &str = "## Harness: Codex sandbox has no network";
+
+    #[test]
+    fn codex_sessions_carry_the_sandbox_note_in_their_standing_context() {
+        for mode in [SessionMode::Conversation, SessionMode::Task] {
+            let prompt = base_prompt_for("codex-acp", "buzz-dev-mcp", mode);
+            assert!(prompt.contains(CODEX_HEADING));
+            assert!(prompt.contains("You are an agent operating inside Buzz"));
+        }
+    }
+
+    #[test]
+    fn other_runtimes_standing_context_is_untouched() {
+        for command in ["goose", "claude-agent-acp"] {
+            let prompt = base_prompt_for(command, "buzz-dev-mcp", SessionMode::Conversation);
+            assert!(!prompt.contains("## Harness"));
+        }
+    }
+
+    #[test]
+    fn no_base_prompt_still_means_no_base_prompt() {
+        // The addendum rides on the composed base; `--no-base-prompt` agents
+        // get neither it nor the session model, as before this change.
+        let mut config = test_config();
+        config.agent_command = "codex-acp".into();
+        config.mcp_command = "buzz-dev-mcp".into();
+        config.no_base_prompt = true;
+        let rest = relay::RestClient {
+            http: reqwest::Client::new(),
+            base_url: "http://localhost:3000".into(),
+            keys: config.keys.clone(),
+            auth_tag_json: None,
+        };
+        assert!(
+            make_prompt_context(&config, rest, HashMap::new(), SessionMode::Conversation)
+                .expect("prompt context should build")
+                .base_prompt
+                .is_none()
+        );
+    }
 }
