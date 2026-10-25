@@ -1,5 +1,5 @@
 {
-  "comment": "Which attachments may be handed to the OS default application, keyed by the final filename extension. Read by desktop/src-tauri/src/external_open_policy.rs and desktop/src/shared/lib/externalOpenPolicy.ts — this file is the single source of truth for both; neither keeps its own copy. Three tiers: an extension in `safe` opens straight away, one in `executable` is never handed out at all, and anything else (including an unknown extension and a name with none) opens only after the user confirms. The sniffed MIME cannot answer this question: a script is plain text, so `infer` classifies .bat/.vbs/.desktop as application/octet-stream and the upload deny-list waves it through. Extensions only, lowercased, no leading dot.",
+  "comment": "Which attachments may be handed to the OS default application, keyed by the final filename extension. Read by desktop/src-tauri/src/external_open_policy.rs and desktop/src/shared/lib/externalOpenPolicy.ts — this file is the single source of truth for both; neither keeps its own copy. Three tiers: an extension in `safe` opens straight away, one in `executable` is never handed out at all, and anything else (including an unknown extension and a name with none) opens only after the user confirms. The sniffed MIME cannot answer this question: a script is plain text, so `infer` classifies .bat/.vbs/.desktop as application/octet-stream and the upload deny-list waves it through. Extensions only, lowercased, no leading dot. `extensionCharacterFolds` below is part of the same single source of truth: it is how a lookup is normalised before it reaches these tiers.",
   "safe": {
     "comment": "Formats whose default handler displays a document rather than running it. A viewer can still have its own parser bugs; this list is about not asking the OS to execute the sender's file. Deliberately narrower than it could be, and each omission is a decision: TEMPLATES (.dot .xlt .pot .dotx …) are out because an AutoExec/Auto_Open macro in a template fires on open, which is not what a document does; SPREADSHEET DATA (.csv .tsv) is out because its handler is Excel, where a cell beginning with = is a formula or DDE payload one warning dialog away from running; .epub and .svg are out because their handler is a browser, which sandboxes the script but still makes the document's outbound requests; .wmv and .wma are out because an ASF container can carry URLANDEXIT/SCRIPT commands that Windows Media Player honours. All of those land in the confirmation tier, not the refused one — they are things to ask about, not things to refuse. Note one asymmetry left deliberately unresolved: the macro-enabled DOCUMENT formats (.docm .xlsm .pptm .xlam .ppam) are in the refused tier, while the macro-enabled TEMPLATE formats that carry the same payload (.dotm .xltm .potm .ppsm .sldm) are still only confirmed. That is the requested list, not a judgement that a template is safer; if anything it is the more dangerous half. The legacy binary Office formats (.doc .xls .ppt) ARE here, because 'office docs' was the requirement; note they can carry VBA where their modern counterparts cannot, and what normally stops that macro is Protected View, which is Mark-of-the-Web-gated — see the quarantine marking in media_preview.rs.",
     "documents": [
@@ -53,7 +53,11 @@
   "executable": {
     "comment": "Extensions whose default handler runs code the sender chose, or puts the user one ordinary click away from it. Refused outright rather than put behind a confirmation: a dialog is a prompt to click through, and nothing a user can read off a filename tells them whether this one is safe. Download still works — saving a file to a location the user picked is a different act from asking the OS to run it. Five families qualify, and the rule is 'opening it runs the sender's code, or hands them the launcher': DIRECT EXECUTION (.exe .bat .vbs .jar .tool …), where the file's own contents are the program; INDIRECTION (.lnk .url .webloc .website .fileloc .inetloc .appref-ms .xbap), where the file names a target and the shell follows it, so the bytes on disk look harmless; INSTALLERS (.msi .msu .pkg .deb .application), which run setup logic as a matter of course; MACRO-BEARING OFFICE AND DATABASE FORMATS (.docm .xlsm .pptm .xlam .ppam .mdb .accde .adp .mda …), which are the same AutoOpen problem as the templates named in the safe tier, only explicit about it; and DISK IMAGES (.dmg .iso .img .vhd .vhdx), which mount into a browsable volume — opening one does not itself execute, but what it presents is a folder whose contents the user is one double-click from running, and the mount is a kernel filesystem driver parsing a stranger's bytes. Also here: .theme and .themepack, which can point Windows at a screensaver (.scr) to run, and .one, whose embedded attachments launch from inside the document. Archives are deliberately NOT here — .zip unpacks to files that face this gate again on their own merits — except .xip, where macOS runs a signed payload. Anything whose handler merely displays or parses the file belongs in the confirmation tier instead.",
     "windows": [
+      "accda",
+      "accdb",
       "accde",
+      "accdr",
+      "accdt",
       "ade",
       "adp",
       "application",
@@ -83,10 +87,15 @@
       "mda",
       "mdb",
       "mde",
+      "mdt",
+      "mdw",
+      "mdz",
       "msc",
       "msh",
       "msh1",
+      "msh1xml",
       "msh2",
+      "msh2xml",
       "mshxml",
       "msi",
       "msix",
@@ -188,5 +197,13 @@
     ],
     "diskImages": ["dmg", "img", "iso", "vhd", "vhdx"],
     "officeMacros": ["docm", "ppam", "pptm", "xlam", "xlsm"]
+  },
+  "extensionCharacterFolds": {
+    "comment": "Characters that are not ASCII but that a case-insensitive Win32 lookup resolves onto an ASCII letter, mapped to that letter. Both halves lowercase an extension before looking it up, and both do it ASCII-only — `to_ascii_lowercase` in Rust, an explicit A-Z replace in TypeScript — rather than calling their runtime's Unicode lowercasing, because the two runtimes do not agree: JavaScript's toLowerCase maps U+212A KELVIN SIGN to `k` and U+0130 to `i` plus a combining dot, while Rust's ASCII lowercasing leaves both alone. That difference is a drift between the tiers the UI offers and the ones the backend enforces, which is the failure this whole table exists to prevent. So the fold is this list and nothing else, applied identically on both sides. The entries: U+0131 DOTLESS I and U+017F LONG S, whose Unicode simple uppercase mappings are `I` and `S` — the table Win32's RtlUpcaseUnicodeString and NTFS $UpCase derive from, which is what makes `x.pıf` resolve to the PIF handler and `x.jſ` to the JS one; and U+212A KELVIN SIGN, which uppercases to itself and so probably is NOT collapsed by Win32, but which JavaScript already folded to `k` before this list existed, so folding it keeps the stricter of the two previous behaviours rather than relaxing either. NONE OF THE THREE IS VERIFIED ON WINDOWS — they are reasoned from the Unicode case tables, so the conservative reading is the one taken. The fold applies to the extension lookup and to the reserved-device-name comparison, never to the name written to disk: the bytes on disk stay the sender's, and what is normalised is only the question 'which handler will the OS pick for them'.",
+    "folds": {
+      "ı": "i",
+      "ſ": "s",
+      "K": "k"
+    }
   }
 }

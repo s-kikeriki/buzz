@@ -35,7 +35,7 @@ use std::sync::LazyLock;
 
 use regex::Regex;
 
-use crate::commands::media_filename::sanitize_filename;
+use crate::commands::media_filename::{bound_filename_length, strip_filename_components};
 
 /// The shared table, embedded at compile time.
 ///
@@ -58,10 +58,22 @@ struct PolicyTier {
     groups: BTreeMap<String, serde_json::Value>,
 }
 
+/// The non-ASCII characters a Win32 lookup resolves onto an ASCII letter.
+///
+/// See the `extensionCharacterFolds` comment in the JSON for what is in here
+/// and why each entry is. The `comment` field is not deserialized; `folds` is
+/// the table.
 #[derive(serde::Deserialize)]
+struct FoldTable {
+    folds: BTreeMap<String, String>,
+}
+
+#[derive(serde::Deserialize)]
+#[serde(rename_all = "camelCase")]
 struct PolicyFile {
     safe: PolicyTier,
     executable: PolicyTier,
+    extension_character_folds: FoldTable,
 }
 
 impl PolicyTier {
@@ -85,6 +97,7 @@ impl PolicyTier {
 struct ExtensionTables {
     safe: HashSet<String>,
     executable: HashSet<String>,
+    folds: Vec<(char, char)>,
 }
 
 static TABLES: LazyLock<ExtensionTables> = LazyLock::new(|| {
@@ -98,8 +111,43 @@ static TABLES: LazyLock<ExtensionTables> = LazyLock::new(|| {
     if let Some(both) = safe.intersection(&executable).next() {
         panic!("external-open-policy.json lists {both:?} as both safe and executable");
     }
-    ExtensionTables { safe, executable }
+    let folds = parsed
+        .extension_character_folds
+        .folds
+        .iter()
+        .map(|(from, to)| {
+            // One character to one character, so a fold cannot change a name's
+            // length or depend on being applied in a particular order.
+            let pair = (from.chars().next(), to.chars().next());
+            match (pair, from.chars().count(), to.chars().count()) {
+                ((Some(from), Some(to)), 1, 1) => (from, to),
+                _ => panic!("extensionCharacterFolds maps {from:?} to {to:?}, not one char to one"),
+            }
+        })
+        .collect();
+    ExtensionTables {
+        safe,
+        executable,
+        folds,
+    }
 });
+
+/// Resolve an extension or device stem the way a Win32 lookup would.
+///
+/// ASCII-lowercased — deliberately not Unicode-lowercased, because
+/// `externalOpenPolicy.ts` cannot match JavaScript's Unicode lowercasing
+/// against Rust's without the two disagreeing — then folded through the shared
+/// table, which is where the non-ASCII characters that collapse onto ASCII are
+/// handled explicitly rather than by whichever runtime happens to be deciding.
+fn folded_for_lookup(text: &str) -> String {
+    let mut folded = text.to_ascii_lowercase();
+    for (from, to) in &TABLES.folds {
+        if folded.contains(*from) {
+            folded = folded.replace(*from, &to.to_string());
+        }
+    }
+    folded
+}
 
 /// What may be done with an attachment of a given name.
 #[derive(Clone, Copy, PartialEq, Eq, Debug)]
@@ -123,6 +171,11 @@ pub enum ExternalOpenPolicy {
 /// - **Only the final extension counts.** `invoice.pdf.exe` is an executable;
 ///   the OS reads the last extension and so must we.
 ///
+/// The result is [`folded_for_lookup`], not merely lowercased, so `x.pıf` is
+/// looked up as `pif`: the characters that a case-insensitive Win32 lookup
+/// resolves onto ASCII are resolved here too, instead of leaving an extension
+/// that matches no tier and therefore only prompts.
+///
 /// Returns `""` for a component with no usable extension — including a dotfile
 /// like `.bashrc`, where the leading dot starts the name rather than an
 /// extension. That is [`ExternalOpenPolicy::NeedsConfirmation`], not allowed.
@@ -134,7 +187,7 @@ fn component_extension(component: &str) -> String {
     if dot == 0 || dot == base.len() - 1 {
         return String::new();
     }
-    base[dot + 1..].to_ascii_lowercase()
+    folded_for_lookup(&base[dot + 1..])
 }
 
 fn classify_component(component: &str) -> ExternalOpenPolicy {
@@ -174,9 +227,14 @@ static FORMAT_CHARACTERS: LazyLock<Regex> =
 /// "open" hands the OS a device rather than the document the user asked for.
 /// The match is on the stem — Win32 applies these with any extension, so
 /// `CON.txt` is the console too.
-const RESERVED_DEVICE_NAMES: [&str; 22] = [
+///
+/// The superscript forms are here because Win32's device-name parsing treats
+/// `COM¹` as `COM1`; the `$` names are the remaining DOS-era devices, of which
+/// `CLOCK$` is the one that predates the others' naming convention.
+const RESERVED_DEVICE_NAMES: [&str; 31] = [
     "con", "prn", "aux", "nul", "com1", "com2", "com3", "com4", "com5", "com6", "com7", "com8",
-    "com9", "lpt1", "lpt2", "lpt3", "lpt4", "lpt5", "lpt6", "lpt7", "lpt8", "lpt9",
+    "com9", "com¹", "com²", "com³", "lpt1", "lpt2", "lpt3", "lpt4", "lpt5", "lpt6", "lpt7", "lpt8",
+    "lpt9", "lpt¹", "lpt²", "lpt³", "conin$", "conout$", "clock$",
 ];
 
 /// Whether this name's stem is one of [`RESERVED_DEVICE_NAMES`].
@@ -185,20 +243,21 @@ const RESERVED_DEVICE_NAMES: [&str; 22] = [
 /// resolves, and it is trimmed before comparison because Win32 ignores trailing
 /// spaces in a device name — `"CON .txt"` is the console as surely as
 /// `"CON.txt"`.
+///
+/// Compared through [`folded_for_lookup`] for the same reason the extension is:
+/// if a Win32 lookup resolves `CONıN$` to the console, so must this.
 fn is_reserved_device_name(name: &str) -> bool {
-    let stem = name.split('.').next().unwrap_or(name).trim();
-    RESERVED_DEVICE_NAMES
-        .iter()
-        .any(|reserved| stem.eq_ignore_ascii_case(reserved))
+    let stem = folded_for_lookup(name.split('.').next().unwrap_or(name).trim());
+    RESERVED_DEVICE_NAMES.contains(&stem.as_str())
 }
 
 /// The name an attachment will actually be written under.
 ///
-/// [`sanitize_filename`] strips directory components, trims, removes control
-/// characters and bounds the length to 255 — enough for a save dialog, which
-/// only treats its result as a suggestion. Here the name is joined onto a real
-/// path and then handed to the operating system, so the things it leaves intact
-/// have to go as well. In order, because several of them can expose each other:
+/// [`strip_filename_components`] drops directory components, trims and removes
+/// control characters — enough for a save dialog, which only treats its result
+/// as a suggestion. Here the name is joined onto a real path and then handed to
+/// the operating system, so the things it leaves intact have to go as well. In
+/// order, because several of them can expose each other:
 ///
 /// 1. **Format characters** (`\p{Cf}`: U+200E/F, U+202A–202E, U+2066–2069, the
 ///    soft hyphen, …). `is_control` is the `Cc` category alone, so these
@@ -206,9 +265,8 @@ fn is_reserved_device_name(name: &str) -> bool {
 ///    `.exe` leaves the extension `"exe\u{200e}"`, which matches nothing in the
 ///    table, so a refusal silently becomes a prompt; and a U+202E renders
 ///    `invoice\u{202e}fdp.exe` as `invoice exe.pdf` to the person deciding
-///    whether to trust it. Stripped **before** the 255-character bound, so
-///    padding a name with invisible characters cannot push its real extension
-///    past the truncation point.
+///    whether to trust it. Stripped **before** the length bound, so padding a
+///    name with invisible characters cannot spend the budget.
 /// 2. `.` and `..`, which survive sanitization because they contain no
 ///    separator. `dir.join("..")` is the parent directory, not a file in it.
 /// 3. `:` and the other characters Windows reserves. A colon addresses an
@@ -222,6 +280,10 @@ fn is_reserved_device_name(name: &str) -> bool {
 /// 5. **Reserved device names**, prefixed with `_` rather than rejected. The
 ///    danger is the device, not the type, so `CON.txt` becomes `_CON.txt` and
 ///    is still classified on `.txt`.
+/// 6. **The length bound**, last, because the `_` above is the one step that
+///    lengthens a name. [`bound_filename_length`] spends the cut on the stem
+///    and keeps the extension, so no name is written under a type the sender
+///    did not give it.
 ///
 /// Every step is idempotent on this function's own output, and
 /// `a_written_name_is_a_fixed_point` is what holds that: the gate's correctness
@@ -229,8 +291,8 @@ fn is_reserved_device_name(name: &str) -> bool {
 /// the output changed it again the two would describe different files.
 pub fn written_name(filename: &str) -> String {
     let unformatted = FORMAT_CHARACTERS.replace_all(filename, "");
-    let sanitized = sanitize_filename(&unformatted);
-    let neutralized: String = sanitized
+    let stripped = strip_filename_components(&unformatted);
+    let neutralized: String = stripped
         .chars()
         .map(|c| {
             if matches!(c, ':' | '*' | '?' | '"' | '<' | '>' | '|') {
@@ -247,11 +309,10 @@ pub fn written_name(filename: &str) -> String {
     } else {
         trimmed.to_string()
     };
-    // The prefix above is the one step that can lengthen the name, so the bound
-    // is re-applied here rather than trusted from `sanitize_filename`. Trimming
-    // again afterwards keeps the result final: cutting the tail at 255 can
-    // expose a trailing dot that step 4 had nothing to trim.
-    let bounded: String = undeviced.chars().take(255).collect();
+    // Trimmed once more afterwards: the bound only preserves an extension when
+    // the tail plausibly is one, and the fallback cut can leave a trailing dot
+    // that step 4 had nothing to trim.
+    let bounded = bound_filename_length(&undeviced);
     let final_name = bounded.trim_end_matches(|c: char| c == '.' || c.is_whitespace());
     if final_name.is_empty() {
         "file".to_string()
@@ -568,6 +629,11 @@ mod tests {
             "minutes 2026-10.docx",
             &"a".repeat(300),
             &format!("{}.exe.pdf", "a".repeat(251)),
+            &format!("{}.pdf.exe", "a".repeat(251)),
+            // A name over the bound whose tail is too long to be an extension,
+            // so the cut lands in the tail and can expose a trailing dot.
+            &format!("{}.{}", "a".repeat(251), "b".repeat(40)),
+            &format!("{}.{}", "a".repeat(254), "b".repeat(40)),
             // Format characters, including ones placed so that removing them
             // exposes a trailing dot or empties the name entirely.
             "setup.exe\u{200e}",
@@ -582,8 +648,15 @@ mod tests {
             "CON",
             "CON.txt",
             "CON .txt",
+            "CONIN$.txt",
+            "CLOCK$",
+            "COM¹",
             &format!("CON.{}", "a".repeat(251)),
             &format!("NUL.{}", "a".repeat(300)),
+            // Folded lookups: the fold decides the tier, never the bytes, so
+            // these have to come back out unchanged.
+            "shortcut.pıf",
+            "CONıN$.txt",
         ] {
             let written = written_name(name);
             assert_eq!(
@@ -602,22 +675,47 @@ mod tests {
     }
 
     #[test]
-    fn truncation_cannot_turn_a_document_into_an_executable_unnoticed() {
-        // `sanitize_filename` bounds the name to 255 characters, so a long
-        // enough name loses its real extension and exposes an earlier one.
-        // The classification has to follow the truncated name, which it does
-        // because `approve` derives that name itself.
-        let deceptive = format!("{}.exe.pdf", "a".repeat(251));
-        assert!(
-            written_name(&deceptive).ends_with(".exe"),
-            "truncation should expose the .exe: {:?}",
-            written_name(&deceptive),
-        );
+    fn truncation_does_not_decide_the_type_the_name_is_written_under() {
+        // The name is bounded to 255 characters, and cutting the tail would
+        // make that bound choose the file's type: a 259-character
+        // `….exe.pdf` loses the `.pdf` and becomes an executable on disk,
+        // while `….pdf.exe` loses the `.exe` and becomes a document. The cut
+        // is spent on the stem instead, so in both directions the type that
+        // survives is the one the sender's name ended with — which is also the
+        // one the user was shown.
+        let document = format!("{}.exe.pdf", "a".repeat(251));
+        let written = written_name(&document);
+        assert_eq!(written.chars().count(), 255, "{written:?}");
+        assert!(written.ends_with(".pdf"), "{written:?}");
+        assert!(!written.contains(".exe"), "{written:?}");
         assert_eq!(
-            classify_external_open(&deceptive),
+            classify_external_open(&document),
+            ExternalOpenPolicy::Allowed
+        );
+        assert!(ApprovedOpenName::approve(&document, false).is_ok());
+
+        // And the mirror image, which is the half that matters: truncation
+        // must not launder an executable into something the gate allows.
+        let executable = format!("{}.pdf.exe", "a".repeat(251));
+        let written = written_name(&executable);
+        assert_eq!(written.chars().count(), 255, "{written:?}");
+        assert!(written.ends_with(".exe"), "{written:?}");
+        assert_eq!(
+            classify_external_open(&executable),
             ExternalOpenPolicy::Refused,
         );
-        assert!(ApprovedOpenName::approve(&deceptive, true).is_err());
+        assert!(ApprovedOpenName::approve(&executable, true).is_err());
+    }
+
+    #[test]
+    fn a_tail_too_long_to_be_an_extension_does_not_get_the_budget() {
+        // The stem is what gets shortened only while the tail really is an
+        // extension. A reserved stem with a 251-character tail is the case
+        // that proves the fallback still bounds the name — preserving that
+        // tail would leave three characters of stem.
+        let written = written_name(&format!("CON.{}", "a".repeat(251)));
+        assert_eq!(written.chars().count(), 255, "{written:?}");
+        assert!(written.starts_with("_CON.aaa"), "{written:?}");
     }
 
     #[test]
@@ -712,6 +810,17 @@ mod tests {
             // Win32 ignores trailing spaces in a device name, so the stem is
             // trimmed before it is compared.
             ("CON .txt", "_CON .txt"),
+            // Win32's device parsing reads the superscript digits as digits,
+            // and these three are DOS-era devices that do not follow the
+            // COMn/LPTn shape at all.
+            ("COM¹.txt", "_COM¹.txt"),
+            ("lpt³.pdf", "_lpt³.pdf"),
+            ("CONIN$.txt", "_CONIN$.txt"),
+            ("conout$.log", "_conout$.log"),
+            ("CLOCK$.txt", "_CLOCK$.txt"),
+            // And through the fold, because a lookup that resolves `CONıN$`
+            // to the console makes the dotless i a way around the list.
+            ("CONıN$.txt", "_CONıN$.txt"),
         ] {
             assert_eq!(written_name(name), expected, "{name} must be neutralized");
         }
@@ -751,8 +860,65 @@ mod tests {
     }
 
     #[test]
+    fn a_character_that_case_folds_onto_ascii_cannot_evade_a_tier() {
+        // `x.pıf` is not in either tier as written, so without the fold it is
+        // merely NeedsConfirmation — while a Win32 lookup, which upcases
+        // U+0131 to `I`, hands it to the PIF handler and runs it.
+        for (name, extension) in [
+            ("shortcut.pıf", ".pif"),
+            ("payload.jſ", ".js"),
+            ("ınstaller.mſı", ".msi"),
+            ("shortcut.lnK", ".lnk"),
+        ] {
+            assert_eq!(
+                classify_external_open(name),
+                ExternalOpenPolicy::Refused,
+                "{name} resolves to {extension} on Windows",
+            );
+            // The fold decides the lookup only. The bytes written to disk stay
+            // the sender's, so the file on disk is still the one being judged.
+            assert_eq!(written_name(name), name, "{name} must not be rewritten");
+        }
+
+        // It cuts the other way too: a folded extension must land in the tier
+        // it resolves to, not be refused for being unusual.
+        assert_eq!(
+            classify_external_open("report.pdſ"),
+            ExternalOpenPolicy::NeedsConfirmation,
+        );
+        assert_eq!(
+            classify_external_open("scan.tıf"),
+            ExternalOpenPolicy::Allowed,
+        );
+    }
+
+    #[test]
+    fn the_lookup_fold_is_the_shared_table_and_nothing_else() {
+        // Not Rust's Unicode lowercasing and not JavaScript's: those two
+        // disagree (JS maps U+212A to `k` and U+0130 to `i` plus a combining
+        // dot; `to_ascii_lowercase` leaves both), and a disagreement here is a
+        // button the frontend offers for something the backend refuses.
+        assert!(!TABLES.folds.is_empty(), "the fold table is empty");
+        for (from, to) in &TABLES.folds {
+            assert!(!from.is_ascii(), "folding {from:?} needs no table");
+            assert!(to.is_ascii(), "{from:?} must fold onto ASCII, not {to:?}");
+            // A fold whose output is another fold's input would make the
+            // result depend on iteration order.
+            assert!(
+                !TABLES.folds.iter().any(|(other, _)| other == to),
+                "{to:?} is both a fold target and a fold source",
+            );
+        }
+        // Characters outside the table are left exactly as they are: the
+        // lowercasing is ASCII-only, so `É` stays `É` and U+0130 stays itself
+        // rather than becoming whatever each runtime thinks its lowercase is.
+        assert_eq!(folded_for_lookup("ÉXE"), "Éxe");
+        assert_eq!(folded_for_lookup("İ"), "İ");
+    }
+
+    #[test]
     fn a_control_character_cannot_hide_an_extension() {
-        // `sanitize_filename` removes control characters, so `setup.exe\u{1}`
+        // Control characters are stripped, so `setup.exe\u{1}`
         // is written as `setup.exe`. Classifying the raw name would see an
         // unknown extension and merely ask.
         assert_eq!(written_name("setup.exe\u{1}"), "setup.exe");

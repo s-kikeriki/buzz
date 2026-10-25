@@ -227,6 +227,16 @@ test("a reserved device name is neutralized without changing its type", () => {
     ["COM1.docx", "_COM1.docx"],
     ["LPT9", "_LPT9"],
     ["CON .txt", "_CON .txt"],
+    // Win32 reads the superscript digits as digits, and these three are
+    // DOS-era devices that do not follow the COMn/LPTn shape.
+    ["COM¹.txt", "_COM¹.txt"],
+    ["lpt³.pdf", "_lpt³.pdf"],
+    ["CONIN$.txt", "_CONIN$.txt"],
+    ["conout$.log", "_conout$.log"],
+    ["CLOCK$.txt", "_CLOCK$.txt"],
+    // Folded, because a lookup that resolves CONıN$ to the console makes the
+    // dotless i a way around the list.
+    ["CONıN$.txt", "_CONıN$.txt"],
   ]) {
     assert.equal(externalOpenWrittenName(name), written, name);
   }
@@ -267,9 +277,20 @@ test("a written name is a fixed point", () => {
     "CON",
     "CON.txt",
     "CON .txt",
+    "CONIN$.txt",
+    "CLOCK$",
+    "COM¹",
     `CON.${"a".repeat(251)}`,
     `NUL.${"a".repeat(300)}`,
     `${"a".repeat(251)}.exe.pdf`,
+    `${"a".repeat(251)}.pdf.exe`,
+    // Over the bound with a tail too long to be an extension, so the cut
+    // lands in the tail and can expose a trailing dot.
+    `${"a".repeat(254)}.${"b".repeat(40)}`,
+    // The fold decides the tier, never the bytes, so these come back out
+    // unchanged.
+    "shortcut.pıf",
+    "CONıN$.txt",
   ]) {
     const written = externalOpenWrittenName(name);
     assert.equal(
@@ -298,8 +319,62 @@ test("the file type shown in the dialog is the one the tier was decided on", () 
   // one the raw name appears to end with.
   assert.equal(externalOpenFileType("drawings\u202Epiz.zip"), ".zip");
   assert.equal(externalOpenFileType("setup.exe\u200E"), ".exe");
-  // And the truncation case, where the extension on disk is not the one typed.
-  assert.equal(externalOpenFileType(`${"a".repeat(251)}.exe.pdf`), ".exe");
+  // And the truncation case: the bound is spent on the stem, so the type shown
+  // is the one the name ended with rather than one the cut manufactured.
+  assert.equal(externalOpenFileType(`${"a".repeat(251)}.exe.pdf`), ".pdf");
+  assert.equal(externalOpenFileType(`${"a".repeat(251)}.pdf.exe`), ".exe");
+  // A folded extension is shown as what the OS will dispatch on, which is the
+  // fact the dialog is there to state.
+  assert.equal(externalOpenFileType("drawings.zıp"), ".zip");
+});
+
+test("truncation does not decide the type the name is written under", () => {
+  // Cutting the tail at 255 would make the bound choose the file's type in
+  // both directions. The stem is what gets shortened, so neither a document
+  // nor an executable changes into the other on the way to disk.
+  const document = `${"a".repeat(251)}.exe.pdf`;
+  assert.equal([...externalOpenWrittenName(document)].length, 255);
+  assert.ok(externalOpenWrittenName(document).endsWith(".pdf"));
+  assert.ok(!externalOpenWrittenName(document).includes(".exe"));
+  assert.equal(classifyExternalOpen(document), "allowed");
+
+  const executable = `${"a".repeat(251)}.pdf.exe`;
+  assert.equal([...externalOpenWrittenName(executable)].length, 255);
+  assert.ok(externalOpenWrittenName(executable).endsWith(".exe"));
+  assert.equal(classifyExternalOpen(executable), "refused");
+
+  // A tail too long to be an extension does not get the budget: preserving
+  // 40 characters of it would leave 215 of a 251-character stem, and the
+  // name is still bounded.
+  const longTail = `${"a".repeat(251)}.${"b".repeat(40)}`;
+  assert.equal(externalOpenWrittenName(longTail), `${"a".repeat(251)}.bbb`);
+});
+
+test("a character that case folds onto ASCII cannot evade a tier", () => {
+  // U+0131 uppercases to I and U+017F to S, which is the table a Win32
+  // lookup is built on — so `x.pıf` reaches the PIF handler while matching
+  // no tier as written. U+212A is the one the two runtimes disagreed about:
+  // JavaScript's toLowerCase folded it to `k` and Rust's ASCII lowercasing
+  // did not, so this half refused a `.lnk` spelled with it while the other
+  // half only asked
+  // about. Neither side lowercases through Unicode now.
+  for (const name of [
+    "shortcut.pıf",
+    "payload.jſ",
+    "ınstaller.mſı",
+    "shortcut.ln\u212A",
+  ]) {
+    assert.equal(classifyExternalOpen(name), "refused", name);
+    // The fold decides the lookup only — the name on disk stays the sender's.
+    assert.equal(externalOpenWrittenName(name), name, name);
+  }
+  // And the other direction: a folded extension lands in the tier it resolves
+  // to rather than being refused for being unusual.
+  assert.equal(classifyExternalOpen("scan.tıf"), "allowed");
+  assert.equal(classifyExternalOpen("report.pdſ"), "needsConfirmation");
+  // Characters outside the shared list are left alone, because the fold is
+  // that list and not whichever runtime is deciding.
+  assert.equal(externalOpenFileType("report.PDFİ"), ".pdfİ");
 });
 
 test("the shared table is one file with no extension in two tiers", async () => {

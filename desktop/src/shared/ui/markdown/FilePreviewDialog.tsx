@@ -166,18 +166,19 @@ function PreviewActions({
   compact,
   externalOpen,
   target,
+  writtenName,
 }: {
   /** Dark, translucent styling for use over the image lightbox backdrop. */
   compact?: boolean;
   externalOpen: ExternalOpenPolicy;
   target: FilePreviewTarget;
+  /** The sanitized name, from the dialog that also shows it in its header. */
+  writtenName: string;
 }) {
   const [opening, setOpening] = React.useState(false);
   const [confirming, setConfirming] = React.useState(false);
 
-  // What the backend will write and dispatch on, not what the sender typed.
-  // Both are only read by the confirmation dialog below.
-  const writtenName = externalOpenWrittenName(target.filename);
+  // What the backend will dispatch on, not what the sender typed.
   const fileType = externalOpenFileType(target.filename);
 
   const handOver = (userConfirmed: boolean) => {
@@ -323,6 +324,14 @@ export function FilePreviewDialog({
   // to offer the hand-over at all, and the unpreviewable notice has to describe
   // the actions that are actually there rather than the ones it used to have.
   const externalOpen = classifyExternalOpen(target.filename);
+  // Every place this dialog renders the name renders the sanitized one: the
+  // raw name is the one part of a file a sender writes, and a U+202E inside it
+  // renders `reportU+202Efdp.exe` as `report exe.pdf` in a title as readily as
+  // in a confirmation dialog. Showing what will be written also means the
+  // header and the confirmation
+  // cannot name different files. Screen-reader labels included — a spoofed name
+  // read aloud is the same defect.
+  const writtenName = externalOpenWrittenName(target.filename);
 
   // Images reuse the existing viewer. Its own chrome (backdrop, Escape,
   // click-away, close button) is the behaviour users already know for an
@@ -330,14 +339,14 @@ export function FilePreviewDialog({
   if (target.kind === "image") {
     return (
       <SimpleImageLightbox
-        alt={target.filename}
+        alt={writtenName}
         onOpenChange={onOpenChange}
         open={open}
         src=""
       >
         <div className="relative flex max-h-[90vh] max-w-[90vw] flex-col items-center gap-4">
           {state.phase === "ready" ? (
-            <ImageBytes alt={target.filename} bytes={state.bytes} />
+            <ImageBytes alt={writtenName} bytes={state.bytes} />
           ) : state.phase === "error" ? (
             <div
               className="rounded-lg bg-background/95 px-6 py-5 text-center text-sm text-foreground"
@@ -364,7 +373,12 @@ export function FilePreviewDialog({
               {EXTERNAL_OPEN_REFUSED_REASON}
             </p>
           ) : null}
-          <PreviewActions compact externalOpen={externalOpen} target={target} />
+          <PreviewActions
+            compact
+            externalOpen={externalOpen}
+            target={target}
+            writtenName={writtenName}
+          />
         </div>
       </SimpleImageLightbox>
     );
@@ -389,8 +403,11 @@ export function FilePreviewDialog({
         >
           <div className="flex shrink-0 items-start justify-between gap-4 border-b border-border/60 px-5 py-4">
             <div className="min-w-0">
-              <DialogPrimitive.Title className="truncate text-base font-semibold">
-                {target.filename}
+              <DialogPrimitive.Title
+                className="truncate text-base font-semibold"
+                data-testid="file-preview-name"
+              >
+                {writtenName}
               </DialogPrimitive.Title>
               <DialogPrimitive.Description className="text-xs text-muted-foreground">
                 {sizeLabel
@@ -399,7 +416,11 @@ export function FilePreviewDialog({
               </DialogPrimitive.Description>
             </div>
             <div className="flex items-center gap-2">
-              <PreviewActions externalOpen={externalOpen} target={target} />
+              <PreviewActions
+                externalOpen={externalOpen}
+                target={target}
+                writtenName={writtenName}
+              />
               <DialogPrimitive.Close
                 aria-label="Close preview"
                 className="rounded-md p-1.5 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground outline-hidden focus-visible:ring-2 focus-visible:ring-ring/70"
@@ -421,7 +442,7 @@ export function FilePreviewDialog({
                 : "This file type cannot be previewed in the app. Download it, or open it in whichever application your system uses for it."}
             </PreviewNotice>
           ) : state.phase === "ready" ? (
-            <PdfPreview bytes={state.bytes} label={target.filename} />
+            <PdfPreview bytes={state.bytes} label={writtenName} />
           ) : state.phase === "error" ? (
             <PreviewNotice
               icon={

@@ -1,11 +1,11 @@
 {
-  "comment": "Cross-implementation cases for the external-open gate. Run by desktop/src-tauri/src/external_open_policy.rs and desktop/src/shared/lib/externalOpenPolicy.test.mjs, each through its own implementation. The two halves already share the extension table, but sharing a table is not enough: they also have to derive the same written name from the same raw filename, and the first three cases below are ones where they did not. Two hand-written suites asserting their own expectations is how the frontend and the backend drifted before — this file is what compares them on identical inputs. `filename` is the sender-supplied name, `writtenAs` is the name that must reach disk, `verdict` is allowed | needsConfirmation | refused, `why` names what the case is for.",
+  "comment": "Cross-implementation cases for the external-open gate. Run by desktop/src-tauri/src/external_open_policy.rs and desktop/src/shared/lib/externalOpenPolicy.test.mjs, each through its own implementation. The two halves already share the extension table, but sharing a table is not enough: they also have to derive the same written name from the same raw filename, and the first three cases below are ones where they did not. Two hand-written suites asserting their own expectations is how the frontend and the backend drifted before — this file is what compares them on identical inputs. `filename` is the sender-supplied name, `writtenAs` is the name that must reach disk, `verdict` is allowed | needsConfirmation | refused, `why` names what the case is for. Non-ASCII characters are written as escapes where a literal would be invisible or indistinguishable from ASCII in this file — which is the property several of these cases are about.",
   "cases": [
     {
       "filename": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.exe.pdf",
-      "writtenAs": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.exe",
-      "verdict": "refused",
-      "why": "255-character truncation drops the .pdf and exposes the .exe underneath it"
+      "writtenAs": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.pdf",
+      "verdict": "allowed",
+      "why": "259 characters: the 255 bound is spent on the stem, so the type the name ended with is the type on disk. Cutting the tail instead wrote this as an executable and refused it"
     },
     {
       "filename": "setup.exe\u0001",
@@ -182,55 +182,55 @@
       "why": "the same script host as .js and .mjs, which are both refused"
     },
     {
-      "filename": "setup.exe\u200E",
+      "filename": "setup.exe‎",
       "writtenAs": "setup.exe",
       "verdict": "refused",
       "why": "U+200E after the extension would make the lookup exe+LRM, which is in neither tier, so a refusal would become a prompt"
     },
     {
-      "filename": "setup.\u2066exe",
+      "filename": "setup.⁦exe",
       "writtenAs": "setup.exe",
       "verdict": "refused",
       "why": "an isolate between the dot and the extension does the same thing from the other side"
     },
     {
-      "filename": "invoice\u202Efdp.exe",
+      "filename": "invoice‮fdp.exe",
       "writtenAs": "invoicefdp.exe",
       "verdict": "refused",
       "why": "U+202E renders this as invoice exe.pdf wherever the raw name is shown"
     },
     {
-      "filename": "drawings\u202Epiz.zip",
+      "filename": "drawings‮piz.zip",
       "writtenAs": "drawingspiz.zip",
       "verdict": "needsConfirmation",
       "why": "the same spoof in the tier that does ask, where the displayed name is what the user decides on"
     },
     {
-      "filename": "notes\u00AD.txt",
+      "filename": "notes­.txt",
       "writtenAs": "notes.txt",
       "verdict": "allowed",
       "why": "a soft hyphen is Cf too, and stripping it must not cost a working action"
     },
     {
-      "filename": "report\u200F.pdf",
+      "filename": "report‏.pdf",
       "writtenAs": "report.pdf",
       "verdict": "allowed",
       "why": "U+200F in an ordinary name, which Cc-only filtering left in place"
     },
     {
-      "filename": "evil.exe\u200E.",
+      "filename": "evil.exe‎.",
       "writtenAs": "evil.exe",
       "verdict": "refused",
       "why": "stripping the format character exposes a trailing dot, which is then trimmed in the same pass"
     },
     {
-      "filename": "\u202A\u202B\u202C\u202D\u202E",
+      "filename": "‪‫‬‭‮",
       "writtenAs": "file",
       "verdict": "needsConfirmation",
       "why": "a name made only of format characters still has to produce something writable"
     },
     {
-      "filename": "\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060a.pdf",
+      "filename": "⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠a.pdf",
       "writtenAs": "a.pdf",
       "verdict": "allowed",
       "why": "251 invisible characters plus a 5-character name is 256: stripping them after the 255 bound instead of before it truncates the real extension to .pd and loses the verdict"
@@ -318,6 +318,96 @@
       "writtenAs": "dark.themepack",
       "verdict": "refused",
       "why": "a theme can point Windows at a screensaver to execute"
+    },
+    {
+      "filename": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.pdf.exe",
+      "writtenAs": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.exe",
+      "verdict": "refused",
+      "why": "the half that matters: shortening the stem must not launder an executable into a document either"
+    },
+    {
+      "filename": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.pdf",
+      "writtenAs": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.pdf",
+      "verdict": "allowed",
+      "why": "one character over the bound, which is the only input that can tell the two truncation orderings apart"
+    },
+    {
+      "filename": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.pdf",
+      "writtenAs": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.pdf",
+      "verdict": "allowed",
+      "why": "exactly on the bound, so nothing is cut and no extension is re-derived"
+    },
+    {
+      "filename": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "writtenAs": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.bbb",
+      "verdict": "needsConfirmation",
+      "why": "a 40-character tail is a long stem, not a long type: preserving it would mangle the stem, so this one is cut at the bound"
+    },
+    {
+      "filename": "records.accdb",
+      "writtenAs": "records.accdb",
+      "verdict": "refused",
+      "why": "an Access database runs its own macros on open, and .accde alone did not cover the family"
+    },
+    {
+      "filename": "report.mdw",
+      "writtenAs": "report.mdw",
+      "verdict": "refused",
+      "why": "a Jet workgroup file is loaded by the same engine"
+    },
+    {
+      "filename": "console.msh1xml",
+      "writtenAs": "console.msh1xml",
+      "verdict": "refused",
+      "why": "a PowerShell console file, the xml sibling of .msh1"
+    },
+    {
+      "filename": "shortcut.pıf",
+      "writtenAs": "shortcut.pıf",
+      "verdict": "refused",
+      "why": "U+0131 DOTLESS I uppercases to I, so a Win32 lookup resolves this to the PIF handler; the fold decides the tier and the name on disk stays the sender's"
+    },
+    {
+      "filename": "payload.jſ",
+      "writtenAs": "payload.jſ",
+      "verdict": "refused",
+      "why": "U+017F LONG S uppercases to S, which is the same evasion spelled with the other character"
+    },
+    {
+      "filename": "shortcut.ln\u212A",
+      "writtenAs": "shortcut.ln\u212A",
+      "verdict": "refused",
+      "why": "U+212A KELVIN SIGN: JavaScript lowercased it to k and Rust did not, so this case is the one that pinned the two halves to one explicit fold"
+    },
+    {
+      "filename": "scan.tıf",
+      "writtenAs": "scan.tıf",
+      "verdict": "allowed",
+      "why": "the fold cuts both ways: a folded extension lands in the tier it resolves to rather than being refused for being unusual"
+    },
+    {
+      "filename": "CONIN$.txt",
+      "writtenAs": "_CONIN$.txt",
+      "verdict": "allowed",
+      "why": "CONIN$ is a console device like CON, and neutralizing it leaves an ordinary text file"
+    },
+    {
+      "filename": "CLOCK$.log",
+      "writtenAs": "_CLOCK$.log",
+      "verdict": "allowed",
+      "why": "the DOS-era clock device, which does not follow the COMn/LPTn shape"
+    },
+    {
+      "filename": "COM¹.bat",
+      "writtenAs": "_COM¹.bat",
+      "verdict": "refused",
+      "why": "Win32 reads the superscript digit as a digit, and neutralizing the device still does not launder the type"
+    },
+    {
+      "filename": "CONıN$.txt",
+      "writtenAs": "_CONıN$.txt",
+      "verdict": "allowed",
+      "why": "the device comparison is folded too, so a dotless i is not a way around the device list"
     }
   ]
 }

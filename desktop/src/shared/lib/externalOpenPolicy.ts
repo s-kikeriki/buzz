@@ -56,6 +56,38 @@ function extensionsOf(tier: Record<string, unknown>): ReadonlySet<string> {
 const SAFE_EXTENSIONS = extensionsOf(externalOpenPolicy.safe);
 const EXECUTABLE_EXTENSIONS = extensionsOf(externalOpenPolicy.executable);
 
+/**
+ * Non-ASCII characters a case-insensitive Win32 lookup resolves onto ASCII.
+ *
+ * Read from the shared table rather than derived from either runtime's Unicode
+ * data, because the two runtimes disagree: `"\u212A".toLowerCase()` is `"k"`
+ * here and `to_ascii_lowercase` leaves it alone in Rust, so a `.lnk` spelled
+ * with U+212A was refused by this half and merely confirmed by the one that
+ * does the writing.
+ * That is the drift this file exists to prevent, so neither side lowercases
+ * through Unicode any more — see {@link foldedForLookup}.
+ */
+const EXTENSION_CHARACTER_FOLDS = Object.entries(
+  externalOpenPolicy.extensionCharacterFolds.folds,
+);
+
+/**
+ * Resolve an extension or a device stem the way a Win32 lookup would.
+ *
+ * ASCII-lowercased, deliberately: `toLowerCase()` would bring JavaScript's
+ * Unicode tables into a decision the Rust side makes with Rust's. Then the
+ * shared fold, which is the explicit list of the characters that matter.
+ */
+function foldedForLookup(text: string): string {
+  const lowered = text.replace(/[A-Z]/g, (character) =>
+    character.toLowerCase(),
+  );
+  return EXTENSION_CHARACTER_FOLDS.reduce(
+    (folded, [from, to]) => folded.replaceAll(from, to),
+    lowered,
+  );
+}
+
 /** Characters Windows reserves in a filename, which the Rust side replaces. */
 const RESERVED_CHARACTERS = /[:*?"<>|]/g;
 
@@ -98,11 +130,63 @@ const FORMAT_CHARACTER = /\p{Cf}/gu;
  * applies these with any extension, so the match is on the stem — everything
  * before the first dot — and the stem is trimmed first because Win32 ignores
  * trailing spaces in a device name.
+ *
+ * The superscript digits are here because Win32's device parsing reads `COM¹`
+ * as `COM1`; `CONIN$`, `CONOUT$` and `CLOCK$` are the DOS-era devices that do
+ * not follow the `COMn`/`LPTn` shape. The stem is compared through
+ * {@link foldedForLookup} for the same reason an extension is, so a dotless i
+ * is not a way around the list.
  */
-const RESERVED_DEVICE_NAME = /^(con|prn|aux|nul|com[1-9]|lpt[1-9])$/i;
+const RESERVED_DEVICE_NAME =
+  /^(con|prn|aux|nul|com[1-9¹²³]|lpt[1-9¹²³]|conin\$|conout\$|clock\$)$/;
 
 function isReservedDeviceName(name: string): boolean {
-  return RESERVED_DEVICE_NAME.test((name.split(".")[0] ?? "").trim());
+  return RESERVED_DEVICE_NAME.test(
+    foldedForLookup((name.split(".")[0] ?? "").trim()),
+  );
+}
+
+/** What relay ingest accepts and what every filesystem here allows. */
+const MAX_FILENAME_CHARACTERS = 255;
+
+/**
+ * The longest trailing extension {@link boundLength} keeps whole.
+ *
+ * Preserving the extension spends the cut on the stem instead, which only makes
+ * sense while the tail really is an extension: a name whose last dot is followed
+ * by 251 characters has a long stem, not a long type. 32 is well clear of the
+ * longest extension anything classifies on (`settingcontent-ms`, at 17).
+ */
+const MAX_PRESERVED_EXTENSION_CHARACTERS = 32;
+
+/**
+ * Bound a name to {@link MAX_FILENAME_CHARACTERS} by shortening its stem.
+ *
+ * A mirror of `bound_filename_length` in `src-tauri/src/commands/media_filename.rs`.
+ * Cutting the tail instead would let the bound decide the file's type: a
+ * 259-character `invoice.exe.pdf` loses the `.pdf` and is written — and
+ * dispatched — as an executable, and `invoice.pdf.exe` loses the `.exe` and is
+ * written as a document. The type at the end of the name is the one the sender
+ * chose and the one the user is shown; the stem is the part nobody is deciding
+ * anything about.
+ */
+function boundLength(name: string): string {
+  const characters = [...name];
+  if (characters.length <= MAX_FILENAME_CHARACTERS) return name;
+
+  const dot = characters.lastIndexOf(".");
+  const extension = characters.length - dot;
+  const preservable =
+    dot > 0 &&
+    dot < characters.length - 1 &&
+    extension - 1 <= MAX_PRESERVED_EXTENSION_CHARACTERS;
+  if (!preservable) {
+    return characters.slice(0, MAX_FILENAME_CHARACTERS).join("");
+  }
+  return [
+    ...characters.slice(0, MAX_FILENAME_CHARACTERS - extension),
+    ...characters.slice(characters.length - extension),
+  ].join("");
 }
 
 /**
@@ -123,35 +207,34 @@ function isReservedDeviceName(name: string): boolean {
  */
 export function externalOpenWrittenName(filename: string): string {
   // Strip format characters first, before the length bound: padding a name with
-  // 250 invisible joiners must not push its real extension past the truncation
-  // point. Rust does this ahead of `sanitize_filename` for the same reason.
+  // 250 invisible joiners must not spend the budget. Rust does this ahead of
+  // `strip_filename_components` for the same reason.
   const unformatted = filename.replace(FORMAT_CHARACTER, "");
 
   // Drop directory components, trim surrounding whitespace, remove control
-  // characters, bound to 255 code points — `sanitize_filename`.
-  const base = (unformatted.split(/[/\\]/).pop() ?? "").replace(
-    SURROUNDING_WHITESPACE,
-    "",
-  );
-  const cleaned = [...base]
+  // characters — `strip_filename_components`.
+  const stripped = [
+    ...(unformatted.split(/[/\\]/).pop() ?? "").replace(
+      SURROUNDING_WHITESPACE,
+      "",
+    ),
+  ]
     .filter((character) => !CONTROL_CHARACTER.test(character))
-    .slice(0, 255)
     .join("");
-  if (!cleaned) return "file";
 
   // Neutralize reserved characters, then trailing dots and whitespace in one
   // pass so neither can expose the other — `written_name`.
-  const trimmed = cleaned
+  const trimmed = stripped
     .replace(RESERVED_CHARACTERS, "_")
     .replace(TRAILING_DOTS_AND_WHITESPACE, "");
 
   // Neutralize a reserved device stem by prefixing it, which addresses the
   // device without changing the type the tier is decided on: `CON.txt` becomes
   // `_CON.txt` and is still a text file. This is the only step that lengthens
-  // the name, so the bound is re-applied after it and the result trimmed again
-  // — cutting the tail at 255 can expose a trailing dot nothing had trimmed.
+  // the name, which is why the bound comes after it, and the result is trimmed
+  // again because the bound's fallback cut can expose a trailing dot.
   const undeviced = isReservedDeviceName(trimmed) ? `_${trimmed}` : trimmed;
-  const bounded = [...undeviced].slice(0, 255).join("");
+  const bounded = boundLength(undeviced);
   return bounded.replace(TRAILING_DOTS_AND_WHITESPACE, "") || "file";
 }
 
@@ -165,6 +248,11 @@ export function externalOpenWrittenName(filename: string): string {
  * `evil.exe`), and are stripped again here so the function is correct for any
  * input, not only a sanitized one.
  *
+ * The result is {@link foldedForLookup}, not merely lowercased, so `x.pıf` is
+ * looked up as `pif`: a character that a Win32 lookup resolves onto ASCII is
+ * resolved here too, instead of leaving an extension that matches no tier and
+ * therefore only prompts.
+ *
  * Returns `""` when there is no usable extension, including a dotfile like
  * `.bashrc` where the leading dot starts the name.
  */
@@ -172,7 +260,7 @@ function extensionOf(writtenName: string): string {
   const base = writtenName.replace(TRAILING_DOTS_AND_WHITESPACE, "");
   const dot = base.lastIndexOf(".");
   if (dot <= 0 || dot === base.length - 1) return "";
-  return base.slice(dot + 1).toLowerCase();
+  return foldedForLookup(base.slice(dot + 1));
 }
 
 /**

@@ -286,6 +286,17 @@ test("a spoofed name cannot misrepresent the file in the confirmation", async ()
   );
   assert.equal(byTestId("file-preview-open-confirm-type").textContent, ".zip");
 
+  // The header above both of them is the same string. It is the first name the
+  // user reads and the one that stays on screen while they decide, so a
+  // confirmation that cannot be spoofed under a title that can is not worth
+  // much.
+  const title = byTestId("file-preview-name").textContent;
+  assert.equal(title, "drawingspiz.zip");
+  assert.ok(
+    !/\p{Cf}/u.test(title),
+    `the header must not render a format character: ${JSON.stringify(title)}`,
+  );
+
   // And the raw name is what still goes over IPC: the backend sanitizes it
   // itself, and sending the display string instead would make the frontend the
   // thing that decides what is written.
