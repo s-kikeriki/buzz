@@ -7,7 +7,9 @@
 //!   render them. Nothing touches the disk.
 //! - [`open_file_in_default_app`] is the escape hatch for a type we cannot
 //!   render. It is the only path here that writes a file, and it writes it to a
-//!   fresh temporary directory, never to a user-visible location.
+//!   fresh temporary directory, never to a user-visible location. What may be
+//!   handed to the OS at all is [`crate::external_open_policy`]'s decision, and
+//!   the directory's removal is [`super::external_open_temp`]'s.
 //!
 //! Both go through [`resolve_download_url`] — the same predecessor-origin
 //! rewrite and the same SSRF gate as `download_file` — and both fetch what that
@@ -17,11 +19,14 @@ use tauri::State;
 use tauri_plugin_opener::OpenerExt;
 
 use crate::app_state::AppState;
+use crate::commands::external_open_temp::{
+    create_external_open_dir, seal_external_open_file, write_external_open_file,
+};
 use crate::commands::media::detect_and_validate_mime;
 use crate::commands::media_download::{
     fetch_blob_bytes_with_cap, resolve_download_url, MAX_DOWNLOAD_BYTES,
 };
-use crate::commands::media_filename::sanitize_filename;
+use crate::external_open_policy::ApprovedOpenName;
 use crate::relay::relay_api_base_url_with_override;
 
 /// Maximum size of an attachment we will pull into memory to preview: 25 MiB.
@@ -151,20 +156,111 @@ pub async fn fetch_preview_bytes(
     Ok(tauri::ipc::Response::new(bytes))
 }
 
-/// A filename safe to join onto a directory we control.
+/// Mark the temporary copy as having come from somewhere else, best effort.
 ///
-/// [`sanitize_filename`] strips path separators, which is all the save dialog
-/// needs — the dialog only ever treats the result as a suggestion the user can
-/// overwrite. Here the name is joined onto a real path, and `.` and `..` survive
-/// that sanitizer intact: `dir.join("..")` is the parent directory, not a file
-/// inside `dir`. Collapse those to a neutral name.
-fn temp_filename(name: &str) -> String {
-    let sanitized = sanitize_filename(name);
-    if sanitized == "." || sanitized == ".." {
-        "file".to_string()
-    } else {
-        sanitized
+/// The `safe` tier says these formats are displayed rather than run. That is
+/// only true because the OS hardens files whose provenance is untrusted, and
+/// the hardening is keyed to a mark the *downloader* is expected to apply:
+///
+/// - **Windows:** a `Zone.Identifier` alternate data stream with `ZoneId=3`
+///   (URLZONE_INTERNET). Office's Protected View and its "macros blocked from
+///   an untrusted source" rule both test for it, so a `.doc` written without
+///   one opens with macros live. Written with `std::fs::write` to
+///   `<path>:Zone.Identifier`, which is how an ADS is created.
+/// - **macOS:** the `com.apple.quarantine` extended attribute, which is what
+///   makes LaunchServices ask before opening and what Office reads for its own
+///   Protected View.
+///
+/// Best effort on purpose: failing to mark a file is a reduction in the OS's
+/// defences, not a hole in ours, and refusing the open the user asked for
+/// because an xattr would not set would be the wrong trade. The policy tiers do
+/// not depend on it. It is logged rather than ignored.
+///
+/// Only the macOS branch has been exercised on this machine; the Windows branch
+/// is written from the documented ADS format and has not been run.
+fn mark_as_quarantined(path: &std::path::Path) {
+    #[cfg(target_os = "windows")]
+    {
+        // ReferrerUrl/HostUrl are deliberately omitted: the attachment's relay
+        // URL is not something to write into a file the user may share on.
+        let stream = format!("{}:Zone.Identifier", path.display());
+        if let Err(error) = std::fs::write(&stream, b"[ZoneTransfer]\r\nZoneId=3\r\n") {
+            eprintln!(
+                "buzz-desktop: could not mark {} as downloaded: {error}",
+                path.display()
+            );
+        }
     }
+
+    #[cfg(target_os = "macos")]
+    {
+        use std::os::unix::ffi::OsStrExt;
+
+        // Fields are flags;timestamp;agent;UUID. 0081 is "quarantined, kind
+        // other" — the value a download gets before anything has approved it.
+        let value = b"0081;00000000;Buzz;\0";
+        let c_path = match std::ffi::CString::new(path.as_os_str().as_bytes()) {
+            Ok(c_path) => c_path,
+            Err(error) => {
+                eprintln!("buzz-desktop: path is not representable for xattr: {error}");
+                return;
+            }
+        };
+        let name = c"com.apple.quarantine";
+        // SAFETY: both pointers are valid NUL-terminated C strings living for
+        // the call, and the value length matches the buffer passed.
+        let result = unsafe {
+            libc::setxattr(
+                c_path.as_ptr(),
+                name.as_ptr(),
+                value.as_ptr().cast(),
+                value.len(),
+                0,
+                0,
+            )
+        };
+        if result != 0 {
+            eprintln!(
+                "buzz-desktop: could not quarantine {}: {}",
+                path.display(),
+                std::io::Error::last_os_error(),
+            );
+        }
+    }
+
+    #[cfg(not(any(target_os = "windows", target_os = "macos")))]
+    {
+        // Linux has no equivalent the desktop handlers agree on.
+        let _ = path;
+    }
+}
+
+/// Write the bytes into a per-open temporary directory and hand the path over.
+///
+/// Takes an [`ApprovedOpenName`] and nothing else. That type's contents are
+/// private to [`crate::external_open_policy`], so this module cannot mint its
+/// own permission — it has to be handed one, and the only way to get one is
+/// through the policy. Skipping the gate here does not quietly pass the tests;
+/// it does not compile.
+///
+/// The file is marked as downloaded-from-elsewhere before it is opened, and the
+/// directory's whole lifetime — read-only copy, removal at exit, sweeping a
+/// crash's leftovers — belongs to [`super::external_open_temp`].
+fn write_and_open(
+    app: &tauri::AppHandle,
+    name: &ApprovedOpenName,
+    bytes: &[u8],
+) -> Result<(), String> {
+    let dir = create_external_open_dir()?;
+    let path = write_external_open_file(&dir, name.as_str(), bytes)?;
+    // Order is load-bearing: both marks need write access to the file, and
+    // sealing it removes that. Mark first, seal last, open only after.
+    mark_as_quarantined(&path);
+    seal_external_open_file(&path)?;
+
+    app.opener()
+        .open_path(path.to_string_lossy(), None::<&str>)
+        .map_err(|e| format!("could not open the file: {e}"))
 }
 
 /// Fetch an attachment and hand it to the OS default application.
@@ -173,19 +269,31 @@ fn temp_filename(name: &str) -> String {
 /// path that writes to disk, and it is explicit in the UI: the user asked for
 /// another application to open the file, which can only be done through a file.
 ///
-/// The file goes into a freshly created temporary directory — one per open, so
-/// two opens of the same filename cannot collide and nothing lands next to the
-/// user's own documents. The directory is deliberately leaked rather than
-/// deleted on return: the external application is still starting up and needs
-/// the file to exist after this command returns. The OS reclaims the temporary
-/// directory; we never put a second copy anywhere else.
+/// A gate the download path does not need, because a download ends at a
+/// location the user chose and this ends at the operating system acting on a
+/// stranger's file: [`ApprovedOpenName::approve`] on the exact name being
+/// written. An extension whose handler executes the file is refused outright;
+/// one we do not recognise requires `user_confirmed`.
+/// `detect_and_validate_mime` cannot answer this, since a script's bytes are
+/// the bytes of a text file.
+///
+/// `user_confirmed` is the frontend's attestation that it showed the
+/// confirmation dialog for an unrecognised type. It cannot prove the user
+/// clicked, but it does mean a future caller has to decide deliberately rather
+/// than inherit a silent open. It is not a way past the refused tier.
 #[tauri::command]
 pub async fn open_file_in_default_app(
     url: String,
     filename: String,
+    user_confirmed: bool,
     app: tauri::AppHandle,
     state: State<'_, AppState>,
 ) -> Result<(), String> {
+    // Decided on the written name, and before any request: a file we will not
+    // open is not worth fetching. `write_and_open` takes nothing else, so this
+    // step cannot be skipped without failing to compile.
+    let approved = ApprovedOpenName::approve(&filename, user_confirmed)?;
+
     let relay_base = relay_api_base_url_with_override(&state);
     let url = resolve_download_url(&url, &relay_base)?;
 
@@ -194,20 +302,7 @@ pub async fn open_file_in_default_app(
     let bytes = fetch_blob_bytes_with_cap(&url, &state, MAX_DOWNLOAD_BYTES, None).await?;
     detect_and_validate_mime(&bytes)?;
 
-    let dir = tempfile::Builder::new()
-        .prefix("buzz-open-")
-        .tempdir()
-        .map_err(|e| format!("could not create a temporary directory: {e}"))?
-        // Keep the directory after this scope: the file must still exist when
-        // the external application gets round to reading it.
-        .keep();
-    let path = dir.join(temp_filename(&filename));
-    std::fs::write(&path, &bytes)
-        .map_err(|e| format!("could not write the temporary file: {e}"))?;
-
-    app.opener()
-        .open_path(path.to_string_lossy(), None::<&str>)
-        .map_err(|e| format!("could not open the file: {e}"))
+    write_and_open(&app, &approved, &bytes)
 }
 
 #[cfg(test)]
@@ -280,39 +375,63 @@ mod tests {
         assert!(error.contains("application/pdf"), "got: {error}");
     }
 
+    /// The provenance mark actually lands on the file.
+    ///
+    /// Asserted rather than assumed because the whole justification for the
+    /// `safe` tier leans on it: Protected View and Gatekeeper are keyed to this
+    /// attribute, and a `setxattr` that silently failed would leave a
+    /// stranger's `.doc` opening with its macros live. Only the macOS branch
+    /// can be exercised here; the Windows `Zone.Identifier` stream is written
+    /// from the documented format and is untested.
+    #[cfg(target_os = "macos")]
     #[test]
-    fn temp_filename_cannot_climb_out_of_its_directory() {
-        // `sanitize_filename` leaves these intact because they contain no
-        // separator; joined onto a directory they are not files in it.
-        assert_eq!(temp_filename(".."), "file");
-        assert_eq!(temp_filename("."), "file");
-        assert_eq!(temp_filename("../../etc/passwd"), "passwd");
-        assert_eq!(temp_filename("report.pdf"), "report.pdf");
-        assert_eq!(temp_filename(""), "file");
+    fn the_temporary_copy_is_marked_as_quarantined() {
+        let dir = tempfile::tempdir().expect("temp dir");
+        let path = dir.path().join("minutes.docx");
+        std::fs::write(&path, b"PK\x03\x04").expect("write");
+
+        mark_as_quarantined(&path);
+
+        use std::os::unix::ffi::OsStrExt;
+        let c_path = std::ffi::CString::new(path.as_os_str().as_bytes()).expect("path");
+        let mut buffer = [0u8; 256];
+        // SAFETY: a valid NUL-terminated path and name, and a buffer whose
+        // length is passed alongside its pointer.
+        let length = unsafe {
+            libc::getxattr(
+                c_path.as_ptr(),
+                c"com.apple.quarantine".as_ptr(),
+                buffer.as_mut_ptr().cast(),
+                buffer.len(),
+                0,
+                0,
+            )
+        };
+        assert!(
+            length > 0,
+            "com.apple.quarantine was not set: {}",
+            std::io::Error::last_os_error(),
+        );
+        let value = String::from_utf8_lossy(&buffer[..length as usize]);
+        assert!(
+            value.starts_with("0081;"),
+            "expected a quarantined-kind-other flag, got {value:?}",
+        );
     }
 
     #[test]
-    fn temp_filename_output_is_always_a_single_component() {
-        for name in [
-            "..",
-            ".",
-            "",
-            "/",
-            "../../etc/passwd",
-            r"..\..\windows\system32\drivers\etc\hosts",
-            "minutes 2026-10.docx",
-        ] {
-            let resolved = temp_filename(name);
-            let path = std::path::Path::new(&resolved);
-            assert_eq!(
-                path.components().count(),
-                1,
-                "{name:?} resolved to {resolved:?}, which is not a single path component",
-            );
-            assert!(
-                path.file_name().is_some(),
-                "{name:?} resolved to {resolved:?}, which has no file name",
-            );
-        }
+    fn an_approved_name_is_the_one_that_gets_written() {
+        // The path this command joins is `approved.as_str()` and nothing else,
+        // so what the policy decided about is what lands on disk. The name
+        // derivation and its edge cases live with the policy; this is the one
+        // assertion that belongs here.
+        let approved = ApprovedOpenName::approve("../../minutes 2026-10.docx", false)
+            .expect("a docx needs no confirmation");
+        assert_eq!(approved.as_str(), "minutes 2026-10.docx");
+        assert_eq!(
+            std::path::Path::new(approved.as_str()).components().count(),
+            1,
+            "an approved name must be a single path component",
+        );
     }
 }

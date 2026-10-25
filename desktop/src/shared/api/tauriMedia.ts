@@ -209,16 +209,25 @@ export async function fetchPreviewBytes(args: {
  * Hand an attachment to the OS default application.
  *
  * The fallback for a type the app cannot render. Unlike {@link
- * fetchPreviewBytes} this does write a file — into a fresh temporary directory
- * the user never navigates to — because starting another application requires
- * one. Same URL validation and content policy as the download path.
+ * fetchPreviewBytes} this does write a file — into a per-open temporary
+ * directory the user never navigates to, removed when the app exits — because
+ * starting another application requires one. Same URL validation and content
+ * policy as the download path, plus the extension gate in
+ * `shared/lib/externalOpenPolicy`.
+ *
+ * `userConfirmed` says the caller showed the confirmation dialog, which the
+ * command requires for any type it does not recognise. It is not a way past
+ * the refused tier: an extension whose handler executes the file is refused
+ * whatever this says, which is why the button is not offered for one at all.
  */
 export async function openFileInDefaultApp(args: {
   url: string;
   filename: string;
+  userConfirmed: boolean;
 }): Promise<void> {
   await invokeTauri("open_file_in_default_app", {
     url: args.url,
     filename: args.filename,
+    userConfirmed: args.userConfirmed,
   });
 }

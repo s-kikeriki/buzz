@@ -353,10 +353,78 @@ test("a type the app cannot render offers download and open-externally", async (
   // No bytes are fetched for something we will not render.
   expect(await invokedCommands(page)).not.toContain("fetch_preview_bytes");
 
+  // A .zip is not in the safe tier, so the hand-over is a question first. This
+  // asserts real hit-testing on the confirmation: a jsdom click would resolve
+  // whether or not the dialog were actually on top and clickable.
   await dialog.getByTestId("file-preview-open-externally").click();
+  const confirm = page.getByTestId("file-preview-open-confirm");
+  await expect(confirm).toBeVisible();
+  expect(await invokedCommands(page)).not.toContain("open_file_in_default_app");
+
+  await confirm.getByTestId("file-preview-open-cancel").click();
+  await expect(confirm).toHaveCount(0);
+  expect(await invokedCommands(page)).not.toContain("open_file_in_default_app");
+
+  await dialog.getByTestId("file-preview-open-externally").click();
+  await page.getByTestId("file-preview-open-confirmed").click();
   await expect
     .poll(() => invokedCommands(page))
     .toContain("open_file_in_default_app");
+});
+
+test("a script type is never offered to the OS, only downloaded", async ({
+  page,
+}) => {
+  // The review case: `.bat` is plain text, so the sniffed MIME is
+  // application/octet-stream and every content check upstream passes it. The
+  // extension is the only thing that knows, and the button must not be there.
+  await installMockBridge(page, {
+    deferredComposerUploads: true,
+    uploadDescriptors: [
+      {
+        url: `https://mock.relay/media/${"d".repeat(64)}.bat`,
+        sha256: "d".repeat(64),
+        size: 512,
+        type: "application/octet-stream",
+        uploaded: Math.floor(Date.now() / 1000),
+        filename: "invoice.pdf.bat",
+      },
+    ],
+  });
+  await page.goto("/");
+  await page.getByTestId("channel-general").click();
+
+  const [chooser] = await Promise.all([
+    page.waitForEvent("filechooser"),
+    page.getByRole("button", { name: "Attach file" }).click(),
+  ]);
+  await chooser.setFiles({
+    buffer: Buffer.from("@echo off"),
+    mimeType: "application/octet-stream",
+    name: "invoice.pdf.bat",
+  });
+  await page.getByTestId("send-message").click();
+  await expect(page.getByText("Sending")).toHaveCount(0);
+
+  await page
+    .getByTestId("file-card")
+    .last()
+    .getByTestId("file-card-open")
+    .click();
+
+  const dialog = page.getByTestId("file-preview-dialog");
+  await expect(dialog.getByTestId("file-preview-unsupported")).toBeVisible();
+  await expect(dialog.getByTestId("file-preview-open-externally")).toHaveCount(
+    0,
+  );
+  await expect(dialog.getByTestId("file-preview-unsupported")).toContainText(
+    "will not pass this file to another application",
+  );
+
+  // Download is still the way out.
+  await dialog.getByTestId("file-preview-download").click();
+  await expect.poll(() => invokedCommands(page)).toContain("download_file");
+  expect(await invokedCommands(page)).not.toContain("open_file_in_default_app");
 });
 
 test("sends immediately and keeps upload progress across channels", async ({

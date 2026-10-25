@@ -16,11 +16,23 @@ import {
 } from "@/shared/api/tauriMedia";
 import { invokeTauri } from "@/shared/api/tauri";
 import { cn } from "@/shared/lib/cn";
+import type { ExternalOpenPolicy } from "@/shared/lib/externalOpenPolicy";
+import { classifyExternalOpen } from "@/shared/lib/externalOpenPolicy";
 import { MODAL_BACKDROP_BLUR_CLASS } from "@/shared/ui/modalBackdrop";
 import {
   MODAL_CONTENT_MOTION_CLASS,
   MODAL_OVERLAY_MOTION_CLASS,
 } from "@/shared/ui/modalMotion";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/shared/ui/alert-dialog";
 import { Button } from "@/shared/ui/button";
 import { SimpleImageLightbox } from "@/shared/ui/SimpleImageLightbox";
 import type { FilePreviewKind } from "@/shared/ui/markdown/filePreview";
@@ -40,6 +52,17 @@ import { PdfPreview } from "@/shared/ui/markdown/PdfPreview";
  * An image goes to the app's existing image viewer rather than a second one
  * built here — `SimpleImageLightbox` with the actions composed into it.
  */
+
+/**
+ * Why "Open in default app" is missing for a refused type.
+ *
+ * One string, because it has to appear in both branches — the document dialog's
+ * "cannot be previewed" notice and the image lightbox, where the file *is*
+ * being shown — and an action that silently disappears in one of them is
+ * indistinguishable from a bug.
+ */
+const EXTERNAL_OPEN_REFUSED_REASON =
+  "Buzz will not pass this file to another application: files of this type are run rather than displayed. Download it if you trust the sender.";
 
 export type FilePreviewTarget = {
   /** Proxy-rewritten URL, as the card already resolved it. */
@@ -124,43 +147,68 @@ function usePreviewBytes(
   };
 }
 
-/** The two actions that work for every attachment, whatever we can render. */
+/**
+ * The actions for an attachment: Download always, and "Open in default app"
+ * only where handing the file to the operating system is something we are
+ * willing to do.
+ *
+ * Download is unconditional because the user picks the destination and nothing
+ * is started. Handing the file over is not: for an extension whose handler
+ * executes it the button is absent, and for one we do not recognise it asks
+ * first. `shared/lib/externalOpenPolicy` decides which, and the Rust command
+ * decides again from the same table — this is the affordance, not the gate.
+ */
 function PreviewActions({
   compact,
+  externalOpen,
   target,
 }: {
   /** Dark, translucent styling for use over the image lightbox backdrop. */
   compact?: boolean;
+  externalOpen: ExternalOpenPolicy;
   target: FilePreviewTarget;
 }) {
   const [opening, setOpening] = React.useState(false);
+  const [confirming, setConfirming] = React.useState(false);
+
+  const handOver = (userConfirmed: boolean) => {
+    setConfirming(false);
+    setOpening(true);
+    openFileInDefaultApp({
+      url: target.href,
+      filename: target.filename,
+      userConfirmed,
+    })
+      .catch((error: unknown) => {
+        toast.error(errorMessage(error, "Could not open the file"));
+      })
+      .finally(() => setOpening(false));
+  };
 
   return (
     <div className="flex shrink-0 items-center gap-2">
-      <Button
-        data-testid="file-preview-open-externally"
-        disabled={opening}
-        onClick={() => {
-          setOpening(true);
-          openFileInDefaultApp({
-            url: target.href,
-            filename: target.filename,
-          })
-            .catch((error: unknown) => {
-              toast.error(errorMessage(error, "Could not open the file"));
-            })
-            .finally(() => setOpening(false));
-        }}
-        size="sm"
-        variant={compact ? "secondary" : "outline"}
-      >
-        {opening ? (
-          <Loader2 aria-hidden="true" className="h-4 w-4 animate-spin" />
-        ) : (
-          <ExternalLink aria-hidden="true" className="h-4 w-4" />
-        )}
-        Open in default app
-      </Button>
+      {externalOpen === "refused" ? null : (
+        <Button
+          data-testid="file-preview-open-externally"
+          disabled={opening}
+          onClick={() => {
+            if (externalOpen === "needsConfirmation") {
+              setConfirming(true);
+              return;
+            }
+            handOver(false);
+          }}
+          size="sm"
+          variant={compact ? "secondary" : "outline"}
+        >
+          {opening ? (
+            <Loader2 aria-hidden="true" className="h-4 w-4 animate-spin" />
+          ) : (
+            <ExternalLink aria-hidden="true" className="h-4 w-4" />
+          )}
+          Open in default app
+        </Button>
+      )}
       <Button
         data-testid="file-preview-download"
         onClick={() => startDownload(target)}
@@ -170,6 +218,37 @@ function PreviewActions({
         <Download aria-hidden="true" className="h-4 w-4" />
         Download
       </Button>
+      {externalOpen !== "needsConfirmation" ? null : (
+        <AlertDialog onOpenChange={setConfirming} open={confirming}>
+          <AlertDialogContent data-testid="file-preview-open-confirm">
+            <AlertDialogHeader>
+              <AlertDialogTitle>Open this file outside Buzz?</AlertDialogTitle>
+              {/* Deliberately does not say "Buzz cannot show this": an image
+                  with an unrecognised extension is being shown right now and
+                  still reaches this dialog. What is true in every case is that
+                  the type is unrecognised. */}
+              <AlertDialogDescription>
+                Buzz does not recognise this file type, so it can only write a
+                temporary copy of “{target.filename}” and hand it to whichever
+                application your system uses for it. What that application then
+                does with the file is up to it. Open it only if you trust
+                whoever sent it.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel data-testid="file-preview-open-cancel">
+                Cancel
+              </AlertDialogCancel>
+              <AlertDialogAction
+                data-testid="file-preview-open-confirmed"
+                onClick={() => handOver(true)}
+              >
+                Open anyway
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+      )}
     </div>
   );
 }
@@ -206,6 +285,10 @@ export function FilePreviewDialog({
 }) {
   const { retry, state } = usePreviewBytes(target, open);
   const sizeLabel = target.size != null ? formatFileSize(target.size) : "";
+  // One answer for the whole dialog: the actions row uses it to decide whether
+  // to offer the hand-over at all, and the unpreviewable notice has to describe
+  // the actions that are actually there rather than the ones it used to have.
+  const externalOpen = classifyExternalOpen(target.filename);
 
   // Images reuse the existing viewer. Its own chrome (backdrop, Escape,
   // click-away, close button) is the behaviour users already know for an
@@ -236,7 +319,18 @@ export function FilePreviewDialog({
               data-testid="file-preview-loading"
             />
           )}
-          <PreviewActions compact target={target} />
+          {externalOpen === "refused" ? (
+            // The button is absent here too, and in this branch there is no
+            // "cannot be previewed" notice to carry the reason — an image with
+            // a refused extension is being shown, just not handed over.
+            <p
+              className="max-w-md rounded-lg bg-background/95 px-4 py-3 text-center text-xs text-muted-foreground"
+              data-testid="file-preview-external-refused"
+            >
+              {EXTERNAL_OPEN_REFUSED_REASON}
+            </p>
+          ) : null}
+          <PreviewActions compact externalOpen={externalOpen} target={target} />
         </div>
       </SimpleImageLightbox>
     );
@@ -271,7 +365,7 @@ export function FilePreviewDialog({
               </DialogPrimitive.Description>
             </div>
             <div className="flex items-center gap-2">
-              <PreviewActions target={target} />
+              <PreviewActions externalOpen={externalOpen} target={target} />
               <DialogPrimitive.Close
                 aria-label="Close preview"
                 className="rounded-md p-1.5 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground outline-hidden focus-visible:ring-2 focus-visible:ring-ring/70"
@@ -288,8 +382,9 @@ export function FilePreviewDialog({
               }
               testId="file-preview-unsupported"
             >
-              This file type cannot be previewed in the app. Download it, or
-              open it in whichever application your system uses for it.
+              {externalOpen === "refused"
+                ? `This file type cannot be previewed in the app. ${EXTERNAL_OPEN_REFUSED_REASON}`
+                : "This file type cannot be previewed in the app. Download it, or open it in whichever application your system uses for it."}
             </PreviewNotice>
           ) : state.phase === "ready" ? (
             <PdfPreview bytes={state.bytes} label={target.filename} />

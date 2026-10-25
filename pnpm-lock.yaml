@@ -211,7 +211,7 @@ importers:
         specifier: ^12.38.0
         version: 12.40.0(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       pdfjs-dist:
-        specifier: ^6.4.299
+        specifier: 6.4.299
         version: 6.4.299
       qrcode:
         specifier: ^1.5.4

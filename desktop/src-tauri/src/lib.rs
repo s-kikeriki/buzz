@@ -10,6 +10,7 @@ mod deep_link;
 mod egress_guard;
 mod event_sync;
 mod events;
+mod external_open_policy;
 #[cfg_attr(not(test), allow(dead_code))]
 mod hpke_key_backup;
 mod huddle;
@@ -244,6 +245,11 @@ pub fn run() {
                 tray_menu::init(&app_handle)?;
                 macos_notifications::init(&app_handle)?;
             }
+
+            // Temporary copies written for "Open in default app" by a run that
+            // crashed: exit cleanup never ran for those, so nothing else would
+            // ever remove them.
+            commands::sweep_external_open_temp_dirs_at_startup();
 
             // Initialise the no-redirect admin HTTP client singleton before any
             // admin command can be invoked. Must run before setup completes.
@@ -971,6 +977,9 @@ pub fn run() {
         RunEvent::Exit => {
             shut_down_app(app_handle, &run_shutdown_done);
             app_handle.state::<ClipboardState>().release();
+            // Temporary copies written for "Open in default app". By now no
+            // application Buzz launched is still waiting to read one.
+            commands::release_external_open_temp_dirs();
             #[cfg(all(feature = "mesh-llm", target_os = "macos"))]
             if restart_requested.load(Ordering::SeqCst) {
                 relaunch_after_mesh_shutdown(app_handle);

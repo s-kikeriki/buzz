@@ -1,0 +1,185 @@
+{
+  "comment": "Cross-implementation cases for the external-open gate. Run by desktop/src-tauri/src/external_open_policy.rs and desktop/src/shared/lib/externalOpenPolicy.test.mjs, each through its own implementation. The two halves already share the extension table, but sharing a table is not enough: they also have to derive the same written name from the same raw filename, and the first three cases below are ones where they did not. Two hand-written suites asserting their own expectations is how the frontend and the backend drifted before — this file is what compares them on identical inputs. `filename` is the sender-supplied name, `writtenAs` is the name that must reach disk, `verdict` is allowed | needsConfirmation | refused, `why` names what the case is for.",
+  "cases": [
+    {
+      "filename": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.exe.pdf",
+      "writtenAs": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.exe",
+      "verdict": "refused",
+      "why": "255-character truncation drops the .pdf and exposes the .exe underneath it"
+    },
+    {
+      "filename": "setup.exe\u0001",
+      "writtenAs": "setup.exe",
+      "verdict": "refused",
+      "why": "a control character after the extension is removed, so the name on disk is an executable"
+    },
+    {
+      "filename": "evil.exe:notes.txt",
+      "writtenAs": "evil.exe_notes.txt",
+      "verdict": "allowed",
+      "why": "the colon is neutralized, so the written file genuinely is a .txt and the action stays available"
+    },
+    {
+      "filename": "notes.txt:evil.exe",
+      "writtenAs": "notes.txt_evil.exe",
+      "verdict": "refused",
+      "why": "the mirror image: neutralizing the colon leaves a real .exe"
+    },
+    {
+      "filename": "report.pdf",
+      "writtenAs": "report.pdf",
+      "verdict": "allowed",
+      "why": "the ordinary case"
+    },
+    {
+      "filename": "minutes 2026-10.docx",
+      "writtenAs": "minutes 2026-10.docx",
+      "verdict": "allowed",
+      "why": "spaces in a name are not a reason to sanitize it"
+    },
+    {
+      "filename": "../../etc/passwd",
+      "writtenAs": "passwd",
+      "verdict": "needsConfirmation",
+      "why": "directory components are stripped and a name with no extension is not assumed safe"
+    },
+    {
+      "filename": "..",
+      "writtenAs": "file",
+      "verdict": "needsConfirmation",
+      "why": "a name that is only dots would be the parent directory, not a file in it"
+    },
+    {
+      "filename": "",
+      "writtenAs": "file",
+      "verdict": "needsConfirmation",
+      "why": "an empty name still has to produce something writable"
+    },
+    {
+      "filename": "setup.bat",
+      "writtenAs": "setup.bat",
+      "verdict": "refused",
+      "why": "a script is plain text, so no MIME check upstream objects to it"
+    },
+    {
+      "filename": "autostart.desktop",
+      "writtenAs": "autostart.desktop",
+      "verdict": "refused",
+      "why": "a Linux desktop entry runs its Exec line"
+    },
+    {
+      "filename": "open me.terminal",
+      "writtenAs": "open me.terminal",
+      "verdict": "refused",
+      "why": "a macOS terminal settings file runs its command"
+    },
+    {
+      "filename": "payload.vbs",
+      "writtenAs": "payload.vbs",
+      "verdict": "refused",
+      "why": "from the review: script hosts execute this"
+    },
+    {
+      "filename": "payload.js",
+      "writtenAs": "payload.js",
+      "verdict": "refused",
+      "why": "from the review: Windows Script Host executes a .js from Explorer"
+    },
+    {
+      "filename": "page.hta",
+      "writtenAs": "page.hta",
+      "verdict": "refused",
+      "why": "from the review: an HTML application runs unsandboxed"
+    },
+    {
+      "filename": "tool.jar",
+      "writtenAs": "tool.jar",
+      "verdict": "refused",
+      "why": "from the review: a JRE association executes it"
+    },
+    {
+      "filename": "invoice.pdf.exe",
+      "writtenAs": "invoice.pdf.exe",
+      "verdict": "refused",
+      "why": "only the final extension decides, and it is the executable one"
+    },
+    {
+      "filename": "invoice.exe.pdf",
+      "writtenAs": "invoice.exe.pdf",
+      "verdict": "allowed",
+      "why": "the mirror image: the OS dispatches on .pdf, so refusing would cost a working feature"
+    },
+    {
+      "filename": "evil.exe.",
+      "writtenAs": "evil.exe",
+      "verdict": "refused",
+      "why": "Win32 strips a trailing dot when it creates the file"
+    },
+    {
+      "filename": "evil.exe . . ",
+      "writtenAs": "evil.exe",
+      "verdict": "refused",
+      "why": "dots and whitespace are trimmed in one pass, so neither can expose the other"
+    },
+    {
+      "filename": "SETUP.BAT",
+      "writtenAs": "SETUP.BAT",
+      "verdict": "refused",
+      "why": "the lookup is case-insensitive but the name on disk is not rewritten"
+    },
+    {
+      "filename": "drawings.zip",
+      "writtenAs": "drawings.zip",
+      "verdict": "needsConfirmation",
+      "why": "an archive is neither displayed nor executed by its handler"
+    },
+    {
+      "filename": "diagram.svg",
+      "writtenAs": "diagram.svg",
+      "verdict": "needsConfirmation",
+      "why": "its handler is a browser: the script is sandboxed, the outbound requests are not"
+    },
+    {
+      "filename": "data.csv",
+      "writtenAs": "data.csv",
+      "verdict": "needsConfirmation",
+      "why": "the handler is a spreadsheet, where a cell starting with = is a formula-injection vector"
+    },
+    {
+      "filename": "scan.jfif",
+      "writtenAs": "scan.jfif",
+      "verdict": "needsConfirmation",
+      "why": "a real image extension that is not in the safe list, so it asks rather than assuming"
+    },
+    {
+      "filename": ".gitignore",
+      "writtenAs": ".gitignore",
+      "verdict": "needsConfirmation",
+      "why": "a leading dot starts the name; this is not a file of type gitignore"
+    },
+    {
+      "filename": "runner.jnlp",
+      "writtenAs": "runner.jnlp",
+      "verdict": "refused",
+      "why": "Java Web Start fetches and runs remote code"
+    },
+    {
+      "filename": "fix.diagcab",
+      "writtenAs": "fix.diagcab",
+      "verdict": "refused",
+      "why": "a Windows troubleshooting pack runs its embedded script"
+    },
+    {
+      "filename": "box.wsb",
+      "writtenAs": "box.wsb",
+      "verdict": "refused",
+      "why": "a Windows Sandbox config runs its LogonCommand with host folders mapped in"
+    },
+    {
+      "filename": "tool.cjs",
+      "writtenAs": "tool.cjs",
+      "verdict": "refused",
+      "why": "the same script host as .js and .mjs, which are both refused"
+    }
+  ]
+}

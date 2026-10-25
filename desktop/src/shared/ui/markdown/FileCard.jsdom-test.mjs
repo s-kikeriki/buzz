@@ -184,7 +184,8 @@ test("an unpreviewable type opens the card's information, not a fetch", async ()
     "there is nothing to fetch for a type we will not render",
   );
 
-  // Both actions the spec requires for this case are present and wired.
+  // Both actions the spec requires for this case are present and wired. A
+  // .docx is in the safe tier, so the hand-over needs no confirmation.
   responses.download_file = () => true;
   responses.open_file_in_default_app = () => null;
   await click(byTestId("file-preview-download"));
@@ -196,7 +197,139 @@ test("an unpreviewable type opens the card's information, not a fetch", async ()
   assert.deepEqual(invocations[1].payload, {
     url: HREF,
     filename: "minutes.docx",
+    userConfirmed: false,
   });
+  assert.equal(
+    byTestId("file-preview-open-confirm"),
+    null,
+    "a safe type must not be put behind a dialog",
+  );
+});
+
+test("an unrecognised type is not handed over until the user confirms", async () => {
+  responses.open_file_in_default_app = () => null;
+
+  await mount({
+    filename: "drawings.zip",
+    mime: "application/zip",
+    size: 4096,
+  });
+  await click(byTestId("file-card-open"));
+  await click(byTestId("file-preview-open-externally"));
+
+  // The click opens the question, and nothing else.
+  assert.ok(byTestId("file-preview-open-confirm"), "the dialog must be shown");
+  assert.deepEqual(
+    commandNames(),
+    [],
+    "nothing may be written or opened before the user answers",
+  );
+
+  await click(byTestId("file-preview-open-cancel"));
+  assert.deepEqual(commandNames(), [], "Cancel must leave the file alone");
+
+  await click(byTestId("file-preview-open-externally"));
+  await click(byTestId("file-preview-open-confirmed"));
+  assert.deepEqual(commandNames(), ["open_file_in_default_app"]);
+  assert.deepEqual(invocations[0].payload, {
+    url: HREF,
+    filename: "drawings.zip",
+    userConfirmed: true,
+  });
+});
+
+test("a script type is not offered to the OS at all", async () => {
+  // The case this tier exists for: a .bat is text, so the sniffed MIME is
+  // application/octet-stream and every content check upstream passes it.
+  responses.download_file = () => true;
+
+  await mount({
+    filename: "invoice.pdf.bat",
+    mime: "application/octet-stream",
+    size: 512,
+  });
+  await click(byTestId("file-card-open"));
+
+  assert.ok(byTestId("file-preview-unsupported"));
+  assert.equal(
+    byTestId("file-preview-open-externally"),
+    null,
+    "there must be no control that hands a script to the OS",
+  );
+  assert.match(
+    byTestId("file-preview-unsupported").textContent,
+    /will not pass this file to another application/,
+    "the notice must say why the action is missing, not just omit it",
+  );
+
+  // Download is still the way out, and still works.
+  await click(byTestId("file-preview-download"));
+  assert.deepEqual(commandNames(), ["download_file"]);
+});
+
+test("the image viewer applies the same tiers as the document dialog", async () => {
+  // The image branch is a different surface — the existing lightbox, not the
+  // preview dialog — and it renders its own copy of the actions. A gate that
+  // only held in one of them would be no gate: a `.jfif` or an image with a
+  // deceptive name reaches this path.
+  const png = new ArrayBuffer(8);
+  responses.fetch_preview_bytes = () => png;
+  responses.open_file_in_default_app = () => null;
+
+  await mount({ filename: "scan.jfif", mime: "image/png", size: 1024 });
+  await click(byTestId("file-card-open"));
+  assert.ok(byTestId("file-preview-image"), "the image must still render");
+
+  // An unrecognised extension asks first, here too.
+  await click(byTestId("file-preview-open-externally"));
+  assert.ok(byTestId("file-preview-open-confirm"), "the dialog must be shown");
+  assert.ok(
+    !commandNames().includes("open_file_in_default_app"),
+    "nothing may be handed over before the user answers",
+  );
+  await click(byTestId("file-preview-open-confirmed"));
+  assert.deepEqual(invocations.at(-1), {
+    command: "open_file_in_default_app",
+    payload: { url: HREF, filename: "scan.jfif", userConfirmed: true },
+  });
+});
+
+test("a refused type explains itself in the image viewer too", async () => {
+  // Here the file IS being shown, so there is no "cannot be previewed" notice
+  // to carry the reason — without its own copy the action would just vanish.
+  const png = new ArrayBuffer(8);
+  responses.fetch_preview_bytes = () => png;
+
+  await mount({ filename: "logo.png.hta", mime: "image/png", size: 1024 });
+  await click(byTestId("file-card-open"));
+
+  assert.equal(
+    byTestId("file-preview-open-externally"),
+    null,
+    "a refused type must not be offered from the image viewer either",
+  );
+  assert.match(
+    byTestId("file-preview-external-refused").textContent,
+    /will not pass this file to another application/,
+  );
+});
+
+test("a deceptive name is classified by the extension the OS would use", async () => {
+  // `.pdf` in the middle of the name must not buy the safe tier, and a
+  // trailing dot must not hide the real extension: Win32 strips it.
+  for (const filename of ["invoice.pdf.exe", "setup.exe."]) {
+    await mount({ filename, mime: "application/octet-stream" });
+    await click(byTestId("file-card-open"));
+    assert.equal(
+      byTestId("file-preview-open-externally"),
+      null,
+      `${filename} must not offer an external open`,
+    );
+    await act(async () => root.unmount());
+    root = null;
+    container?.remove();
+    container = null;
+  }
 });
 
 test("an image goes to the existing viewer, fetched through the same gate", async () => {
