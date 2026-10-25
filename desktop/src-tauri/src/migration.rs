@@ -21,6 +21,13 @@ use tauri::Manager;
 
 use crate::util::replace_with_symlink;
 
+/// The release bundle identifier every other data-dir name is derived from.
+///
+/// Named once rather than spelled inline: the dev identifier, the flavor
+/// discriminator and the pre-rename import source are all this string plus a
+/// suffix, so a build that ever changes it has one place to change rather than
+/// a set of literals that can drift apart silently.
+const RELEASE_IDENTIFIER: &str = "xyz.block.buzz.app";
 const CANONICAL_DEV_IDENTIFIER: &str = "xyz.block.buzz.app.dev";
 const LEGACY_CANONICAL_DEV_IDENTIFIER: &str = "xyz.block.sprout.app.dev";
 const LEGACY_RELEASE_IDENTIFIER: &str = "xyz.block.sprout.app";
@@ -56,12 +63,34 @@ fn canonical_dev_data_dir(current: &Path) -> Option<PathBuf> {
     current.parent().map(|p| p.join(CANONICAL_DEV_IDENTIFIER))
 }
 
+/// Returns `true` when `name` is a per-organisation flavor's data dir — i.e.
+/// the release identifier followed by `.demo.<slug>`.
+///
+/// A flavor has no pre-rename history to import: the Sprout→Buzz rename
+/// predates every flavor, so `xyz.block.sprout.app.demo.<slug>` has never
+/// existed on any machine. Recognising flavors explicitly is what keeps
+/// [`legacy_app_data_dir`] from naming a directory that cannot be this build's.
+pub(crate) fn is_flavor_data_dir_name(name: &str) -> bool {
+    name.strip_prefix(RELEASE_IDENTIFIER)
+        .is_some_and(|rest| rest.starts_with(".demo."))
+}
+
+/// The pre-rename data dir this build should import from, if any.
+///
+/// Returns `None` for anything that is not a production or dev data dir of this
+/// app — including a per-organisation flavor, which never had one. That matters
+/// beyond tidiness: `reset::run_boot_reset` passes this path into the wipe as a
+/// directory it may rename and delete, so a flavor must not hand it a path
+/// derived from another app's identifier.
 pub(crate) fn legacy_app_data_dir(current: &Path) -> Option<PathBuf> {
     let name = current.file_name()?.to_str()?;
+    if is_flavor_data_dir_name(name) {
+        return None;
+    }
     let legacy_name = if name.starts_with(CANONICAL_DEV_IDENTIFIER) {
         name.replacen(CANONICAL_DEV_IDENTIFIER, LEGACY_CANONICAL_DEV_IDENTIFIER, 1)
-    } else if name.starts_with("xyz.block.buzz.app") {
-        name.replacen("xyz.block.buzz.app", LEGACY_RELEASE_IDENTIFIER, 1)
+    } else if name.starts_with(RELEASE_IDENTIFIER) {
+        name.replacen(RELEASE_IDENTIFIER, LEGACY_RELEASE_IDENTIFIER, 1)
     } else {
         return None;
     };

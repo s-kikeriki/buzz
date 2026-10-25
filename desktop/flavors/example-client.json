@@ -1,0 +1,16 @@
+{
+  "id": "example-client",
+  "example": true,
+  "displayName": "Example Client",
+  "productName": "Example Client",
+  "identifier": "xyz.block.buzz.app.demo.example-client-0123456789abcdef",
+  "demo": {
+    "name": "Example Client",
+    "buildId": "0123456789abcdef"
+  },
+  "icon": "flavors/icons/example-client.icns",
+  "relayUrl": "wss://relay.example.test",
+  "autoConnectDefaultRelay": false,
+  "accentColor": "#3b82f6",
+  "notes": "EXAMPLE ONLY — this is the documented template, not a real app. Copy it, give the copy its own demo.buildId (16 lowercase hex characters), and drop the `example` flag. Building it is refused on purpose."
+}

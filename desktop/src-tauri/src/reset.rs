@@ -21,7 +21,16 @@ use std::path::{Path, PathBuf};
 
 /// Sentinel path: `<app_data_dir.parent>/.<bundle_id>.reset-pending`
 /// where `bundle_id` is the file-name component of `app_data_dir`
-/// (e.g. `xyz.block.buzz.app` or `xyz.block.buzz.app.dev`).
+/// (e.g. `xyz.block.buzz.app`, `xyz.block.buzz.app.dev`, or a flavor's
+/// `xyz.block.buzz.app.demo.<slug>`).
+///
+/// Every path this module touches is derived from `app_data_dir`, which Tauri
+/// resolves from the running build's bundle identifier. That is what makes the
+/// wipe per-flavor without any flavor-specific branch: a build can only ever
+/// name its own directories. The one exception used to be
+/// [`crate::migration::legacy_app_data_dir`], which derived a pre-rename path
+/// from a flavor identifier that never had one — it now returns `None` for
+/// flavors.
 pub(crate) fn sentinel_path(app_data_dir: &Path) -> PathBuf {
     let bundle_id = app_data_dir
         .file_name()
@@ -938,5 +947,67 @@ mod tests {
         let trash_legacy = app_support.join("xyz.block.sprout.app.reset-trash");
         assert!(!trash_app.exists(), "app trash must be cleaned");
         assert!(!trash_legacy.exists(), "legacy trash must be cleaned");
+    }
+}
+
+#[cfg(test)]
+mod flavor_scope_tests {
+    use super::*;
+
+    /// Every directory the wipe can touch is named from `app_data_dir`, so a
+    /// flavor's reset must name only that flavor's own paths. The regression
+    /// this guards is a reset deriving a path that belongs to another identity
+    /// and then renaming it into trash.
+    #[test]
+    fn a_flavor_reset_only_ever_names_its_own_directories() {
+        let support = std::path::Path::new("/Users/me/Library/Application Support");
+        let flavor = support.join("xyz.block.buzz.app.demo.zeniad-5f1c08b37d4e2a96");
+
+        assert_eq!(
+            sentinel_path(&flavor),
+            support.join(".xyz.block.buzz.app.demo.zeniad-5f1c08b37d4e2a96.reset-pending")
+        );
+        assert_eq!(
+            trash_path(&flavor),
+            support.join("xyz.block.buzz.app.demo.zeniad-5f1c08b37d4e2a96.reset-trash")
+        );
+        // The legacy import source is the one path not derived from
+        // `app_data_dir`'s own name. A flavor must have none.
+        assert_eq!(crate::migration::legacy_app_data_dir(&flavor), None);
+
+        // Nothing above may name production or another flavor.
+        for path in [sentinel_path(&flavor), trash_path(&flavor)] {
+            let rendered = path.display().to_string();
+            assert!(
+                rendered.contains("zeniad-5f1c08b37d4e2a96"),
+                "{rendered} lost the flavor slug"
+            );
+            assert!(
+                !rendered.contains("kikeriki"),
+                "{rendered} names another flavor"
+            );
+        }
+    }
+
+    /// Production and dev keep deriving their own paths, including the legacy
+    /// import source the flavor branch now skips.
+    #[test]
+    fn production_and_dev_resets_are_unchanged() {
+        let support = std::path::Path::new("/Users/me/Library/Application Support");
+        let production = support.join("xyz.block.buzz.app");
+        assert_eq!(
+            sentinel_path(&production),
+            support.join(".xyz.block.buzz.app.reset-pending")
+        );
+        assert_eq!(
+            crate::migration::legacy_app_data_dir(&production),
+            Some(support.join("xyz.block.sprout.app"))
+        );
+
+        let dev = support.join("xyz.block.buzz.app.dev");
+        assert_eq!(
+            crate::migration::legacy_app_data_dir(&dev),
+            Some(support.join("xyz.block.sprout.app.dev"))
+        );
     }
 }

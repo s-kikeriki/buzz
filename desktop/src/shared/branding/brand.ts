@@ -17,6 +17,8 @@
  * the same way it sets any other Vite env var. The fallback keeps the OSS
  * build's own name when no overlay is applied.
  */
+import { parseDefaultAccentColor } from "./brandAccent";
+
 const DEFAULT_PRODUCT_NAME = "Buzz";
 
 function readProductName(): string {
@@ -29,4 +31,8 @@ function readProductName(): string {
 export const BRAND = {
   /** Product name for user-facing copy. Never hardcode this string. */
   productName: readProductName(),
+  /** Accent colour a fresh install starts on. */
+  defaultAccentColor: parseDefaultAccentColor(
+    import.meta.env?.VITE_BUZZ_DEFAULT_ACCENT_COLOR,
+  ),
 } as const;

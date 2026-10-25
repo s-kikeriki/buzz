@@ -1,0 +1,14 @@
+{
+  "id": "zeniad",
+  "displayName": "Zeniad",
+  "productName": "Zeniad",
+  "identifier": "xyz.block.buzz.app.demo.zeniad-5f1c08b37d4e2a96",
+  "demo": {
+    "name": "Zeniad",
+    "buildId": "5f1c08b37d4e2a96"
+  },
+  "icon": "flavors/icons/zeniad.icns",
+  "relayUrl": "wss://zeniad.communities.buzz.xyz",
+  "autoConnectDefaultRelay": true,
+  "accentColor": "#3b82f6"
+}

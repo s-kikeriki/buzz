@@ -1,0 +1,15 @@
+{
+  "id": "KI.keri.KI",
+  "displayName": "KI.keri.KI",
+  "productName": "KI.keri.KI",
+  "identifier": "xyz.block.buzz.app.demo.subsections-a9e7c83e21a32f51",
+  "demo": {
+    "name": "Subsections",
+    "buildId": "a9e7c83e21a32f51"
+  },
+  "icon": "flavors/icons/KI.keri.KI.icns",
+  "relayUrl": "wss://kikeriki.communities.buzz.xyz",
+  "autoConnectDefaultRelay": true,
+  "frozen": true,
+  "notes": "Frozen 2026-10-25. Kept so the installed app stays reproducible; not developed further. Its relay is the pre-migration kikeriki host. Do not delete this file: without it the identifier that selects this app's data directory and keyring is undocumented."
+}

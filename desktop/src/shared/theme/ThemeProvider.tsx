@@ -9,6 +9,7 @@ import {
 } from "react";
 import { isTauri } from "@tauri-apps/api/core";
 import { getCurrentWindow } from "@tauri-apps/api/window";
+import { BRAND } from "@/shared/branding/brand";
 import { invokeTauri } from "@/shared/api/tauri";
 import { isMacPlatform } from "@/shared/lib/platform";
 import { getStorageItem } from "@/shared/lib/safeStorage";
@@ -62,7 +63,9 @@ export const ACCENT_COLORS = [
 const LIGHT_ONLY_ACCENTS = new Set<string>(["#d7d72e"]);
 const ACCENT_TEXT_CONTRAST = 4.5;
 
-const DEFAULT_ACCENT = "#3b82f6";
+// Per-organisation builds set their own starting accent; see
+// `shared/branding/brand.ts`. Unset leaves the OSS default.
+const DEFAULT_ACCENT = BRAND.defaultAccentColor;
 
 type ThemeContextValue = {
   themeName: string;
