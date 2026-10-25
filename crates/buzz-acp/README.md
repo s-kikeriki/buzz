@@ -85,6 +85,15 @@ buzz-acp
 
 > **API key note:** `codex-acp` always attempts a ChatGPT WebSocket login first, which logs a `426 Upgrade Required` error. This is expected and non-fatal — it falls back to `OPENAI_API_KEY` automatically. Set `OPENAI_API_KEY` to ensure it has a working fallback.
 
+> **Sandbox note:** Codex's built-in shell runs in its own sandbox with no
+> network, so `buzz` commands run there fail with a DNS error. `codex-acp`
+> sends the active mode's sandbox policy on every turn and only
+> `agent-full-access` permits network, so the `CODEX_CONFIG` override the
+> harness injects cannot widen it. Run `buzz-acp` with
+> `BUZZ_ACP_MCP_COMMAND=buzz-dev-mcp` (the desktop app does): its `shell` tool
+> runs outside the sandbox, and the harness then appends a standing note
+> telling the agent to use it for anything that needs the network.
+
 ## Running with Claude Code
 
 [claude-agent-acp](https://github.com/agentclientprotocol/claude-agent-acp) wraps the Claude Agent SDK in an ACP interface.

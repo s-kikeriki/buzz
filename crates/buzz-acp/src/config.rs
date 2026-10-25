@@ -848,12 +848,33 @@ pub(crate) fn agent_output_format(extra_env: &[(String, String)]) -> String {
         .unwrap_or_else(|| default.into())
 }
 
-/// Build the `CODEX_CONFIG` environment variable that enables full outbound
+/// Whether this agent command is one of the Codex runtimes.
+///
+/// One predicate so the Codex-specific behaviors cannot drift apart: the
+/// `CODEX_CONFIG` injection below and the sandbox note in
+/// [`crate::harness_prompt`] must agree on which commands are Codex, or an
+/// agent reads advice about a sandbox it does not have — or hits the sandbox
+/// with no advice at all.
+pub(crate) fn is_codex_agent(agent_command: &str) -> bool {
+    matches!(
+        normalize_agent_command_identity(agent_command).as_str(),
+        "codex" | "codex-acp"
+    )
+}
+
+/// Build the `CODEX_CONFIG` environment variable that asks for outbound
 /// network access in Codex's macOS Seatbelt sandbox.
 ///
-/// Codex sandboxes MCP subprocesses (including `buzz-cli`) behind a Seatbelt sandbox
-/// that blocks all outbound network by default. Without this env var, `buzz-cli`
-/// requests are blocked before they can reach the relay WebSocket.
+/// **This does not reach the agent's own shell.** `codex-acp` 1.13.1 sends the
+/// active `AgentMode`'s sandbox policy on every `turnStart`, and the mode Buzz
+/// runs under (`agent`, the adapter's default) hard-codes
+/// `networkAccess: false`; the only mode that permits network is
+/// `agent-full-access`. So the session-level override below is overtaken by the
+/// per-turn policy, and a `buzz` command run from Codex's built-in shell still
+/// fails with a DNS error. The working path is the dev-MCP `shell` tool, which
+/// runs outside the sandbox — [`crate::harness_prompt`] is what tells the agent
+/// to use it. The injection is kept because it is the right request to make and
+/// costs nothing if a later adapter honors it.
 ///
 /// Returns `Some(("CODEX_CONFIG", "{\"sandbox_workspace_write\":{\"network_access\":true}}"))` for
 /// Codex agents, or `None` for non-Codex agents or when the relay URL cannot be parsed.
@@ -869,9 +890,8 @@ pub(crate) fn agent_output_format(extra_env: &[(String, String)]) -> String {
 ///
 /// Handles `ws://`, `wss://`, `http://`, and `https://` schemes.
 pub fn codex_network_env(agent_command: &str, relay_url: &str) -> Option<(String, String)> {
-    match normalize_agent_command_identity(agent_command).as_str() {
-        "codex" | "codex-acp" => {}
-        _ => return None,
+    if !is_codex_agent(agent_command) {
+        return None;
     }
 
     // Validate the relay URL before injecting broader network access. On parse failure,

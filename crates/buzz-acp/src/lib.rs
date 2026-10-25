@@ -9,6 +9,7 @@ mod config;
 mod edit_routing;
 mod engram_fetch;
 mod filter;
+mod harness_prompt;
 mod isolated_execution;
 mod observer;
 mod pool;
@@ -10095,14 +10096,14 @@ mod observer_chunk_coalescer_tests {
 }
 
 #[cfg(test)]
-mod build_mcp_servers_tests {
+pub(crate) mod build_mcp_servers_tests {
     use super::*;
     use std::sync::Mutex;
 
     /// Env-var-touching tests must run serially — env vars are process-global.
     static ENV_LOCK: Mutex<()> = Mutex::new(());
 
-    pub(super) fn test_config() -> Config {
+    pub(crate) fn test_config() -> Config {
         Config {
             keys: nostr::Keys::generate(),
             relay_url: "ws://localhost:3000".into(),
