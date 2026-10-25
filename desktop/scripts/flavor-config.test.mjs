@@ -1,5 +1,8 @@
 import assert from "node:assert/strict";
+import { existsSync } from "node:fs";
+import path from "node:path";
 import test from "node:test";
+import { fileURLToPath } from "node:url";
 
 import { demoBuildConfig } from "./demo-build-config.mjs";
 import {
@@ -229,5 +232,26 @@ test("shell output quotes every value", () => {
   assert.ok(lines.includes(`BRAND_NAME='Acme'\\''s App'`));
   for (const line of lines) {
     assert.match(line, /^[A-Z0-9_]+='.*'$/);
+  }
+});
+
+test("every buildable flavor's icon is committed at the path it names", () => {
+  // The promise a flavor file makes is "a build needs nothing but a checkout
+  // and the flavor's name". A declared icon that is not in the repo breaks
+  // exactly that, and breaks it late — at `codesign`, in a shell script
+  // outside this repo. Frozen and example flavors are exempt: both refuse to
+  // build, so neither needs its artwork here.
+  const desktopDir = path.resolve(
+    path.dirname(fileURLToPath(import.meta.url)),
+    "..",
+  );
+  for (const id of listFlavorIds()) {
+    const flavor = loadFlavor(id);
+    if (flavor.frozen || flavor.example) continue;
+    const iconPath = path.join(desktopDir, flavor.icon);
+    assert.ok(
+      existsSync(iconPath),
+      `${id}: declares ${flavor.icon}, which is not in the repo`,
+    );
   }
 });
