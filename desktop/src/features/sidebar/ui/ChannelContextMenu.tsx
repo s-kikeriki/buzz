@@ -8,9 +8,9 @@ import {
   Copy,
   LogOut,
   LoaderCircle,
+  Pin,
+  PinOff,
   Plus,
-  Star,
-  StarOff,
   Trash2,
   TriangleAlert,
 } from "lucide-react";
@@ -54,6 +54,9 @@ function MoveToSectionSubmenu({
   onCreateSectionForChannel: (channelId: string) => void;
 }) {
   const currentSectionId = assignments[channelId];
+  const nameById = new Map(
+    sections.map((section) => [section.id, section.name]),
+  );
 
   return (
     <ContextMenuSub>
@@ -62,9 +65,18 @@ function MoveToSectionSubmenu({
         <span>Move to section</span>
       </ContextMenuSubTrigger>
       <ContextMenuSubContent>
+        {/* `sections` arrives in sidebar order: each parent before its
+            children, so one indent step mirrors the sidebar's nesting. */}
         {sections.map((section) => (
           <ContextMenuItem
             key={section.id}
+            // Indentation is visual only, so a nested entry spells its parent
+            // out for assistive tech.
+            aria-label={
+              section.parentId
+                ? `${nameById.get(section.parentId) ?? ""} / ${section.name}`
+                : undefined
+            }
             onSelect={() =>
               deferMenuAction(() => onAssignChannel(channelId, section.id))
             }
@@ -76,7 +88,9 @@ function MoveToSectionSubmenu({
                 <StatusEmoji className="h-4 w-4" value={section.icon} />
               ) : null}
             </ContextMenuIconSlot>
-            <span>{section.name}</span>
+            <span className={section.parentId ? "pl-3" : undefined}>
+              {section.name}
+            </span>
           </ContextMenuItem>
         ))}
         {sections.length > 0 ? <ContextMenuSeparator /> : null}
@@ -307,18 +321,18 @@ export function ChannelContextMenuItems({
             }
           >
             <ContextMenuIconSlot>
-              <StarOff className="h-4 w-4" />
+              <PinOff className="h-4 w-4" />
             </ContextMenuIconSlot>
-            <span>Unstar channel</span>
+            <span>Unpin channel</span>
           </ContextMenuItem>
         ) : (
           <ContextMenuItem
             onSelect={() => deferMenuAction(() => onStarChannel?.(channel.id))}
           >
             <ContextMenuIconSlot>
-              <Star className="h-4 w-4" />
+              <Pin className="h-4 w-4" />
             </ContextMenuIconSlot>
-            <span>Star channel</span>
+            <span>Pin channel</span>
           </ContextMenuItem>
         )
       ) : null}

@@ -64,11 +64,20 @@ detach() {
   device=""
 }
 
+# The volume icon used to be a plain copy of the app's icon, which made a
+# mounted image indistinguishable from the installed app on the Desktop - so
+# images stayed mounted and got dragged around as if they were the app. Badge
+# it instead: same brand, plus the one signal that says "this is a disk".
+app_icon="$app_path/Contents/Resources/icon.icns"
+volume_icon="$work_dir/VolumeIcon.icns"
+if [[ -f "$app_icon" ]]; then
+  "$script_dir/make-dmg-volume-icon.sh" "$app_icon" "$volume_icon"
+fi
+
 if command -v SetFile >/dev/null 2>&1; then
   SetFile -a V "$mount_point/.background" || true
-  icon="$mount_point/$app_name/Contents/Resources/icon.icns"
-  if [[ -f "$icon" ]]; then
-    cp "$icon" "$mount_point/.VolumeIcon.icns" || true
+  if [[ -f "$volume_icon" ]]; then
+    cp "$volume_icon" "$mount_point/.VolumeIcon.icns"
     SetFile -c icnC "$mount_point/.VolumeIcon.icns" || true
     SetFile -a C "$mount_point" || true
   fi

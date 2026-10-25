@@ -1,0 +1,349 @@
+msgid ""
+msgstr ""
+"POT-Creation-Date: 2026-10-18 07:27+0200\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: @lingui/cli\n"
+"Language: en\n"
+
+#: src/features/settings/ui/AppearanceSettingsControls.tsx
+msgid "(all communities)"
+msgstr "(all communities)"
+
+#: src/features/settings/ui/AppearanceSettingsPanel.tsx
+msgid "(per community)"
+msgstr "(per community)"
+
+#: src/features/settings/ui/AppearanceSettingsControls.tsx
+msgid "{glassOpacity}% opacity"
+msgstr "{glassOpacity}% opacity"
+
+#: src/features/settings/ui/SettingsView.tsx
+msgid "{label} settings sections"
+msgstr "{label} settings sections"
+
+#: src/features/settings/ui/AppearanceSettingsControls.tsx
+msgid "A–Z"
+msgstr "A–Z"
+
+#: src/features/settings/ui/AppearanceSettingsControls.tsx
+msgid "Accent color"
+msgstr "Accent color"
+
+#: src/features/settings/ui/SettingsPanels.tsx
+msgid "Admin"
+msgstr "Admin"
+
+#: src/features/settings/ui/SettingsPanels.tsx
+msgid "Agents"
+msgstr "Agents"
+
+#: src/features/settings/ui/SettingsView.tsx
+msgid "App"
+msgstr "App"
+
+#: src/features/settings/ui/AppearanceSettingsPanel.tsx
+#: src/features/settings/ui/SettingsPanels.tsx
+msgid "Appearance"
+msgstr "Appearance"
+
+#: src/features/settings/ui/AppearanceSettingsControls.tsx
+msgid "Applies across conversations and interface text"
+msgstr "Applies across conversations and interface text"
+
+#: src/features/settings/ui/AppearanceSettingsControls.tsx
+msgid "Available in the macOS desktop app."
+msgstr "Available in the macOS desktop app."
+
+#: src/features/settings/ui/SettingsView.tsx
+msgid "Back to app"
+msgstr "Back to app"
+
+#: src/features/settings/ui/AppearanceSettingsControls.tsx
+msgid "Blur the desktop behind navigation while keeping content solid."
+msgstr "Blur the desktop behind navigation while keeping content solid."
+
+#: src/features/settings/ui/SettingsPanels.tsx
+msgid "Channel templates"
+msgstr "Channel templates"
+
+#: src/features/settings/ui/SettingsView.tsx
+msgid "Checking invite permissions…"
+msgstr "Checking invite permissions…"
+
+#: src/features/settings/ui/AppearanceSettingsPanel.tsx
+msgid "Choose how {productName} looks and feels."
+msgstr "Choose how {productName} looks and feels."
+
+#: src/features/settings/ui/AppearanceSettingsPanel.tsx
+msgid "Choose the colors used throughout {productName}."
+msgstr "Choose the colors used throughout {productName}."
+
+#: src/features/settings/ui/AppearanceSettingsControls.tsx
+msgid "Choose the highlight color used throughout {productName}."
+msgstr "Choose the highlight color used throughout {productName}."
+
+#: src/features/settings/ui/AppearanceSettingsPanel.tsx
+msgid "Color mode"
+msgstr "Color mode"
+
+#: src/features/settings/ui/AppearanceSettingsControls.tsx
+msgid "Comfy"
+msgstr "Comfy"
+
+#: src/features/settings/ui/SettingsView.tsx
+msgid "Communities"
+msgstr "Communities"
+
+#: src/features/settings/ui/AppearanceSettingsControls.tsx
+msgid "Compact"
+msgstr "Compact"
+
+#: src/features/settings/ui/SettingsPanels.tsx
+msgid "Compute"
+msgstr "Compute"
+
+#: src/features/settings/ui/AppearanceSettingsControls.tsx
+msgid "Conversation density"
+msgstr "Conversation density"
+
+#: src/features/settings/ui/SettingsPanels.tsx
+msgid "Custom emoji"
+msgstr "Custom emoji"
+
+#: src/features/settings/ui/AppearanceSettingsPanel.tsx
+msgid "Dark"
+msgstr "Dark"
+
+#: src/features/settings/ui/AppearanceSettingsControls.tsx
+msgid "Default"
+msgstr "Default"
+
+#: src/features/settings/ui/SettingsPanels.tsx
+msgid "Experiments"
+msgstr "Experiments"
+
+#: src/features/settings/ui/AppearanceSettingsControls.tsx
+msgid "Focus"
+msgstr "Focus"
+
+#: src/features/settings/ui/AppearanceSettingsPanel.tsx
+msgid "Follow your system or choose a light or dark appearance."
+msgstr "Follow your system or choose a light or dark appearance."
+
+#: src/features/settings/ui/AppearanceSettingsControls.tsx
+msgid "Font size"
+msgstr "Font size"
+
+#: src/features/settings/ui/AppearanceSettingsControls.tsx
+msgid "Give the selected navigation item a higher-contrast background."
+msgstr "Give the selected navigation item a higher-contrast background."
+
+#: src/features/settings/ui/AppearanceSettingsControls.tsx
+msgid "Glass background"
+msgstr "Glass background"
+
+#: src/features/settings/ui/AppearanceSettingsControls.tsx
+msgid "Glass opacity"
+msgstr "Glass opacity"
+
+#: src/features/settings/ui/AppearanceSettingsControls.tsx
+msgid "Highlights from this release: refreshed conversation layout, quicker link handling, and readability improvements."
+msgstr "Highlights from this release: refreshed conversation layout, quicker link handling, and readability improvements."
+
+#: src/features/settings/ui/SettingsPanels.tsx
+msgid "Hosted communities"
+msgstr "Hosted communities"
+
+#: src/features/settings/ui/AppearanceSettingsControls.tsx
+msgid "I added a longer message so you can compare line height and text spacing."
+msgstr "I added a longer message so you can compare line height and text spacing."
+
+#: src/features/settings/ui/SettingsView.tsx
+msgid "Invite settings are unavailable. Relay recovery may still be in progress."
+msgstr "Invite settings are unavailable. Relay recovery may still be in progress."
+
+#: src/features/settings/ui/SettingsView.tsx
+msgid "Invite settings could not be checked."
+msgstr "Invite settings could not be checked."
+
+#: src/features/settings/ui/SettingsPanels.tsx
+msgid "Invites"
+msgstr "Invites"
+
+#: src/features/settings/ui/LanguageSettingsControl.tsx
+msgid "Language"
+msgstr "Language"
+
+#: src/features/settings/ui/LanguageSettingsControl.tsx
+msgid "Language used across menus, settings, and system messages"
+msgstr "Language used across menus, settings, and system messages"
+
+#: src/features/settings/ui/AppearanceSettingsControls.tsx
+msgid "Large previews with images and descriptions"
+msgstr "Large previews with images and descriptions"
+
+#: src/features/settings/ui/AppearanceSettingsControls.tsx
+msgid "Larger"
+msgstr "Larger"
+
+#: src/features/settings/ui/AppearanceSettingsPanel.tsx
+msgid "Light"
+msgstr "Light"
+
+#: src/features/settings/ui/AppearanceSettingsControls.tsx
+msgid "Link previews"
+msgstr "Link previews"
+
+#: src/features/settings/ui/SettingsPanels.tsx
+msgid "Local archive"
+msgstr "Local archive"
+
+#: src/features/settings/ui/AppearanceSettingsControls.tsx
+msgid "Lower values reveal more of the desktop blur."
+msgstr "Lower values reveal more of the desktop blur."
+
+#: src/features/settings/ui/SettingsPanels.tsx
+msgid "Mobile"
+msgstr "Mobile"
+
+#: src/features/settings/ui/SettingsPanels.tsx
+msgid "Notifications"
+msgstr "Notifications"
+
+#: src/features/settings/ui/AppearanceSettingsControls.tsx
+msgid "Orders every list in the sidebar. Recent also floats the sections themselves, so dragging them waits for A–Z. A section you have set from its own menu keeps that order."
+msgstr "Orders every list in the sidebar. Recent also floats the sections themselves, so dragging them waits for A–Z. A section you have set from its own menu keeps that order."
+
+#: src/features/settings/ui/SettingsView.tsx
+msgid "Personal"
+msgstr "Personal"
+
+#: src/features/settings/ui/AppearanceSettingsPanel.tsx
+msgid "Preferences"
+msgstr "Preferences"
+
+#: src/features/settings/ui/AppearanceSettingsControls.tsx
+msgid "Preview"
+msgstr "Preview"
+
+#: src/features/settings/ui/AppearanceSettingsControls.tsx
+msgid "Product updates — a fresh look at conversations"
+msgstr "Product updates — a fresh look at conversations"
+
+#: src/features/settings/ui/SettingsPanels.tsx
+msgid "Profile"
+msgstr "Profile"
+
+#: src/features/settings/ui/AppearanceSettingsControls.tsx
+msgid "Prominent active tab"
+msgstr "Prominent active tab"
+
+#: src/features/settings/ui/AppearanceSettingsControls.tsx
+msgid "Recent"
+msgstr "Recent"
+
+#: src/features/settings/ui/AppearanceSettingsControls.tsx
+msgid "Reset glass opacity"
+msgstr "Reset glass opacity"
+
+#: src/features/settings/ui/AppearanceSettingsControls.tsx
+msgid "Rich"
+msgstr "Rich"
+
+#: src/features/settings/ui/AppearanceSettingsControls.tsx
+msgid "Row height and the spacing around section headers"
+msgstr "Row height and the spacing around section headers"
+
+#: src/features/settings/ui/SettingsPanels.tsx
+msgid "Shortcuts"
+msgstr "Shortcuts"
+
+#: src/features/settings/ui/AppearanceSettingsControls.tsx
+msgid "Sidebar density"
+msgstr "Sidebar density"
+
+#: src/features/settings/ui/AppearanceSettingsControls.tsx
+msgid "Sidebar order"
+msgstr "Sidebar order"
+
+#: src/features/settings/ui/AppearanceSettingsControls.tsx
+msgid "Small cards with a thumbnail"
+msgstr "Small cards with a thumbnail"
+
+#: src/features/settings/ui/AppearanceSettingsControls.tsx
+msgid "Smaller"
+msgstr "Smaller"
+
+#: src/features/settings/ui/AppearanceSettingsControls.tsx
+msgid "Spacing in conversations and Markdown content across {productName}"
+msgstr "Spacing in conversations and Markdown content across {productName}"
+
+#: src/features/settings/ui/AppearanceSettingsControls.tsx
+msgid "Spacious"
+msgstr "Spacious"
+
+#: src/features/settings/ui/AppearanceSettingsControls.tsx
+msgid "Split"
+msgstr "Split"
+
+#: src/features/settings/ui/AppearanceSettingsPanel.tsx
+msgid "System"
+msgstr "System"
+
+#: src/features/settings/ui/AppearanceSettingsControls.tsx
+msgid "The revised conversation layout is ready to review."
+msgstr "The revised conversation layout is ready to review."
+
+#: src/features/settings/ui/AppearanceSettingsControls.tsx
+msgid "The same rhythm carries through channels, threads, DMs, and Inbox."
+msgstr "The same rhythm carries through channels, threads, DMs, and Inbox."
+
+#: src/features/settings/ui/AppearanceSettingsPanel.tsx
+msgid "Theme"
+msgstr "Theme"
+
+#: src/features/settings/ui/AppearanceSettingsPanel.tsx
+msgid "Theme style"
+msgstr "Theme style"
+
+#: src/features/settings/ui/AppearanceSettingsPanel.tsx
+msgid "Theme style, {selectedThemeLabel}"
+msgstr "Theme style, {selectedThemeLabel}"
+
+#: src/features/settings/ui/AppearanceSettingsPanel.tsx
+msgid "this community"
+msgstr "this community"
+
+#: src/features/settings/ui/AppearanceSettingsControls.tsx
+msgid "Thread layout"
+msgstr "Thread layout"
+
+#: src/features/settings/ui/AppearanceSettingsControls.tsx
+msgid "Threads open in a side panel next to the channel"
+msgstr "Threads open in a side panel next to the channel"
+
+#: src/features/settings/ui/AppearanceSettingsControls.tsx
+msgid "Threads open over the channel"
+msgstr "Threads open over the channel"
+
+#: src/features/settings/ui/SettingsView.tsx
+msgid "Try again"
+msgstr "Try again"
+
+#: src/features/settings/ui/SettingsPanels.tsx
+msgid "Updates"
+msgstr "Updates"
+
+#: src/features/settings/ui/AppearanceSettingsControls.tsx
+msgid "Use {colorName} accent"
+msgstr "Use {colorName} accent"
+
+#: src/features/settings/ui/SettingsView.tsx
+msgid "v{appVersion}"
+msgstr "v{appVersion}"
+
+#: src/features/settings/ui/SettingsPanels.tsx
+msgid "Voice"
+msgstr "Voice"

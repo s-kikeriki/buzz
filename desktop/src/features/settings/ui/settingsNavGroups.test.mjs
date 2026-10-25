@@ -5,7 +5,7 @@ import { settingsNavGroups } from "./SettingsView.tsx";
 
 test("relay-admin is wired into the Communities nav group", () => {
   const communitiesGroup = settingsNavGroups.find(
-    (g) => g.label === "Communities",
+    (g) => g.id === "communities",
   );
   assert.ok(
     communitiesGroup,
@@ -19,7 +19,7 @@ test("relay-admin is wired into the Communities nav group", () => {
 
 test("relay-admin follows community-members in the Communities nav group", () => {
   const communitiesGroup = settingsNavGroups.find(
-    (g) => g.label === "Communities",
+    (g) => g.id === "communities",
   );
   assert.ok(
     communitiesGroup,
@@ -38,7 +38,7 @@ test("the removed admin-console id is not wired into any nav group", () => {
   for (const group of settingsNavGroups) {
     assert.ok(
       !group.sections.includes("admin-console"),
-      `"admin-console" must not appear in the "${group.label}" group`,
+      `"admin-console" must not appear in the "${group.id}" group`,
     );
   }
 });

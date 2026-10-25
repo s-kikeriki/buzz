@@ -32,6 +32,13 @@ export const LEGACY_WELCOME_GUIDE_SYSTEM_PROMPT =
 export const WELCOME_GUIDE_INTRO_MESSAGE =
   "Hi, I'm Fizz. Welcome to Buzz.\n\nI can help you get oriented, answer questions, and make the first few steps feel less mysterious.\n\nFeel free to ask me what else you can do in Buzz, or just talk through what you want to build.";
 
+/**
+ * kikeriki fork: the bee starter agents are removed from this build, so
+ * nothing may provision or start the Welcome Team. The provisioning code
+ * below stays intact, and its call sites check this first.
+ */
+export const WELCOME_TEAM_ENABLED = false;
+
 export type WelcomeTeamRole = "lead" | "teammate";
 
 export type WelcomeTeamStarterDefinition = Readonly<{

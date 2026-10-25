@@ -7,6 +7,7 @@ import {
   countUnreadBadgeObservedEvents,
   countUnreadHighPriorityObservedEvents,
   countUnreadObservedEvents,
+  countUnreadThreadObservedEvents,
   hasUnreadTopLevelObservedEvent,
   observedUnreadEventReadAt,
   recordObservedUnreadEvent,
@@ -424,6 +425,33 @@ test("countUnreadObservedEvents_countsThreadRepliesForChannelUnread", () => {
     countUnreadAppBadgeObservedEvents(events, readAtFor(300, new Map())),
     0,
   );
+});
+
+test("countUnreadThreadObservedEvents_countsEachThreadOnce", () => {
+  const events = new Map([
+    ["reply-a", observed("reply-a", 500, "root-1")],
+    ["reply-b", observed("reply-b", 600, "root-1")],
+    ["reply-c", observed("reply-c", 700, "root-2")],
+    ["top", observed("top", 800, null)],
+  ]);
+
+  assert.equal(countUnreadObservedEvents(events, readAtFor(300, new Map())), 4);
+  assert.equal(
+    countUnreadThreadObservedEvents(events, readAtFor(300, new Map())),
+    3,
+  );
+});
+
+test("countUnreadThreadObservedEvents_dropsThreadsReadInTheirOwnContext", () => {
+  const events = new Map([
+    ["reply-a", observed("reply-a", 500, "root-1")],
+    ["reply-c", observed("reply-c", 700, "root-2")],
+  ]);
+  // root-1 was opened and read; only root-2 is still unread.
+  const getReadAt = readAtFor(300, new Map([["root-1", 600]]));
+
+  assert.equal(countUnreadThreadObservedEvents(events, getReadAt), 1);
+  assert.equal(countUnreadThreadObservedEvents(undefined, getReadAt), 0);
 });
 
 test("highPriorityObservedEvents_countsMentionBadgeForGeneralMessage", () => {

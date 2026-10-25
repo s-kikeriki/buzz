@@ -13,12 +13,24 @@ const MOCK_PUBKEY = "deadbeef".repeat(8);
 const MOCK_RELAY_ENCODED = encodeURIComponent("ws://localhost:3000");
 const SORT_STORAGE_KEY = `buzz-channel-sort.v1:${MOCK_PUBKEY}:${MOCK_RELAY_ENCODED}`;
 
+const SIDEBAR_ORDER_STORAGE_KEY = "buzz.appearance.sidebarChannelOrder";
+
 function seedSortState(page: Page, groups: Record<string, string>) {
   return page.addInitScript(
     ({ key, groups }) => {
       window.localStorage.setItem(key, JSON.stringify({ version: 1, groups }));
     },
     { key: SORT_STORAGE_KEY, groups },
+  );
+}
+
+/** Device-level fallback order that every unset grouping follows. */
+function seedSidebarOrder(page: Page, order: "alpha" | "recent") {
+  return page.addInitScript(
+    ({ key, order }) => {
+      window.localStorage.setItem(key, order);
+    },
+    { key: SIDEBAR_ORDER_STORAGE_KEY, order },
   );
 }
 
@@ -98,18 +110,39 @@ function streamNames(page: Page) {
 }
 
 test.describe("per-group channel sort", () => {
-  test("01 — Channels group defaults to A–Z", async ({ page }) => {
+  test("01 — unset groups follow the Sidebar order preference", async ({
+    page,
+  }) => {
+    await installMockBridge(page);
+    await openApp(page);
+
+    // Recent is the shipped default, so an untouched sidebar is recency-first.
+    await expect
+      .poll(async () => (await streamNames(page)).slice(0, 2))
+      .toEqual(["all-replies", "deep-history"]);
+  });
+
+  test("01b — Sidebar order A–Z puts unset groups back in name order", async ({
+    page,
+  }) => {
+    await seedSidebarOrder(page, "alpha");
     await installMockBridge(page);
     await openApp(page);
 
     const names = await streamNames(page);
     const sorted = [...names].sort((a, b) => a.localeCompare(b));
     expect(names).toEqual(sorted);
+
+    const forumOrder = await forumNames(page);
+    expect(forumOrder).toEqual(
+      [...forumOrder].sort((a, b) => a.localeCompare(b)),
+    );
   });
 
   test("02 — sort trigger switches Channels to Recent and persists", async ({
     page,
   }) => {
+    await seedSidebarOrder(page, "alpha");
     await installMockBridge(page);
     await openApp(page);
 
@@ -194,6 +227,7 @@ test.describe("per-group channel sort", () => {
   test("03 — group preferences are independent (seeded Channels=recent leaves Forums A–Z)", async ({
     page,
   }) => {
+    await seedSidebarOrder(page, "alpha");
     await seedSortState(page, { channels: "recent" });
     await installMockBridge(page);
     await openApp(page);
@@ -228,6 +262,7 @@ test.describe("per-group channel sort", () => {
   });
 
   test("05 — DM group has its own sort trigger", async ({ page }) => {
+    await seedSidebarOrder(page, "alpha");
     await installMockBridge(page);
     await openApp(page);
 

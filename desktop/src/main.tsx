@@ -23,6 +23,10 @@ import { recoverLocalStorageQuotaOnStartup } from "@/shared/lib/localStorageQuot
 import { startLocalStorageSweep } from "@/shared/lib/localStorageSweep";
 import { initializeConversationDensityPreference } from "@/shared/lib/conversationDensityPreference";
 import { initializeFontSizePreference } from "@/shared/lib/fontSizePreference";
+import { initializeSidebarDensityPreference } from "@/shared/lib/sidebarDensityPreference";
+import { initializeSidebarChannelOrderPreference } from "@/features/sidebar/lib/sidebarChannelOrderPreference";
+import { initializeLocalePreference } from "@/shared/lib/localePreference";
+import { AppI18nProvider } from "@/shared/i18n/AppI18nProvider";
 
 type E2eWindow = Window & {
   __BUZZ_E2E__?: unknown;
@@ -85,26 +89,28 @@ function renderApp() {
       {/* block/buzz#5078 — catch any uncaught render error so a WebKit
           SecurityError from localStorage can't blank the whole window. */}
       <RootErrorBoundary>
-        <AvatarClipPaths />
-        <CommunitiesProvider>
-          <CommunityOnboardingProvider
-            enabled={huddleWindowChannelId() === null}
-          >
-            <ThemeProvider defaultTheme="buzz">
-              <TooltipProvider>
-                <EmojiBurstProvider>
-                  <PoofBurstProvider>
-                    <UpdaterProvider>
-                      <App />
-                      <NostrBindConsentDialog />
-                    </UpdaterProvider>
-                    <Toaster />
-                  </PoofBurstProvider>
-                </EmojiBurstProvider>
-              </TooltipProvider>
-            </ThemeProvider>
-          </CommunityOnboardingProvider>
-        </CommunitiesProvider>
+        <AppI18nProvider>
+          <AvatarClipPaths />
+          <CommunitiesProvider>
+            <CommunityOnboardingProvider
+              enabled={huddleWindowChannelId() === null}
+            >
+              <ThemeProvider defaultTheme="buzz">
+                <TooltipProvider>
+                  <EmojiBurstProvider>
+                    <PoofBurstProvider>
+                      <UpdaterProvider>
+                        <App />
+                        <NostrBindConsentDialog />
+                      </UpdaterProvider>
+                      <Toaster />
+                    </PoofBurstProvider>
+                  </EmojiBurstProvider>
+                </TooltipProvider>
+              </ThemeProvider>
+            </CommunityOnboardingProvider>
+          </CommunitiesProvider>
+        </AppI18nProvider>
       </RootErrorBoundary>
     </React.StrictMode>,
   );
@@ -130,6 +136,9 @@ async function bootstrap() {
   recoverLocalStorageQuotaOnStartup();
   initializeConversationDensityPreference();
   initializeFontSizePreference();
+  initializeSidebarDensityPreference();
+  initializeSidebarChannelOrderPreference();
+  initializeLocalePreference();
   startLocalStorageSweep();
   await installE2eBridgeIfConfigured();
   await migrateLegacyCommunityStorageBeforeRender();

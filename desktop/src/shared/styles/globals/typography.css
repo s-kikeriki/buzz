@@ -40,6 +40,22 @@
     --conversation-list-item-gap: 0.375rem;
     --conversation-timestamp-font-size: calc(var(--buzz-type-rem) * 0.75);
     --conversation-timestamp-line-height: var(--buzz-type-rem);
+
+    /*
+     * Sidebar rhythm: row height, the gap between rows, the block padding
+     * around a section, and the section header height. Sidebar density
+     * overrides these and nothing else, so type size stays put.
+     */
+    --sidebar-row-height: 2rem;
+    --sidebar-row-gap: 0.25rem;
+    --sidebar-group-padding-block: 0.5rem;
+    --sidebar-group-label-height: 2rem;
+    /*
+     * A subsection halves its block padding and pulls back the sidebar's own
+     * stack gap by the same amount, so a run of subsections sits at half the
+     * spacing of the top-level sections it hangs under.
+     */
+    --sidebar-subgroup-padding-block: 0.25rem;
   }
 
   /* Conversation text contract: 13 / 14 / 15px before keyboard zoom. */
@@ -63,6 +79,14 @@
     --conversation-row-padding-block: 0.5rem;
     --conversation-paragraph-gap: 0.625rem;
     --conversation-list-item-gap: 0.5rem;
+  }
+
+  :root[data-sidebar-density="compact"] {
+    --sidebar-row-height: 1.75rem;
+    --sidebar-row-gap: 0rem;
+    --sidebar-group-padding-block: 0.25rem;
+    --sidebar-group-label-height: 1.625rem;
+    --sidebar-subgroup-padding-block: 0.125rem;
   }
 
   body {
