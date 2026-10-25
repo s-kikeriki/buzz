@@ -16,6 +16,7 @@ mod huddle;
 mod identity_storage;
 mod initial_window;
 mod key_backup;
+mod legacy_media_origins;
 mod link_preview_tags;
 mod linux_media;
 #[cfg(target_os = "macos")]
