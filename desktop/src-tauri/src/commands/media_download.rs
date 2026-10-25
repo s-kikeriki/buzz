@@ -8,6 +8,7 @@ use crate::commands::clipboard::with_clipboard;
 use crate::commands::export_util::save_bytes_with_dialog;
 use crate::commands::media::{detect_and_validate_mime, mint_media_get_auth};
 use crate::commands::media_filename::sanitize_filename;
+use crate::external_open_policy::written_name;
 use crate::commands::{
     personas::{
         parse_snapshot_payload_from_bytes, MAX_SNAPSHOT_JSON_BYTES, MAX_SNAPSHOT_PNG_BYTES,
@@ -117,12 +118,35 @@ pub async fn download_image(
     save_bytes_with_dialog(&app, &filename, "Images", &[&ext], &bytes).await
 }
 
+/// The name the save dialog suggests for a sender-supplied attachment, and the
+/// extension it filters on.
+///
+/// One function returning both, because they must be read off the same string:
+/// a dialog that suggests one name and filters for another type is the drift
+/// that the external-open gate exists to prevent, one surface over.
+///
+/// [`written_name`] rather than [`sanitize_filename`]: the save dialog is where
+/// the user reads the file's name and type before agreeing to keep it, so it is
+/// a display surface, and `sanitize_filename` leaves the things that make a
+/// displayed name lie. A U+202E renders `invoice\u{202e}fdp.exe` as
+/// `invoice exe.pdf`, and the dialog would offer to save a document. It is also
+/// the name the preview dialog and the attachment card already show, so all
+/// three agree about which file this is.
+fn attachment_save_target(filename: &str) -> (String, Option<String>) {
+    let name = written_name(filename);
+    let extension = std::path::Path::new(&name)
+        .extension()
+        .and_then(|e| e.to_str())
+        .map(str::to_string);
+    (name, extension)
+}
+
 /// Download an arbitrary file attachment from a relay `/media/` URL and save it
 /// via a native save-file dialog.
 ///
 /// The frontend supplies `filename` from the message's imeta `filename` field
 /// (the URL path is only the content hash, so it carries no human-readable
-/// name). We sanitize it defensively before using it as the suggested name.
+/// name). [`attachment_save_target`] is what turns it into a name worth showing.
 ///
 /// Mirrors `download_image`'s SSRF and size protections, but uses a generic
 /// "All Files" dialog filter and derives the extension from the supplied
@@ -138,15 +162,7 @@ pub async fn download_file(
     let relay_base = relay_api_base_url_with_override(&state);
     let url = resolve_download_url(&url, &relay_base)?;
 
-    // The imeta filename is the only human-readable name we have; sanitize it
-    // so directory traversal / control characters can never reach the dialog.
-    let filename = sanitize_filename(&filename);
-
-    // Derive extension for the save dialog filter from the supplied filename.
-    let ext = std::path::Path::new(&filename)
-        .extension()
-        .and_then(|e| e.to_str())
-        .map(|e| e.to_string());
+    let (filename, ext) = attachment_save_target(&filename);
 
     let bytes = fetch_blob_bytes(&url, &state).await?;
 
@@ -542,6 +558,41 @@ pub async fn fetch_snapshot_bytes(
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn the_save_dialog_is_offered_the_sanitized_name() {
+        // U+202E reverses what follows it, so the raw name renders as
+        // `invoice exe.pdf`: the dialog would be offering to save a document,
+        // and the name the user then reads in Finder would not be the one they
+        // agreed to. The filter has to follow the same string, or the dialog
+        // says `.pdf` while suggesting an `.exe`.
+        let (name, extension) = attachment_save_target("invoice\u{202e}fdp.exe");
+        assert_eq!(name, "invoicefdp.exe");
+        assert_eq!(extension.as_deref(), Some("exe"));
+
+        // The weaker label sanitizer passes it through, which is why this path
+        // does not use it.
+        assert!(sanitize_filename("invoice\u{202e}fdp.exe").contains('\u{202e}'));
+    }
+
+    #[test]
+    fn the_save_dialog_name_and_its_filter_are_read_off_one_string() {
+        for (raw, name, extension) in [
+            ("report.pdf", "report.pdf", Some("pdf")),
+            ("../../etc/passwd", "passwd", None),
+            // Win32 strips the trailing dot, so `.exe` is the real type and
+            // the filter must not advertise something else.
+            ("setup.exe.", "setup.exe", Some("exe")),
+            ("notes.txt:evil.exe", "notes.txt_evil.exe", Some("exe")),
+            ("", "file", None),
+        ] {
+            assert_eq!(
+                attachment_save_target(raw),
+                (name.to_string(), extension.map(str::to_string)),
+                "{raw}"
+            );
+        }
+    }
 
     #[test]
     fn snapshot_kind_json_returns_json_kind_and_correct_cap() {
