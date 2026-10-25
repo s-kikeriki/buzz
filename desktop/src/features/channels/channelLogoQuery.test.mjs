@@ -190,13 +190,20 @@ test("a local write shows immediately and still re-reads from the relay", async 
 });
 
 test("a channel id that is absent never issues a relay read", async () => {
-  const { calls } = recordingFetcher(new Map());
+  const calls = [];
+  const fetchEvents = async (filter) => {
+    calls.push(filter);
+    return [];
+  };
   for (const absent of [null, undefined, ""]) {
-    const options = channelLogoQueryOptions(absent, async (filter) => {
-      calls.push(filter);
-      return [];
-    });
+    const options = channelLogoQueryOptions(absent, fetchEvents);
     assert.equal(options.enabled, false);
+    // `enabled` is honoured by useQuery but ignored by fetchQuery, so the
+    // query function itself has to refuse rather than query channel "none".
+    await assert.rejects(
+      async () => await options.queryFn(),
+      /No channel selected/,
+    );
   }
   assert.equal(calls.length, 0);
 });

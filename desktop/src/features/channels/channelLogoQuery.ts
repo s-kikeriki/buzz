@@ -81,7 +81,14 @@ export function channelLogoQueryOptions(
 ) {
   return {
     queryKey: channelLogoQueryKey(channelId ?? "none"),
-    queryFn: () => fetchChannelLogoUrl(channelId as string, fetchEvents),
+    queryFn: () => {
+      // `enabled` already stops `useQuery` here, but `fetchQuery` ignores it.
+      // Fail loudly rather than querying the relay for channel "none".
+      if (typeof channelId !== "string" || channelId.length === 0) {
+        throw new Error("No channel selected.");
+      }
+      return fetchChannelLogoUrl(channelId, fetchEvents);
+    },
     enabled: typeof channelId === "string" && channelId.length > 0,
     staleTime: CHANNEL_LOGO_STALE_TIME_MS,
   };
