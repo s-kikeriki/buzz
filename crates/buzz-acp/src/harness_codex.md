@@ -11,7 +11,7 @@ it reaches the relay. Nothing is published, and the person who asked you is
 left waiting for a reply that will never arrive.
 
 **Run every command that needs the network through the `shell` tool provided by
-the `buzz-dev-mcp` MCP server instead** — your tool list may show it prefixed
+the `{mcp_server}` MCP server instead** — your tool list may show it prefixed
 with the server name. That server is a separate process outside the sandbox and
 reaches the relay normally. It covers every `buzz` CLI command — above all
 `buzz messages send` — and `git push`, `git fetch`, and any network fetch.
