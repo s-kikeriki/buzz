@@ -17,7 +17,11 @@ import {
 import { invokeTauri } from "@/shared/api/tauri";
 import { cn } from "@/shared/lib/cn";
 import type { ExternalOpenPolicy } from "@/shared/lib/externalOpenPolicy";
-import { classifyExternalOpen } from "@/shared/lib/externalOpenPolicy";
+import {
+  classifyExternalOpen,
+  externalOpenFileType,
+  externalOpenWrittenName,
+} from "@/shared/lib/externalOpenPolicy";
 import { MODAL_BACKDROP_BLUR_CLASS } from "@/shared/ui/modalBackdrop";
 import {
   MODAL_CONTENT_MOTION_CLASS,
@@ -171,6 +175,11 @@ function PreviewActions({
   const [opening, setOpening] = React.useState(false);
   const [confirming, setConfirming] = React.useState(false);
 
+  // What the backend will write and dispatch on, not what the sender typed.
+  // Both are only read by the confirmation dialog below.
+  const writtenName = externalOpenWrittenName(target.filename);
+  const fileType = externalOpenFileType(target.filename);
+
   const handOver = (userConfirmed: boolean) => {
     setConfirming(false);
     setOpening(true);
@@ -229,11 +238,36 @@ function PreviewActions({
                   the type is unrecognised. */}
               <AlertDialogDescription>
                 Buzz does not recognise this file type, so it can only write a
-                temporary copy of “{target.filename}” and hand it to whichever
-                application your system uses for it. What that application then
-                does with the file is up to it. Open it only if you trust
-                whoever sent it.
+                temporary copy and hand it to whichever application your system
+                uses for it. What that application then does with the file is up
+                to it. Open it only if you trust whoever sent it.
               </AlertDialogDescription>
+              {/* The name and the type are stated as separate facts, and the
+                  name is the sanitized one. The sender writes this string: the
+                  type decides everything the dialog is asking about, and it is
+                  the part a name can be built to misrepresent — `holiday.jpg.zip`
+                  reads as an image right up to the end. Reading it off the
+                  written name also means the dialog cannot disagree with the
+                  backend about what is being opened. */}
+              <dl
+                className="mt-3 grid grid-cols-[auto_1fr] gap-x-3 gap-y-1 text-sm"
+                data-testid="file-preview-open-confirm-details"
+              >
+                <dt className="text-muted-foreground">File name:</dt>
+                <dd
+                  className="break-all font-medium"
+                  data-testid="file-preview-open-confirm-name"
+                >
+                  {writtenName}
+                </dd>
+                <dt className="text-muted-foreground">File type:</dt>
+                <dd
+                  className="font-medium"
+                  data-testid="file-preview-open-confirm-type"
+                >
+                  {fileType ?? "none"}
+                </dd>
+              </dl>
             </AlertDialogHeader>
             <AlertDialogFooter>
               <AlertDialogCancel data-testid="file-preview-open-cancel">

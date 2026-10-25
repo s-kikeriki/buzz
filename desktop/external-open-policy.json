@@ -1,7 +1,7 @@
 {
   "comment": "Which attachments may be handed to the OS default application, keyed by the final filename extension. Read by desktop/src-tauri/src/external_open_policy.rs and desktop/src/shared/lib/externalOpenPolicy.ts — this file is the single source of truth for both; neither keeps its own copy. Three tiers: an extension in `safe` opens straight away, one in `executable` is never handed out at all, and anything else (including an unknown extension and a name with none) opens only after the user confirms. The sniffed MIME cannot answer this question: a script is plain text, so `infer` classifies .bat/.vbs/.desktop as application/octet-stream and the upload deny-list waves it through. Extensions only, lowercased, no leading dot.",
   "safe": {
-    "comment": "Formats whose default handler displays a document rather than running it. A viewer can still have its own parser bugs; this list is about not asking the OS to execute the sender's file. Deliberately narrower than it could be, and each omission is a decision: TEMPLATES (.dot .xlt .pot .dotx …) are out because an AutoExec/Auto_Open macro in a template fires on open, which is not what a document does; SPREADSHEET DATA (.csv .tsv) is out because its handler is Excel, where a cell beginning with = is a formula or DDE payload one warning dialog away from running; .epub and .svg are out because their handler is a browser, which sandboxes the script but still makes the document's outbound requests; .wmv and .wma are out because an ASF container can carry URLANDEXIT/SCRIPT commands that Windows Media Player honours. All of those land in the confirmation tier, not the refused one — they are things to ask about, not things to refuse. The legacy binary Office formats (.doc .xls .ppt) ARE here, because 'office docs' was the requirement; note they can carry VBA where their modern counterparts cannot, and what normally stops that macro is Protected View, which is Mark-of-the-Web-gated — see the quarantine marking in media_preview.rs.",
+    "comment": "Formats whose default handler displays a document rather than running it. A viewer can still have its own parser bugs; this list is about not asking the OS to execute the sender's file. Deliberately narrower than it could be, and each omission is a decision: TEMPLATES (.dot .xlt .pot .dotx …) are out because an AutoExec/Auto_Open macro in a template fires on open, which is not what a document does; SPREADSHEET DATA (.csv .tsv) is out because its handler is Excel, where a cell beginning with = is a formula or DDE payload one warning dialog away from running; .epub and .svg are out because their handler is a browser, which sandboxes the script but still makes the document's outbound requests; .wmv and .wma are out because an ASF container can carry URLANDEXIT/SCRIPT commands that Windows Media Player honours. All of those land in the confirmation tier, not the refused one — they are things to ask about, not things to refuse. Note one asymmetry left deliberately unresolved: the macro-enabled DOCUMENT formats (.docm .xlsm .pptm .xlam .ppam) are in the refused tier, while the macro-enabled TEMPLATE formats that carry the same payload (.dotm .xltm .potm .ppsm .sldm) are still only confirmed. That is the requested list, not a judgement that a template is safer; if anything it is the more dangerous half. The legacy binary Office formats (.doc .xls .ppt) ARE here, because 'office docs' was the requirement; note they can carry VBA where their modern counterparts cannot, and what normally stops that macro is Protected View, which is Mark-of-the-Web-gated — see the quarantine marking in media_preview.rs.",
     "documents": [
       "pdf",
       "doc",
@@ -51,8 +51,13 @@
     "video": ["avi", "m4v", "mkv", "mov", "mp4", "mpeg", "mpg", "ogv", "webm"]
   },
   "executable": {
-    "comment": "Extensions whose default handler executes the file's own contents. These are refused outright rather than put behind a confirmation: a dialog is a prompt to click through, and nothing a user can read off a filename tells them whether this one is safe. Download still works — saving a file the user named a location for is a different act from asking the OS to run it. The rule for adding one is 'opening it runs code the sender chose', which is why indirection formats are here too (.lnk .url .webloc .website point somewhere and the shell follows) and why archives are not (.zip .xip is an exception: macOS xip runs a signed payload). Anything whose handler merely displays, parses or mounts the file belongs in the confirmation tier instead.",
+    "comment": "Extensions whose default handler runs code the sender chose, or puts the user one ordinary click away from it. Refused outright rather than put behind a confirmation: a dialog is a prompt to click through, and nothing a user can read off a filename tells them whether this one is safe. Download still works — saving a file to a location the user picked is a different act from asking the OS to run it. Five families qualify, and the rule is 'opening it runs the sender's code, or hands them the launcher': DIRECT EXECUTION (.exe .bat .vbs .jar .tool …), where the file's own contents are the program; INDIRECTION (.lnk .url .webloc .website .fileloc .inetloc .appref-ms .xbap), where the file names a target and the shell follows it, so the bytes on disk look harmless; INSTALLERS (.msi .msu .pkg .deb .application), which run setup logic as a matter of course; MACRO-BEARING OFFICE AND DATABASE FORMATS (.docm .xlsm .pptm .xlam .ppam .mdb .accde .adp .mda …), which are the same AutoOpen problem as the templates named in the safe tier, only explicit about it; and DISK IMAGES (.dmg .iso .img .vhd .vhdx), which mount into a browsable volume — opening one does not itself execute, but what it presents is a folder whose contents the user is one double-click from running, and the mount is a kernel filesystem driver parsing a stranger's bytes. Also here: .theme and .themepack, which can point Windows at a screensaver (.scr) to run, and .one, whose embedded attachments launch from inside the document. Archives are deliberately NOT here — .zip unpacks to files that face this gate again on their own merits — except .xip, where macOS runs a signed payload. Anything whose handler merely displays or parses the file belongs in the confirmation tier instead.",
     "windows": [
+      "accde",
+      "ade",
+      "adp",
+      "application",
+      "appref-ms",
       "appx",
       "appxbundle",
       "bat",
@@ -75,17 +80,28 @@
       "jse",
       "library-ms",
       "lnk",
+      "mda",
+      "mdb",
+      "mde",
       "msc",
+      "msh",
+      "msh1",
+      "msh2",
+      "mshxml",
       "msi",
       "msix",
       "msp",
       "mst",
+      "msu",
       "ocx",
+      "one",
       "pif",
       "ps1",
       "ps1xml",
       "ps2",
+      "ps2xml",
       "psc1",
+      "psc2",
       "psd1",
       "psm1",
       "reg",
@@ -97,6 +113,8 @@
       "shb",
       "shs",
       "sys",
+      "theme",
+      "themepack",
       "url",
       "vb",
       "vbe",
@@ -113,6 +131,7 @@
       "wsc",
       "wsf",
       "wsh",
+      "xbap",
       "xll",
       "xnk"
     ],
@@ -122,6 +141,8 @@
       "caction",
       "command",
       "definition",
+      "fileloc",
+      "inetloc",
       "mpkg",
       "osax",
       "pkg",
@@ -131,6 +152,7 @@
       "scptd",
       "service",
       "terminal",
+      "tool",
       "webloc",
       "workflow",
       "xip"
@@ -163,6 +185,8 @@
       "sh",
       "vbscript",
       "zsh"
-    ]
+    ],
+    "diskImages": ["dmg", "img", "iso", "vhd", "vhdx"],
+    "officeMacros": ["docm", "ppam", "pptm", "xlam", "xlsm"]
   }
 }

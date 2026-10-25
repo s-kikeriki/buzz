@@ -64,13 +64,46 @@ const RESERVED_CHARACTERS = /[:*?"<>|]/g;
  *
  * `String.prototype.trim` and the `\s` class both include U+FEFF, which Rust's
  * `char::is_whitespace` does not, and `char::is_control` is the `Cc` category
- * alone — not the `Cf` formatting characters a broader class would catch. The
- * halves have to agree character for character or the shared test corpus is the
- * only thing that notices, so the categories are spelled out.
+ * alone. The halves have to agree character for character or the shared test
+ * corpus is the only thing that notices, so the categories are spelled out.
  */
 const SURROUNDING_WHITESPACE = /^\p{White_Space}+|\p{White_Space}+$/gu;
 const CONTROL_CHARACTER = /\p{Cc}/u;
 const TRAILING_DOTS_AND_WHITESPACE = /[.\p{White_Space}]+$/u;
+
+/**
+ * Invisible characters: `General_Category=Format`, the same class the Rust side
+ * builds its regex from.
+ *
+ * `Cc` does not include these, so they survive the control-character filter,
+ * and they are invisible in two different ways. U+200E after `.exe` makes the
+ * extension `"exe\u200E"`, which is in neither tier, so a refusal becomes a
+ * prompt; U+202E renders `invoice\u202Efdp.exe` as `invoice exe.pdf` to the
+ * person deciding whether to trust it. The category rather than a list of the
+ * known-abused ones, so a character Unicode adds later is covered already.
+ *
+ * Both sides read their own platform's Unicode tables here rather than a shared
+ * list. A version skew between them is possible and is cosmetic: the Rust
+ * command re-derives this name and re-decides before it writes anything, so the
+ * worst case is a button offered for something the backend then refuses by
+ * name. The test corpus pins the characters that actually carry the attack.
+ */
+const FORMAT_CHARACTER = /\p{Cf}/gu;
+
+/**
+ * Device names Win32 resolves before it looks at the filesystem.
+ *
+ * `dir/CON` is the console, not a file in `dir`: the write succeeds, the bytes
+ * go nowhere, and the open hands the OS a device instead of a document. Win32
+ * applies these with any extension, so the match is on the stem — everything
+ * before the first dot — and the stem is trimmed first because Win32 ignores
+ * trailing spaces in a device name.
+ */
+const RESERVED_DEVICE_NAME = /^(con|prn|aux|nul|com[1-9]|lpt[1-9])$/i;
+
+function isReservedDeviceName(name: string): boolean {
+  return RESERVED_DEVICE_NAME.test((name.split(".")[0] ?? "").trim());
+}
 
 /**
  * The name the Rust command will actually write this attachment under.
@@ -89,9 +122,14 @@ const TRAILING_DOTS_AND_WHITESPACE = /[.\p{White_Space}]+$/u;
  * and the same verdict, so a change to either side that drifts fails a test.
  */
 export function externalOpenWrittenName(filename: string): string {
+  // Strip format characters first, before the length bound: padding a name with
+  // 250 invisible joiners must not push its real extension past the truncation
+  // point. Rust does this ahead of `sanitize_filename` for the same reason.
+  const unformatted = filename.replace(FORMAT_CHARACTER, "");
+
   // Drop directory components, trim surrounding whitespace, remove control
   // characters, bound to 255 code points — `sanitize_filename`.
-  const base = (filename.split(/[/\\]/).pop() ?? "").replace(
+  const base = (unformatted.split(/[/\\]/).pop() ?? "").replace(
     SURROUNDING_WHITESPACE,
     "",
   );
@@ -106,7 +144,15 @@ export function externalOpenWrittenName(filename: string): string {
   const trimmed = cleaned
     .replace(RESERVED_CHARACTERS, "_")
     .replace(TRAILING_DOTS_AND_WHITESPACE, "");
-  return trimmed || "file";
+
+  // Neutralize a reserved device stem by prefixing it, which addresses the
+  // device without changing the type the tier is decided on: `CON.txt` becomes
+  // `_CON.txt` and is still a text file. This is the only step that lengthens
+  // the name, so the bound is re-applied after it and the result trimmed again
+  // — cutting the tail at 255 can expose a trailing dot nothing had trimmed.
+  const undeviced = isReservedDeviceName(trimmed) ? `_${trimmed}` : trimmed;
+  const bounded = [...undeviced].slice(0, 255).join("");
+  return bounded.replace(TRAILING_DOTS_AND_WHITESPACE, "") || "file";
 }
 
 /**
@@ -141,4 +187,22 @@ export function classifyExternalOpen(filename: string): ExternalOpenPolicy {
   if (EXECUTABLE_EXTENSIONS.has(extension)) return "refused";
   if (SAFE_EXTENSIONS.has(extension)) return "allowed";
   return "needsConfirmation";
+}
+
+/**
+ * The extension the tier was decided on, dotted for display, or `null`.
+ *
+ * For the confirmation dialog, which has to state the type as its own fact
+ * rather than leaving the user to find it at the end of a filename. The
+ * extension is the whole basis of the decision being confirmed, and a name is
+ * the one part of this an attacker writes: `holiday.jpg.zip` reads as an image
+ * until the eye reaches the end, and that is the benign version — the hostile
+ * one spells the same trick with characters that have no width.
+ *
+ * Derived from the written name, so it is the extension that will actually be
+ * dispatched on and not whatever the raw name appeared to end with.
+ */
+export function externalOpenFileType(filename: string): string | null {
+  const extension = extensionOf(externalOpenWrittenName(filename));
+  return extension ? `.${extension}` : null;
 }

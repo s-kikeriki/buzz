@@ -180,6 +180,144 @@
       "writtenAs": "tool.cjs",
       "verdict": "refused",
       "why": "the same script host as .js and .mjs, which are both refused"
+    },
+    {
+      "filename": "setup.exe\u200E",
+      "writtenAs": "setup.exe",
+      "verdict": "refused",
+      "why": "U+200E after the extension would make the lookup exe+LRM, which is in neither tier, so a refusal would become a prompt"
+    },
+    {
+      "filename": "setup.\u2066exe",
+      "writtenAs": "setup.exe",
+      "verdict": "refused",
+      "why": "an isolate between the dot and the extension does the same thing from the other side"
+    },
+    {
+      "filename": "invoice\u202Efdp.exe",
+      "writtenAs": "invoicefdp.exe",
+      "verdict": "refused",
+      "why": "U+202E renders this as invoice exe.pdf wherever the raw name is shown"
+    },
+    {
+      "filename": "drawings\u202Epiz.zip",
+      "writtenAs": "drawingspiz.zip",
+      "verdict": "needsConfirmation",
+      "why": "the same spoof in the tier that does ask, where the displayed name is what the user decides on"
+    },
+    {
+      "filename": "notes\u00AD.txt",
+      "writtenAs": "notes.txt",
+      "verdict": "allowed",
+      "why": "a soft hyphen is Cf too, and stripping it must not cost a working action"
+    },
+    {
+      "filename": "report\u200F.pdf",
+      "writtenAs": "report.pdf",
+      "verdict": "allowed",
+      "why": "U+200F in an ordinary name, which Cc-only filtering left in place"
+    },
+    {
+      "filename": "evil.exe\u200E.",
+      "writtenAs": "evil.exe",
+      "verdict": "refused",
+      "why": "stripping the format character exposes a trailing dot, which is then trimmed in the same pass"
+    },
+    {
+      "filename": "\u202A\u202B\u202C\u202D\u202E",
+      "writtenAs": "file",
+      "verdict": "needsConfirmation",
+      "why": "a name made only of format characters still has to produce something writable"
+    },
+    {
+      "filename": "\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060\u2060a.pdf",
+      "writtenAs": "a.pdf",
+      "verdict": "allowed",
+      "why": "251 invisible characters plus a 5-character name is 256: stripping them after the 255 bound instead of before it truncates the real extension to .pd and loses the verdict"
+    },
+    {
+      "filename": "CON.txt",
+      "writtenAs": "_CON.txt",
+      "verdict": "allowed",
+      "why": "CON.txt addresses the console, not a file; the prefix fixes the device and the .txt still decides the tier"
+    },
+    {
+      "filename": "nul.pdf",
+      "writtenAs": "_nul.pdf",
+      "verdict": "allowed",
+      "why": "lowercase counts, and writes to NUL are discarded silently"
+    },
+    {
+      "filename": "COM1.bat",
+      "writtenAs": "_COM1.bat",
+      "verdict": "refused",
+      "why": "neutralizing the device does not launder the type"
+    },
+    {
+      "filename": "CON",
+      "writtenAs": "_CON",
+      "verdict": "needsConfirmation",
+      "why": "a bare device name has no extension, so it asks rather than being assumed safe"
+    },
+    {
+      "filename": "CON .txt",
+      "writtenAs": "_CON .txt",
+      "verdict": "allowed",
+      "why": "Win32 ignores trailing spaces in a device name, so the stem is trimmed before it is compared"
+    },
+    {
+      "filename": "console.txt",
+      "writtenAs": "console.txt",
+      "verdict": "allowed",
+      "why": "the rule is the whole stem, not a prefix: an ordinary name must not be rewritten"
+    },
+    {
+      "filename": "com10.txt",
+      "writtenAs": "com10.txt",
+      "verdict": "allowed",
+      "why": "only COM1-COM9 are devices, so the digit boundary has to be exact"
+    },
+    {
+      "filename": "CON.aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "writtenAs": "_CON.aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "verdict": "needsConfirmation",
+      "why": "the device prefix is the only step that lengthens a name, so the 255 bound is re-applied after it"
+    },
+    {
+      "filename": "budget.xlsm",
+      "writtenAs": "budget.xlsm",
+      "verdict": "refused",
+      "why": "a macro-enabled workbook is the AutoOpen problem stated outright"
+    },
+    {
+      "filename": "installer.dmg",
+      "writtenAs": "installer.dmg",
+      "verdict": "refused",
+      "why": "a disk image mounts into a volume whose contents are one double-click from running"
+    },
+    {
+      "filename": "boot.iso",
+      "writtenAs": "boot.iso",
+      "verdict": "refused",
+      "why": "the same, and the mount is a kernel filesystem driver parsing a strangers bytes"
+    },
+    {
+      "filename": "launch.appref-ms",
+      "writtenAs": "launch.appref-ms",
+      "verdict": "refused",
+      "why": "a ClickOnce reference names a remote application and the shell launches it"
+    },
+    {
+      "filename": "records.accde",
+      "writtenAs": "records.accde",
+      "verdict": "refused",
+      "why": "an Access database runs its own macros on open"
+    },
+    {
+      "filename": "dark.themepack",
+      "writtenAs": "dark.themepack",
+      "verdict": "refused",
+      "why": "a theme can point Windows at a screensaver to execute"
     }
   ]
 }

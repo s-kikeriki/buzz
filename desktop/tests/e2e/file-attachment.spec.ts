@@ -361,6 +361,18 @@ test("a type the app cannot render offers download and open-externally", async (
   await expect(confirm).toBeVisible();
   expect(await invokedCommands(page)).not.toContain("open_file_in_default_app");
 
+  // The question has to state what it is asking about. The type is the whole
+  // basis of the decision and the part a filename can be built to
+  // misrepresent, so it is its own line rather than a suffix the eye has to
+  // find — and this asserts it in a real browser, where the dialog is actually
+  // laid out and the text is actually visible.
+  await expect(
+    confirm.getByTestId("file-preview-open-confirm-type"),
+  ).toHaveText(".zip");
+  await expect(
+    confirm.getByTestId("file-preview-open-confirm-name"),
+  ).toHaveText("drawings.zip");
+
   await confirm.getByTestId("file-preview-open-cancel").click();
   await expect(confirm).toHaveCount(0);
   expect(await invokedCommands(page)).not.toContain("open_file_in_default_app");

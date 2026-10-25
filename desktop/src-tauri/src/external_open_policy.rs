@@ -33,6 +33,8 @@
 use std::collections::{BTreeMap, HashSet};
 use std::sync::LazyLock;
 
+use regex::Regex;
+
 use crate::commands::media_filename::sanitize_filename;
 
 /// The shared table, embedded at compile time.
@@ -149,29 +151,85 @@ fn classify_component(component: &str) -> ExternalOpenPolicy {
     ExternalOpenPolicy::NeedsConfirmation
 }
 
+/// Unicode `General_Category=Format` — the invisible characters.
+///
+/// Built from the category rather than from a hand-written list of the ones
+/// that are known to be abused, so a character added to Unicode later is
+/// covered without anybody remembering to add it. `externalOpenPolicy.ts` uses
+/// the same `\p{Cf}` against JavaScript's tables; see
+/// `format_characters_cover_the_bidi_and_joiner_controls` for what both sides
+/// are pinned to.
+///
+/// The `expect` is on a pattern that is a literal in this file, so it cannot
+/// fail for anything a sender controls, and every alternative fails open — a
+/// `None` here would mean "strip nothing", which is precisely the gap this
+/// closes. Same trade, and same reasoning, as `EXTERNAL_OPEN_POLICY_JSON`.
+static FORMAT_CHARACTERS: LazyLock<Regex> =
+    LazyLock::new(|| Regex::new(r"\p{Cf}").expect(r"\p{Cf} is a valid character class"));
+
+/// Device names Win32 resolves before it ever looks at the filesystem.
+///
+/// `dir.join("CON")` does not address a file in `dir`; it addresses the
+/// console. Writing to it succeeds and discards the bytes, and the subsequent
+/// "open" hands the OS a device rather than the document the user asked for.
+/// The match is on the stem — Win32 applies these with any extension, so
+/// `CON.txt` is the console too.
+const RESERVED_DEVICE_NAMES: [&str; 22] = [
+    "con", "prn", "aux", "nul", "com1", "com2", "com3", "com4", "com5", "com6", "com7", "com8",
+    "com9", "lpt1", "lpt2", "lpt3", "lpt4", "lpt5", "lpt6", "lpt7", "lpt8", "lpt9",
+];
+
+/// Whether this name's stem is one of [`RESERVED_DEVICE_NAMES`].
+///
+/// The stem is everything before the *first* dot, which is the part Win32
+/// resolves, and it is trimmed before comparison because Win32 ignores trailing
+/// spaces in a device name — `"CON .txt"` is the console as surely as
+/// `"CON.txt"`.
+fn is_reserved_device_name(name: &str) -> bool {
+    let stem = name.split('.').next().unwrap_or(name).trim();
+    RESERVED_DEVICE_NAMES
+        .iter()
+        .any(|reserved| stem.eq_ignore_ascii_case(reserved))
+}
+
 /// The name an attachment will actually be written under.
 ///
 /// [`sanitize_filename`] strips directory components, trims, removes control
 /// characters and bounds the length to 255 — enough for a save dialog, which
 /// only treats its result as a suggestion. Here the name is joined onto a real
-/// path and then handed to the operating system, so three things it leaves
-/// intact have to go as well:
+/// path and then handed to the operating system, so the things it leaves intact
+/// have to go as well. In order, because several of them can expose each other:
 ///
-/// - `.` and `..`, which survive it because they contain no separator.
-///   `dir.join("..")` is the parent directory, not a file inside it.
-/// - Trailing dots and whitespace, which Win32 removes when it creates the
-///   file: `evil.exe.` would be written as `evil.exe`, so a classification of
-///   the untrimmed name would not describe the file on disk.
-/// - `:` and the other characters Windows reserves. A colon addresses an
-///   alternate data stream, which is a second way to write to a different file
-///   than the name appears to describe.
+/// 1. **Format characters** (`\p{Cf}`: U+200E/F, U+202A–202E, U+2066–2069, the
+///    soft hyphen, …). `is_control` is the `Cc` category alone, so these
+///    survive it, and they are invisible twice over. A single U+200E after
+///    `.exe` leaves the extension `"exe\u{200e}"`, which matches nothing in the
+///    table, so a refusal silently becomes a prompt; and a U+202E renders
+///    `invoice\u{202e}fdp.exe` as `invoice exe.pdf` to the person deciding
+///    whether to trust it. Stripped **before** the 255-character bound, so
+///    padding a name with invisible characters cannot push its real extension
+///    past the truncation point.
+/// 2. `.` and `..`, which survive sanitization because they contain no
+///    separator. `dir.join("..")` is the parent directory, not a file in it.
+/// 3. `:` and the other characters Windows reserves. A colon addresses an
+///    alternate data stream, which is a second way to write to a different file
+///    than the name appears to describe.
+/// 4. **Trailing dots and whitespace**, which Win32 removes when it creates the
+///    file: `evil.exe.` would be written as `evil.exe`, so a classification of
+///    the untrimmed name would not describe the file on disk. Trimmed in one
+///    pass, not dots-then-spaces: `evil.exe\u{a0}.` must not leave a
+///    non-breaking space exposed as the new last character.
+/// 5. **Reserved device names**, prefixed with `_` rather than rejected. The
+///    danger is the device, not the type, so `CON.txt` becomes `_CON.txt` and
+///    is still classified on `.txt`.
 ///
-/// Trailing dots and whitespace are trimmed in one pass, not dots-then-spaces:
-/// `evil.exe\u{a0}.` must not leave a non-breaking space exposed as the new
-/// last character, or this function is not idempotent and "the name we classify
-/// is the name we write" stops being true of its own output.
+/// Every step is idempotent on this function's own output, and
+/// `a_written_name_is_a_fixed_point` is what holds that: the gate's correctness
+/// rests on the name the policy judged being the name on disk, so if sanitizing
+/// the output changed it again the two would describe different files.
 pub fn written_name(filename: &str) -> String {
-    let sanitized = sanitize_filename(filename);
+    let unformatted = FORMAT_CHARACTERS.replace_all(filename, "");
+    let sanitized = sanitize_filename(&unformatted);
     let neutralized: String = sanitized
         .chars()
         .map(|c| {
@@ -183,10 +241,22 @@ pub fn written_name(filename: &str) -> String {
         })
         .collect();
     let trimmed = neutralized.trim_end_matches(|c: char| c == '.' || c.is_whitespace());
-    if trimmed.is_empty() {
-        "file".to_string()
+
+    let undeviced = if is_reserved_device_name(trimmed) {
+        format!("_{trimmed}")
     } else {
         trimmed.to_string()
+    };
+    // The prefix above is the one step that can lengthen the name, so the bound
+    // is re-applied here rather than trusted from `sanitize_filename`. Trimming
+    // again afterwards keeps the result final: cutting the tail at 255 can
+    // expose a trailing dot that step 4 had nothing to trim.
+    let bounded: String = undeviced.chars().take(255).collect();
+    let final_name = bounded.trim_end_matches(|c: char| c == '.' || c.is_whitespace());
+    if final_name.is_empty() {
+        "file".to_string()
+    } else {
+        final_name.to_string()
     }
 }
 
@@ -498,6 +568,22 @@ mod tests {
             "minutes 2026-10.docx",
             &"a".repeat(300),
             &format!("{}.exe.pdf", "a".repeat(251)),
+            // Format characters, including ones placed so that removing them
+            // exposes a trailing dot or empties the name entirely.
+            "setup.exe\u{200e}",
+            "invoice\u{202e}fdp.exe",
+            "evil.exe\u{200e}.",
+            "\u{202e}\u{200f}\u{2066}",
+            &format!("{}report.pdf", "\u{2060}".repeat(300)),
+            // Reserved device names: the prefix is the only step that makes a
+            // name longer, so the 255 bound has to be re-applied after it. A
+            // reserved stem with a 251-character extension is the case that
+            // lands on exactly the bound.
+            "CON",
+            "CON.txt",
+            "CON .txt",
+            &format!("CON.{}", "a".repeat(251)),
+            &format!("NUL.{}", "a".repeat(300)),
         ] {
             let written = written_name(name);
             assert_eq!(
@@ -532,6 +618,136 @@ mod tests {
             ExternalOpenPolicy::Refused,
         );
         assert!(ApprovedOpenName::approve(&deceptive, true).is_err());
+    }
+
+    #[test]
+    fn format_characters_cover_the_bidi_and_joiner_controls() {
+        // The class is `\p{Cf}`, not a list, so this pins the characters the
+        // review named rather than the whole category — those are the ones the
+        // frontend must agree about, and `externalOpenPolicy.test.mjs` asserts
+        // the same set against JavaScript's tables. A floor on the total
+        // catches an implementation that matched `Cc` by mistake (that would be
+        // ~65) without failing every time a Unicode update adds a character.
+        let named = ['\u{200e}', '\u{200f}', '\u{00ad}', '\u{feff}']
+            .into_iter()
+            .chain('\u{202a}'..='\u{202e}')
+            .chain('\u{2066}'..='\u{2069}');
+        for character in named {
+            assert!(
+                FORMAT_CHARACTERS.is_match(&character.to_string()),
+                "U+{:04X} must be treated as a format character",
+                character as u32,
+            );
+        }
+
+        let total = (0..=0x10FFFF)
+            .filter_map(char::from_u32)
+            .filter(|c| FORMAT_CHARACTERS.is_match(&c.to_string()))
+            .count();
+        assert!(total >= 170, "only {total} format characters");
+    }
+
+    #[test]
+    fn an_invisible_character_cannot_downgrade_a_refusal_to_a_prompt() {
+        // A single U+200E after the extension leaves `component_extension`
+        // looking up "exe\u{200e}", which is in neither tier — so without the
+        // strip this is NeedsConfirmation, and one click away from running.
+        assert_eq!(written_name("setup.exe\u{200e}"), "setup.exe");
+        assert_eq!(
+            classify_external_open("setup.exe\u{200e}"),
+            ExternalOpenPolicy::Refused,
+        );
+        // Between the dot and the extension, and inside it, for the same reason.
+        assert_eq!(written_name("setup.\u{200b}exe"), "setup.exe");
+        assert_eq!(written_name("setup.e\u{2060}xe"), "setup.exe");
+        assert_eq!(
+            classify_external_open("setup.e\u{2060}xe"),
+            ExternalOpenPolicy::Refused,
+        );
+    }
+
+    #[test]
+    fn a_bidi_override_cannot_make_an_executable_read_as_a_document() {
+        // U+202E renders the rest right-to-left, so this displays as
+        // "invoice exe.pdf" wherever the raw name is shown. The extension was
+        // always .exe and the verdict was always Refused; what the strip fixes
+        // is the name the *dialog* shows for the tier that does ask.
+        assert_eq!(written_name("invoice\u{202e}fdp.exe"), "invoicefdp.exe");
+        assert_eq!(
+            classify_external_open("invoice\u{202e}fdp.exe"),
+            ExternalOpenPolicy::Refused,
+        );
+        // And the confirmation tier, where a spoofed name is what the user reads
+        // before deciding.
+        assert_eq!(written_name("drawings\u{202e}piz.zip"), "drawingspiz.zip");
+        assert_eq!(
+            classify_external_open("drawings\u{202e}piz.zip"),
+            ExternalOpenPolicy::NeedsConfirmation,
+        );
+    }
+
+    #[test]
+    fn invisible_padding_cannot_push_an_extension_past_the_length_bound() {
+        // Stripping after the 255-character bound would let 250 joiners eat the
+        // budget and truncate the real extension away. Stripping first means
+        // the bound only ever spends itself on characters that are really there.
+        let padded = format!("{}report.pdf", "\u{2060}".repeat(300));
+        assert_eq!(written_name(&padded), "report.pdf");
+        assert_eq!(classify_external_open(&padded), ExternalOpenPolicy::Allowed,);
+    }
+
+    #[test]
+    fn a_reserved_device_name_is_not_handed_to_the_os_as_a_device() {
+        // `dir.join("CON")` is the console, not a file in `dir`: the write
+        // succeeds, the bytes are discarded, and the open hands over a device.
+        for (name, expected) in [
+            ("CON", "_CON"),
+            ("con", "_con"),
+            ("CON.txt", "_CON.txt"),
+            ("nul.pdf", "_nul.pdf"),
+            ("COM1.docx", "_COM1.docx"),
+            ("LPT9", "_LPT9"),
+            ("prn", "_prn"),
+            ("aux.png", "_aux.png"),
+            // Win32 ignores trailing spaces in a device name, so the stem is
+            // trimmed before it is compared.
+            ("CON .txt", "_CON .txt"),
+        ] {
+            assert_eq!(written_name(name), expected, "{name} must be neutralized");
+        }
+
+        // The type still decides the tier — the prefix addresses the device, so
+        // a neutralized .txt is as openable as any other .txt.
+        assert_eq!(
+            classify_external_open("CON.txt"),
+            ExternalOpenPolicy::Allowed
+        );
+        assert_eq!(
+            classify_external_open("CON.bat"),
+            ExternalOpenPolicy::Refused
+        );
+        assert_eq!(
+            classify_external_open("CON"),
+            ExternalOpenPolicy::NeedsConfirmation,
+        );
+    }
+
+    #[test]
+    fn a_name_that_merely_starts_with_a_device_name_is_left_alone() {
+        // The rule is the whole stem, not a prefix: these are ordinary names
+        // and rewriting them would be a visible bug for no gain.
+        for name in [
+            "console.txt",
+            "contract.pdf",
+            "com10.txt",
+            "com0.txt",
+            "nullable.md",
+            "auxiliary.docx",
+            "my CON.txt",
+            "_CON.txt",
+        ] {
+            assert_eq!(written_name(name), name, "{name} must not be rewritten");
+        }
     }
 
     #[test]

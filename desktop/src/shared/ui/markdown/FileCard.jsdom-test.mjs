@@ -238,6 +238,79 @@ test("an unrecognised type is not handed over until the user confirms", async ()
   });
 });
 
+test("the confirmation names the file it will write and states its type", async () => {
+  // The dialog is the whole protection for this tier, and the string it is
+  // describing is written by the sender. So it states the type as its own fact
+  // rather than leaving it at the end of a filename, and it shows the
+  // sanitized name — the one the backend will actually write and dispatch on.
+  responses.open_file_in_default_app = () => null;
+
+  await mount({
+    filename: "holiday.jpg.zip",
+    mime: "application/zip",
+    size: 4096,
+  });
+  await click(byTestId("file-card-open"));
+  await click(byTestId("file-preview-open-externally"));
+
+  assert.equal(
+    byTestId("file-preview-open-confirm-type").textContent,
+    ".zip",
+    "the type must be stated explicitly, not inferred from the name",
+  );
+  assert.equal(
+    byTestId("file-preview-open-confirm-name").textContent,
+    "holiday.jpg.zip",
+  );
+});
+
+test("a spoofed name cannot misrepresent the file in the confirmation", async () => {
+  // U+202E renders the raw name as "drawings piz.zip" — reversed, so the eye
+  // reads a different extension than the one that decides the tier. The dialog
+  // shows the written name, which has no format characters left in it.
+  responses.open_file_in_default_app = () => null;
+
+  await mount({
+    filename: "drawings\u202Epiz.zip",
+    mime: "application/zip",
+    size: 4096,
+  });
+  await click(byTestId("file-card-open"));
+  await click(byTestId("file-preview-open-externally"));
+
+  const shown = byTestId("file-preview-open-confirm-name").textContent;
+  assert.equal(shown, "drawingspiz.zip");
+  assert.ok(
+    !/\p{Cf}/u.test(shown),
+    `the dialog must not render a format character: ${JSON.stringify(shown)}`,
+  );
+  assert.equal(byTestId("file-preview-open-confirm-type").textContent, ".zip");
+
+  // And the raw name is what still goes over IPC: the backend sanitizes it
+  // itself, and sending the display string instead would make the frontend the
+  // thing that decides what is written.
+  await click(byTestId("file-preview-open-confirmed"));
+  assert.deepEqual(invocations.at(-1).payload, {
+    url: HREF,
+    filename: "drawings\u202Epiz.zip",
+    userConfirmed: true,
+  });
+});
+
+test("a name with no extension says so rather than showing nothing", async () => {
+  responses.open_file_in_default_app = () => null;
+
+  await mount({ filename: "README", mime: "application/octet-stream" });
+  await click(byTestId("file-card-open"));
+  await click(byTestId("file-preview-open-externally"));
+
+  assert.equal(byTestId("file-preview-open-confirm-type").textContent, "none");
+  assert.equal(
+    byTestId("file-preview-open-confirm-name").textContent,
+    "README",
+  );
+});
+
 test("a script type is not offered to the OS at all", async () => {
   // The case this tier exists for: a .bat is text, so the sniffed MIME is
   // application/octet-stream and every content check upstream passes it.

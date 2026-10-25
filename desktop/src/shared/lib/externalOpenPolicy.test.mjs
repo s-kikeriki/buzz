@@ -14,6 +14,7 @@ import test from "node:test";
 
 import {
   classifyExternalOpen,
+  externalOpenFileType,
   externalOpenWrittenName,
 } from "./externalOpenPolicy.ts";
 
@@ -163,6 +164,142 @@ test("classification is case-insensitive and ignores directories", () => {
   // A directory named like a document must not vote on the file inside it.
   assert.equal(classifyExternalOpen("/tmp/report.pdf/setup.exe"), "refused");
   assert.equal(classifyExternalOpen("C:\\report.pdf\\setup.exe"), "refused");
+});
+
+test("the format characters the review named are all stripped", () => {
+  // `\p{Cf}` is a category, not a list, so this pins the ones that carry the
+  // attack rather than the whole class — and `external_open_policy.rs` asserts
+  // the same set against Rust's tables. The floor on the total catches an
+  // implementation that reached for `Cc` by mistake (that would be ~65) without
+  // failing whenever a Unicode update adds a character.
+  // Escapes, not the characters themselves: a literal here is invisible in the
+  // source file, which is the whole reason this test exists.
+  const named = [
+    "\u200E", // LEFT-TO-RIGHT MARK
+    "\u200F", // RIGHT-TO-LEFT MARK
+    "\u00AD", // SOFT HYPHEN
+    "\uFEFF", // ZERO WIDTH NO-BREAK SPACE
+    "\u202A", // LEFT-TO-RIGHT EMBEDDING
+    "\u202B", // RIGHT-TO-LEFT EMBEDDING
+    "\u202C", // POP DIRECTIONAL FORMATTING
+    "\u202D", // LEFT-TO-RIGHT OVERRIDE
+    "\u202E", // RIGHT-TO-LEFT OVERRIDE
+    "\u2066", // LEFT-TO-RIGHT ISOLATE
+    "\u2067", // RIGHT-TO-LEFT ISOLATE
+    "\u2068", // FIRST STRONG ISOLATE
+    "\u2069", // POP DIRECTIONAL ISOLATE
+    "\u2060", // WORD JOINER
+  ];
+  for (const character of named) {
+    assert.equal(
+      externalOpenWrittenName(`report${character}.pdf`),
+      "report.pdf",
+      `U+${character.codePointAt(0).toString(16).toUpperCase()} must be stripped`,
+    );
+  }
+
+  let total = 0;
+  for (let point = 0; point <= 0x10ffff; point++) {
+    if (point >= 0xd800 && point <= 0xdfff) continue;
+    if (/\p{Cf}/u.test(String.fromCodePoint(point))) total++;
+  }
+  assert.ok(total >= 170, `only ${total} format characters`);
+});
+
+test("an invisible character cannot downgrade a refusal to a prompt", () => {
+  // Without the strip, the extension looked up here is "exe\u200E" — in
+  // neither tier, so the verdict is needsConfirmation and the file is one
+  // click from being handed to the OS.
+  assert.equal(classifyExternalOpen("setup.exe\u200E"), "refused");
+  assert.equal(classifyExternalOpen("setup.e\u2060xe"), "refused");
+  // And the display half: U+202E renders this as "invoice exe.pdf".
+  assert.equal(
+    externalOpenWrittenName("invoice\u202Efdp.exe"),
+    "invoicefdp.exe",
+  );
+});
+
+test("a reserved device name is neutralized without changing its type", () => {
+  for (const [name, written] of [
+    ["CON", "_CON"],
+    ["CON.txt", "_CON.txt"],
+    ["nul.pdf", "_nul.pdf"],
+    ["COM1.docx", "_COM1.docx"],
+    ["LPT9", "_LPT9"],
+    ["CON .txt", "_CON .txt"],
+  ]) {
+    assert.equal(externalOpenWrittenName(name), written, name);
+  }
+  // The stem has to match whole: these are ordinary names.
+  for (const name of [
+    "console.txt",
+    "contract.pdf",
+    "com10.txt",
+    "com0.txt",
+    "nullable.md",
+    "_CON.txt",
+  ]) {
+    assert.equal(externalOpenWrittenName(name), name, name);
+  }
+  // Neutralizing the device does not launder the type.
+  assert.equal(classifyExternalOpen("CON.txt"), "allowed");
+  assert.equal(classifyExternalOpen("CON.bat"), "refused");
+  assert.equal(classifyExternalOpen("CON"), "needsConfirmation");
+});
+
+test("a written name is a fixed point", () => {
+  // The gate rests on the name the policy judged being the name on disk, so
+  // this function has to be final on its own output. The device prefix is the
+  // step that makes that non-obvious: it is the only one that lengthens a name,
+  // and a reserved stem with a 251-character extension lands on the bound.
+  for (const name of [
+    "..",
+    "",
+    "/",
+    "evil.exe.",
+    "evil.exe .",
+    "notes.txt:evil.exe",
+    "invoice.pdf.exe",
+    "setup.exe\u200E",
+    "invoice\u202Efdp.exe",
+    "\u202A\u202B\u202C",
+    `${"\u2060".repeat(300)}report.pdf`,
+    "CON",
+    "CON.txt",
+    "CON .txt",
+    `CON.${"a".repeat(251)}`,
+    `NUL.${"a".repeat(300)}`,
+    `${"a".repeat(251)}.exe.pdf`,
+  ]) {
+    const written = externalOpenWrittenName(name);
+    assert.equal(
+      externalOpenWrittenName(written),
+      written,
+      `${JSON.stringify(name)} wrote as ${JSON.stringify(written)}, which is not already final`,
+    );
+    assert.ok(
+      [...written].length <= 255,
+      `${JSON.stringify(written)} is ${[...written].length} characters`,
+    );
+    assert.ok(!/[/\\]/.test(written), `${written} must be one component`);
+  }
+});
+
+test("the file type shown in the dialog is the one the tier was decided on", () => {
+  // The dialog states the type separately because the name is the part a
+  // sender writes, and it has to be the extension that will really be
+  // dispatched on — including after sanitization changes it.
+  assert.equal(externalOpenFileType("drawings.zip"), ".zip");
+  assert.equal(externalOpenFileType("holiday.jpg.zip"), ".zip");
+  assert.equal(externalOpenFileType("SETUP.BAT"), ".bat");
+  assert.equal(externalOpenFileType("README"), null);
+  assert.equal(externalOpenFileType(".gitignore"), null);
+  // The spoofed cases: what the dialog shows is the real extension, not the
+  // one the raw name appears to end with.
+  assert.equal(externalOpenFileType("drawings\u202Epiz.zip"), ".zip");
+  assert.equal(externalOpenFileType("setup.exe\u200E"), ".exe");
+  // And the truncation case, where the extension on disk is not the one typed.
+  assert.equal(externalOpenFileType(`${"a".repeat(251)}.exe.pdf`), ".exe");
 });
 
 test("the shared table is one file with no extension in two tiers", async () => {
