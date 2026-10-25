@@ -6,6 +6,7 @@ import type {
   ChannelPageCursor,
   ChannelType,
   CreateChannelInput,
+  SetChannelLogoInput,
   SetChannelPurposeInput,
   SetChannelTopicInput,
   UpdateChannelInput,
@@ -253,6 +254,18 @@ export async function updateChannel(
     input,
   });
   return fromRawChannelDetail(channel);
+}
+
+/**
+ * Set or remove a channel's logo.
+ *
+ * The relay authorises this: the underlying kind:9002 carries a privileged
+ * `name` tag, so a non-admin's write is refused server-side.
+ */
+export async function setChannelLogo(
+  input: SetChannelLogoInput,
+): Promise<void> {
+  await invokeTauri("set_channel_logo", { input });
 }
 
 export async function setChannelTopic(

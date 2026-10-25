@@ -2,6 +2,11 @@ export const KIND_DELETION = 5;
 export const KIND_REACTION = 7;
 export const KIND_TEXT_NOTE = 1;
 export const KIND_STREAM_MESSAGE = 9;
+// NIP-29 channel metadata edit command. A partial update: a missing tag means
+// "no change", and the relay ignores tag names it does not recognise while
+// storing the signed event verbatim. Appended, not replaceable — a channel
+// accumulates one of these per metadata edit.
+export const KIND_NIP29_EDIT_METADATA = 9002;
 // Buzz-native deletion. The relay soft-deletes the target and emits a
 // kind:40099 system message. Treated as a deletion marker alongside kind:5.
 export const KIND_NIP29_DELETE_EVENT = 9005;

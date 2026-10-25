@@ -637,6 +637,7 @@ pub fn run() {
             get_channel_details,
             get_channel_members,
             update_channel,
+            set_channel_logo,
             set_channel_topic,
             set_channel_purpose,
             archive_channel,

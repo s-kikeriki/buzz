@@ -36,6 +36,7 @@ import {
   useOpenDmMutation,
 } from "@/features/channels/hooks";
 import { useDmResurfaceFromMessages } from "@/features/channels/useDmResurfaceFromMessages";
+import { useChannelLogoLiveRefresh } from "@/features/channels/useChannelLogo";
 import { useUnreadChannels } from "@/features/channels/useUnreadChannels";
 import { useMembershipNotifications } from "@/features/channels/useMembershipNotifications";
 import { useFeedItemState } from "@/features/home/useFeedItemState";
@@ -286,6 +287,15 @@ export function AppShell() {
       ),
     [huddleBackingChannelIds, memberChannels, revealedHuddleChannelIds],
   );
+  // Channels whose glyph can carry a logo. DMs render a participant avatar
+  // instead, so they never need the per-channel relay read a logo costs.
+  const sidebarLogoChannelIds = React.useMemo(
+    () =>
+      sidebarChannels
+        .filter((channel) => channel.channelType !== "dm")
+        .map((channel) => channel.id),
+    [sidebarChannels],
+  );
   const hasRestoredCommunityDestinationRef = React.useRef(false);
   React.useEffect(() => {
     const activeCommunityId = communitiesHook.activeCommunity?.id;
@@ -416,6 +426,12 @@ export function AppShell() {
       followedRootIds,
     },
   );
+
+  // Channel logos ride on kind:9002, which the per-channel live message
+  // subscription does not carry. One subscription across the sidebar's
+  // channels keeps a logo another admin sets visible without a restart; DMs
+  // render a participant avatar and never a logo.
+  useChannelLogoLiveRefresh(sidebarLogoChannelIds);
 
   const {
     getThreadReadAt,

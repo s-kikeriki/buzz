@@ -57,6 +57,7 @@ import {
   PANEL_ENTER_MOTION_CLASS,
   PANEL_OVERLAY_CLASS,
 } from "@/shared/ui/OverlayPanelBackdrop";
+import { ChannelLogoEditor } from "./ChannelLogoEditor";
 import { KeyedChannelCanvas } from "./KeyedChannelCanvas";
 import { ChannelWorkflowsSection } from "./ChannelWorkflowsSection";
 import {
@@ -552,6 +553,14 @@ export function ChannelManagementSheet({
                     </div>
                   </div>
                 </div>
+
+                {resolvedChannel.channelType !== "dm" ? (
+                  <ChannelLogoEditor
+                    channelId={resolvedChannel.id}
+                    channelName={resolvedChannel.name}
+                    disabled={isSavingChannelEdits}
+                  />
+                ) : null}
 
                 {resolvedChannel.channelType !== "dm" ? (
                   <div
