@@ -78,6 +78,15 @@ const PHOTO_FILE = {
   name: "photo.png",
 };
 
+/** Every Tauri command the bridge has seen, in order. */
+async function invokedCommands(page: Page) {
+  return page.evaluate(
+    () =>
+      (window as Window & { __BUZZ_E2E_COMMANDS__?: string[] })
+        .__BUZZ_E2E_COMMANDS__ ?? [],
+  );
+}
+
 async function uploadCommandCount(page: Page) {
   return page.evaluate(
     () =>
@@ -239,26 +248,115 @@ test("upload a file and see a FileCard in the timeline", async ({ page }) => {
   await page.getByTestId("send-message").click();
   await expect(page.getByText("Sending")).toHaveCount(0);
 
-  // A FileCard renders in the timeline: a button carrying the filename. It
-  // downloads via the native `download_file` command (HTTP inside the app's
-  // tunnel + save dialog), NOT a plain `<a download>` link — a bare link
-  // escapes the webview to the OS browser and hits a corporate CDN page.
+  // A FileCard renders in the timeline, carrying the filename and two separate
+  // controls. Download goes through the native `download_file` command (HTTP
+  // inside the app's tunnel + save dialog), NOT a plain `<a download>` link —
+  // a bare link escapes the webview to the OS browser and hits a corporate CDN
+  // page. The card body opens the in-app preview instead, and must not
+  // download anything on the way.
   const card = page.getByTestId("file-card").last();
   await expect(card).toBeVisible();
   await expectCornerRadiusPx(card, 16);
   await expectSmoothCorners(card);
   await expect(card).toContainText("quarterly-report.pdf");
 
-  await card.click();
+  await card.getByTestId("file-card-download").click();
+  await expect.poll(() => invokedCommands(page)).toContain("download_file");
+});
+
+test("clicking a PDF card previews it in the app and renders its page", async ({
+  page,
+}) => {
+  // The whole point of the feature: reading a document without saving it. The
+  // mock bridge returns a real one-page PDF, so this exercises pdf.js end to
+  // end — parse, worker, rasterise — which no unit test in this repo can
+  // (pdf.js v6 needs `Promise.try`, absent in the Node the suite runs on).
+  await page.goto("/");
+  await page.getByTestId("channel-general").click();
+  await chooseQuarterlyReport(page);
+  await page.getByTestId("send-message").click();
+  await expect(page.getByText("Sending")).toHaveCount(0);
+
+  const card = page.getByTestId("file-card").last();
+  await card.getByTestId("file-card-open").click();
+
+  const dialog = page.getByTestId("file-preview-dialog");
+  await expect(dialog).toBeVisible();
+  await expect(dialog).toContainText("quarterly-report.pdf");
+
+  // The page is rasterised to a canvas with real pixel dimensions. A failed
+  // parse leaves the error pane instead, and a canvas that never rendered
+  // stays 0×0.
+  const firstPage = dialog.getByTestId("pdf-page-1");
+  await expect(firstPage).toBeVisible();
   await expect
-    .poll(() =>
-      page.evaluate(
-        () =>
-          (window as Window & { __BUZZ_E2E_COMMANDS__?: string[] })
-            .__BUZZ_E2E_COMMANDS__ ?? [],
-      ),
-    )
-    .toContain("download_file");
+    .poll(() => firstPage.evaluate((canvas: HTMLCanvasElement) => canvas.width))
+    .toBeGreaterThan(0);
+  await expect(dialog.getByTestId("pdf-preview-error")).toHaveCount(0);
+  await expect(dialog).toContainText("1 page");
+
+  // Zoom is a separate control from the document, and changes the raster size.
+  const beforeZoom = await firstPage.evaluate(
+    (canvas: HTMLCanvasElement) => canvas.width,
+  );
+  await dialog.getByRole("button", { name: "Zoom in" }).click();
+  await expect
+    .poll(() => firstPage.evaluate((canvas: HTMLCanvasElement) => canvas.width))
+    .toBeGreaterThan(beforeZoom);
+
+  // Opening a preview must not have downloaded anything; Download is its own
+  // action, offered again inside the preview.
+  expect(await invokedCommands(page)).not.toContain("download_file");
+  await dialog.getByTestId("file-preview-download").click();
+  await expect.poll(() => invokedCommands(page)).toContain("download_file");
+});
+
+test("a type the app cannot render offers download and open-externally", async ({
+  page,
+}) => {
+  await installMockBridge(page, {
+    deferredComposerUploads: true,
+    uploadDescriptors: [
+      {
+        url: `https://mock.relay/media/${"c".repeat(64)}.zip`,
+        sha256: "c".repeat(64),
+        size: 4096,
+        type: "application/zip",
+        uploaded: Math.floor(Date.now() / 1000),
+        filename: "drawings.zip",
+      },
+    ],
+  });
+  await page.goto("/");
+  await page.getByTestId("channel-general").click();
+
+  const [chooser] = await Promise.all([
+    page.waitForEvent("filechooser"),
+    page.getByRole("button", { name: "Attach file" }).click(),
+  ]);
+  await chooser.setFiles({
+    buffer: Buffer.from("drawings"),
+    mimeType: "application/zip",
+    name: "drawings.zip",
+  });
+  await page.getByTestId("send-message").click();
+  await expect(page.getByText("Sending")).toHaveCount(0);
+
+  await page
+    .getByTestId("file-card")
+    .last()
+    .getByTestId("file-card-open")
+    .click();
+
+  const dialog = page.getByTestId("file-preview-dialog");
+  await expect(dialog.getByTestId("file-preview-unsupported")).toBeVisible();
+  // No bytes are fetched for something we will not render.
+  expect(await invokedCommands(page)).not.toContain("fetch_preview_bytes");
+
+  await dialog.getByTestId("file-preview-open-externally").click();
+  await expect
+    .poll(() => invokedCommands(page))
+    .toContain("open_file_in_default_app");
 });
 
 test("sends immediately and keeps upload progress across channels", async ({
@@ -622,22 +720,14 @@ test("forum posts emit a FileCard for generic attachments, not a broken image", 
   await page.getByTestId("send-message").click();
 
   // The post renders through the shared Markdown component as a FileCard —
-  // a button carrying the filename that downloads via the native
+  // carrying the filename, with a Download control that uses the native
   // `download_file` command — NOT an inline image and NOT a bare link.
   const card = page.getByTestId("file-card");
   await expect(card).toBeVisible();
   await expect(card).toContainText("quarterly-report.pdf");
 
-  await card.click();
-  await expect
-    .poll(() =>
-      page.evaluate(
-        () =>
-          (window as Window & { __BUZZ_E2E_COMMANDS__?: string[] })
-            .__BUZZ_E2E_COMMANDS__ ?? [],
-      ),
-    )
-    .toContain("download_file");
+  await card.getByTestId("file-card-download").click();
+  await expect.poll(() => invokedCommands(page)).toContain("download_file");
 });
 
 test("a queued attachment can be removed without a mouse", async ({ page }) => {

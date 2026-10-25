@@ -4,6 +4,7 @@ import react from "@vitejs/plugin-react";
 import { lingui } from "@lingui/vite-plugin";
 import { tanstackRouter } from "@tanstack/router-plugin/vite";
 import { linguiMacro } from "./scripts/vite-plugin-lingui-macro.mjs";
+import { pdfjsAssets } from "./scripts/vite-plugin-pdfjs-assets.mjs";
 
 const host = process.env.TAURI_DEV_HOST;
 
@@ -36,6 +37,9 @@ export default defineConfig(async ({ mode }) => {
       // Compiles `src/locales/*/messages.po` on import so catalogues are
       // loadable modules rather than a committed build artifact.
       lingui(),
+      // Copies pdf.js's cmaps, standard fonts, wasm, and ICC profiles to
+      // unhashed URLs the PDF preview can hand to pdf.js.
+      pdfjsAssets(),
     ],
     resolve: {
       alias: {

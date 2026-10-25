@@ -35,6 +35,7 @@ mod media_download;
 mod media_fetch_cancellation;
 mod media_filename;
 mod media_gif;
+mod media_preview;
 mod media_raw;
 mod media_snapshot_png;
 mod media_transcode;
@@ -105,6 +106,7 @@ pub use link_preview::*;
 pub use media::*;
 pub use media_download::*;
 pub use media_fetch_cancellation::*;
+pub use media_preview::*;
 pub use media_raw::*;
 #[cfg(feature = "mesh-llm")]
 pub use mesh_llm::*;

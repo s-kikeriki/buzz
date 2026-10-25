@@ -175,3 +175,50 @@ export async function fetchSnapshotBytes(args: {
   });
   return Array.from(new Uint8Array(buffer));
 }
+
+/**
+ * Fetch an attachment in memory so it can be previewed in the app.
+ *
+ * Goes through the same relay-origin gate, predecessor-origin rewrite, minted
+ * media auth, and content policy as `download_file`, under a lower size cap,
+ * and refuses bytes that are not the `kind` the caller is about to render.
+ * Nothing is written to disk.
+ *
+ * `declaredSize` is the imeta `size` field when the message carries one: it
+ * lets an oversized attachment be refused before any request is made. Omitting
+ * it is safe — the streamed-byte cap still applies.
+ *
+ * Returns the bytes as an `ArrayBuffer`, which is what both renderers want
+ * (pdf.js takes a typed array; the image path wraps it in a `Blob`). Throws a
+ * human-readable error string on any validation failure, including the
+ * too-large refusal the preview surface turns into a download prompt.
+ */
+export async function fetchPreviewBytes(args: {
+  url: string;
+  kind: "pdf" | "image";
+  declaredSize?: number;
+}): Promise<ArrayBuffer> {
+  return invokeTauri<ArrayBuffer>("fetch_preview_bytes", {
+    url: args.url,
+    kind: args.kind,
+    declaredSize: args.declaredSize,
+  });
+}
+
+/**
+ * Hand an attachment to the OS default application.
+ *
+ * The fallback for a type the app cannot render. Unlike {@link
+ * fetchPreviewBytes} this does write a file — into a fresh temporary directory
+ * the user never navigates to — because starting another application requires
+ * one. Same URL validation and content policy as the download path.
+ */
+export async function openFileInDefaultApp(args: {
+  url: string;
+  filename: string;
+}): Promise<void> {
+  await invokeTauri("open_file_in_default_app", {
+    url: args.url,
+    filename: args.filename,
+  });
+}

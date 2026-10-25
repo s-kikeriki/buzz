@@ -686,6 +686,8 @@ pub fn run() {
             download_image,
             save_png_data_url,
             download_file,
+            fetch_preview_bytes,
+            open_file_in_default_app,
             fetch_media_bytes,
             cancel_media_fetch,
             release_media_fetch,
