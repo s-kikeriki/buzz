@@ -902,7 +902,12 @@ pub(crate) fn is_codex_agent(agent_command: &str, agent_args: &[String]) -> bool
 /// candidate because which one carries the name depends on how it was installed.
 ///
 /// Flags are skipped, so `npx -y <package>` and `node --enable-source-maps
-/// <entry>` read the same as the bare forms.
+/// <entry>` read the same as the bare forms — and a path inside an attached
+/// flag value (`--experimental-loader=…/codex-acp/loader.mjs`) is not mistaken
+/// for the program. A flag's *separate* value is indistinguishable from a
+/// program path and is not excluded; telling them apart would mean knowing each
+/// launcher's flag grammar, and the cost of being wrong here is an unused env
+/// var and a paragraph of sandbox advice.
 fn argument_names_codex(argument: &str) -> bool {
     let argument = argument.trim();
     if argument.is_empty() || argument.starts_with('-') {
@@ -2064,9 +2069,17 @@ mod tests {
             ("npx", args(&["@zed-industries/claude-code-acp"])),
             ("node", args(&["/opt/my-agent/dist/index.js"])),
             ("npx", args(&[])),
-            // A flag is not a program, so a `--codex-acp`-shaped flag must not
-            // be read as one.
-            ("node", args(&["--codex-acp", "/opt/other/index.js"])),
+            // A flag is not a program. This is the shape that reaches the
+            // check: the path inside an attached flag value carries a
+            // `codex-acp` segment, but the program being run is the entry point
+            // after it.
+            (
+                "node",
+                args(&[
+                    "--experimental-loader=/opt/codex-acp/loader.mjs",
+                    "/opt/other/index.js",
+                ]),
+            ),
             // Not a launcher: for any other command the arguments are flags,
             // and reading them would hand a non-Codex agent Codex advice.
             ("goose", args(&["acp", "--profile", "codex-acp"])),
