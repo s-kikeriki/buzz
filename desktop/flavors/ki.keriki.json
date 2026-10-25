@@ -1,0 +1,14 @@
+{
+  "id": "ki.keriki",
+  "displayName": "ki.keriki",
+  "productName": "ki.keriki",
+  "identifier": "xyz.block.buzz.app.demo.kikeriki-857f685ce21f5788",
+  "demo": {
+    "name": "kikeriki",
+    "buildId": "857f685ce21f5788"
+  },
+  "icon": "flavors/icons/ki.keriki.icns",
+  "relayUrl": "wss://relay.ki.keriki.de",
+  "autoConnectDefaultRelay": true,
+  "accentColor": "#3b82f6"
+}

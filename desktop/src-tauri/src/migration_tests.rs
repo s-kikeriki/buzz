@@ -991,3 +991,74 @@ fn migrate_legacy_nest_preserves_user_edited_agents_md() {
         "a user-edited live AGENTS.md must never be clobbered"
     );
 }
+
+// ── Per-organisation flavors own only their own data dir ─────────────────────
+
+#[test]
+fn flavor_data_dirs_are_recognised_and_production_ones_are_not() {
+    assert!(is_flavor_data_dir_name(
+        "xyz.block.buzz.app.demo.zeniad-5f1c08b37d4e2a96"
+    ));
+    assert!(is_flavor_data_dir_name(
+        "xyz.block.buzz.app.demo.kikeriki-857f685ce21f5788"
+    ));
+    assert!(!is_flavor_data_dir_name("xyz.block.buzz.app"));
+    assert!(!is_flavor_data_dir_name("xyz.block.buzz.app.dev"));
+    assert!(!is_flavor_data_dir_name("xyz.block.buzz.app.dev.my-branch"));
+    // Prefix collisions must not count as a flavor.
+    assert!(!is_flavor_data_dir_name("xyz.block.buzz.app.demonstration"));
+    assert!(!is_flavor_data_dir_name("xyz.block.buzz.app.demo"));
+    assert!(!is_flavor_data_dir_name("xyz.block.sprout.app.demo.zeniad"));
+}
+
+#[test]
+fn a_flavor_has_no_legacy_data_dir_to_import_or_wipe() {
+    // The defect this guards: the Sprout→Buzz rename predates every flavor, so
+    // `xyz.block.sprout.app.demo.<slug>` has never existed. Deriving it anyway
+    // handed `reset::run_boot_reset` a path outside this build's identity as a
+    // directory it may rename and delete.
+    let support = PathBuf::from("/Users/me/Library/Application Support");
+    for slug in [
+        "zeniad-5f1c08b37d4e2a96",
+        "kikeriki-857f685ce21f5788",
+        "subsections-a9e7c83e21a32f51",
+    ] {
+        let current = support.join(format!("xyz.block.buzz.app.demo.{slug}"));
+        assert_eq!(
+            legacy_app_data_dir(&current),
+            None,
+            "flavor {slug} must not claim a legacy data dir"
+        );
+    }
+}
+
+#[test]
+fn production_and_dev_still_resolve_their_legacy_data_dirs() {
+    // The fix above must not cost production or dev their real import source.
+    let support = PathBuf::from("/Users/me/Library/Application Support");
+    assert_eq!(
+        legacy_app_data_dir(&support.join("xyz.block.buzz.app")),
+        Some(support.join("xyz.block.sprout.app"))
+    );
+    assert_eq!(
+        legacy_app_data_dir(&support.join("xyz.block.buzz.app.dev")),
+        Some(support.join("xyz.block.sprout.app.dev"))
+    );
+    assert_eq!(
+        legacy_app_data_dir(&support.join("xyz.block.buzz.app.dev.my-branch")),
+        Some(support.join("xyz.block.sprout.app.dev.my-branch"))
+    );
+}
+
+#[test]
+fn a_flavor_data_dir_is_not_a_dev_data_dir() {
+    // `is_dev_data_dir_name` drives the dev/prod discriminator the reset and
+    // the nest both read, so a flavor landing on the dev side would wipe and
+    // symlink the shared dev roots.
+    assert!(!is_dev_data_dir_name(
+        "xyz.block.buzz.app.demo.zeniad-5f1c08b37d4e2a96"
+    ));
+    assert!(!is_dev_data_dir_name(
+        "xyz.block.buzz.app.demo.kikeriki-857f685ce21f5788"
+    ));
+}

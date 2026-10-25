@@ -14,7 +14,7 @@
     "lint": "biome lint .",
     "check": "biome check . && pnpm check:px-text && pnpm check:pubkey-truncation && pnpm check:i18n",
     "format": "biome format --write .",
-    "test": "node --import ./test-loader.mjs --experimental-strip-types --test \"src/**/*.test.mjs\" \"scripts/*.test.mjs\" && node --import ./test-jsdom-setup.mjs --import ./test-loader.mjs --experimental-strip-types --test-force-exit --test \"src/**/*.jsdom-test.mjs\"",
+    "test": "node ./scripts/run-tests.mjs",
     "preview": "vite preview",
     "tauri": "node ./scripts/tauri-command.mjs",
     "test:e2e": "pnpm build:e2e && playwright test",
