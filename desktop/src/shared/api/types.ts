@@ -56,6 +56,12 @@ export type UpdateChannelInput = {
   ttlSeconds?: number | null;
 };
 
+export type SetChannelLogoInput = {
+  channelId: string;
+  /** `null` removes the logo. */
+  pictureUrl: string | null;
+};
+
 export type SetChannelTopicInput = {
   channelId: string;
   topic: string;

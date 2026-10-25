@@ -174,6 +174,61 @@ pub fn build_update_channel(
     Ok(EventBuilder::new(Kind::Custom(9002), "").tags(tags))
 }
 
+/// Kind 9002 — set or remove a channel logo.
+///
+/// The logo rides on the metadata-edit command as a `picture` tag. The relay
+/// ignores tag names it does not recognise and stores the signed event
+/// verbatim, so the tag survives a round trip even though `picture` never
+/// reaches the `channels` table or the relay-signed kind:39000.
+///
+/// Two relay rules drive the shape of this event:
+///
+/// * `validate_admin_event` rejects a kind:9002 whose tags are all unknown, so
+///   a logo write must carry a recognised tag. `current_name` is re-sent
+///   unchanged for that purpose.
+/// * `name` is a privileged tag, so the relay enforces owner/admin itself
+///   rather than trusting a client-side role check — and it is the only
+///   privileged tag that emits no system message, so setting a logo stays
+///   silent in the channel.
+///
+/// `current_name` must be the channel's name as the relay currently stores it.
+/// The relay canonicalises names on write (`canonical_channel_name`, which is
+/// idempotent), so re-sending a stored name is a true no-op; passing a
+/// *different* name here would rename the channel as a side effect.
+///
+/// `picture_url` of `None` emits `["picture", ""]`, which is how a logo is
+/// removed: kind:9002 appends rather than replaces, so the newest write wins
+/// and an empty value reads back as "no logo".
+pub fn build_set_channel_logo(
+    channel_id: Uuid,
+    current_name: &str,
+    picture_url: Option<&str>,
+) -> Result<EventBuilder, String> {
+    let name = buzz_sdk_pkg::canonical_channel_name(current_name);
+    if name.trim().is_empty() {
+        return Err("channel name is required".into());
+    }
+    let picture = match picture_url {
+        None => "",
+        Some(url) => {
+            let url = url.trim();
+            if url.is_empty() {
+                return Err("logo URL must not be empty — pass None to remove it".into());
+            }
+            if !url.starts_with("http://") && !url.starts_with("https://") {
+                return Err("logo URL must be an http(s) URL".into());
+            }
+            url
+        }
+    };
+    let tags = vec![
+        tag(vec!["h", &channel_id.to_string()])?,
+        tag(vec!["name", name])?,
+        tag(vec!["picture", picture])?,
+    ];
+    Ok(EventBuilder::new(Kind::Custom(9002), "").tags(tags))
+}
+
 /// Kind 9002 — set topic.
 pub fn build_set_topic(channel_id: Uuid, topic: &str) -> Result<EventBuilder, String> {
     let tags = vec![
@@ -788,6 +843,94 @@ mod tests {
         let channel_id = Uuid::new_v4();
         assert!(build_create_channel(channel_id, "###", "open", "stream", None, None).is_err());
         assert!(build_update_channel(channel_id, Some("###"), None, None, None).is_err());
+        assert!(build_set_channel_logo(channel_id, "###", Some("https://relay.test/a.png")).is_err());
+    }
+
+    /// Tag layout for a logo write. The `name` tag is not decoration: the relay
+    /// rejects a kind:9002 with no recognised tag, and `name` is what makes the
+    /// relay enforce owner/admin without a system message.
+    #[test]
+    fn channel_logo_write_carries_the_channel_and_a_no_op_name() {
+        let channel_id = Uuid::new_v4();
+        let url = "https://zeniad.communities.buzz.xyz/media/abc.png";
+        let event = build_set_channel_logo(channel_id, "clients", Some(url))
+            .unwrap()
+            .sign_with_keys(&Keys::generate())
+            .unwrap();
+
+        assert_eq!(event.kind, Kind::Custom(9002));
+        let tags: Vec<Vec<String>> = event
+            .tags
+            .iter()
+            .map(|t| t.as_slice().to_vec())
+            .collect();
+        assert_eq!(
+            tags,
+            vec![
+                vec!["h".to_string(), channel_id.to_string()],
+                vec!["name".to_string(), "clients".to_string()],
+                vec!["picture".to_string(), url.to_string()],
+            ]
+        );
+    }
+
+    /// Removal is an empty `picture`, not an absent tag: kind:9002 appends, so
+    /// omitting the tag would leave the previous logo as the newest write.
+    #[test]
+    fn channel_logo_removal_emits_an_empty_picture_tag() {
+        let channel_id = Uuid::new_v4();
+        let event = build_set_channel_logo(channel_id, "clients", None)
+            .unwrap()
+            .sign_with_keys(&Keys::generate())
+            .unwrap();
+
+        let picture: Vec<&str> = event
+            .tags
+            .iter()
+            .filter(|t| t.as_slice().first().map(String::as_str) == Some("picture"))
+            .map(|t| t.as_slice().get(1).map(String::as_str).unwrap_or_default())
+            .collect();
+        assert_eq!(picture, vec![""]);
+    }
+
+    /// The name is canonicalised the same way the relay canonicalises it on
+    /// write, so a stored name round-trips as a no-op instead of renaming the
+    /// channel as a side effect of setting its logo.
+    #[test]
+    fn channel_logo_write_canonicalises_the_echoed_name() {
+        let channel_id = Uuid::new_v4();
+        let event = build_set_channel_logo(channel_id, "  #clients  ", None)
+            .unwrap()
+            .sign_with_keys(&Keys::generate())
+            .unwrap();
+
+        let name = event
+            .tags
+            .iter()
+            .find(|t| t.as_slice().first().map(String::as_str) == Some("name"))
+            .and_then(|t| t.as_slice().get(1).cloned())
+            .unwrap();
+        assert_eq!(name, "clients");
+    }
+
+    #[test]
+    fn channel_logo_write_rejects_urls_it_will_not_render() {
+        let channel_id = Uuid::new_v4();
+        for bad in [
+            "",
+            "   ",
+            "/media/logo.png",
+            "media/logo.png",
+            "javascript:alert(1)",
+            "data:image/png;base64,iVBORw0KGgo=",
+            "file:///etc/passwd",
+            "buzz-media://localhost/media/logo.png",
+        ] {
+            assert!(
+                build_set_channel_logo(channel_id, "clients", Some(bad)).is_err(),
+                "expected {bad:?} to be refused"
+            );
+        }
     }
     /// Builder layout regression for the NIP-IA owner-of-agent archive flow.
     /// Compares against `docs/nips/NIP-IA.md` §Vector 1.

@@ -523,6 +523,45 @@ pub async fn update_channel(
         .ok_or_else(|| "channel updated but metadata not yet available".to_string())
 }
 
+#[derive(serde::Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct SetChannelLogoInput {
+    pub channel_id: String,
+    /// `null` removes the logo.
+    pub picture_url: Option<String>,
+}
+
+/// Set or remove a channel's logo.
+///
+/// Authorisation is the relay's: the event carries a privileged `name` tag, so
+/// a non-admin's write is refused server-side. The UI hides the control for
+/// members who cannot use it, but that is presentation, not the gate.
+///
+/// The echoed `name` is read from the relay here rather than accepted from the
+/// caller. The settings sheet holds an *unsaved* name draft while this control
+/// is on screen, so taking a name from the frontend would let uploading a logo
+/// silently commit a rename the user never confirmed.
+#[tauri::command]
+pub async fn set_channel_logo(
+    input: SetChannelLogoInput,
+    state: State<'_, AppState>,
+) -> Result<(), String> {
+    let uuid = parse_channel_uuid(&input.channel_id)?;
+
+    let events = query_relay(&state, &[channel_metadata_filter(&[&input.channel_id])]).await?;
+    let current_name = events
+        .first()
+        .map(nostr_convert::channel_detail_from_event)
+        .transpose()?
+        .map(|detail| detail.name)
+        .ok_or_else(|| "channel metadata not available".to_string())?;
+
+    let builder =
+        events::build_set_channel_logo(uuid, &current_name, input.picture_url.as_deref())?;
+    submit_event(builder, &state).await?;
+    Ok(())
+}
+
 #[tauri::command]
 pub async fn set_channel_topic(
     channel_id: String,
