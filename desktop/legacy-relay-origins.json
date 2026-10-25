@@ -1,0 +1,10 @@
+{
+  "comment": "Relay migrations this app knows about. A media URL on one of a current relay's predecessors is treated as our own: blobs are content-addressed by sha256, so the same /media/ path resolves against the current relay once the file has been copied there. Keyed by the origin of the relay the workspace is on NOW, so only the community that actually did the move claims its predecessors. Read by desktop/src/shared/lib/mediaUrl.ts and desktop/src-tauri/src/legacy_media_origins.rs — this file is the single source of truth for both; neither keeps its own copy. Only exact origins belong here, never a blanket host rule: a genuine third-party Blossom host must still be left alone.",
+  "migrations": [
+    {
+      "currentRelayOrigin": "https://relay.ki.keriki.de",
+      "legacyOrigins": ["https://kikeriki.communities.buzz.xyz"],
+      "note": "kikeriki moved off communities.buzz.xyz in October 2026. Events written before the move still carry the old origin; the blobs were copied to the new relay under the same hashes."
+    }
+  ]
+}

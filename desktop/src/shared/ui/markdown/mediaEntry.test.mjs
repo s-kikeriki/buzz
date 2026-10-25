@@ -109,3 +109,47 @@ test("isRelayDownloadable: unresolved → off-relay origin keeps an external URL
   // Origin resolves to a different (relay) origin → still hidden.
   assert.equal(isRelayDownloadable(src, RELAY), false);
 });
+
+// ── isRelayDownloadable: media left on a relay the community moved off ────
+//
+// These use the real migration table (desktop/legacy-relay-origins.json), not
+// a fixture: the whole point is that the shape the Rust download gate accepts
+// and the shape this offers Download for are the same shape.
+
+const KIKERIKI_NOW = "https://relay.ki.keriki.de";
+const KIKERIKI_LEGACY = "https://kikeriki.communities.buzz.xyz";
+const legacyUrl = (name) => `${KIKERIKI_LEGACY}/media/${name}`;
+
+test("isRelayDownloadable: a document left on a predecessor relay is eligible", () => {
+  // The inline rewrite only covers extensions an <img>/<video> can render, so
+  // documents reach this check with the old origin still on them. The Rust
+  // gate rewrites and accepts them, so hiding Download here would hide an
+  // action that works.
+  for (const name of ["report.pdf", "minutes.docx", "bundle.zip"]) {
+    assert.equal(
+      isRelayDownloadable(legacyUrl(name), KIKERIKI_NOW),
+      true,
+      `${name} on the predecessor origin must be downloadable`,
+    );
+  }
+});
+
+test("isRelayDownloadable: a predecessor is claimed only by the relay that moved", () => {
+  // Another community's build must not claim kikeriki's predecessor — its
+  // relay has no such blob, so Download would only produce an error.
+  assert.equal(isRelayDownloadable(legacyUrl("report.pdf"), RELAY), false);
+});
+
+test("isRelayDownloadable: a non-/media/ path on a predecessor is not eligible", () => {
+  assert.equal(
+    isRelayDownloadable(`${KIKERIKI_LEGACY}/admin/secrets`, KIKERIKI_NOW),
+    false,
+  );
+});
+
+test("isRelayDownloadable: a third-party host is still not eligible", () => {
+  assert.equal(
+    isRelayDownloadable("https://nostr.build/media/abc.pdf", KIKERIKI_NOW),
+    false,
+  );
+});

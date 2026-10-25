@@ -13,6 +13,8 @@
  * Kept DOM-free so the branch logic is unit-testable without a webview.
  */
 
+import { isOwnedMediaOrigin } from "@/shared/lib/legacyRelayOrigins";
+
 /** Legacy video extensions, used only when an imeta MIME type is absent. */
 const VIDEO_EXTENSIONS = ["mp4", "webm", "mov"] as const;
 
@@ -48,10 +50,14 @@ export function isVideoMedia(src: string, imetaMime?: string): boolean {
 }
 
 /**
- * Whether `src` is a relay-hosted `/media/` URL on `relayOrigin`.
+ * Whether `src` is a `/media/` URL this workspace owns — on `relayOrigin`, or
+ * on a relay the community moved off (`isOwnedMediaOrigin`).
  *
- * This mirrors the Rust `validate_download_url` origin+path check for UX
- * purposes only — the Rust gate remains the authoritative SSRF boundary.
+ * This mirrors the Rust `resolve_download_url` check for UX purposes only —
+ * the Rust gate remains the authoritative SSRF boundary. Including
+ * predecessors is what keeps the two in step: the gate rewrites a predecessor
+ * URL onto the current relay and accepts it, so refusing to offer Download
+ * here would hide an action that works.
  *
  * Fails closed when the relay origin has not resolved yet (`relayOrigin`
  * absent): an unresolved origin means we can't distinguish a relay `/media/`
@@ -73,5 +79,5 @@ export function isRelayDownloadable(
     return false;
   }
   if (!parsed.pathname.startsWith("/media/")) return false;
-  return parsed.origin === relayOrigin;
+  return isOwnedMediaOrigin(src, relayOrigin);
 }

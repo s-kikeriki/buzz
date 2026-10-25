@@ -17,6 +17,7 @@ use crate::commands::{
         decode_team_snapshot_from_bytes, MAX_TEAM_SNAPSHOT_JSON_BYTES, MAX_TEAM_SNAPSHOT_PNG_BYTES,
     },
 };
+use crate::legacy_media_origins::canonicalize_legacy_media_url;
 use crate::relay::{classify_request_error, relay_api_base_url_with_override, relay_error_message};
 
 /// Maximum download size: 50 MiB. Prevents OOM from oversized responses.
@@ -61,6 +62,24 @@ pub(super) fn validate_download_url(url: &str, relay_base: &str) -> Result<(), S
     Ok(())
 }
 
+/// Resolve the URL a download command should actually fetch.
+///
+/// A `/media/` URL left on a relay this community has moved off is rewritten
+/// onto the current relay first (`canonicalize_legacy_media_url`), then put
+/// through the unchanged SSRF gate. Doing it in that order is what keeps the
+/// gate honest: a predecessor origin is a URL shape we recognise, never an
+/// origin we are willing to fetch from, so the only host any of these commands
+/// talks to is still the workspace's own relay.
+///
+/// Returns the resolved URL so callers fetch what was validated rather than
+/// what was passed in — validating one URL and fetching another is the classic
+/// way a check like this stops meaning anything.
+pub(super) fn resolve_download_url(url: &str, relay_base: &str) -> Result<String, String> {
+    let resolved = canonicalize_legacy_media_url(url, relay_base);
+    validate_download_url(&resolved, relay_base)?;
+    Ok(resolved)
+}
+
 /// Download an image from a URL and save it via a native save-file dialog.
 #[tauri::command]
 pub async fn download_image(
@@ -70,7 +89,7 @@ pub async fn download_image(
 ) -> Result<bool, String> {
     // SSRF protection: only allow downloads from the relay's /media/ path.
     let relay_base = relay_api_base_url_with_override(&state);
-    validate_download_url(&url, &relay_base)?;
+    let url = resolve_download_url(&url, &relay_base)?;
 
     // Infer filename from the URL path (e.g. "abcdef123.jpg" from a Blossom URL).
     let filename = url::Url::parse(&url)
@@ -117,7 +136,7 @@ pub async fn download_file(
 ) -> Result<bool, String> {
     // SSRF protection: only allow downloads from the relay's /media/ path.
     let relay_base = relay_api_base_url_with_override(&state);
-    validate_download_url(&url, &relay_base)?;
+    let url = resolve_download_url(&url, &relay_base)?;
 
     // The imeta filename is the only human-readable name we have; sanitize it
     // so directory traversal / control characters can never reach the dialog.
@@ -157,7 +176,7 @@ pub async fn copy_image_to_clipboard(
     state: State<'_, AppState>,
 ) -> Result<(), String> {
     let relay_base = relay_api_base_url_with_override(&state);
-    validate_download_url(&url, &relay_base)?;
+    let url = resolve_download_url(&url, &relay_base)?;
 
     let bytes = fetch_blob_bytes(&url, &state).await?;
     detect_and_validate_mime(&bytes)?;
@@ -458,7 +477,7 @@ pub async fn fetch_snapshot_bytes(
 ) -> Result<tauri::ipc::Response, String> {
     // ── Pre-fetch validation ──────────────────────────────────────────────
     let relay_base = relay_api_base_url_with_override(&state);
-    validate_download_url(&url, &relay_base)?;
+    let url = resolve_download_url(&url, &relay_base)?;
 
     // Sanitize the filename and verify it is a recognised snapshot extension.
     let filename = sanitize_filename(&filename);
@@ -807,6 +826,74 @@ mod tests {
     #[test]
     fn test_validate_download_url_private_ip_rejected() {
         let result = validate_download_url("http://169.254.169.254/latest/meta-data/", RELAY_BASE);
+        assert!(result.is_err());
+    }
+
+    // ── resolve_download_url: the legacy-origin rewrite in front of the gate ──
+    //
+    // These use the real migration table, because the point of the change is
+    // that the production table reaches the production download path.
+
+    const KIKERIKI_NOW: &str = "https://relay.ki.keriki.de";
+    const KIKERIKI_LEGACY: &str = "https://kikeriki.communities.buzz.xyz";
+
+    #[test]
+    fn resolve_download_url_rewrites_a_legacy_document_and_returns_it() {
+        let resolved =
+            resolve_download_url(&format!("{KIKERIKI_LEGACY}/media/abc123.pdf"), KIKERIKI_NOW);
+        assert_eq!(
+            resolved.as_deref(),
+            Ok(format!("{KIKERIKI_NOW}/media/abc123.pdf").as_str())
+        );
+    }
+
+    #[test]
+    fn resolve_download_url_covers_documents_not_just_inline_media() {
+        // The frontend's inline rewrite is limited to extensions an <img> or
+        // <video> can render; the download path must not inherit that limit.
+        for name in ["report.pdf", "minutes.docx", "bundle.zip", "notes.txt"] {
+            let resolved =
+                resolve_download_url(&format!("{KIKERIKI_LEGACY}/media/{name}"), KIKERIKI_NOW);
+            assert_eq!(
+                resolved.as_deref(),
+                Ok(format!("{KIKERIKI_NOW}/media/{name}").as_str()),
+                "{name} must resolve onto the current relay",
+            );
+        }
+    }
+
+    #[test]
+    fn resolve_download_url_still_rejects_an_unrelated_origin() {
+        // The rewrite adds one known predecessor; it must not become a hole.
+        let result = resolve_download_url("https://evil.example.com/media/abc.pdf", KIKERIKI_NOW);
+        assert!(result.is_err());
+        assert!(result.unwrap_err().contains("relay origin"));
+    }
+
+    #[test]
+    fn resolve_download_url_rejects_the_legacy_origin_on_another_community() {
+        // A build whose workspace is on some other relay must not claim
+        // kikeriki's predecessor — its relay has no such blob.
+        let result = resolve_download_url(&format!("{KIKERIKI_LEGACY}/media/abc.pdf"), RELAY_BASE);
+        assert!(result.is_err());
+        assert!(result.unwrap_err().contains("relay origin"));
+    }
+
+    #[test]
+    fn resolve_download_url_passes_a_current_origin_through_unchanged() {
+        let url = format!("{RELAY_BASE}/media/abc.jpg");
+        assert_eq!(
+            resolve_download_url(&url, RELAY_BASE).as_deref(),
+            Ok(url.as_str())
+        );
+    }
+
+    #[test]
+    fn resolve_download_url_rejects_a_legacy_origin_outside_media() {
+        // Rewriting is scoped to /media/; anything else stays rejected rather
+        // than being relocated onto the relay.
+        let result =
+            resolve_download_url(&format!("{KIKERIKI_LEGACY}/admin/secrets"), KIKERIKI_NOW);
         assert!(result.is_err());
     }
 

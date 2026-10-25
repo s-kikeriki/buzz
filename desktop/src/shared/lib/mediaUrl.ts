@@ -17,6 +17,11 @@
 
 import { invoke } from "@tauri-apps/api/core";
 
+import {
+  canonicalOrigin,
+  isLegacyOriginForCurrentRelay,
+} from "@/shared/lib/legacyRelayOrigins";
+
 // Matches: https://anything.com/media/{64-hex}.{ext}
 // Also matches thumbnails: /media/{64-hex}.thumb.jpg
 const RELAY_MEDIA_RE =
@@ -31,26 +36,6 @@ let portPromise: Promise<number | null> | null = null;
  * canonicalized via {@link canonicalOrigin} so comparisons are stable.
  */
 let cachedRelayOrigin: string | null = null;
-
-/**
- * Canonicalize a URL to its origin with a lowercased scheme/host.
- *
- * The relay always emits media URLs with a lowercased tenant host
- * (`normalize_host` in buzz-core), but the saved community relay URL keeps
- * whatever casing the user typed (DNS is case-insensitive, so an uppercase
- * host connects fine). A raw string comparison between the two misclassifies
- * the relay's own media URLs as external and skips the authenticated proxy.
- * `new URL().origin` lowercases scheme + host and drops default ports.
- *
- * Returns null for unparseable input.
- */
-function canonicalOrigin(url: string): string | null {
-  try {
-    return new URL(url).origin;
-  } catch {
-    return null;
-  }
-}
 
 /**
  * Monotonic cache generation, bumped on every `resetMediaCaches` (i.e.
@@ -291,48 +276,6 @@ export function getCachedRelayOrigin(): string | null {
  */
 export function getCachedMediaProxyPort(): number | null {
   return cachedPort;
-}
-
-/**
- * Relay migrations this app knows about, keyed by the origin of the relay the
- * workspace is on **now**. A media URL on one of the mapped predecessors is
- * treated as our own: the blob is content-addressed by sha256, so the same path
- * resolves against the current relay once the file has been uploaded there.
- * Without this, history written before a relay migration keeps pointing at the
- * old host, which stops answering as soon as the move is finished.
- *
- * Keying on the current relay is what keeps the rewrite scoped to the community
- * that actually did the move. A flat list of predecessor origins would make
- * *every* build claim them, so an unrelated community would resolve a
- * `kikeriki` URL against its own relay, which has no such blob — an image that
- * renders today would go blank.
- *
- * Only exact origins belong here, never a blanket "any host" rule — a real
- * third-party Blossom host must still pass through untouched.
- */
-const LEGACY_RELAY_ORIGINS_BY_CURRENT: ReadonlyMap<
-  string,
-  ReadonlySet<string>
-> = new Map([
-  [
-    "https://relay.ki.keriki.de",
-    new Set(["https://kikeriki.communities.buzz.xyz"]) as ReadonlySet<string>,
-  ],
-]);
-
-/**
- * Whether `urlOrigin` is a relay the community on `currentRelayOrigin` moved
- * off. Both arguments must already be canonicalized by {@link canonicalOrigin}.
- */
-function isLegacyOriginForCurrentRelay(
-  urlOrigin: string | null,
-  currentRelayOrigin: string,
-): boolean {
-  if (urlOrigin === null) return false;
-  return (
-    LEGACY_RELAY_ORIGINS_BY_CURRENT.get(currentRelayOrigin)?.has(urlOrigin) ??
-    false
-  );
 }
 
 /**
