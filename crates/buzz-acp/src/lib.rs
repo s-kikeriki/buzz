@@ -10521,13 +10521,17 @@ pub(crate) mod build_mcp_servers_tests {
 
     #[test]
     fn empty_mcp_command_returns_no_servers() {
-        let mut config = test_config();
-        config.mcp_command = "".into();
-        let servers = build_mcp_servers(&config);
-        assert!(
-            servers.is_empty(),
-            "empty mcp_command should produce no MCP servers"
-        );
+        // Whitespace-only too: it is not a command either, and a server built
+        // from it would be advertised in `session/new` and then fail to spawn.
+        for mcp_command in ["", "   ", "\t\n"] {
+            let mut config = test_config();
+            config.mcp_command = mcp_command.into();
+            let servers = build_mcp_servers(&config);
+            assert!(
+                servers.is_empty(),
+                "{mcp_command:?} should produce no MCP servers"
+            );
+        }
     }
 
     #[test]
