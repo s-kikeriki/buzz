@@ -14,6 +14,12 @@ export type FileCardImetaEntry = {
 export type ResolvedFileCard = {
   href: string;
   filename: string;
+  /**
+   * The imeta `m` value, carried through so the card can classify what a
+   * preview would render. Sender-supplied, like the filename — the backend
+   * re-checks the bytes against whatever the card concludes.
+   */
+  mime?: string;
   size?: number;
 };
 
@@ -142,5 +148,10 @@ export function resolveFileCard(
   }
   const filename =
     entry.filename || childText.trim() || href.split("/").pop() || "file";
-  return { href: rewriteRelayUrl(href), filename, size: entry.size };
+  return {
+    href: rewriteRelayUrl(href),
+    filename,
+    mime: entry.m,
+    size: entry.size,
+  };
 }

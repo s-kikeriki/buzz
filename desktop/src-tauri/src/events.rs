@@ -843,7 +843,9 @@ mod tests {
         let channel_id = Uuid::new_v4();
         assert!(build_create_channel(channel_id, "###", "open", "stream", None, None).is_err());
         assert!(build_update_channel(channel_id, Some("###"), None, None, None).is_err());
-        assert!(build_set_channel_logo(channel_id, "###", Some("https://relay.test/a.png")).is_err());
+        assert!(
+            build_set_channel_logo(channel_id, "###", Some("https://relay.test/a.png")).is_err()
+        );
     }
 
     /// Tag layout for a logo write. The `name` tag is not decoration: the relay
@@ -859,11 +861,7 @@ mod tests {
             .unwrap();
 
         assert_eq!(event.kind, Kind::Custom(9002));
-        let tags: Vec<Vec<String>> = event
-            .tags
-            .iter()
-            .map(|t| t.as_slice().to_vec())
-            .collect();
+        let tags: Vec<Vec<String>> = event.tags.iter().map(|t| t.as_slice().to_vec()).collect();
         assert_eq!(
             tags,
             vec![

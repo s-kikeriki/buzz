@@ -552,6 +552,12 @@ type E2eConfig = {
      * message — lets specs prove malformed/hash/size-mismatch error paths.
      */
     snapshotFetchError?: string;
+    /**
+     * When set to a non-empty string, `fetch_preview_bytes` throws with this
+     * message — lets specs prove the preview failure branch, including the
+     * too-large refusal that falls back to Download.
+     */
+    previewFetchError?: string;
     uploadDescriptors?: RawBlobDescriptor[];
     // Seed rows returned by `list_save_subscriptions`. Each entry uses the same
     // snake_case wire shape the Rust backend returns so tests can drive the
@@ -1663,6 +1669,67 @@ const CHANNEL_WINDOW_AUX_DELETION_KINDS = new Set([
 // asserts against this exact port.
 const MOCK_MEDIA_PROXY_PORT = 54321;
 let mockMediaProxyPort = MOCK_MEDIA_PROXY_PORT;
+
+/**
+ * A complete one-page PDF (200×120, "Preview OK" in Helvetica), returned by the
+ * mock `fetch_preview_bytes`.
+ *
+ * Written out in full rather than base64 so a reviewer can see it is a real
+ * document with a real xref table — pdf.js will reconstruct a broken one, so a
+ * subtly invalid fixture would still "work" and prove nothing about rendering.
+ */
+const MOCK_PREVIEW_PDF = [
+  "%PDF-1.4",
+  "1 0 obj",
+  "<< /Type /Catalog /Pages 2 0 R >>",
+  "endobj",
+  "2 0 obj",
+  "<< /Type /Pages /Kids [3 0 R] /Count 1 >>",
+  "endobj",
+  "3 0 obj",
+  "<< /Type /Page /Parent 2 0 R /MediaBox [0 0 200 120] /Contents 4 0 R " +
+    "/Resources << /Font << /F1 5 0 R >> >> >>",
+  "endobj",
+  "4 0 obj",
+  "<< /Length 40 >>",
+  "stream",
+  "BT /F1 18 Tf 20 60 Td (Preview OK) Tj ET",
+  "endstream",
+  "endobj",
+  "5 0 obj",
+  "<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>",
+  "endobj",
+  "xref",
+  "0 6",
+  "0000000000 65535 f ",
+  "0000000009 00000 n ",
+  "0000000058 00000 n ",
+  "0000000115 00000 n ",
+  "0000000241 00000 n ",
+  "0000000331 00000 n ",
+  "trailer",
+  "<< /Size 6 /Root 1 0 R >>",
+  "startxref",
+  "401",
+  "%%EOF",
+  "",
+].join("\n");
+
+const MOCK_PREVIEW_PDF_BYTES = new TextEncoder().encode(MOCK_PREVIEW_PDF);
+
+/**
+ * A 1×1 transparent PNG, for the mock preview's `image` kind. Hex rather than
+ * base64 so the constant needs no `atob` at module scope — this module is also
+ * loaded in environments without one.
+ */
+const MOCK_PREVIEW_PNG_BYTES = Uint8Array.from(
+  (
+    "89504e470d0a1a0a0000000d49484452000000010000000108060000001f15c4" +
+    "890000000d4944415478da63fccfc0f01f00050001ffabce3689000000004945" +
+    "4e44ae426082"
+  ).match(/../g) ?? [],
+  (pair) => Number.parseInt(pair, 16),
+);
 
 // A relay-hosted custom emoji used by the reaction guard. Its URL matches
 // `rewriteRelayUrl()`'s `/media/{64-hex}.{ext}` pattern on the relay origin, so
@@ -14680,6 +14747,26 @@ export function maybeInstallE2eTauriMocks() {
         // FileCard / image-menu click handlers resolve. Specs assert the
         // command was invoked via `__BUZZ_E2E_COMMANDS__`, not the dialog.
         return true;
+      case "fetch_preview_bytes": {
+        // The real command applies the download path's URL validation and
+        // content policy, then returns the bytes. In E2E the bridge returns a
+        // minimal document of the requested kind so the preview surface can be
+        // driven without a relay. `previewFetchError` forces the failure
+        // branch (including the too-large refusal).
+        const err = activeConfig?.mock?.previewFetchError;
+        if (err) throw new Error(err);
+        const kind = (payload as { kind?: string }).kind;
+        const bytes =
+          kind === "image" ? MOCK_PREVIEW_PNG_BYTES : MOCK_PREVIEW_PDF_BYTES;
+        // Return an ArrayBuffer to mirror the real Tauri ipc::Response.
+        const buf = new ArrayBuffer(bytes.length);
+        new Uint8Array(buf).set(bytes);
+        return buf;
+      }
+      case "open_file_in_default_app":
+        // Handing a file to the OS cannot run headlessly. Specs assert the
+        // command was invoked, not that an application launched.
+        return null;
       case "card_mint_key_status":
         // Cards: pretend a key is configured in global defaults so the mint
         // form renders and the key-status row is shown.

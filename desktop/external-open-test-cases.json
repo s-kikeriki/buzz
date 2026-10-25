@@ -1,0 +1,413 @@
+{
+  "comment": "Cross-implementation cases for the external-open gate. Run by desktop/src-tauri/src/external_open_policy.rs and desktop/src/shared/lib/externalOpenPolicy.test.mjs, each through its own implementation. The two halves already share the extension table, but sharing a table is not enough: they also have to derive the same written name from the same raw filename, and the first three cases below are ones where they did not. Two hand-written suites asserting their own expectations is how the frontend and the backend drifted before — this file is what compares them on identical inputs. `filename` is the sender-supplied name, `writtenAs` is the name that must reach disk, `verdict` is allowed | needsConfirmation | refused, `why` names what the case is for. Non-ASCII characters are written as escapes where a literal would be invisible or indistinguishable from ASCII in this file — which is the property several of these cases are about.",
+  "cases": [
+    {
+      "filename": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.exe.pdf",
+      "writtenAs": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.pdf",
+      "verdict": "allowed",
+      "why": "259 characters: the 255 bound is spent on the stem, so the type the name ended with is the type on disk. Cutting the tail instead wrote this as an executable and refused it"
+    },
+    {
+      "filename": "setup.exe\u0001",
+      "writtenAs": "setup.exe",
+      "verdict": "refused",
+      "why": "a control character after the extension is removed, so the name on disk is an executable"
+    },
+    {
+      "filename": "evil.exe:notes.txt",
+      "writtenAs": "evil.exe_notes.txt",
+      "verdict": "allowed",
+      "why": "the colon is neutralized, so the written file genuinely is a .txt and the action stays available"
+    },
+    {
+      "filename": "notes.txt:evil.exe",
+      "writtenAs": "notes.txt_evil.exe",
+      "verdict": "refused",
+      "why": "the mirror image: neutralizing the colon leaves a real .exe"
+    },
+    {
+      "filename": "report.pdf",
+      "writtenAs": "report.pdf",
+      "verdict": "allowed",
+      "why": "the ordinary case"
+    },
+    {
+      "filename": "minutes 2026-10.docx",
+      "writtenAs": "minutes 2026-10.docx",
+      "verdict": "allowed",
+      "why": "spaces in a name are not a reason to sanitize it"
+    },
+    {
+      "filename": "../../etc/passwd",
+      "writtenAs": "passwd",
+      "verdict": "needsConfirmation",
+      "why": "directory components are stripped and a name with no extension is not assumed safe"
+    },
+    {
+      "filename": "..",
+      "writtenAs": "file",
+      "verdict": "needsConfirmation",
+      "why": "a name that is only dots would be the parent directory, not a file in it"
+    },
+    {
+      "filename": "",
+      "writtenAs": "file",
+      "verdict": "needsConfirmation",
+      "why": "an empty name still has to produce something writable"
+    },
+    {
+      "filename": "setup.bat",
+      "writtenAs": "setup.bat",
+      "verdict": "refused",
+      "why": "a script is plain text, so no MIME check upstream objects to it"
+    },
+    {
+      "filename": "autostart.desktop",
+      "writtenAs": "autostart.desktop",
+      "verdict": "refused",
+      "why": "a Linux desktop entry runs its Exec line"
+    },
+    {
+      "filename": "open me.terminal",
+      "writtenAs": "open me.terminal",
+      "verdict": "refused",
+      "why": "a macOS terminal settings file runs its command"
+    },
+    {
+      "filename": "payload.vbs",
+      "writtenAs": "payload.vbs",
+      "verdict": "refused",
+      "why": "from the review: script hosts execute this"
+    },
+    {
+      "filename": "payload.js",
+      "writtenAs": "payload.js",
+      "verdict": "refused",
+      "why": "from the review: Windows Script Host executes a .js from Explorer"
+    },
+    {
+      "filename": "page.hta",
+      "writtenAs": "page.hta",
+      "verdict": "refused",
+      "why": "from the review: an HTML application runs unsandboxed"
+    },
+    {
+      "filename": "tool.jar",
+      "writtenAs": "tool.jar",
+      "verdict": "refused",
+      "why": "from the review: a JRE association executes it"
+    },
+    {
+      "filename": "invoice.pdf.exe",
+      "writtenAs": "invoice.pdf.exe",
+      "verdict": "refused",
+      "why": "only the final extension decides, and it is the executable one"
+    },
+    {
+      "filename": "invoice.exe.pdf",
+      "writtenAs": "invoice.exe.pdf",
+      "verdict": "allowed",
+      "why": "the mirror image: the OS dispatches on .pdf, so refusing would cost a working feature"
+    },
+    {
+      "filename": "evil.exe.",
+      "writtenAs": "evil.exe",
+      "verdict": "refused",
+      "why": "Win32 strips a trailing dot when it creates the file"
+    },
+    {
+      "filename": "evil.exe . . ",
+      "writtenAs": "evil.exe",
+      "verdict": "refused",
+      "why": "dots and whitespace are trimmed in one pass, so neither can expose the other"
+    },
+    {
+      "filename": "SETUP.BAT",
+      "writtenAs": "SETUP.BAT",
+      "verdict": "refused",
+      "why": "the lookup is case-insensitive but the name on disk is not rewritten"
+    },
+    {
+      "filename": "drawings.zip",
+      "writtenAs": "drawings.zip",
+      "verdict": "needsConfirmation",
+      "why": "an archive is neither displayed nor executed by its handler"
+    },
+    {
+      "filename": "diagram.svg",
+      "writtenAs": "diagram.svg",
+      "verdict": "needsConfirmation",
+      "why": "its handler is a browser: the script is sandboxed, the outbound requests are not"
+    },
+    {
+      "filename": "data.csv",
+      "writtenAs": "data.csv",
+      "verdict": "needsConfirmation",
+      "why": "the handler is a spreadsheet, where a cell starting with = is a formula-injection vector"
+    },
+    {
+      "filename": "scan.jfif",
+      "writtenAs": "scan.jfif",
+      "verdict": "needsConfirmation",
+      "why": "a real image extension that is not in the safe list, so it asks rather than assuming"
+    },
+    {
+      "filename": ".gitignore",
+      "writtenAs": ".gitignore",
+      "verdict": "needsConfirmation",
+      "why": "a leading dot starts the name; this is not a file of type gitignore"
+    },
+    {
+      "filename": "runner.jnlp",
+      "writtenAs": "runner.jnlp",
+      "verdict": "refused",
+      "why": "Java Web Start fetches and runs remote code"
+    },
+    {
+      "filename": "fix.diagcab",
+      "writtenAs": "fix.diagcab",
+      "verdict": "refused",
+      "why": "a Windows troubleshooting pack runs its embedded script"
+    },
+    {
+      "filename": "box.wsb",
+      "writtenAs": "box.wsb",
+      "verdict": "refused",
+      "why": "a Windows Sandbox config runs its LogonCommand with host folders mapped in"
+    },
+    {
+      "filename": "tool.cjs",
+      "writtenAs": "tool.cjs",
+      "verdict": "refused",
+      "why": "the same script host as .js and .mjs, which are both refused"
+    },
+    {
+      "filename": "setup.exe‎",
+      "writtenAs": "setup.exe",
+      "verdict": "refused",
+      "why": "U+200E after the extension would make the lookup exe+LRM, which is in neither tier, so a refusal would become a prompt"
+    },
+    {
+      "filename": "setup.⁦exe",
+      "writtenAs": "setup.exe",
+      "verdict": "refused",
+      "why": "an isolate between the dot and the extension does the same thing from the other side"
+    },
+    {
+      "filename": "invoice‮fdp.exe",
+      "writtenAs": "invoicefdp.exe",
+      "verdict": "refused",
+      "why": "U+202E renders this as invoice exe.pdf wherever the raw name is shown"
+    },
+    {
+      "filename": "drawings‮piz.zip",
+      "writtenAs": "drawingspiz.zip",
+      "verdict": "needsConfirmation",
+      "why": "the same spoof in the tier that does ask, where the displayed name is what the user decides on"
+    },
+    {
+      "filename": "notes­.txt",
+      "writtenAs": "notes.txt",
+      "verdict": "allowed",
+      "why": "a soft hyphen is Cf too, and stripping it must not cost a working action"
+    },
+    {
+      "filename": "report‏.pdf",
+      "writtenAs": "report.pdf",
+      "verdict": "allowed",
+      "why": "U+200F in an ordinary name, which Cc-only filtering left in place"
+    },
+    {
+      "filename": "evil.exe‎.",
+      "writtenAs": "evil.exe",
+      "verdict": "refused",
+      "why": "stripping the format character exposes a trailing dot, which is then trimmed in the same pass"
+    },
+    {
+      "filename": "‪‫‬‭‮",
+      "writtenAs": "file",
+      "verdict": "needsConfirmation",
+      "why": "a name made only of format characters still has to produce something writable"
+    },
+    {
+      "filename": "⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠⁠a.pdf",
+      "writtenAs": "a.pdf",
+      "verdict": "allowed",
+      "why": "251 invisible characters plus a 5-character name is 256: stripping them after the 255 bound instead of before it truncates the real extension to .pd and loses the verdict"
+    },
+    {
+      "filename": "CON.txt",
+      "writtenAs": "_CON.txt",
+      "verdict": "allowed",
+      "why": "CON.txt addresses the console, not a file; the prefix fixes the device and the .txt still decides the tier"
+    },
+    {
+      "filename": "nul.pdf",
+      "writtenAs": "_nul.pdf",
+      "verdict": "allowed",
+      "why": "lowercase counts, and writes to NUL are discarded silently"
+    },
+    {
+      "filename": "COM1.bat",
+      "writtenAs": "_COM1.bat",
+      "verdict": "refused",
+      "why": "neutralizing the device does not launder the type"
+    },
+    {
+      "filename": "CON",
+      "writtenAs": "_CON",
+      "verdict": "needsConfirmation",
+      "why": "a bare device name has no extension, so it asks rather than being assumed safe"
+    },
+    {
+      "filename": "CON .txt",
+      "writtenAs": "_CON .txt",
+      "verdict": "allowed",
+      "why": "Win32 ignores trailing spaces in a device name, so the stem is trimmed before it is compared"
+    },
+    {
+      "filename": "console.txt",
+      "writtenAs": "console.txt",
+      "verdict": "allowed",
+      "why": "the rule is the whole stem, not a prefix: an ordinary name must not be rewritten"
+    },
+    {
+      "filename": "com10.txt",
+      "writtenAs": "com10.txt",
+      "verdict": "allowed",
+      "why": "only COM1-COM9 are devices, so the digit boundary has to be exact"
+    },
+    {
+      "filename": "CON.aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "writtenAs": "_CON.aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "verdict": "needsConfirmation",
+      "why": "the device prefix is the only step that lengthens a name, so the 255 bound is re-applied after it"
+    },
+    {
+      "filename": "budget.xlsm",
+      "writtenAs": "budget.xlsm",
+      "verdict": "refused",
+      "why": "a macro-enabled workbook is the AutoOpen problem stated outright"
+    },
+    {
+      "filename": "installer.dmg",
+      "writtenAs": "installer.dmg",
+      "verdict": "refused",
+      "why": "a disk image mounts into a volume whose contents are one double-click from running"
+    },
+    {
+      "filename": "boot.iso",
+      "writtenAs": "boot.iso",
+      "verdict": "refused",
+      "why": "the same, and the mount is a kernel filesystem driver parsing a strangers bytes"
+    },
+    {
+      "filename": "launch.appref-ms",
+      "writtenAs": "launch.appref-ms",
+      "verdict": "refused",
+      "why": "a ClickOnce reference names a remote application and the shell launches it"
+    },
+    {
+      "filename": "records.accde",
+      "writtenAs": "records.accde",
+      "verdict": "refused",
+      "why": "an Access database runs its own macros on open"
+    },
+    {
+      "filename": "dark.themepack",
+      "writtenAs": "dark.themepack",
+      "verdict": "refused",
+      "why": "a theme can point Windows at a screensaver to execute"
+    },
+    {
+      "filename": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.pdf.exe",
+      "writtenAs": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.exe",
+      "verdict": "refused",
+      "why": "the half that matters: shortening the stem must not launder an executable into a document either"
+    },
+    {
+      "filename": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.pdf",
+      "writtenAs": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.pdf",
+      "verdict": "allowed",
+      "why": "one character over the bound, which is the only input that can tell the two truncation orderings apart"
+    },
+    {
+      "filename": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.pdf",
+      "writtenAs": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.pdf",
+      "verdict": "allowed",
+      "why": "exactly on the bound, so nothing is cut and no extension is re-derived"
+    },
+    {
+      "filename": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "writtenAs": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.bbb",
+      "verdict": "needsConfirmation",
+      "why": "a 40-character tail is a long stem, not a long type: preserving it would mangle the stem, so this one is cut at the bound"
+    },
+    {
+      "filename": "records.accdb",
+      "writtenAs": "records.accdb",
+      "verdict": "refused",
+      "why": "an Access database runs its own macros on open, and .accde alone did not cover the family"
+    },
+    {
+      "filename": "report.mdw",
+      "writtenAs": "report.mdw",
+      "verdict": "refused",
+      "why": "a Jet workgroup file is loaded by the same engine"
+    },
+    {
+      "filename": "console.msh1xml",
+      "writtenAs": "console.msh1xml",
+      "verdict": "refused",
+      "why": "a PowerShell console file, the xml sibling of .msh1"
+    },
+    {
+      "filename": "shortcut.pıf",
+      "writtenAs": "shortcut.pıf",
+      "verdict": "refused",
+      "why": "U+0131 DOTLESS I uppercases to I, so a Win32 lookup resolves this to the PIF handler; the fold decides the tier and the name on disk stays the sender's"
+    },
+    {
+      "filename": "payload.jſ",
+      "writtenAs": "payload.jſ",
+      "verdict": "refused",
+      "why": "U+017F LONG S uppercases to S, which is the same evasion spelled with the other character"
+    },
+    {
+      "filename": "shortcut.ln\u212A",
+      "writtenAs": "shortcut.ln\u212A",
+      "verdict": "refused",
+      "why": "U+212A KELVIN SIGN: JavaScript lowercased it to k and Rust did not, so this case is the one that pinned the two halves to one explicit fold"
+    },
+    {
+      "filename": "scan.tıf",
+      "writtenAs": "scan.tıf",
+      "verdict": "allowed",
+      "why": "the fold cuts both ways: a folded extension lands in the tier it resolves to rather than being refused for being unusual"
+    },
+    {
+      "filename": "CONIN$.txt",
+      "writtenAs": "_CONIN$.txt",
+      "verdict": "allowed",
+      "why": "CONIN$ is a console device like CON, and neutralizing it leaves an ordinary text file"
+    },
+    {
+      "filename": "CLOCK$.log",
+      "writtenAs": "_CLOCK$.log",
+      "verdict": "allowed",
+      "why": "the DOS-era clock device, which does not follow the COMn/LPTn shape"
+    },
+    {
+      "filename": "COM¹.bat",
+      "writtenAs": "_COM¹.bat",
+      "verdict": "refused",
+      "why": "Win32 reads the superscript digit as a digit, and neutralizing the device still does not launder the type"
+    },
+    {
+      "filename": "CONıN$.txt",
+      "writtenAs": "_CONıN$.txt",
+      "verdict": "allowed",
+      "why": "the device comparison is folded too, so a dotless i is not a way around the device list"
+    }
+  ]
+}

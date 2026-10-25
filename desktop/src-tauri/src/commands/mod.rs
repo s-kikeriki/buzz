@@ -22,6 +22,7 @@ mod clipboard;
 mod dms;
 mod engrams;
 mod export_util;
+mod external_open_temp;
 mod global_agent_config;
 mod identity;
 mod identity_archive;
@@ -33,8 +34,11 @@ pub(crate) mod media;
 mod media_animated;
 mod media_download;
 mod media_fetch_cancellation;
-mod media_filename;
+// `pub(crate)` so `external_open_policy` can derive the written name from
+// the same sanitizer the save dialog uses.
+pub(crate) mod media_filename;
 mod media_gif;
+mod media_preview;
 mod media_raw;
 mod media_snapshot_png;
 mod media_transcode;
@@ -96,6 +100,9 @@ pub use channels::*;
 pub use clipboard::*;
 pub use dms::*;
 pub use engrams::*;
+pub use external_open_temp::{
+    release_external_open_temp_dirs, sweep_external_open_temp_dirs_at_startup,
+};
 pub use global_agent_config::*;
 pub use identity::*;
 pub use identity_archive::*;
@@ -105,6 +112,7 @@ pub use link_preview::*;
 pub use media::*;
 pub use media_download::*;
 pub use media_fetch_cancellation::*;
+pub use media_preview::*;
 pub use media_raw::*;
 #[cfg(feature = "mesh-llm")]
 pub use mesh_llm::*;
