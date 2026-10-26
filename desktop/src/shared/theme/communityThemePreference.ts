@@ -15,16 +15,33 @@ export type CommunityThemePreference = {
 };
 
 /**
+ * The appearance a community starts on, for a build whose accent is
+ * `brandAccent`.
+ *
+ * Takes the accent as an argument rather than reading `BRAND` inline so the
+ * derivation is falsifiable: `BRAND.defaultAccentColor` is fixed at module
+ * load from `import.meta.env`, which a unit test has no accent for, so a test
+ * against the constant alone cannot tell "reads the build" from "hardcodes the
+ * OSS blue" — the two agree in the test environment.
+ */
+export function defaultCommunityTheme(
+  brandAccent: string,
+): CommunityThemePreference {
+  return Object.freeze({
+    version: 1,
+    theme: "buzz",
+    accent: brandAccent,
+    followSystem: true,
+  });
+}
+
+/**
  * The appearance a community starts on. The accent comes from the build rather
  * than a literal: this is the second place a fresh install's accent is decided,
  * and a hardcoded one here silently outranked the flavor file's.
  */
-export const DEFAULT_COMMUNITY_THEME: CommunityThemePreference = Object.freeze({
-  version: 1,
-  theme: "buzz",
-  accent: BRAND.defaultAccentColor,
-  followSystem: true,
-});
+export const DEFAULT_COMMUNITY_THEME: CommunityThemePreference =
+  defaultCommunityTheme(BRAND.defaultAccentColor);
 
 const THEME_NAMES = new Set<string>(SYNTAX_THEMES);
 const ACCENTS = new Set<string>(ACCENT_COLORS.map(({ value }) => value));

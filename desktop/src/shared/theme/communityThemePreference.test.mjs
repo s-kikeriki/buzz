@@ -5,6 +5,7 @@ import { ACCENT_COLORS } from "./ThemeProvider.tsx";
 import {
   DEFAULT_COMMUNITY_THEME,
   cacheAndApplyCommunityTheme,
+  defaultCommunityTheme,
   clearCommunityThemeOutbox,
   communityThemeApplyExpectation,
   communityThemeOutboxKey,
@@ -245,4 +246,24 @@ test("community switch defers stale outgoing appearance persistence", () => {
     "acknowledge",
   );
   assert.equal(communityThemePersistenceAction(null, incoming), "persist");
+});
+
+test("the starting appearance takes its accent from the build", () => {
+  // The flavor file is not the only place a fresh install's accent comes from;
+  // this constant is the other one, and a literal here outranks the flavor
+  // silently. Asserting `DEFAULT_COMMUNITY_THEME.accent` alone cannot catch
+  // that — `BRAND.defaultAccentColor` is the OSS blue in this environment, so
+  // the literal and the derivation agree. Drive the derivation instead.
+  assert.equal(defaultCommunityTheme("#d4f247").accent, "#d4f247");
+  assert.equal(defaultCommunityTheme("#ef4444").accent, "#ef4444");
+  // The rest of the starting appearance is fixed.
+  const started = defaultCommunityTheme("#d4f247");
+  assert.equal(started.theme, "buzz");
+  assert.equal(started.followSystem, true);
+  assert.equal(started.version, 1);
+  // And the exported constant really is that function's output.
+  assert.deepEqual(
+    DEFAULT_COMMUNITY_THEME,
+    defaultCommunityTheme(DEFAULT_COMMUNITY_THEME.accent),
+  );
 });
