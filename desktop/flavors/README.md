@@ -1,8 +1,9 @@
 # App flavors
 
 A **flavor** is the complete answer to "which app am I building": bundle
-identifier, display name, icon, and default relay. One JSON file per app,
-committed here, so a build needs nothing but a checkout and the flavor's name.
+identifier, display name, icon, in-app logo, and default relay. One JSON file
+per app, committed here, so a build needs nothing but a checkout and the
+flavor's name.
 
 The trunk stays neutral. With no flavor selected the build is plain Buzz — no
 organisation's name, icon, identifier or relay is baked into any default. A
@@ -30,6 +31,9 @@ flavor is always an explicit choice at build time.
     "buildId": "00112233445566aa"  // exactly 16 lowercase hex characters
   },
   "icon": "flavors/icons/acme.icns",      // repo-relative, no `..`
+  "logo": "flavors/logos/acme.svg",       // optional in-app mark, see flavors/logos/
+  "logoStyle": "mask",                    // optional, "mask" (default) or "color"
+  "logoLight": "flavors/logos/acme-light.svg", // optional light-theme cut, "color" only
   "relayUrl": "wss://relay.acme.test",    // default relay baked into the binary
   "autoConnectDefaultRelay": true,        // optional, default false
   "accentColor": "#3b82f6",               // optional, lowercase #rrggbb
@@ -65,7 +69,10 @@ flavor, so a bad edit fails the test suite rather than a release.
    `<slug>` is `demo.name` lowercased with non-alphanumerics collapsed to `-`.
    If you get it wrong, the loader tells you the derived value.
 4. Drop the `example` flag and the example `notes`.
-5. Put the icon at the path `icon` names.
+5. Put the icon at the path `icon` names. If the app should carry an in-app
+   mark too, add `logo` and read `flavors/logos/README.md` first — the file
+   has to be an SVG, and which of the two `logoStyle` values it needs follows
+   from the artwork rather than from taste.
 6. Run `node scripts/flavor-config.test.mjs` and confirm it passes.
 
 ## Building
@@ -79,8 +86,15 @@ node scripts/flavor-config.mjs zeniad --json   # the resolved flavor
 eval "$(node scripts/flavor-config.mjs zeniad)" && export \
   BRAND_NAME BUZZ_BUILD_DEMO_SLUG BUZZ_RELAY_URL DEMO_BUILD_ID DEMO_NAME \
   VITE_BUZZ_PRODUCT_NAME VITE_BUZZ_DEFAULT_ACCENT_COLOR \
-  BUZZ_BUILD_AUTO_CONNECT_DEFAULT_RELAY
+  VITE_BUZZ_PRODUCT_LOGO VITE_BUZZ_PRODUCT_LOGO_LIGHT \
+  VITE_BUZZ_PRODUCT_LOGO_STYLE BUZZ_BUILD_AUTO_CONNECT_DEFAULT_RELAY
 ```
+
+`eval` sets the variables; only `export` hands them to the Vite and Cargo
+child processes. A name left out of that list is read as unset by the build,
+and the result is a DMG missing whatever it configured — no accent, no mark —
+with nothing in the log to say so. `flavor-config.test.mjs` binds this list to
+the variables `flavorBuildEnv` can emit, so the next one cannot be forgotten.
 
 A frozen or example flavor exits non-zero with the reason instead of printing
 an environment. `--allow-frozen` overrides that for a deliberate rebuild of a
@@ -95,6 +109,9 @@ frozen app.
 | `BRAND_NAME` | packaging | `.app` folder name, `CFBundleName`, DMG and volume name |
 | `VITE_BUZZ_PRODUCT_NAME` | `shared/branding/brand.ts` | Product name in user-facing copy |
 | `VITE_BUZZ_DEFAULT_ACCENT_COLOR` | `shared/branding/brandAccent.ts` | Accent a fresh install starts on |
+| `VITE_BUZZ_PRODUCT_LOGO` | `shared/branding/brandLogo.ts` | The flavor's `logo` file, base64 into a `data:image/svg+xml` URL. Omitted when the flavor declares none |
+| `VITE_BUZZ_PRODUCT_LOGO_LIGHT` | `shared/branding/brandLogo.ts` | The flavor's `logoLight` file, same encoding. The light theme shows this cut and the dark theme shows the one above |
+| `VITE_BUZZ_PRODUCT_LOGO_STYLE` | `shared/branding/brandLogo.ts` | `mask` or `color` — recolour that file to the theme, or paint it as it is. Emitted with the logo, never without it |
 | `BUZZ_RELAY_URL` | `src-tauri/build.rs` → `relay::relay_ws_url` | Default relay |
 | `BUZZ_BUILD_AUTO_CONNECT_DEFAULT_RELAY` | `commands::identity` | Connect to that relay without asking |
 

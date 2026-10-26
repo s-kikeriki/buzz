@@ -8,6 +8,9 @@
     "buildId": "857f685ce21f5788"
   },
   "icon": "flavors/icons/ki.keriki.icns",
+  "logo": "flavors/logos/ki.keriki.svg",
+  "logoLight": "flavors/logos/ki.keriki-light.svg",
+  "logoStyle": "color",
   "relayUrl": "wss://relay.ki.keriki.de",
   "autoConnectDefaultRelay": true,
   "accentColor": "#3b82f6"
