@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { existsSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import path from "node:path";
 import test from "node:test";
 import { fileURLToPath } from "node:url";
@@ -170,6 +170,68 @@ test("an icon path that escapes the repo is refused", () => {
   }
 });
 
+test("a logo path that escapes the repo is refused", () => {
+  for (const logo of ["/etc/passwd.svg", "../../secrets/logo.svg"]) {
+    assert.throws(
+      () => validateFlavor(goodFlavor({ logo }), "acme"),
+      /logo must be a repo-relative path without/,
+    );
+  }
+});
+
+test("a logo that is not a single-colour SVG is refused", () => {
+  // The mark is painted as a CSS mask over `currentColor`, so a raster or a
+  // multi-colour file renders as a solid block of the foreground colour. That
+  // is a branding defect that looks like a bug in the theme, not in the asset.
+  for (const logo of [
+    "flavors/logos/acme.png",
+    "flavors/logos/acme.icns",
+    "flavors/logos/acme",
+  ]) {
+    assert.throws(
+      () => validateFlavor(goodFlavor({ logo }), "acme"),
+      /logo must be a single-colour \.svg/,
+    );
+  }
+  for (const logo of ["", "   ", 7]) {
+    assert.throws(
+      () => validateFlavor(goodFlavor({ logo }), "acme"),
+      /logo must be a non-empty string/,
+    );
+  }
+});
+
+test("the logo is optional and its variable is omitted without one", () => {
+  const flavor = validateFlavor(goodFlavor(), "acme");
+  assert.equal(flavor.logo, undefined);
+  assert.equal(
+    flavorBuildEnv(flavor, () => {
+      throw new Error("must not read a logo this flavor does not declare");
+    }).VITE_BUZZ_PRODUCT_LOGO,
+    undefined,
+  );
+});
+
+test("the logo variable carries the asset's own bytes", () => {
+  // The bytes must come from the file the flavor names, not from anywhere
+  // else: this is the whole reason the variable is a data URL and not a path.
+  const flavor = loadFlavor("ki.keriki");
+  const env = flavorBuildEnv(flavor);
+  const [, base64] = env.VITE_BUZZ_PRODUCT_LOGO.split("base64,");
+  const decoded = Buffer.from(base64, "base64").toString("utf8");
+  const onDisk = readFileSync(
+    path.join(
+      path.resolve(path.dirname(fileURLToPath(import.meta.url)), ".."),
+      flavor.logo,
+    ),
+    "utf8",
+  );
+  assert.equal(decoded, onDisk);
+  assert.match(decoded, /^<svg /);
+  // Painted through `currentColor`, so the file must not pin its own colour.
+  assert.doesNotMatch(decoded, /#[0-9a-fA-F]{3,8}\b/);
+});
+
 test("an accent colour that is not lowercase #rrggbb is refused", () => {
   for (const accentColor of ["#FFF", "#3B82F6", "blue", "#3b82f"]) {
     assert.throws(
@@ -189,16 +251,20 @@ test("an unknown flavor names the ones that exist", () => {
 
 test("the build env carries every value a build needs to pick an identity", () => {
   const flavor = loadFlavor("ki.keriki");
-  assert.deepEqual(flavorBuildEnv(flavor), {
-    BRAND_NAME: "ki.keriki",
-    BUZZ_BUILD_AUTO_CONNECT_DEFAULT_RELAY: "1",
-    BUZZ_BUILD_DEMO_SLUG: "kikeriki-857f685ce21f5788",
-    BUZZ_RELAY_URL: "wss://relay.ki.keriki.de",
-    DEMO_BUILD_ID: "857f685ce21f5788",
-    DEMO_NAME: "kikeriki",
-    VITE_BUZZ_DEFAULT_ACCENT_COLOR: "#3b82f6",
-    VITE_BUZZ_PRODUCT_NAME: "ki.keriki",
-  });
+  assert.deepEqual(
+    flavorBuildEnv(flavor, () => "<svg/>"),
+    {
+      BRAND_NAME: "ki.keriki",
+      BUZZ_BUILD_AUTO_CONNECT_DEFAULT_RELAY: "1",
+      BUZZ_BUILD_DEMO_SLUG: "kikeriki-857f685ce21f5788",
+      BUZZ_RELAY_URL: "wss://relay.ki.keriki.de",
+      DEMO_BUILD_ID: "857f685ce21f5788",
+      DEMO_NAME: "kikeriki",
+      VITE_BUZZ_DEFAULT_ACCENT_COLOR: "#3b82f6",
+      VITE_BUZZ_PRODUCT_LOGO: "data:image/svg+xml;base64,PHN2Zy8+",
+      VITE_BUZZ_PRODUCT_NAME: "ki.keriki",
+    },
+  );
 });
 
 test("the slug in the build env is the one the identifier is built from", () => {
@@ -232,6 +298,24 @@ test("shell output quotes every value", () => {
   assert.ok(lines.includes(`BRAND_NAME='Acme'\\''s App'`));
   for (const line of lines) {
     assert.match(line, /^[A-Z0-9_]+='.*'$/);
+  }
+});
+
+test("every buildable flavor's logo is committed at the path it names", () => {
+  // Weaker promise than the icon's — a logo is optional — but the same
+  // failure mode: a declared asset that is not in the repo fails the build
+  // late, after `pnpm tauri build` has already run for minutes.
+  const desktopDir = path.resolve(
+    path.dirname(fileURLToPath(import.meta.url)),
+    "..",
+  );
+  for (const id of listFlavorIds()) {
+    const flavor = loadFlavor(id);
+    if (flavor.frozen || flavor.example || flavor.logo === undefined) continue;
+    assert.ok(
+      existsSync(path.join(desktopDir, flavor.logo)),
+      `${id}: declares ${flavor.logo}, which is not in the repo`,
+    );
   }
 });
 

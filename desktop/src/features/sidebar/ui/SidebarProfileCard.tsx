@@ -19,6 +19,7 @@ import { useMyRelayMembershipLookupQuery } from "@/features/community-members/ho
 import type { SettingsSection } from "@/features/settings/ui/SettingsPanels";
 import type { PresenceStatus, Profile, UserStatus } from "@/shared/api/types";
 import { cn } from "@/shared/lib/cn";
+import { BrandLogo } from "@/shared/ui/BrandLogo";
 
 type SidebarProfileCardProps = {
   activeCommunity: Community | null;
@@ -245,6 +246,8 @@ export function SidebarProfileCard({
             <div className="relative mt-0.5">{readonlyCommunityLabel}</div>
           )}
         </div>
+
+        <BrandLogo className="h-3.5 w-11 shrink-0 text-sidebar-foreground/45" />
       </div>
     </div>
   );

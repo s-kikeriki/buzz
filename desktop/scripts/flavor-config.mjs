@@ -9,10 +9,10 @@ import { demoBuildConfig } from "./demo-build-config.mjs";
  * Per-organisation build flavors, loaded from `desktop/flavors/*.json`.
  *
  * A flavor is the complete answer to "which app am I building" — bundle
- * identifier, display name, icon, default relay — committed to the repo so a
- * build needs nothing but a checkout and the flavor's name. The trunk stays
- * neutral: with no flavor selected the build is plain Buzz, and no
- * organisation's name, icon or identifier is baked into any default.
+ * identifier, display name, icon, in-app logo, default relay — committed to
+ * the repo so a build needs nothing but a checkout and the flavor's name. The
+ * trunk stays neutral: with no flavor selected the build is plain Buzz, and no
+ * organisation's name, icon, logo or identifier is baked into any default.
  *
  * ## Why the identifier is both declared and derived
  *
@@ -27,11 +27,11 @@ import { demoBuildConfig } from "./demo-build-config.mjs";
  * makes a mismatch a build failure instead of a delivery.
  */
 
-const flavorsDir = path.resolve(
+const desktopDir = path.resolve(
   path.dirname(fileURLToPath(import.meta.url)),
   "..",
-  "flavors",
 );
+const flavorsDir = path.join(desktopDir, "flavors");
 
 /** Fields every flavor must declare, with the type each must have. */
 const REQUIRED_STRING_FIELDS = [
@@ -125,6 +125,25 @@ export function validateFlavor(flavor, flavorId) {
     fail(flavorId, "icon must be a repo-relative path without `..`");
   }
 
+  if (flavor.logo !== undefined) {
+    if (typeof flavor.logo !== "string" || flavor.logo.trim().length === 0) {
+      fail(flavorId, "logo must be a non-empty string");
+    }
+    if (
+      path.isAbsolute(flavor.logo) ||
+      flavor.logo.split(path.sep).includes("..")
+    ) {
+      fail(flavorId, "logo must be a repo-relative path without `..`");
+    }
+    if (!flavor.logo.endsWith(".svg")) {
+      // The logo is painted as a CSS mask so it takes the sidebar's own
+      // foreground colour in both themes. That only works for a single-colour
+      // vector; a raster or a multi-colour file would come out as a solid
+      // block, which is a branding defect nobody notices in a diff.
+      fail(flavorId, "logo must be a single-colour .svg");
+    }
+  }
+
   if (flavor.accentColor !== undefined) {
     if (
       typeof flavor.accentColor !== "string" ||
@@ -152,6 +171,7 @@ export function validateFlavor(flavor, flavorId) {
     deepLinkScheme: derived.deepLinkScheme,
     cliName: derived.cliName,
     icon: flavor.icon,
+    logo: typeof flavor.logo === "string" ? flavor.logo : undefined,
     relayUrl: flavor.relayUrl,
     autoConnectDefaultRelay: flavor.autoConnectDefaultRelay === true,
     accentColor: flavor.accentColor,
@@ -190,7 +210,7 @@ export function loadFlavor(flavorId, readFile = readFileSync) {
  * mapping here — rather than in a shell script outside the repo — is what makes
  * "the same flavor always produces the same identity" checkable.
  */
-export function flavorBuildEnv(flavor) {
+export function flavorBuildEnv(flavor, readFile = readFileSync) {
   const env = {
     // Identity. `BUZZ_BUILD_DEMO_SLUG` is what `build.rs` bakes in, and every
     // runtime identity (keyring, nest, deep link, CLI name) derives from it.
@@ -210,6 +230,13 @@ export function flavorBuildEnv(flavor) {
   if (flavor.accentColor !== undefined) {
     env.VITE_BUZZ_DEFAULT_ACCENT_COLOR = flavor.accentColor;
   }
+  if (flavor.logo !== undefined) {
+    // The bytes travel in the variable, not the path: the frontend build runs
+    // in a temp directory that `tauri-command.mjs` deletes afterwards, so a
+    // path would have to survive a move the build controls and we do not.
+    const svg = readFile(path.join(desktopDir, flavor.logo), "utf8");
+    env.VITE_BUZZ_PRODUCT_LOGO = `data:image/svg+xml;base64,${Buffer.from(svg, "utf8").toString("base64")}`;
+  }
   return env;
 }
 
@@ -219,8 +246,8 @@ function shellQuote(value) {
 }
 
 /** `KEY='value'` lines, one per variable, ready to `eval` or `source`. */
-export function flavorBuildEnvShell(flavor) {
-  const env = flavorBuildEnv(flavor);
+export function flavorBuildEnvShell(flavor, readFile = readFileSync) {
+  const env = flavorBuildEnv(flavor, readFile);
   return Object.keys(env)
     .sort()
     .map((key) => `${key}=${shellQuote(env[key])}`)

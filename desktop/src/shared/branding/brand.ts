@@ -18,6 +18,7 @@
  * build's own name when no overlay is applied.
  */
 import { parseDefaultAccentColor } from "./brandAccent";
+import { parseProductLogoUrl } from "./brandLogo";
 
 const DEFAULT_PRODUCT_NAME = "Buzz";
 
@@ -35,4 +36,6 @@ export const BRAND = {
   defaultAccentColor: parseDefaultAccentColor(
     import.meta.env?.VITE_BUZZ_DEFAULT_ACCENT_COLOR,
   ),
+  /** Single-colour logo as an SVG data URL, or `null` for a build with none. */
+  productLogoUrl: parseProductLogoUrl(import.meta.env?.VITE_BUZZ_PRODUCT_LOGO),
 } as const;

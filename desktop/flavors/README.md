@@ -1,8 +1,9 @@
 # App flavors
 
 A **flavor** is the complete answer to "which app am I building": bundle
-identifier, display name, icon, and default relay. One JSON file per app,
-committed here, so a build needs nothing but a checkout and the flavor's name.
+identifier, display name, icon, in-app logo, and default relay. One JSON file
+per app, committed here, so a build needs nothing but a checkout and the
+flavor's name.
 
 The trunk stays neutral. With no flavor selected the build is plain Buzz — no
 organisation's name, icon, identifier or relay is baked into any default. A
@@ -30,6 +31,7 @@ flavor is always an explicit choice at build time.
     "buildId": "00112233445566aa"  // exactly 16 lowercase hex characters
   },
   "icon": "flavors/icons/acme.icns",      // repo-relative, no `..`
+  "logo": "flavors/logos/acme.svg",       // optional in-app mark, see flavors/logos/
   "relayUrl": "wss://relay.acme.test",    // default relay baked into the binary
   "autoConnectDefaultRelay": true,        // optional, default false
   "accentColor": "#3b82f6",               // optional, lowercase #rrggbb
@@ -65,7 +67,9 @@ flavor, so a bad edit fails the test suite rather than a release.
    `<slug>` is `demo.name` lowercased with non-alphanumerics collapsed to `-`.
    If you get it wrong, the loader tells you the derived value.
 4. Drop the `example` flag and the example `notes`.
-5. Put the icon at the path `icon` names.
+5. Put the icon at the path `icon` names. If the app should carry an in-app
+   mark too, add `logo` and read `flavors/logos/README.md` first — the file
+   has to be a single-colour SVG, and the reason is not obvious.
 6. Run `node scripts/flavor-config.test.mjs` and confirm it passes.
 
 ## Building
@@ -95,6 +99,7 @@ frozen app.
 | `BRAND_NAME` | packaging | `.app` folder name, `CFBundleName`, DMG and volume name |
 | `VITE_BUZZ_PRODUCT_NAME` | `shared/branding/brand.ts` | Product name in user-facing copy |
 | `VITE_BUZZ_DEFAULT_ACCENT_COLOR` | `shared/branding/brandAccent.ts` | Accent a fresh install starts on |
+| `VITE_BUZZ_PRODUCT_LOGO` | `shared/branding/brandLogo.ts` | The flavor's `logo` file, base64 into a `data:image/svg+xml` URL. Omitted when the flavor declares none |
 | `BUZZ_RELAY_URL` | `src-tauri/build.rs` → `relay::relay_ws_url` | Default relay |
 | `BUZZ_BUILD_AUTO_CONNECT_DEFAULT_RELAY` | `commands::identity` | Connect to that relay without asking |
 
