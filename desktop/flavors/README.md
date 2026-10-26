@@ -32,6 +32,7 @@ flavor is always an explicit choice at build time.
   },
   "icon": "flavors/icons/acme.icns",      // repo-relative, no `..`
   "logo": "flavors/logos/acme.svg",       // optional in-app mark, see flavors/logos/
+  "logoStyle": "mask",                    // optional, "mask" (default) or "color"
   "relayUrl": "wss://relay.acme.test",    // default relay baked into the binary
   "autoConnectDefaultRelay": true,        // optional, default false
   "accentColor": "#3b82f6",               // optional, lowercase #rrggbb
@@ -69,7 +70,8 @@ flavor, so a bad edit fails the test suite rather than a release.
 4. Drop the `example` flag and the example `notes`.
 5. Put the icon at the path `icon` names. If the app should carry an in-app
    mark too, add `logo` and read `flavors/logos/README.md` first — the file
-   has to be a single-colour SVG, and the reason is not obvious.
+   has to be an SVG, and which of the two `logoStyle` values it needs follows
+   from the artwork rather than from taste.
 6. Run `node scripts/flavor-config.test.mjs` and confirm it passes.
 
 ## Building
@@ -83,7 +85,8 @@ node scripts/flavor-config.mjs zeniad --json   # the resolved flavor
 eval "$(node scripts/flavor-config.mjs zeniad)" && export \
   BRAND_NAME BUZZ_BUILD_DEMO_SLUG BUZZ_RELAY_URL DEMO_BUILD_ID DEMO_NAME \
   VITE_BUZZ_PRODUCT_NAME VITE_BUZZ_DEFAULT_ACCENT_COLOR \
-  VITE_BUZZ_PRODUCT_LOGO BUZZ_BUILD_AUTO_CONNECT_DEFAULT_RELAY
+  VITE_BUZZ_PRODUCT_LOGO VITE_BUZZ_PRODUCT_LOGO_STYLE \
+  BUZZ_BUILD_AUTO_CONNECT_DEFAULT_RELAY
 ```
 
 `eval` sets the variables; only `export` hands them to the Vite and Cargo
@@ -106,6 +109,7 @@ frozen app.
 | `VITE_BUZZ_PRODUCT_NAME` | `shared/branding/brand.ts` | Product name in user-facing copy |
 | `VITE_BUZZ_DEFAULT_ACCENT_COLOR` | `shared/branding/brandAccent.ts` | Accent a fresh install starts on |
 | `VITE_BUZZ_PRODUCT_LOGO` | `shared/branding/brandLogo.ts` | The flavor's `logo` file, base64 into a `data:image/svg+xml` URL. Omitted when the flavor declares none |
+| `VITE_BUZZ_PRODUCT_LOGO_STYLE` | `shared/branding/brandLogo.ts` | `mask` or `color` — recolour that file to the theme, or paint it as it is. Emitted with the logo, never without it |
 | `BUZZ_RELAY_URL` | `src-tauri/build.rs` → `relay::relay_ws_url` | Default relay |
 | `BUZZ_BUILD_AUTO_CONNECT_DEFAULT_RELAY` | `commands::identity` | Connect to that relay without asking |
 

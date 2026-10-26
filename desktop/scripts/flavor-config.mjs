@@ -43,6 +43,18 @@ const REQUIRED_STRING_FIELDS = [
   "relayUrl",
 ];
 
+/**
+ * How the in-app mark is painted.
+ *
+ * `mask` paints the file as a CSS mask over the sidebar's own foreground
+ * colour: one asset then reads in both themes, at the price of discarding
+ * every colour in it. `color` paints the file as an image, colours intact —
+ * which is the only way to ship a mark whose colours *are* the brand, and
+ * leaves the asset responsible for reading on whatever surface it lands on.
+ */
+const LOGO_STYLES = ["mask", "color"];
+const DEFAULT_LOGO_STYLE = "mask";
+
 function fail(flavorId, message) {
   throw new Error(`flavor ${flavorId}: ${message}`);
 }
@@ -148,11 +160,25 @@ export function validateFlavor(flavor, flavorId) {
       fail(flavorId, "logo must be a repo-relative path without `..`");
     }
     if (!flavor.logo.endsWith(".svg")) {
-      // The logo is painted as a CSS mask so it takes the sidebar's own
-      // foreground colour in both themes. That only works for a single-colour
-      // vector; a raster or a multi-colour file would come out as a solid
-      // block, which is a branding defect nobody notices in a diff.
-      fail(flavorId, "logo must be a single-colour .svg");
+      // Both styles below need a vector: the mask style discards every colour
+      // in the file, and `brandLogo.ts` accepts only an inline SVG data URL in
+      // either case, so a raster would be dropped at runtime with nothing in
+      // the build log to say so.
+      fail(flavorId, "logo must be an .svg");
+    }
+  }
+
+  if (flavor.logoStyle !== undefined) {
+    if (!LOGO_STYLES.includes(flavor.logoStyle)) {
+      fail(
+        flavorId,
+        `logoStyle must be one of ${LOGO_STYLES.join(", ")} (default ${DEFAULT_LOGO_STYLE})`,
+      );
+    }
+    if (flavor.logo === undefined) {
+      // A style with nothing to style is a half-made edit, and the half that
+      // is missing is the visible one.
+      fail(flavorId, "logoStyle is set but no logo is declared");
     }
   }
 
@@ -184,6 +210,10 @@ export function validateFlavor(flavor, flavorId) {
     cliName: derived.cliName,
     icon: flavor.icon,
     logo: typeof flavor.logo === "string" ? flavor.logo : undefined,
+    logoStyle:
+      flavor.logo === undefined
+        ? undefined
+        : (flavor.logoStyle ?? DEFAULT_LOGO_STYLE),
     relayUrl: flavor.relayUrl,
     autoConnectDefaultRelay: flavor.autoConnectDefaultRelay === true,
     accentColor: flavor.accentColor,
@@ -248,6 +278,10 @@ export function flavorBuildEnv(flavor, readFile = readFileSync) {
     // path would have to survive a move the build controls and we do not.
     const svg = readFile(path.join(desktopDir, flavor.logo), "utf8");
     env.VITE_BUZZ_PRODUCT_LOGO = `data:image/svg+xml;base64,${Buffer.from(svg, "utf8").toString("base64")}`;
+    // Emitted with the logo rather than only for the non-default style: the
+    // two variables are one setting, and a build that picks up the asset but
+    // not the style paints a brand mark in the wrong form silently.
+    env.VITE_BUZZ_PRODUCT_LOGO_STYLE = flavor.logoStyle ?? DEFAULT_LOGO_STYLE;
   }
   return env;
 }

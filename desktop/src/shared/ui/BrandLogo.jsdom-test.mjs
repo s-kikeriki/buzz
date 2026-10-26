@@ -28,8 +28,9 @@ async function mount(element) {
 test("the mark is painted as a mask over the inherited colour", async () => {
   const { container, unmount } = await mount(
     React.createElement(BrandLogoMark, {
-      className: "h-3.5 w-11",
+      className: "h-4 w-10",
       label: "ki.keriki",
+      style: "mask",
       url: URL_VALUE,
     }),
   );
@@ -57,8 +58,9 @@ test("the mark also carries the -webkit- spelling of the mask", async () => {
   // box unmasked, painting a solid rectangle of foreground colour where the
   // wordmark should be.
   const element = BrandLogoMark({
-    className: "h-3.5 w-11",
+    className: "h-4 w-10",
     label: "ki.keriki",
+    style: "mask",
     url: URL_VALUE,
   });
   assert.ok(element.props.style.WebkitMask.includes(URL_VALUE));
@@ -70,8 +72,9 @@ test("the mark carries the product name for assistive tech", async () => {
   // reaches the end of the sidebar and announces an unnamed graphic.
   const { container, unmount } = await mount(
     React.createElement(BrandLogoMark, {
-      className: "h-3.5 w-11",
+      className: "h-4 w-10",
       label: "ki.keriki",
+      style: "mask",
       url: URL_VALUE,
     }),
   );
@@ -81,12 +84,56 @@ test("the mark carries the product name for assistive tech", async () => {
   await unmount();
 });
 
+test("a colour mark is painted as an image, not masked away", async () => {
+  // The defect this guards is silent and total: paint a multi-colour asset
+  // through the mask path and every colour in it collapses into one block of
+  // the sidebar's foreground — the kikeriki mark loses its lime and comes out
+  // as a grey slab, which reads as a rendering bug rather than a build one.
+  const { container, unmount } = await mount(
+    React.createElement(BrandLogoMark, {
+      className: "h-4 w-10",
+      label: "ki.keriki",
+      style: "color",
+      url: URL_VALUE,
+    }),
+  );
+  const mark = container.querySelector('[data-testid="brand-logo"]');
+  assert.equal(mark.tagName, "IMG");
+  assert.equal(mark.getAttribute("src"), URL_VALUE);
+  assert.equal(mark.style.mask, "");
+  assert.ok(!mark.className.split(" ").includes("bg-current"));
+  // A box that letterboxes rather than stretches, same contract as the mask's
+  // `contain`.
+  assert.ok(mark.className.split(" ").includes("object-contain"));
+  await unmount();
+});
+
+test("a colour mark names itself for assistive tech exactly once", async () => {
+  // `alt` is the image's name; an `aria-label` beside it would be a second
+  // name for one element, which is the duplicate-stop defect the review rules
+  // call out. The empty-alt spelling would be worse still — a decorative
+  // image, announcing nothing where the product's name belongs.
+  const { container, unmount } = await mount(
+    React.createElement(BrandLogoMark, {
+      className: "h-4 w-10",
+      label: "ki.keriki",
+      style: "color",
+      url: URL_VALUE,
+    }),
+  );
+  const mark = container.querySelector('[data-testid="brand-logo"]');
+  assert.equal(mark.getAttribute("alt"), "ki.keriki");
+  assert.equal(mark.getAttribute("aria-label"), null);
+  assert.equal(mark.getAttribute("role"), null);
+  await unmount();
+});
+
 test("a build with no logo renders nothing rather than a placeholder", async () => {
   // The unit-test build has no `VITE_BUZZ_PRODUCT_LOGO`, so this is the OSS
   // trunk's own path: the sidebar must come out neutral, not with an empty
   // box holding space where a client's mark would be.
   const { container, unmount } = await mount(
-    React.createElement(BrandLogo, { className: "h-3.5 w-11" }),
+    React.createElement(BrandLogo, { className: "h-4 w-10" }),
   );
   assert.equal(container.querySelector('[data-testid="brand-logo"]'), null);
   assert.equal(container.innerHTML, "");

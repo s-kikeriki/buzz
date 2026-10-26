@@ -214,10 +214,10 @@ test("a path that merely contains two dots is still allowed", () => {
   assert.equal(flavor.logo, "flavors/logos/..acme.svg");
 });
 
-test("a logo that is not a single-colour SVG is refused", () => {
-  // The mark is painted as a CSS mask over `currentColor`, so a raster or a
-  // multi-colour file renders as a solid block of the foreground colour. That
-  // is a branding defect that looks like a bug in the theme, not in the asset.
+test("a logo that is not an SVG is refused", () => {
+  // `brandLogo.ts` accepts only an inline SVG data URL, so a raster is not a
+  // logo that renders badly — it is dropped at paint time, leaving a build
+  // that declared a mark and ships none, with nothing in the log to say so.
   for (const logo of [
     "flavors/logos/acme.png",
     "flavors/logos/acme.icns",
@@ -225,7 +225,7 @@ test("a logo that is not a single-colour SVG is refused", () => {
   ]) {
     assert.throws(
       () => validateFlavor(goodFlavor({ logo }), "acme"),
-      /logo must be a single-colour \.svg/,
+      /logo must be an \.svg/,
     );
   }
   for (const logo of ["", "   ", 7]) {
@@ -234,6 +234,54 @@ test("a logo that is not a single-colour SVG is refused", () => {
       /logo must be a non-empty string/,
     );
   }
+});
+
+test("the logo style is one of the two the renderer implements", () => {
+  for (const logoStyle of ["colour", "COLOR", "image", "", true, 1]) {
+    assert.throws(
+      () =>
+        validateFlavor(
+          goodFlavor({ logo: "flavors/logos/acme.svg", logoStyle }),
+          "acme",
+        ),
+      /logoStyle must be one of mask, color/,
+      `logoStyle ${logoStyle} must be refused`,
+    );
+  }
+});
+
+test("a logo style without a logo is refused", () => {
+  assert.throws(
+    () => validateFlavor(goodFlavor({ logoStyle: "color" }), "acme"),
+    /logoStyle is set but no logo is declared/,
+  );
+});
+
+test("a flavor that declares a logo and no style gets the mask", () => {
+  // The default has to stay `mask`: it is what every flavor written before
+  // `logoStyle` existed means, and the one that degrades legibly when the
+  // asset and the style disagree.
+  const flavor = validateFlavor(
+    goodFlavor({ logo: "flavors/logos/acme.svg" }),
+    "acme",
+  );
+  assert.equal(flavor.logoStyle, "mask");
+  assert.equal(
+    flavorBuildEnv(flavor, () => "<svg/>").VITE_BUZZ_PRODUCT_LOGO_STYLE,
+    "mask",
+  );
+});
+
+test("the style variable is omitted along with the logo", () => {
+  // The pair travels together or not at all: a style variable surviving from
+  // a previous flavor's build would paint the next one's mark in the wrong
+  // form.
+  const flavor = validateFlavor(goodFlavor(), "acme");
+  assert.equal(flavor.logoStyle, undefined);
+  assert.equal(
+    flavorBuildEnv(flavor, () => "<svg/>").VITE_BUZZ_PRODUCT_LOGO_STYLE,
+    undefined,
+  );
 });
 
 test("the logo is optional and its variable is omitted without one", () => {
@@ -257,8 +305,38 @@ test("the logo variable carries the asset's own bytes", () => {
   const onDisk = readFileSync(path.join(desktopDir, flavor.logo), "utf8");
   assert.equal(decoded, onDisk);
   assert.match(decoded, /^<svg /);
-  // Painted through `currentColor`, so the file must not pin its own colour.
-  assert.doesNotMatch(decoded, /#[0-9a-fA-F]{3,8}\b/);
+});
+
+test("every committed logo is the kind of file its style can paint", () => {
+  // Both halves of this matter, and they fail the same way — a mark that is
+  // there and unreadable. A `mask` asset that pins its own colours loses all
+  // of them to the foreground and comes out as a solid slab; a `color` asset
+  // drawn in `currentColor` resolves against whatever colour it inherits,
+  // which in the sidebar is near-black on near-black. Neither shows up in a
+  // diff, so assert the match in both directions rather than one.
+  for (const id of listFlavorIds()) {
+    const flavor = loadFlavor(id);
+    if (flavor.logo === undefined) continue;
+    const svg = readFileSync(path.join(desktopDir, flavor.logo), "utf8");
+    if (flavor.logoStyle === "color") {
+      assert.doesNotMatch(
+        svg,
+        /currentColor/,
+        `${id}: a colour mark must not defer to the theme's foreground`,
+      );
+      assert.match(
+        svg,
+        /(?:fill|stroke)="(?:#[0-9a-fA-F]{3,8}|(?!none\b)[a-z]+)"/,
+        `${id}: a colour mark must pin at least one colour of its own`,
+      );
+    } else {
+      assert.doesNotMatch(
+        svg,
+        /#[0-9a-fA-F]{3,8}\b/,
+        `${id}: a masked mark must not pin a colour the mask discards`,
+      );
+    }
+  }
 });
 
 test("the real flavors start on the accent each app is meant to have", () => {
@@ -310,6 +388,7 @@ test("the build env carries every value a build needs to pick an identity", () =
       DEMO_NAME: "kikeriki",
       VITE_BUZZ_DEFAULT_ACCENT_COLOR: "#3b82f6",
       VITE_BUZZ_PRODUCT_LOGO: "data:image/svg+xml;base64,PHN2Zy8+",
+      VITE_BUZZ_PRODUCT_LOGO_STYLE: "color",
       VITE_BUZZ_PRODUCT_NAME: "ki.keriki",
     },
   );

@@ -247,7 +247,11 @@ export function SidebarProfileCard({
           )}
         </div>
 
-        <BrandLogo className="h-3.5 w-11 shrink-0 text-sidebar-foreground/45" />
+        {/* 2.5:1 — the box a mark is letterboxed into, and the proportions of
+            the asset `flavors/logos/README.md` asks a flavor to keep. The
+            colour class is what a `mask`-style mark is painted in; a `color`
+            one brings its own. */}
+        <BrandLogo className="h-4 w-10 shrink-0 text-sidebar-foreground/45" />
       </div>
     </div>
   );
