@@ -1,5 +1,6 @@
 import * as React from "react";
 
+import { externalOpenWrittenName } from "@/shared/lib/externalOpenPolicy";
 import { rewriteRelayUrl } from "@/shared/lib/mediaUrl";
 import { useRelayOrigin } from "@/shared/lib/useRelayOrigin";
 
@@ -47,16 +48,24 @@ export function MarkdownVideoPlayer({
   // Fall back to `thumb` for compatibility with older events.
   const posterUrl = entry?.image ?? entry?.thumb;
   const resolvedPoster = posterUrl ? rewriteRelayUrl(posterUrl) : undefined;
+  // The review dialog puts this string in its heading, so the sender's raw
+  // imeta `filename` must not go in it — the same defect the save dialog and
+  // the audio row had. `written_name` is what the backend would write the file
+  // as, which is also the only name the user has been shown anywhere else.
+  // `filename` still travels raw to `VideoPlayer` for the save dialog, where
+  // the Rust side derives its own.
+  const writtenName = entry?.filename
+    ? externalOpenWrittenName(entry.filename)
+    : undefined;
   const resolvedReviewContext = React.useMemo(
     () =>
       videoReviewContext
         ? {
             ...videoReviewContext,
-            title:
-              videoReviewContext.title ?? entry?.filename ?? alt ?? "Video",
+            title: videoReviewContext.title ?? writtenName ?? alt ?? "Video",
           }
         : undefined,
-    [alt, entry?.filename, videoReviewContext],
+    [alt, writtenName, videoReviewContext],
   );
 
   return (
