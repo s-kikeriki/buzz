@@ -54,13 +54,21 @@ export const ACCENT_COLORS = [
   { name: "Purple", value: "#a855f7" },
   { name: "Indigo", value: "#6366f1" },
   { name: "Chartreuse", value: "#d7d72e" },
+  { name: "Citron", value: "#d4f247" },
 ] as const;
 
 /**
  * Accents too light to read as `text-primary` on light themes. They darken
  * there; the legacy accents keep their established rendering.
+ *
+ * Citron is 1.27:1 on white and 14.95:1 on the dark surface, so it belongs
+ * here for the same reason Chartreuse does. Without the entry the light theme
+ * draws it as unreadable text rather than failing visibly.
  */
-const LIGHT_ONLY_ACCENTS = new Set<string>(["#d7d72e"]);
+export const LIGHT_ONLY_ACCENTS: ReadonlySet<string> = new Set<string>([
+  "#d7d72e",
+  "#d4f247",
+]);
 const ACCENT_TEXT_CONTRAST = 4.5;
 
 // Per-organisation builds set their own starting accent; see
@@ -321,12 +329,22 @@ export function isBuzzTheme(themeName: string): boolean {
 /**
  * Resolve the accent to actually apply for a theme: Buzz themes are pinned to
  * the neutral accent; every other theme uses the stored/selected accent.
+ *
+ * A build that configured its own accent is the exception. The Buzz themes are
+ * the default, so without this a per-organisation build's accent was never
+ * rendered on a fresh install — the flavor file set it and the pin discarded
+ * it, which reads as "the setting does nothing" rather than as a conflict.
+ * An unconfigured OSS build has no brand accent and keeps the neutral pin.
  */
-function resolveEffectiveAccent(
+export function resolveEffectiveAccent(
   themeName: string,
   accentColor: string,
+  brandAccent: string | null,
 ): string {
-  return isBuzzTheme(themeName) ? NEUTRAL_ACCENT : accentColor;
+  if (!isBuzzTheme(themeName)) {
+    return accentColor;
+  }
+  return brandAccent ?? NEUTRAL_ACCENT;
 }
 
 /** Toggle the Buzz-specific gradient marker independently from glass. */
@@ -482,10 +500,12 @@ function applyCachedVars(): string | null {
     glassThemeReady = true;
 
     const accent = getStorageItem(ACCENT_STORAGE_KEY) ?? DEFAULT_ACCENT;
-    // Pin Buzz themes to the neutral accent here too, matching applyTheme.
-    // Otherwise a cached Buzz theme + non-neutral stored accent flashes the
+    // Pin Buzz themes to their fixed accent here too, matching applyTheme.
+    // Otherwise a cached Buzz theme + a different stored accent flashes the
     // old accent on reload until the async applyTheme effect runs.
-    applyAccentColor(resolveEffectiveAccent(themeName, accent));
+    applyAccentColor(
+      resolveEffectiveAccent(themeName, accent, BRAND.configuredAccentColor),
+    );
 
     return themeName;
   } catch {
@@ -527,11 +547,12 @@ async function applyTheme(name: SyntaxThemeName): Promise<{
   // browser paints the new theme + accent together. Doing this in a later
   // microtask (e.g. the caller's `.then`) let the previous accent flash on the
   // new theme for a frame — the flicker seen when switching to Buzz. Buzz
-  // themes resolve to the neutral accent regardless of the stored value.
+  // themes resolve to their pinned accent regardless of the stored value.
   applyAccentColor(
     resolveEffectiveAccent(
       name,
       getStorageItem(ACCENT_STORAGE_KEY) ?? DEFAULT_ACCENT,
+      BRAND.configuredAccentColor,
     ),
   );
 
@@ -701,7 +722,13 @@ export function ThemeProvider({
   // same synchronous batch as the theme vars — the flicker fix — so this effect
   // is idempotent on theme changes and simply covers accent-only changes.
   useEffect(() => {
-    applyAccentColor(resolveEffectiveAccent(effectiveTheme, accentColor));
+    applyAccentColor(
+      resolveEffectiveAccent(
+        effectiveTheme,
+        accentColor,
+        BRAND.configuredAccentColor,
+      ),
+    );
   }, [accentColor, effectiveTheme]);
 
   const setTheme = useCallback((name: string) => {

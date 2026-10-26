@@ -1,4 +1,5 @@
 import { normalizeRelayUrl } from "@/features/profile/lib/selfProfileStorage";
+import { BRAND } from "@/shared/branding/brand";
 import { ACCENT_COLORS } from "./ThemeProvider";
 import { SYNTAX_THEMES, type SyntaxThemeName } from "./theme-loader";
 
@@ -13,10 +14,15 @@ export type CommunityThemePreference = {
   followSystem: boolean;
 };
 
+/**
+ * The appearance a community starts on. The accent comes from the build rather
+ * than a literal: this is the second place a fresh install's accent is decided,
+ * and a hardcoded one here silently outranked the flavor file's.
+ */
 export const DEFAULT_COMMUNITY_THEME: CommunityThemePreference = Object.freeze({
   version: 1,
   theme: "buzz",
-  accent: "#3b82f6",
+  accent: BRAND.defaultAccentColor,
   followSystem: true,
 });
 

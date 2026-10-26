@@ -8,11 +8,25 @@
  */
 export const DEFAULT_ACCENT_COLOR = "#3b82f6";
 
-/** Normalise a configured accent, falling back to the OSS default. */
-export function parseDefaultAccentColor(configured: unknown): string {
+/**
+ * The accent this build was configured with, or `null` for an unconfigured
+ * build.
+ *
+ * Kept separate from {@link parseDefaultAccentColor} because "the build asked
+ * for this colour" and "nobody asked, so use ours" are different facts, and
+ * one caller needs to tell them apart: the Buzz themes pin a neutral accent
+ * and would otherwise discard a brand accent silently. Folding the fallback in
+ * here would make an unconfigured OSS build look like one that chose blue.
+ */
+export function parseConfiguredAccentColor(configured: unknown): string | null {
   if (typeof configured !== "string") {
-    return DEFAULT_ACCENT_COLOR;
+    return null;
   }
   const trimmed = configured.trim().toLowerCase();
-  return /^#[0-9a-f]{6}$/.test(trimmed) ? trimmed : DEFAULT_ACCENT_COLOR;
+  return /^#[0-9a-f]{6}$/.test(trimmed) ? trimmed : null;
+}
+
+/** Normalise a configured accent, falling back to the OSS default. */
+export function parseDefaultAccentColor(configured: unknown): string {
+  return parseConfiguredAccentColor(configured) ?? DEFAULT_ACCENT_COLOR;
 }

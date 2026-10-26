@@ -429,10 +429,10 @@ test("the real flavors start on the accent each app is meant to have", () => {
   // The companion to the relay test above: the accent is the other value a
   // fresh install takes from the build rather than from the user, so assert
   // the colour each app actually ships, not merely that it declared one.
-  // Both live apps are on Buzz's blue today — that is the fact under guard,
-  // and the day one of them gets its own brand colour this is the test that
-  // has to be updated deliberately.
-  const expected = { zeniad: "#3b82f6", "ki.keriki": "#3b82f6" };
+  // `ki.keriki` is on citron `#d4f247`, the one signal colour the kikeriki
+  // brand book ratifies; Zeniad is still on Buzz's blue. Changing either is a
+  // deliberate edit to this line, not a side effect of touching a flavor file.
+  const expected = { zeniad: "#3b82f6", "ki.keriki": "#d4f247" };
   for (const [id, accentColor] of Object.entries(expected)) {
     const flavor = loadFlavor(id);
     assert.equal(flavor.accentColor, accentColor, `${id}: declared accent`);
@@ -472,7 +472,7 @@ test("the build env carries every value a build needs to pick an identity", () =
       BUZZ_RELAY_URL: "wss://relay.ki.keriki.de",
       DEMO_BUILD_ID: "857f685ce21f5788",
       DEMO_NAME: "kikeriki",
-      VITE_BUZZ_DEFAULT_ACCENT_COLOR: "#3b82f6",
+      VITE_BUZZ_DEFAULT_ACCENT_COLOR: "#d4f247",
       VITE_BUZZ_PRODUCT_LOGO: "data:image/svg+xml;base64,PHN2Zy8+",
       VITE_BUZZ_PRODUCT_LOGO_LIGHT: "data:image/svg+xml;base64,PHN2Zy8+",
       VITE_BUZZ_PRODUCT_LOGO_STYLE: "color",

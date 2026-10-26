@@ -1,7 +1,12 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { hexToHsl } from "./adaptive-theme.ts";
-import { ACCENT_COLORS, accentPrimary } from "./ThemeProvider.tsx";
+import {
+  ACCENT_COLORS,
+  LIGHT_ONLY_ACCENTS,
+  accentPrimary,
+  resolveEffectiveAccent,
+} from "./ThemeProvider.tsx";
 
 function luminance(hex) {
   const channels = [1, 3, 5].map((i) => {
@@ -20,26 +25,74 @@ function contrast(a, b) {
 const LIGHT = ["#ffffff", "#fafafa", "#f6f8fa", "#eff1f5", "#bcbcbc"];
 const DARK = ["#0d1117", "#24273a", "#1e1e1e"];
 
-test("Chartreuse reads as text and as a filled control on every theme", () => {
-  for (const background of [...LIGHT, ...DARK]) {
-    const { fill, ink } = accentPrimary("#d7d72e", hexToHsl(background));
-    assert.ok(contrast(fill, background) >= 4.5, `text on ${background}`);
-    assert.ok(contrast(ink, fill) >= 4.5, `ink on fill over ${background}`);
-  }
-  // Dark themes keep the raw accent.
-  for (const background of DARK) {
-    assert.equal(
-      accentPrimary("#d7d72e", hexToHsl(background)).fill,
-      "#d7d72e",
+// Driven by the production set rather than a literal list, so a future
+// light-only accent is covered the moment it is added there.
+test("every light-only accent reads as text and as a filled control", () => {
+  assert.ok(LIGHT_ONLY_ACCENTS.size > 0, "the set must not be empty");
+  for (const accent of LIGHT_ONLY_ACCENTS) {
+    for (const background of [...LIGHT, ...DARK]) {
+      const { fill, ink } = accentPrimary(accent, hexToHsl(background));
+      assert.ok(
+        contrast(fill, background) >= 4.5,
+        `${accent}: text on ${background}`,
+      );
+      assert.ok(
+        contrast(ink, fill) >= 4.5,
+        `${accent}: ink on fill over ${background}`,
+      );
+    }
+    // Dark themes keep the raw accent.
+    for (const background of DARK) {
+      assert.equal(
+        accentPrimary(accent, hexToHsl(background)).fill,
+        accent,
+        `${accent}: unchanged on ${background}`,
+      );
+    }
+    // And a light theme must actually move it — otherwise the entry in the set
+    // is doing nothing and the first assertion passed for the wrong reason.
+    assert.notEqual(
+      accentPrimary(accent, hexToHsl("#ffffff")).fill,
+      accent,
+      `${accent}: must darken on white`,
     );
   }
 });
 
-test("legacy accents keep their established fill", () => {
+test("Citron is the kikeriki signal colour and is selectable", () => {
+  const citron = ACCENT_COLORS.find(({ value }) => value === "#d4f247");
+  assert.ok(citron, "citron must be in ACCENT_COLORS");
+  assert.equal(citron.name, "Citron");
+  // The community-theme reader rejects any accent outside ACCENT_COLORS, so
+  // an accent missing from that list is dropped on the sync path.
+  assert.ok(LIGHT_ONLY_ACCENTS.has("#d4f247"));
+});
+
+test("accents that read on every surface keep their established fill", () => {
   for (const { value } of ACCENT_COLORS) {
-    if (value === "neutral" || value === "#d7d72e") continue;
+    if (value === "neutral" || LIGHT_ONLY_ACCENTS.has(value)) continue;
     for (const background of [...LIGHT, ...DARK]) {
       assert.equal(accentPrimary(value, hexToHsl(background)).fill, value);
     }
+  }
+});
+
+test("a Buzz theme renders the build's accent, not the neutral pin", () => {
+  // Buzz themes are the default, so a per-organisation build whose accent the
+  // pin discards here never shows that accent on a fresh install at all.
+  assert.equal(resolveEffectiveAccent("buzz", "#ef4444", "#d4f247"), "#d4f247");
+  assert.equal(
+    resolveEffectiveAccent("buzz-dark", "#ef4444", "#d4f247"),
+    "#d4f247",
+  );
+  // An unconfigured OSS build keeps the neutral pin.
+  assert.equal(resolveEffectiveAccent("buzz", "#ef4444", null), "neutral");
+  assert.equal(resolveEffectiveAccent("buzz-dark", "#ef4444", null), "neutral");
+  // Every other theme uses the stored accent, branded build or not.
+  for (const brandAccent of ["#d4f247", null]) {
+    assert.equal(
+      resolveEffectiveAccent("catppuccin-latte", "#ef4444", brandAccent),
+      "#ef4444",
+    );
   }
 });
