@@ -6451,8 +6451,8 @@ async fn run_models(args: ModelsArgs) -> Result<()> {
     Ok(())
 }
 
-/// The name the agent will see for the configured dev-MCP server, or `None`
-/// when no server is configured.
+/// The configured dev-MCP server as `(command, name)` — the command to spawn
+/// and the name the agent will see for it — or `None` when none is configured.
 ///
 /// One derivation, because [`harness_prompt`] names this server in the Codex
 /// sandbox note and gates that note on which server it is. A note that names a
@@ -6460,26 +6460,37 @@ async fn run_models(args: ModelsArgs) -> Result<()> {
 /// a tool it does not have — so the name in the prompt and the name in
 /// `session/new` have to come from the same place, not from two readings of the
 /// same path.
-pub(crate) fn mcp_server_name(mcp_command: &str) -> Option<&str> {
-    let trimmed = mcp_command.trim();
-    if trimmed.is_empty() {
+///
+/// The command is returned alongside the name, already trimmed, for the same
+/// reason. `BUZZ_ACP_MCP_COMMAND` arrives from the environment, where a
+/// trailing newline is ordinary; the trim used to decide the *name* has to be
+/// the string that is actually spawned, or ` /usr/local/bin/buzz-dev-mcp\n` is
+/// announced to the agent as a `buzz-dev-mcp` server whose process cannot exec.
+pub(crate) fn mcp_server(mcp_command: &str) -> Option<(&str, &str)> {
+    let command = mcp_command.trim();
+    if command.is_empty() {
         return None;
     }
-    Some(
-        std::path::Path::new(trimmed)
-            .file_stem()
-            .and_then(|s| s.to_str())
-            .unwrap_or("mcp"),
-    )
+    let name = std::path::Path::new(command)
+        .file_stem()
+        .and_then(|stem| stem.to_str())
+        .unwrap_or("mcp");
+    Some((command, name))
+}
+
+/// The name the agent will see for the configured dev-MCP server, or `None`
+/// when no server is configured. See [`mcp_server`].
+pub(crate) fn mcp_server_name(mcp_command: &str) -> Option<&str> {
+    mcp_server(mcp_command).map(|(_, name)| name)
 }
 
 fn build_mcp_servers(config: &Config) -> Vec<McpServer> {
-    let Some(name) = mcp_server_name(&config.mcp_command) else {
+    let Some((command, name)) = mcp_server(&config.mcp_command) else {
         return vec![];
     };
     vec![McpServer {
         name: name.to_string(),
-        command: config.mcp_command.clone(),
+        command: command.to_string(),
         args: vec![],
         env: {
             let mut env = vec![
@@ -10530,6 +10541,55 @@ pub(crate) mod build_mcp_servers_tests {
             assert!(
                 servers.is_empty(),
                 "{mcp_command:?} should produce no MCP servers"
+            );
+        }
+    }
+
+    #[test]
+    fn the_spawned_command_is_the_one_the_name_was_read_from() {
+        // `BUZZ_ACP_MCP_COMMAND` comes from the environment, where a trailing
+        // newline is ordinary — `export BUZZ_ACP_MCP_COMMAND="$(which
+        // buzz-dev-mcp)"` is fine, a here-doc or a file read is not. The name
+        // was taken from the trimmed path while the untrimmed string was
+        // spawned, so the agent was told it had a `buzz-dev-mcp` server whose
+        // process could never exec.
+        for mcp_command in [
+            " /opt/bin/buzz-dev-mcp",
+            "/opt/bin/buzz-dev-mcp\n",
+            "\t/opt/bin/buzz-dev-mcp \r\n",
+        ] {
+            let mut config = test_config();
+            config.mcp_command = mcp_command.into();
+            let servers = build_mcp_servers(&config);
+            assert_eq!(servers.len(), 1, "{mcp_command:?} is one server");
+            assert_eq!(
+                servers[0].command, "/opt/bin/buzz-dev-mcp",
+                "{mcp_command:?} must spawn the trimmed command"
+            );
+            assert_eq!(
+                servers[0].name, "buzz-dev-mcp",
+                "{mcp_command:?} names the server from that same command"
+            );
+        }
+    }
+
+    #[test]
+    fn the_announced_name_and_the_spawned_command_agree() {
+        // The prompt's copy of the name comes from `mcp_server_name` and the
+        // session's from `build_mcp_servers`; both must read the string that is
+        // actually spawned, whatever padding the environment carried in.
+        for mcp_command in ["buzz-dev-mcp", " /opt/bin/buzz-dev-mcp\n", "./mcp.sh "] {
+            let mut config = test_config();
+            config.mcp_command = mcp_command.into();
+            let servers = build_mcp_servers(&config);
+            let announced = mcp_server_name(&config.mcp_command).expect("a server is configured");
+            assert_eq!(servers[0].name, announced, "{mcp_command:?}");
+            assert_eq!(
+                std::path::Path::new(&servers[0].command)
+                    .file_stem()
+                    .and_then(|stem| stem.to_str()),
+                Some(announced),
+                "{mcp_command:?}: the announced name must be the spawned command's own stem"
             );
         }
     }

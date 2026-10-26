@@ -896,10 +896,19 @@ pub(crate) fn is_codex_agent(agent_command: &str, agent_args: &[String]) -> bool
 /// Whether a launcher argument names a Codex runtime.
 ///
 /// Accepts the package spec (`@agentclientprotocol/codex-acp`, with or without
-/// an `@version` suffix or Deno's `npm:` prefix) and any path running through a
-/// directory or file of that name — `node …/codex-acp/dist/index.js`, or the
-/// `node_modules/.bin/codex-acp` shim `npx` resolves to. Every path segment is a
-/// candidate because which one carries the name depends on how it was installed.
+/// an `@version` suffix or Deno's `npm:` prefix) and a path whose entry point or
+/// package directory carries the name — `node …/codex-acp/dist/index.js`, or the
+/// `node_modules/.bin/codex-acp` shim `npx` resolves to. The name can be on a
+/// directory rather than the file, because which segment carries it depends on
+/// how the package was installed.
+///
+/// Which segments may carry it is narrower than "any of them". The last segment
+/// is the program, so either identity counts there. Before it they are
+/// directories, and a directory called plainly `codex` is somebody's home or
+/// project folder as often as it is an install — `node /home/codex/app.js` is
+/// not a Codex runtime. So a bare `codex` directory has to look like a package:
+/// inside `node_modules`, or under an `@scope` that owns it. `codex-acp` is
+/// specific enough to count wherever it appears.
 ///
 /// Flags are skipped, so `npx -y <package>` and `node --enable-source-maps
 /// <entry>` read the same as the bare forms — and a path inside an attached
@@ -914,10 +923,29 @@ fn argument_names_codex(argument: &str) -> bool {
         return false;
     }
     let spec = argument.strip_prefix("npm:").unwrap_or(argument);
-    spec.replace('\\', "/").split('/').any(|segment| {
-        CODEX_IDENTITIES
-            .contains(&normalize_agent_command_identity(strip_package_version(segment)).as_str())
-    })
+    let normalized = spec.replace('\\', "/");
+    let segments: Vec<&str> = normalized.split('/').collect();
+    let Some((program, directories)) = segments.split_last() else {
+        return false;
+    };
+    let identity = |segment: &str| normalize_agent_command_identity(strip_package_version(segment));
+    if CODEX_IDENTITIES.contains(&identity(program).as_str()) {
+        return true;
+    }
+    directories
+        .iter()
+        .enumerate()
+        .any(|(index, segment)| match identity(segment).as_str() {
+            "codex-acp" => true,
+            // Matched against the raw parent, not its normalized identity:
+            // that normalization turns `_` into `-`, so `node_modules` only
+            // compares equal to itself before it is applied.
+            "codex" => index.checked_sub(1).is_some_and(|parent| {
+                let parent = directories[parent];
+                parent == "node_modules" || parent.starts_with('@')
+            }),
+            _ => false,
+        })
 }
 
 /// Drop an npm `@version` suffix, leaving a `@scope` segment intact.
@@ -2055,6 +2083,13 @@ mod tests {
                 args(&[r"C:\tools\codex-acp\dist\index.js"]),
             ),
             ("node", args(&["node_modules/.bin/codex-acp"])),
+            // `codex` on its own is the program, not a directory.
+            ("npx", args(&["codex"])),
+            ("npx", args(&["@openai/codex"])),
+            // …and as a directory it still counts when it is shaped like an
+            // installed package rather than somebody's folder.
+            ("node", args(&["node_modules/@openai/codex/bin/codex.js"])),
+            ("node", args(&["/usr/lib/node_modules/codex/bin/index.js"])),
         ] {
             assert!(
                 is_codex_agent(command, &argv),
@@ -2080,6 +2115,14 @@ mod tests {
                     "/opt/other/index.js",
                 ]),
             ),
+            // A directory called plainly `codex` is a home or project folder as
+            // often as it is an install. Accepting it made every script under
+            // one a Codex runtime, which is the bare-`codex`-segment defect:
+            // the entry point here is `app.js`, and nothing names the adapter.
+            ("node", args(&["/home/codex/app.js"])),
+            ("node", args(&["/Users/codex/projects/agent/index.js"])),
+            ("node", args(&["/opt/codex/bin/server.js"])),
+            ("node", args(&["./codex/dist/index.js"])),
             // Not a launcher: for any other command the arguments are flags,
             // and reading them would hand a non-Codex agent Codex advice.
             ("goose", args(&["acp", "--profile", "codex-acp"])),
