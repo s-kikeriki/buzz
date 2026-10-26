@@ -21,6 +21,12 @@ const MAX_PRESERVED_EXTENSION_CHARACTERS: usize = 32;
 /// has steps of its own to run between this and the length bound, and running
 /// the bound twice around them is how a name can be classified as one type and
 /// written as another.
+///
+/// This is the weaker of the two, and it is not enough for anything a person
+/// reads: it leaves format and bidi characters intact, so a name it returns can
+/// still render as a different name than it is. Anything that *shows* a
+/// sender-supplied name — including a save dialog's suggestion — goes through
+/// `written_name` instead.
 pub(crate) fn strip_filename_components(name: &str) -> String {
     let base = name.rsplit(['/', '\\']).next().unwrap_or(name).trim();
     base.chars().filter(|c| !c.is_control()).collect()

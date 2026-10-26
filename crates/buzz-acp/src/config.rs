@@ -780,9 +780,13 @@ pub(crate) fn normalize_agent_command_identity(command: &str) -> String {
         .next()
         .expect("rsplit always yields at least one element");
     let lower = basename.to_ascii_lowercase();
-    // Windows resolves commands through `.exe` binaries and npm's `.cmd`/`.bat`
-    // shims; all three name the same runtime identity.
-    let stem = [".exe", ".cmd", ".bat"]
+    // Windows resolves commands through `.exe` binaries and npm's shims, and
+    // npm writes three of those per bin: `.cmd` for cmd.exe, `.ps1` for
+    // PowerShell, `.bat` for older shells. All of them name the same runtime
+    // identity, and which one is on the configured path is not the agent's
+    // choice — leaving `.ps1` out made a PowerShell-resolved `codex-acp.ps1`
+    // an unrecognized runtime.
+    let stem = [".exe", ".cmd", ".bat", ".ps1"]
         .iter()
         .find_map(|extension| lower.strip_suffix(extension))
         .unwrap_or(&lower);
@@ -848,6 +852,28 @@ pub(crate) fn agent_output_format(extra_env: &[(String, String)]) -> String {
         .unwrap_or_else(|| default.into())
 }
 
+/// The normalized command identities that are a Codex runtime.
+///
+/// Also what an argument has to name for a package launcher to count — see
+/// [`argument_names_codex`].
+const CODEX_IDENTITIES: &[&str] = &["codex", "codex-acp"];
+
+/// Commands that run the program named in their arguments instead of being a
+/// runtime themselves.
+///
+/// `@agentclientprotocol/codex-acp` is an npm package, so `npx
+/// @agentclientprotocol/codex-acp` and `node …/codex-acp/dist/index.js` are
+/// ordinary ways to start the same adapter — and under both of them the command
+/// is a launcher, not an identity. For these the runtime is in `agent_args`.
+///
+/// The arguments are read *only* for a launcher. For any other command they are
+/// flags, and a stray `codex-acp` among them would hand a non-Codex agent
+/// advice about a sandbox it does not have — the failure this predicate exists
+/// to prevent, in the other direction.
+const PACKAGE_LAUNCHERS: &[&str] = &[
+    "node", "npm", "npx", "pnpm", "pnpx", "yarn", "bun", "bunx", "deno",
+];
+
 /// Whether this agent command is one of the Codex runtimes.
 ///
 /// One predicate so the Codex-specific behaviors cannot drift apart: the
@@ -855,11 +881,52 @@ pub(crate) fn agent_output_format(extra_env: &[(String, String)]) -> String {
 /// [`crate::harness_prompt`] must agree on which commands are Codex, or an
 /// agent reads advice about a sandbox it does not have — or hits the sandbox
 /// with no advice at all.
-pub(crate) fn is_codex_agent(agent_command: &str) -> bool {
-    matches!(
-        normalize_agent_command_identity(agent_command).as_str(),
-        "codex" | "codex-acp"
-    )
+///
+/// Takes the arguments as well as the command because a Codex agent is not
+/// always launched by a Codex-named binary: see [`PACKAGE_LAUNCHERS`].
+pub(crate) fn is_codex_agent(agent_command: &str, agent_args: &[String]) -> bool {
+    let identity = normalize_agent_command_identity(agent_command);
+    if CODEX_IDENTITIES.contains(&identity.as_str()) {
+        return true;
+    }
+    PACKAGE_LAUNCHERS.contains(&identity.as_str())
+        && agent_args.iter().any(|arg| argument_names_codex(arg))
+}
+
+/// Whether a launcher argument names a Codex runtime.
+///
+/// Accepts the package spec (`@agentclientprotocol/codex-acp`, with or without
+/// an `@version` suffix or Deno's `npm:` prefix) and any path running through a
+/// directory or file of that name — `node …/codex-acp/dist/index.js`, or the
+/// `node_modules/.bin/codex-acp` shim `npx` resolves to. Every path segment is a
+/// candidate because which one carries the name depends on how it was installed.
+///
+/// Flags are skipped, so `npx -y <package>` and `node --enable-source-maps
+/// <entry>` read the same as the bare forms — and a path inside an attached
+/// flag value (`--experimental-loader=…/codex-acp/loader.mjs`) is not mistaken
+/// for the program. A flag's *separate* value is indistinguishable from a
+/// program path and is not excluded; telling them apart would mean knowing each
+/// launcher's flag grammar, and the cost of being wrong here is an unused env
+/// var and a paragraph of sandbox advice.
+fn argument_names_codex(argument: &str) -> bool {
+    let argument = argument.trim();
+    if argument.is_empty() || argument.starts_with('-') {
+        return false;
+    }
+    let spec = argument.strip_prefix("npm:").unwrap_or(argument);
+    spec.replace('\\', "/").split('/').any(|segment| {
+        CODEX_IDENTITIES
+            .contains(&normalize_agent_command_identity(strip_package_version(segment)).as_str())
+    })
+}
+
+/// Drop an npm `@version` suffix, leaving a `@scope` segment intact.
+fn strip_package_version(segment: &str) -> &str {
+    match segment.rfind('@') {
+        // `@agentclientprotocol` is a scope, not a versioned name.
+        None | Some(0) => segment,
+        Some(at) => &segment[..at],
+    }
 }
 
 /// Build the `CODEX_CONFIG` environment variable that asks for outbound
@@ -889,8 +956,12 @@ pub(crate) fn is_codex_agent(agent_command: &str) -> bool {
 /// be parsed, avoiding accidental sandbox widening for malformed configs.
 ///
 /// Handles `ws://`, `wss://`, `http://`, and `https://` schemes.
-pub fn codex_network_env(agent_command: &str, relay_url: &str) -> Option<(String, String)> {
-    if !is_codex_agent(agent_command) {
+pub fn codex_network_env(
+    agent_command: &str,
+    agent_args: &[String],
+    relay_url: &str,
+) -> Option<(String, String)> {
+    if !is_codex_agent(agent_command, agent_args) {
         return None;
     }
 
@@ -1193,13 +1264,14 @@ impl Config {
         // Inject CODEX_CONFIG so the @agentclientprotocol/codex-acp adapter (1.x)
         // opens the Seatbelt network sandbox for buzz-cli (an MCP subprocess). No-op
         // for non-Codex agents or unparseable relay URLs.
-        let has_generated_codex_config =
-            if let Some(network_env) = codex_network_env(&agent_command, &args.relay_url) {
-                persona_env_vars.push(network_env);
-                true
-            } else {
-                false
-            };
+        let has_generated_codex_config = if let Some(network_env) =
+            codex_network_env(&agent_command, &agent_args, &args.relay_url)
+        {
+            persona_env_vars.push(network_env);
+            true
+        } else {
+            false
+        };
 
         validate_multiple_event_handling(args.multiple_event_handling, args.dedup)?;
 
@@ -1802,6 +1874,17 @@ mod tests {
             normalize_agent_command_identity(r"C:\Tools\Hermes\HERMES-AGENT.BAT"),
             "hermes-agent"
         );
+        // npm writes a `.ps1` shim beside the `.cmd` one, and PowerShell picks
+        // that one. Without it the command was an unrecognized runtime.
+        assert_eq!(
+            normalize_agent_command_identity(r"C:\Users\test\AppData\Roaming\npm\codex-acp.ps1"),
+            "codex-acp"
+        );
+        assert_eq!(
+            normalize_agent_command_identity("GOOSE.PS1"),
+            "goose",
+            "the shim suffix is matched case-insensitively, like the others"
+        );
         // Non-ASCII must not panic.
         assert_eq!(normalize_agent_command_identity("my-agënt"), "my-agënt");
         // Edge cases: empty, whitespace-only, bare separators.
@@ -1853,7 +1936,7 @@ mod tests {
 
     #[test]
     fn codex_network_env_wss_url() {
-        let result = codex_network_env("codex-acp", "wss://sprout-oss.stage.blox.sqprod.co");
+        let result = codex_network_env("codex-acp", &[], "wss://sprout-oss.stage.blox.sqprod.co");
         assert_eq!(
             result,
             Some(("CODEX_CONFIG".to_string(), CODEX_CONFIG_JSON.to_string()))
@@ -1862,7 +1945,7 @@ mod tests {
 
     #[test]
     fn codex_network_env_ws_url() {
-        let result = codex_network_env("codex-acp", "ws://localhost:3000");
+        let result = codex_network_env("codex-acp", &[], "ws://localhost:3000");
         assert_eq!(
             result,
             Some(("CODEX_CONFIG".to_string(), CODEX_CONFIG_JSON.to_string()))
@@ -1871,7 +1954,7 @@ mod tests {
 
     #[test]
     fn codex_network_env_https_url() {
-        let result = codex_network_env("codex-acp", "https://relay.example.com/path");
+        let result = codex_network_env("codex-acp", &[], "https://relay.example.com/path");
         assert_eq!(
             result,
             Some(("CODEX_CONFIG".to_string(), CODEX_CONFIG_JSON.to_string()))
@@ -1880,7 +1963,7 @@ mod tests {
 
     #[test]
     fn codex_network_env_http_url_with_port() {
-        let result = codex_network_env("codex-acp", "http://relay.example.com:8080/query");
+        let result = codex_network_env("codex-acp", &[], "http://relay.example.com:8080/query");
         assert_eq!(
             result,
             Some(("CODEX_CONFIG".to_string(), CODEX_CONFIG_JSON.to_string()))
@@ -1890,7 +1973,7 @@ mod tests {
     #[test]
     fn codex_network_env_bare_codex_command() {
         // "codex" (not "codex-acp") should also get the env var.
-        let result = codex_network_env("codex", "wss://relay.example.com");
+        let result = codex_network_env("codex", &[], "wss://relay.example.com");
         assert_eq!(
             result,
             Some(("CODEX_CONFIG".to_string(), CODEX_CONFIG_JSON.to_string()))
@@ -1900,7 +1983,7 @@ mod tests {
     #[test]
     fn codex_network_env_full_path_codex_command() {
         // Full path like /usr/local/bin/codex-acp should be normalized.
-        let result = codex_network_env("/usr/local/bin/codex-acp", "wss://relay.example.com");
+        let result = codex_network_env("/usr/local/bin/codex-acp", &[], "wss://relay.example.com");
         assert_eq!(
             result,
             Some(("CODEX_CONFIG".to_string(), CODEX_CONFIG_JSON.to_string()))
@@ -1909,16 +1992,125 @@ mod tests {
 
     #[test]
     fn codex_network_env_non_codex_agent_returns_none() {
-        assert!(codex_network_env("goose", "wss://relay.example.com").is_none());
-        assert!(codex_network_env("claude-agent-acp", "wss://relay.example.com").is_none());
-        assert!(codex_network_env("buzz-agent", "wss://relay.example.com").is_none());
+        assert!(codex_network_env("goose", &[], "wss://relay.example.com").is_none());
+        assert!(codex_network_env("claude-agent-acp", &[], "wss://relay.example.com").is_none());
+        assert!(codex_network_env("buzz-agent", &[], "wss://relay.example.com").is_none());
+    }
+
+    /// `agent_args` as `Config` holds them.
+    fn args(values: &[&str]) -> Vec<String> {
+        values.iter().map(|value| value.to_string()).collect()
+    }
+
+    #[test]
+    fn a_codex_named_command_is_codex_whatever_its_arguments_are() {
+        for command in [
+            "codex",
+            "codex-acp",
+            "CODEX_ACP",
+            "codex-acp.exe",
+            "codex-acp.cmd",
+            "codex-acp.bat",
+            // npm writes a PowerShell shim next to the `.cmd` one; which of
+            // them resolves is a property of the shell, not of the runtime.
+            "codex-acp.ps1",
+            "/usr/local/bin/codex-acp",
+            r"C:\Users\me\AppData\Roaming\npm\codex-acp.ps1",
+        ] {
+            assert!(
+                is_codex_agent(command, &args(&["-c", "model=\"gpt-5\""])),
+                "{command} is a Codex runtime"
+            );
+        }
+    }
+
+    #[test]
+    fn a_codex_launched_through_a_package_launcher_is_codex() {
+        // The adapter is an npm package, so the binary on the path is often a
+        // launcher and the runtime is named in the arguments.
+        for (command, argv) in [
+            ("npx", args(&["@agentclientprotocol/codex-acp"])),
+            (
+                "npx",
+                args(&["-y", "@agentclientprotocol/codex-acp@1.13.1"]),
+            ),
+            ("npx", args(&["codex-acp"])),
+            ("npm", args(&["exec", "@agentclientprotocol/codex-acp"])),
+            ("pnpm", args(&["dlx", "@agentclientprotocol/codex-acp"])),
+            ("bunx", args(&["@agentclientprotocol/codex-acp"])),
+            (
+                "deno",
+                args(&["run", "-A", "npm:@agentclientprotocol/codex-acp"]),
+            ),
+            (
+                "node",
+                args(&["/Users/me/node_modules/@agentclientprotocol/codex-acp/dist/index.js"]),
+            ),
+            (
+                "node",
+                args(&["--enable-source-maps", "./codex-acp/dist/index.js"]),
+            ),
+            (
+                "/opt/homebrew/bin/node.exe",
+                args(&[r"C:\tools\codex-acp\dist\index.js"]),
+            ),
+            ("node", args(&["node_modules/.bin/codex-acp"])),
+        ] {
+            assert!(
+                is_codex_agent(command, &argv),
+                "{command} {argv:?} launches Codex"
+            );
+        }
+    }
+
+    #[test]
+    fn a_launcher_running_something_else_is_not_codex() {
+        for (command, argv) in [
+            ("npx", args(&["@zed-industries/claude-code-acp"])),
+            ("node", args(&["/opt/my-agent/dist/index.js"])),
+            ("npx", args(&[])),
+            // A flag is not a program. This is the shape that reaches the
+            // check: the path inside an attached flag value carries a
+            // `codex-acp` segment, but the program being run is the entry point
+            // after it.
+            (
+                "node",
+                args(&[
+                    "--experimental-loader=/opt/codex-acp/loader.mjs",
+                    "/opt/other/index.js",
+                ]),
+            ),
+            // Not a launcher: for any other command the arguments are flags,
+            // and reading them would hand a non-Codex agent Codex advice.
+            ("goose", args(&["acp", "--profile", "codex-acp"])),
+            ("hermes", args(&["@agentclientprotocol/codex-acp"])),
+        ] {
+            assert!(
+                !is_codex_agent(command, &argv),
+                "{command} {argv:?} is not Codex"
+            );
+        }
+    }
+
+    #[test]
+    fn a_scope_is_not_read_as_a_version() {
+        // `rfind('@')` on `@agentclientprotocol` is the scope's own sigil at
+        // index 0; truncating there would leave an empty segment, and a
+        // mis-split like that is how the whole spec stops matching.
+        assert_eq!(
+            strip_package_version("@agentclientprotocol"),
+            "@agentclientprotocol"
+        );
+        assert_eq!(strip_package_version("codex-acp@1.13.1"), "codex-acp");
+        assert_eq!(strip_package_version("codex-acp"), "codex-acp");
+        assert_eq!(strip_package_version("@scope/pkg@2"), "@scope/pkg");
     }
 
     #[test]
     fn codex_network_env_includes_sandbox_network_access() {
         // The JSON value must set sandbox_workspace_write.network_access=true — without
         // it, the Seatbelt sandbox blocks outbound connections in the 1.x adapter.
-        let result = codex_network_env("codex-acp", "wss://relay.example.com");
+        let result = codex_network_env("codex-acp", &[], "wss://relay.example.com");
         let (key, val) = result.expect("expected Some for valid codex + valid url");
         assert_eq!(key, "CODEX_CONFIG");
         assert!(
@@ -1934,13 +2126,13 @@ mod tests {
     #[test]
     fn codex_network_env_empty_relay_url_returns_none() {
         // Empty string fails Url::parse — graceful None return.
-        assert!(codex_network_env("codex-acp", "").is_none());
+        assert!(codex_network_env("codex-acp", &[], "").is_none());
     }
 
     #[test]
     fn codex_network_env_schemeless_string_returns_none() {
         // A bare string with no scheme fails Url::parse — graceful None return.
-        assert!(codex_network_env("codex-acp", "not-a-url").is_none());
+        assert!(codex_network_env("codex-acp", &[], "not-a-url").is_none());
     }
 
     #[test]

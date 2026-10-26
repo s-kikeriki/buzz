@@ -6451,16 +6451,34 @@ async fn run_models(args: ModelsArgs) -> Result<()> {
     Ok(())
 }
 
-fn build_mcp_servers(config: &Config) -> Vec<McpServer> {
-    if config.mcp_command.is_empty() {
-        return vec![];
+/// The name the agent will see for the configured dev-MCP server, or `None`
+/// when no server is configured.
+///
+/// One derivation, because [`harness_prompt`] names this server in the Codex
+/// sandbox note and gates that note on which server it is. A note that names a
+/// different prefix than the agent's tool list carries would send it looking for
+/// a tool it does not have — so the name in the prompt and the name in
+/// `session/new` have to come from the same place, not from two readings of the
+/// same path.
+pub(crate) fn mcp_server_name(mcp_command: &str) -> Option<&str> {
+    let trimmed = mcp_command.trim();
+    if trimmed.is_empty() {
+        return None;
     }
-    vec![McpServer {
-        name: std::path::Path::new(&config.mcp_command)
+    Some(
+        std::path::Path::new(trimmed)
             .file_stem()
             .and_then(|s| s.to_str())
-            .unwrap_or("mcp")
-            .to_string(),
+            .unwrap_or("mcp"),
+    )
+}
+
+fn build_mcp_servers(config: &Config) -> Vec<McpServer> {
+    let Some(name) = mcp_server_name(&config.mcp_command) else {
+        return vec![];
+    };
+    vec![McpServer {
+        name: name.to_string(),
         command: config.mcp_command.clone(),
         args: vec![],
         env: {
@@ -10503,13 +10521,17 @@ pub(crate) mod build_mcp_servers_tests {
 
     #[test]
     fn empty_mcp_command_returns_no_servers() {
-        let mut config = test_config();
-        config.mcp_command = "".into();
-        let servers = build_mcp_servers(&config);
-        assert!(
-            servers.is_empty(),
-            "empty mcp_command should produce no MCP servers"
-        );
+        // Whitespace-only too: it is not a command either, and a server built
+        // from it would be advertised in `session/new` and then fail to spawn.
+        for mcp_command in ["", "   ", "\t\n"] {
+            let mut config = test_config();
+            config.mcp_command = mcp_command.into();
+            let servers = build_mcp_servers(&config);
+            assert!(
+                servers.is_empty(),
+                "{mcp_command:?} should produce no MCP servers"
+            );
+        }
     }
 
     #[test]

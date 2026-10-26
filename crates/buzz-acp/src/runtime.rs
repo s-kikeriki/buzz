@@ -109,6 +109,7 @@ fn make_prompt_context(
                     harness_prompt::SessionModelFor::Policy(config.session_policy)
                 },
                 &config.agent_command,
+                &config.agent_args,
                 &config.mcp_command,
             ))
         },
@@ -139,8 +140,18 @@ mod tests {
     /// agent went through that function. Restoring the previous inline
     /// composition here would leave every test in that module passing.
     fn base_prompt_for(agent_command: &str, mcp_command: &str, mode: SessionMode) -> String {
+        base_prompt_for_argv(agent_command, &[], mcp_command, mode)
+    }
+
+    fn base_prompt_for_argv(
+        agent_command: &str,
+        agent_args: &[&str],
+        mcp_command: &str,
+        mode: SessionMode,
+    ) -> String {
         let mut config = test_config();
         config.agent_command = agent_command.into();
+        config.agent_args = agent_args.iter().map(|arg| arg.to_string()).collect();
         config.mcp_command = mcp_command.into();
         let rest = relay::RestClient {
             http: reqwest::Client::new(),
@@ -171,6 +182,28 @@ mod tests {
             let prompt = base_prompt_for(command, "buzz-dev-mcp", SessionMode::Conversation);
             assert!(!prompt.contains("## Harness"));
         }
+    }
+
+    #[test]
+    fn a_node_launched_codex_carries_the_note_and_a_custom_mcp_server_does_not() {
+        // The two gates, through the context the harness actually hands an
+        // agent: the runtime identity comes from `agent_args` under a launcher,
+        // and the note is conditional on the dev-MCP server specifically.
+        let launched = base_prompt_for_argv(
+            "npx",
+            &["@agentclientprotocol/codex-acp"],
+            "buzz-dev-mcp",
+            SessionMode::Conversation,
+        );
+        assert!(launched.contains(CODEX_HEADING));
+
+        let custom = base_prompt_for_argv(
+            "npx",
+            &["@agentclientprotocol/codex-acp"],
+            "/opt/corp/corp-mcp",
+            SessionMode::Conversation,
+        );
+        assert!(!custom.contains("## Harness"));
     }
 
     #[test]

@@ -17,6 +17,7 @@ import { scheduleAudioMediaLoad } from "@/features/messages/lib/audioMediaLoadSc
 import { invokeTauri } from "@/shared/api/tauri";
 import { fetchMediaBytes } from "@/shared/api/tauriMedia";
 import { cn } from "@/shared/lib/cn";
+import { externalOpenWrittenName } from "@/shared/lib/externalOpenPolicy";
 import { rewriteRelayUrl } from "@/shared/lib/mediaUrl";
 import {
   Attachment,
@@ -158,6 +159,13 @@ export function AudioMessageAttachment({
   >();
   const [peaks, setPeaks] = React.useState(() => dotPeaks(INITIAL_BAR_COUNT));
   const [waveformReady, setWaveformReady] = React.useState(false);
+  // The only name this component renders. The sender wrote `filename`, and the
+  // audio row's copy of it is read by a screen reader rather than seen, which
+  // makes a bidi override worse here, not better: nothing about
+  // `invoice\u{202e}3pm.exe` sounds wrong when it is spoken back as
+  // `invoice exe.mp3`. The raw name still goes over IPC — the backend derives
+  // its own and decides what is written.
+  const writtenName = externalOpenWrittenName(filename);
   useSmoothCorners(mediaRef);
   useSmoothCorners(playbackRateRef);
 
@@ -443,7 +451,7 @@ export function AudioMessageAttachment({
         </button>
       </AttachmentMedia>
       <AttachmentContent className="min-w-0">
-        <AttachmentTitle className="sr-only">{filename}</AttachmentTitle>
+        <AttachmentTitle className="sr-only">{writtenName}</AttachmentTitle>
         {playbackError ? (
           <div className="text-xs font-medium text-destructive" role="alert">
             Audio unavailable. Retry playback.
@@ -539,7 +547,7 @@ export function AudioMessageAttachment({
       {!composer && downloadUrl ? (
         <AttachmentActions>
           <AttachmentAction
-            aria-label={`Download ${filename}`}
+            aria-label={`Download ${writtenName}`}
             onClick={() => {
               invokeTauri("download_file", {
                 filename,
