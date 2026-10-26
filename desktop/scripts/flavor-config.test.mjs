@@ -13,6 +13,11 @@ import {
   validateFlavor,
 } from "./flavor-config.mjs";
 
+const desktopDir = path.resolve(
+  path.dirname(fileURLToPath(import.meta.url)),
+  "..",
+);
+
 function goodFlavor(overrides = {}) {
   return {
     id: "acme",
@@ -161,22 +166,52 @@ test("a relay URL that is not a websocket URL is refused", () => {
   }
 });
 
+// A traversal written with the separator this host does not use is still a
+// traversal: the flavor file is data, and the build that reads it may run on
+// Windows. Splitting on `path.sep` saw `..\..\x` as one innocent segment.
+const ESCAPING_PATHS = [
+  "/etc/passwd",
+  "../../secrets",
+  "flavors/../../secrets",
+  "..\\..\\secrets",
+  "flavors\\..\\..\\secrets",
+  "C:\\Windows\\System32",
+  "\\\\server\\share\\secrets",
+  "\\etc\\passwd",
+];
+
 test("an icon path that escapes the repo is refused", () => {
-  for (const icon of ["/etc/passwd", "../../secrets/icon.icns"]) {
+  for (const suffix of ESCAPING_PATHS) {
     assert.throws(
-      () => validateFlavor(goodFlavor({ icon }), "acme"),
+      () => validateFlavor(goodFlavor({ icon: `${suffix}.icns` }), "acme"),
       /icon must be a repo-relative path without/,
+      `icon ${suffix}.icns must be refused`,
     );
   }
 });
 
 test("a logo path that escapes the repo is refused", () => {
-  for (const logo of ["/etc/passwd.svg", "../../secrets/logo.svg"]) {
+  for (const suffix of ESCAPING_PATHS) {
     assert.throws(
-      () => validateFlavor(goodFlavor({ logo }), "acme"),
+      () => validateFlavor(goodFlavor({ logo: `${suffix}.svg` }), "acme"),
       /logo must be a repo-relative path without/,
+      `logo ${suffix}.svg must be refused`,
     );
   }
+});
+
+test("a path that merely contains two dots is still allowed", () => {
+  // The check rejects a `..` *segment*, not the characters: a filename is
+  // free to carry dots, and over-rejecting here would refuse real artwork.
+  const flavor = validateFlavor(
+    goodFlavor({
+      icon: "flavors/icons/acme..v2.icns",
+      logo: "flavors/logos/..acme.svg",
+    }),
+    "acme",
+  );
+  assert.equal(flavor.icon, "flavors/icons/acme..v2.icns");
+  assert.equal(flavor.logo, "flavors/logos/..acme.svg");
 });
 
 test("a logo that is not a single-colour SVG is refused", () => {
@@ -219,17 +254,30 @@ test("the logo variable carries the asset's own bytes", () => {
   const env = flavorBuildEnv(flavor);
   const [, base64] = env.VITE_BUZZ_PRODUCT_LOGO.split("base64,");
   const decoded = Buffer.from(base64, "base64").toString("utf8");
-  const onDisk = readFileSync(
-    path.join(
-      path.resolve(path.dirname(fileURLToPath(import.meta.url)), ".."),
-      flavor.logo,
-    ),
-    "utf8",
-  );
+  const onDisk = readFileSync(path.join(desktopDir, flavor.logo), "utf8");
   assert.equal(decoded, onDisk);
   assert.match(decoded, /^<svg /);
   // Painted through `currentColor`, so the file must not pin its own colour.
   assert.doesNotMatch(decoded, /#[0-9a-fA-F]{3,8}\b/);
+});
+
+test("the real flavors start on the accent each app is meant to have", () => {
+  // The companion to the relay test above: the accent is the other value a
+  // fresh install takes from the build rather than from the user, so assert
+  // the colour each app actually ships, not merely that it declared one.
+  // Both live apps are on Buzz's blue today — that is the fact under guard,
+  // and the day one of them gets its own brand colour this is the test that
+  // has to be updated deliberately.
+  const expected = { zeniad: "#3b82f6", "ki.keriki": "#3b82f6" };
+  for (const [id, accentColor] of Object.entries(expected)) {
+    const flavor = loadFlavor(id);
+    assert.equal(flavor.accentColor, accentColor, `${id}: declared accent`);
+    assert.equal(
+      flavorBuildEnv(flavor, () => "<svg/>").VITE_BUZZ_DEFAULT_ACCENT_COLOR,
+      accentColor,
+      `${id}: the accent that reaches the build`,
+    );
+  }
 });
 
 test("an accent colour that is not lowercase #rrggbb is refused", () => {
@@ -301,14 +349,50 @@ test("shell output quotes every value", () => {
   }
 });
 
+test("the README exports every variable a flavor can emit", () => {
+  // This list drifted the moment `VITE_BUZZ_PRODUCT_LOGO` was added: `eval`
+  // set it, nothing exported it, so a build that followed the README shipped a
+  // DMG with no mark and no complaint. The failure is silent in both
+  // directions — an unexported variable reads exactly like an unset one — so
+  // the list has to be checked against the code rather than re-read by a human.
+  const readme = readFileSync(
+    path.join(desktopDir, "flavors", "README.md"),
+    "utf8",
+  );
+  const fenced = readme
+    .split("```")
+    .find((section) => section.includes("export "));
+  assert.ok(fenced, "the README must show how to export a flavor's env");
+  const tokens = fenced.replaceAll("\\\n", " ").split(/\s+/);
+  const exported = new Set(
+    tokens
+      .slice(tokens.indexOf("export") + 1)
+      .filter((token) => /^[A-Z][A-Z0-9_]*$/.test(token)),
+  );
+
+  const emitted = new Set();
+  for (const id of listFlavorIds()) {
+    for (const key of Object.keys(
+      flavorBuildEnv(loadFlavor(id), () => "<svg/>"),
+    )) {
+      emitted.add(key);
+    }
+  }
+
+  assert.deepEqual([...exported].sort(), [...emitted].sort());
+  // The table below the snippet is the other copy of the same list.
+  for (const key of emitted) {
+    assert.ok(
+      readme.includes(`\`${key}\``),
+      `${key} is exported but the README does not say what it does`,
+    );
+  }
+});
+
 test("every buildable flavor's logo is committed at the path it names", () => {
   // Weaker promise than the icon's — a logo is optional — but the same
   // failure mode: a declared asset that is not in the repo fails the build
   // late, after `pnpm tauri build` has already run for minutes.
-  const desktopDir = path.resolve(
-    path.dirname(fileURLToPath(import.meta.url)),
-    "..",
-  );
   for (const id of listFlavorIds()) {
     const flavor = loadFlavor(id);
     if (flavor.frozen || flavor.example || flavor.logo === undefined) continue;
@@ -325,10 +409,6 @@ test("every buildable flavor's icon is committed at the path it names", () => {
   // exactly that, and breaks it late — at `codesign`, in a shell script
   // outside this repo. Frozen and example flavors are exempt: both refuse to
   // build, so neither needs its artwork here.
-  const desktopDir = path.resolve(
-    path.dirname(fileURLToPath(import.meta.url)),
-    "..",
-  );
   for (const id of listFlavorIds()) {
     const flavor = loadFlavor(id);
     if (flavor.frozen || flavor.example) continue;

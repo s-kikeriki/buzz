@@ -83,8 +83,14 @@ node scripts/flavor-config.mjs zeniad --json   # the resolved flavor
 eval "$(node scripts/flavor-config.mjs zeniad)" && export \
   BRAND_NAME BUZZ_BUILD_DEMO_SLUG BUZZ_RELAY_URL DEMO_BUILD_ID DEMO_NAME \
   VITE_BUZZ_PRODUCT_NAME VITE_BUZZ_DEFAULT_ACCENT_COLOR \
-  BUZZ_BUILD_AUTO_CONNECT_DEFAULT_RELAY
+  VITE_BUZZ_PRODUCT_LOGO BUZZ_BUILD_AUTO_CONNECT_DEFAULT_RELAY
 ```
+
+`eval` sets the variables; only `export` hands them to the Vite and Cargo
+child processes. A name left out of that list is read as unset by the build,
+and the result is a DMG missing whatever it configured — no accent, no mark —
+with nothing in the log to say so. `flavor-config.test.mjs` binds this list to
+the variables `flavorBuildEnv` can emit, so the next one cannot be forgotten.
 
 A frozen or example flavor exits non-zero with the reason instead of printing
 an environment. `--allow-frozen` overrides that for a deliberate rebuild of a

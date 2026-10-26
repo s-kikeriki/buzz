@@ -47,6 +47,24 @@ function fail(flavorId, message) {
   throw new Error(`flavor ${flavorId}: ${message}`);
 }
 
+/**
+ * Whether a declared asset path can reach outside the repo.
+ *
+ * Split on both separators rather than `path.sep`. A flavor file is data read
+ * on whichever host runs the build, so the separator the traversal uses is not
+ * the separator this process happens to have: on macOS `path.sep` is `/`, which
+ * leaves `..\..\secrets\logo.svg` as a single harmless-looking segment with no
+ * `..` in it. The leading-character test covers everything that is rooted
+ * somewhere — a POSIX `/`, a Windows drive letter, and the `\` of a
+ * root-relative or UNC path — which `path.isAbsolute` only recognises on the
+ * platform that owns each form.
+ */
+function escapesRepo(value) {
+  return (
+    /^([a-zA-Z]:|[/\\])/.test(value) || value.split(/[/\\]/).includes("..")
+  );
+}
+
 /** Absolute path of a flavor's JSON file. */
 export function flavorPath(flavorId) {
   return path.join(flavorsDir, `${flavorId}.json`);
@@ -118,10 +136,7 @@ export function validateFlavor(flavor, flavorId) {
     fail(flavorId, `relayUrl must be a ws:// or wss:// URL`);
   }
 
-  if (
-    path.isAbsolute(flavor.icon) ||
-    flavor.icon.split(path.sep).includes("..")
-  ) {
+  if (escapesRepo(flavor.icon)) {
     fail(flavorId, "icon must be a repo-relative path without `..`");
   }
 
@@ -129,10 +144,7 @@ export function validateFlavor(flavor, flavorId) {
     if (typeof flavor.logo !== "string" || flavor.logo.trim().length === 0) {
       fail(flavorId, "logo must be a non-empty string");
     }
-    if (
-      path.isAbsolute(flavor.logo) ||
-      flavor.logo.split(path.sep).includes("..")
-    ) {
+    if (escapesRepo(flavor.logo)) {
       fail(flavorId, "logo must be a repo-relative path without `..`");
     }
     if (!flavor.logo.endsWith(".svg")) {
