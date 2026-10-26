@@ -32,8 +32,10 @@ black. `flavor-config.test.mjs` asserts each committed asset against the style
 its flavor declares, in both directions.
 
 Choose `mask` when the mark is one colour and the brand does not depend on
-which. Choose `color` when the colours *are* the brand — then one asset has to
-carry both themes on its own, because nothing recolours it.
+which. Choose `color` when the colours *are* the brand — and then, if one
+drawing cannot carry both surfaces, add `logoLight` with the cut for the light
+theme. `logoLight` is refused under `mask`, where it could never be displayed:
+a mask already follows the theme.
 
 Two more things worth getting right in the file itself:
 
@@ -53,20 +55,36 @@ This repository is a public fork, so committing a client's artwork publishes
 it. A per-client flavor keeps its logo outside the checkout and places it at
 the path its flavor names before building.
 
-| File | Flavor | Style |
+| File | Flavor | Shown in |
 |---|---|---|
-| `ki.keriki.svg` | `ki.keriki.json` | `color` |
+| `ki.keriki.svg` | `ki.keriki.json` `logo` | the dark theme |
+| `ki.keriki-light.svg` | `ki.keriki.json` `logoLight` | the light theme |
 
 `ki.keriki.svg` is the current kikeriki logo, taken unmodified from
 `https://kikeriki.net/assets/kikeriki-logo.svg` (sha256 `f2afb6c4…`): the
 wordmark in white, the speech bubble in `#F5F5F5`, and the lime `#D4F247`
 shadow that the earlier single-colour wordmark could not carry.
 
-**It is the negative mark**, drawn for a dark surface. The dark theme's
-sidebar is 17% lightness and it reads cleanly; the light theme's is 94%, where
-the white wordmark all but disappears and only the lime shadow survives. That
-is a known and accepted limitation of shipping the brand's own file unaltered:
-there is no positive variant to switch to — kikeriki.net publishes this one —
-and recolouring it here would be this repository restyling someone's logo. If
-the light theme has to read, the fix is a second asset from the brand library,
-not a change to this code.
+## The light cut
+
+That file is the **negative** mark, drawn for a dark surface — 17% lightness
+in the dark theme and it reads cleanly, 94% in the light theme where the white
+wordmark all but disappears and only the lime survives. kikeriki.net publishes
+no positive variant, and the two people using this build are split across the
+two themes, so `ki.keriki-light.svg` is a recolour of the same drawing, made
+on Ian's instruction on 2026-10-26.
+
+The rule is exact, so the file can be regenerated when the master changes:
+**in the body of the SVG, every `fill="white"` and `fill="#F5F5F5"` becomes
+`#0A0A0A`. The lime `#D4F247` is untouched, and the `fill="white"` on the
+`clipPath` rect inside `<defs>` stays white** — it is a mask, not ink, and
+darkening it would clip the whole mark away.
+
+Nothing else may differ. `flavor-config.test.mjs` checks that the light cut is
+not byte-identical to the dark one and that it paints no near-white ink, which
+catches the two ways a regeneration goes wrong: the file not replaced, and the
+file replaced by a copy of the master.
+
+`BrandLogo` renders both cuts and lets the `dark` class on `<html>` choose, so
+the mark follows a theme change in the same paint. Only one is displayed, so
+only one is announced.

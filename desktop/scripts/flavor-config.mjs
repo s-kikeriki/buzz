@@ -168,6 +168,31 @@ export function validateFlavor(flavor, flavorId) {
     }
   }
 
+  if (flavor.logoLight !== undefined) {
+    if (
+      typeof flavor.logoLight !== "string" ||
+      flavor.logoLight.trim().length === 0
+    ) {
+      fail(flavorId, "logoLight must be a non-empty string");
+    }
+    if (escapesRepo(flavor.logoLight)) {
+      fail(flavorId, "logoLight must be a repo-relative path without `..`");
+    }
+    if (!flavor.logoLight.endsWith(".svg")) {
+      fail(flavorId, "logoLight must be an .svg");
+    }
+    if (flavor.logo === undefined) {
+      fail(flavorId, "logoLight is set but no logo is declared");
+    }
+    if (flavor.logoStyle !== "color") {
+      // A mask already follows the theme — it is painted in whatever
+      // foreground the sidebar has. A second file under `mask` would be a
+      // variant that can never be reached, which reads in review as theme
+      // support that exists.
+      fail(flavorId, "logoLight only applies to logoStyle color");
+    }
+  }
+
   if (flavor.logoStyle !== undefined) {
     if (!LOGO_STYLES.includes(flavor.logoStyle)) {
       fail(
@@ -210,6 +235,8 @@ export function validateFlavor(flavor, flavorId) {
     cliName: derived.cliName,
     icon: flavor.icon,
     logo: typeof flavor.logo === "string" ? flavor.logo : undefined,
+    logoLight:
+      typeof flavor.logoLight === "string" ? flavor.logoLight : undefined,
     logoStyle:
       flavor.logo === undefined
         ? undefined
@@ -282,6 +309,10 @@ export function flavorBuildEnv(flavor, readFile = readFileSync) {
     // two variables are one setting, and a build that picks up the asset but
     // not the style paints a brand mark in the wrong form silently.
     env.VITE_BUZZ_PRODUCT_LOGO_STYLE = flavor.logoStyle ?? DEFAULT_LOGO_STYLE;
+  }
+  if (flavor.logoLight !== undefined) {
+    const svg = readFile(path.join(desktopDir, flavor.logoLight), "utf8");
+    env.VITE_BUZZ_PRODUCT_LOGO_LIGHT = `data:image/svg+xml;base64,${Buffer.from(svg, "utf8").toString("base64")}`;
   }
   return env;
 }

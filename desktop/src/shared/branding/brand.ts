@@ -38,6 +38,10 @@ export const BRAND = {
   ),
   /** Logo as an inline SVG data URL, or `null` for a build with none. */
   productLogoUrl: parseProductLogoUrl(import.meta.env?.VITE_BUZZ_PRODUCT_LOGO),
+  /** The light theme's cut of that logo, or `null` to use the one above in both. */
+  productLogoLightUrl: parseProductLogoUrl(
+    import.meta.env?.VITE_BUZZ_PRODUCT_LOGO_LIGHT,
+  ),
   /** Whether that logo is recoloured to the theme or painted as it is. */
   productLogoStyle: parseProductLogoStyle(
     import.meta.env?.VITE_BUZZ_PRODUCT_LOGO_STYLE,

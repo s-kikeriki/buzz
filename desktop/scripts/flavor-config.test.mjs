@@ -250,6 +250,74 @@ test("the logo style is one of the two the renderer implements", () => {
   }
 });
 
+test("a light cut is refused unless it can actually be reached", () => {
+  const colour = { logo: "flavors/logos/acme.svg", logoStyle: "color" };
+  for (const suffix of ESCAPING_PATHS) {
+    assert.throws(
+      () =>
+        validateFlavor(
+          goodFlavor({ ...colour, logoLight: `${suffix}.svg` }),
+          "acme",
+        ),
+      /logoLight must be a repo-relative path without/,
+      `logoLight ${suffix}.svg must be refused`,
+    );
+  }
+  assert.throws(
+    () =>
+      validateFlavor(
+        goodFlavor({ ...colour, logoLight: "flavors/logos/acme-light.png" }),
+        "acme",
+      ),
+    /logoLight must be an \.svg/,
+  );
+  assert.throws(
+    () =>
+      validateFlavor(
+        goodFlavor({ logoLight: "flavors/logos/acme-light.svg" }),
+        "acme",
+      ),
+    /logoLight is set but no logo is declared/,
+  );
+  // The one that is a contradiction rather than a typo: a mask already
+  // follows the theme, so a second file under it is a variant nothing can
+  // ever display — and in review it looks like theme support that works.
+  assert.throws(
+    () =>
+      validateFlavor(
+        goodFlavor({
+          logo: "flavors/logos/acme.svg",
+          logoLight: "flavors/logos/acme-light.svg",
+        }),
+        "acme",
+      ),
+    /logoLight only applies to logoStyle color/,
+  );
+});
+
+test("the light cut travels as its own variable, or not at all", () => {
+  const withLight = validateFlavor(
+    goodFlavor({
+      logo: "flavors/logos/acme.svg",
+      logoLight: "flavors/logos/acme-light.svg",
+      logoStyle: "color",
+    }),
+    "acme",
+  );
+  assert.equal(
+    flavorBuildEnv(withLight, () => "<svg/>").VITE_BUZZ_PRODUCT_LOGO_LIGHT,
+    "data:image/svg+xml;base64,PHN2Zy8+",
+  );
+  const withoutLight = validateFlavor(
+    goodFlavor({ logo: "flavors/logos/acme.svg" }),
+    "acme",
+  );
+  assert.equal(
+    flavorBuildEnv(withoutLight, () => "<svg/>").VITE_BUZZ_PRODUCT_LOGO_LIGHT,
+    undefined,
+  );
+});
+
 test("a logo style without a logo is refused", () => {
   assert.throws(
     () => validateFlavor(goodFlavor({ logoStyle: "color" }), "acme"),
@@ -336,6 +404,24 @@ test("every committed logo is the kind of file its style can paint", () => {
         `${id}: a masked mark must not pin a colour the mask discards`,
       );
     }
+    if (flavor.logoLight === undefined) continue;
+    // The light cut is only worth a second file and a second request if it
+    // is a different drawing. Two paths lead to it being neither: the wrong
+    // file copied in, or a regeneration that recoloured nothing. Both ship a
+    // mark that disappears in one theme, which is the defect the cut exists
+    // to fix.
+    const light = readFileSync(path.join(desktopDir, flavor.logoLight), "utf8");
+    assert.notEqual(
+      light,
+      svg,
+      `${id}: the light cut is byte-identical to the dark one`,
+    );
+    const body = light.split("<defs>")[0];
+    assert.doesNotMatch(
+      body,
+      /fill="(?:white|#[fF]{3,6}\b|#[fF]5[fF]5[fF]5\b)"/,
+      `${id}: the light cut still paints near-white ink on a light surface`,
+    );
   }
 });
 
@@ -388,6 +474,7 @@ test("the build env carries every value a build needs to pick an identity", () =
       DEMO_NAME: "kikeriki",
       VITE_BUZZ_DEFAULT_ACCENT_COLOR: "#3b82f6",
       VITE_BUZZ_PRODUCT_LOGO: "data:image/svg+xml;base64,PHN2Zy8+",
+      VITE_BUZZ_PRODUCT_LOGO_LIGHT: "data:image/svg+xml;base64,PHN2Zy8+",
       VITE_BUZZ_PRODUCT_LOGO_STYLE: "color",
       VITE_BUZZ_PRODUCT_NAME: "ki.keriki",
     },
@@ -474,11 +561,14 @@ test("every buildable flavor's logo is committed at the path it names", () => {
   // late, after `pnpm tauri build` has already run for minutes.
   for (const id of listFlavorIds()) {
     const flavor = loadFlavor(id);
-    if (flavor.frozen || flavor.example || flavor.logo === undefined) continue;
-    assert.ok(
-      existsSync(path.join(desktopDir, flavor.logo)),
-      `${id}: declares ${flavor.logo}, which is not in the repo`,
-    );
+    if (flavor.frozen || flavor.example) continue;
+    for (const declared of [flavor.logo, flavor.logoLight]) {
+      if (declared === undefined) continue;
+      assert.ok(
+        existsSync(path.join(desktopDir, declared)),
+        `${id}: declares ${declared}, which is not in the repo`,
+      );
+    }
   }
 });
 

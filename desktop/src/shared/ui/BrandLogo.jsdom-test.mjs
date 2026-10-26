@@ -13,6 +13,7 @@ import { BrandLogo, BrandLogoMark } from "./BrandLogo.tsx";
  */
 
 const URL_VALUE = "data:image/svg+xml;base64,PHN2Zy8+";
+const LIGHT_URL_VALUE = "data:image/svg+xml;base64,PHN2ZyBpZD0ibCIvPg==";
 
 async function mount(element) {
   const container = document.createElement("div");
@@ -125,6 +126,59 @@ test("a colour mark names itself for assistive tech exactly once", async () => {
   assert.equal(mark.getAttribute("alt"), "ki.keriki");
   assert.equal(mark.getAttribute("aria-label"), null);
   assert.equal(mark.getAttribute("role"), null);
+  await unmount();
+});
+
+test("a light cut is rendered beside the dark one, and the class picks", async () => {
+  // Both cuts are in the DOM and `dark:` decides, so the swap happens in the
+  // same paint as the theme change. Asserting the classes is asserting the
+  // mechanism: jsdom applies no stylesheet, so a test that looked for the
+  // visible one would pass whichever class was written.
+  const { container, unmount } = await mount(
+    React.createElement(BrandLogoMark, {
+      className: "h-4 w-10",
+      label: "ki.keriki",
+      lightUrl: LIGHT_URL_VALUE,
+      style: "color",
+      url: URL_VALUE,
+    }),
+  );
+  const marks = container.querySelectorAll('[data-testid="brand-logo"]');
+  assert.equal(marks.length, 2);
+  const light = container.querySelector('[data-variant="light"]');
+  const dark = container.querySelector('[data-variant="dark"]');
+  assert.equal(light.getAttribute("src"), LIGHT_URL_VALUE);
+  assert.equal(dark.getAttribute("src"), URL_VALUE);
+  // Exactly one of the two is displayed in either theme. Both hidden is a
+  // mark that vanished; neither hidden is two marks side by side, and both
+  // are states a stylesheet-less DOM cannot show us.
+  const classes = (el) => el.className.split(" ");
+  assert.ok(classes(light).includes("inline-block"));
+  assert.ok(classes(light).includes("dark:hidden"));
+  assert.ok(classes(dark).includes("hidden"));
+  assert.ok(classes(dark).includes("dark:inline-block"));
+  await unmount();
+});
+
+test("a flavor with no light cut renders one image, not two", async () => {
+  // The pair is the exception. A single-cut flavor must not pay for a second
+  // image that is hidden in one theme and identical in the other.
+  const { container, unmount } = await mount(
+    React.createElement(BrandLogoMark, {
+      className: "h-4 w-10",
+      label: "ki.keriki",
+      lightUrl: null,
+      style: "color",
+      url: URL_VALUE,
+    }),
+  );
+  assert.equal(
+    container.querySelectorAll('[data-testid="brand-logo"]').length,
+    1,
+  );
+  const only = container.querySelector('[data-testid="brand-logo"]');
+  assert.ok(only.className.split(" ").includes("inline-block"));
+  assert.ok(!only.className.split(" ").includes("dark:hidden"));
   await unmount();
 });
 
