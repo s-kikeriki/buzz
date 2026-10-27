@@ -24,7 +24,7 @@ const SHOTS = "test-results/brand-logo";
 const THEME_STORAGE_KEY = "buzz-theme";
 
 /** The box `SidebarProfileCard` gives the mark, in CSS pixels. */
-const LOGO_BOX = { height: 16, width: 40 };
+const LOGO_BOX = { height: 20, width: 50 };
 
 test.use({ deviceScaleFactor: 2 });
 

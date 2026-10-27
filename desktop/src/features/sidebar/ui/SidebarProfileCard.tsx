@@ -250,8 +250,13 @@ export function SidebarProfileCard({
         {/* 2.5:1 — the box a mark is letterboxed into, and the proportions of
             the asset `flavors/logos/README.md` asks a flavor to keep. The
             colour class is what a `mask`-style mark is painted in; a `color`
-            one brings its own. */}
-        <BrandLogo className="h-4 w-10 shrink-0 text-sidebar-foreground/45" />
+            one brings its own.
+
+            `w-[3.125rem]` rather than a stock step because the scale has none
+            at 2.5x of `h-5`: `w-12` is 2.4:1 and `w-14` is 2.8:1, and either
+            letterboxes the mark inside its own box instead of filling it.
+            rem, not px, so the mark follows Cmd +/- with the text beside it. */}
+        <BrandLogo className="h-5 w-[3.125rem] shrink-0 text-sidebar-foreground/45" />
       </div>
     </div>
   );
