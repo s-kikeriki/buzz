@@ -108,6 +108,12 @@ export default {
         primary: {
           DEFAULT: "hsl(var(--primary))",
           foreground: "hsl(var(--primary-foreground))",
+          // The accent as a surface rather than as text. `DEFAULT` darkens for
+          // a light-only accent so `text-primary` stays readable on the content
+          // background; a filled element carries its own ink and keeps the
+          // brand colour. See `accentPrimary` in `ThemeProvider`.
+          fill: "hsl(var(--primary-fill))",
+          "fill-foreground": "hsl(var(--primary-fill-foreground))",
         },
         secondary: {
           DEFAULT: "hsl(var(--secondary))",

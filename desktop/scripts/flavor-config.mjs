@@ -54,6 +54,14 @@ const REQUIRED_STRING_FIELDS = [
  */
 const LOGO_STYLES = ["mask", "color"];
 const DEFAULT_LOGO_STYLE = "mask";
+/**
+ * Which surface the navigation chrome is painted on. `auto` follows the
+ * document's light/dark mode, as Buzz always has; `ink` keeps the rail on the
+ * dark surface in both modes, for a brand whose own house style is a black
+ * header over a white body.
+ */
+const CHROME_SURFACES = ["auto", "ink"];
+const DEFAULT_CHROME_SURFACE = "auto";
 
 function fail(flavorId, message) {
   throw new Error(`flavor ${flavorId}: ${message}`);
@@ -207,6 +215,15 @@ export function validateFlavor(flavor, flavorId) {
     }
   }
 
+  if (flavor.chromeSurface !== undefined) {
+    if (!CHROME_SURFACES.includes(flavor.chromeSurface)) {
+      fail(
+        flavorId,
+        `chromeSurface must be one of ${CHROME_SURFACES.join(", ")} (default ${DEFAULT_CHROME_SURFACE})`,
+      );
+    }
+  }
+
   if (flavor.accentColor !== undefined) {
     if (
       typeof flavor.accentColor !== "string" ||
@@ -244,6 +261,7 @@ export function validateFlavor(flavor, flavorId) {
     relayUrl: flavor.relayUrl,
     autoConnectDefaultRelay: flavor.autoConnectDefaultRelay === true,
     accentColor: flavor.accentColor,
+    chromeSurface: flavor.chromeSurface ?? DEFAULT_CHROME_SURFACE,
     frozen: flavor.frozen === true,
     example: flavor.example === true,
     notes: typeof flavor.notes === "string" ? flavor.notes : undefined,
@@ -299,6 +317,11 @@ export function flavorBuildEnv(flavor, readFile = readFileSync) {
   if (flavor.accentColor !== undefined) {
     env.VITE_BUZZ_DEFAULT_ACCENT_COLOR = flavor.accentColor;
   }
+  // Emitted unconditionally, unlike the logo and the accent: `auto` is a
+  // value the frontend parses, and a build that silently inherited whatever
+  // the parser defaults to would make a flavor's choice unreadable from the
+  // env it produced.
+  env.VITE_BUZZ_CHROME_SURFACE = flavor.chromeSurface ?? DEFAULT_CHROME_SURFACE;
   if (flavor.logo !== undefined) {
     // The bytes travel in the variable, not the path: the frontend build runs
     // in a temp directory that `tauri-command.mjs` deletes afterwards, so a

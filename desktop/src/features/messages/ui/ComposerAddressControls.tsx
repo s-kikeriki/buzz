@@ -331,7 +331,7 @@ export function ComposerSendButton({
             ? "Sending"
             : "Send message"
       }
-      className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-primary text-primary-foreground shadow transition-colors hover:bg-primary/90 focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
+      className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-primary-fill text-primary-fill-foreground shadow transition-colors hover:bg-primary-fill/90 focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
       data-testid={isFinishingVoiceNote ? "finish-voice-note" : "send-message"}
       disabled={sendDisabled || isSending}
       onClick={onFinishVoiceNote}

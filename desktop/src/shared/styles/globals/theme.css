@@ -244,12 +244,38 @@
 }
 
 /*
- * Dark variant (Buzz Dark). Reuses the GitHub Dark base palette; only the
- * Buzz color tokens change, so every downstream rule (gradient fill, hover,
- * search box, muted labels, active pill) adapts automatically. The `.dark`
- * class is set on the document root whenever a dark theme is active.
+ * Dark chrome. Reuses the GitHub Dark base palette; only the Buzz color
+ * tokens change, so every downstream rule (gradient fill, hover, search box,
+ * muted labels, active pill) adapts automatically.
+ *
+ * Keyed off `data-buzz-chrome` rather than the document's `.dark` class.
+ * Those were the same question until a build wanted an ink rail over a light
+ * panel: with `.dark` absent, the rail inherited the light tokens and the
+ * light cut of the brand logo, which on ink is dark-on-dark. `ThemeProvider`
+ * writes `light`, `dark` or `ink` here; `ink` means the chrome stays dark in
+ * both document modes, and `dark` is exactly what `.dark` used to select, so
+ * the stock Buzz themes are unchanged.
+ *
+ * Specificity is two attributes (0,3,0), which beats both `:root` and `.dark`
+ * regardless of source order — the light values above do not have to be
+ * written as `:not()` to stay out of the way.
  */
-:root[data-buzz-sidebar].dark {
+:root[data-buzz-sidebar]:is(
+  [data-buzz-chrome="dark"],
+  [data-buzz-chrome="ink"]
+) {
+  /* The sidebar family, which otherwise follows the document. On an ink rail
+     in light mode these are the difference between readable chrome and dark
+     text on a dark surface. */
+  --sidebar: 234 22.75% 17.25%;
+  --sidebar-background: 234 22.75% 17.25%;
+  --sidebar-foreground: 227 68.25% 87.65%;
+  --sidebar-accent: 232 23.4% 18.43%;
+  --sidebar-accent-foreground: 227 68.25% 87.65%;
+  --sidebar-border: 231 15.61% 33.92%;
+  --sidebar-ring: 231 15.61% 33.92%;
+  --sidebar-row-subtle-active-surface: rgb(255 255 255 / 16%);
+  --sidebar-row-active-surface: rgb(255 255 255 / 18%);
   --buzz-gradient-top: var(--buzz-gradient-dark-top);
   --buzz-gradient-bottom: var(--buzz-gradient-dark-bottom);
   --buzz-muted-foreground: rgb(255 255 255 / 40%);
@@ -258,6 +284,53 @@
   --buzz-hover-surface: rgb(255 255 255 / 4%);
   --buzz-active-fill: 0 0% 100%;
   --buzz-active-foreground: 0 0% 100%;
+}
+
+/*
+ * Ink chrome: the rail is one flat near-black in both document modes.
+ *
+ * Done by overriding the Buzz *palette* tokens rather than the gradient
+ * machinery, so both painted layers resolve to the same ink and the
+ * light/dark layer swap above keeps working untouched. That swap exists to
+ * stop WKWebView retaining a stale raster when `background-image` changes on
+ * a translucent surface; rewriting it to follow the chrome attribute would
+ * mean re-earning that, for a build where both layers are identical anyway.
+ *
+ * #07090c rather than pure black: the brand's ink is #0A0A0A, and a rail that
+ * is literally #000 reads as a hole next to the content panel's shadow.
+ */
+:root[data-buzz-sidebar][data-buzz-chrome="ink"] {
+  --buzz-gradient-light-top: #07090c;
+  --buzz-gradient-light-bottom: #07090c;
+  --buzz-gradient-dark-top: #07090c;
+  --buzz-gradient-dark-bottom: #07090c;
+}
+
+/*
+ * Which cut of a two-cut brand mark is displayed.
+ *
+ * `BrandLogo` renders both and hides one with Tailwind's `dark:` variant,
+ * which asks about the document. The mark is painted on the rail, so the
+ * question is about the rail: an ink rail under a light document needs the
+ * cut drawn for a dark surface, and the `dark:` answer there is the dark-ink
+ * wordmark on near-black — invisible, not merely wrong.
+ *
+ * Unlayered, like the gradient rules above and for the same reason: Tailwind's
+ * `hidden` / `inline-block` live in the `utilities` layer, and an unlayered
+ * declaration beats any layered one without `!important`. Scoped to
+ * `[data-buzz-chrome]`, so a theme that paints no chrome canvas keeps the
+ * `dark:` behaviour untouched.
+ */
+:root[data-buzz-chrome="light"] [data-brand-logo-cut="light"],
+:root:is([data-buzz-chrome="dark"], [data-buzz-chrome="ink"])
+  [data-brand-logo-cut="dark"] {
+  display: inline-block;
+}
+
+:root[data-buzz-chrome="light"] [data-brand-logo-cut="dark"],
+:root:is([data-buzz-chrome="dark"], [data-buzz-chrome="ink"])
+  [data-brand-logo-cut="light"] {
+  display: none;
 }
 
 /*

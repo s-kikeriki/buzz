@@ -10,6 +10,7 @@ import {
 import { isTauri } from "@tauri-apps/api/core";
 import { getCurrentWindow } from "@tauri-apps/api/window";
 import { BRAND } from "@/shared/branding/brand";
+import type { ChromeSurface } from "@/shared/branding/brandChrome";
 import { invokeTauri } from "@/shared/api/tauri";
 import { isMacPlatform } from "@/shared/lib/platform";
 import { getStorageItem } from "@/shared/lib/safeStorage";
@@ -270,6 +271,27 @@ export function accentPrimary(
   return { fill, ink: getContrastColor(fill) };
 }
 
+/**
+ * The accent for the rail, which may not be the accent for the content.
+ *
+ * An `ink` build's rail is dark in both document modes, so a light-only accent
+ * does not need the readability darkening `accentPrimary` applies — and
+ * applying it anyway is a visible regression rather than a safe default: the
+ * mark, the active row and the unread badges all come out olive on a surface
+ * where the true colour reads at 14.95:1.
+ *
+ * Every other build's rail follows the document, so it keeps whatever
+ * `accentPrimary` decided for that background.
+ */
+export function sidebarAccent(
+  surface: ChromeSurface,
+  raw: string,
+  content: { fill: string; ink: string },
+): { fill: string; ink: string } {
+  if (surface !== "ink") return content;
+  return { fill: raw, ink: getContrastColor(raw) };
+}
+
 function applyAccentColor(value: string) {
   const root = document.documentElement;
   if (value === NEUTRAL_ACCENT) {
@@ -287,6 +309,8 @@ function applyAccentColor(value: string) {
     );
     root.style.setProperty("--primary", foreground);
     root.style.setProperty("--primary-foreground", background);
+    root.style.setProperty("--primary-fill", foreground);
+    root.style.setProperty("--primary-fill-foreground", background);
     root.style.setProperty("--sidebar-primary", foreground);
     root.style.setProperty("--sidebar-primary-foreground", background);
     root.style.setProperty("--sidebar-active", foreground);
@@ -298,8 +322,16 @@ function applyAccentColor(value: string) {
     value,
     window.getComputedStyle(root).getPropertyValue("--background"),
   );
+  // The rail has its own surface, and on an ink build that surface is ink in
+  // both modes — citron is 14.95:1 there. The darkening above exists only
+  // because `--primary` is drawn as text on the *content* background; applying
+  // it to the rail as well is what turned the sidebar olive in light mode on a
+  // build whose rail was never light.
+  const sidebar = sidebarAccent(BRAND.chromeSurface, value, { fill, ink });
   const accentHsl = hexToHsl(fill);
   const fgHsl = hexToHsl(ink);
+  const sidebarHsl = hexToHsl(sidebar.fill);
+  const sidebarFgHsl = hexToHsl(sidebar.ink);
   root.style.setProperty("--buzz-selected-accent", accentHsl);
   // The review chip sits on its own dark surface, so it keeps the raw accent.
   root.style.setProperty("--buzz-video-review-accent", hexToHsl(value));
@@ -309,10 +341,21 @@ function applyAccentColor(value: string) {
   );
   root.style.setProperty("--primary", accentHsl);
   root.style.setProperty("--primary-foreground", fgHsl);
-  root.style.setProperty("--sidebar-primary", accentHsl);
-  root.style.setProperty("--sidebar-primary-foreground", fgHsl);
-  root.style.setProperty("--sidebar-active", accentHsl);
-  root.style.setProperty("--sidebar-active-foreground", fgHsl);
+  // The accent as a *surface*: the colour itself, never darkened, paired with
+  // whichever of black or white reads on it. `--primary` has to stay readable
+  // as text on the content background, which for a light-only accent means it
+  // is no longer the brand colour; a fill has ink on top and is under no such
+  // constraint. The two were one token, so a fill inherited a constraint that
+  // was never about it.
+  root.style.setProperty("--primary-fill", hexToHsl(value));
+  root.style.setProperty(
+    "--primary-fill-foreground",
+    hexToHsl(getContrastColor(value)),
+  );
+  root.style.setProperty("--sidebar-primary", sidebarHsl);
+  root.style.setProperty("--sidebar-primary-foreground", sidebarFgHsl);
+  root.style.setProperty("--sidebar-active", sidebarHsl);
+  root.style.setProperty("--sidebar-active-foreground", sidebarFgHsl);
 }
 
 /**
@@ -347,11 +390,74 @@ export function resolveEffectiveAccent(
   return brandAccent ?? NEUTRAL_ACCENT;
 }
 
+/**
+ * Which surface the chrome is painted on, for the current document mode.
+ *
+ * Split out from the document's own light/dark class because they are not the
+ * same question. Every rail token — the gradient, the hover surface, the
+ * search box, the muted labels, the active fill — and the brand logo's two
+ * cuts all keyed off `.dark`, which made "dark rail, light panel" unsayable:
+ * a build that wanted one got the light rail tokens and the dark-ink wordmark
+ * on top of its own ink, which is invisible rather than wrong-looking.
+ *
+ * `ink` builds answer `dark` in both modes. Everyone else mirrors the
+ * document, which is exactly what `.dark` did, so the stock themes are
+ * unchanged.
+ */
+export type ChromeMode = "light" | "dark" | "ink";
+
+export function chromeMode(
+  surface: ChromeSurface,
+  documentIsDark: boolean,
+): ChromeMode {
+  if (surface === "ink") return "ink";
+  return documentIsDark ? "dark" : "light";
+}
+
+/**
+ * The rail tokens `createThemeVars` writes inline on `:root`.
+ *
+ * They are derived from the active theme's own palette and set as inline
+ * styles, which beat any stylesheet rule — so the chrome block in `theme.css`
+ * cannot take them over by specificity, however many attributes it carries.
+ * When the chrome is dark under a light document they are the light theme's
+ * near-black text on a near-black rail, so the inline value is removed and the
+ * stylesheet's dark values govern.
+ *
+ * Removal rather than an inline override of our own: the values then live in
+ * one place, next to the rest of the dark chrome, instead of being duplicated
+ * in TypeScript where the two copies would drift.
+ */
+const CHROME_OWNED_VARS = [
+  "--sidebar",
+  "--sidebar-background",
+  "--sidebar-foreground",
+  "--sidebar-accent",
+  "--sidebar-accent-foreground",
+  "--sidebar-border",
+  "--sidebar-ring",
+] as const;
+
 /** Toggle the Buzz-specific gradient marker independently from glass. */
-function applyBuzzSidebar(themeName: string) {
+function applyBuzzSidebar(themeName: string, isDark: boolean) {
   const root = document.documentElement;
   if (isBuzzTheme(themeName)) {
     root.setAttribute("data-buzz-sidebar", "");
+    // Only the Buzz themes paint the chrome canvas this attribute describes.
+    // Under any other theme the rail is that theme's own surface, so an `ink`
+    // build must fall back to following the document — otherwise switching to,
+    // say, Dracula would leave the logo picking a cut for a rail that is not
+    // there.
+    const mode = chromeMode(BRAND.chromeSurface, isDark);
+    root.setAttribute("data-buzz-chrome", mode);
+    // Only when the two disagree. With a light document and a dark rail the
+    // inline values are the light theme's; everywhere else they already match
+    // the chrome and removing them would throw away the theme's own palette.
+    for (const name of CHROME_OWNED_VARS) {
+      if (mode === "ink" && !isDark) {
+        root.style.removeProperty(name);
+      }
+    }
     // Keep the concrete Buzz variant on the root as well as the generic
     // marker. The gradient stylesheet matches this attribute directly, which
     // makes WKWebView invalidate the painted background when light/dark mode
@@ -360,6 +466,7 @@ function applyBuzzSidebar(themeName: string) {
   } else {
     root.removeAttribute("data-buzz-sidebar");
     root.removeAttribute("data-buzz-theme");
+    root.removeAttribute("data-buzz-chrome");
   }
 }
 
@@ -496,7 +603,7 @@ function applyCachedVars(): string | null {
     }
     root.classList.remove("light", "dark");
     root.classList.add(isDark ? "dark" : "light");
-    applyBuzzSidebar(themeName);
+    applyBuzzSidebar(themeName, isDark);
     glassThemeReady = true;
 
     const accent = getStorageItem(ACCENT_STORAGE_KEY) ?? DEFAULT_ACCENT;
@@ -539,7 +646,7 @@ async function applyTheme(name: SyntaxThemeName): Promise<{
 
   root.classList.remove("light", "dark");
   root.classList.add(isDark ? "dark" : "light");
-  applyBuzzSidebar(name);
+  applyBuzzSidebar(name, isDark);
   glassThemeReady = true;
   maybeEnableGlassBackground(glassVibrancyRequest);
 

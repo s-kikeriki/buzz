@@ -457,6 +457,47 @@ test("an accent colour that is not lowercase #rrggbb is refused", () => {
   );
 });
 
+test("a chrome surface outside the known set is refused", () => {
+  for (const chromeSurface of ["Ink", "black", "dark", "", true]) {
+    assert.throws(
+      () => validateFlavor(goodFlavor({ chromeSurface }), "acme"),
+      /chromeSurface must be one of auto, ink/,
+      `for ${String(chromeSurface)}`,
+    );
+  }
+  assert.equal(
+    validateFlavor(goodFlavor({ chromeSurface: "ink" }), "acme").chromeSurface,
+    "ink",
+  );
+});
+
+test("a flavor that declares no chrome surface builds as auto", () => {
+  // Normalised rather than left undefined, and emitted into the env even at
+  // the default: the frontend parses this value, so a build that silently
+  // inherited the parser's fallback would make a flavor's choice unreadable
+  // from the env it produced.
+  const flavor = validateFlavor(goodFlavor(), "acme");
+  assert.equal(flavor.chromeSurface, "auto");
+  assert.equal(
+    flavorBuildEnv(flavor, () => "<svg/>").VITE_BUZZ_CHROME_SURFACE,
+    "auto",
+  );
+});
+
+test("the chrome surface each flavor declares is the one that is built", () => {
+  // Bound to the committed flavor files, so moving kikeriki off the ink rail
+  // has to be a deliberate edit rather than something a refactor can drop.
+  const expected = { "ki.keriki": "ink" };
+  for (const id of listFlavorIds()) {
+    const flavor = loadFlavor(id);
+    assert.equal(
+      flavorBuildEnv(flavor, () => "<svg/>").VITE_BUZZ_CHROME_SURFACE,
+      expected[id] ?? "auto",
+      `${id}: the chrome surface that reaches the build`,
+    );
+  }
+});
+
 test("an unknown flavor names the ones that exist", () => {
   assert.throws(() => loadFlavor("nope"), /no such flavor. Available: /);
 });
@@ -472,6 +513,7 @@ test("the build env carries every value a build needs to pick an identity", () =
       BUZZ_RELAY_URL: "wss://relay.ki.keriki.de",
       DEMO_BUILD_ID: "857f685ce21f5788",
       DEMO_NAME: "kikeriki",
+      VITE_BUZZ_CHROME_SURFACE: "ink",
       VITE_BUZZ_DEFAULT_ACCENT_COLOR: "#d4f247",
       VITE_BUZZ_PRODUCT_LOGO: "data:image/svg+xml;base64,PHN2Zy8+",
       VITE_BUZZ_PRODUCT_LOGO_LIGHT: "data:image/svg+xml;base64,PHN2Zy8+",

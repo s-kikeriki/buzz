@@ -22,13 +22,21 @@ type BrandLogoMarkProps = {
  * recolouring — kikeriki's lime, for one.
  *
  * A `color` mark drawn for one surface needs a second cut for the other, and
- * `lightUrl` is it: both images are rendered, and the `dark` class on `<html>`
- * decides which is displayed. Doing it in CSS rather than from the theme
- * context is deliberate — the class is toggled by `ThemeProvider` itself, so
- * the swap follows a theme change in the same paint, with no subscription to
- * get out of step and no state to re-read on mount. `hidden` is
- * `display: none`, which takes the other cut out of the accessibility tree
- * too, so the mark is announced once rather than twice.
+ * `lightUrl` is it: both images are rendered, and CSS decides which is
+ * displayed. Doing it in CSS rather than from the theme context is deliberate
+ * — the signal is written by `ThemeProvider` itself, so the swap follows a
+ * theme change in the same paint, with no subscription to get out of step and
+ * no state to re-read on mount. `hidden` is `display: none`, which takes the
+ * other cut out of the accessibility tree too, so the mark is announced once
+ * rather than twice.
+ *
+ * The `dark:` classes below are the fallback, for a theme that paints no
+ * chrome canvas of its own. When one is painted, `data-buzz-chrome` on
+ * `<html>` overrides them from `theme.css` — the mark sits *on the rail*, so
+ * which cut reads is a question about the rail's surface and not about the
+ * document. An ink rail under a light document is exactly where those two
+ * answers differ, and taking the document's answer there renders the dark-ink
+ * wordmark on near-black.
  *
  * Split from {@link BrandLogo} for the same reason `brandAccent.ts` is split
  * from `brand.ts` — `BRAND` is populated from `import.meta.env` at module
@@ -51,6 +59,7 @@ export function BrandLogoMark({
       <img
         alt={label}
         className={cn("object-contain", show, className)}
+        data-brand-logo-cut={variant}
         data-testid="brand-logo"
         data-variant={variant}
         draggable={false}

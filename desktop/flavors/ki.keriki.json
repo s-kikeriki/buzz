@@ -13,5 +13,6 @@
   "logoStyle": "color",
   "relayUrl": "wss://relay.ki.keriki.de",
   "autoConnectDefaultRelay": true,
-  "accentColor": "#d4f247"
+  "accentColor": "#d4f247",
+  "chromeSurface": "ink"
 }

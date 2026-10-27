@@ -21,6 +21,7 @@ import {
   parseConfiguredAccentColor,
   parseDefaultAccentColor,
 } from "./brandAccent";
+import { parseChromeSurface } from "./brandChrome";
 import { parseProductLogoStyle, parseProductLogoUrl } from "./brandLogo";
 
 const DEFAULT_PRODUCT_NAME = "Buzz";
@@ -57,4 +58,6 @@ export const BRAND = {
   productLogoStyle: parseProductLogoStyle(
     import.meta.env?.VITE_BUZZ_PRODUCT_LOGO_STYLE,
   ),
+  /** Whether the navigation chrome stays on ink in both modes. */
+  chromeSurface: parseChromeSurface(import.meta.env?.VITE_BUZZ_CHROME_SURFACE),
 } as const;
