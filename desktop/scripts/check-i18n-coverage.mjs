@@ -21,6 +21,14 @@ const CONVERTED_FILES = [
   "src/features/settings/ui/AppearanceSettingsPanel.tsx",
   // Settings chrome: the nav rail and group headers that frame every panel.
   "src/features/settings/ui/SettingsView.tsx",
+  // Sidebar navigation: the rows, section titles, badges and channel menu a
+  // person reads before they ever open Settings.
+  "src/features/sidebar/ui/AppSidebar.tsx",
+  "src/features/sidebar/ui/AppSidebarPinnedHeader.tsx",
+  "src/features/sidebar/ui/ChannelContextMenu.tsx",
+  "src/features/sidebar/ui/CommunityRail.tsx",
+  "src/features/sidebar/ui/SectionUnreadThreadCount.tsx",
+  "src/features/sidebar/ui/SidebarSection.tsx",
 ];
 
 /**

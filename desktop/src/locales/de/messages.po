@@ -15,6 +15,14 @@ msgstr "(alle Communitys)"
 msgid "(per community)"
 msgstr "(pro Community)"
 
+#: src/features/sidebar/ui/SidebarSection.tsx
+msgid "{count, plural, one {unread notification} other {unread notifications}}"
+msgstr "{count, plural, one {ungelesene Benachrichtigung} other {ungelesene Benachrichtigungen}}"
+
+#: src/features/sidebar/ui/SectionUnreadThreadCount.tsx
+msgid "{count, plural, one {unread thread} other {unread threads}}"
+msgstr "{count, plural, one {ungelesener Thread} other {ungelesene Threads}}"
+
 #: src/features/settings/ui/AppearanceSettingsControls.tsx
 msgid "{glassOpacity}% opacity"
 msgstr "{glassOpacity} % Deckkraft"
@@ -31,11 +39,16 @@ msgstr "A–Z"
 msgid "Accent color"
 msgstr "Akzentfarbe"
 
+#: src/features/sidebar/ui/CommunityRail.tsx
+msgid "Add community"
+msgstr "Community hinzufügen"
+
 #: src/features/settings/ui/SettingsPanels.tsx
 msgid "Admin"
 msgstr "Administration"
 
 #: src/features/settings/ui/SettingsPanels.tsx
+#: src/features/sidebar/ui/AppSidebarPinnedHeader.tsx
 msgid "Agents"
 msgstr "Agenten"
 
@@ -52,6 +65,10 @@ msgstr "Darstellung"
 msgid "Applies across conversations and interface text"
 msgstr "Gilt für Unterhaltungen und Oberflächentexte"
 
+#: src/features/sidebar/ui/ChannelContextMenu.tsx
+msgid "Archive channel"
+msgstr "Kanal archivieren"
+
 #: src/features/settings/ui/AppearanceSettingsControls.tsx
 msgid "Available in the macOS desktop app."
 msgstr "Verfügbar in der macOS-Desktop-App."
@@ -64,9 +81,17 @@ msgstr "Zurück zur App"
 msgid "Blur the desktop behind navigation while keeping content solid."
 msgstr "Den Schreibtisch hinter der Navigation weichzeichnen, Inhalte bleiben deckend."
 
+#: src/features/sidebar/ui/ChannelContextMenu.tsx
+msgid "Channel actions unavailable"
+msgstr "Kanalaktionen nicht verfügbar"
+
 #: src/features/settings/ui/SettingsPanels.tsx
 msgid "Channel templates"
 msgstr "Kanalvorlagen"
+
+#: src/features/sidebar/ui/AppSidebar.tsx
+msgid "Channels"
+msgstr "Kanäle"
 
 #: src/features/settings/ui/SettingsView.tsx
 msgid "Checking invite permissions…"
@@ -84,6 +109,10 @@ msgstr "Wähle die Farben, die in {productName} durchgängig verwendet werden."
 msgid "Choose the highlight color used throughout {productName}."
 msgstr "Wähle die Hervorhebungsfarbe, die in {productName} durchgängig verwendet wird."
 
+#: src/features/sidebar/ui/SidebarSection.tsx
+msgid "Close direct message"
+msgstr "Direktnachricht schließen"
+
 #: src/features/settings/ui/AppearanceSettingsPanel.tsx
 msgid "Color mode"
 msgstr "Farbmodus"
@@ -93,8 +122,13 @@ msgid "Comfy"
 msgstr "Bequem"
 
 #: src/features/settings/ui/SettingsView.tsx
+#: src/features/sidebar/ui/CommunityRail.tsx
 msgid "Communities"
 msgstr "Communitys"
+
+#: src/features/sidebar/ui/CommunityRail.tsx
+msgid "Community settings"
+msgstr "Community-Einstellungen"
 
 #: src/features/settings/ui/AppearanceSettingsControls.tsx
 msgid "Compact"
@@ -108,6 +142,22 @@ msgstr "Rechenleistung"
 msgid "Conversation density"
 msgstr "Dichte der Unterhaltungen"
 
+#: src/features/sidebar/ui/ChannelContextMenu.tsx
+msgid "Copy"
+msgstr "Kopieren"
+
+#: src/features/sidebar/ui/ChannelContextMenu.tsx
+msgid "Copy channel ID"
+msgstr "Kanal-ID kopieren"
+
+#: src/features/sidebar/ui/ChannelContextMenu.tsx
+msgid "Copy channel name"
+msgstr "Kanalname kopieren"
+
+#: src/features/sidebar/ui/CommunityRail.tsx
+msgid "Copy community URL"
+msgstr "Community-URL kopieren"
+
 #: src/features/settings/ui/SettingsPanels.tsx
 msgid "Custom emoji"
 msgstr "Eigene Emojis"
@@ -119,6 +169,14 @@ msgstr "Dunkel"
 #: src/features/settings/ui/AppearanceSettingsControls.tsx
 msgid "Default"
 msgstr "Standard"
+
+#: src/features/sidebar/ui/ChannelContextMenu.tsx
+msgid "Delete channel"
+msgstr "Kanal löschen"
+
+#: src/features/sidebar/ui/AppSidebar.tsx
+msgid "Direct messages"
+msgstr "Direktnachrichten"
 
 #: src/features/settings/ui/SettingsPanels.tsx
 msgid "Experiments"
@@ -135,6 +193,10 @@ msgstr "Dem System folgen oder eine helle bzw. dunkle Darstellung wählen."
 #: src/features/settings/ui/AppearanceSettingsControls.tsx
 msgid "Font size"
 msgstr "Schriftgröße"
+
+#: src/features/sidebar/ui/AppSidebar.tsx
+msgid "Forums"
+msgstr "Foren"
 
 #: src/features/settings/ui/AppearanceSettingsControls.tsx
 msgid "Give the selected navigation item a higher-contrast background."
@@ -160,6 +222,10 @@ msgstr "Gehostete Communitys"
 msgid "I added a longer message so you can compare line height and text spacing."
 msgstr "Ich habe eine längere Nachricht hinzugefügt, damit du Zeilenhöhe und Textabstände vergleichen kannst."
 
+#: src/features/sidebar/ui/AppSidebarPinnedHeader.tsx
+msgid "Inbox"
+msgstr "Posteingang"
+
 #: src/features/settings/ui/SettingsView.tsx
 msgid "Invite settings are unavailable. Relay recovery may still be in progress."
 msgstr "Einladungseinstellungen sind nicht verfügbar. Die Relay-Wiederherstellung läuft möglicherweise noch."
@@ -167,6 +233,10 @@ msgstr "Einladungseinstellungen sind nicht verfügbar. Die Relay-Wiederherstellu
 #: src/features/settings/ui/SettingsView.tsx
 msgid "Invite settings could not be checked."
 msgstr "Einladungseinstellungen konnten nicht geprüft werden."
+
+#: src/features/sidebar/ui/CommunityRail.tsx
+msgid "Invite to community"
+msgstr "Zur Community einladen"
 
 #: src/features/settings/ui/SettingsPanels.tsx
 msgid "Invites"
@@ -188,6 +258,10 @@ msgstr "Große Vorschauen mit Bildern und Beschreibungen"
 msgid "Larger"
 msgstr "Größer"
 
+#: src/features/sidebar/ui/ChannelContextMenu.tsx
+msgid "Leave channel"
+msgstr "Kanal verlassen"
+
 #: src/features/settings/ui/AppearanceSettingsPanel.tsx
 msgid "Light"
 msgstr "Hell"
@@ -195,6 +269,10 @@ msgstr "Hell"
 #: src/features/settings/ui/AppearanceSettingsControls.tsx
 msgid "Link previews"
 msgstr "Linkvorschauen"
+
+#: src/features/sidebar/ui/ChannelContextMenu.tsx
+msgid "Loading channel actions..."
+msgstr "Kanalaktionen werden geladen …"
 
 #: src/features/settings/ui/SettingsPanels.tsx
 msgid "Local archive"
@@ -204,9 +282,37 @@ msgstr "Lokales Archiv"
 msgid "Lower values reveal more of the desktop blur."
 msgstr "Niedrigere Werte lassen mehr vom weichgezeichneten Schreibtisch durchscheinen."
 
+#: src/features/sidebar/ui/CommunityRail.tsx
+msgid "Mark all as read"
+msgstr "Alle als gelesen markieren"
+
+#: src/features/sidebar/ui/ChannelContextMenu.tsx
+msgid "Mark as read"
+msgstr "Als gelesen markieren"
+
+#: src/features/sidebar/ui/ChannelContextMenu.tsx
+msgid "Mark unread"
+msgstr "Als ungelesen markieren"
+
 #: src/features/settings/ui/SettingsPanels.tsx
 msgid "Mobile"
 msgstr "Mobil"
+
+#: src/features/sidebar/ui/ChannelContextMenu.tsx
+msgid "Move to section"
+msgstr "In Abschnitt verschieben"
+
+#: src/features/sidebar/ui/ChannelContextMenu.tsx
+msgid "Mute channel"
+msgstr "Kanal stummschalten"
+
+#: src/features/sidebar/ui/AppSidebar.tsx
+msgid "New message"
+msgstr "Neue Nachricht"
+
+#: src/features/sidebar/ui/ChannelContextMenu.tsx
+msgid "New section..."
+msgstr "Neuer Abschnitt …"
 
 #: src/features/settings/ui/SettingsPanels.tsx
 msgid "Notifications"
@@ -219,6 +325,14 @@ msgstr "Ordnet jede Liste in der Seitenleiste. „Zuletzt“ lässt außerdem di
 #: src/features/settings/ui/SettingsView.tsx
 msgid "Personal"
 msgstr "Persönlich"
+
+#: src/features/sidebar/ui/ChannelContextMenu.tsx
+msgid "Pin channel"
+msgstr "Kanal anheften"
+
+#: src/features/sidebar/ui/AppSidebar.tsx
+msgid "Pinned"
+msgstr "Angeheftet"
 
 #: src/features/settings/ui/AppearanceSettingsPanel.tsx
 msgid "Preferences"
@@ -236,13 +350,25 @@ msgstr "Produkt-Updates — ein frischer Blick auf Unterhaltungen"
 msgid "Profile"
 msgstr "Profil"
 
+#: src/features/sidebar/ui/AppSidebarPinnedHeader.tsx
+msgid "Projects"
+msgstr "Projekte"
+
 #: src/features/settings/ui/AppearanceSettingsControls.tsx
 msgid "Prominent active tab"
 msgstr "Hervorgehobener aktiver Tab"
 
+#: src/features/sidebar/ui/AppSidebarPinnedHeader.tsx
+msgid "Pulse"
+msgstr "Pulse"
+
 #: src/features/settings/ui/AppearanceSettingsControls.tsx
 msgid "Recent"
 msgstr "Zuletzt"
+
+#: src/features/sidebar/ui/ChannelContextMenu.tsx
+msgid "Remove from section"
+msgstr "Aus Abschnitt entfernen"
 
 #: src/features/settings/ui/AppearanceSettingsControls.tsx
 msgid "Reset glass opacity"
@@ -332,6 +458,19 @@ msgstr "Threads öffnen sich über dem Kanal"
 msgid "Try again"
 msgstr "Erneut versuchen"
 
+#: src/features/sidebar/ui/ChannelContextMenu.tsx
+msgid "Unmute channel"
+msgstr "Stummschaltung aufheben"
+
+#: src/features/sidebar/ui/ChannelContextMenu.tsx
+msgid "Unpin channel"
+msgstr "Kanal nicht mehr anheften"
+
+#: src/features/sidebar/ui/CommunityRail.tsx
+#: src/features/sidebar/ui/SidebarSection.tsx
+msgid "unread"
+msgstr "ungelesen"
+
 #: src/features/settings/ui/SettingsPanels.tsx
 msgid "Updates"
 msgstr "Updates"
@@ -347,3 +486,7 @@ msgstr "v{appVersion}"
 #: src/features/settings/ui/SettingsPanels.tsx
 msgid "Voice"
 msgstr "Sprache"
+
+#: src/features/sidebar/ui/AppSidebarPinnedHeader.tsx
+msgid "Workflows"
+msgstr "Workflows"

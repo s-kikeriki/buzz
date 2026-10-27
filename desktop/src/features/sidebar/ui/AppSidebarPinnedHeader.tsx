@@ -1,4 +1,5 @@
 import { Activity, Bot, Folders, Inbox, Zap } from "lucide-react";
+import { Trans, useLingui } from "@lingui/react/macro";
 
 import { TopbarSearch } from "@/features/search/ui/TopbarSearch";
 import { FeatureGate } from "@/shared/features";
@@ -101,6 +102,12 @@ export function AppSidebarPrimaryMenu({
   // The projects section used to hang off this menu. It is unbounded - every
   // project with every child channel - so it stays in the scrolling area while
   // these rows are pinned above it; AppSidebar renders it directly.
+  //
+  // Each row carries its name twice — as the visible label and as the tooltip
+  // the collapsed rail shows in its place — so both go through the catalogue.
+  // Translating only the label leaves the icon rail, which is the whole UI at
+  // that width, in English.
+  const { t } = useLingui();
   return (
     <SidebarHeader
       className="relative z-40 cursor-default select-none px-2 pb-0 pt-0"
@@ -113,11 +120,13 @@ export function AppSidebarPrimaryMenu({
             className="data-[active=true]:font-normal"
             isActive={selectedView === "home"}
             onClick={onSelectHome}
-            tooltip="Inbox"
+            tooltip={t`Inbox`}
             type="button"
           >
             <Inbox className="h-4 w-4" />
-            <SidebarMenuLabel>Inbox</SidebarMenuLabel>
+            <SidebarMenuLabel>
+              <Trans>Inbox</Trans>
+            </SidebarMenuLabel>
           </SidebarMenuButton>
           {homeBadgeCount > 0 ? (
             <SidebarMenuBadge
@@ -134,11 +143,13 @@ export function AppSidebarPrimaryMenu({
               data-testid="open-pulse-view"
               isActive={selectedView === "pulse"}
               onClick={onSelectPulse}
-              tooltip="Pulse"
+              tooltip={t`Pulse`}
               type="button"
             >
               <Activity className="h-4 w-4" />
-              <SidebarMenuLabel>Pulse</SidebarMenuLabel>
+              <SidebarMenuLabel>
+                <Trans>Pulse</Trans>
+              </SidebarMenuLabel>
             </SidebarMenuButton>
           </SidebarMenuItem>
         </FeatureGate>
@@ -148,11 +159,13 @@ export function AppSidebarPrimaryMenu({
               data-testid="open-projects-view"
               isActive={selectedView === "projects" && projectsOverviewActive}
               onClick={onSelectProjects}
-              tooltip="Projects"
+              tooltip={t`Projects`}
               type="button"
             >
               <Folders className="h-4 w-4" />
-              <SidebarMenuLabel>Projects</SidebarMenuLabel>
+              <SidebarMenuLabel>
+                <Trans>Projects</Trans>
+              </SidebarMenuLabel>
             </SidebarMenuButton>
           </SidebarMenuItem>
         </FeatureGate>
@@ -162,11 +175,13 @@ export function AppSidebarPrimaryMenu({
             data-testid="open-agents-view"
             isActive={selectedView === "agents"}
             onClick={onSelectAgents}
-            tooltip="Agents"
+            tooltip={t`Agents`}
             type="button"
           >
             <Bot className="h-4 w-4" />
-            <SidebarMenuLabel>Agents</SidebarMenuLabel>
+            <SidebarMenuLabel>
+              <Trans>Agents</Trans>
+            </SidebarMenuLabel>
           </SidebarMenuButton>
         </SidebarMenuItem>
         <ProtectedBestieSidebarEntry />
@@ -176,11 +191,13 @@ export function AppSidebarPrimaryMenu({
               data-testid="open-workflows-view"
               isActive={selectedView === "workflows"}
               onClick={onSelectWorkflows}
-              tooltip="Workflows"
+              tooltip={t`Workflows`}
               type="button"
             >
               <Zap className="h-4 w-4" />
-              <SidebarMenuLabel>Workflows</SidebarMenuLabel>
+              <SidebarMenuLabel>
+                <Trans>Workflows</Trans>
+              </SidebarMenuLabel>
             </SidebarMenuButton>
           </SidebarMenuItem>
         </FeatureGate>

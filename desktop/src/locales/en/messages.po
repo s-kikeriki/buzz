@@ -15,6 +15,14 @@ msgstr "(all communities)"
 msgid "(per community)"
 msgstr "(per community)"
 
+#: src/features/sidebar/ui/SidebarSection.tsx
+msgid "{count, plural, one {unread notification} other {unread notifications}}"
+msgstr "{count, plural, one {unread notification} other {unread notifications}}"
+
+#: src/features/sidebar/ui/SectionUnreadThreadCount.tsx
+msgid "{count, plural, one {unread thread} other {unread threads}}"
+msgstr "{count, plural, one {unread thread} other {unread threads}}"
+
 #: src/features/settings/ui/AppearanceSettingsControls.tsx
 msgid "{glassOpacity}% opacity"
 msgstr "{glassOpacity}% opacity"
@@ -31,11 +39,16 @@ msgstr "A–Z"
 msgid "Accent color"
 msgstr "Accent color"
 
+#: src/features/sidebar/ui/CommunityRail.tsx
+msgid "Add community"
+msgstr "Add community"
+
 #: src/features/settings/ui/SettingsPanels.tsx
 msgid "Admin"
 msgstr "Admin"
 
 #: src/features/settings/ui/SettingsPanels.tsx
+#: src/features/sidebar/ui/AppSidebarPinnedHeader.tsx
 msgid "Agents"
 msgstr "Agents"
 
@@ -52,6 +65,10 @@ msgstr "Appearance"
 msgid "Applies across conversations and interface text"
 msgstr "Applies across conversations and interface text"
 
+#: src/features/sidebar/ui/ChannelContextMenu.tsx
+msgid "Archive channel"
+msgstr "Archive channel"
+
 #: src/features/settings/ui/AppearanceSettingsControls.tsx
 msgid "Available in the macOS desktop app."
 msgstr "Available in the macOS desktop app."
@@ -64,9 +81,17 @@ msgstr "Back to app"
 msgid "Blur the desktop behind navigation while keeping content solid."
 msgstr "Blur the desktop behind navigation while keeping content solid."
 
+#: src/features/sidebar/ui/ChannelContextMenu.tsx
+msgid "Channel actions unavailable"
+msgstr "Channel actions unavailable"
+
 #: src/features/settings/ui/SettingsPanels.tsx
 msgid "Channel templates"
 msgstr "Channel templates"
+
+#: src/features/sidebar/ui/AppSidebar.tsx
+msgid "Channels"
+msgstr "Channels"
 
 #: src/features/settings/ui/SettingsView.tsx
 msgid "Checking invite permissions…"
@@ -84,6 +109,10 @@ msgstr "Choose the colors used throughout {productName}."
 msgid "Choose the highlight color used throughout {productName}."
 msgstr "Choose the highlight color used throughout {productName}."
 
+#: src/features/sidebar/ui/SidebarSection.tsx
+msgid "Close direct message"
+msgstr "Close direct message"
+
 #: src/features/settings/ui/AppearanceSettingsPanel.tsx
 msgid "Color mode"
 msgstr "Color mode"
@@ -93,8 +122,13 @@ msgid "Comfy"
 msgstr "Comfy"
 
 #: src/features/settings/ui/SettingsView.tsx
+#: src/features/sidebar/ui/CommunityRail.tsx
 msgid "Communities"
 msgstr "Communities"
+
+#: src/features/sidebar/ui/CommunityRail.tsx
+msgid "Community settings"
+msgstr "Community settings"
 
 #: src/features/settings/ui/AppearanceSettingsControls.tsx
 msgid "Compact"
@@ -108,6 +142,22 @@ msgstr "Compute"
 msgid "Conversation density"
 msgstr "Conversation density"
 
+#: src/features/sidebar/ui/ChannelContextMenu.tsx
+msgid "Copy"
+msgstr "Copy"
+
+#: src/features/sidebar/ui/ChannelContextMenu.tsx
+msgid "Copy channel ID"
+msgstr "Copy channel ID"
+
+#: src/features/sidebar/ui/ChannelContextMenu.tsx
+msgid "Copy channel name"
+msgstr "Copy channel name"
+
+#: src/features/sidebar/ui/CommunityRail.tsx
+msgid "Copy community URL"
+msgstr "Copy community URL"
+
 #: src/features/settings/ui/SettingsPanels.tsx
 msgid "Custom emoji"
 msgstr "Custom emoji"
@@ -119,6 +169,14 @@ msgstr "Dark"
 #: src/features/settings/ui/AppearanceSettingsControls.tsx
 msgid "Default"
 msgstr "Default"
+
+#: src/features/sidebar/ui/ChannelContextMenu.tsx
+msgid "Delete channel"
+msgstr "Delete channel"
+
+#: src/features/sidebar/ui/AppSidebar.tsx
+msgid "Direct messages"
+msgstr "Direct messages"
 
 #: src/features/settings/ui/SettingsPanels.tsx
 msgid "Experiments"
@@ -135,6 +193,10 @@ msgstr "Follow your system or choose a light or dark appearance."
 #: src/features/settings/ui/AppearanceSettingsControls.tsx
 msgid "Font size"
 msgstr "Font size"
+
+#: src/features/sidebar/ui/AppSidebar.tsx
+msgid "Forums"
+msgstr "Forums"
 
 #: src/features/settings/ui/AppearanceSettingsControls.tsx
 msgid "Give the selected navigation item a higher-contrast background."
@@ -160,6 +222,10 @@ msgstr "Hosted communities"
 msgid "I added a longer message so you can compare line height and text spacing."
 msgstr "I added a longer message so you can compare line height and text spacing."
 
+#: src/features/sidebar/ui/AppSidebarPinnedHeader.tsx
+msgid "Inbox"
+msgstr "Inbox"
+
 #: src/features/settings/ui/SettingsView.tsx
 msgid "Invite settings are unavailable. Relay recovery may still be in progress."
 msgstr "Invite settings are unavailable. Relay recovery may still be in progress."
@@ -167,6 +233,10 @@ msgstr "Invite settings are unavailable. Relay recovery may still be in progress
 #: src/features/settings/ui/SettingsView.tsx
 msgid "Invite settings could not be checked."
 msgstr "Invite settings could not be checked."
+
+#: src/features/sidebar/ui/CommunityRail.tsx
+msgid "Invite to community"
+msgstr "Invite to community"
 
 #: src/features/settings/ui/SettingsPanels.tsx
 msgid "Invites"
@@ -188,6 +258,10 @@ msgstr "Large previews with images and descriptions"
 msgid "Larger"
 msgstr "Larger"
 
+#: src/features/sidebar/ui/ChannelContextMenu.tsx
+msgid "Leave channel"
+msgstr "Leave channel"
+
 #: src/features/settings/ui/AppearanceSettingsPanel.tsx
 msgid "Light"
 msgstr "Light"
@@ -195,6 +269,10 @@ msgstr "Light"
 #: src/features/settings/ui/AppearanceSettingsControls.tsx
 msgid "Link previews"
 msgstr "Link previews"
+
+#: src/features/sidebar/ui/ChannelContextMenu.tsx
+msgid "Loading channel actions..."
+msgstr "Loading channel actions..."
 
 #: src/features/settings/ui/SettingsPanels.tsx
 msgid "Local archive"
@@ -204,9 +282,37 @@ msgstr "Local archive"
 msgid "Lower values reveal more of the desktop blur."
 msgstr "Lower values reveal more of the desktop blur."
 
+#: src/features/sidebar/ui/CommunityRail.tsx
+msgid "Mark all as read"
+msgstr "Mark all as read"
+
+#: src/features/sidebar/ui/ChannelContextMenu.tsx
+msgid "Mark as read"
+msgstr "Mark as read"
+
+#: src/features/sidebar/ui/ChannelContextMenu.tsx
+msgid "Mark unread"
+msgstr "Mark unread"
+
 #: src/features/settings/ui/SettingsPanels.tsx
 msgid "Mobile"
 msgstr "Mobile"
+
+#: src/features/sidebar/ui/ChannelContextMenu.tsx
+msgid "Move to section"
+msgstr "Move to section"
+
+#: src/features/sidebar/ui/ChannelContextMenu.tsx
+msgid "Mute channel"
+msgstr "Mute channel"
+
+#: src/features/sidebar/ui/AppSidebar.tsx
+msgid "New message"
+msgstr "New message"
+
+#: src/features/sidebar/ui/ChannelContextMenu.tsx
+msgid "New section..."
+msgstr "New section..."
 
 #: src/features/settings/ui/SettingsPanels.tsx
 msgid "Notifications"
@@ -219,6 +325,14 @@ msgstr "Orders every list in the sidebar. Recent also floats the sections themse
 #: src/features/settings/ui/SettingsView.tsx
 msgid "Personal"
 msgstr "Personal"
+
+#: src/features/sidebar/ui/ChannelContextMenu.tsx
+msgid "Pin channel"
+msgstr "Pin channel"
+
+#: src/features/sidebar/ui/AppSidebar.tsx
+msgid "Pinned"
+msgstr "Pinned"
 
 #: src/features/settings/ui/AppearanceSettingsPanel.tsx
 msgid "Preferences"
@@ -236,13 +350,25 @@ msgstr "Product updates — a fresh look at conversations"
 msgid "Profile"
 msgstr "Profile"
 
+#: src/features/sidebar/ui/AppSidebarPinnedHeader.tsx
+msgid "Projects"
+msgstr "Projects"
+
 #: src/features/settings/ui/AppearanceSettingsControls.tsx
 msgid "Prominent active tab"
 msgstr "Prominent active tab"
 
+#: src/features/sidebar/ui/AppSidebarPinnedHeader.tsx
+msgid "Pulse"
+msgstr "Pulse"
+
 #: src/features/settings/ui/AppearanceSettingsControls.tsx
 msgid "Recent"
 msgstr "Recent"
+
+#: src/features/sidebar/ui/ChannelContextMenu.tsx
+msgid "Remove from section"
+msgstr "Remove from section"
 
 #: src/features/settings/ui/AppearanceSettingsControls.tsx
 msgid "Reset glass opacity"
@@ -332,6 +458,19 @@ msgstr "Threads open over the channel"
 msgid "Try again"
 msgstr "Try again"
 
+#: src/features/sidebar/ui/ChannelContextMenu.tsx
+msgid "Unmute channel"
+msgstr "Unmute channel"
+
+#: src/features/sidebar/ui/ChannelContextMenu.tsx
+msgid "Unpin channel"
+msgstr "Unpin channel"
+
+#: src/features/sidebar/ui/CommunityRail.tsx
+#: src/features/sidebar/ui/SidebarSection.tsx
+msgid "unread"
+msgstr "unread"
+
 #: src/features/settings/ui/SettingsPanels.tsx
 msgid "Updates"
 msgstr "Updates"
@@ -347,3 +486,7 @@ msgstr "v{appVersion}"
 #: src/features/settings/ui/SettingsPanels.tsx
 msgid "Voice"
 msgstr "Voice"
+
+#: src/features/sidebar/ui/AppSidebarPinnedHeader.tsx
+msgid "Workflows"
+msgstr "Workflows"

@@ -1,5 +1,6 @@
 // biome-ignore format: keep compact to stay within file size limit
 import * as React from "react";
+import { useLingui } from "@lingui/react/macro";
 import { FeatureGate } from "@/shared/features";
 import { SidebarDndContext } from "@/features/sidebar/ui/SidebarDnd";
 
@@ -156,6 +157,9 @@ export function AppSidebar({
   const { status: updateStatus } = useUpdaterContext();
   const canShowSidebarUpdateCard = shouldShowSidebarUpdateCard(updateStatus);
   const { open: sidebarOpen, openMobile } = useSidebar();
+  // Section titles and quick-action labels are props, not children, so they
+  // cannot be `<Trans>` — they go through `t` at the call site instead.
+  const { t } = useLingui();
   const isMobile = useIsMobile();
   const [isSidebarUpdateCardDismissed, setIsSidebarUpdateCardDismissed] =
     React.useState(false);
@@ -716,7 +720,7 @@ export function AppSidebar({
               onSelectChannel={onSelectChannel}
               onToggleCollapsed={() => toggleCollapsedGroup("starred")}
               selectedChannelId={selectedChannelId}
-              title="Pinned"
+              title={t`Pinned`}
               unreadChannelIds={unreadChannelIds}
               mutedChannelIds={mutedChannelIds}
               onMuteChannel={onMuteChannel}
@@ -870,7 +874,7 @@ export function AppSidebar({
                       onSelectChannel={onSelectChannel}
                       onToggleCollapsed={() => toggleCollapsedGroup("channels")}
                       selectedChannelId={selectedChannelId}
-                      title="Channels"
+                      title={t`Channels`}
                       unreadChannelIds={unreadChannelIds}
                       sections={channelSections}
                       assignments={channelAssignments}
@@ -909,7 +913,7 @@ export function AppSidebar({
                       onSelectChannel={onSelectChannel}
                       onToggleCollapsed={() => toggleCollapsedGroup("forums")}
                       selectedChannelId={selectedChannelId}
-                      title="Forums"
+                      title={t`Forums`}
                       unreadChannelIds={unreadChannelIds}
                       mutedChannelIds={mutedChannelIds}
                       onMuteChannel={onMuteChannel}
@@ -921,7 +925,7 @@ export function AppSidebar({
                     action={
                       <div className="absolute right-1 top-1/2 z-10 flex -translate-y-1/2 items-center gap-0.5">
                         <SectionQuickAction
-                          label="New message"
+                          label={t`New message`}
                           onClick={onNewMessage}
                           testId="section-actions-dms-quick-create"
                         />
@@ -953,7 +957,7 @@ export function AppSidebar({
                     presenceByChannelId={dmPresenceByChannelId}
                     selectedChannelId={selectedChannelId}
                     testId="dm-list"
-                    title="Direct messages"
+                    title={t`Direct messages`}
                     unreadThreadCount={unreadThreadsIn(sortedDirectMessages)}
                     sectionActionsOpen={dmActionsMenuOpen}
                     unreadChannelCounts={unreadChannelCounts}
