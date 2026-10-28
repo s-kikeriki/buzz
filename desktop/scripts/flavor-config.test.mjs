@@ -426,6 +426,43 @@ test("every committed logo is the kind of file its style can paint", () => {
   }
 });
 
+test("every committed mark's light cut is a real recolour", () => {
+  // The same two failures the wordmark's cut has, on the asset that lands on
+  // the one surface the ink shell does not reach: the content card, the
+  // hosted-community dialog, and a light-mode community switch. A mark that
+  // is the dark cut under another name is white on white there, and the
+  // screenshot that would show it is the one nobody takes.
+  for (const id of listFlavorIds()) {
+    const flavor = loadFlavor(id);
+    if (flavor.logoMark === undefined || flavor.logoMarkLight === undefined) {
+      continue;
+    }
+    const dark = readFileSync(path.join(desktopDir, flavor.logoMark), "utf8");
+    const light = readFileSync(
+      path.join(desktopDir, flavor.logoMarkLight),
+      "utf8",
+    );
+    assert.notEqual(
+      light,
+      dark,
+      `${id}: the mark's light cut is byte-identical to the dark one`,
+    );
+    const body = light.split("<defs>")[0];
+    assert.doesNotMatch(
+      body,
+      /fill="(?:white|#[fF]{3,6}\b|#[fF]5[fF]5[fF]5\b)"/,
+      `${id}: the mark's light cut still paints near-white ink`,
+    );
+    // And the dark cut must still be the negative one, or the pair is two
+    // copies of the same drawing in the other direction.
+    assert.match(
+      dark.split("<defs>")[0],
+      /fill="(?:white|#[fF]{3,6}\b|#[fF]5[fF]5[fF]5\b)"/,
+      `${id}: the mark's dark cut paints no near-white ink`,
+    );
+  }
+});
+
 test("the real flavors start on the accent each app is meant to have", () => {
   // The companion to the relay test above: the accent is the other value a
   // fresh install takes from the build rather than from the user, so assert
@@ -530,14 +567,18 @@ test("the build env carries every value a build needs to pick an identity", () =
       BRAND_NAME: "ki.keriki",
       BUZZ_BUILD_AUTO_CONNECT_DEFAULT_RELAY: "1",
       BUZZ_BUILD_DEMO_SLUG: "kikeriki-857f685ce21f5788",
+      BUZZ_BUILD_PRODUCT_NAME: "ki.keriki",
+      BUZZ_BUILD_TRAY_ICON: "flavors/icons/ki.keriki-tray.png",
       BUZZ_RELAY_URL: "wss://relay.ki.keriki.de",
       DEMO_BUILD_ID: "857f685ce21f5788",
       DEMO_NAME: "kikeriki",
+      DMG_BACKGROUND: "flavors/icons/ki.keriki-dmg-background.png",
       VITE_BUZZ_CHROME_SURFACE: "ink",
       VITE_BUZZ_DEFAULT_ACCENT_COLOR: "#d4f247",
       VITE_BUZZ_PRODUCT_LOGO: "data:image/svg+xml;base64,PHN2Zy8+",
       VITE_BUZZ_PRODUCT_LOGO_LIGHT: "data:image/svg+xml;base64,PHN2Zy8+",
       VITE_BUZZ_PRODUCT_LOGO_MARK: "data:image/svg+xml;base64,PHN2Zy8+",
+      VITE_BUZZ_PRODUCT_LOGO_MARK_LIGHT: "data:image/svg+xml;base64,PHN2Zy8+",
       VITE_BUZZ_PRODUCT_LOGO_STYLE: "color",
       VITE_BUZZ_PRODUCT_NAME: "ki.keriki",
       VITE_BUZZ_THEME_LABEL: "kikeriki",
@@ -601,6 +642,125 @@ test("the companion mark is optional and needs a wordmark to accompany", () => {
         ),
       /logoMark/,
       `logoMark ${JSON.stringify(logoMark)} must be refused`,
+    );
+  }
+});
+
+test("the mark's light cut needs a mark, a colour style, and its own ink", () => {
+  const both = validateFlavor(
+    goodFlavor({
+      logo: "flavors/logos/acme.svg",
+      logoStyle: "color",
+      logoMark: "flavors/logos/acme-mark.svg",
+      logoMarkLight: "flavors/logos/acme-mark-light.svg",
+    }),
+    "acme",
+  );
+  assert.equal(
+    flavorBuildEnv(both, () => "<svg/>").VITE_BUZZ_PRODUCT_LOGO_MARK_LIGHT,
+    "data:image/svg+xml;base64,PHN2Zy8+",
+  );
+
+  // Omitted, not emptied — the same contract the wordmark's cut has. A build
+  // with one cut paints it on every surface, which is right for a mark drawn
+  // to read on both.
+  const oneCut = flavorBuildEnv(
+    validateFlavor(
+      goodFlavor({
+        logo: "flavors/logos/acme.svg",
+        logoStyle: "color",
+        logoMark: "flavors/logos/acme-mark.svg",
+      }),
+      "acme",
+    ),
+    () => "<svg/>",
+  );
+  assert.ok(!("VITE_BUZZ_PRODUCT_LOGO_MARK_LIGHT" in oneCut));
+
+  assert.throws(
+    () =>
+      validateFlavor(
+        goodFlavor({
+          logo: "flavors/logos/acme.svg",
+          logoStyle: "color",
+          logoMarkLight: "flavors/logos/acme-mark-light.svg",
+        }),
+        "acme",
+      ),
+    /logoMarkLight is set but no logoMark is declared/,
+  );
+  assert.throws(
+    () =>
+      validateFlavor(
+        goodFlavor({
+          logo: "flavors/logos/acme.svg",
+          logoStyle: "mask",
+          logoMark: "flavors/logos/acme-mark.svg",
+          logoMarkLight: "flavors/logos/acme-mark-light.svg",
+        }),
+        "acme",
+      ),
+    /logoMarkLight only applies to logoStyle color/,
+  );
+  for (const value of ["", "   ", "../secrets/mark.svg", "mark.png", 7]) {
+    assert.throws(
+      () =>
+        validateFlavor(
+          goodFlavor({
+            logo: "flavors/logos/acme.svg",
+            logoStyle: "color",
+            logoMark: "flavors/logos/acme-mark.svg",
+            logoMarkLight: value,
+          }),
+          "acme",
+        ),
+      /logoMarkLight/,
+      `logoMarkLight ${JSON.stringify(value)} must be refused`,
+    );
+  }
+});
+
+test("the native shell gets the product name and the tray glyph as paths", () => {
+  // Three variables the frontend never sees. The name goes to `build.rs` for
+  // the app menu, the About box and the tray items; the glyph and the DMG
+  // panel travel as repo-relative paths because a Cargo build script and a
+  // packaging shell script both resolve them from inside the checkout — and
+  // an absolute path would make the emitted environment differ per machine.
+  const branded = flavorBuildEnv(
+    validateFlavor(
+      goodFlavor({
+        productName: "Acme",
+        trayIcon: "flavors/icons/acme-tray.png",
+        dmgBackground: "flavors/icons/acme-dmg.png",
+      }),
+      "acme",
+    ),
+  );
+  assert.equal(branded.BUZZ_BUILD_PRODUCT_NAME, "Acme");
+  assert.equal(branded.BUZZ_BUILD_TRAY_ICON, "flavors/icons/acme-tray.png");
+  assert.equal(branded.DMG_BACKGROUND, "flavors/icons/acme-dmg.png");
+
+  // The two assets are optional and absent means "keep the bee" / "keep the
+  // stock panel"; the name is not, because every flavor declares one.
+  const plain = flavorBuildEnv(validateFlavor(goodFlavor(), "acme"));
+  assert.ok(!("BUZZ_BUILD_TRAY_ICON" in plain));
+  assert.ok(!("DMG_BACKGROUND" in plain));
+  assert.equal(plain.BUZZ_BUILD_PRODUCT_NAME, plain.VITE_BUZZ_PRODUCT_NAME);
+
+  // A raster, deliberately: `brand.rs` decodes it with `png`, and an .svg
+  // here would fail to decode and silently fall back to the Buzz bee.
+  for (const trayIcon of ["", "   ", "../secrets/tray.png", "tray.svg", 7]) {
+    assert.throws(
+      () => validateFlavor(goodFlavor({ trayIcon }), "acme"),
+      /trayIcon/,
+      `trayIcon ${JSON.stringify(trayIcon)} must be refused`,
+    );
+  }
+  for (const dmgBackground of ["", "   ", "../secrets/bg.png", "bg.svg", 7]) {
+    assert.throws(
+      () => validateFlavor(goodFlavor({ dmgBackground }), "acme"),
+      /dmgBackground/,
+      `dmgBackground ${JSON.stringify(dmgBackground)} must be refused`,
     );
   }
 });
@@ -738,7 +898,14 @@ test("every buildable flavor's logo is committed at the path it names", () => {
   for (const id of listFlavorIds()) {
     const flavor = loadFlavor(id);
     if (flavor.frozen || flavor.example) continue;
-    for (const declared of [flavor.logo, flavor.logoLight]) {
+    for (const declared of [
+      flavor.logo,
+      flavor.logoLight,
+      flavor.logoMark,
+      flavor.logoMarkLight,
+      flavor.trayIcon,
+      flavor.dmgBackground,
+    ]) {
       if (declared === undefined) continue;
       assert.ok(
         existsSync(path.join(desktopDir, declared)),

@@ -14,7 +14,24 @@ out_dmg="$2"
 app_name="$(basename "$app_path")"
 volume_name="${VOL_NAME:-Buzz}"
 script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-background="$script_dir/../src-tauri/icons/dmg-background.png"
+desktop_dir="$(cd "$script_dir/.." && pwd)"
+# The flavor's own panel, if it declared one. `flavor-config.mjs` emits
+# DMG_BACKGROUND as a path relative to desktop/, so a flavor file means the
+# same thing on every machine; an absolute path is honoured as given.
+#
+# Before this, the only way to ship a branded DMG was to overwrite the repo's
+# file in the checkout for the duration of the build, from an asset that lived
+# outside it. That works and is what every ki.keriki DMG so far has done — and
+# it means the panel a user sees at install is invisible in a diff and absent
+# from any other machine's build.
+if [[ -n "${DMG_BACKGROUND:-}" ]]; then
+  case "$DMG_BACKGROUND" in
+    /*) background="$DMG_BACKGROUND" ;;
+    *) background="$desktop_dir/$DMG_BACKGROUND" ;;
+  esac
+else
+  background="$desktop_dir/src-tauri/icons/dmg-background.png"
+fi
 work_dir="$(mktemp -d "${TMPDIR:-/tmp}/buzz-dmg.XXXXXX")"
 source_dir="$work_dir/source"
 rw_dmg="$work_dir/read-write.dmg"

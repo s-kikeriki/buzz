@@ -37,6 +37,7 @@ import type {
   OnboardingProfileValues,
   ProfileStepState,
 } from "./types";
+import { BRAND } from "@/shared/branding/brand";
 
 function isRelayMembershipDeniedError(error: unknown): boolean {
   if (!(error instanceof Error)) {
@@ -589,8 +590,9 @@ export function OnboardingFlow({
                     </h1>
                     <p className="mt-5 text-sm leading-6 text-muted-foreground">
                       Import your Nostr private key to use that identity with
-                      Buzz. If this key already has a profile on the relay, your
-                      name and avatar are restored automatically.
+                      {BRAND.productName}. If this key already has a profile on
+                      the relay, your name and avatar are restored
+                      automatically.
                     </p>
                   </>
                 )}

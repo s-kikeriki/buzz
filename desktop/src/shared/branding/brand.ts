@@ -63,6 +63,20 @@ export const BRAND = {
   productLogoMarkUrl: parseProductLogoUrl(
     import.meta.env?.VITE_BUZZ_PRODUCT_LOGO_MARK,
   ),
+  /**
+   * The mark's cut for a light surface, or `null` to use the one above
+   * everywhere.
+   *
+   * A `color` mark carries its own colours and so is drawn for one surface.
+   * The mark above is kikeriki's negative — white glyph, citron rim — which
+   * is right on the boot gate and the onboarding canvas and invisible on the
+   * light surfaces the first-run flow also has: the pending-invite gate, the
+   * community-switch gate and the hosted-community dialog, which forces light
+   * whatever the document is doing.
+   */
+  productLogoMarkLightUrl: parseProductLogoUrl(
+    import.meta.env?.VITE_BUZZ_PRODUCT_LOGO_MARK_LIGHT,
+  ),
   /** Whether that logo is recoloured to the theme or painted as it is. */
   productLogoStyle: parseProductLogoStyle(
     import.meta.env?.VITE_BUZZ_PRODUCT_LOGO_STYLE,

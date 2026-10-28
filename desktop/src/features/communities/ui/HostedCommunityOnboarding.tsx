@@ -24,6 +24,7 @@ import {
 } from "@/features/communities/hostedCommunityApi";
 import { useCommunityOnboarding } from "@/features/onboarding/communityOnboarding";
 import { useIdentityQuery } from "@/shared/api/hooks";
+import { BRAND } from "@/shared/branding/brand";
 import { safeNpub } from "@/shared/lib/nostrUtils";
 import { UNAVAILABLE_KEY_LABEL } from "@/shared/lib/pubkey";
 import { Button } from "@/shared/ui/button";
@@ -34,6 +35,7 @@ import {
   ONBOARDING_INK_ICON_CLASS,
   ONBOARDING_PRIMARY_CTA_CLASS,
 } from "@/features/onboarding/ui/OnboardingChrome";
+import { BrandMark } from "@/shared/ui/BrandMark";
 import { BuzzMark } from "@/shared/ui/buzz-logo/BuzzMark";
 import {
   Dialog,
@@ -508,7 +510,16 @@ export function HostedCommunityOnboarding({
         surface="textured"
       >
         <div className="mx-auto flex w-full max-w-sm flex-col items-center py-2 text-center">
-          <BuzzMark className="mb-5 h-auto w-9 text-foreground" />
+          {/*
+            `surface="light"`, not the document's mode: this dialog pins
+            `data-system-color-scheme="light"` on itself, so it is a light
+            surface even on a dark build and even under ink chrome.
+          */}
+          <BrandMark
+            className="mb-5 h-auto w-9"
+            fallback={<BuzzMark className="mb-5 h-auto w-9 text-foreground" />}
+            surface="light"
+          />
 
           {!auth ? (
             <>
@@ -518,7 +529,7 @@ export function HostedCommunityOnboarding({
               <DialogDescription className="mt-2 text-sm leading-6 text-foreground">
                 Sign in to connect a community you already own or create a new
                 one. We’ll open Builderlab in your browser, then bring you back
-                to Buzz.
+                to {BRAND.productName}.
               </DialogDescription>
               {errorBox ? <div className="mt-5 w-full">{errorBox}</div> : null}
               {action === "Signing in…" ? (

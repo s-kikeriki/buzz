@@ -76,6 +76,7 @@ import {
 import { BRAND } from "@/shared/branding/brand";
 import { cn } from "@/shared/lib/cn";
 import { BrandBootMark } from "@/shared/ui/BrandBootMark";
+import { BrandMark } from "@/shared/ui/BrandMark";
 import { BuzzMark } from "@/shared/ui/buzz-logo/BuzzMark";
 import { FuzzyLogo } from "@/shared/ui/buzz-logo/FuzzyLogo";
 import { StartupWindowDragRegion } from "@/shared/ui/StartupWindowDragRegion";
@@ -173,6 +174,10 @@ function useBootSplashHold(): BootSplashPhase {
 // the very first frame even before scripting starts, avoiding a blank flash on
 // hard reload. The animated FuzzyLogo is layered on top and takes over once it
 // begins playing.
+//
+// Kept whole as the stock fallback rather than branched inside: the two-layer
+// first-paint trick is the reason this component exists, and a brand mark is
+// one `<img>` that needs none of it.
 function BeeLoader({
   ariaLabel,
   className,
@@ -246,10 +251,24 @@ function CommunitySwitchGate() {
       <StartupWindowDragRegion />
       <span className="sr-only">Switching community…</span>
       {showSpinner ? (
-        <BeeLoader
-          ariaLabel="Switching community…"
+        /*
+          `auto`, unlike every other mark in this sweep: this gate really is
+          on `bg-background`, which follows the document's light/dark class,
+          so both cuts render and CSS picks. It is the only surface here that
+          does. Decorative, because the gate is a `role="status"` with its own
+          sr-only caption and naming the mark would announce it twice.
+        */
+        <BrandMark
           className="h-auto w-20"
-          tintClassName="text-muted-foreground"
+          fallback={
+            <BeeLoader
+              ariaLabel="Switching community…"
+              className="h-auto w-20"
+              tintClassName="text-muted-foreground"
+            />
+          }
+          motion
+          surface="auto"
         />
       ) : null}
     </div>

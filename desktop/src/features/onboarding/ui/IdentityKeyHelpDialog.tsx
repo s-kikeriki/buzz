@@ -11,6 +11,7 @@ import {
 } from "@/shared/ui/dialog";
 import { ONBOARDING_INK_ICON_CLASS } from "./OnboardingChrome";
 import { OnboardingFooter } from "./OnboardingFooter";
+import { BRAND } from "@/shared/branding/brand";
 
 const IDENTITY_KEY_HELP_SEEN_STORAGE_KEY =
   "buzz.machine-onboarding.identity-key-help-seen.v1";
@@ -124,15 +125,15 @@ function IdentityKeyHelpBody() {
   return (
     <>
       <p>
-        Buzz will create a Nostr identity with two parts: a private key that
-        signs you in and a public key you can safely share. You can find your
-        public identity anytime in Buzz settings.
+        {BRAND.productName} will create a Nostr identity with two parts: a
+        private key that signs you in and a public key you can safely share. You
+        can find your public identity anytime in {BRAND.productName} settings.
       </p>
       <p>
-        This identity belongs to you, not Buzz, and can move with you to another
-        device or compatible Nostr app. Because only you control the private
-        key, Buzz can’t reset or recover it. Keep a backup somewhere safe, and
-        never share it.
+        This identity belongs to you, not {BRAND.productName}, and can move with
+        you to another device or compatible Nostr app. Because only you control
+        the private key, {BRAND.productName} can’t reset or recover it. Keep a
+        backup somewhere safe, and never share it.
       </p>
     </>
   );

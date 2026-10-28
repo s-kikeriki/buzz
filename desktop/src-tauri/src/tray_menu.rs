@@ -25,6 +25,8 @@ use tauri::{
     AppHandle, Emitter, Manager, Runtime,
 };
 
+use crate::brand;
+
 const TRAY_ID: &str = "buzz-tray";
 const OPEN_BUZZ_ID: &str = "tray-open-buzz";
 const NEW_CHANNEL_ID: &str = "tray-new-channel";
@@ -102,6 +104,19 @@ fn format_elapsed(elapsed: Duration) -> String {
     let minutes = total_minutes % 60;
     let hours = total_minutes / 60;
     format!("{hours}h {minutes}m {seconds}s")
+}
+
+/// The glyph the menu bar flies: the flavor's own on a build that ships one,
+/// the Buzz bee otherwise.
+///
+/// A raster from the flavor rather than the vector-derived mask below, because
+/// nothing in this build can rasterise an SVG. A build that declares no icon
+/// takes the bee, so the OSS trunk is unchanged by construction.
+fn tray_icon() -> Image<'static> {
+    match brand::tray_icon_rgba() {
+        Some((rgba, width, height)) => Image::new_owned(rgba, width, height),
+        None => tray_bee_icon(),
+    }
 }
 
 /// Builds the standalone Buzz bee as a transparent, macOS template image.
@@ -333,10 +348,13 @@ fn build_menu<R: Runtime>(
         None::<&str>,
     )?)?;
     append_separator(app, &menu)?;
+    // The product's own name, not the literal: these two items are the whole
+    // of the app's presence in the menu bar when its window is hidden.
+    let product = brand::product_name(app.package_info().name.as_str());
     menu.append(&MenuItem::with_id(
         app,
         OPEN_BUZZ_ID,
-        "Open Buzz",
+        format!("Open {product}"),
         true,
         None::<&str>,
     )?)?;
@@ -344,7 +362,7 @@ fn build_menu<R: Runtime>(
     menu.append(&MenuItem::with_id(
         app,
         QUIT_ID,
-        "Quit Buzz",
+        format!("Quit {product}"),
         true,
         None::<&str>,
     )?)?;
@@ -488,7 +506,7 @@ pub fn init<R: Runtime>(app: &AppHandle<R>) -> tauri::Result<()> {
     });
     let tray = TrayIconBuilder::with_id(TRAY_ID)
         .menu(&menu)
-        .icon(tray_bee_icon())
+        .icon(tray_icon())
         .icon_as_template(true)
         .on_menu_event(|app, event| handle_menu_event(app, event.id.as_ref()))
         .build(app)?;

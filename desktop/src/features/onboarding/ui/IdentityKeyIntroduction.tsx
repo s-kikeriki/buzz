@@ -9,6 +9,7 @@ import {
   OnboardingSlideTransition,
 } from "./OnboardingSlideTransition";
 import { ONBOARDING_CARD_NEUTRAL_SURFACE_CLASS } from "./onboardingCardStyles";
+import { BRAND } from "@/shared/branding/brand";
 
 const GUIDANCE_ICON_CLASS = `flex size-10 shrink-0 items-center justify-center rounded-full text-foreground ${ONBOARDING_CARD_NEUTRAL_SURFACE_CLASS}`;
 
@@ -37,8 +38,8 @@ export function IdentityKeyIntroduction({
           Create a private identity key
         </h1>
         <p className="mt-2 text-base leading-6 text-foreground/75">
-          This key will be how you log into Buzz. You can use it across Buzz
-          communities and other platforms.
+          This key will be how you log into {BRAND.productName}. You can use it
+          across Buzz communities and other platforms.
         </p>
         <div className="mt-2">
           <IdentityKeyHelpDialog inline onOpen={onOpenHelp} />

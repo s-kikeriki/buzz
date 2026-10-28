@@ -1,3 +1,4 @@
+import { BrandMark } from "@/shared/ui/BrandMark";
 import { BuzzMark } from "@/shared/ui/buzz-logo/BuzzMark";
 
 /**
@@ -53,9 +54,15 @@ export const ONBOARDING_SECURITY_ICON_CLASS =
 
 /**
  * Shared onboarding chrome shown on every page after the landing screen: a
- * static Buzz mark pinned to the top-left, and a centered pagination track that
+ * static mark pinned to the top-left, and a centered pagination track that
  * sits above the page title. The active page reads as a longer bar; inactive
  * pages are dots.
+ *
+ * The mark is the brand's own on a build that ships one, the Buzz mark
+ * otherwise. These are pages 2-7 — the landing was rebranded on its own, and
+ * leaving the six pages behind it flying a bee is where a new install last
+ * saw Buzz. The surface is `ink` because `OnboardingCard` carries the same
+ * `buzz-onboarding-brand-ink` canvas the landing does.
  */
 export function OnboardingChrome({
   current,
@@ -70,7 +77,11 @@ export function OnboardingChrome({
       className="pointer-events-none fixed inset-x-0 top-12 z-10 flex items-center px-6 text-foreground"
     >
       <span className="block w-11" data-testid="onboarding-logo">
-        <BuzzMark className="h-auto w-full" />
+        <BrandMark
+          className="h-auto w-full"
+          fallback={<BuzzMark className="h-auto w-full" />}
+          surface="ink"
+        />
       </span>
       <div
         className="absolute left-1/2 top-1/2 -mt-3 flex -translate-x-1/2 -translate-y-1/2 items-center gap-2"

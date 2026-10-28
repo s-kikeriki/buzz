@@ -1,5 +1,11 @@
 import * as React from "react";
 
+import {
+  BRAND_ACCENT_STYLE,
+  BRAND_INK_CARD_CLASS,
+  BRAND_INK_SHELL_CLASS,
+  brandOnboardingColorScheme,
+} from "@/features/onboarding/brandSurface";
 import { cn } from "@/shared/lib/cn";
 import { Card } from "@/shared/ui/card";
 import { useSmoothCorners } from "@/shared/ui/smoothCorners";
@@ -20,6 +26,12 @@ export function useOnboardingCardLayout() {
  * Production onboarding shell for all steps after the landing screen. The
  * page keeps the existing onboarding backdrop while navigation and content
  * live together inside one stable card.
+ *
+ * On a brand-ink build the backdrop is the brand's ink rather than the Buzz
+ * chartreuse gradient — the same declaration and the same class the landing
+ * screen uses, so a new install does not walk from a branded first screen
+ * onto six Buzz-yellow ones. The card keeps its own light surface: it is the
+ * document the person is filling in, not chrome.
  */
 export function OnboardingCard({
   allowWideContent = false,
@@ -48,9 +60,14 @@ export function OnboardingCard({
 
   return (
     <div
-      className="buzz-onboarding-neutral-theme buzz-startup-shell flex max-h-dvh items-center justify-center overflow-x-hidden overflow-y-auto px-4 py-6 text-foreground"
-      data-system-color-scheme={systemColorScheme}
+      className={cn(
+        "buzz-onboarding-neutral-theme buzz-startup-shell flex max-h-dvh items-center justify-center overflow-x-hidden overflow-y-auto px-4 py-6 text-foreground",
+        BRAND_INK_SHELL_CLASS,
+      )}
+      data-brand-onboarding={BRAND_INK_SHELL_CLASS ? "ink" : undefined}
+      data-system-color-scheme={brandOnboardingColorScheme(systemColorScheme)}
       data-testid={testId}
+      style={BRAND_ACCENT_STYLE}
     >
       <StartupWindowDragRegion />
       {showStepIndicator ? (
@@ -69,6 +86,7 @@ export function OnboardingCard({
           allowWideContent
             ? "[&_.buzz-onboarding-transition-content]:max-w-full"
             : "[&_.buzz-onboarding-transition-content]:max-w-[32rem]",
+          BRAND_INK_CARD_CLASS,
         )}
         data-testid="onboarding-content-card"
         ref={cardRef}

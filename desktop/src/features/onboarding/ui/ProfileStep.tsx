@@ -19,6 +19,7 @@ import {
   OnboardingSlideTransition,
 } from "./OnboardingSlideTransition";
 import type { ProfileStepActions, ProfileStepState } from "./types";
+import { BRAND } from "@/shared/branding/brand";
 
 type ProfileStepProps = {
   actions: ProfileStepActions;
@@ -234,8 +235,8 @@ export function ProfileStep({
           What should we call you?
         </h1>
         <p className="mt-5 text-sm leading-6 text-muted-foreground">
-          Pick the name people and agents will see in Buzz. You can change it
-          anytime.
+          Pick the name people and agents will see in {BRAND.productName}. You
+          can change it anytime.
         </p>
       </div>
 

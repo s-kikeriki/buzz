@@ -59,6 +59,8 @@ the path its flavor names before building.
 |---|---|---|
 | `ki.keriki.svg` | `ki.keriki.json` `logo` | the dark theme |
 | `ki.keriki-light.svg` | `ki.keriki.json` `logoLight` | the light theme |
+| `ki.keriki-mark.svg` | `ki.keriki.json` `logoMark` | ink surfaces: the boot gate, the onboarding canvas |
+| `ki.keriki-mark-light.svg` | `ki.keriki.json` `logoMarkLight` | light surfaces: the onboarding content card, the hosted-community dialog, a light-mode community switch |
 
 `ki.keriki.svg` is the current kikeriki logo, taken unmodified from
 `https://kikeriki.net/assets/kikeriki-logo.svg` (sha256 `f2afb6c4…`): the
@@ -88,3 +90,30 @@ file replaced by a copy of the master.
 `BrandLogo` renders both cuts and lets the `dark` class on `<html>` choose, so
 the mark follows a theme change in the same paint. Only one is displayed, so
 only one is announced.
+
+## The companion mark, and its own light cut
+
+`logoMark` is the glyph-sized companion to the wordmark, for the slots that
+want the brand at icon size: the drifting field on the onboarding landing, the
+boot gate, the corner of every onboarding step. It is a **second asset, not a
+crop of the first** — the wordmark is 669x268, and at 26px wide in the landing
+field it is a smudge.
+
+`logoMarkLight` is to `logoMark` what `logoLight` is to `logo`, by the same
+exact rule: every `fill="white"` and `fill="#F5F5F5"` in the body becomes
+`#0A0A0A`, the lime `#D4F247` is untouched, and anything inside `<defs>` stays
+as it is. `ki.keriki-mark.svg` has no `<defs>`, so the recolour is the whole
+of it.
+
+It is not optional in the way the wordmark's cut is. `BrandMark` takes the
+surface from its **call site** rather than from the document, because the
+first-run flow has three surfaces that ignore the document mode — the ink
+canvas is dark under a light document, the hosted-community dialog pins itself
+light, and the backup step pins itself dark. A flavor with a mark and no light
+cut paints the one it has on all of them, and the negative mark on the white
+content card is invisible.
+
+`flavor-config.test.mjs` checks the pair the same way it checks the wordmark's:
+not byte-identical, no near-white ink in the light cut — and, for the mark,
+that the dark cut *does* carry near-white ink, which catches the pair being
+two copies of the same drawing in the other direction.

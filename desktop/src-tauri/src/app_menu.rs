@@ -46,8 +46,13 @@ pub fn install<R: Runtime>(builder: Builder<R>) -> Builder<R> {
 pub fn build<R: Runtime>(app: &AppHandle<R>) -> tauri::Result<Menu<R>> {
     let pkg_info = app.package_info();
     let config = app.config();
+    // The flavor's name, not Tauri's `productName`. `demo-build-config.mjs`
+    // derives that as `Buzz <demo name>`, so the About box and the app menu of
+    // a fully branded build read "Buzz kikeriki" — the one place the word
+    // survived a rebrand that had changed everything inside the window.
+    let product_name = crate::brand::product_name(pkg_info.name.as_str()).to_string();
     let about_metadata = AboutMetadata {
-        name: Some(pkg_info.name.clone()),
+        name: Some(product_name.clone()),
         version: Some(pkg_info.version.to_string()),
         copyright: config.bundle.copyright.clone(),
         authors: config.bundle.publisher.clone().map(|p| vec![p]),
@@ -59,7 +64,7 @@ pub fn build<R: Runtime>(app: &AppHandle<R>) -> tauri::Result<Menu<R>> {
         &[
             &Submenu::with_items(
                 app,
-                pkg_info.name.clone(),
+                product_name.clone(),
                 true,
                 &[
                     &PredefinedMenuItem::about(app, None, Some(about_metadata))?,

@@ -27,6 +27,7 @@ import { initializeSidebarDensityPreference } from "@/shared/lib/sidebarDensityP
 import { initializeSidebarChannelOrderPreference } from "@/features/sidebar/lib/sidebarChannelOrderPreference";
 import { initializeLocalePreference } from "@/shared/lib/localePreference";
 import { AppI18nProvider } from "@/shared/i18n/AppI18nProvider";
+import { applyBrandFavicon } from "@/shared/branding/applyBrandFavicon";
 
 type E2eWindow = Window & {
   __BUZZ_E2E__?: unknown;
@@ -133,6 +134,7 @@ async function installE2eBridgeIfConfigured() {
 async function bootstrap() {
   resetDevWebviewStateFromUrl();
   configureDevE2eBridgeFromUrl();
+  applyBrandFavicon();
   recoverLocalStorageQuotaOnStartup();
   initializeConversationDensityPreference();
   initializeFontSizePreference();
