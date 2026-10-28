@@ -25,6 +25,8 @@ export default defineConfig({
         "**/institutional-chrome.spec.ts",
         "**/kikeriki-theme.spec.ts",
         "**/onboarding-brand.spec.ts",
+        "**/boot-splash-brand.spec.ts",
+        "**/flavor-preview.spec.ts",
         "**/mock-subscription-readiness.spec.ts",
         "**/owned-agent-discovery.spec.ts",
         "**/thread-head-stale-edit.spec.ts",

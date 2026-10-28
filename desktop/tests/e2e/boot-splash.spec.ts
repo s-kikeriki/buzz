@@ -29,14 +29,25 @@ test("boot splash overlay holds with a flapping bee, then dismisses", async ({
   await expect(overlay).toBeVisible();
 
   // The bee is actually animating while the overlay holds — pure CSS, no SMIL.
-  const wingState = await overlay.locator(".bee-wing-left").evaluate((wing) => {
-    const animation = wing.getAnimations()[0];
-    return {
-      name: getComputedStyle(wing).animationName,
-      state: animation?.playState,
-    };
-  });
-  expect(wingState).toEqual({ name: "bee-wing-left-flap", state: "running" });
+  //
+  // Only this assertion is conditional, and on the runner's declaration rather
+  // than on what the screen renders: a bundle built with a flavor that ships
+  // its own mark has no bee here by design, and `boot-splash-brand.spec.ts`
+  // asserts what flies in its place and that it is moving. Everything else in
+  // this test — that the overlay holds, that the app mounts beneath it, that
+  // it fades and unmounts — is brand-independent and runs either way.
+  if (!process.env.BUZZ_E2E_FLAVOR) {
+    const wingState = await overlay
+      .locator(".bee-wing-left")
+      .evaluate((wing) => {
+        const animation = wing.getAnimations()[0];
+        return {
+          name: getComputedStyle(wing).animationName,
+          state: animation?.playState,
+        };
+      });
+    expect(wingState).toEqual({ name: "bee-wing-left-flap", state: "running" });
+  }
 
   // The app mounts and loads beneath the overlay — boot is not delayed.
   await expect(page.getByTestId("home-inbox-list")).toBeVisible();
