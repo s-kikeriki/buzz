@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { execFileSync } from "node:child_process";
 import { existsSync, readFileSync } from "node:fs";
 import path from "node:path";
 import test from "node:test";
@@ -628,37 +629,72 @@ test("only ki.keriki renames the theme; the others keep Buzz", () => {
   assert.equal(labels["KI.keri.KI"], undefined);
 });
 
-test("shell output quotes every value", () => {
-  const lines = flavorBuildEnvShell(
-    validateFlavor(goodFlavor({ displayName: "Acme's App" }), "acme"),
-  ).split("\n");
-  assert.ok(lines.includes(`BRAND_NAME='Acme'\\''s App'`));
+test("shell output exports and quotes every value", () => {
+  const flavor = validateFlavor(
+    goodFlavor({ displayName: "Acme's App" }),
+    "acme",
+  );
+  const lines = flavorBuildEnvShell(flavor).split("\n");
+  assert.ok(lines.includes(`export BRAND_NAME='Acme'\\''s App'`));
   for (const line of lines) {
-    assert.match(line, /^[A-Z0-9_]+='.*'$/);
+    assert.match(line, /^export [A-Z0-9_]+='.*'$/);
+  }
+  // Not one `export` keyword somewhere in the output — one per variable. A
+  // single `export A=1 B=2 …` line would satisfy the regex above only by
+  // accident, and a partially-exported block is the failure this guards.
+  assert.deepEqual(
+    lines.map((line) => line.slice("export ".length).split("=")[0]).sort(),
+    Object.keys(flavorBuildEnv(flavor)).sort(),
+  );
+});
+
+test("eval of the CLI output hands every variable to a child process", (t) => {
+  // The test the `20261028.0248` ki.keriki DMG needed. Its wrapper did
+  // `eval "$(flavor-config.mjs ki.keriki)"`, printed the flavor's values back
+  // from its own shell, and shipped a build whose frontend and build.rs had
+  // seen none of them: `eval` of a bare `KEY='value'` sets a shell variable,
+  // and only an exported one crosses into `pnpm` or `cargo`. An unexported
+  // variable and an unset one are indistinguishable to the build and to the
+  // log, so this asserts the crossing itself rather than the text that
+  // precedes it.
+  if (process.platform === "win32") {
+    t.skip("flavor builds are POSIX-only; no bash to eval with");
+    return;
+  }
+  const flavorId = "ki.keriki";
+  const expected = flavorBuildEnv(loadFlavor(flavorId));
+  const script =
+    `eval "$(node ${JSON.stringify(path.join(desktopDir, "scripts", "flavor-config.mjs"))} ${flavorId})"\n` +
+    // `node -p` is the child. It can only read what crossed the boundary.
+    `node -p 'JSON.stringify(process.env)'\n`;
+  const childEnv = JSON.parse(
+    execFileSync("bash", ["-c", script], {
+      cwd: desktopDir,
+      encoding: "utf8",
+      // Strip the operator's own BUZZ_*/VITE_* so a variable already present
+      // in this process cannot stand in for one the flavor failed to export.
+      env: Object.fromEntries(
+        Object.entries(process.env).filter(
+          ([key]) => !/^(BUZZ_|VITE_|DEMO_|BRAND_)/.test(key),
+        ),
+      ),
+    }),
+  );
+  for (const [key, value] of Object.entries(expected)) {
+    assert.equal(childEnv[key], value, `${key} did not reach the child`);
   }
 });
 
-test("the README exports every variable a flavor can emit", () => {
-  // This list drifted the moment `VITE_BUZZ_PRODUCT_LOGO` was added: `eval`
-  // set it, nothing exported it, so a build that followed the README shipped a
-  // DMG with no mark and no complaint. The failure is silent in both
-  // directions — an unexported variable reads exactly like an unset one — so
-  // the list has to be checked against the code rather than re-read by a human.
+test("the README documents every variable a flavor can emit", () => {
+  // The export list this test used to bind lived in the README, and binding it
+  // only ever protected the README: a wrapper written without reading it was
+  // still free to drop a name, which is exactly how `20261028.0248` shipped.
+  // `flavorBuildEnvShell` now exports on its own, so what is left to check is
+  // that each variable is described somewhere a reader can find it.
   const readme = readFileSync(
     path.join(desktopDir, "flavors", "README.md"),
     "utf8",
   );
-  const fenced = readme
-    .split("```")
-    .find((section) => section.includes("export "));
-  assert.ok(fenced, "the README must show how to export a flavor's env");
-  const tokens = fenced.replaceAll("\\\n", " ").split(/\s+/);
-  const exported = new Set(
-    tokens
-      .slice(tokens.indexOf("export") + 1)
-      .filter((token) => /^[A-Z][A-Z0-9_]*$/.test(token)),
-  );
-
   const emitted = new Set();
   for (const id of listFlavorIds()) {
     for (const key of Object.keys(
@@ -667,13 +703,11 @@ test("the README exports every variable a flavor can emit", () => {
       emitted.add(key);
     }
   }
-
-  assert.deepEqual([...exported].sort(), [...emitted].sort());
-  // The table below the snippet is the other copy of the same list.
+  assert.ok(emitted.size > 0);
   for (const key of emitted) {
     assert.ok(
       readme.includes(`\`${key}\``),
-      `${key} is exported but the README does not say what it does`,
+      `${key} is emitted but the README does not say what it does`,
     );
   }
 });
