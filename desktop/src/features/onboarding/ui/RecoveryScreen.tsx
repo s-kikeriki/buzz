@@ -1,5 +1,13 @@
 import { relaunch } from "@tauri-apps/plugin-process";
 
+import {
+  BRAND_ACCENT_STYLE,
+  BRAND_INK_SHELL_CLASS,
+  brandOnboardingColorScheme,
+} from "@/features/onboarding/brandSurface";
+import { BRAND } from "@/shared/branding/brand";
+import { cn } from "@/shared/lib/cn";
+
 import { useSystemColorScheme } from "@/shared/theme/useSystemColorScheme";
 import { Button } from "@/shared/ui/button";
 import { StartupWindowDragRegion } from "@/shared/ui/StartupWindowDragRegion";
@@ -17,9 +25,14 @@ export function RecoveryScreen({
 
   return (
     <div
-      className="buzz-onboarding-neutral-theme buzz-startup-shell flex items-center justify-center bg-background px-4 py-8 text-foreground"
-      data-system-color-scheme={systemColorScheme}
+      className={cn(
+        "buzz-onboarding-neutral-theme buzz-startup-shell flex items-center justify-center bg-background px-4 py-8 text-foreground",
+        BRAND_INK_SHELL_CLASS,
+      )}
+      data-brand-onboarding={BRAND_INK_SHELL_CLASS ? "ink" : undefined}
+      data-system-color-scheme={brandOnboardingColorScheme(systemColorScheme)}
       data-testid={testId}
+      style={BRAND_ACCENT_STYLE}
     >
       <StartupWindowDragRegion />
       <div className="relative flex w-full max-w-[500px] flex-col items-center text-center">
@@ -33,7 +46,7 @@ export function RecoveryScreen({
           }}
           type="button"
         >
-          Relaunch Buzz
+          Relaunch {BRAND.productName}
         </Button>
       </div>
     </div>

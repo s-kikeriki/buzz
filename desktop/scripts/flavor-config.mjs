@@ -222,6 +222,63 @@ export function validateFlavor(flavor, flavorId) {
     }
   }
 
+  if (flavor.logoMarkLight !== undefined) {
+    if (
+      typeof flavor.logoMarkLight !== "string" ||
+      flavor.logoMarkLight.trim().length === 0
+    ) {
+      fail(flavorId, "logoMarkLight must be a non-empty string");
+    }
+    if (escapesRepo(flavor.logoMarkLight)) {
+      fail(flavorId, "logoMarkLight must be a repo-relative path without `..`");
+    }
+    if (!flavor.logoMarkLight.endsWith(".svg")) {
+      fail(flavorId, "logoMarkLight must be an .svg");
+    }
+    if (flavor.logoMark === undefined) {
+      fail(flavorId, "logoMarkLight is set but no logoMark is declared");
+    }
+    if (flavor.logoStyle !== "color") {
+      // Same reason `logoLight` is refused under `mask`: a mask is painted in
+      // the surrounding foreground, so a second cut could never be displayed.
+      fail(flavorId, "logoMarkLight only applies to logoStyle color");
+    }
+  }
+
+  if (flavor.trayIcon !== undefined) {
+    if (
+      typeof flavor.trayIcon !== "string" ||
+      flavor.trayIcon.trim().length === 0
+    ) {
+      fail(flavorId, "trayIcon must be a non-empty string");
+    }
+    if (escapesRepo(flavor.trayIcon)) {
+      fail(flavorId, "trayIcon must be a repo-relative path without `..`");
+    }
+    if (!flavor.trayIcon.endsWith(".png")) {
+      // A raster, unlike every other mark in a flavor: this one is decoded by
+      // `png` in `src-tauri` and handed to AppKit as pixels. Nothing in the
+      // Rust build can rasterise an SVG, so an .svg here would be read as a
+      // PNG, fail to decode, and silently fall back to the bee.
+      fail(flavorId, "trayIcon must be a .png (a macOS template image)");
+    }
+  }
+
+  if (flavor.dmgBackground !== undefined) {
+    if (
+      typeof flavor.dmgBackground !== "string" ||
+      flavor.dmgBackground.trim().length === 0
+    ) {
+      fail(flavorId, "dmgBackground must be a non-empty string");
+    }
+    if (escapesRepo(flavor.dmgBackground)) {
+      fail(flavorId, "dmgBackground must be a repo-relative path without `..`");
+    }
+    if (!flavor.dmgBackground.endsWith(".png")) {
+      fail(flavorId, "dmgBackground must be a .png");
+    }
+  }
+
   if (flavor.logoStyle !== undefined) {
     if (!LOGO_STYLES.includes(flavor.logoStyle)) {
       fail(
@@ -287,6 +344,15 @@ export function validateFlavor(flavor, flavorId) {
     logoLight:
       typeof flavor.logoLight === "string" ? flavor.logoLight : undefined,
     logoMark: typeof flavor.logoMark === "string" ? flavor.logoMark : undefined,
+    logoMarkLight:
+      typeof flavor.logoMarkLight === "string"
+        ? flavor.logoMarkLight
+        : undefined,
+    trayIcon: typeof flavor.trayIcon === "string" ? flavor.trayIcon : undefined,
+    dmgBackground:
+      typeof flavor.dmgBackground === "string"
+        ? flavor.dmgBackground
+        : undefined,
     logoStyle:
       flavor.logo === undefined
         ? undefined
@@ -345,6 +411,13 @@ export function flavorBuildEnv(flavor, readFile = readFileSync) {
     BRAND_NAME: flavor.displayName,
     // In-app copy (`shared/branding/brand.ts`).
     VITE_BUZZ_PRODUCT_NAME: flavor.productName,
+    // The same name again, for the half of the app that is not the frontend:
+    // the macOS app menu, the About box and the tray's Open/Quit items are
+    // built in Rust and cannot read `import.meta.env`. Without it they fall
+    // back to Tauri's `productName`, which `demo-build-config.mjs` derives as
+    // `Buzz <demo name>` — which is why a fully branded ki.keriki build still
+    // had "Buzz kikeriki" in its About box and "Quit Buzz" in its menu bar.
+    BUZZ_BUILD_PRODUCT_NAME: flavor.productName,
     // Default relay baked into the binary (`relay::relay_ws_url`).
     BUZZ_RELAY_URL: flavor.relayUrl,
   };
@@ -384,6 +457,22 @@ export function flavorBuildEnv(flavor, readFile = readFileSync) {
   if (flavor.logoMark !== undefined) {
     const svg = readFile(path.join(desktopDir, flavor.logoMark), "utf8");
     env.VITE_BUZZ_PRODUCT_LOGO_MARK = `data:image/svg+xml;base64,${Buffer.from(svg, "utf8").toString("base64")}`;
+  }
+  if (flavor.logoMarkLight !== undefined) {
+    const svg = readFile(path.join(desktopDir, flavor.logoMarkLight), "utf8");
+    env.VITE_BUZZ_PRODUCT_LOGO_MARK_LIGHT = `data:image/svg+xml;base64,${Buffer.from(svg, "utf8").toString("base64")}`;
+  }
+  // Paths, not bytes, unlike the logos above: these two are read by a Cargo
+  // build script and a packaging shell script, both of which run from a known
+  // directory inside the checkout. Repo-relative rather than absolute so the
+  // emitted environment is the same on every machine — `build.rs` resolves
+  // against `CARGO_MANIFEST_DIR/..` and `package-macos-dmg.sh` against its own
+  // `$script_dir/..`, which are both this `desktop/` directory.
+  if (flavor.trayIcon !== undefined) {
+    env.BUZZ_BUILD_TRAY_ICON = flavor.trayIcon;
+  }
+  if (flavor.dmgBackground !== undefined) {
+    env.DMG_BACKGROUND = flavor.dmgBackground;
   }
   return env;
 }

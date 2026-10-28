@@ -12,6 +12,7 @@ import { getNsec } from "@/shared/api/tauriIdentity";
 import type { IdentityStorage } from "@/shared/api/types";
 import { cn } from "@/shared/lib/cn";
 import { writeTextToClipboard } from "@/shared/lib/clipboard";
+import { BrandMark } from "@/shared/ui/BrandMark";
 import { Button } from "@/shared/ui/button";
 import { FuzzyLogo } from "@/shared/ui/buzz-logo/FuzzyLogo";
 import { Spinner } from "@/shared/ui/spinner";
@@ -27,6 +28,7 @@ import {
 } from "./OnboardingSlideTransition";
 import { ONBOARDING_KEY_TEXT_CLASS } from "./NsecMaskedDisplay";
 import { ONBOARDING_CARD_NEUTRAL_SURFACE_CLASS } from "./onboardingCardStyles";
+import { BRAND } from "@/shared/branding/brand";
 
 /**
  * How long the "Creating your identity key" loader holds the stage before the
@@ -154,10 +156,10 @@ export function BackupStep({
 
   const storageDescription =
     identityStorage === "system-keyring"
-      ? "Buzz keeps your identity key in your system keychain. Your computer may ask for your password when Buzz needs to read the key."
+      ? `${BRAND.productName} keeps your identity key in your system keychain. Your computer may ask for your password when ${BRAND.productName} needs to read the key.`
       : identityStorage === "local-file"
-        ? "Your system keychain wasn’t available, so Buzz keeps your identity key in a private file on this device."
-        : "Buzz keeps your identity key protected on this device. Make a separate backup in case you lose access.";
+        ? `Your system keychain wasn’t available, so ${BRAND.productName} keeps your identity key in a private file on this device.`
+        : `${BRAND.productName} keeps your identity key protected on this device. Make a separate backup in case you lose access.`;
   const storageTitle =
     identityStorage === "system-keyring"
       ? "Protected by your system keychain"
@@ -190,9 +192,9 @@ export function BackupStep({
               cardLayout ? "mt-2 text-base" : "mt-5 text-sm",
             )}
           >
-            Your identity key works like a password for your Buzz account. Keep
-            a copy somewhere safe. You can create a backup file and lock it with
-            a password you can remember.
+            Your identity key works like a password for your {BRAND.productName}{" "}
+            account. Keep a copy somewhere safe. You can create a backup file
+            and lock it with a password you can remember.
           </p>
         </div>
 
@@ -353,12 +355,25 @@ export function BackupStep({
           className="flex w-full flex-1 items-center justify-center py-10"
           data-testid="backup-intro-logo"
         >
-          <FuzzyLogo
-            ariaLabel="Creating your identity key"
-            className="w-20! text-foreground"
-            fuzz
-            loop
-            loopRestSeconds={0}
+          {/*
+            The light cut: this sits inside the onboarding content card, which
+            is white on every build — the ink shell behind it does not reach
+            here. The brand's negative mark would be white on white.
+          */}
+          <BrandMark
+            className="w-20"
+            fallback={
+              <FuzzyLogo
+                ariaLabel="Creating your identity key"
+                className="w-20! text-foreground"
+                fuzz
+                loop
+                loopRestSeconds={0}
+              />
+            }
+            label="Creating your identity key"
+            motion
+            surface="light"
           />
         </div>
       ) : (

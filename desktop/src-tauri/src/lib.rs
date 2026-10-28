@@ -2,6 +2,7 @@
 mod app_menu;
 mod app_state;
 mod archive;
+mod brand;
 mod build_identity;
 mod builderlab;
 mod channel_head_cache;
@@ -240,6 +241,20 @@ pub fn run() {
         .manage(channel_head_cache::ChannelHeadCacheStore::default())
         .setup(move |app| {
             let app_handle = app.handle().clone();
+
+            // `tauri.conf.json` hardcodes the window title as "Buzz" and the
+            // demo overlay does not override it, so a branded build carried it
+            // into the Window menu and into every screen reader. Set here
+            // rather than in the overlay config: `windows` is an array, and a
+            // `--config` merge replaces an array wholesale, which would drop
+            // every other property of the main window to change one string.
+            if let Some(window) = app_handle.get_webview_window("main") {
+                let title = brand::product_name(app_handle.package_info().name.as_str());
+                if let Err(error) = window.set_title(title) {
+                    eprintln!("buzz-desktop: failed to set the window title: {error}");
+                }
+            }
+
             #[cfg(target_os = "macos")]
             {
                 tray_menu::init(&app_handle)?;

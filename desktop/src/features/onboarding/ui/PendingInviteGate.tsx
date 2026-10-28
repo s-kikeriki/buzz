@@ -1,5 +1,13 @@
+import {
+  BRAND_ACCENT_STYLE,
+  BRAND_INK_SHELL_CLASS,
+  BRAND_ONBOARDING_SURFACE,
+  brandOnboardingColorScheme,
+} from "@/features/onboarding/brandSurface";
 import { useCommunityOnboarding } from "@/features/onboarding/communityOnboarding";
+import { cn } from "@/shared/lib/cn";
 import { useSystemColorScheme } from "@/shared/theme/useSystemColorScheme";
+import { BrandMark } from "@/shared/ui/BrandMark";
 import { Button } from "@/shared/ui/button";
 import { FlappingBee } from "@/shared/ui/buzz-logo/FlappingBee";
 import { StartupWindowDragRegion } from "@/shared/ui/StartupWindowDragRegion";
@@ -17,13 +25,23 @@ export function PendingInviteGate() {
 
   return (
     <div
-      className="buzz-onboarding-neutral-theme buzz-startup-shell fixed inset-0 z-50 flex items-center justify-center bg-background px-4 py-8 text-foreground"
-      data-system-color-scheme={systemColorScheme}
+      className={cn(
+        "buzz-onboarding-neutral-theme buzz-startup-shell fixed inset-0 z-50 flex items-center justify-center bg-background px-4 py-8 text-foreground",
+        BRAND_INK_SHELL_CLASS,
+      )}
+      data-brand-onboarding={BRAND_INK_SHELL_CLASS ? "ink" : undefined}
+      data-system-color-scheme={brandOnboardingColorScheme(systemColorScheme)}
       data-testid="pending-invite-gate"
+      style={BRAND_ACCENT_STYLE}
     >
       <StartupWindowDragRegion />
       <div className="relative flex w-full max-w-[500px] flex-col items-center text-center">
-        <FlappingBee className="h-auto w-24" />
+        <BrandMark
+          className="h-auto w-24"
+          fallback={<FlappingBee className="h-auto w-24" />}
+          motion
+          surface={BRAND_ONBOARDING_SURFACE}
+        />
         <h1 className="mt-6 text-3xl font-semibold tracking-tight">
           Opening community link
         </h1>

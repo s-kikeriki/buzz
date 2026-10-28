@@ -1,5 +1,18 @@
 import { defineConfig, devices } from "@playwright/test";
 
+/**
+ * The port the built frontend is served on.
+ *
+ * Overridable because `reuseExistingServer` is on outside CI: a server already
+ * listening on the default port is reused whatever it is serving. The flavor
+ * preview viewer holds one open for as long as someone is looking at it, so a
+ * suite run alongside it silently tests that other worktree's `dist` and
+ * reports it as this one's result. Giving the run its own port is the fix that
+ * does not involve closing someone's window.
+ */
+const PORT = process.env.BUZZ_E2E_PORT ?? "4173";
+const BASE_URL = `http://127.0.0.1:${PORT}`;
+
 export default defineConfig({
   testDir: "./tests/e2e",
   timeout: 30_000,
@@ -10,7 +23,7 @@ export default defineConfig({
     ["html", { open: "never", outputFolder: "playwright-report" }],
   ],
   use: {
-    baseURL: "http://127.0.0.1:4173",
+    baseURL: BASE_URL,
     screenshot: "only-on-failure",
     trace: "on-first-retry",
     video: "retain-on-failure",
@@ -25,6 +38,7 @@ export default defineConfig({
         "**/institutional-chrome.spec.ts",
         "**/kikeriki-theme.spec.ts",
         "**/onboarding-brand.spec.ts",
+        "**/first-run-brand.spec.ts",
         "**/boot-splash-brand.spec.ts",
         "**/flavor-preview.spec.ts",
         "**/mock-subscription-readiness.spec.ts",
@@ -228,9 +242,9 @@ export default defineConfig({
     },
   ],
   webServer: {
-    command: "python3 -m http.server 4173 -d dist",
+    command: `python3 -m http.server ${PORT} -d dist`,
     cwd: ".",
     reuseExistingServer: !process.env.CI,
-    url: "http://127.0.0.1:4173",
+    url: BASE_URL,
   },
 });

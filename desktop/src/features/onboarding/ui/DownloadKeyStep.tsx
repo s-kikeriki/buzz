@@ -18,6 +18,7 @@ import {
   type EncryptedBackupSession,
   EncryptedBackupCreator,
 } from "./EncryptedBackupCreator";
+import { BRAND } from "@/shared/branding/brand";
 
 type DownloadKeyStepProps = {
   direction: OnboardingTransitionDirection;
@@ -105,7 +106,7 @@ export function DownloadKeyStep({
               ? "Enter your password to make sure you can unlock this file."
               : hasCreated
                 ? "Test your backup to make sure it works, or continue without testing."
-                : "This creates a password-protected file with your private key. Remember, Buzz can’t recover your key if you lose it."}
+                : `This creates a password-protected file with your private key. Remember, ${BRAND.productName} can’t recover your key if you lose it.`}
         </p>
       </motion.div>
 

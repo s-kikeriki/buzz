@@ -14,10 +14,40 @@ the path is repo-relative.
 
 Our own brand marks, and nothing else.
 
-| File | Flavor |
-|---|---|
-| `ki.keriki.icns` | `ki.keriki.json` |
-| `zeniad.icns` | `zeniad.json` |
+| File | Flavor | Field |
+|---|---|---|
+| `ki.keriki.icns` | `ki.keriki.json` | `icon` |
+| `ki.keriki-tray.png` | `ki.keriki.json` | `trayIcon` |
+| `ki.keriki-dmg-background.png` | `ki.keriki.json` | `dmgBackground` |
+| `zeniad.icns` | `zeniad.json` | `icon` |
+
+## The menu-bar glyph
+
+`trayIcon` is a **macOS template image**: black ink on transparent, read for
+its alpha alone, because AppKit tints it itself for a light or dark menu bar.
+`src-tauri/src/brand.rs` decodes it with `png` and hands AppKit the raw RGBA,
+so it has to be a raster — nothing in the Rust build can rasterise an SVG, and
+an `.svg` here is refused rather than silently falling back to the Buzz bee.
+
+`ki.keriki-tray.png` is 38x43, rendered from `logos/ki.keriki-mark.svg` with
+every fill forced to black and the viewBox trimmed to the ink. 43px tall is
+the Buzz bee's own height, so the brand glyph occupies the same space in the
+menu bar as the one it replaces. The `ki` counters come through as holes in
+the alpha, which is what keeps it from reading as a filled blob at 22pt.
+
+## The DMG panel
+
+`dmgBackground` is the picture behind the drag-to-Applications window — the
+first thing anyone sees of the app, before it is even installed.
+`scripts/package-macos-dmg.sh` reads it from `DMG_BACKGROUND`; with no flavor
+value it keeps `src-tauri/icons/dmg-background.png`, which is Buzz's.
+
+Every ki.keriki DMG so far has in fact shown a kikeriki panel, by a build
+wrapper that overwrote the repo's file for the duration of the build from an
+asset living outside the checkout. That works and is invisible: the panel is
+absent from the diff, and a build on any other machine ships the Buzz one.
+1320x1000 at 144 dpi, matching the stock file — `verify-macos-dmg.sh` checks
+the DPI, and a 72 dpi panel renders at double size in the Finder window.
 
 **Bake the rounding into the icon, do not inherit it.** `ki.keriki.icns` is
 the squircle-masked build (sha256 `171d08b6…`), replacing a full-bleed opaque

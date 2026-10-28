@@ -7,6 +7,91 @@ include!("src/managed_agents/reserved_env_keys.rs");
 
 use base64::Engine as _;
 
+/// The display name the native shell uses: app menu, About box, tray items,
+/// window title.
+///
+/// The frontend reads its own name from `VITE_BUZZ_PRODUCT_NAME`, which Rust
+/// cannot see. Without this the native half falls back to Tauri's
+/// `productName`, which `demo-build-config.mjs` derives as `Buzz <demo name>`
+/// — so a build whose every window said ki.keriki still had "Buzz kikeriki" in
+/// its About box and "Quit Buzz" in its menu bar.
+///
+/// Trimmed and refused when empty rather than baked blank: an empty menu title
+/// is a macOS app menu with no name at all, which is harder to notice than a
+/// wrong one.
+fn bake_brand_product_name() {
+    let Ok(raw) = std::env::var("BUZZ_BUILD_PRODUCT_NAME") else {
+        return;
+    };
+    let name = raw.trim();
+    if name.is_empty() {
+        panic!("BUZZ_BUILD_PRODUCT_NAME must not be empty or whitespace");
+    }
+    println!("cargo:rustc-env=BUZZ_DESKTOP_BUILD_PRODUCT_NAME={name}");
+}
+
+/// The menu-bar glyph, copied into `OUT_DIR` for `include_bytes!`.
+///
+/// A raster, unlike every other brand asset: `tray_menu.rs` hands AppKit raw
+/// RGBA, and nothing in this toolchain can rasterise an SVG. The flavor
+/// commits a template PNG — black ink on transparent, since macOS tints a
+/// template image itself and reads only the alpha — and this copies it next to
+/// the build output so the binary carries it with no path to resolve at run
+/// time.
+///
+/// The file is written on *every* build, empty when no flavor declares one, so
+/// the `include_bytes!` on the other side always has something to include and
+/// the choice stays a runtime `is_empty()` rather than a `cfg` that has to be
+/// kept in step with this function.
+///
+/// The declared path is repo-relative to `desktop/`, so a flavor file means
+/// the same thing on every machine; it is resolved here against
+/// `CARGO_MANIFEST_DIR`, which is `desktop/src-tauri`.
+fn bake_brand_tray_icon() {
+    let out_dir = std::env::var("OUT_DIR").expect("OUT_DIR is always set for a build script");
+    let destination = std::path::Path::new(&out_dir).join("brand-tray-icon.png");
+
+    let bytes = match std::env::var("BUZZ_BUILD_TRAY_ICON") {
+        Err(_) => Vec::new(),
+        Ok(relative) => {
+            let desktop_dir = std::path::Path::new(
+                &std::env::var("CARGO_MANIFEST_DIR")
+                    .expect("CARGO_MANIFEST_DIR is always set for a build script"),
+            )
+            .parent()
+            .expect("src-tauri always has a parent")
+            .to_path_buf();
+            let source = desktop_dir.join(&relative);
+            println!("cargo:rerun-if-changed={}", source.display());
+            // Refused rather than skipped. A missing icon that silently fell
+            // back to the bee would ship a Buzz glyph in the menu bar of a
+            // build whose flavor explicitly asked for its own, and the only
+            // evidence would be a screenshot nobody takes of a 22pt icon.
+            std::fs::read(&source).unwrap_or_else(|error| {
+                panic!(
+                    "BUZZ_BUILD_TRAY_ICON points at {} which could not be read: {error}",
+                    source.display()
+                )
+            })
+        }
+    };
+
+    std::fs::write(&destination, &bytes).unwrap_or_else(|error| {
+        panic!(
+            "failed to write {} for the tray icon: {error}",
+            destination.display()
+        )
+    });
+
+    // A marker the other side can compare itself against. Without it the
+    // tests can only say "the glyph decodes if there is one", which passes
+    // identically on a build that silently baked nothing — and a build that
+    // silently baked nothing is the whole failure being guarded against.
+    if !bytes.is_empty() {
+        println!("cargo:rustc-env=BUZZ_DESKTOP_BUILD_HAS_TRAY_ICON=1");
+    }
+}
+
 fn main() {
     println!("cargo:rerun-if-env-changed=BUZZ_RELAY_URL");
     println!("cargo:rerun-if-env-changed=BUZZ_RELAY_HTTP");
@@ -19,7 +104,12 @@ fn main() {
     println!("cargo:rerun-if-env-changed=BUZZ_BUILD_AGENT_ACCESS_OWNER_ONLY");
     println!("cargo:rerun-if-env-changed=BUZZ_BUILD_AUTO_CONNECT_DEFAULT_RELAY");
     println!("cargo:rerun-if-env-changed=BUZZ_BUILD_DEMO_SLUG");
+    println!("cargo:rerun-if-env-changed=BUZZ_BUILD_PRODUCT_NAME");
+    println!("cargo:rerun-if-env-changed=BUZZ_BUILD_TRAY_ICON");
     println!("cargo:rustc-check-cfg=cfg(buzz_updater_enabled)");
+
+    bake_brand_product_name();
+    bake_brand_tray_icon();
 
     if let Ok(slug) = std::env::var("BUZZ_BUILD_DEMO_SLUG") {
         let valid = !slug.is_empty()

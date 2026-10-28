@@ -35,6 +35,9 @@ flavor is always an explicit choice at build time.
   "logoStyle": "mask",                    // optional, "mask" (default) or "color"
   "logoLight": "flavors/logos/acme-light.svg", // optional light-theme cut, "color" only
   "logoMark": "flavors/logos/acme-mark.svg",   // optional glyph-sized companion mark
+  "logoMarkLight": "flavors/logos/acme-mark-light.svg", // optional light cut of it, "color" only
+  "trayIcon": "flavors/icons/acme-tray.png",   // optional macOS menu-bar template PNG
+  "dmgBackground": "flavors/icons/acme-dmg.png", // optional DMG window panel
   "relayUrl": "wss://relay.acme.test",    // default relay baked into the binary
   "autoConnectDefaultRelay": true,        // optional, default false
   "accentColor": "#3b82f6",               // optional, lowercase #rrggbb
@@ -120,9 +123,13 @@ frozen app.
 | `VITE_BUZZ_PRODUCT_LOGO` | `shared/branding/brandLogo.ts` | The flavor's `logo` file, base64 into a `data:image/svg+xml` URL. Omitted when the flavor declares none |
 | `VITE_BUZZ_PRODUCT_LOGO_LIGHT` | `shared/branding/brandLogo.ts` | The flavor's `logoLight` file, same encoding. The light theme shows this cut and the dark theme shows the one above |
 | `VITE_BUZZ_PRODUCT_LOGO_MARK` | `shared/branding/brandLogo.ts` | The flavor's `logoMark` file, same encoding. Glyph-sized companion to the wordmark; the onboarding landing field drifts this instead of the Buzz bees. A build that declares none keeps the bees |
+| `VITE_BUZZ_PRODUCT_LOGO_MARK_LIGHT` | `shared/branding/brandLogo.ts` | The flavor's `logoMarkLight` file, same encoding. The cut for a light surface — the onboarding content card, the hosted-community dialog, a light-mode community switch. Omitted when the flavor declares none, which paints the cut above everywhere |
 | `VITE_BUZZ_PRODUCT_LOGO_STYLE` | `shared/branding/brandLogo.ts` | `mask` or `color` — recolour that file to the theme, or paint it as it is. Emitted with the logo, never without it |
 | `VITE_BUZZ_CHROME_SURFACE` | `shared/branding/brandChrome.ts` | `auto` or `ink` — whether the navigation rail follows the document's light/dark mode, or stays on the dark surface in both. Always emitted, including at the default |
 | `VITE_BUZZ_THEME_LABEL` | `shared/branding/brandThemeLabel.ts` | What the appearance picker calls the first-party theme pair, in place of "Buzz" / "Buzz Dark". The `buzz` / `buzz-dark` identifiers are untouched — they are what storage and `theme.css` match on. Omitted when the flavor declares none, which keeps the Buzz labels |
+| `BUZZ_BUILD_PRODUCT_NAME` | `src-tauri/build.rs` → `src-tauri/src/brand.rs` | The same name again, for the half of the app that is **not** the frontend: the macOS app menu and its About box, the tray's Open/Quit items, the window title. Rust cannot read `import.meta.env`, and without this it falls back to Tauri's `productName`, which `demo-build-config.mjs` derives as `Buzz <demo name>` |
+| `BUZZ_BUILD_TRAY_ICON` | `src-tauri/build.rs` → `src-tauri/src/brand.rs` | Repo-relative path to the flavor's `trayIcon`, embedded at compile time. A **raster**, unlike every other mark here: the menu-bar glyph is handed to AppKit as pixels and nothing in the Rust build can rasterise an SVG. Omitted when the flavor declares none, which keeps the Buzz bee |
+| `DMG_BACKGROUND` | `scripts/package-macos-dmg.sh` | Repo-relative path to the flavor's `dmgBackground`. Omitted when the flavor declares none, which keeps the stock panel |
 | `BUZZ_RELAY_URL` | `src-tauri/build.rs` → `relay::relay_ws_url` | Default relay |
 | `BUZZ_BUILD_AUTO_CONNECT_DEFAULT_RELAY` | `commands::identity` | Connect to that relay without asking |
 

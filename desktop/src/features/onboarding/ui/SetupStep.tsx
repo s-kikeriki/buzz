@@ -37,6 +37,7 @@ import {
   OnboardingSlideTransition,
 } from "./OnboardingSlideTransition";
 import type { SetupStepActions, SetupStepState } from "./types";
+import { BRAND } from "@/shared/branding/brand";
 type SetupStepProps = {
   actions: SetupStepActions;
   direction: OnboardingTransitionDirection;
@@ -859,7 +860,7 @@ function RuntimeSetupGuide({
   const subscriptionDetail =
     method === "subscription"
       ? {
-          description: `Buzz will open a sign-in window for ${label}.`,
+          description: `${BRAND.productName} will open a sign-in window for ${label}.`,
           title: SUBSCRIPTION_NAMES[runtime.id] ?? label,
         }
       : undefined;

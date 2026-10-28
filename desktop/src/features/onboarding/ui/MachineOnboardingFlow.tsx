@@ -9,6 +9,10 @@ import {
 } from "@/shared/api/tauriIdentity";
 import type { IdentityStorage } from "@/shared/api/types";
 import { BRAND } from "@/shared/branding/brand";
+import {
+  BRAND_ACCENT_STYLE,
+  BRAND_INK_ONBOARDING,
+} from "@/features/onboarding/brandSurface";
 import { cn } from "@/shared/lib/cn";
 import { Button } from "@/shared/ui/button";
 import { StartupWindowDragRegion } from "@/shared/ui/StartupWindowDragRegion";
@@ -44,31 +48,6 @@ import {
 import { SetupStep } from "./SetupStep";
 import type { HarnessConnectionMethod } from "./harnessConnectionOptions";
 import type { DefaultConfigDraft } from "./types";
-
-/**
- * Whether this build paints the onboarding canvas on the brand's ink surface.
- *
- * The same flavor fact that keeps the navigation rail dark in both document
- * modes — a brand whose house style is a black header over a white body. The
- * onboarding canvas is chrome, so it follows the same declaration rather than
- * a second one that could disagree with it.
- */
-const BRAND_INK_ONBOARDING = BRAND.chromeSurface === "ink";
-
-/**
- * The flavor's accent, handed to the stylesheet rather than written into it.
- *
- * `components.css` must stay organisation-neutral — no flavor's colour is
- * baked into the trunk — so the brand-ink block reads `--buzz-brand-accent`
- * and this supplies it from the build's own configuration. `undefined` on a
- * build with no configured accent leaves the block's own fallback in place.
- */
-const BRAND_ACCENT_STYLE =
-  BRAND_INK_ONBOARDING && BRAND.configuredAccentColor !== null
-    ? ({
-        "--buzz-brand-accent": BRAND.configuredAccentColor,
-      } as React.CSSProperties)
-    : undefined;
 
 export type MachineOnboardingPage =
   | "identity"
@@ -475,7 +454,8 @@ export function MachineOnboardingFlow({
                 Restore from a backup file
               </h1>
               <p className="mt-2 w-full text-base leading-6 text-foreground/80">
-                Choose the encrypted backup file you saved from Buzz.
+                Choose the encrypted backup file you saved from{" "}
+                {BRAND.productName}.
               </p>
               <NostrKeyImportForm
                 key={keyImportFormKey}
@@ -499,7 +479,7 @@ export function MachineOnboardingFlow({
               </h1>
               <p className="mt-2 w-full text-base leading-6 text-foreground/80">
                 {phoneRecoveryStep === "loading" || phoneRecoveryStep === "qr"
-                  ? "Scan this code with a device where you’re currently signed in to Buzz."
+                  ? `Scan this code with a device where you’re currently signed in to ${BRAND.productName}.`
                   : "Confirm the code before sharing your identity."}
               </p>
               <div
@@ -534,8 +514,8 @@ export function MachineOnboardingFlow({
                     "Enter your backup password to restore your identity."
                   ) : (
                     <p>
-                      Paste your private key to sign in to Buzz. You can also
-                      use a{" "}
+                      Paste your private key to sign in to {BRAND.productName}.
+                      You can also use a{" "}
                       <button
                         className="rounded-sm font-medium underline decoration-foreground/40 underline-offset-4 transition-colors hover:decoration-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-60"
                         data-testid="nostr-import-file-button"
