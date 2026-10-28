@@ -345,12 +345,29 @@ function shellQuote(value) {
   return `'${value.replaceAll("'", `'\\''`)}'`;
 }
 
-/** `KEY='value'` lines, one per variable, ready to `eval` or `source`. */
+/**
+ * `export KEY='value'` lines, one per variable, ready to `eval` or `source`.
+ *
+ * The `export` is the point. These values only do anything in the Vite and
+ * Cargo child processes, and a plain `KEY='value'` that is `eval`ed sets a
+ * shell variable that no child ever sees — while still reading back correctly
+ * from the calling script's own `echo`. That is not a hypothetical: the
+ * `20261028.0248` ki.keriki DMG was built by a wrapper that `eval`ed this
+ * output and named only four variables on the build command line. It shipped
+ * with no brand mark, the stock accent, `auto` chrome and
+ * `ws://localhost:3000` as its baked relay, and its build log printed the
+ * flavor's real values on the way past.
+ *
+ * Exporting here rather than documenting an export list makes the one correct
+ * usage — `eval "$(flavor-config.mjs <id>)"` — complete on its own. A caller
+ * cannot forget a name it never has to type, and the next variable added to
+ * {@link flavorBuildEnv} reaches every existing caller with no edit.
+ */
 export function flavorBuildEnvShell(flavor, readFile = readFileSync) {
   const env = flavorBuildEnv(flavor, readFile);
   return Object.keys(env)
     .sort()
-    .map((key) => `${key}=${shellQuote(env[key])}`)
+    .map((key) => `export ${key}=${shellQuote(env[key])}`)
     .join("\n");
 }
 

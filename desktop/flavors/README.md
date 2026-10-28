@@ -81,21 +81,26 @@ flavor, so a bad edit fails the test suite rather than a release.
 
 ```sh
 cd desktop
-node scripts/flavor-config.mjs zeniad          # KEY='value' lines
+node scripts/flavor-config.mjs zeniad          # export KEY='value' lines
 node scripts/flavor-config.mjs zeniad --json   # the resolved flavor
-eval "$(node scripts/flavor-config.mjs zeniad)" && export \
-  BRAND_NAME BUZZ_BUILD_DEMO_SLUG BUZZ_RELAY_URL DEMO_BUILD_ID DEMO_NAME \
-  VITE_BUZZ_PRODUCT_NAME VITE_BUZZ_DEFAULT_ACCENT_COLOR \
-  VITE_BUZZ_PRODUCT_LOGO VITE_BUZZ_PRODUCT_LOGO_LIGHT \
-  VITE_BUZZ_PRODUCT_LOGO_STYLE VITE_BUZZ_CHROME_SURFACE \
-  BUZZ_BUILD_AUTO_CONNECT_DEFAULT_RELAY
+eval "$(node scripts/flavor-config.mjs zeniad)"
 ```
 
-`eval` sets the variables; only `export` hands them to the Vite and Cargo
-child processes. A name left out of that list is read as unset by the build,
-and the result is a DMG missing whatever it configured — no accent, no mark —
-with nothing in the log to say so. `flavor-config.test.mjs` binds this list to
-the variables `flavorBuildEnv` can emit, so the next one cannot be forgotten.
+That one `eval` is the whole step: every line carries its own `export`, so the
+variables cross into the Vite and Cargo child processes that are the only
+things which read them, and a variable added to `flavorBuildEnv` later reaches
+this caller with no edit here.
+
+It used to be `eval` plus a hand-written `export` list, and the list is how the
+`20261028.0248` ki.keriki DMG went wrong: a build wrapper written without
+reading this file `eval`ed the output, named four variables on its build
+command line, and shipped an app with no brand mark, the stock accent, `auto`
+chrome and `ws://localhost:3000` as its baked relay. Nothing failed. An
+unexported variable and an unset one are indistinguishable to the build, and
+the wrapper's own `echo` printed the flavor's real values on the way past,
+because a shell variable is exactly what `echo` can see and `pnpm` cannot.
+`flavor-config.test.mjs` now `eval`s this command in a real shell and asserts
+every variable arrives in a child process.
 
 A frozen or example flavor exits non-zero with the reason instead of printing
 an environment. `--allow-frozen` overrides that for a deliberate rebuild of a
