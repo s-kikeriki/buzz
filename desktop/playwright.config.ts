@@ -29,6 +29,7 @@ export default defineConfig({
         "**/sidebar-subsections.spec.ts",
         "**/sidebar-section-recency.spec.ts",
         "**/sidebar-pinned-rail.spec.ts",
+        "**/sidebar-brand-logo-screenshots.spec.ts",
         "**/tooltip-semantics.spec.ts",
         "**/search-scope-screenshots.spec.ts",
         "**/onboarding-docked-cta-screenshots.spec.ts",
