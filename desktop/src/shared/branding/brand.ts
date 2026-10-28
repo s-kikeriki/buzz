@@ -55,6 +55,14 @@ export const BRAND = {
   productLogoLightUrl: parseProductLogoUrl(
     import.meta.env?.VITE_BUZZ_PRODUCT_LOGO_LIGHT,
   ),
+  /**
+   * The compact companion mark, for places that want the brand at glyph size
+   * rather than as a wordmark — today the onboarding landing field. `null` on
+   * a build that declared none.
+   */
+  productLogoMarkUrl: parseProductLogoUrl(
+    import.meta.env?.VITE_BUZZ_PRODUCT_LOGO_MARK,
+  ),
   /** Whether that logo is recoloured to the theme or painted as it is. */
   productLogoStyle: parseProductLogoStyle(
     import.meta.env?.VITE_BUZZ_PRODUCT_LOGO_STYLE,

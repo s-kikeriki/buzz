@@ -8,6 +8,8 @@ import {
   persistCurrentIdentity,
 } from "@/shared/api/tauriIdentity";
 import type { IdentityStorage } from "@/shared/api/types";
+import { BRAND } from "@/shared/branding/brand";
+import { cn } from "@/shared/lib/cn";
 import { Button } from "@/shared/ui/button";
 import { StartupWindowDragRegion } from "@/shared/ui/StartupWindowDragRegion";
 import { BackupStep } from "./BackupStep";
@@ -24,7 +26,7 @@ import {
 } from "./IdentityKeyHelpDialog";
 import { IdentityKeyIntroduction } from "./IdentityKeyIntroduction";
 import { IdentityRecoveryPairing } from "./IdentityRecoveryPairing";
-import { LandingBees } from "./LandingBees";
+import { LandingMarks } from "./LandingMarks";
 import {
   NostrKeyImportForm,
   type NostrKeyImportStage,
@@ -42,6 +44,31 @@ import {
 import { SetupStep } from "./SetupStep";
 import type { HarnessConnectionMethod } from "./harnessConnectionOptions";
 import type { DefaultConfigDraft } from "./types";
+
+/**
+ * Whether this build paints the onboarding canvas on the brand's ink surface.
+ *
+ * The same flavor fact that keeps the navigation rail dark in both document
+ * modes — a brand whose house style is a black header over a white body. The
+ * onboarding canvas is chrome, so it follows the same declaration rather than
+ * a second one that could disagree with it.
+ */
+const BRAND_INK_ONBOARDING = BRAND.chromeSurface === "ink";
+
+/**
+ * The flavor's accent, handed to the stylesheet rather than written into it.
+ *
+ * `components.css` must stay organisation-neutral — no flavor's colour is
+ * baked into the trunk — so the brand-ink block reads `--buzz-brand-accent`
+ * and this supplies it from the build's own configuration. `undefined` on a
+ * build with no configured accent leaves the block's own fallback in place.
+ */
+const BRAND_ACCENT_STYLE =
+  BRAND_INK_ONBOARDING && BRAND.configuredAccentColor !== null
+    ? ({
+        "--buzz-brand-accent": BRAND.configuredAccentColor,
+      } as React.CSSProperties)
+    : undefined;
 
 export type MachineOnboardingPage =
   | "identity"
@@ -328,11 +355,16 @@ export function MachineOnboardingFlow({
   if (page === "identity") {
     return (
       <div
-        className="buzz-onboarding-neutral-theme buzz-startup-shell buzz-onboarding-welcome flex max-h-dvh items-start justify-center overflow-x-hidden overflow-y-auto px-4 py-8 text-foreground"
+        className={cn(
+          "buzz-onboarding-neutral-theme buzz-startup-shell buzz-onboarding-welcome flex max-h-dvh items-start justify-center overflow-x-hidden overflow-y-auto px-4 py-8 text-foreground",
+          BRAND_INK_ONBOARDING && "buzz-onboarding-brand-ink",
+        )}
+        data-brand-onboarding={BRAND_INK_ONBOARDING ? "ink" : undefined}
         data-testid="machine-onboarding-gate"
+        style={BRAND_ACCENT_STYLE}
       >
         <StartupWindowDragRegion />
-        <LandingBees />
+        <LandingMarks />
         <OnboardingFooterProvider>
           <div className="relative my-auto flex w-full max-w-[1040px] flex-col items-center text-center">
             <OnboardingSlideTransition
@@ -341,9 +373,9 @@ export function MachineOnboardingFlow({
               transitionKey={`machine-identity-${transitionDirection}`}
             >
               <img
-                alt="Buzz"
+                alt={BRAND.productName}
                 className="w-full max-w-[600px]"
-                src="/landing/buzz-wordmark.png"
+                src={BRAND.productLogoUrl ?? "/landing/buzz-wordmark.png"}
               />
               <p className="mt-2 max-w-[560px] text-center text-2xl font-normal leading-none text-foreground">
                 Your people, your agents, your projects —<br />

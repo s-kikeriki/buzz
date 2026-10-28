@@ -349,6 +349,68 @@
   }
 
   /*
+   * Onboarding for a brand whose house surface is ink.
+   *
+   * The first screen a new install shows was the one place a fully branded
+   * build still said Buzz: chartreuse field, bee marks, Buzz wordmark. This
+   * repaints the same screen in the brand's own neutrals — it changes no
+   * geometry, no motion and no copy, only the values the existing tokens
+   * already route through, which is why the landing keeps its dot grid, its
+   * docked-footer scrim and its CTA shapes untouched.
+   *
+   * `#08090a` is the brand's own black, the value its logo ident and its mail
+   * avatar are cut on, rather than a darkened chartreuse. The accent stays a
+   * rim: it is the CTA label and the focus ring, not a fill.
+   */
+  .buzz-onboarding-brand-ink {
+    color-scheme: dark;
+    --buzz-welcome-chartreuse: #08090a;
+    --buzz-onboarding-shell-bottom: #08090a;
+    /*
+     * The CTA pill inverts on ink — it is the foreground, not a dark chip —
+     * so its label is the canvas it sits on, exactly the relationship the
+     * chartreuse landing CTA has on stock. The accent is deliberately NOT
+     * used here: #d4f247 on a white pill is about 1.2:1, which is a brand
+     * colour applied where it cannot be read.
+     */
+    --buzz-onboarding-cta-label: #08090a;
+    --buzz-onboarding-landing-cta-label: #08090a;
+    --buzz-onboarding-backup-ink: var(--buzz-brand-accent, #d4f247);
+    --background: 220 11% 4%;
+    --foreground: 0 0% 96%;
+    --card: 220 11% 8%;
+    --card-foreground: 0 0% 96%;
+    --popover: 220 11% 7%;
+    --popover-foreground: 0 0% 96%;
+    --primary: 0 0% 96%;
+    --primary-foreground: 220 11% 4%;
+    --secondary: 0 0% 12%;
+    --secondary-foreground: 0 0% 96%;
+    --muted: 0 0% 12%;
+    --muted-foreground: 0 0% 72%;
+    --accent: 0 0% 16%;
+    --accent-foreground: 0 0% 96%;
+    --border: 0 0% 22%;
+    --input: 0 0% 22%;
+    --ring: 0 0% 84%;
+  }
+
+  /*
+   * The landing dot grid is drawn in black at 8% by the rule above, which is
+   * invisible on ink. Same lattice, same opacity, inverted — so the field
+   * reads as texture rather than disappearing.
+   */
+  .buzz-onboarding-neutral-theme.buzz-startup-shell.buzz-onboarding-welcome.buzz-onboarding-brand-ink,
+  .buzz-onboarding-neutral-theme.buzz-startup-shell.buzz-onboarding-brand-ink {
+    background-image: radial-gradient(
+      circle,
+      rgb(255 255 255 / 0.08) 1px,
+      transparent 1px
+    );
+    background-size: 24px 24px;
+  }
+
+  /*
    * Backup options and password backup intentionally leave the bright
    * onboarding world for a dark security-focused subview. Keep these semantic
    * overrides on a reusable class as well as the shell so portaled
