@@ -34,9 +34,11 @@ flavor is always an explicit choice at build time.
   "logo": "flavors/logos/acme.svg",       // optional in-app mark, see flavors/logos/
   "logoStyle": "mask",                    // optional, "mask" (default) or "color"
   "logoLight": "flavors/logos/acme-light.svg", // optional light-theme cut, "color" only
+  "logoMark": "flavors/logos/acme-mark.svg",   // optional glyph-sized companion mark
   "relayUrl": "wss://relay.acme.test",    // default relay baked into the binary
   "autoConnectDefaultRelay": true,        // optional, default false
   "accentColor": "#3b82f6",               // optional, lowercase #rrggbb
+  "themeLabel": "Acme",                   // optional — renames the Buzz theme pair
   "frozen": false,                        // optional — refuses to build
   "example": false,                       // optional — refuses to build
   "notes": "free text for reviewers"      // optional
@@ -117,8 +119,10 @@ frozen app.
 | `VITE_BUZZ_DEFAULT_ACCENT_COLOR` | `shared/branding/brandAccent.ts` | Accent a fresh install starts on |
 | `VITE_BUZZ_PRODUCT_LOGO` | `shared/branding/brandLogo.ts` | The flavor's `logo` file, base64 into a `data:image/svg+xml` URL. Omitted when the flavor declares none |
 | `VITE_BUZZ_PRODUCT_LOGO_LIGHT` | `shared/branding/brandLogo.ts` | The flavor's `logoLight` file, same encoding. The light theme shows this cut and the dark theme shows the one above |
+| `VITE_BUZZ_PRODUCT_LOGO_MARK` | `shared/branding/brandLogo.ts` | The flavor's `logoMark` file, same encoding. Glyph-sized companion to the wordmark; the onboarding landing field drifts this instead of the Buzz bees. A build that declares none keeps the bees |
 | `VITE_BUZZ_PRODUCT_LOGO_STYLE` | `shared/branding/brandLogo.ts` | `mask` or `color` — recolour that file to the theme, or paint it as it is. Emitted with the logo, never without it |
 | `VITE_BUZZ_CHROME_SURFACE` | `shared/branding/brandChrome.ts` | `auto` or `ink` — whether the navigation rail follows the document's light/dark mode, or stays on the dark surface in both. Always emitted, including at the default |
+| `VITE_BUZZ_THEME_LABEL` | `shared/branding/brandThemeLabel.ts` | What the appearance picker calls the first-party theme pair, in place of "Buzz" / "Buzz Dark". The `buzz` / `buzz-dark` identifiers are untouched — they are what storage and `theme.css` match on. Omitted when the flavor declares none, which keeps the Buzz labels |
 | `BUZZ_RELAY_URL` | `src-tauri/build.rs` → `relay::relay_ws_url` | Default relay |
 | `BUZZ_BUILD_AUTO_CONNECT_DEFAULT_RELAY` | `commands::identity` | Connect to that relay without asking |
 

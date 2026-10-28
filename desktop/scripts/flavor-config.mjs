@@ -201,6 +201,27 @@ export function validateFlavor(flavor, flavorId) {
     }
   }
 
+  if (flavor.logoMark !== undefined) {
+    if (
+      typeof flavor.logoMark !== "string" ||
+      flavor.logoMark.trim().length === 0
+    ) {
+      fail(flavorId, "logoMark must be a non-empty string");
+    }
+    if (escapesRepo(flavor.logoMark)) {
+      fail(flavorId, "logoMark must be a repo-relative path without `..`");
+    }
+    if (!flavor.logoMark.endsWith(".svg")) {
+      fail(flavorId, "logoMark must be an .svg");
+    }
+    if (flavor.logo === undefined) {
+      // The mark is the wordmark's companion, not a substitute for it. A
+      // flavor with a mark and no logo would brand the scattered field and
+      // leave the Buzz wordmark in the middle of it.
+      fail(flavorId, "logoMark is set but no logo is declared");
+    }
+  }
+
   if (flavor.logoStyle !== undefined) {
     if (!LOGO_STYLES.includes(flavor.logoStyle)) {
       fail(
@@ -233,6 +254,17 @@ export function validateFlavor(flavor, flavorId) {
     }
   }
 
+  if (flavor.themeLabel !== undefined) {
+    if (
+      typeof flavor.themeLabel !== "string" ||
+      flavor.themeLabel.trim().length === 0
+    ) {
+      // Refused rather than ignored: an empty label renders a nameless tile in
+      // the appearance picker, which reads as a broken theme.
+      fail(flavorId, "themeLabel must be a non-empty string");
+    }
+  }
+
   for (const flag of ["frozen", "example", "autoConnectDefaultRelay"]) {
     if (flavor[flag] !== undefined && typeof flavor[flag] !== "boolean") {
       fail(flavorId, `${flag} must be a boolean`);
@@ -254,6 +286,7 @@ export function validateFlavor(flavor, flavorId) {
     logo: typeof flavor.logo === "string" ? flavor.logo : undefined,
     logoLight:
       typeof flavor.logoLight === "string" ? flavor.logoLight : undefined,
+    logoMark: typeof flavor.logoMark === "string" ? flavor.logoMark : undefined,
     logoStyle:
       flavor.logo === undefined
         ? undefined
@@ -261,6 +294,10 @@ export function validateFlavor(flavor, flavorId) {
     relayUrl: flavor.relayUrl,
     autoConnectDefaultRelay: flavor.autoConnectDefaultRelay === true,
     accentColor: flavor.accentColor,
+    themeLabel:
+      typeof flavor.themeLabel === "string"
+        ? flavor.themeLabel.trim()
+        : undefined,
     chromeSurface: flavor.chromeSurface ?? DEFAULT_CHROME_SURFACE,
     frozen: flavor.frozen === true,
     example: flavor.example === true,
@@ -317,6 +354,13 @@ export function flavorBuildEnv(flavor, readFile = readFileSync) {
   if (flavor.accentColor !== undefined) {
     env.VITE_BUZZ_DEFAULT_ACCENT_COLOR = flavor.accentColor;
   }
+  if (flavor.themeLabel !== undefined) {
+    // Omitted when unset, unlike the chrome surface: "no label" is not a value
+    // the frontend parses but the absence of a rename, and emitting an empty
+    // string would make an unconfigured flavor indistinguishable from one that
+    // asked for a nameless theme.
+    env.VITE_BUZZ_THEME_LABEL = flavor.themeLabel;
+  }
   // Emitted unconditionally, unlike the logo and the accent: `auto` is a
   // value the frontend parses, and a build that silently inherited whatever
   // the parser defaults to would make a flavor's choice unreadable from the
@@ -336,6 +380,10 @@ export function flavorBuildEnv(flavor, readFile = readFileSync) {
   if (flavor.logoLight !== undefined) {
     const svg = readFile(path.join(desktopDir, flavor.logoLight), "utf8");
     env.VITE_BUZZ_PRODUCT_LOGO_LIGHT = `data:image/svg+xml;base64,${Buffer.from(svg, "utf8").toString("base64")}`;
+  }
+  if (flavor.logoMark !== undefined) {
+    const svg = readFile(path.join(desktopDir, flavor.logoMark), "utf8");
+    env.VITE_BUZZ_PRODUCT_LOGO_MARK = `data:image/svg+xml;base64,${Buffer.from(svg, "utf8").toString("base64")}`;
   }
   return env;
 }

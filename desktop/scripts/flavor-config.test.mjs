@@ -518,8 +518,10 @@ test("the build env carries every value a build needs to pick an identity", () =
       VITE_BUZZ_DEFAULT_ACCENT_COLOR: "#d4f247",
       VITE_BUZZ_PRODUCT_LOGO: "data:image/svg+xml;base64,PHN2Zy8+",
       VITE_BUZZ_PRODUCT_LOGO_LIGHT: "data:image/svg+xml;base64,PHN2Zy8+",
+      VITE_BUZZ_PRODUCT_LOGO_MARK: "data:image/svg+xml;base64,PHN2Zy8+",
       VITE_BUZZ_PRODUCT_LOGO_STYLE: "color",
       VITE_BUZZ_PRODUCT_NAME: "ki.keriki",
+      VITE_BUZZ_THEME_LABEL: "kikeriki",
     },
   );
 });
@@ -543,9 +545,88 @@ test("auto-connect is only emitted when the flavor asks for it", () => {
   assert.equal(env.BUZZ_BUILD_AUTO_CONNECT_DEFAULT_RELAY, undefined);
 });
 
+test("the companion mark is optional and needs a wordmark to accompany", () => {
+  const withMark = validateFlavor(
+    goodFlavor({
+      logo: "flavors/logos/acme.svg",
+      logoMark: "flavors/logos/acme-mark.svg",
+    }),
+    "acme",
+  );
+  assert.equal(
+    flavorBuildEnv(withMark, () => "<svg/>").VITE_BUZZ_PRODUCT_LOGO_MARK,
+    "data:image/svg+xml;base64,PHN2Zy8+",
+  );
+
+  // Omitted, not emptied: absence is what keeps the bees on a build that has
+  // not drawn a mark yet.
+  const plain = flavorBuildEnv(validateFlavor(goodFlavor(), "acme"));
+  assert.ok(!("VITE_BUZZ_PRODUCT_LOGO_MARK" in plain));
+
+  // A mark with no wordmark would brand the drifting field and leave the Buzz
+  // wordmark in the middle of it.
+  assert.throws(
+    () =>
+      validateFlavor(
+        goodFlavor({ logoMark: "flavors/logos/acme-mark.svg" }),
+        "acme",
+      ),
+    /logoMark is set but no logo is declared/,
+  );
+  for (const logoMark of ["", "   ", "../secrets/mark.svg", "mark.png", 7]) {
+    assert.throws(
+      () =>
+        validateFlavor(
+          goodFlavor({ logo: "flavors/logos/acme.svg", logoMark }),
+          "acme",
+        ),
+      /logoMark/,
+      `logoMark ${JSON.stringify(logoMark)} must be refused`,
+    );
+  }
+});
+
 test("the accent variable is omitted when the flavor sets no colour", () => {
   const env = flavorBuildEnv(validateFlavor(goodFlavor(), "acme"));
   assert.equal(env.VITE_BUZZ_DEFAULT_ACCENT_COLOR, undefined);
+});
+
+test("a theme label renames the Buzz pair for that flavor only", () => {
+  const labelled = flavorBuildEnv(
+    validateFlavor(goodFlavor({ themeLabel: "  Acme  " }), "acme"),
+  );
+  assert.equal(labelled.VITE_BUZZ_THEME_LABEL, "Acme");
+
+  // Omitted, not emptied. The frontend reads absence as "keep calling it
+  // Buzz"; an empty string would be a flavor asking for a nameless theme.
+  const plain = flavorBuildEnv(validateFlavor(goodFlavor(), "acme"));
+  assert.equal(plain.VITE_BUZZ_THEME_LABEL, undefined);
+  assert.ok(!("VITE_BUZZ_THEME_LABEL" in plain));
+});
+
+test("a theme label that would render nothing is refused", () => {
+  for (const themeLabel of ["", "   ", 7, null, {}]) {
+    assert.throws(
+      () => validateFlavor(goodFlavor({ themeLabel }), "acme"),
+      /themeLabel must be a non-empty string/,
+      `themeLabel ${JSON.stringify(themeLabel)} must be refused`,
+    );
+  }
+});
+
+test("only ki.keriki renames the theme; the others keep Buzz", () => {
+  // The scope of the rename, bound to the committed files rather than to a
+  // sentence in a PR. Zeniad and the OSS trunk were explicitly to stay as
+  // they are.
+  const labels = Object.fromEntries(
+    listFlavorIds().map((id) => [
+      id,
+      flavorBuildEnv(loadFlavor(id), () => "<svg/>").VITE_BUZZ_THEME_LABEL,
+    ]),
+  );
+  assert.equal(labels["ki.keriki"], "kikeriki");
+  assert.equal(labels.zeniad, undefined);
+  assert.equal(labels["KI.keri.KI"], undefined);
 });
 
 test("shell output exports and quotes every value", () => {
