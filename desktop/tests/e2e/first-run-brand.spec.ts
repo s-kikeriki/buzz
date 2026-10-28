@@ -73,16 +73,11 @@ test.describe("branded onboarding steps", () => {
         background: styles.backgroundColor,
         chartreuse: styles.getPropertyValue("--buzz-welcome-chartreuse").trim(),
         accent: styles.getPropertyValue("--buzz-brand-accent").trim(),
-        // The OS pin must be suppressed: it is a two-class selector declared
-        // after the ink block and sets the same tokens on the same element,
-        // so on a light-scheme machine it silently wins.
-        schemePin: node.getAttribute("data-system-color-scheme"),
       };
     });
     expect(paint.background).toBe(INK);
     expect(paint.chartreuse).toBe("#08090a");
     expect(paint.accent).toBe(CITRON);
-    expect(paint.schemePin).toBeNull();
   });
 
   test("the content card stays white with readable text", async ({ page }) => {
@@ -153,6 +148,31 @@ test.describe("branded onboarding steps", () => {
     expect(width / height).toBeLessThan(1.4);
   });
 
+  test("the keyring screen drops the OS pin that would outrank the ink", async ({
+    page,
+  }) => {
+    // `useSystemColorScheme` always returns a value, so this attribute is
+    // always present on the screens that read it — unlike the step shell,
+    // which is handed the prop and never gets one. That is why the guard is
+    // bound here: `.buzz-onboarding-neutral-theme[data-system-color-scheme=
+    // "light"]` is a two-class selector declared *after* the ink block and
+    // sets the same tokens on the same element, so on a machine reporting a
+    // light OS scheme it wins and the screen comes out white under an ink
+    // dot grid. This runner reports dark, which is exactly why asserting the
+    // rendered colour here would prove nothing.
+    await installMockBridge(page, { identityLocked: true });
+    await page.goto("/");
+    const gate = page.getByTestId("keyring-locked");
+    await expect(gate).toBeVisible();
+    await expect(gate).toHaveAttribute("data-brand-onboarding", "ink");
+    await expect(gate).not.toHaveAttribute("data-system-color-scheme", /.*/);
+    // And the copy on it: this is the screen behind the keychain prompt on
+    // every replacement build, so it is the normal update path.
+    await expect(
+      page.getByRole("button", { name: "Relaunch ki.keriki" }),
+    ).toBeVisible();
+  });
+
   test("onboarding step screenshot", async ({ page }) => {
     await openFirstCardStep(page);
     await page.waitForTimeout(400);
@@ -186,5 +206,25 @@ test.describe("the stock trunk is unchanged", () => {
 
     await page.waitForTimeout(400);
     await page.screenshot({ path: `${SHOTS}/step-2-stock.png` });
+  });
+
+  test("the keyring screen keeps the OS pin and the Buzz name", async ({
+    page,
+  }) => {
+    // The other direction of the suppression: the OS pin is the trunk's own
+    // mechanism, and dropping it unconditionally would stop the stock
+    // first-run screens following the system scheme at all.
+    await installMockBridge(page, { identityLocked: true });
+    await page.goto("/");
+    const gate = page.getByTestId("keyring-locked");
+    await expect(gate).toBeVisible();
+    await expect(gate).not.toHaveAttribute("data-brand-onboarding", /.*/);
+    await expect(gate).toHaveAttribute(
+      "data-system-color-scheme",
+      /^(dark|light)$/,
+    );
+    await expect(
+      page.getByRole("button", { name: "Relaunch Buzz" }),
+    ).toBeVisible();
   });
 });
