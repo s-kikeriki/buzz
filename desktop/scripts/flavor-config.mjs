@@ -254,6 +254,17 @@ export function validateFlavor(flavor, flavorId) {
     }
   }
 
+  if (flavor.themeLabel !== undefined) {
+    if (
+      typeof flavor.themeLabel !== "string" ||
+      flavor.themeLabel.trim().length === 0
+    ) {
+      // Refused rather than ignored: an empty label renders a nameless tile in
+      // the appearance picker, which reads as a broken theme.
+      fail(flavorId, "themeLabel must be a non-empty string");
+    }
+  }
+
   for (const flag of ["frozen", "example", "autoConnectDefaultRelay"]) {
     if (flavor[flag] !== undefined && typeof flavor[flag] !== "boolean") {
       fail(flavorId, `${flag} must be a boolean`);
@@ -283,6 +294,10 @@ export function validateFlavor(flavor, flavorId) {
     relayUrl: flavor.relayUrl,
     autoConnectDefaultRelay: flavor.autoConnectDefaultRelay === true,
     accentColor: flavor.accentColor,
+    themeLabel:
+      typeof flavor.themeLabel === "string"
+        ? flavor.themeLabel.trim()
+        : undefined,
     chromeSurface: flavor.chromeSurface ?? DEFAULT_CHROME_SURFACE,
     frozen: flavor.frozen === true,
     example: flavor.example === true,
@@ -338,6 +353,13 @@ export function flavorBuildEnv(flavor, readFile = readFileSync) {
   }
   if (flavor.accentColor !== undefined) {
     env.VITE_BUZZ_DEFAULT_ACCENT_COLOR = flavor.accentColor;
+  }
+  if (flavor.themeLabel !== undefined) {
+    // Omitted when unset, unlike the chrome surface: "no label" is not a value
+    // the frontend parses but the absence of a rename, and emitting an empty
+    // string would make an unconfigured flavor indistinguishable from one that
+    // asked for a nameless theme.
+    env.VITE_BUZZ_THEME_LABEL = flavor.themeLabel;
   }
   // Emitted unconditionally, unlike the logo and the accent: `auto` is a
   // value the frontend parses, and a build that silently inherited whatever

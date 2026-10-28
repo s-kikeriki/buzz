@@ -23,6 +23,7 @@ export default defineConfig({
         "**/i18n-appearance.spec.ts",
         "**/sidebar-german-screenshots.spec.ts",
         "**/institutional-chrome.spec.ts",
+        "**/kikeriki-theme.spec.ts",
         "**/onboarding-brand.spec.ts",
         "**/mock-subscription-readiness.spec.ts",
         "**/owned-agent-discovery.spec.ts",
