@@ -1,8 +1,23 @@
 import * as React from "react";
 
+import { BRAND } from "@/shared/branding/brand";
 import { BuzzMark } from "@/shared/ui/buzz-logo/BuzzMark";
 import { FlappingBee } from "@/shared/ui/buzz-logo/FlappingBee";
 
+/**
+ * The drifting field behind the onboarding landing page.
+ *
+ * The scatter, the wander and the pointer repulsion are the product's, and a
+ * per-organisation build keeps all three — what changes is which mark is
+ * drifting. A build that ships its own logo must never show the Buzz bee: it
+ * is the first screen a new install renders, and a bee there says the app is
+ * Buzz louder than every branded surface behind it says otherwise.
+ *
+ * `logoMark` rather than the wordmark `logo`, because this is glyph-sized.
+ * A 669x268 wordmark drawn 26px wide is a smudge; the mark is cut square for
+ * exactly this. With no `logoMark` the build keeps the bees, which is right
+ * for the OSS trunk and for any flavor that has not drawn one yet.
+ */
 type Bee = {
   top: string;
   left: string;
@@ -62,7 +77,10 @@ const REPEL_STRENGTH = 110;
 const WANDER_X = 26;
 const WANDER_Y = 20;
 
-export function LandingBees() {
+export function LandingMarks() {
+  // Read once: `BRAND` is frozen at module load, and the field below is a
+  // fixed scatter that must not re-key between renders.
+  const markUrl = BRAND.productLogoMarkUrl;
   const fieldRef = React.useRef<HTMLDivElement>(null);
   const beeRefs = React.useRef<(HTMLSpanElement | null)[]>([]);
   const pointer = React.useRef<{ x: number; y: number } | null>(null);
@@ -142,7 +160,11 @@ export function LandingBees() {
       className="pointer-events-none absolute inset-0 overflow-hidden"
     >
       <span className="absolute left-6 top-12 block w-11 text-[#231E1E]">
-        <BuzzMark className="h-auto w-full" />
+        {markUrl === null ? (
+          <BuzzMark className="h-auto w-full" />
+        ) : (
+          <img alt="" className="h-auto w-full" src={markUrl} />
+        )}
       </span>
       {BEES.map((bee, i) => (
         <span
@@ -155,12 +177,18 @@ export function LandingBees() {
             top: bee.top,
             left: bee.left,
             width: bee.size,
-            color: bee.color,
+            // The brand mark carries its own two colours; only the bee is
+            // tinted per-position.
+            color: markUrl === null ? bee.color : undefined,
             transform: `rotate(${bee.rotate}deg)`,
             opacity: 0.9,
           }}
         >
-          <FlappingBee className="w-full" />
+          {markUrl === null ? (
+            <FlappingBee className="w-full" />
+          ) : (
+            <img alt="" className="w-full" src={markUrl} />
+          )}
         </span>
       ))}
     </div>

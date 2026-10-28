@@ -201,6 +201,27 @@ export function validateFlavor(flavor, flavorId) {
     }
   }
 
+  if (flavor.logoMark !== undefined) {
+    if (
+      typeof flavor.logoMark !== "string" ||
+      flavor.logoMark.trim().length === 0
+    ) {
+      fail(flavorId, "logoMark must be a non-empty string");
+    }
+    if (escapesRepo(flavor.logoMark)) {
+      fail(flavorId, "logoMark must be a repo-relative path without `..`");
+    }
+    if (!flavor.logoMark.endsWith(".svg")) {
+      fail(flavorId, "logoMark must be an .svg");
+    }
+    if (flavor.logo === undefined) {
+      // The mark is the wordmark's companion, not a substitute for it. A
+      // flavor with a mark and no logo would brand the scattered field and
+      // leave the Buzz wordmark in the middle of it.
+      fail(flavorId, "logoMark is set but no logo is declared");
+    }
+  }
+
   if (flavor.logoStyle !== undefined) {
     if (!LOGO_STYLES.includes(flavor.logoStyle)) {
       fail(
@@ -254,6 +275,7 @@ export function validateFlavor(flavor, flavorId) {
     logo: typeof flavor.logo === "string" ? flavor.logo : undefined,
     logoLight:
       typeof flavor.logoLight === "string" ? flavor.logoLight : undefined,
+    logoMark: typeof flavor.logoMark === "string" ? flavor.logoMark : undefined,
     logoStyle:
       flavor.logo === undefined
         ? undefined
@@ -336,6 +358,10 @@ export function flavorBuildEnv(flavor, readFile = readFileSync) {
   if (flavor.logoLight !== undefined) {
     const svg = readFile(path.join(desktopDir, flavor.logoLight), "utf8");
     env.VITE_BUZZ_PRODUCT_LOGO_LIGHT = `data:image/svg+xml;base64,${Buffer.from(svg, "utf8").toString("base64")}`;
+  }
+  if (flavor.logoMark !== undefined) {
+    const svg = readFile(path.join(desktopDir, flavor.logoMark), "utf8");
+    env.VITE_BUZZ_PRODUCT_LOGO_MARK = `data:image/svg+xml;base64,${Buffer.from(svg, "utf8").toString("base64")}`;
   }
   return env;
 }

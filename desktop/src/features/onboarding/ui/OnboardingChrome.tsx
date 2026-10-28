@@ -24,8 +24,14 @@ export const ONBOARDING_SECURITY_PRIMARY_CTA_CLASS = `${ONBOARDING_CTA_SHAPE} bg
  * Primary-CTA styling for the landing screen only: the shared pill with the
  * chartreuse label (`--buzz-welcome-chartreuse`). The blue label is reserved
  * for the CTAs inside the steps.
+ *
+ * The label is named rather than read straight off the canvas colour so a
+ * per-organisation build can part the two. Stock keeps the echo — the label is
+ * the field it sits on — because the fallback is that same variable; a brand
+ * whose canvas is ink would otherwise get an ink-on-white pill and no accent
+ * anywhere on its first screen.
  */
-export const ONBOARDING_LANDING_CTA_CLASS = `${ONBOARDING_CTA_SHAPE} text-[var(--buzz-welcome-chartreuse)]`;
+export const ONBOARDING_LANDING_CTA_CLASS = `${ONBOARDING_CTA_SHAPE} text-[var(--buzz-onboarding-landing-cta-label,var(--buzz-welcome-chartreuse))]`;
 
 /** Shared quiet pill for secondary actions throughout onboarding. */
 export const ONBOARDING_SECONDARY_CTA_CLASS =
