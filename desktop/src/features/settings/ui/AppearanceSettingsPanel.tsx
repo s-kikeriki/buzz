@@ -255,9 +255,10 @@ export function ThemeSettingsCard() {
     t`this community`,
   );
 
-  // Buzz themes pin a neutral accent (GitHub black in light, white in dark),
-  // so the accent picker is hidden while a Buzz theme is active. `themeName` is
-  // the effective theme, so this also covers System mode resolving to Buzz.
+  // Buzz themes pin their accent — the neutral GitHub black/white, or the
+  // build's own accent on a per-organisation build — so the accent picker is
+  // hidden while a Buzz theme is active. `themeName` is the effective theme,
+  // so this also covers System mode resolving to Buzz.
   const buzzThemeSelected = isBuzzTheme(themeName);
   const accentPickerHidden = buzzThemeSelected;
   const shouldReduceMotion = useReducedMotion();

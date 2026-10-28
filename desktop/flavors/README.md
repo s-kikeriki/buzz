@@ -87,7 +87,8 @@ eval "$(node scripts/flavor-config.mjs zeniad)" && export \
   BRAND_NAME BUZZ_BUILD_DEMO_SLUG BUZZ_RELAY_URL DEMO_BUILD_ID DEMO_NAME \
   VITE_BUZZ_PRODUCT_NAME VITE_BUZZ_DEFAULT_ACCENT_COLOR \
   VITE_BUZZ_PRODUCT_LOGO VITE_BUZZ_PRODUCT_LOGO_LIGHT \
-  VITE_BUZZ_PRODUCT_LOGO_STYLE BUZZ_BUILD_AUTO_CONNECT_DEFAULT_RELAY
+  VITE_BUZZ_PRODUCT_LOGO_STYLE VITE_BUZZ_CHROME_SURFACE \
+  BUZZ_BUILD_AUTO_CONNECT_DEFAULT_RELAY
 ```
 
 `eval` sets the variables; only `export` hands them to the Vite and Cargo
@@ -112,6 +113,7 @@ frozen app.
 | `VITE_BUZZ_PRODUCT_LOGO` | `shared/branding/brandLogo.ts` | The flavor's `logo` file, base64 into a `data:image/svg+xml` URL. Omitted when the flavor declares none |
 | `VITE_BUZZ_PRODUCT_LOGO_LIGHT` | `shared/branding/brandLogo.ts` | The flavor's `logoLight` file, same encoding. The light theme shows this cut and the dark theme shows the one above |
 | `VITE_BUZZ_PRODUCT_LOGO_STYLE` | `shared/branding/brandLogo.ts` | `mask` or `color` — recolour that file to the theme, or paint it as it is. Emitted with the logo, never without it |
+| `VITE_BUZZ_CHROME_SURFACE` | `shared/branding/brandChrome.ts` | `auto` or `ink` — whether the navigation rail follows the document's light/dark mode, or stays on the dark surface in both. Always emitted, including at the default |
 | `BUZZ_RELAY_URL` | `src-tauri/build.rs` → `relay::relay_ws_url` | Default relay |
 | `BUZZ_BUILD_AUTO_CONNECT_DEFAULT_RELAY` | `commands::identity` | Connect to that relay without asking |
 

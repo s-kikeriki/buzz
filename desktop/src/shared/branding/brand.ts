@@ -17,7 +17,11 @@
  * the same way it sets any other Vite env var. The fallback keeps the OSS
  * build's own name when no overlay is applied.
  */
-import { parseDefaultAccentColor } from "./brandAccent";
+import {
+  parseConfiguredAccentColor,
+  parseDefaultAccentColor,
+} from "./brandAccent";
+import { parseChromeSurface } from "./brandChrome";
 import { parseProductLogoStyle, parseProductLogoUrl } from "./brandLogo";
 
 const DEFAULT_PRODUCT_NAME = "Buzz";
@@ -36,6 +40,14 @@ export const BRAND = {
   defaultAccentColor: parseDefaultAccentColor(
     import.meta.env?.VITE_BUZZ_DEFAULT_ACCENT_COLOR,
   ),
+  /**
+   * The same value, but `null` when this build configured no accent. A branded
+   * build's accent outranks the Buzz themes' neutral pin; an unconfigured one
+   * must not.
+   */
+  configuredAccentColor: parseConfiguredAccentColor(
+    import.meta.env?.VITE_BUZZ_DEFAULT_ACCENT_COLOR,
+  ),
   /** Logo as an inline SVG data URL, or `null` for a build with none. */
   productLogoUrl: parseProductLogoUrl(import.meta.env?.VITE_BUZZ_PRODUCT_LOGO),
   /** The light theme's cut of that logo, or `null` to use the one above in both. */
@@ -46,4 +58,6 @@ export const BRAND = {
   productLogoStyle: parseProductLogoStyle(
     import.meta.env?.VITE_BUZZ_PRODUCT_LOGO_STYLE,
   ),
+  /** Whether the navigation chrome stays on ink in both modes. */
+  chromeSurface: parseChromeSurface(import.meta.env?.VITE_BUZZ_CHROME_SURFACE),
 } as const;

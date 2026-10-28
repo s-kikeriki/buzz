@@ -4,7 +4,10 @@ import test from "node:test";
 // `brand.ts` reads `import.meta.env` at module load, which the plain Node test
 // runner has no Vite shim for. The parser lives in its own module so these
 // tests bind the production code path rather than a copy of the regex.
-import { parseDefaultAccentColor } from "./brandAccent.ts";
+import {
+  parseConfiguredAccentColor,
+  parseDefaultAccentColor,
+} from "./brandAccent.ts";
 
 test("a well-formed accent is taken as-is", () => {
   assert.equal(parseDefaultAccentColor("#a1b2c3"), "#a1b2c3");
@@ -32,4 +35,17 @@ test("an unset or malformed accent falls back to the OSS default", () => {
   ]) {
     assert.equal(parseDefaultAccentColor(bad), "#3b82f6");
   }
+});
+
+test("an unconfigured build is distinguishable from one that chose blue", () => {
+  // The Buzz themes pin a neutral accent unless the build asked for one, so
+  // collapsing "unset" into the OSS default here would make every OSS install
+  // render a brand accent it never configured.
+  assert.equal(parseConfiguredAccentColor("#d4f247"), "#d4f247");
+  assert.equal(parseConfiguredAccentColor("  #D4F247 "), "#d4f247");
+  for (const unset of [undefined, null, "", "   ", "#abc", "blue", 123]) {
+    assert.equal(parseConfiguredAccentColor(unset), null);
+  }
+  // And the defaulting wrapper still answers with the OSS colour.
+  assert.equal(parseDefaultAccentColor(undefined), "#3b82f6");
 });
