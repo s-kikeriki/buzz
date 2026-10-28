@@ -7,6 +7,7 @@ import {
   useSensors,
 } from "@dnd-kit/core";
 import type { DragEndEvent, DragStartEvent } from "@dnd-kit/core";
+import { Trans, useLingui } from "@lingui/react/macro";
 import {
   SortableContext,
   arrayMove,
@@ -170,7 +171,9 @@ function CommunityButton({
                   className="absolute -bottom-0.5 -right-0.5 h-2 w-2 shrink-0 rounded-full bg-primary ring-2 ring-sidebar"
                   data-testid={`community-rail-unread-dot-${community.id}`}
                 >
-                  <span className="sr-only">unread</span>
+                  <span className="sr-only">
+                    <Trans>unread</Trans>
+                  </span>
                 </span>
               ) : null}
             </button>
@@ -261,7 +264,7 @@ function SortableCommunityButton({
           <>
             <ContextMenuItem onClick={() => onMarkAllRead(community)}>
               <CheckCheck className="h-4 w-4" />
-              Mark all as read
+              <Trans>Mark all as read</Trans>
             </ContextMenuItem>
             <ContextMenuSeparator />
             <ContextMenuItem
@@ -270,17 +273,17 @@ function SortableCommunityButton({
               }}
             >
               <Link2 className="h-4 w-4" />
-              Copy community URL
+              <Trans>Copy community URL</Trans>
             </ContextMenuItem>
             {canInvite ? (
               <ContextMenuItem onClick={onInvite}>
                 <Ticket className="h-4 w-4" />
-                Invite to community
+                <Trans>Invite to community</Trans>
               </ContextMenuItem>
             ) : null}
             <ContextMenuItem onClick={() => onSetEditingCommunity(community)}>
               <Settings2 className="h-4 w-4" />
-              Community settings
+              <Trans>Community settings</Trans>
             </ContextMenuItem>
           </>
         }
@@ -317,6 +320,7 @@ export function CommunityRail({
     activeCommunityId,
   );
   const iconsByCommunity = useCommunityIcons(communities);
+  const { t } = useLingui();
   const { markAllChannelsRead, onOpenSettings } = useAppShell();
   const myMembershipQuery = useMyRelayMembershipLookupQuery();
   const activeRole = myMembershipQuery.data?.membership?.role;
@@ -373,7 +377,7 @@ export function CommunityRail({
 
   return (
     <nav
-      aria-label="Communities"
+      aria-label={t`Communities`}
       className="relative z-20 flex w-14 shrink-0 flex-col items-center gap-2.5 overflow-y-auto bg-sidebar px-2.5 pb-5 pt-[calc(var(--buzz-top-chrome-height,40px)+7px)]"
       data-testid="community-rail"
     >
@@ -415,7 +419,7 @@ export function CommunityRail({
       <Tooltip>
         <TooltipTrigger asChild>
           <button
-            aria-label="Add community"
+            aria-label={t`Add community`}
             className="flex h-9 w-9 items-center justify-center rounded-2xl bg-sidebar-accent/60 text-sidebar-foreground/70 outline-hidden transition-all hover:rounded-xl hover:bg-primary/80 hover:text-primary-foreground focus:outline-none focus-visible:outline-none"
             data-testid="community-rail-add"
             onClick={onAddCommunity}
@@ -425,7 +429,7 @@ export function CommunityRail({
           </button>
         </TooltipTrigger>
         <TooltipContent side="right" sideOffset={8}>
-          Add community
+          <Trans>Add community</Trans>
         </TooltipContent>
       </Tooltip>
       <EditCommunityDialog

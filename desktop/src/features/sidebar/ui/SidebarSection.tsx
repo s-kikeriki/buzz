@@ -1,5 +1,6 @@
 import type * as React from "react";
 import { BellOff, ChevronDown, CircleDot, X } from "lucide-react";
+import { Plural, Trans, useLingui } from "@lingui/react/macro";
 
 import {
   ContextMenu,
@@ -77,7 +78,11 @@ function UnreadCountBadge({
       {formatUnreadCount(count)}
       <span className="sr-only">
         {" "}
-        unread notification{count === 1 ? "" : "s"}
+        <Plural
+          value={count}
+          one="unread notification"
+          other="unread notifications"
+        />
       </span>
     </span>
   );
@@ -95,7 +100,9 @@ function UnreadDotBadge({
       className={cn("h-2 w-2 shrink-0 rounded-full bg-primary", className)}
       data-testid={`channel-unread-dot-${channelName}`}
     >
-      <span className="sr-only">unread</span>
+      <span className="sr-only">
+        <Trans>unread</Trans>
+      </span>
     </span>
   );
 }
@@ -429,6 +436,10 @@ export function SidebarSection({
   onUnmuteChannel?: (channelId: string) => void;
   sectionActionsOpen?: boolean;
 }) {
+  // Before the early return: the section renders nothing when it is empty, and
+  // a hook called after that branch would run on some renders and not others.
+  const { t } = useLingui();
+
   if (items.length === 0 && !action && !emptyState) {
     return null;
   }
@@ -512,7 +523,7 @@ export function SidebarSection({
                     ) : null}
                     {channel.channelType === "dm" && onHideDm ? (
                       <button
-                        aria-label="Close direct message"
+                        aria-label={t`Close direct message`}
                         className={cn(
                           "absolute right-1 top-1/2 z-10 -translate-y-1/2 after:absolute after:-inset-2 after:md:hidden group-data-[collapsible=icon]:hidden",
                           SIDEBAR_ROW_ICON_ACTION_CLASS,
