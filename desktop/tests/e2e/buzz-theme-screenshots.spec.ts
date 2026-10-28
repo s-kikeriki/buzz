@@ -1,5 +1,6 @@
 import { expect, test, type Page } from "@playwright/test";
 
+import { ACCENT_COLORS } from "../../src/shared/theme/ThemeProvider";
 import { waitForAnimations } from "../helpers/animations";
 import { installMockBridge } from "../helpers/bridge";
 
@@ -12,6 +13,60 @@ const CONVERSATION_DENSITY_STORAGE_KEY = "buzz.appearance.conversationDensity";
 const FONT_SIZE_STORAGE_KEY = "buzz.appearance.fontSize";
 const MOCK_PUBKEY = "deadbeef".repeat(8);
 const GENERAL_CHANNEL_ID = "9a1657ac-f7aa-5db0-b632-d8bbeb6dfb50";
+
+/** The flat near-black an ink-chrome flavor paints its rail in. */
+const INK = "#07090c";
+
+/**
+ * Which surface the navigation chrome is painted on, as `<html>` reports it.
+ *
+ * The document's light/dark mode and the chrome's used to be the same
+ * question, and every expectation in this file was written from the document.
+ * A flavor with `chromeSurface: "ink"` separates them: the rail stays dark
+ * under a light document, so a sidebar expectation derived from the document
+ * asks the wrong one. Read the attribute the app actually keys off rather
+ * than inferring it from the build env, so a stock run and a flavored run
+ * take the same path through these helpers.
+ */
+async function chromeSurface(page: Page): Promise<string | null> {
+  return page.evaluate(() =>
+    document.documentElement.getAttribute("data-buzz-chrome"),
+  );
+}
+
+/**
+ * The mode the *chrome* is painted in, for a document in `mode`.
+ *
+ * On a stock build this is the document's own mode, so nothing about the
+ * existing expectations changes. On an ink build it is always `dark` — the
+ * ink rail reuses the dark sidebar tokens, so the dark values are the correct
+ * expectation rather than a tolerated difference.
+ */
+async function chromeMode(
+  page: Page,
+  mode: "light" | "dark",
+): Promise<"light" | "dark"> {
+  return (await chromeSurface(page)) === "ink" ? "dark" : mode;
+}
+
+/**
+ * The two row-selection surfaces, per chrome mode.
+ *
+ * `theme.css` sets both in the same block that paints the dark rail, which is
+ * also the block an ink flavor opts into, so an ink build in light mode takes
+ * the dark values for both. Written here once so the subtle and prominent
+ * treatments cannot drift apart across the three tests that assert them.
+ */
+const ROW_SURFACES = {
+  light: {
+    subtleActive: "rgba(0, 0, 0, 0.07)",
+    prominentActive: "rgba(255, 255, 255, 0.82)",
+  },
+  dark: {
+    subtleActive: "rgba(255, 255, 255, 0.16)",
+    prominentActive: "rgba(255, 255, 255, 0.18)",
+  },
+} as const;
 
 /**
  * Seed the active theme into localStorage BEFORE the mock bridge installs so
@@ -58,16 +113,20 @@ async function openChannel(page: Page) {
 }
 
 async function expectBuzzSidebarPalette(page: Page, mode: "light" | "dark") {
+  // Every colour below is painted on the rail, so each follows the chrome and
+  // not the document. The geometry assertions further down are the same on
+  // either, and stay keyed off nothing.
+  const chrome = await chromeMode(page, mode);
   const mutedColor =
-    mode === "light" ? "rgba(0, 0, 0, 0.4)" : "rgba(255, 255, 255, 0.4)";
+    chrome === "light" ? "rgba(0, 0, 0, 0.4)" : "rgba(255, 255, 255, 0.4)";
   const searchSurface =
-    mode === "light" ? "rgba(0, 0, 0, 0.04)" : "rgba(255, 255, 255, 0.04)";
+    chrome === "light" ? "rgba(0, 0, 0, 0.04)" : "rgba(255, 255, 255, 0.04)";
   const rowHoverSurface =
-    mode === "light" ? "rgba(0, 0, 0, 0.04)" : "rgba(255, 255, 255, 0.04)";
+    chrome === "light" ? "rgba(0, 0, 0, 0.04)" : "rgba(255, 255, 255, 0.04)";
   const activeSurface =
-    mode === "light" ? "rgba(0, 0, 0, 0.07)" : "rgba(255, 255, 255, 0.16)";
+    chrome === "light" ? "rgba(0, 0, 0, 0.07)" : "rgba(255, 255, 255, 0.16)";
   const chromeColor =
-    mode === "light" ? "rgba(0, 0, 0, 0.5)" : "rgba(255, 255, 255, 0.5)";
+    chrome === "light" ? "rgba(0, 0, 0, 0.5)" : "rgba(255, 255, 255, 0.5)";
   const search = page.getByTestId("open-search");
   const pinnedHeader = page.getByTestId("sidebar-pinned-header");
   const sidebarScroller = page.locator(".buzz-sidebar-scrollbar");
@@ -299,6 +358,8 @@ async function expectBuzzGradientPaint(
     };
   });
 
+  const ink = (await chromeSurface(page)) === "ink";
+
   expect(paint.theme).toBe(mode === "light" ? "buzz" : "buzz-dark");
   expect(paint.isDark).toBe(mode === "dark");
   expect(paint.surfaceImage).toBe("none");
@@ -306,7 +367,17 @@ async function expectBuzzGradientPaint(
   expect(paint.lightImage).not.toBe("none");
   expect(paint.darkImage).not.toBe("");
   expect(paint.darkImage).not.toBe("none");
-  expect(paint.lightImage).not.toBe(paint.darkImage);
+  if (ink) {
+    // Both layers are painted in the same ink on purpose — the swap still
+    // runs, it just has nothing to swap between. That is the one property
+    // worth asserting here, and it is the opposite of the stock one, so it
+    // gets its own branch rather than a relaxed shared assertion that would
+    // pass either way.
+    expect(paint.lightImage).toBe(paint.darkImage);
+  } else {
+    expect(paint.lightImage).not.toBe(paint.darkImage);
+  }
+  // The layer swap is driven by the document, so it is unchanged by ink.
   expect(paint.lightOpacity).toBe(mode === "light" ? "1" : "0");
   expect(paint.darkOpacity).toBe(mode === "dark" ? "1" : "0");
   expect(paint.sidebarImage).toBe("none");
@@ -314,8 +385,11 @@ async function expectBuzzGradientPaint(
 }
 
 async function expectBuzzSettingsPalette(page: Page, mode: "light" | "dark") {
+  // The settings nav is a sidebar, so an ink rail reaches it too. The
+  // gradient check below is about the document and keeps `mode`.
+  const chrome = await chromeMode(page, mode);
   const mutedColor =
-    mode === "light" ? "rgba(0, 0, 0, 0.4)" : "rgba(255, 255, 255, 0.4)";
+    chrome === "light" ? "rgba(0, 0, 0, 0.4)" : "rgba(255, 255, 255, 0.4)";
   const sidebar = page.getByTestId("settings-sidebar");
   const sectionLabel = sidebar
     .locator('[data-sidebar="group-label"]')
@@ -341,6 +415,12 @@ async function expectAppliedBuzzTheme(
   storedTheme: "buzz" | "buzz-dark" = themeName,
 ) {
   const isDark = themeName === "buzz-dark";
+  // An ink flavor overrides the gradient palette tokens to one flat colour,
+  // deliberately and in both document modes, so both ends resolve to INK.
+  // The document mode itself still has to change — that is what the rest of
+  // this assertion pins, and flattening the gradient must not quietly take
+  // `isDark` and `buzzTheme` with it.
+  const ink = (await chromeSurface(page)) === "ink";
   await expect
     .poll(() =>
       page.evaluate((storageKey) => {
@@ -361,8 +441,8 @@ async function expectAppliedBuzzTheme(
       storedTheme,
       isDark,
       buzzTheme: themeName,
-      gradientTop: isDark ? "#4a4616" : "#e6e6b6",
-      gradientBottom: isDark ? "#0a1423" : "#c4d0da",
+      gradientTop: ink ? INK : isDark ? "#4a4616" : "#e6e6b6",
+      gradientBottom: ink ? INK : isDark ? "#0a1423" : "#c4d0da",
     });
 }
 
@@ -1246,9 +1326,12 @@ test("prominent active tab is opt-in and switches selection surfaces", async ({
   const root = page.locator("html");
   const activeRow = page.getByTestId("settings-nav-appearance");
   const toggle = page.getByTestId("prominent-active-tab-toggle");
+  // Both surfaces follow the rail, not the document.
+  const chromeIsLight = (await chromeMode(page, "light")) === "light";
+  const surfaces = ROW_SURFACES[chromeIsLight ? "light" : "dark"];
   await expect(toggle).not.toBeChecked();
   await expect(root).not.toHaveAttribute("data-prominent-active-tab", "");
-  await expect(activeRow).toHaveCSS("background-color", "rgba(0, 0, 0, 0.07)");
+  await expect(activeRow).toHaveCSS("background-color", surfaces.subtleActive);
   const subtleTextStyle = await activeRow.evaluate((element) => {
     const styles = getComputedStyle(element);
     return { color: styles.color, fontWeight: styles.fontWeight };
@@ -1267,7 +1350,7 @@ test("prominent active tab is opt-in and switches selection surfaces", async ({
   await expect(root).toHaveAttribute("data-prominent-active-tab", "");
   await expect(activeRow).toHaveCSS(
     "background-color",
-    "rgba(255, 255, 255, 0.82)",
+    surfaces.prominentActive,
   );
   await expect
     .poll(() =>
@@ -1281,11 +1364,28 @@ test("prominent active tab is opt-in and switches selection surfaces", async ({
     const styles = getComputedStyle(element);
     return { color: styles.color, fontWeight: styles.fontWeight };
   });
-  expect(prominentTextStyle).toEqual(subtleTextStyle);
+  // Toggling prominence changes the surface, never the weight.
+  expect(prominentTextStyle.fontWeight).toBe(subtleTextStyle.fontWeight);
+  if (chromeIsLight) {
+    // On light chrome `--buzz-active-foreground` is `var(--foreground)`, the
+    // same colour the subtle row already uses, so the row is visually
+    // identical apart from its fill.
+    expect(prominentTextStyle.color).toBe(subtleTextStyle.color);
+  } else {
+    // Dark chrome pins the *subtle* active row to white via
+    // `--buzz-active-foreground`, while the prominent row — whose fill is
+    // already a translucent white — keeps the ordinary sidebar foreground.
+    // That predates the ink flavor: both declarations sit in the block the
+    // stock dark theme has always used, and this test simply never ran in
+    // dark mode to see it. Assert the divergence rather than skipping, so a
+    // change to either token still fails here.
+    expect(subtleTextStyle.color).toBe("rgb(255, 255, 255)");
+    expect(prominentTextStyle.color).toBe("rgb(202, 211, 245)");
+  }
 
   await toggle.click();
   await expect(root).not.toHaveAttribute("data-prominent-active-tab", "");
-  await expect(activeRow).toHaveCSS("background-color", "rgba(0, 0, 0, 0.07)");
+  await expect(activeRow).toHaveCSS("background-color", surfaces.subtleActive);
   await expect
     .poll(() =>
       page.evaluate(
@@ -1309,42 +1409,37 @@ test("prominent channel and direct-message rows share one flat active state", as
 
   const channelRow = page.getByTestId("channel-general");
   const directMessageRow = page.getByTestId("channel-alice-tyler");
+  // The point of this test is that the two row kinds agree, whatever the
+  // surface is — so read it from the chrome rather than naming a colour.
+  const { prominentActive } = ROW_SURFACES[await chromeMode(page, "light")];
 
-  await expect(channelRow).toHaveCSS(
-    "background-color",
-    "rgba(255, 255, 255, 0.82)",
-  );
+  await expect(channelRow).toHaveCSS("background-color", prominentActive);
   await expect(channelRow).toHaveCSS("box-shadow", "none");
   await channelRow.hover();
-  await expect(channelRow).toHaveCSS(
-    "background-color",
-    "rgba(255, 255, 255, 0.82)",
-  );
+  await expect(channelRow).toHaveCSS("background-color", prominentActive);
 
   await directMessageRow.click();
   await expect(page.getByTestId("chat-title")).toHaveText("alice-tyler");
-  await expect(directMessageRow).toHaveCSS(
-    "background-color",
-    "rgba(255, 255, 255, 0.82)",
-  );
+  await expect(directMessageRow).toHaveCSS("background-color", prominentActive);
   await expect(directMessageRow).toHaveCSS("box-shadow", "none");
   await directMessageRow.hover();
-  await expect(directMessageRow).toHaveCSS(
-    "background-color",
-    "rgba(255, 255, 255, 0.82)",
-  );
+  await expect(directMessageRow).toHaveCSS("background-color", prominentActive);
 });
 
-for (const { activeSurface, hoverSurface, mode, theme } of [
+for (const { hoverSurfaces, mode, theme } of [
   {
-    activeSurface: "rgba(0, 0, 0, 0.07)",
-    hoverSurface: "rgba(0, 0, 0, 0.04)",
+    hoverSurfaces: {
+      light: "rgba(0, 0, 0, 0.04)",
+      dark: "rgba(255, 255, 255, 0.04)",
+    },
     mode: "light" as const,
     theme: "buzz",
   },
   {
-    activeSurface: "rgba(255, 255, 255, 0.16)",
-    hoverSurface: "rgba(255, 255, 255, 0.04)",
+    hoverSurfaces: {
+      light: "rgba(255, 255, 255, 0.04)",
+      dark: "rgba(255, 255, 255, 0.04)",
+    },
     mode: "dark" as const,
     theme: "buzz-dark",
   },
@@ -1363,6 +1458,11 @@ for (const { activeSurface, hoverSurface, mode, theme } of [
     const root = page.locator("html");
     const sidebar = page.getByTestId("app-sidebar");
     const activeRow = page.getByTestId("channel-general");
+    // The document class below is asserted from `mode` on purpose: an ink
+    // rail must not drag the document into dark mode, and this is the check
+    // that would catch it if it did. Only the row surfaces move to the chrome.
+    const chrome = await chromeMode(page, mode);
+    const activeSurface = ROW_SURFACES[chrome].subtleActive;
     await expect(root).toHaveClass(
       new RegExp(`(^|\\s)${mode === "dark" ? "dark" : "light"}($|\\s)`),
     );
@@ -1374,7 +1474,10 @@ for (const { activeSurface, hoverSurface, mode, theme } of [
     await expect(activeRow).toHaveCSS("background-color", activeSurface);
     const inactiveRow = page.getByTestId("channel-random");
     await inactiveRow.hover();
-    await expect(inactiveRow).toHaveCSS("background-color", hoverSurface);
+    await expect(inactiveRow).toHaveCSS(
+      "background-color",
+      hoverSurfaces[chrome],
+    );
     const expectedForeground = await sidebar.evaluate((element) => {
       const probe = document.createElement("span");
       probe.style.color = "hsl(var(--sidebar-active-foreground))";
@@ -1810,19 +1913,33 @@ test("accent picker reveals/hides when toggling Buzz", async ({ page }) => {
         return { x: box.x, y: box.y };
       }),
     );
-  expect(swatchBoxes).toHaveLength(11);
+  // Counted from the source list rather than written out. The literal `11`
+  // that used to be here went stale the moment Citron was added as a 12th
+  // accent, and the failure said "expected 11, got 12" — which names the
+  // symptom and not the cause. Bound to `ACCENT_COLORS`, the row is asserted
+  // to render every accent the app defines, and adding a thirteenth is a
+  // product change rather than a test edit.
+  expect(swatchBoxes).toHaveLength(ACCENT_COLORS.length);
+  // The count alone cannot tell an added accent from a removed-and-replaced
+  // one, so name the accent this file exists to cover.
+  await expect(page.getByTestId("accent-color-citron")).toBeVisible();
   expect(new Set(swatchBoxes.map((box) => Math.round(box.y))).size).toBe(1);
   await expect(page.getByTestId("accent-color-options")).toHaveCSS(
     "overflow-x",
     "auto",
   );
-  await expect(page.getByTestId("accent-color-blue")).toHaveAttribute(
-    "aria-pressed",
-    "true",
-  );
-  await expect(
-    page.getByTestId("accent-color-blue").getByTestId("accent-color-selection"),
-  ).toBeVisible();
+  // Which accent starts selected is a property of the build: an
+  // unconfigured one falls back to blue, and a flavor that sets
+  // `accentColor` starts on its own. Naming blue here asserted the former on
+  // every build. What this test is actually about is the picker's selection
+  // state being coherent — exactly one swatch pressed, and that swatch the
+  // one wearing the indicator. `brand.test.mjs` already pins the
+  // unconfigured build's fallback to `#3b82f6`, so nothing is lost.
+  const pressed = page
+    .getByTestId("accent-color-options")
+    .locator('button[aria-pressed="true"]');
+  await expect(pressed).toHaveCount(1);
+  await expect(pressed.getByTestId("accent-color-selection")).toBeVisible();
   await waitForAnimations(page);
   await page.getByTestId("settings-theme").screenshot({
     path: `${SHOTS}/12-appearance-theme-and-accents.png`,
@@ -1847,7 +1964,13 @@ test("Buzz light and dark modes apply live without a reload", async ({
   await page.getByTestId("appearance-mode-dark").click();
   await expectAppliedBuzzTheme(page, "buzz-dark");
   const darkGradient = await expectBuzzGradientPaint(page, "dark");
-  expect(darkGradient).not.toBe(lightGradient);
+  if ((await chromeSurface(page)) === "ink") {
+    // One flat ink in both modes, so the painted layer is identical. The
+    // mode switch is still asserted by `expectAppliedBuzzTheme` above.
+    expect(darkGradient).toBe(lightGradient);
+  } else {
+    expect(darkGradient).not.toBe(lightGradient);
+  }
 
   await page.getByTestId("appearance-mode-light").click();
   await expectAppliedBuzzTheme(page, "buzz");
