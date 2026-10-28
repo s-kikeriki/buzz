@@ -499,6 +499,25 @@ test("the chrome surface each flavor declares is the one that is built", () => {
   }
 });
 
+test("only the flavors that drew a mark send one to the startup gates", () => {
+  // The loading screen and the onboarding field fall back to the Buzz bee
+  // when no mark reaches the build, so "Zeniad and the trunk keep the bee" is
+  // a fact about which flavors emit this variable. Bound to the committed
+  // files so giving another flavor a mark is a deliberate edit.
+  const expected = new Set(["ki.keriki"]);
+  for (const id of listFlavorIds()) {
+    const flavor = loadFlavor(id);
+    const emitted =
+      flavorBuildEnv(flavor, () => "<svg/>").VITE_BUZZ_PRODUCT_LOGO_MARK !==
+      undefined;
+    assert.equal(
+      emitted,
+      expected.has(id),
+      `${id}: whether a brand mark reaches the startup gates`,
+    );
+  }
+});
+
 test("an unknown flavor names the ones that exist", () => {
   assert.throws(() => loadFlavor("nope"), /no such flavor. Available: /);
 });

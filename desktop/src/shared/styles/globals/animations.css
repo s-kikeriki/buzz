@@ -739,6 +739,58 @@
   --buzz-grainient-alpha-soft: 0.34;
 }
 
+/*
+ * The startup gates for a brand whose house surface is ink.
+ *
+ * This is the window the app paints before anything else exists, and on a
+ * branded build the stock gate was the loudest remaining Buzz surface: the
+ * grainient derives from the active theme's chart colours, so a kikeriki build
+ * booted on Buzz's blue and green with a bee over it.
+ *
+ * It lives here, beside the shell it repaints, rather than with the onboarding
+ * ink block in components.css — the four `--buzz-grainient-color-*` are
+ * defined four lines up, and an override of them that is not next to them is
+ * one that goes stale when the wash is retuned.
+ *
+ * Nothing about the gate's structure changes: the same four radial blobs, the
+ * same 10s orbit, the same veil. Only the values differ — the canvas becomes
+ * the brand's own black (`220 11% 4%`, the value #21 cut the onboarding
+ * landing on) and the blobs become neutral lifts off it, with exactly one
+ * carrying the accent. That is the whole of "citron, sparingly": a single
+ * bloom at low alpha behind the mark, and the mark's own rim. The accent
+ * arrives as `--buzz-brand-accent`, set inline by the gate from the flavor's
+ * configuration, so no organisation's colour is baked into this file; the
+ * fallback only covers a build that declares ink chrome and no accent.
+ */
+.buzz-setup-loading-shell.buzz-boot-brand-ink {
+  color-scheme: dark;
+  --background: 220 11% 4%;
+  --foreground: 0 0% 96%;
+  --buzz-grainient-color-0: rgb(255 255 255 / 0.05);
+  --buzz-grainient-color-1: color-mix(
+    in srgb,
+    var(--buzz-brand-accent, #d4f247) 13%,
+    transparent
+  );
+  --buzz-grainient-color-2: rgb(255 255 255 / 0.04);
+  --buzz-grainient-color-3: rgb(255 255 255 / 0.06);
+}
+
+/*
+ * The accent blob is also drawn tighter than the stock wash draws its own.
+ *
+ * Without this it is the same 5%→72% field as the rest, and a brand colour
+ * spread across two thirds of the screen stops reading as an accent: on ink it
+ * came out as a flat olive cast over the whole canvas, which is the Buzz
+ * gradient's failure mode wearing a different hue. Contained, it is a glow
+ * behind the mark that the orbit carries around — present, and clearly a
+ * decision.
+ */
+.buzz-setup-loading-shell.buzz-boot-brand-ink .buzz-setup-grainient__wash {
+  --buzz-grainient-s-start-1: 2%;
+  --buzz-grainient-s-end-1: 34%;
+}
+
 .buzz-setup-grainient {
   inset: 0;
   overflow: hidden;
@@ -927,6 +979,42 @@
 
 @media (prefers-reduced-motion: reduce) {
   .bee-sprite .bee-wing {
+    animation: none;
+  }
+}
+
+/* The same slot on a build that flies its own mark instead of the bee.
+
+   A brand mark has no wings, so the gesture cannot be a flap — but the job is
+   the one the flap does: the gate must read as a thing that is working, not a
+   frozen frame, for however long the boot takes. A slow breath carries that at
+   glyph scale without inventing a motion language the brand never asked for.
+
+   On the <img> itself, which is an HTML element, for the reason FlappingBee
+   builds its wings as HTML layers: WebKit paints SVG children on the main
+   thread, so an animation inside the mark would freeze for exactly as long as
+   boot work holds that thread — the entire window in which this is visible.
+   Transforms on HTML elements run on the compositor and keep moving.
+
+   Starting a quarter-beat in (negative delay), like the flap, so a gate that
+   is on screen for one frame shows the mark mid-gesture rather than at rest. */
+.buzz-boot-mark {
+  animation: buzz-boot-mark-breathe 2.4s ease-in-out -0.6s infinite;
+  will-change: transform;
+}
+
+@keyframes buzz-boot-mark-breathe {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.055);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .buzz-boot-mark {
     animation: none;
   }
 }

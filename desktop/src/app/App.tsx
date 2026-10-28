@@ -3,6 +3,7 @@ import { emit } from "@tauri-apps/api/event";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { RouterProvider } from "@tanstack/react-router";
 import {
+  type CSSProperties,
   type ReactNode,
   useCallback,
   useEffect,
@@ -72,13 +73,41 @@ import {
   type AddCommunityDeepLinkPayload,
   listenForDeepLinks,
 } from "@/shared/deep-link";
+import { BRAND } from "@/shared/branding/brand";
 import { cn } from "@/shared/lib/cn";
+import { BrandBootMark } from "@/shared/ui/BrandBootMark";
 import { BuzzMark } from "@/shared/ui/buzz-logo/BuzzMark";
-import { FlappingBee } from "@/shared/ui/buzz-logo/FlappingBee";
 import { FuzzyLogo } from "@/shared/ui/buzz-logo/FuzzyLogo";
 import { StartupWindowDragRegion } from "@/shared/ui/StartupWindowDragRegion";
 
 const LOADING_TEXT = "Setting up your community...";
+
+/**
+ * Whether this build paints its startup gates on the brand's ink.
+ *
+ * The same declaration that keeps the navigation rail dark in both document
+ * modes, read for the same reason the onboarding landing reads it: a boot gate
+ * is chrome. Keyed on the chrome surface rather than on the mark, because the
+ * canvas and the glyph are two separate brand facts — a flavor can declare one
+ * without the other, and silently inferring either from the other is how two
+ * surfaces end up disagreeing.
+ */
+const BRAND_INK_BOOT = BRAND.chromeSurface === "ink";
+
+/**
+ * The flavor's accent, handed to the stylesheet rather than written into it.
+ *
+ * `components.css` must stay organisation-neutral — no flavor's colour is
+ * baked into the trunk — so the brand-ink block reads `--buzz-brand-accent`
+ * and this supplies it from the build's own configuration. `undefined` on a
+ * build with no configured accent leaves the block's own fallback in place.
+ */
+const BRAND_BOOT_ACCENT_STYLE =
+  BRAND_INK_BOOT && BRAND.configuredAccentColor !== null
+    ? ({
+        "--buzz-brand-accent": BRAND.configuredAccentColor,
+      } as CSSProperties)
+    : undefined;
 
 // Minimum time the cold-boot splash stays on screen. A real boot resolves the
 // community in well under 100ms, and the native window setup plus first paint
@@ -168,20 +197,32 @@ function BeeLoader({
 }
 
 // Cold boot gate: the theme-adaptive grainient background with a single
-// centered Buzz bee flying over it — the same static mark as before, now with
-// its wings flapping (ported from the Buzz website's wing-flap). Replaces the
-// old "Setting up your community" text, which stays as an sr-only caption.
+// centered mark flying over it — the Buzz bee with its wings flapping (ported
+// from the Buzz website's wing-flap), or the brand's own mark on a build that
+// ships one. Replaces the old "Setting up your community" text, which stays as
+// an sr-only caption.
+//
+// This is the first thing any launch paints, so it is also the surface where a
+// branded build saying "Buzz" is loudest. The two brand facts it reads are the
+// two the onboarding landing reads, keyed on the same declarations: the mark
+// follows `logoMark`, and the canvas follows `chromeSurface: ink` — the boot
+// gate is chrome, in the window before any document surface exists.
 function AppLoadingGate() {
   return (
     <div
-      className="buzz-setup-loading-shell flex min-h-dvh flex-col items-center justify-center overflow-hidden px-6 py-10"
+      className={cn(
+        "buzz-setup-loading-shell flex min-h-dvh flex-col items-center justify-center overflow-hidden px-6 py-10",
+        BRAND_INK_BOOT && "buzz-boot-brand-ink",
+      )}
+      data-brand-boot={BRAND_INK_BOOT ? "ink" : undefined}
       data-testid="app-loading-gate"
       role="status"
+      style={BRAND_BOOT_ACCENT_STYLE}
     >
       <StartupWindowDragRegion />
       <ThemeGrainientBackground />
       <span className="sr-only">{LOADING_TEXT}</span>
-      <FlappingBee className="relative z-10 h-auto w-28" />
+      <BrandBootMark className="relative z-10 h-auto w-28" />
     </div>
   );
 }
