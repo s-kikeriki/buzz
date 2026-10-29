@@ -3,6 +3,8 @@ import { TerminalSquare } from "lucide-react";
 
 import type { AcpRuntimeCatalogEntry } from "@/shared/api/types";
 import { cn } from "@/shared/lib/cn";
+import { BRAND } from "@/shared/branding/brand";
+import { BrandMark } from "@/shared/ui/BrandMark";
 import { BuzzMark } from "@/shared/ui/buzz-logo/BuzzMark";
 import claudeLogoUrl from "../assets/harness-logos/claude.png?inline";
 import { RUNTIME_MARKS } from "./HarnessMarks";
@@ -32,10 +34,17 @@ function isBuzzRuntime(runtime: AcpRuntimeCatalogEntry): boolean {
   return runtime.id.trim().toLowerCase() === "buzz-agent";
 }
 
+/**
+ * The built-in runtime is named after the app, not after a third party, so it
+ * follows the product name — a kikeriki build listing "Buzz" beside Claude and
+ * Codex reads as a fourth vendor rather than as "the one that ships with this
+ * app". Every other entry keeps its own `label`, which is the vendor's name
+ * and is never ours to change.
+ */
 export function getRuntimeDisplayLabel(
   runtime: AcpRuntimeCatalogEntry,
 ): string {
-  return isBuzzRuntime(runtime) ? "Buzz" : runtime.label;
+  return isBuzzRuntime(runtime) ? BRAND.productName : runtime.label;
 }
 
 function getRuntimeLogoUrl(runtime: AcpRuntimeCatalogEntry): string | null {
@@ -60,7 +69,14 @@ export function RuntimeIcon({
   if (isBuzzRuntime(runtime)) {
     // The mark's wide viewBox letterboxes inside a square box, so honoring
     // the caller's size keeps it optically in line with the square logos.
-    return <BuzzMark className={cn(className, "text-foreground")} />;
+    // `BrandMark` letterboxes too (`object-contain`), so a flavor mark of any
+    // aspect ratio lands in the same box as the vendor logos beside it.
+    return (
+      <BrandMark
+        className={className}
+        fallback={<BuzzMark className={cn(className, "text-foreground")} />}
+      />
+    );
   }
 
   if (Mark) {
