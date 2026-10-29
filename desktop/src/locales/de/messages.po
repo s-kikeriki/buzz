@@ -684,7 +684,7 @@ msgstr "Gehostete Communitys"
 
 #: src/features/settings/ui/AppearanceSettingsControls.tsx
 msgid "I added a longer message so you can compare line height and text spacing."
-msgstr "Ich habe eine längere Nachricht hinzugefügt, damit du Zeilenhöhe und Textabstände vergleichen kannst."
+msgstr "Ich habe eine längere Nachricht hinzugefügt, damit Sie Zeilenhöhe und Textabstände vergleichen können."
 
 #: src/features/sidebar/ui/AppSidebarPinnedHeader.tsx
 msgid "Inbox"
@@ -1107,7 +1107,7 @@ msgstr "Optional"
 
 #: src/features/settings/ui/AppearanceSettingsControls.tsx
 msgid "Orders every list in the sidebar. Recent also floats the sections themselves, so dragging them waits for A–Z. A section you have set from its own menu keeps that order."
-msgstr "Ordnet jede Liste in der Seitenleiste. „Zuletzt“ lässt außerdem die Abschnitte selbst nach oben rücken, sodass das Verschieben per Drag-and-drop erst bei A–Z möglich ist. Ein Abschnitt, den du über sein eigenes Menü festgelegt hast, behält seine Sortierung."
+msgstr "Ordnet jede Liste in der Seitenleiste. „Zuletzt“ lässt außerdem die Abschnitte selbst nach oben rücken, sodass das Verschieben per Drag-and-drop erst bei A–Z möglich ist. Ein Abschnitt, den Sie über sein eigenes Menü festgelegt haben, behält seine Sortierung."
 
 #: src/features/sidebar/ui/SidebarProjectsSection.tsx
 msgid "Owned by me"
