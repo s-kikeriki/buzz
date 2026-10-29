@@ -39,6 +39,7 @@ export default defineConfig({
         "**/kikeriki-theme.spec.ts",
         "**/onboarding-brand.spec.ts",
         "**/first-run-brand.spec.ts",
+        "**/running-app-brand.spec.ts",
         "**/boot-splash-brand.spec.ts",
         "**/flavor-preview.spec.ts",
         "**/mock-subscription-readiness.spec.ts",

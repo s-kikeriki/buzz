@@ -1,5 +1,6 @@
 import { expect, test } from "@playwright/test";
-import { installMockBridge } from "../helpers/bridge";
+
+import { PRODUCT_NAME } from "../helpers/brand";import { installMockBridge } from "../helpers/bridge";
 import { passThroughBackupStep } from "../helpers/onboarding";
 
 function runtime(
@@ -587,7 +588,9 @@ test("sign in stays pending until catalog detection confirms Ready", async ({
     page.getByText("Claude subscription", { exact: true }),
   ).toBeVisible();
   await expect(
-    page.getByText("Buzz will open a sign-in window for Claude Code."),
+    page.getByText(
+      `${PRODUCT_NAME} will open a sign-in window for Claude Code.`,
+    ),
   ).toBeVisible();
   const signIn = page.getByRole("button", { name: "Sign in to Claude Code" });
   await expect(signIn).toHaveText("Sign in");
