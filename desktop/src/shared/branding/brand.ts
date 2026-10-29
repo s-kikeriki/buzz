@@ -21,6 +21,7 @@ import {
   parseConfiguredAccentColor,
   parseDefaultAccentColor,
 } from "./brandAccent";
+import { parseCelebrationEmojis } from "./brandCelebration";
 import { parseChromeSurface } from "./brandChrome";
 import { parseProductLogoStyle, parseProductLogoUrl } from "./brandLogo";
 import { parseThemeLabel } from "./brandThemeLabel";
@@ -89,4 +90,11 @@ export const BRAND = {
    * identifiers are what storage and the stylesheet match on.
    */
   themeLabel: parseThemeLabel(import.meta.env?.VITE_BUZZ_THEME_LABEL),
+  /**
+   * The emoji the backup-test burst throws. Stock includes the bee and the
+   * honey jar, so a flavored build declares its own.
+   */
+  celebrationEmojis: parseCelebrationEmojis(
+    import.meta.env?.VITE_BUZZ_CELEBRATION_EMOJIS,
+  ),
 } as const;

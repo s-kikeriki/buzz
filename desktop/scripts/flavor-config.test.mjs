@@ -573,6 +573,7 @@ test("the build env carries every value a build needs to pick an identity", () =
       DEMO_BUILD_ID: "857f685ce21f5788",
       DEMO_NAME: "kikeriki",
       DMG_BACKGROUND: "flavors/icons/ki.keriki-dmg-background.png",
+      VITE_BUZZ_CELEBRATION_EMOJIS: "🎉,✨,🔑,💛,✅,🔒",
       VITE_BUZZ_CHROME_SURFACE: "ink",
       VITE_BUZZ_DEFAULT_ACCENT_COLOR: "#d4f247",
       VITE_BUZZ_PRODUCT_LOGO: "data:image/svg+xml;base64,PHN2Zy8+",
@@ -930,4 +931,67 @@ test("every buildable flavor's icon is committed at the path it names", () => {
       `${id}: declares ${flavor.icon}, which is not in the repo`,
     );
   }
+});
+
+test("a flavor's celebration set crosses as one comma-separated variable", () => {
+  const set = flavorBuildEnv(
+    validateFlavor(
+      goodFlavor({ celebrationEmojis: [" 🎉 ", "✨", "🔑"] }),
+      "acme",
+    ),
+  );
+  assert.equal(set.VITE_BUZZ_CELEBRATION_EMOJIS, "🎉,✨,🔑");
+
+  // Omitted, not emptied — same contract as the theme label. The frontend
+  // reads absence as "keep the stock set", which includes the bee.
+  const plain = flavorBuildEnv(validateFlavor(goodFlavor(), "acme"));
+  assert.equal(plain.VITE_BUZZ_CELEBRATION_EMOJIS, undefined);
+  assert.ok(!("VITE_BUZZ_CELEBRATION_EMOJIS" in plain));
+});
+
+test("an entry containing a comma is refused, not silently split", () => {
+  // The transport is one comma-separated string, so a comma inside an entry
+  // would arrive at `parseCelebrationEmojis` as two entries with nothing in
+  // the build log to say so. Refuse where the diff is readable instead.
+  assert.throws(
+    () => validateFlavor(goodFlavor({ celebrationEmojis: ["🎉,✨"] }), "acme"),
+    /must not contain a comma/,
+  );
+});
+
+test("a celebration set that would render nothing is refused", () => {
+  for (const celebrationEmojis of [
+    [],
+    "",
+    "🎉",
+    7,
+    null,
+    {},
+    [""],
+    ["  "],
+    [7],
+  ]) {
+    assert.throws(
+      () => validateFlavor(goodFlavor({ celebrationEmojis }), "acme"),
+      /celebrationEmojis/,
+      `celebrationEmojis ${JSON.stringify(celebrationEmojis)} must be refused`,
+    );
+  }
+});
+
+test("only ki.keriki replaces the burst; the others keep the bee", () => {
+  // Bound to the committed files, like the theme-label scope test above.
+  // Zeniad and the OSS trunk were explicitly to stay as they are.
+  const sets = Object.fromEntries(
+    listFlavorIds().map((id) => [
+      id,
+      flavorBuildEnv(loadFlavor(id), () => "<svg/>")
+        .VITE_BUZZ_CELEBRATION_EMOJIS,
+    ]),
+  );
+  assert.equal(sets["ki.keriki"], "🎉,✨,🔑,💛,✅,🔒");
+  assert.ok(!sets["ki.keriki"].includes("🐝"), "the bee must be gone");
+  assert.ok(!sets["ki.keriki"].includes("🍯"), "the honey must be gone");
+  assert.equal(sets.zeniad, undefined);
+  assert.equal(sets["KI.keri.KI"], undefined);
 });

@@ -1,6 +1,7 @@
 import { buildTranscriptState } from "./agentSessionTranscript";
 import type { ObserverEvent, TranscriptItem } from "./agentSessionTypes";
 import { classifyToolItem } from "./agentSessionToolClassifier";
+import { BRAND } from "@/shared/branding/brand";
 
 export type TranscriptTurnSegment =
   | { kind: "item"; item: TranscriptItem }
@@ -375,7 +376,8 @@ function sameKindLabel(item: TranscriptItem, count: number): string {
     return `Read ${count} skill${count === 1 ? "" : "s"}`;
   }
   if (renderClass === "shell") return `Ran ${count} commands`;
-  if (renderClass === "relay-op") return `Ran ${count} Buzz relay ops`;
+  if (renderClass === "relay-op")
+    return `Ran ${count} ${BRAND.productName} relay ops`;
   return `${label} ×${count}`;
 }
 
