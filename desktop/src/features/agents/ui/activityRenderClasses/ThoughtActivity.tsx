@@ -1,4 +1,5 @@
 import { Markdown } from "@/shared/ui/markdown";
+import { useLocale } from "@/shared/lib/localePreference";
 import {
   ActivityRow,
   ActivityRowContent,
@@ -9,6 +10,7 @@ import { formatTranscriptTimestampTitle } from "../agentSessionUtils";
 import type { ActivityRenderClassItemProps } from "./types";
 
 export function ThoughtActivity(props: ActivityRenderClassItemProps) {
+  const locale = useLocale();
   if (props.item.type === "tool") {
     return <ToolActivity {...props} />;
   }
@@ -20,7 +22,7 @@ export function ThoughtActivity(props: ActivityRenderClassItemProps) {
   const label = (
     <ActivityRowLabel openToneScope="tool" verb={props.item.title} />
   );
-  const title = formatTranscriptTimestampTitle(props.item.timestamp);
+  const title = formatTranscriptTimestampTitle(props.item.timestamp, locale);
 
   // Some models return thinking sealed (signature only, no readable text).
   // Keep the row so it is clear the model did think, but nothing expands.

@@ -10,6 +10,7 @@ import {
   User,
 } from "lucide-react";
 import * as React from "react";
+import { localeDateTime } from "@/shared/lib/intlLocale";
 import { toast } from "sonner";
 
 import { useIsManagedAgent } from "@/features/agent-memory/hooks";
@@ -35,6 +36,7 @@ import {
 import { useIdentityQuery } from "@/shared/api/hooks";
 import type { ChannelMember } from "@/shared/api/types";
 import { BuzzLoadingState } from "@/shared/ui/BuzzLoadingState";
+import { useLocale } from "@/shared/lib/localePreference";
 import { normalizePubkey } from "@/shared/lib/pubkey";
 import { IssueAssigneeFacepile, IssueAssigneesRow } from "./IssueAssigneesRow";
 import { DiscussedInChannels } from "./DiscussionChannels";
@@ -169,6 +171,7 @@ function IssueRow({
   project: Project;
   rangeItems: ReturnType<typeof issueSelectionItem>[];
 }) {
+  const locale = useLocale();
   const authorProfile = profiles?.[normalizePubkey(issue.author)];
   const authorLabel = resolveUserLabel({ profiles, pubkey: issue.author });
   const status = issueStatusVisual(issue.status);
@@ -260,9 +263,9 @@ function IssueRow({
           <span
             className="hidden w-20 shrink-0 text-right text-xs text-muted-foreground/55 sm:block"
             data-testid="project-issue-row-date"
-            title={new Date(issue.createdAt * 1_000).toLocaleString()}
+            title={localeDateTime(new Date(issue.createdAt * 1_000), locale)}
           >
-            {relativeTime(issue.createdAt)}
+            {relativeTime(issue.createdAt, locale)}
           </span>
         </>
       }
@@ -280,6 +283,7 @@ export function ProjectIssueDetail({
   profiles?: UserProfileLookup;
   project: Project;
 }) {
+  const locale = useLocale();
   const commentMutation = useCreateProjectIssueCommentMutation(project);
   const members = React.useMemo(
     () => issueMembers(project, issue, profiles),
@@ -342,9 +346,9 @@ export function ProjectIssueDetail({
           <span>Task created</span>
           <span
             className="shrink-0 whitespace-nowrap"
-            title={new Date(issue.createdAt * 1_000).toLocaleString()}
+            title={localeDateTime(new Date(issue.createdAt * 1_000), locale)}
           >
-            {relativeTime(issue.createdAt)}
+            {relativeTime(issue.createdAt, locale)}
           </span>
           <ProjectOriginReference
             agentName={issue.originAgentName}

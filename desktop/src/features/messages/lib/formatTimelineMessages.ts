@@ -41,7 +41,6 @@ import { normalizePubkey } from "@/shared/lib/pubkey";
 import { channelRoleMap } from "@/shared/lib/rosterDerivations";
 
 const EMPTY_ROLE_MAP: ReadonlyMap<string, string> = new Map();
-import { formatTime } from "@/features/messages/lib/dateFormatters";
 // Pure overlay helper lives in a sibling .mjs so node:test (no TS loader)
 // can exercise the exact same source the renderer uses.
 import { applyEditTagOverlay } from "@/features/messages/lib/applyEditTagOverlay.mjs";
@@ -502,7 +501,6 @@ export function formatTimelineMessages(
         role === "bot"
           ? respondToLookup?.get(authorPubkey.toLowerCase())
           : undefined,
-      time: formatTime(event.created_at),
       body: edit ? edit.content : event.content,
       parentId: thread.parentId,
       rootId: thread.rootId,

@@ -13,6 +13,7 @@ import type { UserProfileLookup } from "@/features/profile/lib/identity";
 import { useRemindLater } from "@/features/reminders/ui/RemindMeLaterProvider";
 import { useIdentityQuery } from "@/shared/api/hooks";
 import type { Channel, FeedItem, HomeFeedResponse } from "@/shared/api/types";
+import { useLocale } from "@/shared/lib/localePreference";
 import { normalizePubkey, truncateNpub } from "@/shared/lib/pubkey";
 import { useNow } from "@/shared/lib/useNow";
 import { Markdown } from "@/shared/ui/markdown";
@@ -248,6 +249,7 @@ export function ChannelActivityPopover({
   channel: Channel;
   children: React.ReactNode;
 }) {
+  const locale = useLocale();
   const [open, setOpen] = React.useState(false);
   const hoverTimerRef = React.useRef<ReturnType<typeof setTimeout> | null>(
     null,
@@ -303,12 +305,14 @@ export function ChannelActivityPopover({
       feed: buildChannelActivityFeed(unreadChannelFeedItems),
       getMessageReadAt: (messageId) =>
         activityReadAtByMessageId.get(messageId) ?? null,
+      locale,
       profiles,
     });
   }, [
     channel,
     activityReadAtByMessageId,
     identityQuery.data?.pubkey,
+    locale,
     open,
     profiles,
     unreadChannelFeedItems,

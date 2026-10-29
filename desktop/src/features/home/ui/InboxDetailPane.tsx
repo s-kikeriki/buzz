@@ -29,6 +29,7 @@ import {
 } from "@/features/home/ui/InboxMessageRow";
 import type { TimelineMessage } from "@/features/messages/types";
 import { formatTime } from "@/features/messages/lib/dateFormatters";
+import { useLocale } from "@/shared/lib/localePreference";
 import {
   hasSameMessageAuthor,
   isWithinGroupingWindow,
@@ -199,6 +200,7 @@ function InboxMessageDetailPane({
   onSendReply,
   onToggleReaction,
 }: InboxDetailPaneProps) {
+  const locale = useLocale();
   const detailPaneRef = React.useRef<HTMLElement | null>(null);
   const { activeCommunity } = useCommunities();
   // Refs for the shared anchored-scroll hook's container and content roots.
@@ -252,11 +254,11 @@ function InboxMessageDetailPane({
         parentId: threadReference.parentId,
         rootId: threadReference.rootId,
         tags: item.item.tags,
-        timeLabel: formatTime(item.item.createdAt),
+        timeLabel: formatTime(item.item.createdAt, locale),
       },
       ...pendingReplyMessages,
     ];
-  }, [item, messages, replies]);
+  }, [item, locale, messages, replies]);
   const videoReviewMessages = React.useMemo(
     () => displayMessages.map(toTimelineMessage),
     [displayMessages],
@@ -749,7 +751,6 @@ function InboxMessageDetailPane({
                   depth: message.depth,
                   kind: message.kind,
                   pubkey: message.authorPubkey,
-                  time: message.timeLabel ?? message.fullTimestampLabel,
                 },
                 currentPubkey,
                 profiles,

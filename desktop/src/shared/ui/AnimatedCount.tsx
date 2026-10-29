@@ -1,5 +1,6 @@
 import * as React from "react";
 
+import { useLocale } from "@/shared/lib/localePreference";
 import { cn } from "@/shared/lib/cn";
 import {
   formatAnimatedCount,
@@ -97,8 +98,9 @@ function AnimatedCountSlot({
 }
 
 export function AnimatedCount({ className, value }: AnimatedCountProps) {
+  const locale = useLocale();
   const normalizedValue = normalizeAnimatedCount(value);
-  const formattedValue = formatAnimatedCount(normalizedValue);
+  const formattedValue = formatAnimatedCount(normalizedValue, locale);
   const previousValueRef = React.useRef(normalizedValue);
   const [transition, setTransition] = React.useState<AnimatedCountTransition>(
     () => ({

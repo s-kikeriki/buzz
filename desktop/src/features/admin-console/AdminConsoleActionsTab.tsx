@@ -67,6 +67,7 @@ import {
   preserveRequestIdOnError,
   UNSUPPORTED_BROWSING,
 } from "./AdminConsolePanelHelpers";
+import { useLocale } from "@/shared/lib/localePreference";
 import { reasonAudienceCopy } from "./AdminConsoleReportsTab";
 
 const ACTION_LABELS: Record<AdminDirectAction, string> = {
@@ -335,13 +336,14 @@ function validate(draft: Draft, eventId: string | null): string | null {
 }
 
 function MemberState({ member }: { member: AdminMemberDetailDto }) {
+  const locale = useLocale();
   const facts = [
     member.role === null
       ? "Not on the community roster"
       : `Role: ${member.role}`,
     member.banned ? "Currently banned" : null,
     member.mutedUntil
-      ? `Timed out until ${formatAbsoluteTimestamp(member.mutedUntil)}`
+      ? `Timed out until ${formatAbsoluteTimestamp(member.mutedUntil, locale)}`
       : null,
     member.isStaff ? "Relay staff" : null,
   ].filter(Boolean);
@@ -356,6 +358,7 @@ function MemberState({ member }: { member: AdminMemberDetailDto }) {
 }
 
 function EventPreview({ event }: { event: AdminEventPreviewDto }) {
+  const locale = useLocale();
   return (
     <div
       className="space-y-1 rounded-md border border-border/60 px-2 py-1.5 text-xs"
@@ -365,7 +368,7 @@ function EventPreview({ event }: { event: AdminEventPreviewDto }) {
       <p className="whitespace-pre-wrap break-words">{event.content}</p>
       {event.deletedAt && (
         <p className="text-muted-foreground">
-          Already deleted {formatTimestamp(event.deletedAt)}.
+          Already deleted {formatTimestamp(event.deletedAt, locale)}.
         </p>
       )}
     </div>

@@ -7,6 +7,10 @@ msgstr ""
 "X-Generator: @lingui/cli\n"
 "Language: de\n"
 
+#: src/features/messages/ui/MessageThreadSummaryRow.tsx
+msgid "({unreadCount} new)"
+msgstr "({unreadCount} neu)"
+
 #: src/features/settings/ui/AppearanceSettingsControls.tsx
 msgid "(all communities)"
 msgstr "(alle Communitys)"
@@ -23,13 +27,65 @@ msgstr "{count, plural, one {ungelesene Benachrichtigung} other {ungelesene Bena
 msgid "{count, plural, one {unread thread} other {unread threads}}"
 msgstr "{count, plural, one {ungelesener Thread} other {ungelesene Threads}}"
 
+#: src/shared/lib/datetime.ts
+msgid "{dayLabel} at {time}"
+msgstr "{dayLabel} um {time}"
+
+#: src/features/channels/lib/ephemeralChannel.ts
+msgid "{days, plural, one {# day} other {# days}}"
+msgstr "{days, plural, one {# Tag} other {# Tage}}"
+
+#: src/features/channels/lib/ephemeralChannel.ts
+msgid "{days, plural, one {#d left} other {#d left}}"
+msgstr "{days, plural, one {# Tag übrig} other {# Tage übrig}}"
+
+#: src/features/channels/lib/ephemeralChannel.ts
+msgid "{days, plural, one {#d TTL} other {#d TTL}}"
+msgstr "{days, plural, one {# Tag TTL} other {# Tage TTL}}"
+
 #: src/features/settings/ui/AppearanceSettingsControls.tsx
 msgid "{glassOpacity}% opacity"
 msgstr "{glassOpacity} % Deckkraft"
 
+#: src/features/channels/lib/ephemeralChannel.ts
+msgid "{hours, plural, one {# hour} other {# hours}}"
+msgstr "{hours, plural, one {# Stunde} other {# Stunden}}"
+
+#: src/features/channels/lib/ephemeralChannel.ts
+msgid "{hours, plural, one {#h left} other {#h left}}"
+msgstr "{hours, plural, one {# Std. übrig} other {# Std. übrig}}"
+
+#: src/features/channels/lib/ephemeralChannel.ts
+msgid "{hours, plural, one {#h TTL} other {#h TTL}}"
+msgstr "{hours, plural, one {# Std. TTL} other {# Std. TTL}}"
+
 #: src/features/settings/ui/SettingsView.tsx
 msgid "{label} settings sections"
 msgstr "{label} – Einstellungsbereiche"
+
+#: src/features/channels/lib/ephemeralChannel.ts
+msgid "{minutes, plural, one {# minute} other {# minutes}}"
+msgstr "{minutes, plural, one {# Minute} other {# Minuten}}"
+
+#: src/features/channels/lib/ephemeralChannel.ts
+msgid "{minutes, plural, one {#m left} other {#m left}}"
+msgstr "{minutes, plural, one {# Min. übrig} other {# Min. übrig}}"
+
+#: src/features/channels/lib/ephemeralChannel.ts
+msgid "{minutes, plural, one {#m TTL} other {#m TTL}}"
+msgstr "{minutes, plural, one {# Min. TTL} other {# Min. TTL}}"
+
+#: src/features/messages/ui/MessageThreadSummaryRow.tsx
+msgid "{replyCount, plural, one {# reply} other {# replies}}"
+msgstr "{replyCount, plural, one {# Antwort} other {# Antworten}}"
+
+#: src/features/channels/lib/ephemeralChannel.ts
+msgid "{seconds, plural, one {# second} other {# seconds}}"
+msgstr "{seconds, plural, one {# Sekunde} other {# Sekunden}}"
+
+#: src/features/channels/lib/ephemeralChannel.ts
+msgid "{seconds, plural, one {#s TTL} other {#s TTL}}"
+msgstr "{seconds, plural, one {# s TTL} other {# s TTL}}"
 
 #: src/features/settings/ui/AppearanceSettingsControls.tsx
 msgid "A–Z"
@@ -38,6 +94,10 @@ msgstr "A–Z"
 #: src/features/settings/ui/AppearanceSettingsControls.tsx
 msgid "Accent color"
 msgstr "Akzentfarbe"
+
+#: src/shared/ui/markdown/ChannelDeepLink.tsx
+msgid "Active {when}"
+msgstr "Aktiv {when}"
 
 #: src/features/sidebar/ui/CommunityRail.tsx
 msgid "Add community"
@@ -68,6 +128,10 @@ msgstr "Gilt für Unterhaltungen und Oberflächentexte"
 #: src/features/sidebar/ui/ChannelContextMenu.tsx
 msgid "Archive channel"
 msgstr "Kanal archivieren"
+
+#: src/shared/ui/markdown/ChannelDeepLink.tsx
+msgid "Archived"
+msgstr "Archiviert"
 
 #: src/features/settings/ui/AppearanceSettingsControls.tsx
 msgid "Available in the macOS desktop app."
@@ -108,6 +172,10 @@ msgstr "Wähle die Farben, die in {productName} durchgängig verwendet werden."
 #: src/features/settings/ui/AppearanceSettingsControls.tsx
 msgid "Choose the highlight color used throughout {productName}."
 msgstr "Wähle die Hervorhebungsfarbe, die in {productName} durchgängig verwendet wird."
+
+#: src/features/channels/lib/ephemeralChannel.ts
+msgid "Cleanup due"
+msgstr "Aufräumen fällig"
 
 #: src/features/sidebar/ui/SidebarSection.tsx
 msgid "Close direct message"
@@ -174,9 +242,33 @@ msgstr "Standard"
 msgid "Delete channel"
 msgstr "Kanal löschen"
 
+#: src/shared/ui/markdown/MessageLinkPill.tsx
+msgid "Direct message with {destination}"
+msgstr "Direktnachricht mit {destination}"
+
 #: src/features/sidebar/ui/AppSidebar.tsx
 msgid "Direct messages"
 msgstr "Direktnachrichten"
+
+#: src/features/channels/lib/ephemeralChannel.ts
+msgid "Ephemeral channel. Cleans up {when}."
+msgstr "Temporärer Kanal. Wird {when} aufgeräumt."
+
+#: src/features/channels/lib/ephemeralChannel.ts
+msgid "Ephemeral channel. Cleans up {when}. Scheduled for {absoluteDeadlineLabel}."
+msgstr "Temporärer Kanal. Wird {when} aufgeräumt. Geplant für {absoluteDeadlineLabel}."
+
+#: src/features/channels/lib/ephemeralChannel.ts
+msgid "Ephemeral channel. Cleans up after {window} of inactivity."
+msgstr "Temporärer Kanal. Wird nach {window} Inaktivität aufgeräumt."
+
+#: src/features/channels/lib/ephemeralChannel.ts
+msgid "Ephemeral channel. Cleans up automatically after inactivity."
+msgstr "Temporärer Kanal. Wird nach Inaktivität automatisch aufgeräumt."
+
+#: src/features/channels/lib/ephemeralChannel.ts
+msgid "Ephemeral channel. Cleanup is due now."
+msgstr "Temporärer Kanal. Das Aufräumen ist jetzt fällig."
 
 #: src/features/settings/ui/SettingsPanels.tsx
 msgid "Experiments"
@@ -193,6 +285,14 @@ msgstr "Dem System folgen oder eine helle bzw. dunkle Darstellung wählen."
 #: src/features/settings/ui/AppearanceSettingsControls.tsx
 msgid "Font size"
 msgstr "Schriftgröße"
+
+#: src/shared/ui/markdown/ChannelDeepLink.tsx
+msgid "Forum"
+msgstr "Forum"
+
+#: src/shared/ui/markdown/MessageLinkPill.tsx
+msgid "Forum post in {destination}"
+msgstr "Forumsbeitrag in {destination}"
 
 #: src/features/sidebar/ui/AppSidebar.tsx
 msgid "Forums"
@@ -242,6 +342,15 @@ msgstr "Zur Community einladen"
 msgid "Invites"
 msgstr "Einladungen"
 
+#. placeholder {0}: formatRelativeDate(member.createdAt, locale)
+#: src/features/community-members/ui/CommunityMembersCard.tsx
+msgid "Joined {0}"
+msgstr "Beigetreten {0}"
+
+#: src/shared/lib/relativeTime.ts
+msgid "just now"
+msgstr "gerade eben"
+
 #: src/features/settings/ui/LanguageSettingsControl.tsx
 msgid "Language"
 msgstr "Sprache"
@@ -258,6 +367,23 @@ msgstr "Große Vorschauen mit Bildern und Beschreibungen"
 msgid "Larger"
 msgstr "Größer"
 
+#: src/features/profile/ui/UserProfilePanelTabs.tsx
+msgid "Last live {label}"
+msgstr "Zuletzt live {label}"
+
+#: src/features/messages/ui/MessageThreadSummaryRow.tsx
+msgid "last reply {lastReply}"
+msgstr "letzte Antwort {lastReply}"
+
+#. placeholder {0}: localeDateTime(new Date(latestActivityAt), locale)
+#: src/features/channels/ui/AgentSessionThreadPanel.tsx
+msgid "Last updated {0}"
+msgstr "Zuletzt aktualisiert {0}"
+
+#: src/features/channels/ui/AgentSessionThreadPanel.tsx
+msgid "Last updated {when}"
+msgstr "Zuletzt aktualisiert {when}"
+
 #: src/features/sidebar/ui/ChannelContextMenu.tsx
 msgid "Leave channel"
 msgstr "Kanal verlassen"
@@ -269,6 +395,10 @@ msgstr "Hell"
 #: src/features/settings/ui/AppearanceSettingsControls.tsx
 msgid "Link previews"
 msgstr "Linkvorschauen"
+
+#: src/features/profile/ui/UserProfilePanelTabs.tsx
+msgid "Live activity will appear here."
+msgstr "Live-Aktivität erscheint hier."
 
 #: src/features/sidebar/ui/ChannelContextMenu.tsx
 msgid "Loading channel actions..."
@@ -294,6 +424,18 @@ msgstr "Als gelesen markieren"
 msgid "Mark unread"
 msgstr "Als ungelesen markieren"
 
+#: src/shared/ui/markdown/MessageLinkPill.tsx
+msgid "Message deleted"
+msgstr "Nachricht gelöscht"
+
+#: src/shared/ui/markdown/MessageLinkPill.tsx
+msgid "Message in channel {channelLabel}"
+msgstr "Nachricht im Kanal {channelLabel}"
+
+#: src/shared/ui/markdown/MessageLinkPill.tsx
+msgid "Message unavailable"
+msgstr "Nachricht nicht verfügbar"
+
 #: src/features/settings/ui/SettingsPanels.tsx
 msgid "Mobile"
 msgstr "Mobil"
@@ -314,9 +456,45 @@ msgstr "Neue Nachricht"
 msgid "New section..."
 msgstr "Neuer Abschnitt …"
 
+#: src/features/profile/ui/UserProfilePanelTabs.tsx
+msgid "No activity yet"
+msgstr "Noch keine Aktivität"
+
+#: src/features/channels/ui/AgentSessionThreadPanel.tsx
+msgid "No updates yet"
+msgstr "Noch keine Updates"
+
 #: src/features/settings/ui/SettingsPanels.tsx
 msgid "Notifications"
 msgstr "Benachrichtigungen"
+
+#: src/features/channels/lib/ephemeralChannel.ts
+msgid "now"
+msgstr "jetzt"
+
+#: src/features/messages/lib/dateFormatters.ts
+msgid "on {date}"
+msgstr "am {date}"
+
+#: src/features/profile/ui/UserProfilePanelTabs.tsx
+msgid "Open activity feed. Last live {lastLiveLabel}."
+msgstr "Aktivitätsfeed öffnen. Zuletzt live {lastLiveLabel}."
+
+#: src/shared/ui/markdown/MessageLinkPill.tsx
+msgid "Open channel {channelLabel}; linked message was deleted"
+msgstr "Kanal {channelLabel} öffnen; die verknüpfte Nachricht wurde gelöscht"
+
+#: src/features/profile/ui/UserProfilePanelTabs.tsx
+msgid "Open full activity. Last live {label}."
+msgstr "Vollständige Aktivität öffnen. Zuletzt live {label}."
+
+#: src/shared/ui/markdown/MessageLinkPill.tsx
+msgid "Open message in channel {channelLabel}"
+msgstr "Nachricht im Kanal {channelLabel} öffnen"
+
+#: src/shared/ui/markdown/MessageLinkPill.tsx
+msgid "Open thread in channel {channelLabel}; linked message was deleted"
+msgstr "Thread im Kanal {channelLabel} öffnen; die verknüpfte Nachricht wurde gelöscht"
 
 #: src/features/settings/ui/AppearanceSettingsControls.tsx
 msgid "Orders every list in the sidebar. Recent also floats the sections themselves, so dragging them waits for A–Z. A section you have set from its own menu keeps that order."
@@ -342,6 +520,10 @@ msgstr "Einstellungen"
 msgid "Preview"
 msgstr "Vorschau"
 
+#: src/shared/ui/markdown/ChannelDeepLink.tsx
+msgid "Private channel"
+msgstr "Privater Kanal"
+
 #: src/features/settings/ui/AppearanceSettingsControls.tsx
 msgid "Product updates — a fresh look at conversations"
 msgstr "Produkt-Updates — ein frischer Blick auf Unterhaltungen"
@@ -357,6 +539,10 @@ msgstr "Projekte"
 #: src/features/settings/ui/AppearanceSettingsControls.tsx
 msgid "Prominent active tab"
 msgstr "Hervorgehobener aktiver Tab"
+
+#: src/shared/ui/markdown/ChannelDeepLink.tsx
+msgid "Public channel"
+msgstr "Öffentlicher Kanal"
 
 #: src/features/sidebar/ui/AppSidebarPinnedHeader.tsx
 msgid "Pulse"
@@ -442,6 +628,10 @@ msgstr "Designstil, {selectedThemeLabel}"
 msgid "this community"
 msgstr "diese Community"
 
+#: src/shared/ui/markdown/MessageLinkPill.tsx
+msgid "Thread in {destination}"
+msgstr "Thread in {destination}"
+
 #: src/features/settings/ui/AppearanceSettingsControls.tsx
 msgid "Thread layout"
 msgstr "Thread-Layout"
@@ -453,6 +643,10 @@ msgstr "Threads öffnen sich in einem Seitenbereich neben dem Kanal"
 #: src/features/settings/ui/AppearanceSettingsControls.tsx
 msgid "Threads open over the channel"
 msgstr "Threads öffnen sich über dem Kanal"
+
+#: src/shared/lib/datetime.ts
+msgid "Today"
+msgstr "Heute"
 
 #: src/features/settings/ui/SettingsView.tsx
 msgid "Try again"
@@ -483,6 +677,18 @@ msgstr "Akzentfarbe {colorName} verwenden"
 msgid "v{appVersion}"
 msgstr "v{appVersion}"
 
+#: src/features/messages/ui/MessageThreadSummaryRow.tsx
+msgid "View thread"
+msgstr "Thread ansehen"
+
+#: src/features/messages/ui/MessageThreadSummaryRow.tsx
+msgid "View thread with {replyCount} replies"
+msgstr "Thread mit {replyCount} ansehen"
+
+#: src/features/messages/ui/MessageThreadSummaryRow.tsx
+msgid "View thread with {replyCount} replies, last reply {lastReply}"
+msgstr "Thread mit {replyCount} ansehen, letzte Antwort {lastReply}"
+
 #: src/features/settings/ui/SettingsPanels.tsx
 msgid "Voice"
 msgstr "Sprache"
@@ -490,3 +696,7 @@ msgstr "Sprache"
 #: src/features/sidebar/ui/AppSidebarPinnedHeader.tsx
 msgid "Workflows"
 msgstr "Workflows"
+
+#: src/shared/lib/datetime.ts
+msgid "Yesterday"
+msgstr "Gestern"

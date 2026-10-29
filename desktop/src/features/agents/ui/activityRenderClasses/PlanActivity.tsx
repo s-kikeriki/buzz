@@ -1,4 +1,5 @@
 import { Markdown } from "@/shared/ui/markdown";
+import { useLocale } from "@/shared/lib/localePreference";
 import {
   ActivityRow,
   ActivityRowContent,
@@ -9,6 +10,7 @@ import { formatTranscriptTimestampTitle } from "../agentSessionUtils";
 import type { ActivityRenderClassItemProps } from "./types";
 
 export function PlanActivity(props: ActivityRenderClassItemProps) {
+  const locale = useLocale();
   if (props.item.type === "tool") {
     return <ToolActivity {...props} />;
   }
@@ -20,7 +22,7 @@ export function PlanActivity(props: ActivityRenderClassItemProps) {
     return (
       <ActivityRow
         testId="transcript-plan-update-item"
-        title={formatTranscriptTimestampTitle(props.item.timestamp)}
+        title={formatTranscriptTimestampTitle(props.item.timestamp, locale)}
       >
         <ActivityRowLabel
           object={<PlanUpdateLabelObject text={props.item.text} />}
@@ -34,7 +36,7 @@ export function PlanActivity(props: ActivityRenderClassItemProps) {
   return (
     <ActivityRow
       testId="transcript-plan-item"
-      title={formatTranscriptTimestampTitle(props.item.timestamp)}
+      title={formatTranscriptTimestampTitle(props.item.timestamp, locale)}
     >
       <ActivityRowLabel object="plan" openToneScope="tool" verb="Updated" />
       <ActivityRowContent className="pt-1 pb-1.5 text-sm leading-5 text-muted-foreground">

@@ -1,3 +1,4 @@
+import { useLocale } from "@/shared/lib/localePreference";
 import { cn } from "@/shared/lib/cn";
 import type { TranscriptItem } from "../agentSessionTypes";
 import type { CompactToolSummary } from "../agentSessionToolSummary";
@@ -28,6 +29,7 @@ export function TodoToolSummary({
   fallbackPreview: string | null;
   item: Extract<TranscriptItem, { type: "tool" }>;
 }) {
+  const locale = useLocale();
   const todos = buildTodoDisplayItems(item.args, item.result, fallbackPreview);
   const variant = useAgentSessionTranscriptVariant();
   const isCompactPreview = variant === "compactPreview";
@@ -37,7 +39,7 @@ export function TodoToolSummary({
   };
 
   return (
-    <ActivityRow title={formatTranscriptTimestampTitle(item.timestamp)}>
+    <ActivityRow title={formatTranscriptTimestampTitle(item.timestamp, locale)}>
       <ActivityRowLabel
         object={actionLabel.object}
         openToneScope="tool"

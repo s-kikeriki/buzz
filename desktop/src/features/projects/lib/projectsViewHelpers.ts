@@ -7,7 +7,10 @@ import { hasLocalRepositoryCheckout } from "@/features/projects/lib/projectLocal
 import { projectRepoHostForRepository } from "@/features/projects/lib/projectRepoHost";
 import { selectProjectRepository } from "@/features/projects/projectModels";
 import type { UserProfileLookup } from "@/features/profile/lib/identity";
+import { localeDateTimeFormat } from "@/shared/lib/intlLocale";
+import type { AppLocale } from "@/shared/lib/localePreference";
 import { normalizePubkey } from "@/shared/lib/pubkey";
+import { formatRelativeTimeOrDate } from "@/shared/lib/relativeTime";
 
 export type ProjectsViewMode = "grid" | "list";
 export type ProjectsRepositoryScope =
@@ -33,14 +36,17 @@ export type ProjectsSort = "updated" | "created" | "name";
 
 export const REPOSITORY_ENTRY_PAGE_SIZE = 200;
 
-export function formatLastChangedAt(timestamp: number | null) {
+export function formatLastChangedAt(
+  timestamp: number | null,
+  locale: AppLocale,
+) {
   if (!timestamp) return "—";
-  return new Date(timestamp * 1_000).toLocaleString(undefined, {
+  return localeDateTimeFormat(locale, {
     month: "short",
     day: "numeric",
     hour: "numeric",
     minute: "2-digit",
-  });
+  }).format(new Date(timestamp * 1_000));
 }
 
 export function formatFileSize(size: number | null) {
@@ -256,56 +262,44 @@ export function listRowDescription(
   return text;
 }
 
-export function formatCreatedDate(createdAt: number) {
-  return new Date(createdAt * 1_000).toLocaleDateString(undefined, {
+export function formatCreatedDate(createdAt: number, locale: AppLocale) {
+  return localeDateTimeFormat(locale, {
     month: "short",
     day: "numeric",
+  }).format(new Date(createdAt * 1_000));
+}
+
+/**
+ * How long ago something in a project happened, switching to a calendar date
+ * past a week.
+ *
+ * `locale` is required and the ladder comes from `Intl`: this used to build
+ * `` `${value} ${unit.label}s ago` `` from an English unit table, and pass
+ * `undefined` to `toLocaleDateString` — which means the operating system's
+ * locale, not the app's. A German app on an English Mac got English dates from
+ * the second half and English prose from the first.
+ */
+export function relativeTime(
+  createdAt: number,
+  locale: AppLocale,
+  nowSeconds = Math.floor(Date.now() / 1_000),
+) {
+  return formatRelativeTimeOrDate(createdAt, {
+    locale,
+    nowSeconds,
+    style: "long",
   });
 }
 
-export function relativeTime(
-  createdAt: number,
-  nowSeconds = Math.floor(Date.now() / 1_000),
-) {
-  const elapsedSeconds = Math.max(1, Math.floor(nowSeconds - createdAt));
-  const units = [
-    { label: "day", seconds: 24 * 60 * 60 },
-    { label: "hour", seconds: 60 * 60 },
-    { label: "minute", seconds: 60 },
-    { label: "second", seconds: 1 },
-  ];
-
-  if (elapsedSeconds >= 7 * 24 * 60 * 60) {
-    const createdDate = new Date(createdAt * 1_000);
-    const nowDate = new Date(nowSeconds * 1_000);
-    return createdDate.toLocaleDateString(undefined, {
-      month: "short",
-      day: "numeric",
-      ...(createdDate.getFullYear() === nowDate.getFullYear()
-        ? {}
-        : { year: "numeric" }),
-    });
-  }
-
-  for (const unit of units) {
-    const value = Math.floor(elapsedSeconds / unit.seconds);
-    if (value >= 1) {
-      return `${value} ${unit.label}${value === 1 ? "" : "s"} ago`;
-    }
-  }
-
-  return "just now";
-}
-
-export function formatExactTimestamp(createdAt: number) {
-  return new Date(createdAt * 1_000).toLocaleString(undefined, {
+export function formatExactTimestamp(createdAt: number, locale: AppLocale) {
+  return localeDateTimeFormat(locale, {
     year: "numeric",
     month: "short",
     day: "numeric",
     hour: "numeric",
     minute: "2-digit",
     second: "2-digit",
-  });
+  }).format(new Date(createdAt * 1_000));
 }
 
 export function projectPeople(

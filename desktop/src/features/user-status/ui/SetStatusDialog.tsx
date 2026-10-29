@@ -1,4 +1,7 @@
 import * as React from "react";
+import { localeDateTimeFormat } from "@/shared/lib/intlLocale";
+import type { AppLocale } from "@/shared/lib/localePreference";
+import { useLocale } from "@/shared/lib/localePreference";
 import {
   CalendarClock,
   Check,
@@ -82,11 +85,11 @@ function toLocalTimeValue(date: Date) {
   return `${date.getHours().toString().padStart(2, "0")}:${date.getMinutes().toString().padStart(2, "0")}`;
 }
 
-function formattedTime(date: Date) {
-  return date.toLocaleTimeString(undefined, {
+function formattedTime(date: Date, locale: AppLocale) {
+  return localeDateTimeFormat(locale, {
     hour: "numeric",
     minute: "2-digit",
-  });
+  }).format(date);
 }
 
 function endOfToday(from: Date) {
@@ -139,12 +142,12 @@ function startOfToday() {
   return today;
 }
 
-function formattedDate(date: Date) {
-  return date.toLocaleDateString(undefined, {
+function formattedDate(date: Date, locale: AppLocale) {
+  return localeDateTimeFormat(locale, {
     day: "numeric",
     month: "short",
     year: "numeric",
-  });
+  }).format(date);
 }
 
 function withCustomTime(current: Date, value: string) {
@@ -192,6 +195,7 @@ export function SetStatusDialog({
   onClear,
   hasExistingStatus,
 }: SetStatusDialogProps) {
+  const locale = useLocale();
   const [text, setText] = React.useState(initialText);
   const [emoji, setEmoji] = React.useState(initialEmoji);
   const [pickerOpen, setPickerOpen] = React.useState(false);
@@ -457,7 +461,7 @@ export function SetStatusDialog({
                     type="button"
                   >
                     <span className="truncate">
-                      {formattedDate(customUntil)}
+                      {formattedDate(customUntil, locale)}
                     </span>
                     <ChevronDown className="ml-auto h-4 w-4 shrink-0 text-muted-foreground" />
                   </button>
@@ -489,7 +493,7 @@ export function SetStatusDialog({
                     <span>
                       {HALF_HOUR_TIMES.find(
                         (time) => time.value === toLocalTimeValue(customUntil),
-                      )?.label ?? formattedTime(customUntil)}
+                      )?.label ?? formattedTime(customUntil, locale)}
                     </span>
                     <ChevronDown className="ml-auto h-4 w-4 shrink-0 text-muted-foreground" />
                   </button>

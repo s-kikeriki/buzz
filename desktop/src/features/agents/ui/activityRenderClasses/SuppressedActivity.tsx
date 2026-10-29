@@ -8,8 +8,10 @@ import {
   splitActivityRowLabel,
 } from "./ActivityRow";
 import type { ActivityRenderClassItemProps } from "./types";
+import { useLocale } from "@/shared/lib/localePreference";
 
 export function SuppressedActivity(props: ActivityRenderClassItemProps) {
+  const locale = useLocale();
   if (props.item.type !== "tool") {
     return null;
   }
@@ -22,7 +24,7 @@ export function SuppressedActivity(props: ActivityRenderClassItemProps) {
   return (
     <ActivityRow
       testId="transcript-suppressed-item"
-      title={formatTranscriptTimestampTitle(props.item.timestamp)}
+      title={formatTranscriptTimestampTitle(props.item.timestamp, locale)}
     >
       <ActivityRowLabel
         object={labelParts?.object ?? props.item.descriptor.preview}

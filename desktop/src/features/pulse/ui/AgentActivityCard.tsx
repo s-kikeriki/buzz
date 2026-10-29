@@ -3,6 +3,10 @@ import * as React from "react";
 
 import type { AgentNoteGroup } from "@/features/pulse/lib/groupAgentNotes";
 import { UserProfilePopover } from "@/features/profile/ui/UserProfilePopover";
+import { localeDateTimeFormat } from "@/shared/lib/intlLocale";
+import type { AppLocale } from "@/shared/lib/localePreference";
+import { useLocale } from "@/shared/lib/localePreference";
+import { formatRelativeTime } from "@/shared/lib/relativeTime";
 import type { UserProfileSummary } from "@/shared/api/types";
 import { Markdown } from "@/shared/ui/markdown";
 import { UserAvatar } from "@/shared/ui/UserAvatar";
@@ -14,19 +18,21 @@ type AgentActivityCardProps = {
   agentStatus?: "online" | "away" | "offline" | "unknown";
 };
 
-function formatRelativeTime(unixSeconds: number): string {
-  const now = Date.now() / 1_000;
-  const diff = now - unixSeconds;
+function formatActivityTime(unixSeconds: number, locale: AppLocale): string {
+  const nowSeconds = Date.now() / 1_000;
 
-  if (diff < 60) return "just now";
-  if (diff < 3_600) return `${Math.floor(diff / 60)}m ago`;
-  if (diff < 86_400) return `${Math.floor(diff / 3_600)}h ago`;
-  if (diff < 604_800) return `${Math.floor(diff / 86_400)}d ago`;
+  if (nowSeconds - unixSeconds < 604_800) {
+    return formatRelativeTime(unixSeconds, {
+      ceiling: "day",
+      locale,
+      nowSeconds,
+    });
+  }
 
-  return new Date(unixSeconds * 1_000).toLocaleDateString(undefined, {
+  return localeDateTimeFormat(locale, {
     month: "short",
     day: "numeric",
-  });
+  }).format(new Date(unixSeconds * 1_000));
 }
 
 function StatusDot({ status }: { status: "online" | "away" | "offline" }) {
@@ -50,6 +56,7 @@ export function AgentActivityCard({
   profile,
   agentStatus,
 }: AgentActivityCardProps) {
+  const locale = useLocale();
   const [expanded, setExpanded] = React.useState(false);
   const displayName = profile?.displayName ?? truncateNpub(group.pubkey);
   const avatarUrl = profile?.avatarUrl ?? null;
@@ -89,7 +96,7 @@ export function AgentActivityCard({
               <StatusDot status={agentStatus} />
             ) : null}
             <span className="shrink-0 text-2xs text-muted-foreground">
-              {formatRelativeTime(group.latestAt)}
+              {formatActivityTime(group.latestAt, locale)}
             </span>
           </div>
         </div>
@@ -127,7 +134,7 @@ export function AgentActivityCard({
               <div className="min-w-0 flex-1 text-sm">
                 <Markdown content={note.content} />
                 <p className="mt-1 text-2xs text-muted-foreground">
-                  {formatRelativeTime(note.createdAt)}
+                  {formatActivityTime(note.createdAt, locale)}
                 </p>
               </div>
             </div>

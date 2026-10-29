@@ -65,6 +65,7 @@ import type { Channel, HomeFeedResponse } from "@/shared/api/types";
 import { KIND_REACTION } from "@/shared/constants/kinds";
 import { topChromeInset } from "@/shared/layout/chromeLayout";
 import { cn } from "@/shared/lib/cn";
+import { useLocale } from "@/shared/lib/localePreference";
 import { normalizePubkey } from "@/shared/lib/pubkey";
 import { getStorageItem, setStorageItem } from "@/shared/lib/safeStorage";
 import { useElementWidth } from "@/shared/hooks/use-mobile";
@@ -107,6 +108,7 @@ export function HomeView({
   onOpenContext,
   onRefresh,
 }: HomeViewProps) {
+  const locale = useLocale();
   const relaySelfPubkey = useRelaySelfQuery().data;
   const [homeInboxRef, homeInboxWidthPx] = useElementWidth<HTMLDivElement>();
   const isNarrowHomeViewport =
@@ -378,6 +380,7 @@ export function HomeView({
       getChannelReadAt,
       getMessageReadAt,
       getThreadReadAt,
+      locale,
       profiles: feedProfiles,
     });
     return filterInboxItems(items);
@@ -389,6 +392,7 @@ export function HomeView({
     getChannelReadAt,
     getMessageReadAt,
     getThreadReadAt,
+    locale,
     readStateVersion,
   ]);
   const { effectiveDoneSet, markItemRead, markItemUnread } =
@@ -884,12 +888,13 @@ export function HomeView({
                     depth: result.depth,
                     fullTimestampLabel: formatInboxFullTimestamp(
                       result.createdAt,
+                      locale,
                     ),
                     id: result.eventId,
                     parentId: result.parentEventId,
                     rootId: result.rootEventId,
                     tags: [...imetaTags, ...emojiTags, ...mentionTags],
-                    timeLabel: formatTime(result.createdAt),
+                    timeLabel: formatTime(result.createdAt, locale),
                   };
                   setLocalRepliesByItemId((current) => ({
                     ...current,

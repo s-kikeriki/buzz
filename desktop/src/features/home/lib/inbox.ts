@@ -22,6 +22,8 @@ import {
   formatDayGroupLabel,
   formatItemTimestamp,
 } from "@/shared/lib/datetime";
+import { localeDateTimeFormat } from "@/shared/lib/intlLocale";
+import type { AppLocale } from "@/shared/lib/localePreference";
 import { resolveMentionProps } from "@/shared/lib/resolveMentionNames";
 
 export type InboxFilter =
@@ -108,13 +110,13 @@ export type InboxGroup = {
 
 type InboxChannel = Pick<Channel, "channelType" | "id" | "name">;
 
-const fullTimeFormatter = new Intl.DateTimeFormat("en-US", {
+const FULL_TIME = {
   month: "short",
   day: "numeric",
   year: "numeric",
   hour: "numeric",
   minute: "2-digit",
-});
+} as const;
 
 function tagValue(item: FeedItem, name: string) {
   return item.tags.find((tag) => tag[0] === name)?.[1]?.trim() || null;
@@ -419,12 +421,17 @@ export function findInboxItemByEventId(
   );
 }
 
-function formatInboxTimestamp(unixSeconds: number) {
-  return formatItemTimestamp(unixSeconds);
+function formatInboxTimestamp(unixSeconds: number, locale: AppLocale) {
+  return formatItemTimestamp(unixSeconds, { locale });
 }
 
-export function formatInboxFullTimestamp(unixSeconds: number) {
-  return fullTimeFormatter.format(new Date(unixSeconds * 1_000));
+export function formatInboxFullTimestamp(
+  unixSeconds: number,
+  locale: AppLocale,
+) {
+  return localeDateTimeFormat(locale, FULL_TIME).format(
+    new Date(unixSeconds * 1_000),
+  );
 }
 
 export function relayEventFromFeedItem(item: FeedItem): RelayEvent {
@@ -441,12 +448,18 @@ export function relayEventFromFeedItem(item: FeedItem): RelayEvent {
 
 export function groupInboxItems(
   items: InboxItem[],
-  nowSeconds = Date.now() / 1_000,
+  {
+    locale,
+    nowSeconds = Date.now() / 1_000,
+  }: { locale: AppLocale; nowSeconds?: number },
 ): InboxGroup[] {
   const groups = new Map<string, InboxItem[]>();
 
   for (const item of items) {
-    const label = formatDayGroupLabel(item.latestActivityAt, nowSeconds);
+    const label = formatDayGroupLabel(item.latestActivityAt, {
+      locale,
+      nowSeconds,
+    });
 
     const current = groups.get(label) ?? [];
     current.push(item);
@@ -466,11 +479,14 @@ export function buildInboxItems({
   getChannelReadAt,
   getMessageReadAt,
   getThreadReadAt,
+  locale,
   profiles,
 }: {
   channels?: InboxChannel[];
   currentPubkey?: string;
   feed?: HomeFeedResponse;
+  /** Interface language the row labels are formatted in. */
+  locale: AppLocale;
   getChannelReadAt?: (channelId: string) => number | null;
   getMessageReadAt?: (messageId: string) => number | null;
   getThreadReadAt?: (
@@ -611,7 +627,7 @@ export function buildInboxItems({
         categories,
         categoryLabel,
         channelLabel,
-        fullTimestampLabel: formatInboxFullTimestamp(item.createdAt),
+        fullTimestampLabel: formatInboxFullTimestamp(item.createdAt, locale),
         groupItems: group.items,
         isActionRequired: categories.includes("needs_action"),
         latestActivityAt: group.latestActivityAt,
@@ -620,7 +636,7 @@ export function buildInboxItems({
         preview,
         senderLabel,
         subject,
-        timestampLabel: formatInboxTimestamp(group.latestActivityAt),
+        timestampLabel: formatInboxTimestamp(group.latestActivityAt, locale),
         unreadCount: unreadItems.length,
       };
     });

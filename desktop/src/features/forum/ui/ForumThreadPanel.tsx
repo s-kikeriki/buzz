@@ -19,7 +19,8 @@ import { Markdown } from "@/shared/ui/markdown";
 import { hasLinkPreviewSuppression } from "@/features/messages/lib/formatTimelineMessages";
 import { Skeleton } from "@/shared/ui/skeleton";
 
-import { formatRelativeTime } from "../lib/time";
+import { useLocale } from "@/shared/lib/localePreference";
+import { formatRelativeTimeLabel } from "../lib/time";
 import { DeleteActionMenu } from "./DeleteActionMenu";
 import { ForumComposer } from "./ForumComposer";
 
@@ -70,6 +71,7 @@ function ReplyRow({
   onDelete?: (eventId: string) => void;
   searchQuery?: string;
 }) {
+  const locale = useLocale();
   const replyAuthorLabel = resolveUserLabel({
     pubkey: reply.pubkey,
     currentPubkey,
@@ -113,7 +115,7 @@ function ReplyRow({
           </button>
         </UserProfilePopover>
         <span className="text-xs text-muted-foreground">
-          {formatRelativeTime(reply.createdAt)}
+          {formatRelativeTimeLabel(reply.createdAt, locale)}
         </span>
 
         {showDelete ? (
@@ -161,6 +163,7 @@ export function ForumThreadPanel({
   targetSearchMessageId,
   targetSearchQuery,
 }: ForumThreadPanelProps) {
+  const locale = useLocale();
   const scrollRef = React.useRef<HTMLDivElement>(null);
   const { channels } = useChannelNavigation();
   const channelNames = React.useMemo(
@@ -272,7 +275,7 @@ export function ForumThreadPanel({
               </button>
             </UserProfilePopover>
             <span className="text-xs text-muted-foreground">
-              {formatRelativeTime(post.createdAt)}
+              {formatRelativeTimeLabel(post.createdAt, locale)}
             </span>
 
             {canDeletePost && onDeletePost ? (

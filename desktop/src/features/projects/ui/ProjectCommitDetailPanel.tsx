@@ -1,4 +1,7 @@
 import { Calendar, GitCommitHorizontal, Hash, UserRound } from "lucide-react";
+import { localeDateTimeFormat } from "@/shared/lib/intlLocale";
+import type { AppLocale } from "@/shared/lib/localePreference";
+import { useLocale } from "@/shared/lib/localePreference";
 
 import type { Repository } from "@/features/projects/hooks";
 import { commitDiscussionQuery } from "@/features/projects/lib/discussionChannels";
@@ -17,11 +20,11 @@ import { ProjectOriginReference } from "./ProjectOriginReference";
 import { ProjectRichContent } from "./ProjectRichContent";
 import { ShareLinkButton } from "./ShareLinkButton";
 
-function commitDateLabel(timestamp: number) {
-  return new Date(timestamp * 1_000).toLocaleString(undefined, {
+function commitDateLabel(timestamp: number, locale: AppLocale) {
+  return localeDateTimeFormat(locale, {
     dateStyle: "medium",
     timeStyle: "short",
-  });
+  }).format(new Date(timestamp * 1_000));
 }
 
 /**
@@ -47,6 +50,7 @@ export function ProjectCommitDetailPanel({
   originChannelId?: string | null;
   project: Repository;
 }) {
+  const locale = useLocale();
   const shortHash = commit?.shortHash ?? commitHash.slice(0, 7);
 
   return (
@@ -71,9 +75,9 @@ export function ProjectCommitDetailPanel({
             {commit ? (
               <span
                 className="shrink-0 whitespace-nowrap"
-                title={commitDateLabel(commit.timestamp)}
+                title={commitDateLabel(commit.timestamp, locale)}
               >
-                {commitDateLabel(commit.timestamp)}
+                {commitDateLabel(commit.timestamp, locale)}
               </span>
             ) : null}
             <ProjectOriginReference
@@ -105,7 +109,7 @@ export function ProjectCommitDetailPanel({
           {commit ? (
             <ProjectDetailMetaRow icon={Calendar} label="Date">
               <span className="text-muted-foreground">
-                {commitDateLabel(commit.timestamp)}
+                {commitDateLabel(commit.timestamp, locale)}
               </span>
             </ProjectDetailMetaRow>
           ) : null}

@@ -8,7 +8,9 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { ReactNode } from "react";
 import { AlertCircle, LoaderCircle } from "lucide-react";
-import { formatRelativeTime } from "../forum/lib/time";
+import { localeDateTimeFormat } from "@/shared/lib/intlLocale";
+import type { AppLocale } from "@/shared/lib/localePreference";
+import { formatRelativeTimeLabel } from "../forum/lib/time";
 import { CommunityBadge } from "./AdminConsoleCommunityBadge";
 
 // ── Generic async state ───────────────────────────────────────────────────
@@ -242,25 +244,41 @@ export function ErrorMessage({ message }: { message: string }) {
 
 // ── Timestamp formatter ───────────────────────────────────────────────────
 
-/** Absolute local time; use for future instants, where a relative label misleads. */
-export function formatAbsoluteTimestamp(raw: string): string {
+/**
+ * Absolute local time; use for future instants, where a relative label misleads.
+ *
+ * `locale` is passed explicitly rather than left as `toLocaleString(undefined)`.
+ * `undefined` there means the *operating system's* locale, so a German app on
+ * an English Mac printed English dates in the admin console — a quieter version
+ * of the hardcoded `"en-US"` problem, and the same fix.
+ */
+export function formatAbsoluteTimestamp(
+  raw: string,
+  locale: AppLocale,
+): string {
   const date = new Date(raw);
   if (Number.isNaN(date.getTime())) return raw;
-  return date.toLocaleString(undefined, {
+  return localeDateTimeFormat(locale, {
     month: "short",
     day: "numeric",
     year: "numeric",
     hour: "2-digit",
     minute: "2-digit",
-  });
+  }).format(date);
 }
 
-export function formatTimestamp(raw: string | null | undefined): string {
+export function formatTimestamp(
+  raw: string | null | undefined,
+  locale: AppLocale,
+): string {
   if (!raw) return "—";
   const date = new Date(raw);
   if (Number.isNaN(date.getTime())) return raw;
-  const absolute = formatAbsoluteTimestamp(raw);
-  const rel = formatRelativeTime(Math.floor(date.getTime() / 1000));
+  const absolute = formatAbsoluteTimestamp(raw, locale);
+  const rel = formatRelativeTimeLabel(
+    Math.floor(date.getTime() / 1000),
+    locale,
+  );
   // Render relative label with the absolute value inline in parentheses.
   return `${rel} (${absolute})`;
 }

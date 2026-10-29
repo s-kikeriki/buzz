@@ -7,6 +7,7 @@ import type {
 } from "@/features/projects/projectPullRequests.mjs";
 import { relativeTime } from "@/features/projects/lib/projectsViewHelpers";
 import type { UserProfileLookup } from "@/features/profile/lib/identity";
+import { useLocale } from "@/shared/lib/localePreference";
 import { normalizePubkey, truncateNpub } from "@/shared/lib/pubkey";
 import { ProjectRichContent } from "./ProjectRichContent";
 
@@ -44,6 +45,7 @@ export function ProjectPullRequestInlineCommentThread({
   ) => Promise<unknown>;
   profiles?: UserProfileLookup;
 }) {
+  const locale = useLocale();
   if (comments.length === 0 && !activeAnchor) return null;
 
   return (
@@ -65,7 +67,7 @@ export function ProjectPullRequestInlineCommentThread({
                   {commentAuthor(comment.author, profiles)}
                 </span>
                 <span className="shrink-0 text-muted-foreground">
-                  {relativeTime(comment.createdAt)}
+                  {relativeTime(comment.createdAt, locale)}
                 </span>
               </div>
               <ProjectRichContent

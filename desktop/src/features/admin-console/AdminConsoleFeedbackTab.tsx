@@ -36,6 +36,7 @@ import {
   parseImetaAttachments,
   useAsyncLoad,
 } from "./AdminConsolePanelHelpers";
+import { useLocale } from "@/shared/lib/localePreference";
 
 // ── Attachment budget ─────────────────────────────────────────────────────
 
@@ -93,6 +94,7 @@ export function FeedbackTab({
   pubkey: string;
   generation: number;
 }) {
+  const locale = useLocale();
   const [selectedId, setSelectedId] = useState<string | null>(null);
   // List refresh fence: bumped when a feedback status change completes in the
   // detail view, so returning to the list shows fresh status without a tab
@@ -155,7 +157,7 @@ export function FeedbackTab({
               </div>
               {receivedAt && (
                 <span className="text-xs text-muted-foreground">
-                  {formatTimestamp(receivedAt)}
+                  {formatTimestamp(receivedAt, locale)}
                 </span>
               )}
             </button>
@@ -350,6 +352,7 @@ function AttachmentViewer({
 // ── Feedback fields ───────────────────────────────────────────────────────
 
 function FeedbackFields({ data }: { data: AdminFeedbackDto }) {
+  const locale = useLocale();
   return (
     <div
       className="space-y-1.5 rounded-md border border-border/60 px-3 py-2.5"
@@ -367,9 +370,12 @@ function FeedbackFields({ data }: { data: AdminFeedbackDto }) {
       <DetailRow label="Event ID" value={data.eventId} mono />
       <DetailRow
         label="Event created"
-        value={formatTimestamp(data.eventCreatedAt)}
+        value={formatTimestamp(data.eventCreatedAt, locale)}
       />
-      <DetailRow label="Received" value={formatTimestamp(data.receivedAt)} />
+      <DetailRow
+        label="Received"
+        value={formatTimestamp(data.receivedAt, locale)}
+      />
     </div>
   );
 }

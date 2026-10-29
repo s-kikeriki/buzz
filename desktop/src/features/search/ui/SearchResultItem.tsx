@@ -10,6 +10,10 @@ import {
   type LucideIcon,
 } from "lucide-react";
 
+import { localeDateTimeFormat } from "@/shared/lib/intlLocale";
+import type { AppLocale } from "@/shared/lib/localePreference";
+import { useLocale } from "@/shared/lib/localePreference";
+import { formatRelativeTime } from "@/shared/lib/relativeTime";
 import { HashSearch } from "@/shared/ui/icons";
 import {
   resolveUserLabel,
@@ -189,22 +193,14 @@ function truncateContent(content: string) {
   return `${trimmed.slice(0, 177)}...`;
 }
 
-function formatRelativeTime(unixSeconds: number) {
-  const diff = Math.floor(Date.now() / 1_000) - unixSeconds;
+function formatHitTime(unixSeconds: number, locale: AppLocale) {
+  const nowSeconds = Math.floor(Date.now() / 1_000);
 
-  if (diff < 60) {
-    return "just now";
+  if (nowSeconds - unixSeconds < 60 * 60 * 24) {
+    return formatRelativeTime(unixSeconds, { locale, nowSeconds });
   }
 
-  if (diff < 60 * 60) {
-    return `${Math.floor(diff / 60)}m ago`;
-  }
-
-  if (diff < 60 * 60 * 24) {
-    return `${Math.floor(diff / (60 * 60))}h ago`;
-  }
-
-  return new Intl.DateTimeFormat("en-US", {
+  return localeDateTimeFormat(locale, {
     month: "short",
     day: "numeric",
     hour: "numeric",
@@ -221,6 +217,7 @@ export function MessageResultBody({
   hit: SearchHit;
   resultProfiles?: UserProfileLookup;
 }) {
+  const locale = useLocale();
   const authorLabel = resolveUserLabel({
     pubkey: hit.pubkey,
     currentPubkey,
@@ -253,7 +250,7 @@ export function MessageResultBody({
           {authorLabel}
         </span>
         <p className="ml-auto whitespace-nowrap text-xs text-muted-foreground">
-          {formatRelativeTime(hit.createdAt)}
+          {formatHitTime(hit.createdAt, locale)}
         </p>
       </div>
       {authorSecondaryLabel ? (

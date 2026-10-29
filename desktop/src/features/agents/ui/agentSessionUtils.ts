@@ -1,3 +1,5 @@
+import { localeDateTimeFormat } from "@/shared/lib/intlLocale";
+import type { AppLocale } from "@/shared/lib/localePreference";
 import { rewriteRelayUrl } from "@/shared/lib/mediaUrl";
 
 export function getToolString(
@@ -236,13 +238,17 @@ export function shortenMiddle(value: string, maxLength: number) {
   return `${value.slice(0, edgeLength)}...${value.slice(-edgeLength)}`;
 }
 
-const transcriptTimeFormat = new Intl.DateTimeFormat("en-US", {
-  hour: "numeric",
-  hour12: true,
-  minute: "2-digit",
-});
+/**
+ * `hour12` is not set.
+ *
+ * It used to be `hour12: true` under a hardcoded `"en-US"`, which forced a
+ * 12-hour clock on every transcript line. Leaving it off lets the locale decide
+ * — German reads 24-hour time, and "14:34" is not a preference there, it is the
+ * convention.
+ */
+const TRANSCRIPT_TIME = { hour: "numeric", minute: "2-digit" } as const;
 
-const transcriptTitleTimeFormat = new Intl.DateTimeFormat(undefined, {
+const TRANSCRIPT_TITLE_TIME = {
   weekday: "long",
   year: "numeric",
   month: "long",
@@ -250,20 +256,24 @@ const transcriptTitleTimeFormat = new Intl.DateTimeFormat(undefined, {
   hour: "numeric",
   minute: "2-digit",
   second: "2-digit",
-});
+} as const;
 
-export function formatTranscriptTime(isoTimestamp: string): string | null {
+export function formatTranscriptTime(
+  isoTimestamp: string,
+  locale: AppLocale,
+): string | null {
   const date = new Date(isoTimestamp);
   if (Number.isNaN(date.getTime())) return null;
-  return transcriptTimeFormat.format(date);
+  return localeDateTimeFormat(locale, TRANSCRIPT_TIME).format(date);
 }
 
 export function formatTranscriptTimestampTitle(
   isoTimestamp: string,
+  locale: AppLocale,
 ): string | undefined {
   const date = new Date(isoTimestamp);
   if (Number.isNaN(date.getTime())) return isoTimestamp || undefined;
-  return transcriptTitleTimeFormat.format(date);
+  return localeDateTimeFormat(locale, TRANSCRIPT_TITLE_TIME).format(date);
 }
 
 export function formatDuration(

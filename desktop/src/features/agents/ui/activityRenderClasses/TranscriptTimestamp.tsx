@@ -2,6 +2,7 @@ import * as React from "react";
 
 import { useAppNavigation } from "@/app/navigation/useAppNavigation";
 import { buildMessageLink } from "@/features/messages/lib/messageLink";
+import { useLocale } from "@/shared/lib/localePreference";
 import { cn } from "@/shared/lib/cn";
 import {
   formatTranscriptTime,
@@ -22,7 +23,8 @@ export function TranscriptTimestamp({
   messageLink?: TranscriptTimestampMessageLink | null;
   timestamp: string;
 }) {
-  const formatted = formatTranscriptTime(timestamp);
+  const locale = useLocale();
+  const formatted = formatTranscriptTime(timestamp, locale);
   const { goChannel } = useAppNavigation();
   const href = messageLink ? buildMessageLink(messageLink) : null;
   const openMessage = React.useCallback(
@@ -38,7 +40,7 @@ export function TranscriptTimestamp({
   );
 
   if (!formatted) return null;
-  const fullDateTime = formatTranscriptTimestampTitle(timestamp);
+  const fullDateTime = formatTranscriptTimestampTitle(timestamp, locale);
 
   if (href) {
     return (

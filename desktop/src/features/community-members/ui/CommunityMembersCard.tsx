@@ -1,6 +1,7 @@
 import * as React from "react";
 import { MoreHorizontal, Plus, Shield, ShieldCheck, User } from "lucide-react";
 import { toast } from "sonner";
+import { Trans } from "@lingui/react/macro";
 
 import { useUsersBatchQuery } from "@/features/profile/hooks";
 import { truncateNpub } from "@/shared/lib/pubkey";
@@ -20,21 +21,36 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/shared/ui/dropdown-menu";
+import { localeDateTimeFormat } from "@/shared/lib/intlLocale";
+import type { AppLocale } from "@/shared/lib/localePreference";
+import { useLocale } from "@/shared/lib/localePreference";
+import { formatRelativeTime } from "@/shared/lib/relativeTime";
 import { AddMemberDialog } from "./AddMemberDialog";
 import { ConfirmRemoveDialog } from "./ConfirmRemoveDialog";
 
-function formatRelativeDate(dateString: string): string {
+/**
+ * How long ago a member joined.
+ *
+ * Past 30 days this drops to a plain calendar date — a join date that old is a
+ * fact about the roster, not a recency signal, so "4w ago" would be worse than
+ * the date itself.
+ */
+function formatRelativeDate(dateString: string, locale: AppLocale): string {
   const date = new Date(dateString);
-  const now = new Date();
-  const diffMs = now.getTime() - date.getTime();
-  const diffMins = Math.floor(diffMs / 60_000);
-  if (diffMins < 1) return "just now";
-  if (diffMins < 60) return `${diffMins}m ago`;
-  const diffHours = Math.floor(diffMins / 60);
-  if (diffHours < 24) return `${diffHours}h ago`;
-  const diffDays = Math.floor(diffHours / 24);
-  if (diffDays < 30) return `${diffDays}d ago`;
-  return date.toLocaleDateString();
+  const nowSeconds = Date.now() / 1_000;
+  const unixSeconds = date.getTime() / 1_000;
+  if (nowSeconds - unixSeconds < 30 * 86_400) {
+    return formatRelativeTime(unixSeconds, {
+      ceiling: "day",
+      locale,
+      nowSeconds,
+    });
+  }
+  return localeDateTimeFormat(locale, {
+    year: "numeric",
+    month: "numeric",
+    day: "numeric",
+  }).format(date);
 }
 
 function RoleBadge({ role }: { role: RelayMemberRole }) {
@@ -78,6 +94,7 @@ function MemberRow({
   onRemove: (member: RelayMember) => void;
   onChangeRole: (pubkey: string, newRole: string) => void;
 }) {
+  const locale = useLocale();
   const isSelf = currentPubkey?.toLowerCase() === member.pubkey.toLowerCase();
   const isOwner = viewerRole === "owner";
   const isAdmin = viewerRole === "admin";
@@ -110,7 +127,11 @@ function MemberRow({
           </div>
           <p className="flex items-center gap-2 text-xs text-muted-foreground">
             <PubKey className="text-xs" pubkey={member.pubkey} />
-            <span>Joined {formatRelativeDate(member.createdAt)}</span>
+            <span>
+              <Trans>
+                Joined {formatRelativeDate(member.createdAt, locale)}
+              </Trans>
+            </span>
           </p>
         </div>
       </div>

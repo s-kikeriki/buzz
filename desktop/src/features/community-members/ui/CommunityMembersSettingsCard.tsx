@@ -1,4 +1,7 @@
 import { Crown, MoreHorizontal, Search, Shield } from "lucide-react";
+import { localeDateTimeFormat } from "@/shared/lib/intlLocale";
+import type { AppLocale } from "@/shared/lib/localePreference";
+import { useLocale } from "@/shared/lib/localePreference";
 import { nip19 } from "nostr-tools";
 import * as React from "react";
 import { toast } from "sonner";
@@ -54,12 +57,12 @@ function npubFromPubkey(pubkey: string): string | null {
   }
 }
 
-function formatDate(dateString: string): string {
-  return new Date(dateString).toLocaleDateString(undefined, {
+function formatDate(dateString: string, locale: AppLocale): string {
+  return localeDateTimeFormat(locale, {
     month: "short",
     day: "numeric",
     year: "numeric",
-  });
+  }).format(new Date(dateString));
 }
 
 function HoverMemberIdentity({
@@ -99,6 +102,7 @@ function RelayMemberRow({
   profile?: UserProfileSummary;
   member: RelayMember;
 }) {
+  const locale = useLocale();
   const removeMutation = useRemoveRelayMemberMutation();
   const changeRoleMutation = useChangeRelayMemberRoleMutation();
   const isSelf = currentPubkey
@@ -168,7 +172,9 @@ function RelayMemberRow({
           <span aria-hidden="true" className="shrink-0">
             ·
           </span>
-          <span className="shrink-0">Added {formatDate(member.createdAt)}</span>
+          <span className="shrink-0">
+            Added {formatDate(member.createdAt, locale)}
+          </span>
           {isSelf ? (
             <>
               <span aria-hidden="true" className="shrink-0">

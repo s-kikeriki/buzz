@@ -18,6 +18,8 @@ import { MessageComposer } from "@/features/messages/ui/MessageComposer";
 import type { UserProfileLookup } from "@/features/profile/lib/identity";
 import type { ChannelType } from "@/shared/api/types";
 import { cn } from "@/shared/lib/cn";
+import { formatItemTimestamp } from "@/shared/lib/datetime";
+import { useLocale } from "@/shared/lib/localePreference";
 import {
   setVideoPlaybackSpeed,
   useVideoPlaybackSpeed,
@@ -66,7 +68,6 @@ export type VideoReviewComment = {
   isAgent?: boolean;
   body: string;
   createdAt: number;
-  time: string;
   /** Parent event id — when it points at another comment, this is a reply. */
   parentId?: string | null;
   reactions?: VideoReviewReaction[];
@@ -1510,7 +1511,6 @@ function VideoReviewDialog({
         body,
         createdAt: Math.floor(Date.now() / 1000),
         parentId: replyTo?.id ?? null,
-        time: "now",
       };
 
       setOptimisticComments((current) => [...current, optimisticComment]);
@@ -2121,6 +2121,7 @@ function VideoReviewCommentBody({
     remove: boolean,
   ) => Promise<void>;
 }) {
+  const locale = useLocale();
   const reactions = item.comment.reactions ?? [];
   const text = item.text || item.comment.body;
   const timecodeButton =
@@ -2145,7 +2146,10 @@ function VideoReviewCommentBody({
           {item.comment.author}
         </p>
         <p className="shrink-0 text-xs text-muted-foreground">
-          {item.comment.time}
+          {formatItemTimestamp(item.comment.createdAt, {
+            locale,
+            withTime: true,
+          })}
         </p>
         {reactions.some((reaction) => reaction.reactedByCurrentUser) ? (
           <Check
