@@ -62,6 +62,7 @@ import {
   CreateIssueDialog,
   type CreateIssueDialogInput,
 } from "./CreateIssueDialog";
+import { BRAND } from "@/shared/branding/brand";
 
 type CreatePullRequestAction = {
   projects: Project[];
@@ -592,7 +593,7 @@ export function WorkspaceTabs({
                 snapshot={displayedSnapshot}
                 unavailableMessage={
                   externalHost
-                    ? `Not mirrored on Buzz. Repository files are hosted on ${externalHost}.`
+                    ? `Not mirrored on ${BRAND.productName}. Repository files are hosted on ${externalHost}.`
                     : undefined
                 }
               />

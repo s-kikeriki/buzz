@@ -31,6 +31,7 @@ import { SettingsSectionHeader } from "./SettingsSectionHeader";
 import { SignOutSection } from "./SignOutSection";
 import { writeTextToClipboard } from "@/shared/lib/clipboard";
 import { canonicalNpub, UNAVAILABLE_KEY_LABEL } from "@/shared/lib/pubkey";
+import { BRAND } from "@/shared/branding/brand";
 
 type ProfileSettingsCardProps = {
   currentPubkey?: string;
@@ -490,7 +491,7 @@ export function ProfileSettingsCard({
       <div>
         <SettingsSectionHeader
           title="Profile"
-          description="Update how your name, avatar, and bio appear across Buzz."
+          description={`Update how your name, avatar, and bio appear across ${BRAND.productName}.`}
         />
 
         <div className="space-y-3">

@@ -21,6 +21,7 @@ import {
   definitionFromFormValues,
   idFromLabel,
 } from "./harnessFormLogic";
+import { BRAND } from "@/shared/branding/brand";
 
 // ── Shared empty state ────────────────────────────────────────────────────────
 
@@ -396,7 +397,8 @@ export function CustomHarnessForm({
           <p className="text-sm font-medium text-foreground">
             Env vars
             <span className={PERSONA_LABEL_OPTIONAL_CLASS}>
-              (override at spawn time; Buzz-managed vars always win)
+              (override at spawn time; {BRAND.productName}-managed vars always
+              win)
             </span>
           </p>
           <EnvEditor

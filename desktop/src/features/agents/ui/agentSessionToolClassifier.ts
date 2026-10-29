@@ -15,6 +15,7 @@ import {
   getToolString,
   getToolStringList,
 } from "./agentSessionUtils";
+import { BRAND } from "@/shared/branding/brand";
 
 type ToolItem = Extract<TranscriptItem, { type: "tool" }>;
 
@@ -85,7 +86,7 @@ const BUZZ_CLI_READ_VERBS = new Set([
 
 const TOOL_CLASS_LABELS: Record<AgentActivityRenderClass, string> = {
   message: "Message",
-  "relay-op": "Buzz relay op",
+  "relay-op": `${BRAND.productName} relay op`,
   "file-edit": "File edit",
   "file-read": "File read",
   "skill-read": "Skill read",
@@ -434,13 +435,13 @@ function buzzOperationObject(operation: string) {
   if (isBuzzMessageSend(operation)) return "message";
   if (operation.includes(".")) {
     const [group] = operation.split(".");
-    return group ? group.replace(/[-_]+/g, " ") : "Buzz";
+    return group ? group.replace(/[-_]+/g, " ") : BRAND.productName;
   }
   const object = operation.replace(
     /^(add|approve|archive|create|delete|edit|get|hide|join|leave|list|open|publish|remove|search|send|set|trigger|unarchive|update|vote)_/,
     "",
   );
-  return object ? object.replace(/[-_]+/g, " ") : "Buzz";
+  return object ? object.replace(/[-_]+/g, " ") : BRAND.productName;
 }
 
 function buzzCliTone(group: string, verb: string): AgentActivityTone {

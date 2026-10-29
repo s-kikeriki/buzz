@@ -79,7 +79,11 @@ type BackupTestFlowProps = {
   onVerified?: () => void;
 };
 
-const BURST_EMOJIS = ["🎉", "✨", "🐝", "🍯", "🔑", "💛"] as const;
+// The set is the flavor's, not this file's. It used to be a literal here AND
+// an identical literal in the sibling copy of this flow — which is how #24
+// found one of them still saying "Buzz" after the other was converted. One
+// source now, so the two cannot drift again.
+const BURST_EMOJIS = BRAND.celebrationEmojis;
 const BURST_PARTICLE_COUNT = 18;
 const VERIFICATION_CONNECTOR_DOTS = [
   "verification-dot-1",

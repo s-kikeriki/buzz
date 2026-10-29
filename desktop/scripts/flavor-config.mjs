@@ -322,6 +322,33 @@ export function validateFlavor(flavor, flavorId) {
     }
   }
 
+  if (flavor.celebrationEmojis !== undefined) {
+    if (
+      !Array.isArray(flavor.celebrationEmojis) ||
+      flavor.celebrationEmojis.length === 0
+    ) {
+      // Refused rather than ignored: an empty list renders a burst of nothing,
+      // which reads as a broken animation rather than as an unset field.
+      fail(flavorId, "celebrationEmojis must be a non-empty array of strings");
+    }
+    for (const entry of flavor.celebrationEmojis) {
+      if (typeof entry !== "string" || entry.trim().length === 0) {
+        fail(flavorId, "celebrationEmojis entries must be non-empty strings");
+      }
+      if (entry.includes(",")) {
+        // The set crosses into the build as one comma-separated variable, so a
+        // comma inside an entry would arrive as two entries with nothing in
+        // the build log to say so. Refuse here, where the diff is readable,
+        // rather than letting `parseCelebrationEmojis` guess the boundary.
+        fail(
+          flavorId,
+          "celebrationEmojis entries must not contain a comma — the set is " +
+            "carried as one comma-separated environment variable",
+        );
+      }
+    }
+  }
+
   for (const flag of ["frozen", "example", "autoConnectDefaultRelay"]) {
     if (flavor[flag] !== undefined && typeof flavor[flag] !== "boolean") {
       fail(flavorId, `${flag} must be a boolean`);
@@ -365,6 +392,9 @@ export function validateFlavor(flavor, flavorId) {
         ? flavor.themeLabel.trim()
         : undefined,
     chromeSurface: flavor.chromeSurface ?? DEFAULT_CHROME_SURFACE,
+    celebrationEmojis: Array.isArray(flavor.celebrationEmojis)
+      ? flavor.celebrationEmojis.map((entry) => entry.trim())
+      : undefined,
     frozen: flavor.frozen === true,
     example: flavor.example === true,
     notes: typeof flavor.notes === "string" ? flavor.notes : undefined,
@@ -433,6 +463,12 @@ export function flavorBuildEnv(flavor, readFile = readFileSync) {
     // string would make an unconfigured flavor indistinguishable from one that
     // asked for a nameless theme.
     env.VITE_BUZZ_THEME_LABEL = flavor.themeLabel;
+  }
+  if (flavor.celebrationEmojis !== undefined) {
+    // Omitted when unset, like the theme label: "no set" is not a value the
+    // frontend parses but the absence of a change, and the stock set is the
+    // one the parser already defaults to.
+    env.VITE_BUZZ_CELEBRATION_EMOJIS = flavor.celebrationEmojis.join(",");
   }
   // Emitted unconditionally, unlike the logo and the accent: `auto` is a
   // value the frontend parses, and a build that silently inherited whatever

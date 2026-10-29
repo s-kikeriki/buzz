@@ -3,12 +3,28 @@ import { createRoot, type Root } from "react-dom/client";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { AgentSessionThreadPanel } from "@/features/channels/ui/AgentSessionThreadPanel";
 import { CommunitiesProvider } from "@/features/communities/useCommunities";
+import { BRAND } from "@/shared/branding/brand";
 import { bytesToHex, hexToBytes } from "@noble/hashes/utils.js";
 import { emit, listen } from "@tauri-apps/api/event";
 import { mockIPC, mockWindows } from "@tauri-apps/api/mocks";
 import { decode, npubEncode, nsecEncode } from "nostr-tools/nip19";
 import { finalizeEvent, getPublicKey } from "nostr-tools/pure";
 import { parse as yamlParse } from "yaml";
+
+/**
+ * What the real backend calls the built-in ACP runtime.
+ *
+ * Mirrors `brand::rebrand_builtin_runtime` in `src-tauri`: the Rust catalog's
+ * `"Buzz Agent"` has its product name substituted for the flavor's, and both
+ * sides take that name from the same `flavor.productName`, so they cannot
+ * disagree. A fixture that hardcoded the trunk's name would make every
+ * flavored assertion about this surface impossible to write — the mock, not
+ * the app, would be the thing saying "Buzz".
+ *
+ * This is the *fixture's* contract, not evidence the Rust rule is right. That
+ * is bound by `brand::tests` on the substitution itself.
+ */
+const MOCK_BUILTIN_RUNTIME_LABEL = `${BRAND.productName} Agent`;
 import {
   mergeMockCustomHarnesses,
   handleSaveCustomHarness,
@@ -2543,7 +2559,7 @@ function buildMockConfigSurface(pubkey: string): {
   const buzzAgentSurface = {
     ...gooseSurface,
     runtimeId: "buzz-agent",
-    runtimeLabel: "Buzz Agent",
+    runtimeLabel: MOCK_BUILTIN_RUNTIME_LABEL,
     advanced: [],
     extensions: [],
     sources: {
@@ -8711,7 +8727,7 @@ async function handleDiscoverAcpRuntimes(
     },
     {
       id: "buzz-agent",
-      label: "Buzz Agent",
+      label: MOCK_BUILTIN_RUNTIME_LABEL,
       avatar_url: "",
       availability: "available",
       command: "buzz-agent",

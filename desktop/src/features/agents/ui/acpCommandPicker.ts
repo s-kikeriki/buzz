@@ -1,5 +1,6 @@
 import type { AcpCommandCandidate } from "@/shared/api/acpCommands";
 import type { PersonaDropdownOption } from "./agentConfigOptions";
+import { BRAND } from "@/shared/branding/brand";
 
 export const DEFAULT_ACP_COMMAND_VALUE = "buzz-acp";
 
@@ -11,7 +12,10 @@ export function acpCommandPickerState(
   selectValue: string;
 } {
   const options: PersonaDropdownOption[] = [
-    { label: "Buzz ACP (default)", value: DEFAULT_ACP_COMMAND_VALUE },
+    {
+      label: `${BRAND.productName} ACP (default)`,
+      value: DEFAULT_ACP_COMMAND_VALUE,
+    },
     ...candidates.map((candidate) => ({
       label: candidate.command,
       value: candidate.command,

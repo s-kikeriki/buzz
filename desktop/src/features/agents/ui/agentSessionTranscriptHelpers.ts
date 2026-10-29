@@ -5,6 +5,7 @@ import {
   normalizeToolName,
 } from "./agentSessionToolCatalog";
 import { asRecord, asString, titleCase } from "./agentSessionUtils";
+import { BRAND } from "@/shared/branding/brand";
 
 export function extractPromptBlocks(
   payload: Record<string, unknown>,
@@ -88,7 +89,7 @@ export function parsePromptText(text: string): {
   return {
     sections,
     userText: eventContent,
-    userTitle: eventKind ? titleCase(eventKind) : "Buzz event",
+    userTitle: eventKind ? titleCase(eventKind) : `${BRAND.productName} event`,
     userPubkey: eventAuthorPubkey,
     userEventId: eventId,
   };
@@ -474,9 +475,11 @@ function semanticTurnTitle(
       return `${label} (${attributes.included} of ${attributes.total} messages${truncated})`;
     }
     case "buzz-event":
-      return attributes.type ? `Buzz event: ${attributes.type}` : "Buzz event";
+      return attributes.type
+        ? `${BRAND.productName} event: ${attributes.type}`
+        : `${BRAND.productName} event`;
     case "buzz-events":
-      return `Buzz events — ${attributes.count} events`;
+      return `${BRAND.productName} events — ${attributes.count} events`;
     case "what-you-were-working-on":
       return "What you were working on";
     case "new-message-arrived-while-you-were-working":

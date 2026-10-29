@@ -166,11 +166,18 @@ pub(crate) fn known_acp_runtime_exact(id: &str) -> Option<&'static KnownAcpRunti
 /// if the catalog entry is missing. (Previous default was bare `goose`, which
 /// is not on PATH on a stock Windows install; buzz-agent ships with the app.)
 pub fn default_agent_command() -> String {
-    known_acp_runtime_exact("buzz-agent")
+    known_acp_runtime_exact(BUILTIN_RUNTIME_ID)
         .and_then(|p| p.commands.first().copied())
-        .unwrap_or("buzz-agent")
+        .unwrap_or(BUILTIN_RUNTIME_ID)
         .to_string()
 }
+
+/// The one catalog id whose copy names this product rather than a vendor.
+///
+/// An identifier, never user-facing, so it stays lowercase `buzz-agent` on
+/// every flavor: it is what the frontend matches on, what a stored agent
+/// record holds, and what resolves the bundled command.
+pub(crate) const BUILTIN_RUNTIME_ID: &str = "buzz-agent";
 
 /// Record-first harness resolution (unified agent model, Phase 1A).
 ///
@@ -992,8 +999,23 @@ fn discover_acp_runtime_phase1(runtime: &'static KnownAcpRuntime, force: bool) -
     let can_auto_install = !runtime.cli_install_commands_for_os().is_empty()
         || !runtime.adapter_install_commands.is_empty();
 
-    let cli_hint = runtime.cli_install_hint;
-    let adapter_hint = runtime.adapter_install_hint;
+    // The built-in runtime's own copy names this product; every other row
+    // names a vendor. Rebranding is scoped to that one id here rather than
+    // inferred inside `brand::rebrand_builtin_runtime`, so "Goose" and
+    // "Claude Code" cannot be caught by a future widening of the rule.
+    let builtin = runtime.id == BUILTIN_RUNTIME_ID;
+    let rebrand = |text: &'static str| {
+        if builtin {
+            crate::brand::rebrand_builtin_runtime(text)
+        } else {
+            text.to_string()
+        }
+    };
+
+    let cli_hint = rebrand(runtime.cli_install_hint);
+    let cli_hint = cli_hint.as_str();
+    let adapter_hint = rebrand(runtime.adapter_install_hint);
+    let adapter_hint = adapter_hint.as_str();
     let install_hint = match availability {
         AcpAvailabilityStatus::Available => cli_hint.to_string(),
         AcpAvailabilityStatus::CliMissing => cli_hint.to_string(),
@@ -1033,7 +1055,7 @@ fn discover_acp_runtime_phase1(runtime: &'static KnownAcpRuntime, force: bool) -
         runtime,
         entry: AcpRuntimeCatalogEntry {
             id: runtime.id.to_string(),
-            label: runtime.label.to_string(),
+            label: rebrand(runtime.label),
             avatar_url: runtime.avatar_url.to_string(),
             availability,
             command,
