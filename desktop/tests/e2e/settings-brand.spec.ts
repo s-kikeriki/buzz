@@ -57,8 +57,14 @@ async function strayStockNames(
 test.describe("settings copy follows the flavor", () => {
   test.skip(!FLAVORED, "needs a bundle built with a flavor");
 
+  // `installMockBridge` only installs the mock IPC — the app still has to be
+  // navigated to before anything mounts, and `open-settings` does not exist
+  // until it has. My first run of this spec timed out on all six tests
+  // waiting for that button, which reads exactly like Settings being broken.
   test.beforeEach(async ({ page }) => {
+    test.setTimeout(60_000);
     await installMockBridge(page);
+    await page.goto("/", { waitUntil: "domcontentloaded" });
   });
 
   test("the panel a rebrand is judged on names the flavor, not Buzz", async ({
