@@ -49,6 +49,22 @@ function bees(scope: Page | Locator) {
   return scope.locator(".buzz-logo");
 }
 
+/**
+ * One mark = two elements on an `auto` surface.
+ *
+ * `BrandMarkImage` renders both cuts and lets Tailwind's `dark:` variant hide
+ * one, so a raw `getByTestId("brand-mark")` count is double what is on screen.
+ * Counting one cut is what makes "three marks" mean three marks — and the
+ * light cut's presence is itself the evidence the surface was declared `auto`
+ * rather than pinned, which is the mistake that makes a mark vanish in light
+ * mode.
+ */
+function markCut(scope: Page | Locator, cut: "dark" | "light") {
+  return scope.locator(
+    `[data-testid="brand-mark"][data-brand-mark-cut="${cut}"]`,
+  );
+}
+
 function brandMarks(scope: Page | Locator) {
   return scope.getByTestId("brand-mark");
 }
@@ -97,6 +113,15 @@ async function startTurn(page: Page) {
   await page.waitForTimeout(300);
 }
 
+/**
+ * One renderable row, so the transcript takes its content branch.
+ *
+ * A bare `session/prompt` is held back for the prompt-context dialog and
+ * renders nothing, which puts the list in its empty state — the other branch,
+ * and the reason the first version of this spec timed out waiting for an
+ * indicator that was never going to mount. `current_mode_update` is the
+ * smallest frame that paints a row.
+ */
 async function seedTranscript(page: Page) {
   await page.evaluate(
     ({ pubkey, channelId, now }) => {
@@ -106,16 +131,20 @@ async function seedTranscript(page: Page) {
           {
             seq: 1,
             timestamp: now,
-            kind: "acp_write",
+            kind: "acp_read",
             agentIndex: 0,
             channelId,
             sessionId: "session-brand",
             turnId: "turn-brand-001",
             payload: {
-              jsonrpc: "2.0",
-              id: 1,
-              method: "session/prompt",
-              params: { prompt: [{ type: "text", text: "Content: hello" }] },
+              method: "session/update",
+              params: {
+                sessionId: "session-brand",
+                update: {
+                  sessionUpdate: "current_mode_update",
+                  currentModeId: "plan",
+                },
+              },
             },
           },
         ],
@@ -125,6 +154,49 @@ async function seedTranscript(page: Page) {
   );
   await page.waitForTimeout(300);
 }
+
+/**
+ * Two runtimes: the one that ships with the app, and a vendor's.
+ *
+ * The default mock bridge serves no catalogue, so the dialog is empty without
+ * this. Claude is here as the control — the point of the change is that one of
+ * these two names is the app's own and the other never is.
+ */
+const CATALOG = [
+  {
+    id: "buzz-agent",
+    label: "Buzz Agent",
+    avatar_url: "",
+    availability: "available",
+    command: "buzz-agent",
+    binary_path: "/usr/local/bin/buzz-agent",
+    default_args: [],
+    mcp_command: "buzz-dev-mcp",
+    install_hint: "",
+    install_instructions_url: "https://github.com/block/buzz",
+    can_auto_install: false,
+    underlying_cli_path: null,
+    node_required: false,
+    auth_status: { status: "not_applicable" },
+  },
+  {
+    id: "claude",
+    label: "Claude Code",
+    avatar_url: "",
+    availability: "available",
+    command: "claude-agent-acp",
+    binary_path: "/usr/local/bin/claude-agent-acp",
+    default_args: [],
+    mcp_command: null,
+    install_hint: "",
+    install_instructions_url:
+      "https://github.com/agentclientprotocol/claude-agent-acp",
+    can_auto_install: true,
+    underlying_cli_path: "/usr/local/bin/claude",
+    node_required: false,
+    auth_status: { status: "logged_in" },
+  },
+];
 
 test.describe("brand marks in the signed-in app", () => {
   test.use({ viewport: { width: 1280, height: 900 } });
@@ -141,6 +213,7 @@ test.describe("brand marks in the signed-in app", () => {
     await installMockBridge(page, { managedAgents: MANAGED_AGENTS });
     const panel = await openActivityPanel(page);
     await seedTranscript(page);
+    await expect(panel.getByText("Mode")).toBeVisible({ timeout: 10_000 });
     await startTurn(page);
 
     const indicator = panel.getByTestId("turn-liveness-indicator");
@@ -149,13 +222,14 @@ test.describe("brand marks in the signed-in app", () => {
     // Three, not "at least one". The staggered row is the branch a normal
     // install sees, and a change that collapsed it to the still mark would
     // pass a presence-only assertion while visibly changing the app.
-    await expect(brandMarks(indicator)).toHaveCount(3);
+    await expect(markCut(indicator, "dark")).toHaveCount(3);
     await expect(bees(indicator)).toHaveCount(0);
 
-    // Both cuts are rendered on an `auto` surface and CSS picks one, so the
-    // count above is of elements, not of visible marks. This is the part that
-    // says the surface was declared `auto` rather than pinned to ink — a pin
-    // here would render one cut and go invisible in light mode.
+    // The light cut is there too, hidden by CSS rather than absent. That is
+    // what says the surface was declared `auto`: a mark pinned to ink renders
+    // the dark cut alone and goes invisible the moment the app is in light
+    // mode, which no dark-mode screenshot would ever show.
+    await expect(markCut(indicator, "light")).toHaveCount(3);
     await expect(brandMarks(indicator).first()).toHaveAttribute(
       "data-brand-mark-surface",
       "auto",
@@ -167,27 +241,44 @@ test.describe("brand marks in the signed-in app", () => {
     const panel = await openActivityPanel(page);
     await startTurn(page);
 
-    // A live turn with nothing renderable yet: the empty state, not the row.
-    await expect(brandMarks(panel).first()).toBeVisible({ timeout: 10_000 });
+    // A live turn with nothing renderable yet. Assert which branch rendered,
+    // not just that a mark is somewhere in the panel: the liveness row also
+    // draws marks, so "a mark is visible" would pass here even if the empty
+    // state had been left flying a bee.
+    await expect(panel.getByTestId("turn-liveness-indicator")).toHaveCount(0);
+    await expect(markCut(panel, "dark")).toHaveCount(1);
     await expect(bees(panel)).toHaveCount(0);
   });
 
   test("the built-in runtime wears the product's name, mark and sentence", async ({
     page,
   }) => {
-    await installMockBridge(page);
+    test.setTimeout(60_000);
+    await installMockBridge(page, { acpRuntimesCatalog: CATALOG });
+    await page.goto("/", { waitUntil: "domcontentloaded" });
     await openSettings(page, "agents");
+    await expect(page.getByTestId("settings-harnesses")).toBeVisible({
+      timeout: 10_000,
+    });
     await page.getByTestId("harness-add-button").click();
     await expect(page.getByTestId("harness-catalog-dialog")).toBeVisible();
+    // Ready entries sit in the "Installed" accordion, collapsed by default.
+    await page.getByTestId("harness-catalog-section-installed").click();
 
     const row = page.getByTestId("harness-catalog-list-item-buzz-agent");
     await expect(row).toBeVisible({ timeout: 10_000 });
 
     // The runtime that ships with the app is named after the app. Listed as
-    // "Buzz" beside Claude and Codex it reads as a fourth vendor.
+    // "Buzz" beside Claude it reads as a third vendor rather than as the one
+    // that came with this install — which is why the fixture has both.
     await expect(row).toContainText(PRODUCT_NAME);
-    await expect(brandMarks(row)).toHaveCount(1);
+    await expect(markCut(row, "dark")).toHaveCount(1);
+    await expect(markCut(row, "light")).toHaveCount(1);
     await expect(bees(row)).toHaveCount(0);
+    // The neighbour is a vendor's name and must be untouched by any of this.
+    await expect(
+      page.getByTestId("harness-catalog-list-item-claude"),
+    ).toContainText("Claude Code");
 
     // Its one-line description is ours and follows the name; every other
     // entry's is the vendor's and must not.

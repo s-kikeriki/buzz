@@ -1,7 +1,8 @@
 import { hexToBytes } from "@noble/hashes/utils.js";
 import { expect, test } from "@playwright/test";
 
-import { PRODUCT_NAME } from "../helpers/brand";import { nsecEncode } from "nostr-tools/nip19";
+import { flavorHasInkChrome, PRODUCT_NAME } from "../helpers/brand";
+import { nsecEncode } from "nostr-tools/nip19";
 
 import { waitForAnimations } from "../helpers/animations";
 import { installMockBridge, TEST_IDENTITIES } from "../helpers/bridge";
@@ -18,13 +19,20 @@ test("normal first launch uses the already-persisted identity", async ({
 
   const gate = page.getByTestId("machine-onboarding-gate");
   await expect(gate).toBeVisible();
-  await expect(gate).toHaveCSS("background-color", "rgb(215, 215, 46)");
-  // Landing carries a subtle dot-grid pattern over the chartreuse fill.
-  await expect(gate).toHaveCSS("background-image", /radial-gradient/);
-  await expect(gate).toHaveCSS("color", "rgb(23, 23, 23)");
-  await expect(
-    page.getByRole("button", { name: "Create a new identity key" }),
-  ).toHaveCSS("background-color", "rgb(23, 23, 23)");
+  // The stock landing's paint. An ink build repaints all three by design and
+  // `onboarding-brand.spec.ts` asserts what it paints instead, so this one
+  // checks them only where they are the right answer. Gated on the flavor the
+  // runner declared, never on what the gate renders — reading the colour back
+  // to decide whether to check the colour proves nothing.
+  if (!flavorHasInkChrome()) {
+    await expect(gate).toHaveCSS("background-color", "rgb(215, 215, 46)");
+    // Landing carries a subtle dot-grid pattern over the chartreuse fill.
+    await expect(gate).toHaveCSS("background-image", /radial-gradient/);
+    await expect(gate).toHaveCSS("color", "rgb(23, 23, 23)");
+    await expect(
+      page.getByRole("button", { name: "Create a new identity key" }),
+    ).toHaveCSS("background-color", "rgb(23, 23, 23)");
+  }
   await page.getByRole("button", { name: "Create a new identity key" }).click();
   await page.getByRole("button", { name: "Create my private key" }).click();
 
@@ -33,12 +41,14 @@ test("normal first launch uses the already-persisted identity", async ({
       name: "Your private identity key",
     }),
   ).toBeVisible();
-  // Non-landing pages layer the dot grid over the chartreuse→light-blue gradient.
-  await expect(gate).toHaveCSS(
-    "background-image",
-    /radial-gradient\(.*\), linear-gradient\(.*rgb\(215, 215, 46\).*rgb\(215, 231, 246\)\)/s,
-  );
-  await expect(gate).toHaveCSS("color", "rgb(23, 23, 23)");
+  if (!flavorHasInkChrome()) {
+    // Non-landing pages layer the dot grid over the chartreuse→light-blue gradient.
+    await expect(gate).toHaveCSS(
+      "background-image",
+      /radial-gradient\(.*\), linear-gradient\(.*rgb\(215, 215, 46\).*rgb\(215, 231, 246\)\)/s,
+    );
+    await expect(gate).toHaveCSS("color", "rgb(23, 23, 23)");
+  }
   const commands = await page.evaluate(
     () =>
       (

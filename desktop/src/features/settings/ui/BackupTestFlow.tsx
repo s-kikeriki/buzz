@@ -6,6 +6,11 @@ import {
   verifyNcryptsecBackup,
   type BackupVerification,
 } from "@/shared/api/tauriIdentity";
+// The onboarding copy of this flow already names the product this way. This
+// one is the same sentence on the Settings screen and was missed by #23 —
+// which is why the flavored suite showed it saying "Buzz" on a ki.keriki
+// build long after the first run stopped.
+import { BRAND } from "@/shared/branding/brand";
 import { Button } from "@/shared/ui/button";
 import { Input } from "@/shared/ui/input";
 import { PubKey } from "@/shared/ui/PubKey";
@@ -264,7 +269,7 @@ export function BackupTestFlow({
           </p>
           <p className="mt-1.5 text-sm leading-6 text-muted-foreground">
             {result.matchesCurrentIdentity
-              ? "It restores your current Buzz identity."
+              ? `It restores your current ${BRAND.productName} identity.`
               : "It restores a different identity than the one signed in here."}
           </p>
           <div className="mt-3 flex justify-center">

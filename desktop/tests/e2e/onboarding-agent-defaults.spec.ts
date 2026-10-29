@@ -1,6 +1,7 @@
 import { expect, test } from "@playwright/test";
 
-import { PRODUCT_NAME } from "../helpers/brand";import { installMockBridge } from "../helpers/bridge";
+import { PRODUCT_NAME } from "../helpers/brand";
+import { installMockBridge } from "../helpers/bridge";
 import { passThroughBackupStep } from "../helpers/onboarding";
 
 function runtime(

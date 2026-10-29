@@ -1,6 +1,7 @@
 import { expect, test, type Page } from "@playwright/test";
 
-import { PRODUCT_NAME } from "../helpers/brand";import { npubEncode } from "nostr-tools/nip19";
+import { PRODUCT_NAME } from "../helpers/brand";
+import { npubEncode } from "nostr-tools/nip19";
 
 import { installMockBridge } from "../helpers/bridge";
 import { openSettings } from "../helpers/settings";
@@ -230,7 +231,7 @@ for (const identity of [
   {
     label: "current",
     pubkey: CURRENT_PUBKEY,
-    message: "It restores your current Buzz identity.",
+    message: `It restores your current ${PRODUCT_NAME} identity.`,
   },
   {
     label: "different",

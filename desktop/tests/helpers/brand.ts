@@ -36,11 +36,25 @@ function readProductName(): string {
 
 export const PRODUCT_NAME = readProductName();
 
+function buildEnv(): Record<string, string | undefined> {
+  const flavorId = process.env.BUZZ_E2E_FLAVOR;
+  return flavorId ? flavorBuildEnv(loadFlavor(flavorId)) : {};
+}
+
 /** True when this run is against a bundle built with a brand mark. */
 export function flavorHasMark(): boolean {
-  const flavorId = process.env.BUZZ_E2E_FLAVOR;
-  if (!flavorId) {
-    return false;
-  }
-  return Boolean(flavorBuildEnv(loadFlavor(flavorId)).VITE_BUZZ_PRODUCT_LOGO_MARK);
+  return Boolean(buildEnv().VITE_BUZZ_PRODUCT_LOGO_MARK);
+}
+
+/**
+ * True when this bundle paints its chrome and its first-run canvas on the
+ * brand's ink in both modes.
+ *
+ * The gate for assertions about the *stock* landing paint — Buzz chartreuse,
+ * the dot grid, the near-black CTA. An ink build repaints all three by
+ * design, and `onboarding-brand.spec.ts` owns what it paints instead; a spec
+ * about something else should not re-assert either set.
+ */
+export function flavorHasInkChrome(): boolean {
+  return buildEnv().VITE_BUZZ_CHROME_SURFACE === "ink";
 }
