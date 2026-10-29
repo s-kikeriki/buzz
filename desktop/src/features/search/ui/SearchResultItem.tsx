@@ -1,3 +1,6 @@
+import type { MessageDescriptor } from "@lingui/core";
+import { msg } from "@lingui/core/macro";
+import { Trans, useLingui } from "@lingui/react/macro";
 import type * as React from "react";
 import {
   ArrowRight,
@@ -149,7 +152,7 @@ export function ChannelResultBody({ channel }: { channel: Channel }) {
         <p className="text-sm font-semibold tracking-tight">{channel.name}</p>
         <Badge variant="secondary">{channel.channelType}</Badge>
         <p className="ml-auto whitespace-nowrap text-xs text-muted-foreground">
-          Channel
+          <Trans>Channel</Trans>
         </p>
       </div>
       {channel.description ? (
@@ -161,29 +164,35 @@ export function ChannelResultBody({ channel }: { channel: Channel }) {
   );
 }
 
-function describeSearchHit(hit: SearchHit) {
+/** Kind badge on a message result. Resolved at render, not at module load. */
+function describeSearchHit(hit: SearchHit): MessageDescriptor {
   switch (hit.kind) {
     case 1:
-      return "Note";
+      return msg`Note`;
     case 45001:
-      return "Forum post";
+      return msg`Forum post`;
     case 45003:
-      return "Forum reply";
+      return msg`Forum reply`;
     case 43001:
-      return "Agent job";
+      return msg`Agent job`;
     case 43003:
-      return "Agent update";
+      return msg`Agent update`;
     case 46010:
-      return "Approval request";
+      return msg`Approval request`;
     default:
-      return "Message";
+      return msg`Message`;
   }
 }
 
-function truncateContent(content: string) {
+/**
+ * `emptyLabel` is passed in rather than written here because this is a
+ * module-level function: a `t` outside a component would be evaluated once at
+ * import and freeze in whichever locale booted.
+ */
+function truncateContent(content: string, emptyLabel: string) {
   const trimmed = content.trim();
   if (trimmed.length === 0) {
-    return "No message body.";
+    return emptyLabel;
   }
 
   if (trimmed.length <= 180) {
@@ -217,6 +226,7 @@ export function MessageResultBody({
   hit: SearchHit;
   resultProfiles?: UserProfileLookup;
 }) {
+  const { i18n, t } = useLingui();
   const locale = useLocale();
   const authorLabel = resolveUserLabel({
     pubkey: hit.pubkey,
@@ -239,7 +249,7 @@ export function MessageResultBody({
         <p className="text-sm font-semibold tracking-tight">
           {hit.channelName}
         </p>
-        <Badge variant="secondary">{describeSearchHit(hit)}</Badge>
+        <Badge variant="secondary">{i18n._(describeSearchHit(hit))}</Badge>
         <span className="flex items-center gap-1 text-xs text-muted-foreground">
           <UserAvatar
             avatarUrl={avatarUrl}
@@ -259,7 +269,7 @@ export function MessageResultBody({
         </p>
       ) : null}
       <p className="mt-2 text-sm leading-6 text-foreground">
-        {truncateContent(hit.content)}
+        {truncateContent(hit.content, t`No message body.`)}
       </p>
     </div>
   );

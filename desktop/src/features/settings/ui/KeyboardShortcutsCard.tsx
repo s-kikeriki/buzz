@@ -1,7 +1,9 @@
+import { useLingui } from "@lingui/react/macro";
 import {
   getShortcutsByCategory,
   getPlatformKeys,
   type KeyboardShortcut,
+  SHORTCUT_CATEGORY_LABELS,
 } from "@/shared/lib/keyboard-shortcuts";
 import {
   SettingsOptionGroup,
@@ -33,18 +35,22 @@ function KeyCombo({ shortcut }: { shortcut: KeyboardShortcut }) {
 }
 
 export function KeyboardShortcutsCard() {
+  const { i18n, t } = useLingui();
   const categories = getShortcutsByCategory();
 
   return (
     <section className="min-w-0" data-testid="settings-shortcuts">
       <SettingsSectionHeader
-        title="Keyboard shortcuts"
-        description="All available keyboard shortcuts. Shortcuts are read-only."
+        title={t`Keyboard shortcuts`}
+        description={t`All available keyboard shortcuts. Shortcuts are read-only.`}
       />
 
       <SettingsOptionGroupList>
         {[...categories.entries()].map(([category, shortcuts]) => (
-          <SettingsOptionGroup key={category} title={category}>
+          <SettingsOptionGroup
+            key={category}
+            title={i18n._(SHORTCUT_CATEGORY_LABELS[category])}
+          >
             {shortcuts.map((shortcut) => (
               <SettingsOptionRow
                 className="min-h-12 px-3 py-2"
@@ -52,13 +58,13 @@ export function KeyboardShortcutsCard() {
               >
                 <div className="min-w-0 flex-1">
                   <span className="text-sm font-medium text-foreground">
-                    {shortcut.label}
+                    {i18n._(shortcut.label)}
                   </span>
                   <span
                     className="ml-2 text-muted-foreground/70"
                     data-settings-subcopy
                   >
-                    {shortcut.description}
+                    {i18n._(shortcut.description)}
                   </span>
                 </div>
                 <KeyCombo shortcut={shortcut} />

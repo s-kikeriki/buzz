@@ -1,3 +1,4 @@
+import { Trans, useLingui } from "@lingui/react/macro";
 import { Search, X } from "lucide-react";
 import type * as React from "react";
 
@@ -42,6 +43,8 @@ export function SearchDialogInputRow({
   query,
   scopeLabel,
 }: SearchDialogInputRowProps) {
+  const { t } = useLingui();
+
   return (
     <div
       className="flex h-12 items-center gap-3 border-b border-border/70 px-4"
@@ -50,11 +53,11 @@ export function SearchDialogInputRow({
       <Search className="h-4 w-4 shrink-0 text-muted-foreground" />
       {scopeLabel ? (
         <button
-          aria-label={`Remove ${scopeLabel} search scope`}
+          aria-label={t`Remove ${scopeLabel} search scope`}
           className="flex h-7 max-w-48 shrink-0 items-center gap-1 rounded-md border border-primary/20 bg-primary/10 px-2 text-sm font-medium text-foreground transition-colors hover:bg-primary/15 focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-ring"
           data-testid="search-channel-scope-chip"
           onClick={onRemoveScope}
-          title={`Remove ${scopeLabel} search scope`}
+          title={t`Remove ${scopeLabel} search scope`}
           type="button"
         >
           <span className="truncate">{scopeLabel}</span>
@@ -65,7 +68,9 @@ export function SearchDialogInputRow({
         {query.length === 0 ? (
           <span className="pointer-events-none absolute inset-y-0 left-0 flex items-center text-base leading-none">
             {scopeLabel ? (
-              <span className="text-muted-foreground">Search messages</span>
+              <span className="text-muted-foreground">
+                <Trans>Search messages</Trans>
+              </span>
             ) : (
               <SearchPromptPlaceholder />
             )}
@@ -73,7 +78,7 @@ export function SearchDialogInputRow({
         ) : null}
         <input
           aria-label={
-            scopeLabel ? `Search in ${scopeLabel}` : "Search everything"
+            scopeLabel ? t`Search in ${scopeLabel}` : t`Search everything`
           }
           autoCapitalize="none"
           autoCorrect="off"
@@ -109,6 +114,13 @@ export function CurrentChannelSearchAction({
   onMouseEnter,
 }: CurrentChannelSearchActionProps) {
   const isDirectMessage = channelType === "dm";
+  // One message each, with the channel name inside it rather than concatenated
+  // after it: German puts "in" and the name in the same order here, but the
+  // split version gave a translator two fragments and no way to see the
+  // sentence they form.
+  const scopeLabel = (
+    <span className="font-medium text-foreground">{channelLabel}</span>
+  );
 
   return (
     <div className="px-3 py-3.5">
@@ -130,14 +142,19 @@ export function CurrentChannelSearchAction({
             className="min-w-0 truncate text-sm text-muted-foreground"
             data-testid="search-current-scope-label"
           >
-            {isDirectMessage ? "Search conversation with " : "Search in "}
-            <span className="font-medium text-foreground">{channelLabel}</span>
+            {isDirectMessage ? (
+              <Trans>Search conversation with {scopeLabel}</Trans>
+            ) : (
+              <Trans>Search in {scopeLabel}</Trans>
+            )}
           </span>
         </span>
         <span className="ml-auto shrink-0 text-xs text-muted-foreground/70">
-          {isDirectMessage
-            ? "Search messages in this conversation."
-            : "Search messages in this channel"}
+          {isDirectMessage ? (
+            <Trans>Search messages in this conversation.</Trans>
+          ) : (
+            <Trans>Search messages in this channel</Trans>
+          )}
         </span>
       </button>
     </div>

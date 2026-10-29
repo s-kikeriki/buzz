@@ -1,3 +1,4 @@
+import { useLingui } from "@lingui/react/macro";
 import { Check, CloudOff } from "lucide-react";
 
 import {
@@ -60,16 +61,17 @@ export function SidebarRelayConnectionCompactCard({
   surface,
   testId = "sidebar-relay-unreachable-compact",
 }: SidebarRelayConnectionCardProps) {
+  const { t } = useLingui();
   const reconnectTitle = isWaitingOnReconnectHook
-    ? "Waiting to reconnect"
-    : "Connecting";
+    ? t`Waiting to reconnect`
+    : t`Connecting`;
   const reconnectDescription = isWaitingOnReconnectHook
-    ? "Complete any prompts opened by the reconnect helper to continue."
-    : "Reconnecting";
+    ? t`Complete any prompts opened by the reconnect helper to continue.`
+    : t`Reconnecting`;
 
   return (
     <SidebarCompactActionCard
-      actionAriaLabel={isConnected ? "Connected" : "Connect to relay"}
+      actionAriaLabel={isConnected ? t`Connected` : t`Connect to relay`}
       actionDisabled={isActionDisabled || isReconnectPending || isConnected}
       actionTestId={actionTestId}
       description={
@@ -77,10 +79,10 @@ export function SidebarRelayConnectionCompactCard({
           ? undefined
           : isReconnectPending
             ? reconnectDescription
-            : "Click to connect"
+            : t`Click to connect`
       }
       dismissClassName={dismissClassName}
-      dismissLabel="Dismiss relay notification"
+      dismissLabel={t`Dismiss relay notification`}
       iconKey={
         isConnected ? "connected" : isReconnectPending ? "pending" : "idle"
       }
@@ -101,10 +103,10 @@ export function SidebarRelayConnectionCompactCard({
       testId={testId}
       title={
         isConnected
-          ? "Connected"
+          ? t`Connected`
           : isReconnectPending
             ? reconnectTitle
-            : "Can't reach the relay"
+            : t`Can't reach the relay`
       }
       tone={isConnected ? "success" : "neutral"}
     />

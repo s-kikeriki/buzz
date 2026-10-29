@@ -1,3 +1,6 @@
+import type { MessageDescriptor } from "@lingui/core";
+import { msg } from "@lingui/core/macro";
+
 import { isMacPlatform } from "@/shared/lib/platform";
 
 export const HUDDLE_SHORTCUT_EVENT = "buzz:huddle-shortcut";
@@ -14,8 +17,13 @@ export type ShortcutCategory =
 
 export type KeyboardShortcut = {
   id: string;
-  label: string;
-  description: string;
+  /**
+   * `MessageDescriptor`, not `string`: this is a module-level table, so a `t`
+   * here would be evaluated once at import and freeze every shortcut label in
+   * whichever locale booted. The card resolves each one with `i18n._()`.
+   */
+  label: MessageDescriptor;
+  description: MessageDescriptor;
   keys: string;
   keysWindows: string;
   category: ShortcutCategory;
@@ -25,96 +33,96 @@ export const KEYBOARD_SHORTCUTS: KeyboardShortcut[] = [
   // Navigation
   {
     id: "quick-search",
-    label: "Quick search",
-    description: "Open the search dialog",
+    label: msg`Quick search`,
+    description: msg`Open the search dialog`,
     keys: "⌘K",
     keysWindows: "Ctrl+K",
     category: "Navigation",
   },
   {
     id: "browse-channels",
-    label: "Browse channels",
-    description: "Open the channel browser",
+    label: msg`Browse channels`,
+    description: msg`Open the channel browser`,
     keys: "⇧⌘O",
     keysWindows: "Shift+Ctrl+O",
     category: "Navigation",
   },
   {
     id: "browse-dms",
-    label: "New direct message",
-    description: "Open the new message composer",
+    label: msg`New direct message`,
+    description: msg`Open the new message composer`,
     keys: "⇧⌘K",
     keysWindows: "Shift+Ctrl+K",
     category: "Navigation",
   },
   {
     id: "new-channel",
-    label: "New channel",
-    description: "Open the create channel dialog",
+    label: msg`New channel`,
+    description: msg`Open the create channel dialog`,
     keys: "⇧⌘N",
     keysWindows: "Shift+Ctrl+N",
     category: "Navigation",
   },
   {
     id: "open-settings",
-    label: "Settings",
-    description: "Open or close settings",
+    label: msg`Settings`,
+    description: msg`Open or close settings`,
     keys: "⌘,",
     keysWindows: "Ctrl+,",
     category: "Navigation",
   },
   {
     id: "go-back",
-    label: "Go back",
-    description: "Navigate to the previous page",
+    label: msg`Go back`,
+    description: msg`Navigate to the previous page`,
     keys: "⌘[",
     keysWindows: "Alt+←",
     category: "Navigation",
   },
   {
     id: "go-forward",
-    label: "Go forward",
-    description: "Navigate to the next page",
+    label: msg`Go forward`,
+    description: msg`Navigate to the next page`,
     keys: "⌘]",
     keysWindows: "Alt+→",
     category: "Navigation",
   },
   {
     id: "find-in-channel",
-    label: "Find in channel",
-    description: "Search messages in current channel",
+    label: msg`Find in channel`,
+    description: msg`Search messages in current channel`,
     keys: "⌘F",
     keysWindows: "Ctrl+F",
     category: "Navigation",
   },
   {
     id: "go-home",
-    label: "Home",
-    description: "Navigate to the home feed",
+    label: msg`Home`,
+    description: msg`Navigate to the home feed`,
     keys: "⇧⌘A",
     keysWindows: "Shift+Ctrl+A",
     category: "Navigation",
   },
   {
     id: "toggle-sidebar",
-    label: "Toggle sidebar",
-    description: "Show or hide the sidebar",
+    label: msg`Toggle sidebar`,
+    description: msg`Show or hide the sidebar`,
     keys: "⌘S",
     keysWindows: "Ctrl+S",
     category: "Navigation",
   },
   {
     id: "mark-current-read",
-    label: "Mark as read",
-    description: "Mark the current conversation as read",
+    label: msg`Mark as read`,
+    description: msg`Mark the current conversation as read`,
     keys: "Escape",
     keysWindows: "Escape",
     category: "Navigation",
   },
   {
     id: "mark-all-read",
-    label: "Mark all as read",
-    description: "Mark all conversations as read",
+    label: msg`Mark all as read`,
+    description: msg`Mark all conversations as read`,
     keys: "⇧Escape",
     keysWindows: "Shift+Escape",
     category: "Navigation",
@@ -123,24 +131,24 @@ export const KEYBOARD_SHORTCUTS: KeyboardShortcut[] = [
   // Zoom
   {
     id: "zoom-in",
-    label: "Zoom in",
-    description: "Increase the zoom level",
+    label: msg`Zoom in`,
+    description: msg`Increase the zoom level`,
     keys: "⌘+",
     keysWindows: "Ctrl+=",
     category: "Zoom",
   },
   {
     id: "zoom-out",
-    label: "Zoom out",
-    description: "Decrease the zoom level",
+    label: msg`Zoom out`,
+    description: msg`Decrease the zoom level`,
     keys: "⌘-",
     keysWindows: "Ctrl+-",
     category: "Zoom",
   },
   {
     id: "zoom-reset",
-    label: "Reset zoom",
-    description: "Reset zoom to default level",
+    label: msg`Reset zoom`,
+    description: msg`Reset zoom to default level`,
     keys: "⌘0",
     keysWindows: "Ctrl+0",
     category: "Zoom",
@@ -149,57 +157,56 @@ export const KEYBOARD_SHORTCUTS: KeyboardShortcut[] = [
   // Messages
   {
     id: "send-message",
-    label: "Send message",
-    description: "Send the current message",
+    label: msg`Send message`,
+    description: msg`Send the current message`,
     keys: "Enter",
     keysWindows: "Enter",
     category: "Messages",
   },
   {
     id: "new-line",
-    label: "New line",
-    description: "Insert a line break in the composer",
+    label: msg`New line`,
+    description: msg`Insert a line break in the composer`,
     keys: "Shift+Enter",
     keysWindows: "Shift+Enter",
     category: "Messages",
   },
   {
     id: "always-address-agent",
-    label: "Always address agent",
-    description: "Address the default agent, or toggle the highlighted agent",
+    label: msg`Always address agent`,
+    description: msg`Address the default agent, or toggle the highlighted agent`,
     keys: "⇧⌘M",
     keysWindows: "Ctrl+Shift+M",
     category: "Messages",
   },
   {
     id: "publish-note",
-    label: "Publish note",
-    description: "Publish a Pulse note",
+    label: msg`Publish note`,
+    description: msg`Publish a Pulse note`,
     keys: "⌘Enter",
     keysWindows: "Ctrl+Enter",
     category: "Messages",
   },
   {
     id: "close-dialog",
-    label: "Close dialog",
-    description: "Close the current dialog or settings",
+    label: msg`Close dialog`,
+    description: msg`Close the current dialog or settings`,
     keys: "Escape",
     keysWindows: "Escape",
     category: "Messages",
   },
   {
     id: "toggle-huddle",
-    label: "Start or leave huddle",
-    description:
-      "Start or join a huddle in the current channel; leave when connected",
+    label: msg`Start or leave huddle`,
+    description: msg`Start or join a huddle in the current channel; leave when connected`,
     keys: "Ctrl+Shift+Space",
     keysWindows: "Ctrl+Shift+Space",
     category: "Messages",
   },
   {
     id: "push-to-talk",
-    label: "Push to talk",
-    description: "Hold to unmute in a huddle",
+    label: msg`Push to talk`,
+    description: msg`Hold to unmute in a huddle`,
     keys: "Ctrl+Space",
     keysWindows: "Ctrl+Space",
     category: "Messages",
@@ -208,41 +215,40 @@ export const KEYBOARD_SHORTCUTS: KeyboardShortcut[] = [
   // Formatting
   {
     id: "format-bold",
-    label: "Bold",
-    description: "Toggle bold formatting",
+    label: msg`Bold`,
+    description: msg`Toggle bold formatting`,
     keys: "⌘B",
     keysWindows: "Ctrl+B",
     category: "Formatting",
   },
   {
     id: "format-italic",
-    label: "Italic",
-    description: "Toggle italic formatting",
+    label: msg`Italic`,
+    description: msg`Toggle italic formatting`,
     keys: "⌘I",
     keysWindows: "Ctrl+I",
     category: "Formatting",
   },
   {
     id: "format-strikethrough",
-    label: "Strikethrough",
-    description: "Toggle strikethrough formatting",
+    label: msg`Strikethrough`,
+    description: msg`Toggle strikethrough formatting`,
     keys: "⌘⇧X",
     keysWindows: "Ctrl+Shift+X",
     category: "Formatting",
   },
   {
     id: "format-code",
-    label: "Inline code",
-    description: "Toggle inline code formatting",
+    label: msg`Inline code`,
+    description: msg`Toggle inline code formatting`,
     keys: "⌘E",
     keysWindows: "Ctrl+E",
     category: "Formatting",
   },
   {
     id: "format-link",
-    label: "Insert link",
-    description:
-      "Link the selected composer text, or edit the link under the caret",
+    label: msg`Insert link`,
+    description: msg`Link the selected composer text, or edit the link under the caret`,
     keys: "⌘K",
     keysWindows: "Ctrl+K",
     category: "Formatting",
@@ -255,6 +261,21 @@ const CATEGORY_ORDER: ShortcutCategory[] = [
   "Formatting",
   "Zoom",
 ];
+
+/**
+ * Display name per category. The union member stays the English key — it is
+ * the grouping identity and a React key — so translating the heading cannot
+ * change which shortcuts land in which group.
+ */
+export const SHORTCUT_CATEGORY_LABELS: Record<
+  ShortcutCategory,
+  MessageDescriptor
+> = {
+  Formatting: msg`Formatting`,
+  Messages: msg`Messages`,
+  Navigation: msg`Navigation`,
+  Zoom: msg`Zoom`,
+};
 
 export function getShortcutsByCategory(): Map<
   ShortcutCategory,

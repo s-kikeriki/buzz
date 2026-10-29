@@ -1,3 +1,5 @@
+import { plural } from "@lingui/core/macro";
+import { Trans, useLingui } from "@lingui/react/macro";
 import * as React from "react";
 
 import { X } from "lucide-react";
@@ -60,6 +62,7 @@ function SectionNameDialog({
   isConfirmDisabled,
   onConfirm,
 }: SectionNameDialogProps) {
+  const { t } = useLingui();
   const [name, setName] = React.useState(initialValue);
   const [icon, setIcon] = React.useState(initialIcon);
   const [pickerOpen, setPickerOpen] = React.useState(false);
@@ -108,7 +111,7 @@ function SectionNameDialog({
               <div className="relative shrink-0">
                 <PopoverTrigger asChild>
                   <button
-                    aria-label="Choose section icon"
+                    aria-label={t`Choose section icon`}
                     className="flex h-9 w-9 items-center justify-center rounded-md border border-input text-lg transition-colors hover:bg-accent"
                     type="button"
                   >
@@ -121,7 +124,7 @@ function SectionNameDialog({
                 </PopoverTrigger>
                 {icon ? (
                   <button
-                    aria-label="Clear section icon"
+                    aria-label={t`Clear section icon`}
                     className="absolute -right-1 -top-1 flex h-4 w-4 items-center justify-center rounded-full border border-background bg-muted text-muted-foreground hover:bg-accent hover:text-foreground"
                     onClick={(event) => {
                       event.stopPropagation();
@@ -147,7 +150,7 @@ function SectionNameDialog({
               autoCorrect="off"
               className="flex-1"
               onChange={(event) => setName(event.target.value)}
-              placeholder="Section name"
+              placeholder={t`Section name`}
               ref={inputRef}
               spellCheck={false}
               value={name}
@@ -156,7 +159,7 @@ function SectionNameDialog({
           <div className="flex justify-end gap-2 mt-4">
             <DialogClose asChild>
               <Button variant="ghost" type="button">
-                Cancel
+                <Trans>Cancel</Trans>
               </Button>
             </DialogClose>
             <Button
@@ -186,18 +189,20 @@ export function CreateSectionDialog({
   parentName,
   onConfirm,
 }: CreateSectionDialogProps) {
+  const { t } = useLingui();
+
   return (
     <SectionNameDialog
       open={open}
       onOpenChange={onOpenChange}
-      title={parentName ? "Create subsection" : "Create section"}
+      title={parentName ? t`Create subsection` : t`Create section`}
       description={
         parentName
-          ? `Subsections group channels one level under "${parentName}".`
-          : "Sections let you group related channels in the sidebar."
+          ? t`Subsections group channels one level under "${parentName}".`
+          : t`Sections let you group related channels in the sidebar.`
       }
       initialValue=""
-      confirmLabel="Create"
+      confirmLabel={t`Create`}
       isConfirmDisabled={(trimmed) => trimmed.length === 0}
       onConfirm={onConfirm}
     />
@@ -219,12 +224,13 @@ export function RenameSectionDialog({
   sectionIcon,
   onConfirm,
 }: RenameSectionDialogProps) {
+  const { t } = useLingui();
   return (
     <SectionNameDialog
       open={open}
       onOpenChange={onOpenChange}
-      title="Rename section"
-      description="Enter a new name for this section."
+      title={t`Rename section`}
+      description={t`Enter a new name for this section.`}
       initialValue={sectionName}
       initialIcon={sectionIcon}
       confirmLabel="Save"
@@ -255,34 +261,49 @@ export function DeleteSectionAlertDialog({
   subsectionCount = 0,
   onConfirm,
 }: DeleteSectionAlertDialogProps) {
-  const channelLabel =
-    channelCount === 1 ? "1 channel" : `${channelCount} channels`;
+  const { i18n, t } = useLingui();
+  // Whole sentences, assembled from two plural messages rather than from
+  // fragments: German inflects both nouns and moves the verb to the end, so
+  // `"Delete section" + count + " channels" + note` has no translatable shape.
+  // The note stays a separate sentence because it is one in English too.
+  const channelClause =
+    channelCount === 0
+      ? t`Delete section "${sectionName}"? It has no channels.`
+      : i18n._(
+          plural(channelCount, {
+            one: `Delete section "${sectionName}"? Its 1 channel will move back to the default Channels group.`,
+            other: `Delete section "${sectionName}"? Its # channels will move back to the default Channels group.`,
+          }),
+        );
   const subsectionNote =
     subsectionCount === 0
       ? ""
-      : subsectionCount === 1
-        ? " Its subsection moves to the top level."
-        : ` Its ${subsectionCount} subsections move to the top level.`;
-  const description =
-    (channelCount === 0
-      ? `Delete section "${sectionName}"? It has no channels.`
-      : `Delete section "${sectionName}"? Its ${channelLabel} will move back to the default Channels group.`) +
-    subsectionNote;
+      : ` ${i18n._(
+          plural(subsectionCount, {
+            one: "Its subsection moves to the top level.",
+            other: "Its # subsections move to the top level.",
+          }),
+        )}`;
+  const description = channelClause + subsectionNote;
 
   return (
     <AlertDialog open={open} onOpenChange={onOpenChange}>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>Delete section</AlertDialogTitle>
+          <AlertDialogTitle>
+            <Trans>Delete section</Trans>
+          </AlertDialogTitle>
           <AlertDialogDescription>{description}</AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel>Cancel</AlertDialogCancel>
+          <AlertDialogCancel>
+            <Trans>Cancel</Trans>
+          </AlertDialogCancel>
           <AlertDialogAction
             className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
             onClick={onConfirm}
           >
-            Delete
+            <Trans>Delete</Trans>
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
@@ -311,18 +332,22 @@ export function LeaveChannelAlertDialog({
     <AlertDialog open={open} onOpenChange={onOpenChange}>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>Leave channel</AlertDialogTitle>
+          <AlertDialogTitle>
+            <Trans>Leave channel</Trans>
+          </AlertDialogTitle>
           <AlertDialogDescription>
             {`Leave "${channelName}"? You'll stop receiving its messages and can rejoin later.`}
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel>Cancel</AlertDialogCancel>
+          <AlertDialogCancel>
+            <Trans>Cancel</Trans>
+          </AlertDialogCancel>
           <AlertDialogAction
             className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
             onClick={onConfirm}
           >
-            Leave
+            <Trans>Leave</Trans>
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
