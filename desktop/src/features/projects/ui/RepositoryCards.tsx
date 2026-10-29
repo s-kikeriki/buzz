@@ -23,6 +23,8 @@ import {
 import { cn } from "@/shared/lib/cn";
 import { normalizePubkey } from "@/shared/lib/pubkey";
 import { useRelayOrigin } from "@/shared/lib/useRelayOrigin";
+import { BRAND } from "@/shared/branding/brand";
+import { BrandMark } from "@/shared/ui/BrandMark";
 import { BuzzMark } from "@/shared/ui/buzz-logo/BuzzMark";
 import { Card } from "@/shared/ui/card";
 import { DropdownMenuItem } from "@/shared/ui/dropdown-menu";
@@ -67,13 +69,18 @@ function RepositoryHostIcon({
   const host = projectRepoHostForRepository(repository, useRelayOrigin());
   const label =
     host.kind === "buzz"
-      ? "Buzz-hosted repository"
+      ? `${BRAND.productName}-hosted repository`
       : host.kind === "external"
         ? `Git data hosted on ${host.host}`
         : "Repository host";
   const mark =
     host.kind === "buzz" ? (
-      <BuzzMark className={compact ? "h-3.5 w-4" : "h-4.5 w-5"} />
+      // Decorative: the `role="img"` wrapper below already carries `label`,
+      // and the tooltip repeats it. A named mark would be a third stop.
+      <BrandMark
+        className={compact ? "h-3.5 w-4" : "h-4.5 w-5"}
+        fallback={<BuzzMark className={compact ? "h-3.5 w-4" : "h-4.5 w-5"} />}
+      />
     ) : host.kind === "external" && host.host === "github.com" ? (
       <GitHubMark className={compact ? "h-3.5 w-3.5" : "h-4.5 w-4.5"} />
     ) : host.kind === "external" ? (

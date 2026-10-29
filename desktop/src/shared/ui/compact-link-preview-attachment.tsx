@@ -12,6 +12,7 @@ import {
   AttachmentTrigger,
 } from "@/shared/ui/attachment";
 import { LinkPreviewControls } from "@/shared/ui/link-preview-controls";
+import { BrandMark } from "@/shared/ui/BrandMark";
 import { BuzzMark } from "@/shared/ui/buzz-logo/BuzzMark";
 import { useSmoothCorners } from "@/shared/ui/smoothCorners";
 
@@ -141,7 +142,10 @@ export function CompactLinkPreviewAttachment({
                 className="flex size-3 shrink-0 items-center text-foreground/70"
                 data-link-preview-hostname-buzz-mark=""
               >
-                <BuzzMark className="h-auto w-full" />
+                <BrandMark
+                  className="h-auto w-full"
+                  fallback={<BuzzMark className="h-auto w-full" />}
+                />
               </span>
             ) : preview.faviconDataUrl ? (
               <img

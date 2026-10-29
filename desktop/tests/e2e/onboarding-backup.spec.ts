@@ -1,4 +1,6 @@
 import { expect, test } from "@playwright/test";
+
+import { PRODUCT_NAME } from "../helpers/brand";
 import { installMockBridge } from "../helpers/bridge";
 import { waitForAnimations } from "../helpers/animations";
 import {
@@ -214,7 +216,7 @@ test("download happy path: generated password, encrypt, native save, Next", asyn
     passwordPanel.getByText("Password", { exact: true }),
   ).toBeVisible();
   const subtitle = page.getByText(
-    "This creates a password-protected file with your private key. Remember, Buzz can’t recover your key if you lose it.",
+    `This creates a password-protected file with your private key. Remember, ${PRODUCT_NAME} can’t recover your key if you lose it.`,
   );
   const passwordLabel = passwordPanel.getByText("Password", { exact: true });
   const [subtitleBox, passwordLabelBox] = await Promise.all([

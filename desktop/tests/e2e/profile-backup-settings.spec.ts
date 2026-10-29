@@ -1,4 +1,6 @@
 import { expect, test, type Page } from "@playwright/test";
+
+import { PRODUCT_NAME } from "../helpers/brand";
 import { npubEncode } from "nostr-tools/nip19";
 
 import { installMockBridge } from "../helpers/bridge";
@@ -221,7 +223,7 @@ test("wrong backup password permits a successful retry in the test modal", async
 
   await verifyBackup(page, "correct password");
   await expect(dialog.getByTestId("backup-test-success")).toContainText(
-    "It restores your current Buzz identity.",
+    `It restores your current ${PRODUCT_NAME} identity.`,
   );
 });
 
@@ -229,7 +231,7 @@ for (const identity of [
   {
     label: "current",
     pubkey: CURRENT_PUBKEY,
-    message: "It restores your current Buzz identity.",
+    message: `It restores your current ${PRODUCT_NAME} identity.`,
   },
   {
     label: "different",

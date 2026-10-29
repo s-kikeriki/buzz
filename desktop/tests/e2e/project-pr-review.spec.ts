@@ -1,6 +1,7 @@
 import { expect, type Locator, test } from "@playwright/test";
 
 import { waitForAnimations } from "../helpers/animations";
+import { PRODUCT_NAME } from "../helpers/brand";
 import { installMockBridge, TEST_IDENTITIES } from "../helpers/bridge";
 
 const SHOTS = "test-results/project-pr-review";
@@ -2915,9 +2916,12 @@ test("repository rows identify their git host", async ({ page }) => {
   const buzzHostIcon = page
     .getByTestId("repository-row-buzz")
     .getByTestId("repository-host-icon");
+  // The badge names the product, so a flavored bundle answers differently and
+  // correctly. Derived from the same flavor env the bundle was built with,
+  // never hardcoded — see tests/helpers/brand.ts.
   await expect(buzzHostIcon).toHaveAttribute(
     "aria-label",
-    "Buzz-hosted repository",
+    `${PRODUCT_NAME}-hosted repository`,
   );
   await expect(
     page
