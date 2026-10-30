@@ -318,6 +318,10 @@ msgstr "Neuer Abschnitt …"
 msgid "Notifications"
 msgstr "Benachrichtigungen"
 
+#: src/features/messages/ui/CollapsedPostBody.tsx
+msgid "Open thread to read the rest"
+msgstr "Thread öffnen, um den Rest zu lesen"
+
 #: src/features/settings/ui/AppearanceSettingsControls.tsx
 msgid "Orders every list in the sidebar. Recent also floats the sections themselves, so dragging them waits for A–Z. A section you have set from its own menu keeps that order."
 msgstr "Ordnet jede Liste in der Seitenleiste. „Zuletzt“ lässt außerdem die Abschnitte selbst nach oben rücken, sodass das Verschieben per Drag-and-drop erst bei A–Z möglich ist. Ein Abschnitt, den du über sein eigenes Menü festgelegt hast, behält seine Sortierung."

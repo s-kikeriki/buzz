@@ -124,3 +124,41 @@
     dynamic-range-limit: standard;
   }
 }
+
+@layer utilities {
+  /*
+   * The fade on a collapsed post.
+   *
+   * A mask rather than a gradient overlay painted in the row's background
+   * colour. The row's background is not one colour — it changes on hover and
+   * on focus-within, and the highlighted-route state paints a third one over
+   * the top — so an overlay would have to track all three or show a seam on
+   * exactly the interaction that draws the eye to it. A mask fades whatever
+   * is behind it to transparent and never has to know.
+   *
+   * Two lines of fade, from the same line-height token as the clamp, so the
+   * proportion holds at every type size rather than the fade eating half a
+   * six-line preview at the largest one.
+   */
+  .collapsed-post-fade {
+    mask-image: linear-gradient(
+      to bottom,
+      black 0,
+      black calc(100% - (2 * var(--conversation-message-line-height))),
+      transparent 100%
+    );
+  }
+
+  /*
+   * Reduced motion does not want a fade removed — it is not motion — but a
+   * reader who has asked for less visual effect is also the reader most hurt
+   * by low-contrast text. Forced colors mode drops the mask entirely and
+   * relies on the clipped edge alone, because a mask over a system-colour
+   * palette produces text that fails contrast outright.
+   */
+  @media (forced-colors: active) {
+    .collapsed-post-fade {
+      mask-image: none;
+    }
+  }
+}

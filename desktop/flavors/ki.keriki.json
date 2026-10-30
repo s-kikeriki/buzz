@@ -20,5 +20,6 @@
   "accentColor": "#d4f247",
   "chromeSurface": "ink",
   "themeLabel": "kikeriki",
+  "collapseLongPosts": true,
   "celebrationEmojis": ["🎉", "✨", "🔑", "💛", "✅", "🔒"]
 }

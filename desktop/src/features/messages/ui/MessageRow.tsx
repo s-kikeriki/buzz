@@ -45,6 +45,8 @@ import { resolveSnapshotSharedBy } from "@/features/messages/lib/snapshotSharedB
 import { resolveMentionProps } from "@/shared/lib/resolveMentionNames";
 import type { VideoReviewContext } from "@/shared/ui/VideoPlayer";
 import { VideoReviewCommentMarkdown } from "@/shared/ui/VideoReviewCommentMarkdown";
+
+import { CollapsedPostBody } from "./CollapsedPostBody";
 import { MessageActionBar } from "./MessageActionBar";
 import { editMessage } from "@/shared/api/tauri";
 import { hasLinkPreviewSuppression } from "@/features/messages/lib/formatTimelineMessages";
@@ -88,7 +90,9 @@ export const MessageRow = React.memo(
     isFollowingThread,
     isContinuation = false,
     isUnread,
+    collapseLongBody = false,
     layoutVariant = "default",
+    onOpenThread,
     message,
     onCollapseDepthGuide,
     onCollapseDepthGuideHoverChange,
@@ -129,7 +133,19 @@ export const MessageRow = React.memo(
     isFollowingThread?: boolean;
     isContinuation?: boolean;
     isUnread?: boolean;
+    /**
+     * Clamp a long body to a few lines, with a fade and a route into the
+     * thread.
+     *
+     * A prop rather than a read of `BRAND` inside this component, because the
+     * answer is not the same everywhere this row renders: the thread panel
+     * shows the same message and must show all of it, which is the whole
+     * point of sending the reader there. The caller knows which pane it is.
+     */
+    collapseLongBody?: boolean;
     layoutVariant?: "default" | "thread-reply";
+    /** Opens this message's thread. Required for `collapseLongBody` to apply. */
+    onOpenThread?: () => void;
     message: TimelineMessage;
     onCollapseDepthGuide?: (message: TimelineMessage) => void;
     onCollapseDepthGuideHoverChange?: (
@@ -683,10 +699,21 @@ export const MessageRow = React.memo(
       ? "mt-0"
       : bodyOffsetClass;
 
+    const bodyNode = renderBody();
     const messageBodyNode = (
       <>
         <SentFromThreadLine channelId={channelId} tags={message.tags} />
-        {renderBody()}
+        {collapseLongBody && onOpenThread ? (
+          // Only the body is inside the clamp. The reactions and the thread
+          // summary below it stay where they are and stay readable — a post
+          // you cannot see the end of is still one you can react to, and the
+          // reply count is how you decide whether to open it at all.
+          <CollapsedPostBody onOpenThread={onOpenThread}>
+            {bodyNode}
+          </CollapsedPostBody>
+        ) : (
+          bodyNode
+        )}
         {continuationMetadataNode}
         <MessageReactions
           messageId={message.id}
@@ -979,6 +1006,8 @@ export const MessageRow = React.memo(
       prev.highlightThreadLineDepths,
       next.highlightThreadLineDepths,
     ) &&
+    prev.collapseLongBody === next.collapseLongBody &&
+    prev.onOpenThread === next.onOpenThread &&
     prev.hoverBackground === next.hoverBackground &&
     prev.huddleMemberPubkeys === next.huddleMemberPubkeys &&
     prev.huddleMemberPubkeysPending === next.huddleMemberPubkeysPending &&

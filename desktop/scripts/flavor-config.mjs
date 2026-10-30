@@ -349,7 +349,12 @@ export function validateFlavor(flavor, flavorId) {
     }
   }
 
-  for (const flag of ["frozen", "example", "autoConnectDefaultRelay"]) {
+  for (const flag of [
+    "frozen",
+    "example",
+    "autoConnectDefaultRelay",
+    "collapseLongPosts",
+  ]) {
     if (flavor[flag] !== undefined && typeof flavor[flag] !== "boolean") {
       fail(flavorId, `${flag} must be a boolean`);
     }
@@ -386,6 +391,7 @@ export function validateFlavor(flavor, flavorId) {
         : (flavor.logoStyle ?? DEFAULT_LOGO_STYLE),
     relayUrl: flavor.relayUrl,
     autoConnectDefaultRelay: flavor.autoConnectDefaultRelay === true,
+    collapseLongPosts: flavor.collapseLongPosts === true,
     accentColor: flavor.accentColor,
     themeLabel:
       typeof flavor.themeLabel === "string"
@@ -453,6 +459,12 @@ export function flavorBuildEnv(flavor, readFile = readFileSync) {
   };
   if (flavor.autoConnectDefaultRelay) {
     env.BUZZ_BUILD_AUTO_CONNECT_DEFAULT_RELAY = "1";
+  }
+  if (flavor.collapseLongPosts) {
+    // Emitted only when on, like the relay flag above rather than like the
+    // chrome surface: the frontend parser treats anything but "1" as off, so
+    // there is no second value an unset variable could be confused with.
+    env.VITE_BUZZ_COLLAPSE_LONG_POSTS = "1";
   }
   if (flavor.accentColor !== undefined) {
     env.VITE_BUZZ_DEFAULT_ACCENT_COLOR = flavor.accentColor;

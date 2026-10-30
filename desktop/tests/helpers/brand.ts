@@ -58,3 +58,14 @@ export function flavorHasMark(): boolean {
 export function flavorHasInkChrome(): boolean {
   return buildEnv().VITE_BUZZ_CHROME_SURFACE === "ink";
 }
+
+/**
+ * True when this bundle collapses long top-level posts in the channel.
+ *
+ * Gated on what the *runner* declared, never on what the page renders. A spec
+ * that skipped itself because the post was not collapsed would turn the exact
+ * regression it exists to catch into a skip, and a skip reads green.
+ */
+export function flavorCollapsesLongPosts(): boolean {
+  return buildEnv().VITE_BUZZ_COLLAPSE_LONG_POSTS === "1";
+}

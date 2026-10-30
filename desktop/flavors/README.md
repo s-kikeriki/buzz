@@ -43,6 +43,7 @@ flavor is always an explicit choice at build time.
   "accentColor": "#3b82f6",               // optional, lowercase #rrggbb
   "themeLabel": "Acme",                   // optional — renames the Buzz theme pair
   "celebrationEmojis": ["🎉", "✨"],       // optional — the backup-test burst
+  "collapseLongPosts": true,              // optional, default false
   "frozen": false,                        // optional — refuses to build
   "example": false,                       // optional — refuses to build
   "notes": "free text for reviewers"      // optional
@@ -129,6 +130,7 @@ frozen app.
 | `VITE_BUZZ_CHROME_SURFACE` | `shared/branding/brandChrome.ts` | `auto` or `ink` — whether the navigation rail follows the document's light/dark mode, or stays on the dark surface in both. Always emitted, including at the default |
 | `VITE_BUZZ_THEME_LABEL` | `shared/branding/brandThemeLabel.ts` | What the appearance picker calls the first-party theme pair, in place of "Buzz" / "Buzz Dark". The `buzz` / `buzz-dark` identifiers are untouched — they are what storage and `theme.css` match on. Omitted when the flavor declares none, which keeps the Buzz labels |
 | `VITE_BUZZ_CELEBRATION_EMOJIS` | `shared/branding/brandCelebration.ts` | The emoji the backup-test burst throws, as one comma-separated list. Two of the stock six are the Buzz bee and its honey jar, so a de-branded build declares its own. Entries must not contain a comma — the flavor refuses one rather than letting the parser guess the boundary. Omitted when the flavor declares none, which keeps the stock set |
+| `VITE_BUZZ_COLLAPSE_LONG_POSTS` | `shared/branding/brandPostDensity.ts` | `1` when a long top-level post is clamped to a few lines in the channel pane, with a fade and its thread opening on click. A reading-density choice about how an organisation's channels are used, not a defect being fixed, so it is off by default and the OSS build is unchanged. Omitted when off — the parser treats anything but `1` as off, so an unset variable and a mis-set one agree |
 | `BUZZ_BUILD_PRODUCT_NAME` | `src-tauri/build.rs` → `src-tauri/src/brand.rs` | The same name again, for the half of the app that is **not** the frontend: the macOS app menu and its About box, the tray's Open/Quit items, the window title. Rust cannot read `import.meta.env`, and without this it falls back to Tauri's `productName`, which `demo-build-config.mjs` derives as `Buzz <demo name>` |
 | `BUZZ_BUILD_TRAY_ICON` | `src-tauri/build.rs` → `src-tauri/src/brand.rs` | Repo-relative path to the flavor's `trayIcon`, embedded at compile time. A **raster**, unlike every other mark here: the menu-bar glyph is handed to AppKit as pixels and nothing in the Rust build can rasterise an SVG. Omitted when the flavor declares none, which keeps the Buzz bee |
 | `DMG_BACKGROUND` | `scripts/package-macos-dmg.sh` | Repo-relative path to the flavor's `dmgBackground`. Omitted when the flavor declares none, which keeps the stock panel |

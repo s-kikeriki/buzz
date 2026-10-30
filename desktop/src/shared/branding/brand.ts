@@ -23,6 +23,7 @@ import {
 } from "./brandAccent";
 import { parseCelebrationEmojis } from "./brandCelebration";
 import { parseChromeSurface } from "./brandChrome";
+import { parseCollapseLongPosts } from "./brandPostDensity";
 import { parseProductLogoStyle, parseProductLogoUrl } from "./brandLogo";
 import { parseThemeLabel } from "./brandThemeLabel";
 
@@ -96,5 +97,12 @@ export const BRAND = {
    */
   celebrationEmojis: parseCelebrationEmojis(
     import.meta.env?.VITE_BUZZ_CELEBRATION_EMOJIS,
+  ),
+  /**
+   * Whether a long top-level post is collapsed to a preview in the channel,
+   * with its thread opening on click. Off in the OSS build.
+   */
+  collapseLongPosts: parseCollapseLongPosts(
+    import.meta.env?.VITE_BUZZ_COLLAPSE_LONG_POSTS,
   ),
 } as const;
