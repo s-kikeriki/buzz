@@ -72,6 +72,11 @@ const CONVERTED_FILES = [
   "src/features/home/ui/ProjectInboxDetail.tsx",
   "src/features/home/ui/ProjectInboxDetailPane.tsx",
   "src/features/home/ui/RecentNotesSection.tsx",
+  // The drafts view *is* the inbox's Drafts filter, so leaving it English
+  // would have made that one filter half-German — the exact seam this tranche
+  // exists to close. Its own e2e assertion is what found it.
+  "src/features/messages/ui/DraftDetailPane.tsx",
+  "src/features/messages/ui/DraftsPanel.tsx",
   // The shared ladder grew a forward-pointing half for the reminder
   // countdown, so it now holds copy of its own ("in less than a minute").
   "src/shared/lib/relativeTime.ts",

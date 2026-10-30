@@ -34,6 +34,11 @@ msgstr "{0, plural, one {# ungelesen} other {# ungelesen}}"
 msgid "{activeDraftCount, plural, one {# active draft} other {# active drafts}}"
 msgstr "{activeDraftCount, plural, one {# aktiver Entwurf} other {# aktive Entwürfe}}"
 
+#: src/features/messages/ui/DraftDetailPane.tsx
+#: src/features/messages/ui/DraftsPanel.tsx
+msgid "{attachmentCount, plural, one {# attachment} other {# attachments}}"
+msgstr "{attachmentCount, plural, one {# Anhang} other {# Anhänge}}"
+
 #: src/features/sidebar/ui/ChannelSectionDialogs.tsx
 msgid "{channelCount, plural, one {Delete section \"{sectionName}\"? Its 1 channel will move back to the default Channels group.} other {Delete section \"{sectionName}\"? Its # channels will move back to the default Channels group.}}"
 msgstr "{channelCount, plural, one {Bereich „{sectionName}“ löschen? Sein 1 Kanal wird in die Standardgruppe „Kanäle“ zurückverschoben.} other {Bereich „{sectionName}“ löschen? Seine # Kanäle werden in die Standardgruppe „Kanäle“ zurückverschoben.}}"
@@ -297,6 +302,10 @@ msgstr "Archivierte Kanäle, denen du beigetreten bist, erscheinen hier."
 msgid "Archived forums you have joined will appear here."
 msgstr "Archivierte Foren, denen du beigetreten bist, erscheinen hier."
 
+#: src/features/messages/ui/DraftsPanel.tsx
+msgid "Are you sure you want to send this message to {destination}?"
+msgstr "Willst du diese Nachricht wirklich an {destination} senden?"
+
 #: src/features/settings/ui/AppearanceSettingsControls.tsx
 msgid "Available in the macOS desktop app."
 msgstr "Verfügbar in der macOS-Desktop-App."
@@ -304,6 +313,10 @@ msgstr "Verfügbar in der macOS-Desktop-App."
 #: src/features/settings/ui/SettingsView.tsx
 msgid "Back to app"
 msgstr "Zurück zur App"
+
+#: src/features/messages/ui/DraftDetailPane.tsx
+msgid "Back to drafts list"
+msgstr "Zurück zur Entwurfsliste"
 
 #: src/features/home/ui/ProjectInboxDetail.tsx
 #: src/features/home/ui/ProjectInboxDetailPane.tsx
@@ -345,6 +358,7 @@ msgstr "Kanäle durchsuchen"
 msgid "Can't reach the relay"
 msgstr "Relay nicht erreichbar"
 
+#: src/features/messages/ui/DraftsPanel.tsx
 #: src/features/sidebar/ui/ChannelSectionDialogs.tsx
 #: src/features/sidebar/ui/SidebarProjectsSection.tsx
 msgid "Cancel"
@@ -572,6 +586,7 @@ msgstr "Die Zoomstufe verringern"
 msgid "Default"
 msgstr "Standard"
 
+#: src/features/messages/ui/DraftDetailPane.tsx
 #: src/features/sidebar/ui/ChannelSectionDialogs.tsx
 msgid "Delete"
 msgstr "Löschen"
@@ -589,6 +604,10 @@ msgstr "{0} für alle aus den Projekten löschen. Das ist nur für eigene Projek
 #: src/features/sidebar/ui/ChannelContextMenu.tsx
 msgid "Delete channel"
 msgstr "Kanal löschen"
+
+#: src/features/messages/ui/DraftsPanel.tsx
+msgid "Delete draft"
+msgstr "Entwurf löschen"
 
 #: src/features/home/ui/InboxDetailPane.tsx
 msgid "Delete message"
@@ -645,7 +664,12 @@ msgstr "DM"
 msgid "DM from {0}"
 msgstr "DM von {0}"
 
+#: src/features/messages/ui/DraftDetailPane.tsx
+msgid "Draft"
+msgstr "Entwurf"
+
 #: src/features/home/ui/InboxFilterMenu.tsx
+#: src/features/messages/ui/DraftsPanel.tsx
 msgid "Drafts"
 msgstr "Entwürfe"
 
@@ -656,6 +680,10 @@ msgstr "Zum Ändern der Breite ziehen."
 #: src/features/home/ui/HomeView.tsx
 msgid "Drag to resize. Double-click to reset width."
 msgstr "Zum Ändern der Breite ziehen. Doppelklick setzt die Breite zurück."
+
+#: src/features/messages/ui/DraftsPanel.tsx
+msgid "Empty draft"
+msgstr "Leerer Entwurf"
 
 #: src/features/sidebar/ui/ChannelSectionDialogs.tsx
 msgid "Enter a new name for this section."
@@ -1176,6 +1204,7 @@ msgid "No channel by that name yet — create it to get started."
 msgstr "Noch kein Kanal mit diesem Namen – lege ihn an, um loszulegen."
 
 #: src/features/home/ui/InboxListPane.tsx
+#: src/features/messages/ui/DraftsPanel.tsx
 msgid "No channel link"
 msgstr "Keine Kanalverknüpfung"
 
@@ -1192,6 +1221,7 @@ msgid "No community"
 msgstr "Keine Community"
 
 #: src/features/home/ui/InboxListPane.tsx
+#: src/features/messages/ui/DraftsPanel.tsx
 msgid "No drafts"
 msgstr "Keine Entwürfe"
 
@@ -1332,6 +1362,11 @@ msgstr "Kanal {channelLabel} öffnen; die verknüpfte Nachricht wurde gelöscht"
 msgid "Open conversation"
 msgstr "Unterhaltung öffnen"
 
+#: src/features/messages/ui/DraftDetailPane.tsx
+#: src/features/messages/ui/DraftsPanel.tsx
+msgid "Open draft"
+msgstr "Entwurf öffnen"
+
 #: src/features/profile/ui/UserProfilePanelTabs.tsx
 msgid "Open full activity. Last live {label}."
 msgstr "Vollständige Aktivität öffnen. Zuletzt live {label}."
@@ -1422,6 +1457,10 @@ msgstr "Personen"
 #: src/features/settings/ui/SettingsView.tsx
 msgid "Personal"
 msgstr "Persönlich"
+
+#: src/features/messages/ui/DraftDetailPane.tsx
+msgid "Pick a draft to preview it and choose what to do next."
+msgstr "Wähle einen Entwurf, um ihn anzusehen und zu entscheiden, wie es weitergeht."
 
 #: src/features/home/ui/InboxDetailPane.tsx
 msgid "Pick an inbox item to see the full message and react to it."
@@ -1667,10 +1706,20 @@ msgstr "Bereichsname"
 msgid "Sections let you group related channels in the sidebar."
 msgstr "Mit Bereichen gruppierst du zusammengehörige Kanäle in der Seitenleiste."
 
+#: src/features/messages/ui/DraftDetailPane.tsx
+msgid "Select a draft"
+msgstr "Wähle einen Entwurf"
+
 #: src/features/home/ui/InboxDetailPane.tsx
 msgid "Select a message"
 msgstr "Wähle eine Nachricht"
 
+#: src/features/messages/ui/DraftDetailPane.tsx
+#: src/features/messages/ui/DraftsPanel.tsx
+msgid "Send"
+msgstr "Senden"
+
+#: src/features/messages/ui/DraftsPanel.tsx
 #: src/shared/lib/keyboard-shortcuts.ts
 msgid "Send message"
 msgstr "Nachricht senden"
@@ -1794,6 +1843,10 @@ msgstr "Vorlage"
 msgid "Template: {0}"
 msgstr "Vorlage: {0}"
 
+#: src/features/messages/ui/DraftDetailPane.tsx
+msgid "The original thread was deleted. This draft can no longer be opened or sent."
+msgstr "Der ursprüngliche Thread wurde gelöscht. Dieser Entwurf lässt sich nicht mehr öffnen oder senden."
+
 #: src/features/home/ui/HomeView.tsx
 msgid "The relay did not return a feed response."
 msgstr "Das Relay hat keine Feed-Antwort zurückgegeben."
@@ -1839,6 +1892,14 @@ msgstr "Dieser Projekteintrag wurde nicht gefunden."
 #: src/features/sidebar/ui/ChannelActivityPopover.tsx
 msgid "Thread"
 msgstr "Thread"
+
+#: src/features/messages/ui/DraftsPanel.tsx
+msgid "thread deleted"
+msgstr "Thread gelöscht"
+
+#: src/features/messages/ui/DraftsPanel.tsx
+msgid "Thread deleted"
+msgstr "Thread gelöscht"
 
 #: src/features/home/lib/inbox.ts
 #: src/features/search/ui/TopbarSearch.tsx
@@ -1910,6 +1971,15 @@ msgstr "Typ"
 msgid "Undo done"
 msgstr "Erledigt rückgängig machen"
 
+#: src/features/messages/ui/DraftDetailPane.tsx
+#: src/features/messages/ui/DraftsPanel.tsx
+msgid "Unknown channel"
+msgstr "Unbekannter Kanal"
+
+#: src/features/messages/ui/DraftsPanel.tsx
+msgid "Unknown time"
+msgstr "Unbekannte Zeit"
+
 #: src/features/sidebar/ui/ChannelContextMenu.tsx
 msgid "Unmute channel"
 msgstr "Stummschaltung aufheben"
@@ -1938,6 +2008,10 @@ msgstr "v{appVersion}"
 #: src/features/home/ui/RecentNotesSection.tsx
 msgid "View all in Pulse"
 msgstr "Alle in Pulse ansehen"
+
+#: src/features/messages/ui/DraftsPanel.tsx
+msgid "View draft in {channelLabel}"
+msgstr "Entwurf in {channelLabel} ansehen"
 
 #: src/features/messages/ui/MessageThreadSummaryRow.tsx
 msgid "View thread"
@@ -1974,6 +2048,10 @@ msgstr "Arbeitet"
 #: src/shared/lib/datetime.ts
 msgid "Yesterday"
 msgstr "Gestern"
+
+#: src/features/messages/ui/DraftDetailPane.tsx
+msgid "You"
+msgstr "Du"
 
 #: src/shared/lib/keyboard-shortcuts.ts
 msgid "Zoom"
