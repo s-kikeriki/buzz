@@ -318,7 +318,7 @@ jobs:
               console.log(loadFlavor(process.argv[1]).mainBinaryName));
           ' "$FLAVOR")
           for expected in \
-            "Categories=Network;InstantMessaging;Chat;" \
+            "Categories=Network;InstantMessaging;" \
             "Exec=$MAIN_BIN %u" \
             "Icon=$MAIN_BIN" \
             "StartupWMClass=$MAIN_BIN"; do

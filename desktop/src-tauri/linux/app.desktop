@@ -43,7 +43,7 @@ Icon={{icon}}
 StartupWMClass={{icon}}
 Terminal=false
 StartupNotify=true
-Categories=Network;InstantMessaging;Chat;
+Categories=Network;InstantMessaging;
 Keywords=chat;messaging;team;projects;agents;nostr;
 {{#if mime_type}}
 MimeType={{mime_type}}
