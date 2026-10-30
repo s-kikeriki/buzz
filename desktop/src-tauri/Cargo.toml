@@ -9,7 +9,14 @@ members = ["crates/buzz-terminal"]
 name = "buzz-desktop"
 version = "0.5.28"
 description = "Buzz desktop app"
-authors = ["you"]
+# No `authors`. It was `["you"]` — `tauri init`'s placeholder — and it reached
+# users: tauri-bundler prefers the Cargo manifest's authors over
+# `bundle.publisher` for a `.deb`'s `Maintainer:` field, so every Linux package
+# this repo produced was maintained by "you". With the key gone, `Maintainer:`
+# falls through to `publisher`, which a flavor sets (`kikeriki GmbH
+# <support@kikeriki.net>`) and a stock build leaves to tauri's own fallback,
+# the identifier's second segment. Nothing else reads it: the NSIS and MSI
+# bundlers only ever consulted `publisher`.
 edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html

@@ -10,10 +10,16 @@
   "icon": "flavors/icons/ki.keriki.icns",
   "platformIcons": {
     "32x32.png": "flavors/icons/ki.keriki-32x32.png",
+    "64x64.png": "flavors/icons/ki.keriki-64x64.png",
     "128x128.png": "flavors/icons/ki.keriki-128x128.png",
     "128x128@2x.png": "flavors/icons/ki.keriki-128x128@2x.png",
+    "256x256.png": "flavors/icons/ki.keriki-256x256.png",
+    "512x512.png": "flavors/icons/ki.keriki-512x512.png",
     "icon.ico": "flavors/icons/ki.keriki.ico"
   },
+  "publisher": "kikeriki GmbH <support@kikeriki.net>",
+  "shortDescription": "Team chat, projects and agents for kikeriki",
+  "longDescription": "ki.keriki is kikeriki GmbH's team workspace: channels, direct messages, shared projects and AI agents in one place, on a relay the organisation runs itself.",
   "logo": "flavors/logos/ki.keriki.svg",
   "logoLight": "flavors/logos/ki.keriki-light.svg",
   "logoMark": "flavors/logos/ki.keriki-mark.svg",

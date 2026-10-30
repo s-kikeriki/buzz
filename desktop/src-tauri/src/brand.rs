@@ -88,14 +88,51 @@ pub(crate) fn tray_icon_rgba() -> Option<(Vec<u8>, u32, u32)> {
     if !has_tray_icon() {
         return None;
     }
+    decode_rgba8(TRAY_ICON_PNG)
+}
+
+/// The app icon at 256px, for the window icon on Linux.
+///
+/// `tauri-build` picks the default window icon by looking for the entry of
+/// `bundle.icon` whose name ends in `32x32.png`, so every window this app
+/// opens carried a 32px icon — which is what the alt-tab switcher and the
+/// taskbar on X11 read out of `_NET_WM_ICON`, and it looked like it.
+///
+/// Staged like every other icon, so this is the *flavor's* artwork in a
+/// flavored build and the trunk's otherwise.
+///
+/// Linux only, like its one caller: macOS takes the dock icon from the
+/// `.app`'s `.icns` and Windows takes the window icon from the `.ico` linked
+/// into the executable, so on those two this would be bytes nothing reads.
+#[cfg(target_os = "linux")]
+const WINDOW_ICON_PNG: &[u8] = include_bytes!("../icons/256x256.png");
+
+/// Decode the window icon to RGBA8, or `None` if it cannot be read.
+///
+/// `None` rather than a panic for the same reason as the tray glyph: the
+/// caller's fallback is the icon Tauri already set, and a blurry icon is not
+/// worth refusing to start over.
+#[cfg(target_os = "linux")]
+pub(crate) fn window_icon_rgba() -> Option<(Vec<u8>, u32, u32)> {
+    decode_rgba8(WINDOW_ICON_PNG)
+}
+
+/// Decode an 8-bit RGBA PNG to a `(pixels, width, height)` triple sized
+/// exactly `width * height * 4`.
+fn decode_rgba8(bytes: &[u8]) -> Option<(Vec<u8>, u32, u32)> {
+    if bytes.is_empty() {
+        return None;
+    }
     // A `Cursor`, not the slice: `png` 0.18 wants `Read + Seek`.
-    let decoder = png::Decoder::new(std::io::Cursor::new(TRAY_ICON_PNG));
+    let decoder = png::Decoder::new(std::io::Cursor::new(bytes));
     let mut reader = decoder.read_info().ok()?;
     let mut buffer = vec![0; reader.output_buffer_size()?];
     let info = reader.next_frame(&mut buffer).ok()?;
     if info.color_type != png::ColorType::Rgba || info.bit_depth != png::BitDepth::Eight {
-        // A template image is read for its alpha, so a file with no alpha
-        // channel would render as a solid block in the menu bar.
+        // Both callers need a real alpha channel: a macOS template image is
+        // read for its alpha alone and would render as a solid block in the
+        // menu bar without one, and a window icon with no transparency gets a
+        // black box behind the artwork in the taskbar.
         return None;
     }
     // Computed rather than taken from the reader's buffer length: the decode
@@ -114,6 +151,28 @@ pub(crate) fn tray_icon_rgba() -> Option<(Vec<u8>, u32, u32)> {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    /// Read here rather than through `WINDOW_ICON_PNG`, which is compiled on
+    /// Linux only. The file is the one the Linux window icon is built from, so
+    /// this still fails if it stops being a decodable 256px RGBA PNG — which
+    /// is the regression worth catching, on whichever platform runs the tests.
+    const WINDOW_ICON_FILE: &[u8] = include_bytes!("../icons/256x256.png");
+
+    #[test]
+    fn the_window_icon_decodes_to_a_full_256px_rgba_frame() {
+        let (rgba, width, height) =
+            decode_rgba8(WINDOW_ICON_FILE).expect("icons/256x256.png decodes");
+        assert_eq!((width, height), (256, 256));
+        // `Image::new_owned` reads exactly this many bytes and would walk off
+        // the end of a short buffer.
+        assert_eq!(rgba.len(), 256 * 256 * 4);
+    }
+
+    #[test]
+    fn a_file_that_is_not_a_png_is_declined_rather_than_panicking() {
+        assert!(decode_rgba8(&[]).is_none());
+        assert!(decode_rgba8(b"not a png at all").is_none());
+    }
 
     #[test]
     fn product_name_falls_back_to_the_package_name() {

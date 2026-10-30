@@ -463,7 +463,17 @@ fn collect_process_snapshots(harness_name: &str) -> Vec<ProcessSnapshot> {
 pub fn expected_harness_exe_path() -> Option<PathBuf> {
     let exe = std::env::current_exe().ok()?;
     let dir = exe.parent()?;
-    let raw = dir.join("buzz-acp");
+    // A flavored bundle keeps its sidecars in a resource directory rather than
+    // beside the executable, so take the first candidate that exists. Falling
+    // back to the first *candidate* when none does preserves the previous
+    // behaviour: a path that cannot match any running process, which makes
+    // this sweep a no-op instead of killing something it should not.
+    let candidates = crate::build_identity::sidecar_dirs(dir);
+    let raw = candidates
+        .iter()
+        .map(|dir| dir.join(HARNESS_BINARY_NAME))
+        .find(|candidate| candidate.exists())
+        .or_else(|| candidates.first().map(|dir| dir.join(HARNESS_BINARY_NAME)))?;
     // Canonicalize if possible; fall back to the raw path on failure.
     Some(std::fs::canonicalize(&raw).unwrap_or(raw))
 }

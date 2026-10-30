@@ -5,9 +5,87 @@
 //! into the binary; every runtime identity is then derived from that one value.
 
 use std::borrow::Cow;
+use std::path::{Path, PathBuf};
+
+/// The subdirectory of a flavored bundle's resources that holds its sidecars.
+/// Written by `build-flavor-tauri-config.mjs`, which is the only other place
+/// this name appears.
+const SIDECAR_RESOURCE_DIR: &str = "sidecars";
 
 pub(crate) fn demo_slug() -> Option<&'static str> {
     option_env!("BUZZ_DESKTOP_BUILD_DEMO_SLUG")
+}
+
+/// The name Tauri's bundler put in this build's filesystem paths, when a
+/// flavor supplied one. See `bake_bundle_name` in `build.rs`.
+pub(crate) fn bundle_name() -> Option<&'static str> {
+    option_env!("BUZZ_DESKTOP_BUILD_BUNDLE_NAME")
+}
+
+/// Every directory this build may keep its bundled sidecars in — `buzz`,
+/// `buzz-acp`, `buzz-agent`, `buzz-dev-mcp`, `git-credential-nostr` and
+/// `buzz-backend-kubernetes` — most specific first.
+///
+/// The trunk declares them as `externalBin`, so the bundler puts them next to
+/// the executable and `exe_dir` alone is the answer. A flavored `.deb` cannot
+/// do that: `externalBin` installs into `/usr/bin`, and a real Buzz's package
+/// already owns `/usr/bin/buzz` and `/usr/bin/buzz-acp`, so dpkg refuses to
+/// unpack a second package claiming them. A flavored bundle therefore ships
+/// them as *resources* under `sidecars/`, which lands them in
+/// `/usr/lib/<bundle name>/sidecars/` — Debian's place for a package's private
+/// executables, and a path no other package can collide with.
+///
+/// `exe_dir` stays in the list, last, for three reasons that are all live:
+/// a flavored macOS build is produced without that config delta and keeps its
+/// sidecars in `Contents/MacOS/`; `cargo build` produces none of this layout
+/// at all; and on a Linux box with stock Buzz also installed, `/usr/bin/buzz`
+/// does exist — a different build of the same program, which is why ours is
+/// searched first rather than instead.
+pub(crate) fn sidecar_dirs(exe_dir: &Path) -> Vec<PathBuf> {
+    sidecar_dirs_for(exe_dir, bundle_name())
+}
+
+fn sidecar_dirs_for(exe_dir: &Path, bundle_name: Option<&str>) -> Vec<PathBuf> {
+    let mut dirs = Vec::new();
+    if let Some(resources) = bundle_name.and_then(|name| bundle_resource_dir(exe_dir, name)) {
+        dirs.push(resources.join(SIDECAR_RESOURCE_DIR));
+    }
+    dirs.push(exe_dir.to_path_buf());
+    dirs
+}
+
+// Where the bundler placed this build's resources, relative to the directory
+// holding the executable. One function per platform because the three bundle
+// layouts genuinely differ: a `.deb` installs the executable to `/usr/bin` and
+// resources to `/usr/lib/<name>`, an NSIS installer puts both in one
+// directory, and a `.app` splits them across `Contents/MacOS` and
+// `Contents/Resources`.
+/// `/usr/bin/<exe>` → `/usr/lib/<bundle name>`.
+#[cfg(target_os = "linux")]
+fn bundle_resource_dir(exe_dir: &Path, bundle_name: &str) -> Option<PathBuf> {
+    Some(exe_dir.parent()?.join("lib").join(bundle_name))
+}
+
+/// An NSIS installer puts resources in the install directory, beside the
+/// executable, so the bundle name is already spent on that directory's name.
+#[cfg(target_os = "windows")]
+fn bundle_resource_dir(exe_dir: &Path, _bundle_name: &str) -> Option<PathBuf> {
+    Some(exe_dir.to_path_buf())
+}
+
+/// `Contents/MacOS/<exe>` → `Contents/Resources`. The bundle name is already
+/// spent on the `.app` folder.
+#[cfg(target_os = "macos")]
+fn bundle_resource_dir(exe_dir: &Path, _bundle_name: &str) -> Option<PathBuf> {
+    Some(exe_dir.parent()?.join("Resources"))
+}
+
+/// No bundle layout to know about. Reached only if this crate is ever built
+/// for a target Tauri has no desktop bundler for; the sidecars are then
+/// wherever the executable is, which is the fallback `sidecar_dirs` appends.
+#[cfg(not(any(target_os = "linux", target_os = "windows", target_os = "macos")))]
+fn bundle_resource_dir(_exe_dir: &Path, _bundle_name: &str) -> Option<PathBuf> {
+    None
 }
 
 pub(crate) fn is_demo_build() -> bool {
@@ -166,6 +244,72 @@ mod tests {
             "buzz://message?id=1",
             "buzz-demo-board-1234567812345678"
         ));
+    }
+
+    /// The directory a `.deb` actually installs the executable into, so the
+    /// expectations below are the real relative hop and not an invented one.
+    #[cfg(target_os = "linux")]
+    const EXE_DIR: &str = "/usr/bin";
+    #[cfg(target_os = "macos")]
+    const EXE_DIR: &str = "/Applications/ki.keriki.app/Contents/MacOS";
+    #[cfg(target_os = "windows")]
+    const EXE_DIR: &str = r"C:\Program Files\ki.keriki";
+
+    #[test]
+    fn an_unflavored_build_looks_for_sidecars_beside_its_executable() {
+        // What every `cargo build` and every stock bundle produces. Nothing
+        // may be prepended here: a `/usr/lib/<name>` guess with no flavor
+        // behind it would be a directory that cannot exist.
+        assert_eq!(
+            sidecar_dirs_for(Path::new(EXE_DIR), None),
+            vec![PathBuf::from(EXE_DIR)]
+        );
+    }
+
+    #[test]
+    fn a_flavored_build_prefers_its_own_resource_dir_then_falls_back() {
+        let dirs = sidecar_dirs_for(Path::new(EXE_DIR), Some("ki.keriki"));
+        assert_eq!(dirs.len(), 2, "{dirs:?}");
+
+        // Order is the load-bearing half. On a box with stock Buzz also
+        // installed, `/usr/bin/buzz-acp` exists and belongs to the other
+        // package; searching it first would spawn a different build's harness.
+        #[cfg(target_os = "linux")]
+        assert_eq!(dirs[0], PathBuf::from("/usr/lib/ki.keriki/sidecars"));
+        #[cfg(target_os = "macos")]
+        assert_eq!(
+            dirs[0],
+            PathBuf::from("/Applications/ki.keriki.app/Contents/Resources/sidecars")
+        );
+        #[cfg(target_os = "windows")]
+        assert_eq!(
+            dirs[0],
+            PathBuf::from(r"C:\Program Files\ki.keriki\sidecars")
+        );
+
+        assert_eq!(dirs[1], PathBuf::from(EXE_DIR));
+    }
+
+    /// Where a second flavor's executable would live once installed alongside
+    /// the first. On Linux that is the *same* directory — every `.deb` puts
+    /// its executable in `/usr/bin`, which is the whole reason the sidecars
+    /// had to move out of it. macOS and Windows give each app its own install
+    /// root, so the second flavor's path differs there.
+    #[cfg(target_os = "linux")]
+    const OTHER_EXE_DIR: &str = "/usr/bin";
+    #[cfg(target_os = "macos")]
+    const OTHER_EXE_DIR: &str = "/Applications/Zeniad.app/Contents/MacOS";
+    #[cfg(target_os = "windows")]
+    const OTHER_EXE_DIR: &str = r"C:\Program Files\Zeniad";
+
+    #[test]
+    fn two_flavors_installed_side_by_side_do_not_share_a_sidecar_directory() {
+        // The property coexistence rests on. Asserted on the first entry
+        // only: the executable's own directory is a deliberately shared
+        // fallback, and on Linux it is literally the same `/usr/bin` for both.
+        let one = sidecar_dirs_for(Path::new(EXE_DIR), Some("ki.keriki"));
+        let two = sidecar_dirs_for(Path::new(OTHER_EXE_DIR), Some("Zeniad"));
+        assert_ne!(one[0], two[0], "{one:?} vs {two:?}");
     }
 
     #[test]

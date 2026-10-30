@@ -131,7 +131,19 @@ pub(in crate::managed_agents) fn build_augmented_path(
         managed.push(nvm_bin);
     }
     if let Some(parent) = exe_parent {
-        managed.push(parent);
+        // Every directory this build's sidecars can be in, not just the
+        // executable's own. A flavored `.deb` keeps them in
+        // `/usr/lib/<bundle name>/sidecars/`, because `/usr/bin/buzz` belongs
+        // to a real Buzz's package and dpkg will not unpack two owners of it
+        // — so on that layout this is the only entry that puts `buzz` and
+        // `git-credential-nostr` on a managed agent's `PATH` at all. The
+        // agent resolves them itself, in a child process, which is why the
+        // directory moves rather than the filenames.
+        //
+        // In a test build `bundle_name()` is `None` and this is exactly the
+        // single `parent` it was before; the flavored ordering is covered by
+        // `build_identity`'s own tests, which take the name as an argument.
+        managed.extend(crate::build_identity::sidecar_dirs(&parent));
     }
 
     // Split the login-shell PATH into individual entries.

@@ -159,6 +159,27 @@ pub fn run() {
                     // on macOS/Windows.
                     linux_media::enable_media_capture(&webview);
 
+                    // Replace the 32px icon `tauri-build` picked out of
+                    // `bundle.icon` with the 256px one. Linux only: macOS
+                    // takes the dock icon from the `.app`'s own `.icns` and
+                    // ignores this, and on Windows the window icon comes from
+                    // the `.ico` linked into the executable. On Linux it is
+                    // `_NET_WM_ICON`, which is what the taskbar and the
+                    // alt-tab switcher actually read.
+                    //
+                    // Best-effort: a failure leaves the icon Tauri already
+                    // set, which is the current behaviour, so there is nothing
+                    // to recover from.
+                    #[cfg(target_os = "linux")]
+                    if let Some((rgba, width, height)) = brand::window_icon_rgba() {
+                        let window = webview.window();
+                        if let Err(error) =
+                            window.set_icon(tauri::image::Image::new_owned(rgba, width, height))
+                        {
+                            eprintln!("buzz-desktop: could not set the window icon: {error}");
+                        }
+                    }
+
                     // macOS applies the restored geometry asynchronously. Wait
                     // for several identical outer bounds and for React to
                     // commit the startup surface before revealing it.

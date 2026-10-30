@@ -9,6 +9,15 @@ const MAX_DEMO_SLUG_LENGTH = 48;
 const DEMO_BUILD_ID_SUFFIX_LENGTH = 17;
 const MAX_DEMO_NAME_LENGTH = MAX_DEMO_SLUG_LENGTH - DEMO_BUILD_ID_SUFFIX_LENGTH;
 
+/**
+ * The Cargo bin name, and therefore the name every non-macOS bundler installs
+ * the executable under: `/usr/bin/buzz-desktop`, `Exec=`, `Icon=`,
+ * `StartupWMClass=`, and each `hicolor/<size>/apps/<name>.png`. A build that
+ * leaves it alone cannot be installed next to a real Buzz, because dpkg
+ * refuses two packages that own one path.
+ */
+const PRODUCTION_MAIN_BINARY_NAME = "buzz-desktop";
+
 export const productionBuildIdentity = Object.freeze({
   productName: "Buzz",
   identifier: PRODUCTION_IDENTIFIER,
@@ -16,6 +25,7 @@ export const productionBuildIdentity = Object.freeze({
   keyringService: "buzz-desktop",
   nestName: ".buzz",
   cliName: "buzz",
+  mainBinaryName: PRODUCTION_MAIN_BINARY_NAME,
 });
 
 export function demoBuildConfig(
@@ -48,6 +58,23 @@ export function demoBuildConfig(
     .replace(/^-+|-+$/g, "");
   const slug = `${readableSlug}-${buildId}`;
   const productName = `Buzz ${name}`;
+  // Deliberately *without* the build ID, unlike every other derived name here.
+  // This one is read by people — it is the `Exec=` line, the WM_CLASS a
+  // window manager groups by, and what `ps` shows — and a sixteen-character
+  // hex tail in all three is noise. `flavor-config.mjs` holds the flavors
+  // pairwise distinct on it instead, which is the property that actually
+  // matters: two *installed* apps must not claim one `/usr/bin` entry.
+  const mainBinaryName = `${readableSlug}-desktop`;
+  if (mainBinaryName === PRODUCTION_MAIN_BINARY_NAME) {
+    // Reachable: demo name "Buzz". The resulting build would install over a
+    // real Buzz's executable and launcher icons — the one outcome this whole
+    // derivation exists to prevent — while every other derived name in it
+    // looked correctly scoped.
+    throw new Error(
+      `Demo name "${name}" derives the production binary name ` +
+        `"${PRODUCTION_MAIN_BINARY_NAME}", which would install over Buzz's own`,
+    );
+  }
   return {
     name,
     slug,
@@ -60,6 +87,7 @@ export function demoBuildConfig(
     keyringService: `buzz-desktop-demo.${slug}`,
     nestName: `.buzz-demo-${slug}`,
     cliName: `buzz-demo-${slug}`,
+    mainBinaryName,
     tauriConfig: {
       productName,
       identifier: `${PRODUCTION_IDENTIFIER}.demo.${slug}`,

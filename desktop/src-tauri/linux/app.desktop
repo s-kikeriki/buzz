@@ -1,0 +1,50 @@
+[Desktop Entry]
+{{!--
+  Handlebars template for the launcher entry in a flavored `.deb` and
+  AppImage, selected by `bundle.linux.deb.desktopTemplate` in the config
+  `build-flavor-tauri-config.mjs` writes. The trunk keeps tauri-bundler's
+  built-in template, so a stock Buzz built from this repo ships exactly the
+  desktop entry it always has.
+
+  This is a Handlebars comment, not a `#` one, so none of it reaches the
+  installed file. It sits after the group header rather than before it so the
+  rendered output starts with `[Desktop Entry]` on line 1 whatever the
+  renderer does with the surrounding newline.
+
+  The bundler supplies `name`, `exec`, `icon`, `categories`, `comment` and
+  `mime_type`. `categories` is deliberately unused, and is the reason this
+  file exists: Tauri maps each `bundle.category` it knows to a single
+  freedesktop token, and the closest one — `SocialNetworking` — maps to
+  `Network;` alone. A chat app belongs under `Network;InstantMessaging;` too,
+  and no category value produces it.
+
+  `StartupWMClass` uses `{{icon}}` rather than `{{exec}}`: both are the main
+  binary name, but `exec` is quoted when it contains a space, and a WM_CLASS
+  is matched literally — a quoted one would never match the window, and the
+  launcher would show a second generic icon beside the running app. The two
+  are identical today because `demo-build-config.mjs` derives the binary name
+  from a slug that cannot contain a space; this keeps them identical if that
+  ever changes.
+
+  `%u` is not in the built-in template, and without it the `MimeType` line is
+  decoration: `xdg-open buzz-demo-…://…` would launch the app with no
+  argument and drop the link. The app reads the URL out of `argv` (the
+  single-instance handler in `lib.rs`), and an ordinary launch expands `%u`
+  to nothing.
+--}}
+Type=Application
+Version=1.0
+Name={{name}}
+{{#if comment}}
+Comment={{comment}}
+{{/if}}
+Exec={{exec}} %u
+Icon={{icon}}
+StartupWMClass={{icon}}
+Terminal=false
+StartupNotify=true
+Categories=Network;InstantMessaging;Chat;
+Keywords=chat;messaging;team;projects;agents;nostr;
+{{#if mime_type}}
+MimeType={{mime_type}}
+{{/if}}

@@ -83,11 +83,19 @@ const DEFAULT_CHROME_SURFACE = "auto";
  * `src-tauri/icons/` by `stage-flavor-icons.mjs` before the bundle is built.
  * `flavor-config.test.mjs` holds this list against `tauri.conf.json`, so a
  * sixth icon added to the bundle cannot quietly stay un-brandable.
+ *
+ * `64x64.png`, `256x256.png` and `512x512.png` are in `src-tauri/icons/` but
+ * not in the trunk's `bundle.icon`; a flavored Linux build adds them (see
+ * `build-flavor-tauri-config.mjs`) because the trunk's list has nothing above
+ * 128px that lands in a `hicolor` directory an icon lookup reads.
  */
 export const PLATFORM_ICON_TARGETS = {
   "32x32.png": ".png",
+  "64x64.png": ".png",
   "128x128.png": ".png",
   "128x128@2x.png": ".png",
+  "256x256.png": ".png",
+  "512x512.png": ".png",
   "icon.ico": ".ico",
 };
 
@@ -237,6 +245,32 @@ export function validateFlavor(flavor, flavorId) {
           "non-macOS icon or none of them",
       );
     }
+  }
+
+  // Package metadata. All three are optional and all three have a default
+  // that is wrong rather than absent, which is why they are worth declaring:
+  // with no `publisher` the `.deb` names its maintainer `you` (the trunk's
+  // `Cargo.toml` author placeholder) or `block`, and with no description it
+  // says "Buzz desktop app" in the package *and* in the launcher's tooltip.
+  for (const field of ["publisher", "shortDescription", "longDescription"]) {
+    const value = flavor[field];
+    if (value === undefined) continue;
+    if (typeof value !== "string" || value.trim().length === 0) {
+      fail(flavorId, `${field} must be a non-empty string`);
+    }
+    if (/[\r\n]/.test(value)) {
+      // `Maintainer:`, `Description:` and `Comment=` are all one-line fields
+      // in their respective formats. An embedded newline does not produce a
+      // long value, it produces a package whose control file or desktop entry
+      // stops parsing at that point.
+      fail(flavorId, `${field} must be a single line`);
+    }
+  }
+  if (flavor.longDescription !== undefined && flavor.shortDescription === undefined) {
+    // Debian's `Description:` is a mandatory synopsis followed by an optional
+    // body, so a long description with no short one would be filed under
+    // "Buzz desktop app" with the flavor's own prose indented beneath it.
+    fail(flavorId, "longDescription is set but no shortDescription is declared");
   }
 
   if (flavor.logo !== undefined) {
@@ -450,6 +484,17 @@ export function validateFlavor(flavor, flavorId) {
     nestName: derived.nestName,
     deepLinkScheme: derived.deepLinkScheme,
     cliName: derived.cliName,
+    mainBinaryName: derived.mainBinaryName,
+    publisher:
+      typeof flavor.publisher === "string" ? flavor.publisher.trim() : undefined,
+    shortDescription:
+      typeof flavor.shortDescription === "string"
+        ? flavor.shortDescription.trim()
+        : undefined,
+    longDescription:
+      typeof flavor.longDescription === "string"
+        ? flavor.longDescription.trim()
+        : undefined,
     icon: flavor.icon,
     platformIcons:
       flavor.platformIcons === undefined
@@ -539,6 +584,18 @@ export function flavorBuildEnv(flavor, readFile = readFileSync) {
     BUZZ_BUILD_PRODUCT_NAME: flavor.productName,
     // Default relay baked into the binary (`relay::relay_ws_url`).
     BUZZ_RELAY_URL: flavor.relayUrl,
+    // The name Tauri's *bundler* puts in filesystem paths: the `.app` folder,
+    // and on Linux the `/usr/lib/<name>/` directory a package's resources go
+    // into. That is `productName` in a Tauri config and `displayName` in a
+    // flavor file — a different field from `productName` here, which is the
+    // name the app calls itself in its own copy.
+    //
+    // Rust needs it because a flavored bundle cannot keep its sidecars next to
+    // its executable: `externalBin` installs them into `/usr/bin`, and a real
+    // Buzz's package already owns `/usr/bin/buzz` and `/usr/bin/buzz-acp`, so
+    // dpkg refuses the install outright. They ship as resources instead, and
+    // `build_identity::sidecar_dirs` resolves that directory from this name.
+    BUZZ_BUILD_BUNDLE_NAME: flavor.displayName,
   };
   if (flavor.autoConnectDefaultRelay) {
     env.BUZZ_BUILD_AUTO_CONNECT_DEFAULT_RELAY = "1";

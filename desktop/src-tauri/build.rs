@@ -30,6 +30,41 @@ fn bake_brand_product_name() {
     println!("cargo:rustc-env=BUZZ_DESKTOP_BUILD_PRODUCT_NAME={name}");
 }
 
+/// The name Tauri's bundler puts in filesystem paths, so the app can find the
+/// sidecars it was packaged with.
+///
+/// A flavored bundle cannot ship them next to its executable the way the trunk
+/// does: `externalBin` installs into `/usr/bin`, and a real Buzz's package
+/// already owns `/usr/bin/buzz` and `/usr/bin/buzz-acp`, so dpkg refuses to
+/// unpack both. The flavored config ships them as resources instead, which on
+/// Linux is `/usr/lib/<this name>/sidecars/` — and `sidecar_dirs` needs the
+/// name to get there.
+///
+/// This is Tauri's `productName`, which is `displayName` in a flavor file. It
+/// is deliberately not `BUZZ_BUILD_PRODUCT_NAME`: that one is the name the app
+/// calls itself in its own copy, a separate flavor field that is allowed to
+/// differ, and reading a *path* out of it would make the two silently
+/// load-bearing for each other.
+///
+/// Refused rather than sanitised when it contains a path separator: a name
+/// carrying one would resolve a sidecar directory somewhere other than inside
+/// the bundle, and the only symptom would be agents that cannot start.
+fn bake_bundle_name() {
+    let Ok(raw) = std::env::var("BUZZ_BUILD_BUNDLE_NAME") else {
+        return;
+    };
+    let name = raw.trim();
+    if name.is_empty() {
+        panic!("BUZZ_BUILD_BUNDLE_NAME must not be empty or whitespace");
+    }
+    if name.contains('/') || name.contains('\\') || name.split('.').any(|part| part.is_empty()) {
+        panic!(
+            "BUZZ_BUILD_BUNDLE_NAME must be a single path component, got {name:?}"
+        );
+    }
+    println!("cargo:rustc-env=BUZZ_DESKTOP_BUILD_BUNDLE_NAME={name}");
+}
+
 /// The menu-bar glyph, copied into `OUT_DIR` for `include_bytes!`.
 ///
 /// A raster, unlike every other brand asset: `tray_menu.rs` hands AppKit raw
@@ -105,10 +140,12 @@ fn main() {
     println!("cargo:rerun-if-env-changed=BUZZ_BUILD_AUTO_CONNECT_DEFAULT_RELAY");
     println!("cargo:rerun-if-env-changed=BUZZ_BUILD_DEMO_SLUG");
     println!("cargo:rerun-if-env-changed=BUZZ_BUILD_PRODUCT_NAME");
+    println!("cargo:rerun-if-env-changed=BUZZ_BUILD_BUNDLE_NAME");
     println!("cargo:rerun-if-env-changed=BUZZ_BUILD_TRAY_ICON");
     println!("cargo:rustc-check-cfg=cfg(buzz_updater_enabled)");
 
     bake_brand_product_name();
+    bake_bundle_name();
     bake_brand_tray_icon();
 
     if let Ok(slug) = std::env::var("BUZZ_BUILD_DEMO_SLUG") {
