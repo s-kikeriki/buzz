@@ -1,0 +1,493 @@
+# PARKED — this file does nothing where it is.
+#
+# GitHub only runs workflows under `.github/workflows/`. It is here because the
+# token the agent pushes with has no `workflow` scope, so any push touching that
+# directory is rejected by the remote. Moving it is one command, run by a human:
+#
+#     git mv .github/workflows-pending/flavor-build.yml .github/workflows/
+#     git commit -s -m "ci: add the ki.keriki flavor build"
+#
+# Actions has never run on this fork, so it also has to be enabled once, in
+# Settings -> Actions -> General -> "Allow all actions and reusable workflows".
+# Until both are done, the Run workflow button does not exist.
+#
+# ---------------------------------------------------------------------------
+#
+# What this is for: Ian's Windows VM and Ethos's Debian box. Neither installer
+# can be produced on the Mac these builds are made on — Linux needs
+# webkit2gtk/gtk3/libsoup, which do not exist on macOS and cannot be
+# cross-linked, and that machine has no docker, podman, colima, lima or qemu.
+# `release.yml` already solves both, on a tag, for stock Buzz. This is the same
+# two jobs with the flavor applied and everything release-only removed.
+#
+# What was deliberately dropped from `release.yml`:
+#
+#   * tag binding (`verify-release-ref.sh`) — this runs from a branch, on demand
+#   * the updater: no `build-release-config.mjs`, no `createUpdaterArtifacts`,
+#     no `TAURI_SIGNING_PRIVATE_KEY`, no `.sig`, no `latest.json`. The updater
+#     plugin is `#[cfg(buzz_updater_enabled)]`, so a build with no updater
+#     config simply does not register it.
+#   * `assemble-manifest` and the GitHub release upload. The artifacts come out
+#     of the Actions run and are placed by hand.
+#
+# Neither installer is signed. Windows SmartScreen will warn on first run
+# ("More info" -> "Run anyway") and Linux has nothing to warn about. That is
+# the same position the macOS DMG is in — it is ad-hoc signed — and it is fine
+# for the two people installing these.
+
+name: Flavor build
+
+on:
+  workflow_dispatch:
+    inputs:
+      flavor:
+        description: Which app to build
+        type: choice
+        options: [ki.keriki, zeniad]
+        default: ki.keriki
+      linux:
+        description: Build the Linux .deb and AppImage
+        type: boolean
+        default: true
+      windows:
+        description: Build the Windows x64 installer
+        type: boolean
+        default: true
+      windows_arm:
+        description: Also try a native arm64 Windows installer (may fail)
+        type: boolean
+        default: true
+      version:
+        description: Version to stamp, e.g. 0.5.28. Blank keeps the repo's.
+        type: string
+        default: ""
+
+concurrency:
+  # Keyed on the flavor as well as the ref: two flavors share one `target/`
+  # directory in a checkout but not across runners, and queueing a ki.keriki
+  # build behind a zeniad one on a different branch helps nobody.
+  group: flavor-build-${{ github.ref }}-${{ inputs.flavor }}
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  linux:
+    name: Linux (deb + AppImage)
+    if: inputs.linux
+    runs-on: ubuntu-latest
+    # Digest-pinned, as in release.yml. Ubuntu 24.04 is glibc 2.39; Ethos's
+    # Debian 13 is 2.41, and glibc is backward compatible, so a .deb built here
+    # installs there. The AppImage is the fallback if a dependency *name*
+    # differs between the two distributions, which glibc versions say nothing
+    # about.
+    container: ubuntu:24.04@sha256:33ceb71981b602c1a7443a53469e4dba065f7503eab3078a2d7a57a2ab987517
+    timeout-minutes: 90
+    env:
+      # linuxdeploy and appimagetool are themselves AppImages, and containers
+      # have no FUSE.
+      APPIMAGE_EXTRACT_AND_RUN: "1"
+    defaults:
+      run:
+        # The container's default shell is dash; the steps below use arrays,
+        # mapfile and [[ ]].
+        shell: bash
+    steps:
+      - name: Install system dependencies
+        env:
+          DEBIAN_FRONTEND: noninteractive
+        run: |
+          # Must run first: bare ubuntu:24.04 ships without curl, wget, git or
+          # ca-certificates, and actions/checkout silently falls back to a REST
+          # tarball without git. Running as root, so no sudo.
+          apt-get update \
+            -o Acquire::Retries=3 \
+            -o Acquire::http::Timeout=30 \
+            -o Acquire::https::Timeout=30
+          apt-get install -y --no-install-recommends \
+            -o Acquire::Retries=3 \
+            -o Acquire::http::Timeout=30 \
+            -o Acquire::https::Timeout=30 \
+            -o DPkg::Lock::Timeout=120 \
+            build-essential \
+            ca-certificates \
+            curl \
+            desktop-file-utils \
+            file \
+            git \
+            libasound2-dev \
+            libayatana-appindicator3-dev \
+            libgtk-3-dev \
+            librsvg2-dev \
+            libssl-dev \
+            libwebkit2gtk-4.1-dev \
+            libxdo-dev \
+            patchelf \
+            pkg-config \
+            squashfs-tools \
+            wget \
+            xdg-utils
+
+      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
+        with:
+          persist-credentials: false
+
+      - name: Mark workspace safe for git (containerized job)
+        run: git config --global --add safe.directory "$GITHUB_WORKSPACE"
+
+      - uses: cashapp/activate-hermit@cea9af7913204a965fd488637a8d1811bba2e616 # v1
+
+      - uses: Swatinem/rust-cache@e18b497796c12c097a38f9edb9d0641fb99eee32 # v2.9.1
+        with:
+          workspaces: desktop/src-tauri
+
+      - name: Install appimagetool
+        run: |
+          # Pinned to an immutable release tag rather than the mutable
+          # `continuous` one, and hash-checked — same reasoning as release.yml.
+          wget -q --tries=3 --timeout=30 -O /tmp/appimagetool \
+            "https://github.com/AppImage/appimagetool/releases/download/1.9.1/appimagetool-x86_64.AppImage"
+          echo "ed4ce84f0d9caff66f50bcca6ff6f35aae54ce8135408b3fa33abfc3cb384eb0  /tmp/appimagetool" | sha256sum -c
+          install -m 755 /tmp/appimagetool /usr/local/bin/appimagetool
+          # appimagetool otherwise fetches the type2 runtime from `continuous`
+          # at repack time. The runtime is the first code a user executes.
+          wget -q --tries=3 --timeout=30 -O /tmp/appimage-runtime \
+            "https://github.com/AppImage/type2-runtime/releases/download/20251108/runtime-x86_64"
+          echo "2fca8b443c92510f1483a883f60061ad09b46b978b2631c807cd873a47ec260d  /tmp/appimage-runtime" | sha256sum -c
+          install -D -m 644 /tmp/appimage-runtime /usr/local/lib/appimage-runtime
+          echo "APPIMAGETOOL_RUNTIME_FILE=/usr/local/lib/appimage-runtime" >> "$GITHUB_ENV"
+
+      - name: Install desktop dependencies
+        run: just desktop-install-ci
+
+      - name: Patch version
+        if: inputs.version != ''
+        env:
+          VERSION: ${{ inputs.version }}
+        run: cd desktop && node scripts/set-version-from-tag.mjs "$VERSION"
+
+      - name: Apply the flavor
+        env:
+          FLAVOR: ${{ inputs.flavor }}
+        run: |
+          cd desktop
+          # Each `run:` is its own shell, so `eval "$(flavor-config.mjs …)"`
+          # here would reach nothing below. $GITHUB_ENV is the crossing that
+          # survives into the build step.
+          node scripts/flavor-github-env.mjs "$FLAVOR"
+          node scripts/build-flavor-tauri-config.mjs "$FLAVOR"
+          node scripts/stage-flavor-icons.mjs "$FLAVOR"
+
+      - name: Check the flavor really crossed
+        env:
+          FLAVOR: ${{ inputs.flavor }}
+        run: |
+          # Read in a *child* process, not by echoing the variables this job
+          # just set. A value that was only ever set in the setting shell reads
+          # back perfectly from that shell and is invisible to `pnpm` and
+          # `cargo` — which is how a ki.keriki DMG once shipped with no brand
+          # mark, the stock accent and `ws://localhost:3000` baked in, with its
+          # build log printing the right values on the way past.
+          expected=$(cd desktop && node -e '
+            import("./scripts/flavor-config.mjs").then(({ flavorBuildEnv, loadFlavor }) => {
+              const env = flavorBuildEnv(loadFlavor(process.argv[1]));
+              for (const key of Object.keys(env).sort())
+                console.log(`${key}=${env[key]}`);
+            });
+          ' "$FLAVOR")
+          missing=0
+          while IFS= read -r line; do
+            key=${line%%=*}
+            want=${line#*=}
+            got=$(printenv "$key" || true)
+            if [ "$got" != "$want" ]; then
+              echo "::error::$key did not cross into the build environment"
+              missing=$((missing + 1))
+            fi
+          done <<< "$expected"
+          echo "$(printf '%s\n' "$expected" | wc -l) flavor variables checked, $missing wrong"
+          [ "$missing" -eq 0 ]
+
+      - name: Build sidecars
+        run: |
+          cargo build --release -p buzz-acp -p buzz-agent -p buzz-backend-kubernetes -p buzz-dev-mcp -p git-credential-nostr -p buzz-cli
+          ./scripts/bundle-sidecars.sh
+
+      - name: Build Linux bundles
+        run: |
+          cd desktop
+          pnpm tauri build --verbose --ci \
+            --bundles deb,appimage \
+            --features mesh-llm \
+            --config src-tauri/tauri.flavor.conf.json
+        env:
+          CMAKE_POLICY_VERSION_MINIMUM: "3.5"
+
+      - name: Fix AppImage (remove infra libs, shim host GStreamer)
+        run: |
+          mapfile -t APPIMAGES < <(find desktop/src-tauri/target/release/bundle/appimage -name '*.AppImage' -type f)
+          if [[ ${#APPIMAGES[@]} -ne 1 ]]; then
+            echo "::error::Expected exactly one AppImage, found ${#APPIMAGES[@]}: ${APPIMAGES[*]-none}"
+            exit 1
+          fi
+          bash desktop/scripts/fix-appimage.sh "${APPIMAGES[0]}"
+
+      - name: Check the .deb wears the flavor
+        env:
+          FLAVOR: ${{ inputs.flavor }}
+        run: |
+          # Read back from the artifact, not from the config that produced it.
+          # The macOS path learned this twice: a build whose log printed every
+          # right value and whose `.app` wore the Buzz bee, and a DMG named one
+          # app carrying another's identifier.
+          #
+          # The *installed icons* are the thing worth reading back here. They
+          # are the half of the brand that has silently reverted before, and
+          # unlike the identifier they survive into the package as whole files
+          # with stable bytes — the identifier is compiled into the binary and
+          # then xz-compressed inside `data.tar`, so grepping the `.deb` for it
+          # proves only that grep found nothing.
+          DEB=$(find desktop/src-tauri/target/release/bundle/deb -name '*.deb' -type f | head -1)
+          [[ -n "$DEB" ]] || { echo "::error::no .deb produced"; exit 1; }
+          rm -rf /tmp/debroot && dpkg-deb -R "$DEB" /tmp/debroot
+
+          mapfile -t INSTALLED < <(find /tmp/debroot/usr/share/icons -name '*.png' -type f | sort)
+          if [[ ${#INSTALLED[@]} -eq 0 ]]; then
+            echo "::error::the .deb installs no icons at all"
+            exit 1
+          fi
+          # Every icon the package installs must be byte-identical to one the
+          # flavor declares. Asserting set membership rather than a fixed
+          # layout keeps this honest if Tauri changes which hicolor directories
+          # it writes, while still failing the moment a stock Buzz asset
+          # survives into the package.
+          OURS=$(cd desktop && node -e '
+            import("./scripts/flavor-config.mjs").then(({ loadFlavor }) => {
+              const flavor = loadFlavor(process.argv[1]);
+              for (const file of Object.values(flavor.platformIcons ?? {}))
+                console.log(file);
+            });
+          ' "$FLAVOR" | while read -r f; do sha256sum "desktop/$f" | cut -d' ' -f1; done)
+          if [[ -z "$OURS" ]]; then
+            echo "::error::$FLAVOR declares no platformIcons — a Linux build of it would ship the stock Buzz icons"
+            exit 1
+          fi
+          for icon in "${INSTALLED[@]}"; do
+            got=$(sha256sum "$icon" | cut -d' ' -f1)
+            if ! grep -qx "$got" <<< "$OURS"; then
+              echo "::error::${icon#/tmp/debroot} is not one of $FLAVOR's icons"
+              exit 1
+            fi
+            echo "ok: ${icon#/tmp/debroot}"
+          done
+
+          # The launcher entry is the other thing a user sees before they ever
+          # open the app.
+          DESKTOP_FILE=$(find /tmp/debroot/usr/share/applications -name '*.desktop' -type f | head -1)
+          [[ -n "$DESKTOP_FILE" ]] || { echo "::error::no .desktop entry in the .deb"; exit 1; }
+          PRODUCT=$(cd desktop && node -e '
+            import("./scripts/flavor-config.mjs").then(({ loadFlavor }) =>
+              console.log(loadFlavor(process.argv[1]).displayName));
+          ' "$FLAVOR")
+          if ! grep -qx "Name=$PRODUCT" "$DESKTOP_FILE"; then
+            echo "::error::the launcher entry is not named $PRODUCT:"
+            grep -i '^name' "$DESKTOP_FILE"
+            exit 1
+          fi
+          echo "ok: launcher entry is Name=$PRODUCT"
+
+      - name: Checksums
+        run: |
+          cd desktop/src-tauri/target/release/bundle
+          find deb appimage -type f \( -name '*.deb' -o -name '*.AppImage' \) \
+            -exec sha256sum {} + | tee "$GITHUB_STEP_SUMMARY"
+
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+        with:
+          name: ${{ inputs.flavor }}-linux-x64
+          if-no-files-found: error
+          retention-days: 14
+          path: |
+            desktop/src-tauri/target/release/bundle/deb/*.deb
+            desktop/src-tauri/target/release/bundle/appimage/*.AppImage
+
+  windows:
+    name: Windows (${{ matrix.arch }})
+    if: inputs.windows
+    runs-on: ${{ matrix.runner }}
+    # arm64 is the unproven half: `windows-11-arm` runners are newer than this
+    # crate's Windows support, which is 44 platform-specific code sites plus
+    # `windows-sys` and the Windows keyring. Letting its failure fail the whole
+    # job would throw away the x64 installer Ian can actually use today, so the
+    # matrix does not fail fast and arm64 is allowed to fail on its own.
+    continue-on-error: ${{ matrix.arch == 'arm64' }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - arch: x64
+            runner: windows-latest
+            target: x86_64-pc-windows-msvc
+          - arch: arm64
+            runner: windows-11-arm
+            target: aarch64-pc-windows-msvc
+    timeout-minutes: 90
+    env:
+      TARGET: ${{ matrix.target }}
+    steps:
+      - name: Skip arm64 unless asked
+        id: gate
+        shell: bash
+        run: |
+          if [[ "${{ matrix.arch }}" == "arm64" && "${{ inputs.windows_arm }}" != "true" ]]; then
+            echo "run=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "run=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
+        if: steps.gate.outputs.run == 'true'
+        with:
+          persist-credentials: false
+
+      - uses: dtolnay/rust-toolchain@e081816240890017053eacbb1bdf337761dc5582 # 1.95.0
+        if: steps.gate.outputs.run == 'true'
+        with:
+          targets: ${{ matrix.target }}
+
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        if: steps.gate.outputs.run == 'true'
+        with:
+          node-version: 24.14.1
+          package-manager-cache: false
+
+      - uses: pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1 # v4.3.0
+        if: steps.gate.outputs.run == 'true'
+        with:
+          version: 11.4.0
+
+      - uses: Swatinem/rust-cache@e18b497796c12c097a38f9edb9d0641fb99eee32 # v2.9.1
+        if: steps.gate.outputs.run == 'true'
+        with:
+          workspaces: desktop/src-tauri
+          key: ${{ matrix.target }}
+
+      - name: Install desktop dependencies
+        if: steps.gate.outputs.run == 'true'
+        shell: bash
+        run: pnpm install --frozen-lockfile
+
+      - name: Patch version
+        if: steps.gate.outputs.run == 'true' && inputs.version != ''
+        shell: bash
+        env:
+          VERSION: ${{ inputs.version }}
+        run: cd desktop && node scripts/set-version-from-tag.mjs "$VERSION"
+
+      - name: Apply the flavor
+        if: steps.gate.outputs.run == 'true'
+        shell: bash
+        env:
+          FLAVOR: ${{ inputs.flavor }}
+        run: |
+          cd desktop
+          node scripts/flavor-github-env.mjs "$FLAVOR"
+          node scripts/build-flavor-tauri-config.mjs "$FLAVOR"
+          node scripts/stage-flavor-icons.mjs "$FLAVOR"
+
+      - name: Check the flavor really crossed
+        if: steps.gate.outputs.run == 'true'
+        shell: bash
+        env:
+          FLAVOR: ${{ inputs.flavor }}
+        run: |
+          expected=$(cd desktop && node -e '
+            import("./scripts/flavor-config.mjs").then(({ flavorBuildEnv, loadFlavor }) => {
+              const env = flavorBuildEnv(loadFlavor(process.argv[1]));
+              for (const key of Object.keys(env).sort())
+                console.log(`${key}=${env[key]}`);
+            });
+          ' "$FLAVOR")
+          missing=0
+          while IFS= read -r line; do
+            key=${line%%=*}
+            want=${line#*=}
+            got=$(printenv "$key" || true)
+            if [ "$got" != "$want" ]; then
+              echo "::error::$key did not cross into the build environment"
+              missing=$((missing + 1))
+            fi
+          done <<< "$expected"
+          echo "$(printf '%s\n' "$expected" | wc -l) flavor variables checked, $missing wrong"
+          [ "$missing" -eq 0 ]
+
+      - name: Build sidecars
+        if: steps.gate.outputs.run == 'true'
+        shell: bash
+        run: |
+          cargo build --release --target "$TARGET" -p buzz-acp -p buzz-agent -p buzz-dev-mcp -p git-credential-nostr -p buzz-cli
+          ./scripts/bundle-sidecars.sh "$TARGET"
+
+      - name: Build Windows NSIS installer (unsigned)
+        if: steps.gate.outputs.run == 'true'
+        shell: bash
+        run: |
+          cd desktop
+          pnpm tauri build --verbose --target "$TARGET" \
+            --bundles nsis \
+            --config src-tauri/tauri.flavor.conf.json
+        env:
+          CMAKE_POLICY_VERSION_MINIMUM: "3.5"
+
+      - name: Check the staged icon is still the flavor's
+        if: steps.gate.outputs.run == 'true'
+        shell: bash
+        env:
+          FLAVOR: ${{ inputs.flavor }}
+        run: |
+          # An NSIS installer is a self-extracting executable, so there is no
+          # cheap way to read the icon back out of the artifact the way the
+          # `.deb` allows. This asserts the next best thing: that the file the
+          # bundler read is the flavor's and was not restored underneath the
+          # build. It is a weaker claim and is stated as one — Windows gets its
+          # real icon check the first time Ian looks at the taskbar.
+          WANT=$(cd desktop && node -e '
+            import("./scripts/flavor-config.mjs").then(({ loadFlavor }) =>
+              console.log(loadFlavor(process.argv[1]).platformIcons?.["icon.ico"] ?? ""));
+          ' "$FLAVOR")
+          if [[ -z "$WANT" ]]; then
+            echo "::error::$FLAVOR declares no icon.ico — this installer would wear the Buzz bee"
+            exit 1
+          fi
+          a=$(sha256sum "desktop/$WANT" | cut -d' ' -f1)
+          b=$(sha256sum desktop/src-tauri/icons/icon.ico | cut -d' ' -f1)
+          [[ "$a" == "$b" ]] || { echo "::error::src-tauri/icons/icon.ico is not $WANT"; exit 1; }
+          echo "ok: the bundler read $WANT ($a)"
+
+      - name: Mark the installer unsigned
+        if: steps.gate.outputs.run == 'true'
+        id: artifacts
+        shell: bash
+        run: |
+          BUNDLE_DIR="desktop/src-tauri/target/${TARGET}/release/bundle"
+          EXE=$(find "$BUNDLE_DIR/nsis" -name '*.exe' -type f | head -1)
+          if [[ -z "$EXE" ]]; then
+            echo "::error::No NSIS installer found in $BUNDLE_DIR/nsis"
+            exit 1
+          fi
+          # Same `_alpha-unsigned` marker release.yml uses. SmartScreen will
+          # warn on first run and the filename should say why before the dialog
+          # does.
+          MARKED="$(dirname "$EXE")/$(basename "$EXE" .exe)_alpha-unsigned.exe"
+          mv "$EXE" "$MARKED"
+          echo "exe=$MARKED" >> "$GITHUB_OUTPUT"
+          sha256sum "$MARKED" | tee -a "$GITHUB_STEP_SUMMARY"
+
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+        if: steps.gate.outputs.run == 'true'
+        with:
+          name: ${{ inputs.flavor }}-windows-${{ matrix.arch }}
+          if-no-files-found: error
+          retention-days: 14
+          path: ${{ steps.artifacts.outputs.exe }}
