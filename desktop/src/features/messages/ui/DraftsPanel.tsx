@@ -1,3 +1,5 @@
+import { plural, t } from "@lingui/core/macro";
+import { Trans } from "@lingui/react/macro";
 import { FileText, Lock, Pencil, Send, Trash2 } from "lucide-react";
 import * as React from "react";
 
@@ -45,7 +47,14 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "@/shared/ui/tooltip";
 
 const SENT_DRAFT_PREFIX = "sent:";
 const THREAD_DRAFT_PREFIX = "thread:";
-const UNKNOWN_CHANNEL_LABEL = "Unknown channel";
+/**
+ * A function, not a module constant.
+ *
+ * `const UNKNOWN_CHANNEL_LABEL = t`…`` at module scope resolves once when the
+ * file is first imported and then keeps that locale for the session. Calling
+ * it per use costs nothing and follows a language switch.
+ */
+const unknownChannelLabel = () => t`Unknown channel`;
 
 export type DraftListEntry = {
   draft: DraftState;
@@ -63,10 +72,17 @@ export type DraftViewItem = {
   source: DraftSource;
 };
 
-const UNKNOWN_DRAFT_SOURCE: DraftSource = {
+/**
+ * A function for the same reason {@link unknownChannelLabel} is one, and this
+ * is the version that bites hardest: as a module-level constant it called `t`
+ * at import time, before any catalogue was activated, and the whole app booted
+ * to a blank page. A stale string is the mild form of this bug; a crash is the
+ * loud one, and it is the same mistake.
+ */
+const unknownDraftSource = (): DraftSource => ({
   channel: null,
-  label: UNKNOWN_CHANNEL_LABEL,
-};
+  label: unknownChannelLabel(),
+});
 
 const DRAFT_TIME = {
   month: "short",
@@ -86,7 +102,7 @@ export function formatDraftCreatedAt(
 ): string {
   const time = parseDraftTime(draft.createdAt);
   return time === 0
-    ? "Unknown time"
+    ? t`Unknown time`
     : localeDateTimeFormat(locale, DRAFT_TIME).format(new Date(time));
 }
 
@@ -125,13 +141,13 @@ export function getDraftPreview(draft: DraftState): string {
   }
 
   const attachmentCount = draft.pendingImeta.length;
-  if (attachmentCount === 1) {
-    return "1 attachment";
+  if (attachmentCount > 0) {
+    return plural(attachmentCount, {
+      one: "# attachment",
+      other: "# attachments",
+    });
   }
-  if (attachmentCount > 1) {
-    return `${attachmentCount} attachments`;
-  }
-  return "Empty draft";
+  return t`Empty draft`;
 }
 
 function resolveDraftSources({
@@ -156,7 +172,7 @@ function resolveDraftSources({
       channel: channel ?? null,
       label: channel
         ? resolveChannelDisplayLabel(channel, currentPubkey, profiles)
-        : UNKNOWN_CHANNEL_LABEL,
+        : unknownChannelLabel(),
     });
   }
 
@@ -318,17 +334,21 @@ export function SendConfirmDialog({
     >
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>Send message</AlertDialogTitle>
+          <AlertDialogTitle>
+            <Trans>Send message</Trans>
+          </AlertDialogTitle>
           <AlertDialogDescription>
-            Are you sure you want to send this message to {destination}?
+            <Trans>
+              Are you sure you want to send this message to {destination}?
+            </Trans>
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
           <Button onClick={onCancel} size="sm" type="button" variant="outline">
-            Cancel
+            <Trans>Cancel</Trans>
           </Button>
           <Button onClick={onConfirm} size="sm" type="button">
-            Send
+            <Trans>Send</Trans>
           </Button>
         </AlertDialogFooter>
       </AlertDialogContent>
@@ -368,7 +388,7 @@ function DraftRow({
     ? isDm
       ? source.label
       : `#${source.label}`
-    : UNKNOWN_CHANNEL_LABEL;
+    : unknownChannelLabel();
 
   return (
     <div
@@ -380,7 +400,7 @@ function DraftRow({
       data-testid={`home-draft-item-${entry.key}`}
     >
       <button
-        aria-label={`View draft in ${channelLabel}`}
+        aria-label={t`View draft in ${channelLabel}`}
         className="block w-full min-w-0 px-3 py-3 text-left disabled:cursor-default"
         onClick={onSelect}
         type="button"
@@ -405,7 +425,7 @@ function DraftRow({
                 className="shrink-0 rounded px-1 py-0.5 text-2xs font-medium text-destructive/70 ring-1 ring-destructive/30"
                 data-testid={`home-draft-orphaned-label-${entry.key}`}
               >
-                thread deleted
+                <Trans>thread deleted</Trans>
               </span>
             ) : null}
           </div>
@@ -427,10 +447,10 @@ function DraftRow({
               disabled={!canOpen}
               label={
                 canOpen
-                  ? "Open draft"
+                  ? t`Open draft`
                   : isOrphaned
-                    ? "Thread deleted"
-                    : "No channel link"
+                    ? t`Thread deleted`
+                    : t`No channel link`
               }
               onClick={() => onOpen(entry)}
             >
@@ -440,10 +460,10 @@ function DraftRow({
               disabled={!canSend}
               label={
                 canSend
-                  ? "Send message"
+                  ? t`Send message`
                   : isOrphaned
-                    ? "Thread deleted"
-                    : "No channel link"
+                    ? t`Thread deleted`
+                    : t`No channel link`
               }
               onClick={() => onSend(entry)}
             >
@@ -452,7 +472,7 @@ function DraftRow({
           </>
         )}
         <DraftRowActionButton
-          label="Delete draft"
+          label={t`Delete draft`}
           onClick={() => onDelete(entry.key)}
         >
           <Trash2 className="h-4 w-4" />
@@ -575,7 +595,7 @@ export function useDraftViewItems(enabled: boolean): DraftViewItem[] {
         threadRootId !== null
           ? (rootStatusMap.get(threadRootId) ?? "checking")
           : "available",
-      source: sources.get(entry.key) ?? UNKNOWN_DRAFT_SOURCE,
+      source: sources.get(entry.key) ?? unknownDraftSource(),
     };
   });
 }
@@ -633,17 +653,19 @@ export function DraftsPanel({
 
   const sendDialogSource =
     items.find((item) => item.entry.key === sendTarget?.key)?.source ??
-    UNKNOWN_DRAFT_SOURCE;
+    unknownDraftSource();
   const sendDialogIsDm = sendDialogSource.channel?.channelType === "dm";
   const sendDialogChannelLabel = sendDialogSource.channel
     ? sendDialogSource.label
-    : UNKNOWN_CHANNEL_LABEL;
+    : unknownChannelLabel();
 
   if (items.length === 0) {
     return (
       <div className="flex h-full flex-col items-center justify-center gap-2 p-8 text-center">
         <FileText className="h-8 w-8 text-muted-foreground/50" />
-        <p className="text-sm text-muted-foreground">No drafts</p>
+        <p className="text-sm text-muted-foreground">
+          <Trans>No drafts</Trans>
+        </p>
       </div>
     );
   }
@@ -655,7 +677,7 @@ export function DraftsPanel({
         data-testid="home-inbox-drafts-list"
       >
         <h3 className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
-          Drafts
+          <Trans>Drafts</Trans>
         </h3>
         {items.map(({ entry, rootStatus, source }) => (
           <DraftRow

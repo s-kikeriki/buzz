@@ -1,3 +1,6 @@
+import type { I18n, MessageDescriptor } from "@lingui/core";
+import { msg } from "@lingui/core/macro";
+
 import {
   resolveUserLabel,
   type UserProfileLookup,
@@ -11,6 +14,18 @@ import {
   isProjectInboxItem,
 } from "@/features/home/lib/projectInbox";
 import type { TimelineReaction } from "@/features/messages/types";
+import {
+  KIND_APPROVAL_REQUEST,
+  KIND_FORUM_COMMENT,
+  KIND_FORUM_POST,
+  KIND_JOB_ACCEPTED,
+  KIND_JOB_CANCEL,
+  KIND_JOB_ERROR,
+  KIND_JOB_PROGRESS,
+  KIND_JOB_REQUEST,
+  KIND_JOB_RESULT,
+  KIND_REMINDER,
+} from "@/shared/constants/kinds";
 import type {
   Channel,
   FeedItem,
@@ -48,7 +63,7 @@ export type InboxItem = {
   id: string;
   item: FeedItem;
   categories: FeedItemCategory[];
-  categoryLabel: string;
+  categoryLabel: MessageDescriptor;
   channelLabel: string | null;
   fullTimestampLabel: string;
   groupItems: FeedItem[];
@@ -56,15 +71,43 @@ export type InboxItem = {
   latestActivityAt: number;
   mentionNames: string[];
   mentionPubkeysByName?: Record<string, string>;
-  preview: string;
+  preview: InboxCopy;
   senderLabel: string;
-  subject: string;
+  subject: InboxCopy;
   timestampLabel: string;
   unreadCount: number;
 };
 
+/**
+ * Copy on its way to an inbox row: either a message to translate or a piece of
+ * the person's own content.
+ *
+ * This module builds the rows, and it is a pure function of relay data — it
+ * runs when the feed changes, not when the locale does. So it cannot resolve
+ * copy itself: a `t` here would bake in whichever locale happened to be active
+ * the last time a message arrived, and a row built before a language switch
+ * would stay in the old language until something else pushed it. The rows
+ * carry descriptors and `InboxListPane` resolves them with `i18n._()` on
+ * render.
+ *
+ * The union is not squeamishness about types. A preview is the message body
+ * when there is one and a fixed sentence when there is not, and a subject is
+ * the author's own `subject` tag when they wrote one — translating a person's
+ * own words would be worse than leaving them.
+ */
+export type InboxCopy = MessageDescriptor | string;
+
 export type InboxTypeLabel = {
-  text: string;
+  text: InboxCopy;
+  /**
+   * Whether `text` still needs the word that links it to the channel chip.
+   *
+   * The fixed phrases carry their own ("Mentioned in"), because the chip is
+   * separately styled and the pair cannot be one sentence with a placeholder.
+   * A dynamic headline cannot carry it: this module hands out descriptors and
+   * so has no resolved string to splice a word onto.
+   */
+  joinsChannel?: boolean;
   channelLabel: string | null;
 };
 
@@ -130,13 +173,16 @@ function projectRootItem(item: FeedItem, groupItems: readonly FeedItem[]) {
   );
 }
 
-function projectTypeLabel(item: FeedItem) {
-  if (item.kind === 1618) return "Review";
-  if (item.kind === 1621) return "Task";
-  return "Project update";
+function projectTypeLabel(item: FeedItem): MessageDescriptor {
+  if (item.kind === 1618) return msg`Review`;
+  if (item.kind === 1621) return msg`Task`;
+  return msg`Project update`;
 }
 
-function feedHeadline(item: FeedItem, groupItems: readonly FeedItem[] = []) {
+function feedHeadline(
+  item: FeedItem,
+  groupItems: readonly FeedItem[] = [],
+): InboxCopy {
   if (isProjectInboxItem(item)) {
     const root = projectRootItem(item, groupItems);
     return (
@@ -145,65 +191,79 @@ function feedHeadline(item: FeedItem, groupItems: readonly FeedItem[] = []) {
     );
   }
 
+  return feedKindHeadline(item);
+}
+
+/**
+ * The headline for an event with no subject of its own.
+ *
+ * Exported because `FeedSection` had a byte-for-byte copy of this switch and
+ * of `feedPreview` below — fourteen of the same strings, written twice. That
+ * is the duplication that let #23 translate one `BackupTestFlow` and leave the
+ * other saying "Buzz", and it would have done the same here: the inbox list
+ * would have gone German while the home feed beside it stayed English.
+ */
+export function feedKindHeadline(item: FeedItem): MessageDescriptor {
   switch (item.kind) {
-    case 40007:
-      return "Reminder";
-    case 43001:
-      return "Job requested";
-    case 43002:
-      return "Job accepted";
-    case 43003:
-      return "Progress update";
-    case 43004:
-      return "Job result";
-    case 43005:
-      return "Job cancelled";
-    case 43006:
-      return "Job failed";
-    case 45001:
-      return "Forum post";
-    case 45003:
-      return "Forum reply";
-    case 46010:
-      return "Approval requested";
+    case KIND_REMINDER:
+      return msg`Reminder`;
+    case KIND_JOB_REQUEST:
+      return msg`Job requested`;
+    case KIND_JOB_ACCEPTED:
+      return msg`Job accepted`;
+    case KIND_JOB_PROGRESS:
+      return msg`Progress update`;
+    case KIND_JOB_RESULT:
+      return msg`Job result`;
+    case KIND_JOB_CANCEL:
+      return msg`Job cancelled`;
+    case KIND_JOB_ERROR:
+      return msg`Job failed`;
+    case KIND_FORUM_POST:
+      return msg`Forum post`;
+    case KIND_FORUM_COMMENT:
+      return msg`Forum reply`;
+    case KIND_APPROVAL_REQUEST:
+      return msg`Approval requested`;
     default:
       if (item.category === "mention") {
-        return "Mention";
+        return msg`Mention`;
       }
 
       if (item.category === "agent_activity") {
-        return "Agent update";
+        return msg`Agent update`;
       }
 
-      return "Channel update";
+      return msg`Channel update`;
   }
 }
 
-function feedPreview(item: FeedItem) {
+/** The preview for an event whose body is empty. See {@link feedKindHeadline}. */
+export function feedPreview(item: FeedItem): InboxCopy {
   const content = item.content.trim();
   if (content.length > 0) {
     return content;
   }
 
-  if (item.kind === 46010) {
-    return "A workflow is waiting for approval.";
+  if (item.kind === KIND_APPROVAL_REQUEST) {
+    return msg`A workflow is waiting for approval.`;
   }
 
-  if (item.kind === 40007) {
-    return "A reminder is waiting for you.";
+  if (item.kind === KIND_REMINDER) {
+    return msg`A reminder is waiting for you.`;
   }
 
-  return "No additional details were attached to this event.";
+  return msg`No additional details were attached to this event.`;
 }
 
-function categoryLabelFor(category: FeedItemCategory) {
+function categoryLabelFor(category: FeedItemCategory): MessageDescriptor {
   return category === "needs_action"
-    ? "Needs Action"
+    ? msg`Needs Action`
     : category === "mention"
-      ? "Mention"
+      ? msg`Mention`
       : category === "agent_activity"
-        ? "Agent update"
-        : "Activity";
+        ? msg`Agent update`
+        : msg`Activity`;
 }
 
 export function isThreadActivityItem(item: FeedItem) {
@@ -283,46 +343,66 @@ export function getInboxTypeLabel(item: InboxItem): InboxTypeLabel {
 
   if (item.item.channelType === "dm") {
     return {
-      text: item.senderLabel ? `DM from ${item.senderLabel}` : "DM",
+      text: item.senderLabel ? msg`DM from ${item.senderLabel}` : msg`DM`,
       channelLabel: null,
     };
   }
 
   const primaryCategory = item.item.category;
+  // The channel name is a separately styled chip beside this phrase, so each
+  // pair has to be two messages rather than one sentence with a placeholder.
+  // That fixes the order as "<phrase> <channel>", which German takes for all
+  // four of these ("Erwähnt in", "Aktion nötig in", "Thread in"). A language
+  // that wants the channel first could not be served without giving up the
+  // chip, and this comment is where that trade is recorded.
   if (primaryCategory === "mention") {
     return {
-      text: channelName ? "Mentioned in" : "Mentioned",
+      text: channelName ? msg`Mentioned in` : msg`Mentioned`,
       channelLabel: channelName,
     };
   }
 
   if (primaryCategory === "needs_action") {
     return {
-      text: channelName ? "Needs action in" : "Needs action",
+      text: channelName ? msg`Needs action in` : msg`Needs action`,
       channelLabel: channelName,
     };
   }
 
   if (isThreadActivityItem(item.item)) {
     return {
-      text: channelName ? "Thread in" : "Thread",
+      text: channelName ? msg`Thread in` : msg`Thread`,
       channelLabel: channelName,
     };
   }
 
   return {
-    text: channelName
-      ? `${activityHeadline(item.item)} in`
-      : activityHeadline(item.item),
+    text: activityHeadline(item.item),
+    joinsChannel: channelName !== null,
     channelLabel: channelName,
   };
 }
 
-export function formatInboxTypeLabel(item: InboxItem) {
+/**
+ * Resolve copy that may be a descriptor or the person's own content.
+ *
+ * One helper rather than a `typeof` at every call site: a missed check reads
+ * as `[object Object]` on screen, which is the kind of defect that gets found
+ * by a person rather than by a gate.
+ */
+export function resolveInboxCopy(i18n: I18n, copy: InboxCopy): string {
+  return typeof copy === "string" ? copy : i18n._(copy);
+}
+
+/** The type label as one flat string, for an `aria-label` or a title. */
+export function formatInboxTypeLabel(i18n: I18n, item: InboxItem) {
   const label = getInboxTypeLabel(item);
-  return label.channelLabel
-    ? `${label.text} #${label.channelLabel}`
-    : label.text;
+  const text = resolveInboxCopy(i18n, label.text);
+  if (!label.channelLabel) return text;
+  // `joinsChannel` phrases end in the linking word already; a dynamic headline
+  // does not, so it gets one here.
+  const phrase = label.joinsChannel ? i18n._(msg`${text} in`) : text;
+  return `${phrase} #${label.channelLabel}`;
 }
 
 function categoryPriority(category: FeedItemCategory) {

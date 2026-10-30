@@ -1,22 +1,17 @@
+import { useLingui } from "@lingui/react/macro";
 import { Check, type LucideIcon } from "lucide-react";
+
+import {
+  feedKindHeadline,
+  feedPreview,
+  resolveInboxCopy,
+} from "@/features/home/lib/inbox";
 
 import {
   resolveUserLabel,
   type UserProfileLookup,
 } from "@/features/profile/lib/identity";
 import type { FeedItem } from "@/shared/api/types";
-import {
-  KIND_APPROVAL_REQUEST,
-  KIND_FORUM_COMMENT,
-  KIND_FORUM_POST,
-  KIND_JOB_ACCEPTED,
-  KIND_JOB_CANCEL,
-  KIND_JOB_ERROR,
-  KIND_JOB_PROGRESS,
-  KIND_JOB_REQUEST,
-  KIND_JOB_RESULT,
-  KIND_REMINDER,
-} from "@/shared/constants/kinds";
 import { intlLocale, localeDateTimeFormat } from "@/shared/lib/intlLocale";
 import type { AppLocale } from "@/shared/lib/localePreference";
 import { useLocale } from "@/shared/lib/localePreference";
@@ -76,58 +71,6 @@ function formatFeedTime(unixSeconds: number, locale: AppLocale) {
   );
 }
 
-function feedHeadline(item: FeedItem) {
-  switch (item.kind) {
-    case KIND_REMINDER:
-      return "Reminder";
-    case KIND_JOB_REQUEST:
-      return "Job requested";
-    case KIND_JOB_ACCEPTED:
-      return "Job accepted";
-    case KIND_JOB_PROGRESS:
-      return "Progress update";
-    case KIND_JOB_RESULT:
-      return "Job result";
-    case KIND_JOB_CANCEL:
-      return "Job cancelled";
-    case KIND_JOB_ERROR:
-      return "Job failed";
-    case KIND_FORUM_POST:
-      return "Forum post";
-    case KIND_FORUM_COMMENT:
-      return "Forum reply";
-    case KIND_APPROVAL_REQUEST:
-      return "Approval requested";
-    default:
-      if (item.category === "mention") {
-        return "Mention";
-      }
-
-      if (item.category === "agent_activity") {
-        return "Agent update";
-      }
-
-      return "Channel update";
-  }
-}
-
-function feedContent(item: FeedItem) {
-  const content = item.content.trim();
-  if (content.length > 0) {
-    return content;
-  }
-
-  if (item.kind === KIND_APPROVAL_REQUEST) {
-    return "A workflow is waiting for approval.";
-  }
-
-  if (item.kind === KIND_REMINDER) {
-    return "A reminder is waiting for you.";
-  }
-
-  return "No additional details were attached to this event.";
-}
-
 type FeedSectionProps = {
   title: string;
   emptyTitle: string;
@@ -159,6 +102,7 @@ export function FeedSection({
   onMarkDone,
   onUndoDone,
 }: FeedSectionProps) {
+  const { i18n, t } = useLingui();
   const locale = useLocale();
   return (
     <section>
@@ -199,7 +143,7 @@ export function FeedSection({
               >
                 {canOpenChannel ? (
                   <button
-                    aria-label={`Open ${item.channelName || "channel"}`}
+                    aria-label={t`Open ${item.channelName || t`channel`}`}
                     className="absolute inset-0"
                     data-testid={`home-feed-open-${item.id}`}
                     onClick={() => {
@@ -213,7 +157,7 @@ export function FeedSection({
                   <span
                     className={`text-sm font-medium ${isDone ? "line-through text-muted-foreground" : ""}`}
                   >
-                    {feedHeadline(item)}
+                    {i18n._(feedKindHeadline(item))}
                   </span>
                   <span className="inline-flex items-center gap-1 text-2xs text-muted-foreground">
                     <UserAvatar
@@ -253,7 +197,7 @@ export function FeedSection({
                 <div className="pointer-events-none relative mt-0.5 line-clamp-2">
                   <Markdown
                     className="max-w-none text-sm leading-snug text-muted-foreground"
-                    content={feedContent(item)}
+                    content={resolveInboxCopy(i18n, feedPreview(item))}
                     messageId={item.id}
                     linkPreviewsSuppressed={hasLinkPreviewSuppression(
                       item.tags,
@@ -265,7 +209,7 @@ export function FeedSection({
 
                 {showDoneAction ? (
                   <Button
-                    aria-label={isDone ? "Undo done" : "Mark done"}
+                    aria-label={isDone ? t`Undo done` : t`Mark done`}
                     onClick={() => {
                       if (isDone) {
                         onUndoDone(item.id);

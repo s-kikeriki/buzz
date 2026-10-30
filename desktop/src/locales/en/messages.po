@@ -25,9 +25,19 @@ msgid "{0, plural, one {# member} other {# members}}"
 msgstr "{0, plural, one {# member} other {# members}}"
 
 #. placeholder {0}: item.unreadCount
+#: src/features/home/ui/InboxListPane.tsx
 #: src/features/sidebar/ui/ChannelActivityPopover.tsx
 msgid "{0, plural, one {# unread} other {# unread}}"
 msgstr "{0, plural, one {# unread} other {# unread}}"
+
+#: src/features/home/ui/InboxFilterMenu.tsx
+msgid "{activeDraftCount, plural, one {# active draft} other {# active drafts}}"
+msgstr "{activeDraftCount, plural, one {# active draft} other {# active drafts}}"
+
+#: src/features/messages/ui/DraftDetailPane.tsx
+#: src/features/messages/ui/DraftsPanel.tsx
+msgid "{attachmentCount, plural, one {# attachment} other {# attachments}}"
+msgstr "{attachmentCount, plural, one {# attachment} other {# attachments}}"
 
 #: src/features/sidebar/ui/ChannelSectionDialogs.tsx
 msgid "{channelCount, plural, one {Delete section \"{sectionName}\"? Its 1 channel will move back to the default Channels group.} other {Delete section \"{sectionName}\"? Its # channels will move back to the default Channels group.}}"
@@ -56,6 +66,10 @@ msgstr "{days, plural, one {#d left} other {#d left}}"
 #: src/features/channels/lib/ephemeralChannel.ts
 msgid "{days, plural, one {#d TTL} other {#d TTL}}"
 msgstr "{days, plural, one {#d TTL} other {#d TTL}}"
+
+#: src/features/home/ui/InboxFilterMenu.tsx
+msgid "{dueReminderCount, plural, one {# due reminder} other {# due reminders}}"
+msgstr "{dueReminderCount, plural, one {# due reminder} other {# due reminders}}"
 
 #: src/features/settings/ui/AppearanceSettingsControls.tsx
 msgid "{glassOpacity}% opacity"
@@ -113,6 +127,11 @@ msgstr "{selectedTemplateTeamCount, plural, one {# team} other {# teams}}"
 msgid "{subsectionCount, plural, one {Its subsection moves to the top level.} other {Its # subsections move to the top level.}}"
 msgstr "{subsectionCount, plural, one {Its subsection moves to the top level.} other {Its # subsections move to the top level.}}"
 
+#: src/features/home/lib/inbox.ts
+#: src/features/home/ui/InboxListPane.tsx
+msgid "{text} in"
+msgstr "{text} in"
+
 #. placeholder {0}: i18n._(copy.newEntity)
 #: src/features/channels/ui/ChannelBrowserDialog.tsx
 msgid "<0>{0}</0> <1>“{query}”</1>"
@@ -126,9 +145,17 @@ msgstr "a channel"
 msgid "a message"
 msgstr "a message"
 
+#: src/features/home/lib/inbox.ts
+msgid "A reminder is waiting for you."
+msgstr "A reminder is waiting for you."
+
 #: src/features/search/ui/SearchPromptPlaceholder.tsx
 msgid "a thread"
 msgstr "a thread"
+
+#: src/features/home/lib/inbox.ts
+msgid "A workflow is waiting for approval."
+msgstr "A workflow is waiting for approval."
 
 #: src/features/settings/ui/AppearanceSettingsControls.tsx
 #: src/features/sidebar/ui/CustomChannelSection.tsx
@@ -147,6 +174,10 @@ msgstr "Actions"
 #: src/shared/ui/markdown/ChannelDeepLink.tsx
 msgid "Active {when}"
 msgstr "Active {when}"
+
+#: src/features/home/lib/inbox.ts
+msgid "Activity"
+msgstr "Activity"
 
 #: src/features/channels/ui/ChannelBrowserDialog.tsx
 msgid "Add a forum"
@@ -181,15 +212,21 @@ msgstr "Admin"
 msgid "Agent job"
 msgstr "Agent job"
 
+#: src/features/home/lib/inbox.ts
 #: src/features/search/ui/SearchResultItem.tsx
 msgid "Agent update"
 msgstr "Agent update"
 
+#: src/features/home/ui/InboxFilterMenu.tsx
 #: src/features/search/ui/TopbarSearch.tsx
 #: src/features/settings/ui/SettingsPanels.tsx
 #: src/features/sidebar/ui/AppSidebarPinnedHeader.tsx
 msgid "Agents"
 msgstr "Agents"
+
+#: src/features/home/ui/InboxFilterMenu.tsx
+msgid "All"
+msgstr "All"
 
 #: src/features/settings/ui/KeyboardShortcutsCard.tsx
 msgid "All available keyboard shortcuts. Shortcuts are read-only."
@@ -240,6 +277,10 @@ msgstr "Applies across conversations and interface text"
 msgid "Approval request"
 msgstr "Approval request"
 
+#: src/features/home/lib/inbox.ts
+msgid "Approval requested"
+msgstr "Approval requested"
+
 #: src/features/sidebar/ui/ChannelContextMenu.tsx
 msgid "Archive channel"
 msgstr "Archive channel"
@@ -261,6 +302,10 @@ msgstr "Archived channels you have joined will appear here."
 msgid "Archived forums you have joined will appear here."
 msgstr "Archived forums you have joined will appear here."
 
+#: src/features/messages/ui/DraftsPanel.tsx
+msgid "Are you sure you want to send this message to {destination}?"
+msgstr "Are you sure you want to send this message to {destination}?"
+
 #: src/features/settings/ui/AppearanceSettingsControls.tsx
 msgid "Available in the macOS desktop app."
 msgstr "Available in the macOS desktop app."
@@ -268,6 +313,19 @@ msgstr "Available in the macOS desktop app."
 #: src/features/settings/ui/SettingsView.tsx
 msgid "Back to app"
 msgstr "Back to app"
+
+#: src/features/messages/ui/DraftDetailPane.tsx
+msgid "Back to drafts list"
+msgstr "Back to drafts list"
+
+#: src/features/home/ui/ProjectInboxDetail.tsx
+#: src/features/home/ui/ProjectInboxDetailPane.tsx
+msgid "Back to Inbox"
+msgstr "Back to Inbox"
+
+#: src/features/home/ui/InboxDetailPane.tsx
+msgid "Back to inbox list"
+msgstr "Back to inbox list"
 
 #: src/features/channels/ui/ChannelBrowserDialog.tsx
 msgid "Back to search"
@@ -280,6 +338,10 @@ msgstr "Blur the desktop behind navigation while keeping content solid."
 #: src/shared/lib/keyboard-shortcuts.ts
 msgid "Bold"
 msgstr "Bold"
+
+#: src/features/home/ui/RecentNotesSection.tsx
+msgid "bot"
+msgstr "bot"
 
 #: src/features/sidebar/ui/SidebarProjectsSection.tsx
 msgid "Browse all projects"
@@ -296,14 +358,23 @@ msgstr "Browse channels"
 msgid "Can't reach the relay"
 msgstr "Can't reach the relay"
 
+#: src/features/messages/ui/DraftsPanel.tsx
 #: src/features/sidebar/ui/ChannelSectionDialogs.tsx
 #: src/features/sidebar/ui/SidebarProjectsSection.tsx
 msgid "Cancel"
 msgstr "Cancel"
 
+#: src/features/home/ui/InboxListPane.tsx
+msgid "Cannot remind without a channel"
+msgstr "Cannot remind without a channel"
+
 #: src/features/sidebar/ui/CreateChannelFormFields.tsx
 msgid "Canvas included"
 msgstr "Canvas included"
+
+#: src/features/home/ui/FeedSection.tsx
+msgid "channel"
+msgstr "channel"
 
 #: src/features/search/ui/SearchResultItem.tsx
 msgid "Channel"
@@ -320,6 +391,10 @@ msgstr "Channel activity"
 #: src/features/settings/ui/SettingsPanels.tsx
 msgid "Channel templates"
 msgstr "Channel templates"
+
+#: src/features/home/lib/inbox.ts
+msgid "Channel update"
+msgstr "Channel update"
 
 #: src/features/search/ui/TopbarSearch.tsx
 #: src/features/sidebar/ui/AppSidebar.tsx
@@ -447,6 +522,15 @@ msgstr "Copy community URL"
 msgid "Copy link"
 msgstr "Copy link"
 
+#: src/features/home/ui/ProjectInboxDetail.tsx
+msgid "Could not load this project item."
+msgstr "Could not load this project item."
+
+#: src/features/home/ui/InboxDetailPane.tsx
+#: src/features/home/ui/InboxListPane.tsx
+msgid "Couldn’t reopen"
+msgstr "Couldn’t reopen"
+
 #: src/features/sidebar/ui/ChannelSectionDialogs.tsx
 msgid "Create"
 msgstr "Create"
@@ -502,6 +586,7 @@ msgstr "Decrease the zoom level"
 msgid "Default"
 msgstr "Default"
 
+#: src/features/messages/ui/DraftDetailPane.tsx
 #: src/features/sidebar/ui/ChannelSectionDialogs.tsx
 msgid "Delete"
 msgstr "Delete"
@@ -519,6 +604,14 @@ msgstr "Delete {0} from Projects for everyone. This can only be done for project
 #: src/features/sidebar/ui/ChannelContextMenu.tsx
 msgid "Delete channel"
 msgstr "Delete channel"
+
+#: src/features/messages/ui/DraftsPanel.tsx
+msgid "Delete draft"
+msgstr "Delete draft"
+
+#: src/features/home/ui/InboxDetailPane.tsx
+msgid "Delete message"
+msgstr "Delete message"
 
 #: src/features/sidebar/ui/SidebarProjectsSection.tsx
 msgid "Delete project"
@@ -562,6 +655,36 @@ msgstr "Direct messages"
 msgid "Dismiss relay notification"
 msgstr "Dismiss relay notification"
 
+#: src/features/home/lib/inbox.ts
+msgid "DM"
+msgstr "DM"
+
+#. placeholder {0}: item.senderLabel
+#: src/features/home/lib/inbox.ts
+msgid "DM from {0}"
+msgstr "DM from {0}"
+
+#: src/features/messages/ui/DraftDetailPane.tsx
+msgid "Draft"
+msgstr "Draft"
+
+#: src/features/home/ui/InboxFilterMenu.tsx
+#: src/features/messages/ui/DraftsPanel.tsx
+msgid "Drafts"
+msgstr "Drafts"
+
+#: src/features/home/ui/HomeView.tsx
+msgid "Drag to resize."
+msgstr "Drag to resize."
+
+#: src/features/home/ui/HomeView.tsx
+msgid "Drag to resize. Double-click to reset width."
+msgstr "Drag to resize. Double-click to reset width."
+
+#: src/features/messages/ui/DraftsPanel.tsx
+msgid "Empty draft"
+msgstr "Empty draft"
+
 #: src/features/sidebar/ui/ChannelSectionDialogs.tsx
 msgid "Enter a new name for this section."
 msgstr "Enter a new name for this section."
@@ -598,6 +721,14 @@ msgstr "Experiments"
 msgid "Failed to delete project"
 msgstr "Failed to delete project"
 
+#: src/features/home/ui/InboxFilterMenu.tsx
+msgid "Filter inbox: {activeLabel}"
+msgstr "Filter inbox: {activeLabel}"
+
+#: src/features/home/ui/InboxFilterMenu.tsx
+msgid "Filter inbox: {activeLabel}. {statusLabel}"
+msgstr "Filter inbox: {activeLabel}. {statusLabel}"
+
 #: src/shared/lib/keyboard-shortcuts.ts
 msgid "Find in channel"
 msgstr "Find in channel"
@@ -622,6 +753,7 @@ msgstr "Formatting"
 msgid "Forum"
 msgstr "Forum"
 
+#: src/features/home/lib/inbox.ts
 #: src/features/search/ui/SearchResultItem.tsx
 msgid "Forum post"
 msgstr "Forum post"
@@ -630,6 +762,7 @@ msgstr "Forum post"
 msgid "Forum post in {destination}"
 msgstr "Forum post in {destination}"
 
+#: src/features/home/lib/inbox.ts
 #: src/features/search/ui/SearchResultItem.tsx
 msgid "Forum reply"
 msgstr "Forum reply"
@@ -678,6 +811,10 @@ msgstr "Hold to unmute in a huddle"
 msgid "Home"
 msgstr "Home"
 
+#: src/features/home/ui/HomeView.tsx
+msgid "Home feed unavailable"
+msgstr "Home feed unavailable"
+
 #: src/features/settings/ui/SettingsPanels.tsx
 msgid "Hosted communities"
 msgstr "Hosted communities"
@@ -686,9 +823,17 @@ msgstr "Hosted communities"
 msgid "I added a longer message so you can compare line height and text spacing."
 msgstr "I added a longer message so you can compare line height and text spacing."
 
+#: src/shared/lib/relativeTime.ts
+msgid "in less than a minute"
+msgstr "in less than a minute"
+
 #: src/features/sidebar/ui/AppSidebarPinnedHeader.tsx
 msgid "Inbox"
 msgstr "Inbox"
+
+#: src/features/home/ui/InboxListPane.tsx
+msgid "Inbox options"
+msgstr "Inbox options"
 
 #: src/shared/lib/keyboard-shortcuts.ts
 msgid "Increase the zoom level"
@@ -725,6 +870,26 @@ msgstr "Invites"
 #: src/shared/lib/keyboard-shortcuts.ts
 msgid "Italic"
 msgstr "Italic"
+
+#: src/features/home/lib/inbox.ts
+msgid "Job accepted"
+msgstr "Job accepted"
+
+#: src/features/home/lib/inbox.ts
+msgid "Job cancelled"
+msgstr "Job cancelled"
+
+#: src/features/home/lib/inbox.ts
+msgid "Job failed"
+msgstr "Job failed"
+
+#: src/features/home/lib/inbox.ts
+msgid "Job requested"
+msgstr "Job requested"
+
+#: src/features/home/lib/inbox.ts
+msgid "Job result"
+msgstr "Job result"
 
 #: src/features/channels/ui/ChannelBrowserDialog.tsx
 msgid "Joined"
@@ -805,6 +970,14 @@ msgstr "Live activity will appear here."
 msgid "Loading channel actions..."
 msgstr "Loading channel actions..."
 
+#: src/features/home/ui/ProjectInboxDetail.tsx
+msgid "Loading project item…"
+msgstr "Loading project item…"
+
+#: src/features/home/ui/InboxDetailPane.tsx
+msgid "Loading surrounding context..."
+msgstr "Loading surrounding context..."
+
 #: src/features/settings/ui/SettingsPanels.tsx
 msgid "Local archive"
 msgstr "Local archive"
@@ -813,6 +986,7 @@ msgstr "Local archive"
 msgid "Lower values reveal more of the desktop blur."
 msgstr "Lower values reveal more of the desktop blur."
 
+#: src/features/home/ui/InboxListPane.tsx
 #: src/features/sidebar/ui/CommunityRail.tsx
 #: src/features/sidebar/ui/CustomChannelSection.tsx
 #: src/shared/lib/keyboard-shortcuts.ts
@@ -823,24 +997,51 @@ msgstr "Mark all as read"
 msgid "Mark all conversations as read"
 msgstr "Mark all conversations as read"
 
+#: src/features/home/ui/InboxListPane.tsx
 #: src/features/sidebar/ui/ChannelActivityPopover.tsx
 #: src/features/sidebar/ui/ChannelContextMenu.tsx
 #: src/shared/lib/keyboard-shortcuts.ts
 msgid "Mark as read"
 msgstr "Mark as read"
 
+#: src/features/home/ui/FeedSection.tsx
+msgid "Mark done"
+msgstr "Mark done"
+
 #: src/shared/lib/keyboard-shortcuts.ts
 msgid "Mark the current conversation as read"
 msgstr "Mark the current conversation as read"
 
+#: src/features/home/ui/InboxListPane.tsx
 #: src/features/sidebar/ui/ChannelContextMenu.tsx
 msgid "Mark unread"
 msgstr "Mark unread"
+
+#: src/features/home/lib/inbox.ts
+msgid "Mention"
+msgstr "Mention"
+
+#: src/features/home/lib/inbox.ts
+msgid "Mentioned"
+msgstr "Mentioned"
+
+#: src/features/home/lib/inbox.ts
+msgid "Mentioned in"
+msgstr "Mentioned in"
+
+#: src/features/home/ui/InboxFilterMenu.tsx
+msgid "Mentions"
+msgstr "Mentions"
 
 #: src/features/search/ui/SearchResultItem.tsx
 #: src/features/search/ui/TopbarSearch.tsx
 msgid "Message"
 msgstr "Message"
+
+#. placeholder {0}: item.senderLabel
+#: src/features/home/ui/InboxDetailPane.tsx
+msgid "Message {0}"
+msgstr "Message {0}"
 
 #: src/shared/ui/markdown/MessageLinkPill.tsx
 msgid "Message deleted"
@@ -865,6 +1066,10 @@ msgstr "Messages"
 #: src/features/settings/ui/SettingsPanels.tsx
 msgid "Mobile"
 msgstr "Mobile"
+
+#: src/features/home/ui/InboxDetailPane.tsx
+msgid "More actions"
+msgstr "More actions"
 
 #: src/features/sidebar/ui/CustomChannelSection.tsx
 msgid "More actions for {sectionLabel}"
@@ -922,6 +1127,23 @@ msgstr "Navigate to the previous page"
 msgid "Navigation"
 msgstr "Navigation"
 
+#: src/features/home/lib/inbox.ts
+#: src/features/home/ui/InboxFilterMenu.tsx
+msgid "Needs action"
+msgstr "Needs action"
+
+#: src/features/home/lib/inbox.ts
+msgid "Needs Action"
+msgstr "Needs Action"
+
+#: src/features/home/lib/inbox.ts
+msgid "Needs action in"
+msgstr "Needs action in"
+
+#: src/features/home/ui/InboxListPane.tsx
+msgid "New activity will appear here."
+msgstr "New activity will appear here."
+
 #: src/features/channels/ui/ChannelBrowserDialog.tsx
 #: src/shared/lib/keyboard-shortcuts.ts
 msgid "New channel"
@@ -956,9 +1178,18 @@ msgstr "New subsection..."
 msgid "Newest"
 msgstr "Newest"
 
+#: src/features/home/ui/InboxListPane.tsx
 #: src/features/profile/ui/UserProfilePanelTabs.tsx
 msgid "No activity yet"
 msgstr "No activity yet"
+
+#: src/features/home/lib/inbox.ts
+msgid "No additional details were attached to this event."
+msgstr "No additional details were attached to this event."
+
+#: src/features/home/ui/InboxListPane.tsx
+msgid "No agent updates found"
+msgstr "No agent updates found"
 
 #: src/features/channels/ui/ChannelBrowserDialog.tsx
 msgid "No archived channels"
@@ -972,6 +1203,11 @@ msgstr "No archived forums"
 msgid "No channel by that name yet — create it to get started."
 msgstr "No channel by that name yet — create it to get started."
 
+#: src/features/home/ui/InboxListPane.tsx
+#: src/features/messages/ui/DraftsPanel.tsx
+msgid "No channel link"
+msgstr "No channel link"
+
 #: src/features/channels/ui/ChannelBrowserDialog.tsx
 msgid "No channels match your search"
 msgstr "No channels match your search"
@@ -983,6 +1219,11 @@ msgstr "No channels to browse"
 #: src/features/sidebar/ui/SidebarProfileCard.tsx
 msgid "No community"
 msgstr "No community"
+
+#: src/features/home/ui/InboxListPane.tsx
+#: src/features/messages/ui/DraftsPanel.tsx
+msgid "No drafts"
+msgstr "No drafts"
 
 #: src/features/channels/ui/ChannelBrowserDialog.tsx
 msgid "No forum by that name yet — create it to get started."
@@ -1008,6 +1249,10 @@ msgstr "No joined forums"
 msgid "No matches for <0>{trimmedQuery}</0>."
 msgstr "No matches for <0>{trimmedQuery}</0>."
 
+#: src/features/home/ui/InboxListPane.tsx
+msgid "No mentions found"
+msgstr "No mentions found"
+
 #: src/features/search/ui/SearchResultItem.tsx
 msgid "No message body."
 msgstr "No message body."
@@ -1016,6 +1261,10 @@ msgstr "No message body."
 msgid "No messages for <0>{trimmedQuery}</0> in <1>{scopeLabel}</1>."
 msgstr "No messages for <0>{trimmedQuery}</0> in <1>{scopeLabel}</1>."
 
+#: src/features/home/ui/InboxListPane.tsx
+msgid "No project work found"
+msgstr "No project work found"
+
 #: src/features/sidebar/ui/SidebarProjectsSection.tsx
 msgid "No projects yet"
 msgstr "No projects yet"
@@ -1023,6 +1272,46 @@ msgstr "No projects yet"
 #: src/features/search/ui/TopbarSearch.tsx
 msgid "No recent activity yet."
 msgstr "No recent activity yet."
+
+#: src/features/home/ui/InboxListPane.tsx
+msgid "No reminders"
+msgstr "No reminders"
+
+#: src/features/home/ui/InboxListPane.tsx
+msgid "No threads found"
+msgstr "No threads found"
+
+#: src/features/home/ui/InboxListPane.tsx
+msgid "No unread activity"
+msgstr "No unread activity"
+
+#: src/features/home/ui/InboxListPane.tsx
+msgid "No unread agent updates"
+msgstr "No unread agent updates"
+
+#: src/features/home/ui/InboxListPane.tsx
+msgid "No unread drafts"
+msgstr "No unread drafts"
+
+#: src/features/home/ui/InboxListPane.tsx
+msgid "No unread items needing action"
+msgstr "No unread items needing action"
+
+#: src/features/home/ui/InboxListPane.tsx
+msgid "No unread mentions"
+msgstr "No unread mentions"
+
+#: src/features/home/ui/InboxListPane.tsx
+msgid "No unread project work"
+msgstr "No unread project work"
+
+#: src/features/home/ui/InboxListPane.tsx
+msgid "No unread reminders"
+msgstr "No unread reminders"
+
+#: src/features/home/ui/InboxListPane.tsx
+msgid "No unread threads"
+msgstr "No unread threads"
 
 #: src/features/channels/ui/AgentSessionThreadPanel.tsx
 msgid "No updates yet"
@@ -1035,6 +1324,10 @@ msgstr "None"
 #: src/features/search/ui/SearchResultItem.tsx
 msgid "Note"
 msgstr "Note"
+
+#: src/features/home/ui/InboxListPane.tsx
+msgid "Nothing needs action"
+msgstr "Nothing needs action"
 
 #: src/features/settings/ui/SettingsPanels.tsx
 msgid "Notifications"
@@ -1052,6 +1345,11 @@ msgstr "on {date}"
 msgid "Open"
 msgstr "Open"
 
+#. placeholder {0}: item.channelName || t`channel`
+#: src/features/home/ui/FeedSection.tsx
+msgid "Open {0}"
+msgstr "Open {0}"
+
 #: src/features/profile/ui/UserProfilePanelTabs.tsx
 msgid "Open activity feed. Last live {lastLiveLabel}."
 msgstr "Open activity feed. Last live {lastLiveLabel}."
@@ -1060,9 +1358,32 @@ msgstr "Open activity feed. Last live {lastLiveLabel}."
 msgid "Open channel {channelLabel}; linked message was deleted"
 msgstr "Open channel {channelLabel}; linked message was deleted"
 
+#: src/features/home/ui/InboxDetailPane.tsx
+msgid "Open conversation"
+msgstr "Open conversation"
+
+#: src/features/messages/ui/DraftDetailPane.tsx
+#: src/features/messages/ui/DraftsPanel.tsx
+msgid "Open draft"
+msgstr "Open draft"
+
 #: src/features/profile/ui/UserProfilePanelTabs.tsx
 msgid "Open full activity. Last live {label}."
 msgstr "Open full activity. Last live {label}."
+
+#: src/features/home/ui/InboxDetailPane.tsx
+msgid "Open full thread"
+msgstr "Open full thread"
+
+#: src/features/home/ui/InboxDetailPane.tsx
+#: src/features/home/ui/InboxListPane.tsx
+msgid "Open in channel"
+msgstr "Open in channel"
+
+#. placeholder {0}: item.senderLabel
+#: src/features/home/ui/InboxListPane.tsx
+msgid "Open inbox item from {0}"
+msgstr "Open inbox item from {0}"
 
 #: src/shared/ui/markdown/MessageLinkPill.tsx
 msgid "Open message in channel {channelLabel}"
@@ -1076,6 +1397,14 @@ msgstr "Open or close settings"
 msgid "Open profile menu for {resolvedDisplayName}"
 msgstr "Open profile menu for {resolvedDisplayName}"
 
+#: src/features/home/ui/ProjectInboxDetailPane.tsx
+msgid "Open review"
+msgstr "Open review"
+
+#: src/features/home/ui/ProjectInboxDetailPane.tsx
+msgid "Open task"
+msgstr "Open task"
+
 #: src/shared/lib/keyboard-shortcuts.ts
 msgid "Open the channel browser"
 msgstr "Open the channel browser"
@@ -1083,6 +1412,10 @@ msgstr "Open the channel browser"
 #: src/shared/lib/keyboard-shortcuts.ts
 msgid "Open the create channel dialog"
 msgstr "Open the create channel dialog"
+
+#: src/features/home/lib/homeMessageCapabilities.ts
+msgid "Open the linked channel to reply."
+msgstr "Open the linked channel to reply."
 
 #: src/shared/lib/keyboard-shortcuts.ts
 msgid "Open the new message composer"
@@ -1113,6 +1446,10 @@ msgstr "Orders every list in the sidebar. Recent also floats the sections themse
 msgid "Owned by me"
 msgstr "Owned by me"
 
+#: src/features/home/ui/InboxListPane.tsx
+msgid "Pending"
+msgstr "Pending"
+
 #: src/features/search/ui/TopbarSearch.tsx
 msgid "People"
 msgstr "People"
@@ -1120,6 +1457,14 @@ msgstr "People"
 #: src/features/settings/ui/SettingsView.tsx
 msgid "Personal"
 msgstr "Personal"
+
+#: src/features/messages/ui/DraftDetailPane.tsx
+msgid "Pick a draft to preview it and choose what to do next."
+msgstr "Pick a draft to preview it and choose what to do next."
+
+#: src/features/home/ui/InboxDetailPane.tsx
+msgid "Pick an inbox item to see the full message and react to it."
+msgstr "Pick an inbox item to see the full message and react to it."
 
 #: src/features/sidebar/ui/ChannelContextMenu.tsx
 msgid "Pin channel"
@@ -1153,6 +1498,15 @@ msgstr "Product updates — a fresh look at conversations"
 msgid "Profile"
 msgstr "Profile"
 
+#: src/features/home/lib/inbox.ts
+msgid "Progress update"
+msgstr "Progress update"
+
+#: src/features/home/lib/inbox.ts
+msgid "Project update"
+msgstr "Project update"
+
+#: src/features/home/ui/InboxFilterMenu.tsx
 #: src/features/sidebar/ui/AppSidebarPinnedHeader.tsx
 #: src/features/sidebar/ui/SidebarProjectsSection.tsx
 msgid "Projects"
@@ -1196,13 +1550,39 @@ msgstr "Recent"
 msgid "Recent activity"
 msgstr "Recent activity"
 
+#: src/features/home/ui/RecentNotesSection.tsx
+msgid "Recent Notes"
+msgstr "Recent Notes"
+
 #: src/features/sidebar/ui/SidebarRelayConnectionCard.tsx
 msgid "Reconnecting"
 msgstr "Reconnecting"
 
+#: src/features/home/ui/InboxListPane.tsx
 #: src/features/sidebar/ui/ChannelActivityPopover.tsx
 msgid "Remind me later"
 msgstr "Remind me later"
+
+#: src/features/home/lib/inbox.ts
+#: src/features/home/ui/InboxListPane.tsx
+msgid "Reminder"
+msgstr "Reminder"
+
+#: src/features/home/ui/InboxListPane.tsx
+msgid "Reminder {until}"
+msgstr "Reminder {until}"
+
+#: src/features/home/ui/InboxListPane.tsx
+msgid "Reminder due"
+msgstr "Reminder due"
+
+#: src/features/home/ui/InboxListPane.tsx
+msgid "Reminder set"
+msgstr "Reminder set"
+
+#: src/features/home/ui/InboxFilterMenu.tsx
+msgid "Reminders"
+msgstr "Reminders"
 
 #: src/features/search/ui/SearchScopeControls.tsx
 msgid "Remove {scopeLabel} search scope"
@@ -1221,6 +1601,15 @@ msgstr "Remove from sidebar"
 msgid "Rename section"
 msgstr "Rename section"
 
+#: src/features/home/ui/InboxDetailPane.tsx
+#: src/features/home/ui/InboxListPane.tsx
+msgid "Reopening…"
+msgstr "Reopening…"
+
+#: src/features/home/ui/InboxDetailPane.tsx
+msgid "Replies are not available for this item."
+msgstr "Replies are not available for this item."
+
 #: src/features/settings/ui/AppearanceSettingsControls.tsx
 msgid "Reset glass opacity"
 msgstr "Reset glass opacity"
@@ -1232,6 +1621,20 @@ msgstr "Reset zoom"
 #: src/shared/lib/keyboard-shortcuts.ts
 msgid "Reset zoom to default level"
 msgstr "Reset zoom to default level"
+
+#: src/features/home/ui/HomeView.tsx
+msgid "Resize inbox list"
+msgstr "Resize inbox list"
+
+#: src/features/home/ui/InboxDetailPane.tsx
+#: src/features/home/ui/InboxListPane.tsx
+#: src/features/home/ui/ProjectInboxDetail.tsx
+msgid "Retry"
+msgstr "Retry"
+
+#: src/features/home/lib/inbox.ts
+msgid "Review"
+msgstr "Review"
 
 #: src/features/settings/ui/AppearanceSettingsControls.tsx
 msgid "Rich"
@@ -1303,9 +1706,32 @@ msgstr "Section name"
 msgid "Sections let you group related channels in the sidebar."
 msgstr "Sections let you group related channels in the sidebar."
 
+#: src/features/messages/ui/DraftDetailPane.tsx
+msgid "Select a draft"
+msgstr "Select a draft"
+
+#: src/features/home/ui/InboxDetailPane.tsx
+msgid "Select a message"
+msgstr "Select a message"
+
+#: src/features/messages/ui/DraftDetailPane.tsx
+#: src/features/messages/ui/DraftsPanel.tsx
+msgid "Send"
+msgstr "Send"
+
+#: src/features/messages/ui/DraftsPanel.tsx
 #: src/shared/lib/keyboard-shortcuts.ts
 msgid "Send message"
 msgstr "Send message"
+
+#. placeholder {0}: item.channelLabel
+#: src/features/home/ui/InboxDetailPane.tsx
+msgid "Send reply to #{0} thread"
+msgstr "Send reply to #{0} thread"
+
+#: src/features/home/ui/InboxDetailPane.tsx
+msgid "Send reply to channel thread"
+msgstr "Send reply to channel thread"
 
 #: src/shared/lib/keyboard-shortcuts.ts
 msgid "Send the current message"
@@ -1327,6 +1753,10 @@ msgstr "Show"
 msgid "Show or hide the sidebar"
 msgstr "Show or hide the sidebar"
 
+#: src/features/home/ui/InboxListPane.tsx
+msgid "Show unread only"
+msgstr "Show unread only"
+
 #: src/features/settings/ui/AppearanceSettingsControls.tsx
 msgid "Sidebar density"
 msgstr "Sidebar density"
@@ -1342,6 +1772,10 @@ msgstr "Small cards with a thumbnail"
 #: src/features/settings/ui/AppearanceSettingsControls.tsx
 msgid "Smaller"
 msgstr "Smaller"
+
+#: src/features/home/ui/InboxDetailPane.tsx
+msgid "Some message context could not be loaded."
+msgstr "Some message context could not be loaded."
 
 #: src/features/sidebar/ui/CustomChannelSection.tsx
 #: src/features/sidebar/ui/SidebarProjectsSection.tsx
@@ -1388,9 +1822,17 @@ msgstr "Strikethrough"
 msgid "Subsections group channels one level under \"{parentName}\"."
 msgstr "Subsections group channels one level under \"{parentName}\"."
 
+#: src/features/home/ui/InboxListPane.tsx
+msgid "Switch back to All to see other activity."
+msgstr "Switch back to All to see other activity."
+
 #: src/features/settings/ui/AppearanceSettingsPanel.tsx
 msgid "System"
 msgstr "System"
+
+#: src/features/home/lib/inbox.ts
+msgid "Task"
+msgstr "Task"
 
 #: src/features/sidebar/ui/CreateChannelFormFields.tsx
 msgid "Template"
@@ -1400,6 +1842,14 @@ msgstr "Template"
 #: src/features/sidebar/ui/CreateChannelFormFields.tsx
 msgid "Template: {0}"
 msgstr "Template: {0}"
+
+#: src/features/messages/ui/DraftDetailPane.tsx
+msgid "The original thread was deleted. This draft can no longer be opened or sent."
+msgstr "The original thread was deleted. This draft can no longer be opened or sent."
+
+#: src/features/home/ui/HomeView.tsx
+msgid "The relay did not return a feed response."
+msgstr "The relay did not return a feed response."
 
 #: src/features/settings/ui/AppearanceSettingsControls.tsx
 msgid "The revised conversation layout is ready to review."
@@ -1425,11 +1875,33 @@ msgstr "Theme style, {selectedThemeLabel}"
 msgid "this community"
 msgstr "this community"
 
+#: src/features/home/lib/homeMessageCapabilities.ts
+msgid "This inbox item does not have a reply target."
+msgstr "This inbox item does not have a reply target."
+
+#: src/features/home/lib/homeMessageCapabilities.ts
+msgid "This item does not support inline replies yet."
+msgstr "This item does not support inline replies yet."
+
+#: src/features/home/ui/ProjectInboxDetail.tsx
+msgid "This project item could not be found."
+msgstr "This project item could not be found."
+
+#: src/features/home/lib/inbox.ts
 #: src/features/search/ui/TopbarSearch.tsx
 #: src/features/sidebar/ui/ChannelActivityPopover.tsx
 msgid "Thread"
 msgstr "Thread"
 
+#: src/features/messages/ui/DraftsPanel.tsx
+msgid "thread deleted"
+msgstr "thread deleted"
+
+#: src/features/messages/ui/DraftsPanel.tsx
+msgid "Thread deleted"
+msgstr "Thread deleted"
+
+#: src/features/home/lib/inbox.ts
 #: src/features/search/ui/TopbarSearch.tsx
 msgid "Thread in"
 msgstr "Thread in"
@@ -1441,6 +1913,10 @@ msgstr "Thread in {destination}"
 #: src/features/settings/ui/AppearanceSettingsControls.tsx
 msgid "Thread layout"
 msgstr "Thread layout"
+
+#: src/features/home/ui/InboxFilterMenu.tsx
+msgid "Threads"
+msgstr "Threads"
 
 #: src/features/settings/ui/AppearanceSettingsControls.tsx
 msgid "Threads open in a side panel next to the channel"
@@ -1478,13 +1954,31 @@ msgstr "Toggle strikethrough formatting"
 msgid "Try a different name or keyword."
 msgstr "Try a different name or keyword."
 
+#: src/features/home/ui/HomeView.tsx
 #: src/features/settings/ui/SettingsView.tsx
 msgid "Try again"
 msgstr "Try again"
 
+#: src/features/home/ui/InboxListPane.tsx
+msgid "Turn off Show unread only to see read activity."
+msgstr "Turn off Show unread only to see read activity."
+
 #: src/features/sidebar/ui/CreateChannelFormFields.tsx
 msgid "Type"
 msgstr "Type"
+
+#: src/features/home/ui/FeedSection.tsx
+msgid "Undo done"
+msgstr "Undo done"
+
+#: src/features/messages/ui/DraftDetailPane.tsx
+#: src/features/messages/ui/DraftsPanel.tsx
+msgid "Unknown channel"
+msgstr "Unknown channel"
+
+#: src/features/messages/ui/DraftsPanel.tsx
+msgid "Unknown time"
+msgstr "Unknown time"
 
 #: src/features/sidebar/ui/ChannelContextMenu.tsx
 msgid "Unmute channel"
@@ -1510,6 +2004,14 @@ msgstr "Use {colorName} accent"
 #: src/features/settings/ui/SettingsView.tsx
 msgid "v{appVersion}"
 msgstr "v{appVersion}"
+
+#: src/features/home/ui/RecentNotesSection.tsx
+msgid "View all in Pulse"
+msgstr "View all in Pulse"
+
+#: src/features/messages/ui/DraftsPanel.tsx
+msgid "View draft in {channelLabel}"
+msgstr "View draft in {channelLabel}"
 
 #: src/features/messages/ui/MessageThreadSummaryRow.tsx
 msgid "View thread"
@@ -1546,6 +2048,10 @@ msgstr "Working"
 #: src/shared/lib/datetime.ts
 msgid "Yesterday"
 msgstr "Yesterday"
+
+#: src/features/messages/ui/DraftDetailPane.tsx
+msgid "You"
+msgstr "You"
 
 #: src/shared/lib/keyboard-shortcuts.ts
 msgid "Zoom"

@@ -1,3 +1,4 @@
+import { Trans, useLingui } from "@lingui/react/macro";
 import { ArrowLeft } from "lucide-react";
 
 import { useAppNavigation } from "@/app/navigation/useAppNavigation";
@@ -27,12 +28,13 @@ function ProjectInboxStatus({
   onBack?: () => void;
   onRetry?: () => void;
 }) {
+  const { t } = useLingui();
   return (
     <section className="flex min-h-0 min-w-0 flex-col bg-background/60">
       {onBack ? (
         <div className="flex min-h-13 items-center px-5 py-2">
           <Button
-            aria-label="Back to Inbox"
+            aria-label={t`Back to Inbox`}
             onClick={onBack}
             size="icon"
             type="button"
@@ -46,7 +48,7 @@ function ProjectInboxStatus({
         <p className="text-sm text-muted-foreground">{message}</p>
         {onRetry ? (
           <Button onClick={onRetry} size="sm" type="button" variant="outline">
-            Retry
+            <Trans>Retry</Trans>
           </Button>
         ) : null}
       </div>
@@ -61,6 +63,7 @@ export function ProjectInboxDetail({
   onBack,
   profiles,
 }: ProjectInboxDetailProps) {
+  const { t } = useLingui();
   const { goProject } = useAppNavigation();
   const projectsQuery = useProjectsQuery();
   const projectsWorkItemsQuery = useProjectsWorkItemsQuery(
@@ -79,10 +82,10 @@ export function ProjectInboxDetail({
       <ProjectInboxStatus
         message={
           error
-            ? "Could not load this project item."
+            ? t`Could not load this project item.`
             : isLoading
-              ? "Loading project item…"
-              : "This project item could not be found."
+              ? t`Loading project item…`
+              : t`This project item could not be found.`
         }
         onBack={onBack}
         onRetry={

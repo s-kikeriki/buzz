@@ -126,6 +126,50 @@ export function formatRelativeTime(
 }
 
 /**
+ * How long until `unixSeconds` — the same ladder, pointing forward.
+ *
+ * `formatRelativeTime` is bounded below on purpose: anything in the future
+ * reads as "just now", because a relay whose clock runs ahead of this machine
+ * must not produce a label in the future tense for something that has already
+ * happened. A reminder is the opposite case — the whole point of the label is
+ * that the moment has not arrived — so it needs its own direction rather than
+ * a flag on that one, where a caller who forgot the flag would silently get
+ * "just now" for every pending reminder.
+ *
+ * Bounded below in the same way, mirrored: a reminder whose moment has passed
+ * is due, and the caller says so in its own words rather than being handed
+ * "in 0 minutes".
+ *
+ * Shares the memoised formatters above, so German still gets `short` rather
+ * than the `narrow` that abbreviates minutes to a bare `m`.
+ */
+export function formatTimeUntil(
+  unixSeconds: number,
+  {
+    ceiling = "week",
+    locale,
+    nowSeconds = Date.now() / 1_000,
+    style = "compact",
+  }: RelativeTimeOptions,
+): string | null {
+  const remaining = unixSeconds - nowSeconds;
+  if (remaining <= 0) return null;
+
+  const format = formatter(locale, style);
+  if (remaining < MINUTE) return t`in less than a minute`;
+  if (remaining < HOUR) {
+    return format.format(Math.floor(remaining / MINUTE), "minute");
+  }
+  if (remaining < DAY) {
+    return format.format(Math.floor(remaining / HOUR), "hour");
+  }
+  if (ceiling === "day" || remaining < WEEK) {
+    return format.format(Math.floor(remaining / DAY), "day");
+  }
+  return format.format(Math.floor(remaining / WEEK), "week");
+}
+
+/**
  * Relative inside a week, a calendar date beyond it.
  *
  * The project rows and the Pulse note card each had their own copy of this

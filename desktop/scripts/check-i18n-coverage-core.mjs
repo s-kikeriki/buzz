@@ -4,7 +4,7 @@ import { parseAsync } from "@babel/core";
  * Finds user-facing English copy that was written as a literal instead of
  * going through a Lingui macro.
  *
- * Five shapes, which are the five that copy actually takes here:
+ * Six shapes, which are the six that copy actually takes here:
  *
  *  1. **JSX text nodes** — `<p>Accent color</p>`. Must be `<Trans>`.
  *  2. **Copy-bearing props** — `aria-label`, `title`, `placeholder`, `legend`,
@@ -18,6 +18,13 @@ import { parseAsync } from "@babel/core";
  *     `KEYBOARD_SHORTCUTS` hold 58 strings that no JSX node ever mentions.
  *     These must be `msg`` ` plus `i18n._()` at render, not `t`` `, or they
  *     freeze in whichever locale booted.
+ *  6. **Copy tables keyed by something other than a copy field** —
+ *     `{ all: "No activity yet", mention: "No mentions found" }`. Rule 4 keys
+ *     off the field *name*, so two tables of inbox empty states — sixteen
+ *     strings — read as clean while every one of them was hardcoded English.
+ *     An object whose every value is prose is a copy table whatever its keys
+ *     are called; one non-prose value and it is data again.
+ *
  *  5. **Prose assigned to a variable, then rendered** — `const browseTitle =
  *     isForumMode ? "Add a forum" : "Browse channels"`. No JSX node and no
  *     copy-bearing prop mentions these, so the first four rules read the file
@@ -117,6 +124,17 @@ function elementName(node) {
 const MACRO_ELEMENTS = new Set(["Trans", "Plural", "Select", "SelectOrdinal"]);
 
 /**
+ * Calls whose arguments are message templates, not copy on its way to a screen.
+ *
+ * `plural(count, { one: "…", other: "…" })` hands Lingui the two forms of one
+ * message; those strings are already translated, and the object they sit in is
+ * exactly the "every value is prose" shape the copy-table rule looks for. The
+ * JSX form of the same thing was already exempt through `MACRO_ELEMENTS` —
+ * this is the call form, which only started to matter once that rule existed.
+ */
+const MACRO_CALLS = new Set(["plural", "select", "selectOrdinal", "msg", "t"]);
+
+/**
  * Elements whose text is a key name rather than language.
  *
  * `<kbd>ESC</kbd>` and `<kbd>⌘K</kbd>` are what is printed on the keyboard; a
@@ -134,7 +152,7 @@ function templateText(node) {
 }
 
 /**
- * Walk the AST looking for the five violation shapes. Written as an explicit
+ * Walk the AST looking for the six violation shapes. Written as an explicit
  * stack walk rather than `@babel/traverse` so this script needs no extra
  * dependency beyond the `@babel/core` the macro transform already requires.
  */
@@ -163,6 +181,18 @@ export function findHardcodedCopy(ast) {
       const name = elementName(node.openingElement);
       childrenInsideMacro = insideMacro || MACRO_ELEMENTS.has(name);
       childrenInsideKeycap = insideKeycap || KEYCAP_ELEMENTS.has(name);
+    }
+
+    if (node.type === "CallExpression") {
+      const callee = node.callee;
+      const name =
+        callee?.type === "Identifier"
+          ? callee.name
+          : callee?.type === "MemberExpression" &&
+              callee.property?.type === "Identifier"
+            ? callee.property.name
+            : undefined;
+      childrenInsideMacro = insideMacro || MACRO_CALLS.has(name ?? "");
     }
 
     if (node.type === "JSXText" && !insideMacro && !insideKeycap) {
@@ -237,6 +267,60 @@ export function findHardcodedCopy(ast) {
               text,
             });
           }
+        }
+      }
+    }
+
+    // An object whose *every* value is prose is a copy table, whatever its
+    // keys are called. Rule 4 above keys off the field name — `label`,
+    // `description`, `title` — and read `INBOX_EMPTY_STATE_TITLES` as clean
+    // because its keys are filter ids (`all`, `mention`, `needs_action`).
+    // Sixteen empty states in the inbox were hardcoded English behind that
+    // gap. Requiring *all* values to be prose is what keeps this from firing
+    // on the kind-to-token and id-to-class maps that fill this codebase: one
+    // non-prose value and the object is data, not copy.
+    if (node.type === "ObjectExpression" && !insideMacro) {
+      const properties = node.properties;
+      const values = properties.map((property) =>
+        property.type === "ObjectProperty" && !property.computed
+          ? property.value
+          : null,
+      );
+      const isHardcoded = (value) =>
+        value?.type === "StringLiteral" &&
+        isProse(value.value) &&
+        isTranslatableText(value.value);
+      // Every value is either hardcoded prose or an already-converted message.
+      //
+      // "Every value is prose" was the first version, and a break test killed
+      // it: converting seven of eight entries and leaving one plain string —
+      // which is exactly what adding a ninth filter would do — made the object
+      // mixed, so the rule stopped seeing a copy table at all and reported
+      // nothing. A half-converted table is the regression this rule is for.
+      // Counting `msg`/`t` as table-shaped keeps that case in scope while
+      // still excluding the kind-to-token and id-to-class maps that fill this
+      // codebase: one value that is neither and the object is data again.
+      const isConverted = (value) =>
+        value?.type === "TaggedTemplateExpression" &&
+        value.tag?.type === "Identifier" &&
+        MACRO_CALLS.has(value.tag.name);
+      const hardcoded = values.filter(isHardcoded);
+      const tableShaped =
+        values.length >= 2 &&
+        hardcoded.length > 0 &&
+        values.every((value) => isHardcoded(value) || isConverted(value));
+      if (tableShaped) {
+        for (const [index, value] of values.entries()) {
+          if (!isHardcoded(value)) continue;
+          const key =
+            properties[index].key?.type === "Identifier"
+              ? properties[index].key.name
+              : properties[index].key?.value;
+          findings.push({
+            line: value.loc?.start.line ?? 0,
+            kind: `copy-table:${key}`,
+            text: normalizeText(value.value),
+          });
         }
       }
     }

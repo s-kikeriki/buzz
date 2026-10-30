@@ -235,3 +235,82 @@ test("a computed key is not read as a copy field", async () => {
   `);
   assert.deepEqual(result, []);
 });
+
+test("a table keyed by ids, not copy fields, is still a copy table", async () => {
+  // The hole this rule was written for. `INBOX_EMPTY_STATE_TITLES` is keyed by
+  // filter id, so the copy-field rule read it as clean while all sixteen inbox
+  // empty states were hardcoded English.
+  const result = await findings(`
+    export const TITLES = {
+      all: "No activity yet",
+      mention: "No mentions found",
+      needs_action: "Nothing needs action",
+    };
+  `);
+  assert.equal(result.length, 3);
+  assert.deepEqual(
+    result.map((finding) => finding.text),
+    ["No activity yet", "No mentions found", "Nothing needs action"],
+  );
+  assert.ok(result.every((finding) => finding.kind.startsWith("copy-table:")));
+});
+
+test("a half-converted copy table flags only the entries left behind", async () => {
+  // The realistic regression, and the one the first version of this rule
+  // missed: adding a filter to a converted table leaves one plain string, the
+  // object stops being uniformly prose, and "every value is prose" stopped
+  // seeing a table at all. A break test caught that; this holds it.
+  const result = await findings(`
+    import { msg } from "@lingui/core/macro";
+    export const TITLES = {
+      all: msg\`No activity yet\`,
+      mention: msg\`No mentions found\`,
+      drafts: "No drafts",
+    };
+  `);
+  assert.equal(result.length, 1);
+  assert.equal(result[0].text, "No drafts");
+  assert.equal(result[0].kind, "copy-table:drafts");
+});
+
+test("a fully converted copy table is clean", async () => {
+  const result = await findings(`
+    import { msg } from "@lingui/core/macro";
+    export const TITLES = {
+      all: msg\`No activity yet\`,
+      mention: msg\`No mentions found\`,
+    };
+  `);
+  assert.deepEqual(result, []);
+});
+
+test("a data map is not a copy table", async () => {
+  // One value that is neither prose nor a message and the object is data.
+  // Without this the rule would flag every kind-to-label and id-to-class map
+  // in the codebase, and a gate nobody can keep green gets deleted.
+  const result = await findings(`
+    export const MODES = {
+      compact: "compact",
+      roomy: 42,
+      wide: "Wide spacing for big screens",
+    };
+  `);
+  assert.deepEqual(result, []);
+});
+
+test("the plural macro's own message forms are not a copy table", async () => {
+  // `plural(n, { one: "…", other: "…" })` hands Lingui two forms of one
+  // message. The first version of the copy-table rule flagged both, on a file
+  // that was already converted — a false positive found by running the new
+  // rule against the existing ratchet.
+  const result = await findings(`
+    import { plural } from "@lingui/core/macro";
+    export function note(count) {
+      return plural(count, {
+        one: "Its subsection moves to the top level.",
+        other: "Its # subsections move to the top level.",
+      });
+    }
+  `);
+  assert.deepEqual(result, []);
+});
