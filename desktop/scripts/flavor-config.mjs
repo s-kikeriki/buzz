@@ -99,6 +99,37 @@ export const PLATFORM_ICON_TARGETS = {
   "icon.ico": ".ico",
 };
 
+/**
+ * `bundle.icon` for a flavored build, as entries of `src-tauri/icons/`.
+ *
+ * The trunk's own list has three PNGs and the largest is named
+ * `128x128@2x.png`. Tauri's Linux bundler reads a PNG's real dimensions and
+ * then appends `@2` when the *filename* says `@2x`, so that file lands in
+ * `usr/share/icons/hicolor/256x256@2/apps/` — not a directory in the icon
+ * theme specification, and therefore read by no icon lookup. The effect on
+ * Ethos's Debian box was a launcher and taskbar with nothing above 128px to
+ * scale from.
+ *
+ * So the `@2x` entry is dropped and the same artwork is declared as
+ * `256x256.png`, which lands somewhere that is read, with `512x512.png` above
+ * it and `64x64.png` filling a gap the repo already had the file for.
+ *
+ * Lives here rather than in `build-flavor-tauri-config.mjs` so
+ * `flavor-config.test.mjs` can hold it against both `tauri.conf.json` and
+ * {@link PLATFORM_ICON_TARGETS} — an icon a flavored build reads but no
+ * flavor can replace is a Buzz asset shipped under another organisation's
+ * name, which is the failure that list exists to prevent.
+ */
+export const FLAVOR_BUNDLE_ICONS = [
+  "icons/32x32.png",
+  "icons/64x64.png",
+  "icons/128x128.png",
+  "icons/256x256.png",
+  "icons/512x512.png",
+  "icons/icon.icns",
+  "icons/icon.ico",
+];
+
 function fail(flavorId, message) {
   throw new Error(`flavor ${flavorId}: ${message}`);
 }
@@ -266,11 +297,17 @@ export function validateFlavor(flavor, flavorId) {
       fail(flavorId, `${field} must be a single line`);
     }
   }
-  if (flavor.longDescription !== undefined && flavor.shortDescription === undefined) {
+  if (
+    flavor.longDescription !== undefined &&
+    flavor.shortDescription === undefined
+  ) {
     // Debian's `Description:` is a mandatory synopsis followed by an optional
     // body, so a long description with no short one would be filed under
     // "Buzz desktop app" with the flavor's own prose indented beneath it.
-    fail(flavorId, "longDescription is set but no shortDescription is declared");
+    fail(
+      flavorId,
+      "longDescription is set but no shortDescription is declared",
+    );
   }
 
   if (flavor.logo !== undefined) {
@@ -486,7 +523,9 @@ export function validateFlavor(flavor, flavorId) {
     cliName: derived.cliName,
     mainBinaryName: derived.mainBinaryName,
     publisher:
-      typeof flavor.publisher === "string" ? flavor.publisher.trim() : undefined,
+      typeof flavor.publisher === "string"
+        ? flavor.publisher.trim()
+        : undefined,
     shortDescription:
       typeof flavor.shortDescription === "string"
         ? flavor.shortDescription.trim()

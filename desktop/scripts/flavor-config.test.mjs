@@ -7,6 +7,7 @@ import { fileURLToPath } from "node:url";
 
 import { demoBuildConfig } from "./demo-build-config.mjs";
 import {
+  FLAVOR_BUNDLE_ICONS,
   PLATFORM_ICON_TARGETS,
   flavorBuildEnv,
   flavorBuildEnvShell,
@@ -567,6 +568,7 @@ test("the build env carries every value a build needs to pick an identity", () =
     {
       BRAND_NAME: "ki.keriki",
       BUZZ_BUILD_AUTO_CONNECT_DEFAULT_RELAY: "1",
+      BUZZ_BUILD_BUNDLE_NAME: "ki.keriki",
       BUZZ_BUILD_DEMO_SLUG: "kikeriki-857f685ce21f5788",
       BUZZ_BUILD_PRODUCT_NAME: "ki.keriki",
       BUZZ_BUILD_TRAY_ICON: "flavors/icons/ki.keriki-tray.png",
@@ -1023,17 +1025,27 @@ function icoSizes(file) {
   }).sort((a, b) => a - b);
 }
 
-test("platformIcons covers exactly the bundle's non-macOS icons", () => {
-  // The drift gate. `PLATFORM_ICON_TARGETS` is a hand-written list and
-  // `tauri.conf.json` is the thing that actually decides which files get
-  // bundled, so a sixth icon added there would otherwise stay un-brandable
-  // with nothing failing — the next Windows build would just quietly ship one
-  // Buzz asset. Asserting equality in both directions is the point: a missing
-  // key and a key for a file the bundle no longer reads are different bugs.
+test("platformIcons covers exactly the icons some build reads", () => {
+  // The drift gate. `PLATFORM_ICON_TARGETS` is a hand-written list and the two
+  // `bundle.icon` lists are what actually decide which files get bundled, so a
+  // sixth icon added to either would otherwise stay un-brandable with nothing
+  // failing — the next Windows or Linux build would quietly ship one Buzz
+  // asset. Asserting equality in both directions is the point: a missing key
+  // and a key for a file no build reads are different bugs.
+  //
+  // Both lists, not just the trunk's: a flavored Linux build replaces the
+  // array wholesale to get real `hicolor` sizes, and its extra entries are
+  // exactly the ones with no other gate on them.
   const conf = JSON.parse(
     readFileSync(path.join(desktopDir, "src-tauri", "tauri.conf.json"), "utf8"),
   );
-  const bundled = conf.bundle.icon.map((entry) => path.basename(entry)).sort();
+  const bundled = [
+    ...new Set(
+      [...conf.bundle.icon, ...FLAVOR_BUNDLE_ICONS].map((entry) =>
+        path.basename(entry),
+      ),
+    ),
+  ].sort();
   const declarable = [
     ...Object.keys(PLATFORM_ICON_TARGETS),
     "icon.icns",
@@ -1041,16 +1053,88 @@ test("platformIcons covers exactly the bundle's non-macOS icons", () => {
   assert.deepEqual(
     declarable,
     bundled,
-    "every icon the bundle reads must be one a flavor can replace — " +
+    "every icon some build reads must be one a flavor can replace — " +
       "`icon.icns` through `icon`, the rest through `platformIcons`",
   );
+});
+
+test("every icon a flavored build reads is a file in the repo", () => {
+  // The list names paths the *bundler* resolves against `src-tauri/`, and a
+  // missing one fails twenty minutes into a Linux build with an error naming
+  // `src-tauri/icons/...` rather than this list.
+  for (const entry of FLAVOR_BUNDLE_ICONS) {
+    const absolute = path.join(desktopDir, "src-tauri", entry);
+    assert.ok(
+      existsSync(absolute),
+      `${entry} is declared for a flavored bundle but is not in the repo`,
+    );
+  }
+});
+
+test("a flavored build declares no @2x icon and does declare 256 and 512", () => {
+  // The fix itself. Tauri derives a `hicolor` directory from a PNG's real
+  // dimensions plus whether the *filename* says `@2x`, so `128x128@2x.png`
+  // (a 256px image) lands in `hicolor/256x256@2/` — not a directory the icon
+  // theme specification defines, and read by nothing. Dropping it and naming
+  // the same artwork `256x256.png` is what gives the launcher something above
+  // 128px to scale from.
+  const names = FLAVOR_BUNDLE_ICONS.map((entry) => path.basename(entry));
+  assert.deepEqual(
+    names.filter((name) => name.includes("@")),
+    [],
+    "an `@2x` entry lands in a hicolor directory no icon lookup reads",
+  );
+  for (const required of ["256x256.png", "512x512.png"]) {
+    assert.ok(
+      names.includes(required),
+      `a flavored build must ship ${required}`,
+    );
+  }
+});
+
+test("no two live flavors claim one executable name", () => {
+  // The property Linux coexistence rests on, and the one `demoBuildConfig`
+  // cannot check by itself: it sees one flavor at a time, and two flavors with
+  // the same `demo.name` and different build IDs derive different identifiers
+  // (so the existing cross-check passes) and the *same* binary name — which on
+  // Linux is one `/usr/bin` entry claimed by two packages.
+  const live = listFlavorIds()
+    .map((id) => loadFlavor(id))
+    .filter((flavor) => !flavor.example);
+  const byBinaryName = new Map();
+  for (const flavor of live) {
+    const clash = byBinaryName.get(flavor.mainBinaryName);
+    assert.equal(
+      clash,
+      undefined,
+      `${flavor.id} and ${clash?.id} both install /usr/bin/${flavor.mainBinaryName}`,
+    );
+    byBinaryName.set(flavor.mainBinaryName, flavor);
+  }
+  assert.ok(byBinaryName.size >= 2, "expected more than one live flavor");
+});
+
+test("the bundle name a flavored build resolves its sidecars from is emitted", () => {
+  // `build_identity::sidecar_dirs` reads this to find
+  // `/usr/lib/<bundle name>/sidecars`, where a flavored `.deb` keeps the
+  // sidecars it cannot put in `/usr/bin`. It is `displayName`, which is what
+  // Tauri's `productName` becomes — deliberately not `productName` here, the
+  // name the app calls itself in its own copy, which a flavor may set
+  // differently.
+  const flavor = loadFlavor("ki.keriki");
+  const env = flavorBuildEnv(flavor);
+  assert.equal(env.BUZZ_BUILD_BUNDLE_NAME, flavor.displayName);
+  assert.equal(env.BUZZ_BUILD_BUNDLE_NAME, "ki.keriki");
 });
 
 test("a flavor's platform icons survive validation unchanged", () => {
   const icons = {
     "32x32.png": "flavors/icons/acme-32x32.png",
+    "64x64.png": "flavors/icons/acme-64x64.png",
     "128x128.png": "flavors/icons/acme-128x128.png",
     "128x128@2x.png": "flavors/icons/acme-128x128@2x.png",
+    "256x256.png": "flavors/icons/acme-256x256.png",
+    "512x512.png": "flavors/icons/acme-512x512.png",
     "icon.ico": "flavors/icons/acme.ico",
   };
   const flavor = validateFlavor(goodFlavor({ platformIcons: icons }), "acme");
@@ -1066,8 +1150,11 @@ test("a flavor's platform icons survive validation unchanged", () => {
 test("a malformed platformIcons is refused", () => {
   const full = {
     "32x32.png": "flavors/icons/acme-32x32.png",
+    "64x64.png": "flavors/icons/acme-64x64.png",
     "128x128.png": "flavors/icons/acme-128x128.png",
     "128x128@2x.png": "flavors/icons/acme-128x128@2x.png",
+    "256x256.png": "flavors/icons/acme-256x256.png",
+    "512x512.png": "flavors/icons/acme-512x512.png",
     "icon.ico": "flavors/icons/acme.ico",
   };
   for (const platformIcons of ["", [], null, 7, [full]]) {
@@ -1090,10 +1177,11 @@ test("a malformed platformIcons is refused", () => {
   assert.throws(
     () =>
       validateFlavor(
-        goodFlavor({ platformIcons: { ...full, "512x512.png": "x.png" } }),
+        goodFlavor({ platformIcons: { ...full, "1024x1024.png": "x.png" } }),
         "acme",
       ),
-    /platformIcons key "512x512.png" is not an icon the bundle reads/,
+    /platformIcons key "1024x1024.png" is not an icon the bundle reads/,
+    "a plausible size that no `bundle.icon` list names is still refused",
   );
 
   for (const bad of ["", "   ", 7, null]) {
@@ -1155,8 +1243,11 @@ test("a malformed platformIcons is refused", () => {
 test("a partial platformIcons is refused, one key at a time", () => {
   const full = {
     "32x32.png": "flavors/icons/acme-32x32.png",
+    "64x64.png": "flavors/icons/acme-64x64.png",
     "128x128.png": "flavors/icons/acme-128x128.png",
     "128x128@2x.png": "flavors/icons/acme-128x128@2x.png",
+    "256x256.png": "flavors/icons/acme-256x256.png",
+    "512x512.png": "flavors/icons/acme-512x512.png",
     "icon.ico": "flavors/icons/acme.ico",
   };
   // Every key dropped in turn, not just one: the `.ico` alone is the tempting
@@ -1176,8 +1267,11 @@ test("a partial platformIcons is refused, one key at a time", () => {
   }
   assert.throws(
     () => validateFlavor(goodFlavor({ platformIcons: {} }), "acme"),
-    /platformIcons is missing 32x32.png, 128x128.png, 128x128@2x.png, icon.ico/,
-    "an empty platformIcons must be refused, naming all four",
+    new RegExp(
+      "platformIcons is missing 32x32\\.png, 64x64\\.png, 128x128\\.png, " +
+        "128x128@2x\\.png, 256x256\\.png, 512x512\\.png, icon\\.ico",
+    ),
+    "an empty platformIcons must be refused, naming every one",
   );
 });
 
@@ -1188,10 +1282,18 @@ test("every declared platform icon is committed, and is the size its key promise
   // installed into the 128px directory and rendered by the launcher at
   // whatever scale it assumes — a wrong icon size is invisible on the build
   // machine and only shows up in somebody's app menu.
+  // `128x128@2x.png` and `256x256.png` are both 256px images of the same
+  // artwork, and that is the point of having both: the `@2x` *filename* makes
+  // Tauri write it to `hicolor/256x256@2/`, a directory the icon theme
+  // specification does not define, so the second name is what gets a 256px
+  // icon somewhere a launcher reads.
   const expectedPngSize = {
     "32x32.png": 32,
+    "64x64.png": 64,
     "128x128.png": 128,
     "128x128@2x.png": 256,
+    "256x256.png": 256,
+    "512x512.png": 512,
   };
   const stockIco = icoSizes(
     path.join(desktopDir, "src-tauri", "icons", "icon.ico"),
@@ -1226,8 +1328,8 @@ test("every declared platform icon is committed, and is the size its key promise
       checked += 1;
     }
   }
-  // ki.keriki's four. Without this the loop passes vacuously the day a
+  // ki.keriki's seven. Without this the loop passes vacuously the day a
   // refactor stops returning `platformIcons`, which is the same unfalsifiable
   // shape as a guard whose skip is gated on the thing it asserts.
-  assert.equal(checked, 4, "ki.keriki's four platform icons must be checked");
+  assert.equal(checked, 7, "ki.keriki's seven platform icons must be checked");
 });

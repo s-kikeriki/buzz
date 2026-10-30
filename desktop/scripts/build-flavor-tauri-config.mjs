@@ -36,43 +36,16 @@ import { readFileSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
-import { listFlavorIds, loadFlavor } from "./flavor-config.mjs";
+import {
+  FLAVOR_BUNDLE_ICONS,
+  listFlavorIds,
+  loadFlavor,
+} from "./flavor-config.mjs";
 
 const desktopDir = path.resolve(
   path.dirname(fileURLToPath(import.meta.url)),
   "..",
 );
-
-/**
- * The `hicolor` sizes a flavored Linux bundle installs, as entries of
- * `src-tauri/icons/`.
- *
- * The trunk's own `bundle.icon` has three PNGs, and the largest of them is
- * named `128x128@2x.png`. Tauri's Linux bundler reads a PNG's real dimensions
- * and then appends `@2` when the *filename* says `@2x`, so that file lands in
- * `usr/share/icons/hicolor/256x256@2/apps/` — not a directory in the icon
- * theme specification, and therefore ignored by every lookup that reads it.
- * The practical effect on Ethos's Debian box was a launcher with nothing
- * above 128px to scale from.
- *
- * So the `@2x` entry is dropped here and the same artwork is declared as
- * `256x256.png`, which lands in a directory that is read. `64x64.png` was
- * already in the repo and never bundled.
- *
- * This list replaces the trunk's array wholesale (RFC 7396 does not merge
- * arrays), which is the point: the trunk's `.deb` is left exactly as it was,
- * so a stock Buzz built from this repo installs the same five paths it always
- * did and keeps its own `Package: buzz`.
- */
-const FLAVOR_BUNDLE_ICONS = [
-  "icons/32x32.png",
-  "icons/64x64.png",
-  "icons/128x128.png",
-  "icons/256x256.png",
-  "icons/512x512.png",
-  "icons/icon.icns",
-  "icons/icon.ico",
-];
 
 /**
  * The subdirectory of the bundle's resources that the sidecars move into.

@@ -131,12 +131,45 @@ test("flavor-github-env refuses to run outside Actions", () => {
   assert.match(output, /GITHUB_ENV is not set/);
 });
 
+/**
+ * RFC 7396 JSON merge patch — the algorithm Tauri applies to `--config`.
+ *
+ * Objects merge key by key and everything else replaces, which is the whole
+ * reason the delta can own `bundle` safely while `bundle.targets` would not be
+ * safe to put in it. Implemented here rather than asserted on the delta's
+ * shape alone because the shape is not the property that matters: what matters
+ * is the config the bundler ends up reading.
+ */
+function mergePatch(base, patch) {
+  if (
+    base === null ||
+    typeof base !== "object" ||
+    Array.isArray(base) ||
+    patch === null ||
+    typeof patch !== "object" ||
+    Array.isArray(patch)
+  ) {
+    return structuredClone(patch);
+  }
+  const merged = structuredClone(base);
+  for (const [key, value] of Object.entries(patch)) {
+    merged[key] =
+      key in merged ? mergePatch(merged[key], value) : structuredClone(value);
+  }
+  return merged;
+}
+
 test("the tauri delta names the app and never the bundle targets", () => {
   const out = path.join(
     mkdtempSync(path.join(tmpdir(), "flavorconf-")),
     "c.json",
   );
-  run("build-flavor-tauri-config.mjs", ["ki.keriki", out]);
+  run("build-flavor-tauri-config.mjs", [
+    "ki.keriki",
+    out,
+    "--target",
+    "x86_64-unknown-linux-gnu",
+  ]);
   const config = JSON.parse(readFileSync(out, "utf8"));
 
   // Asserted before the shape, because this is the specific trap and an
@@ -145,12 +178,13 @@ test("the tauri delta names the app and never the bundle targets", () => {
   //
   // `demoBuildConfig`'s own overlay pins `bundle.targets` to `["app"]`, which
   // is right for the macOS script that packages its own DMG and would produce
-  // no .deb, no AppImage and no installer here. RFC 7396 merge means a
-  // `bundle` key present at all replaces the base value rather than adding to
-  // it, so this is not a style preference.
+  // no .deb, no AppImage and no installer here. The delta owns other `bundle`
+  // keys, which merge in beside the base's; `targets` is the one that must
+  // stay on the `--bundles` command line, where the job that wants a `.deb`
+  // says so.
   assert.ok(
-    !Object.hasOwn(config, "bundle"),
-    "the delta must not own `bundle` — --bundles on the command line decides",
+    !Object.hasOwn(config.bundle ?? {}, "targets"),
+    "the delta must not own `bundle.targets` — --bundles decides",
   );
   // Same reasoning for the version: one input, one owner.
   assert.ok(
@@ -160,16 +194,63 @@ test("the tauri delta names the app and never the bundle targets", () => {
 
   const flavor = loadFlavor("ki.keriki");
   assert.deepEqual(
-    config,
+    {
+      productName: config.productName,
+      mainBinaryName: config.mainBinaryName,
+      identifier: config.identifier,
+      plugins: config.plugins,
+    },
     {
       productName: flavor.displayName,
+      mainBinaryName: flavor.mainBinaryName,
       identifier: flavor.identifier,
       plugins: {
         "deep-link": { desktop: { schemes: [flavor.deepLinkScheme] } },
       },
     },
-    "the delta is exactly the three fields the bundler reads from config",
+    "the delta carries the identity fields the bundler reads from config",
   );
+
+  // The merge, not the delta. Every one of these is a base value the flavored
+  // build still depends on, and an array or a scalar in the delta replaces
+  // rather than merges — so `bundle: {…}` is only safe as long as the keys it
+  // does not mention survive. That is the claim, so assert it.
+  const base = JSON.parse(
+    readFileSync(path.join(desktopDir, "src-tauri", "tauri.conf.json"), "utf8"),
+  );
+  const merged = mergePatch(base, config);
+  assert.deepEqual(merged.bundle.targets, base.bundle.targets);
+  assert.equal(merged.bundle.active, base.bundle.active);
+  assert.deepEqual(merged.bundle.macOS, base.bundle.macOS);
+  assert.equal(merged.app.security.csp, base.app.security.csp);
+  assert.equal(merged.build.frontendDist, base.build.frontendDist);
+  // And the deep-link scheme really is replaced, not appended to: a build that
+  // answered both `buzz://` and its own would capture a real Buzz's links.
+  assert.deepEqual(merged.plugins["deep-link"].desktop.schemes, [
+    flavor.deepLinkScheme,
+  ]);
+
+  // The two halves of the collision fix, read off the merged config rather
+  // than the delta: no sidecar goes to `/usr/bin` any more, and every one of
+  // them is mapped into the resource directory the app resolves instead.
+  assert.deepEqual(
+    merged.bundle.externalBin,
+    [],
+    "a flavored bundle must declare no externalBin — those land in /usr/bin, " +
+      "which a real Buzz's package owns",
+  );
+  const sidecars = Object.entries(merged.bundle.resources);
+  assert.equal(sidecars.length, base.bundle.externalBin.length);
+  for (const [source, destination] of sidecars) {
+    const name = path.posix
+      .basename(source)
+      .replace("-x86_64-unknown-linux-gnu", "");
+    assert.ok(
+      base.bundle.externalBin.includes(`binaries/${name}`),
+      `${source} is not one of the trunk's sidecars`,
+    );
+    assert.equal(destination, `sidecars/${name}`);
+  }
 });
 
 test("the tauri delta refuses the flavors that do not build", () => {
