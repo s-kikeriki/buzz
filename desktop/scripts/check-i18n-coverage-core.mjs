@@ -286,16 +286,32 @@ export function findHardcodedCopy(ast) {
           ? property.value
           : null,
       );
-      const allProse =
+      const isHardcoded = (value) =>
+        value?.type === "StringLiteral" &&
+        isProse(value.value) &&
+        isTranslatableText(value.value);
+      // Every value is either hardcoded prose or an already-converted message.
+      //
+      // "Every value is prose" was the first version, and a break test killed
+      // it: converting seven of eight entries and leaving one plain string —
+      // which is exactly what adding a ninth filter would do — made the object
+      // mixed, so the rule stopped seeing a copy table at all and reported
+      // nothing. A half-converted table is the regression this rule is for.
+      // Counting `msg`/`t` as table-shaped keeps that case in scope while
+      // still excluding the kind-to-token and id-to-class maps that fill this
+      // codebase: one value that is neither and the object is data again.
+      const isConverted = (value) =>
+        value?.type === "TaggedTemplateExpression" &&
+        value.tag?.type === "Identifier" &&
+        MACRO_CALLS.has(value.tag.name);
+      const hardcoded = values.filter(isHardcoded);
+      const tableShaped =
         values.length >= 2 &&
-        values.every(
-          (value) =>
-            value?.type === "StringLiteral" &&
-            isProse(value.value) &&
-            isTranslatableText(value.value),
-        );
-      if (allProse) {
+        hardcoded.length > 0 &&
+        values.every((value) => isHardcoded(value) || isConverted(value));
+      if (tableShaped) {
         for (const [index, value] of values.entries()) {
+          if (!isHardcoded(value)) continue;
           const key =
             properties[index].key?.type === "Identifier"
               ? properties[index].key.name
