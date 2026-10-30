@@ -133,7 +133,12 @@ fi
 # correct ki.keriki AppImage with "bundler layout changed". The desktop entry
 # in the AppDir root is generated from the same name the executable has, so the
 # artefact describes itself.
-DESKTOP_ENTRY=$(find "$WORKDIR/squashfs-root" -maxdepth 1 -name '*.desktop' -type f | head -1)
+#
+# `-xtype f`, not `-type f`: linuxdeploy puts the root entry there as a symlink
+# to usr/share/applications/<name>.desktop, so `-type f` matches nothing and the
+# guard below aborts a correct build. `-xtype f` resolves the link, and still
+# rejects a dangling one.
+DESKTOP_ENTRY=$(find "$WORKDIR/squashfs-root" -maxdepth 1 -name '*.desktop' -xtype f | head -1)
 if [[ -z "$DESKTOP_ENTRY" ]]; then
   echo "Error: no .desktop entry in the AppDir root — bundler layout changed; update fix-appimage.sh" >&2
   exit 1
