@@ -17,9 +17,50 @@ Our own brand marks, and nothing else.
 | File | Flavor | Field |
 |---|---|---|
 | `ki.keriki.icns` | `ki.keriki.json` | `icon` |
+| `ki.keriki-32x32.png` | `ki.keriki.json` | `platformIcons["32x32.png"]` |
+| `ki.keriki-128x128.png` | `ki.keriki.json` | `platformIcons["128x128.png"]` |
+| `ki.keriki-128x128@2x.png` | `ki.keriki.json` | `platformIcons["128x128@2x.png"]` |
+| `ki.keriki.ico` | `ki.keriki.json` | `platformIcons["icon.ico"]` |
 | `ki.keriki-tray.png` | `ki.keriki.json` | `trayIcon` |
 | `ki.keriki-dmg-background.png` | `ki.keriki.json` | `dmgBackground` |
 | `zeniad.icns` | `zeniad.json` | `icon` |
+
+## Windows and Linux
+
+`tauri.conf.json` bundles five icons and `icon` only covers the macOS one, so
+a Windows or Linux bundle of a fully branded flavor wore the Buzz bee: the
+`.ico` on the taskbar and in Add/Remove Programs, the PNGs in the Linux
+launcher and app menu. `platformIcons` declares the other four, keyed by the
+file in `src-tauri/icons/` each one stands in for, and
+`scripts/stage-flavor-icons.mjs <flavor-id>` copies them into place before
+`tauri build` runs. It is all four or none — a flavor that declared the `.ico`
+alone would produce a branded Windows installer and a Linux launcher still
+showing the bee, from the same command.
+
+`scripts/make-flavor-platform-icons.py <flavor-id>` regenerates the set from
+the flavor's own `.icns`, which is the master artwork: the 1024px member of
+`ki.keriki.icns` is pixel-identical to
+`kikeriki/00_brand/output/2026-10-19-app-icon/kikeriki-icon-1024.png`. Deriving
+from the committed icon rather than from a second master is what makes "Windows
+carries the same artwork macOS does" re-derivable from a checkout instead of a
+claim. **Regenerate them whenever the `.icns` changes** — nothing couples the
+two automatically, and a new `.icns` with the old PNGs ships two different
+icons for one app.
+
+**The Apple margin comes off for the other two platforms.** macOS wants the
+artwork inset — Apple's template puts an 824x824 body inside a 1024 canvas, and
+`ki.keriki.icns` bakes in both that margin and the squircle. Windows and Linux
+inset nothing; the stock Buzz `32x32.png` and `icon.ico` are full-bleed to the
+pixel, corner alpha 255. Carrying the macOS margin across would draw ki.keriki
+about 20% smaller than every neighbour in the Windows taskbar, so the generator
+crops to the artwork's alpha bounding box and scales that to fill. The shape
+and the colours are untouched: the squircle's transparent corners come along,
+which is what both platforms want anyway.
+
+`ki.keriki.ico` carries the same six sizes (16, 24, 32, 48, 64, 256) the stock
+`icon.ico` does, so Windows has no size to fall back on that we did not draw,
+and the test holds it to that list rather than to a number — the stock file is
+the comparison.
 
 ## The menu-bar glyph
 

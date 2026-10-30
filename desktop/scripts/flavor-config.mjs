@@ -63,6 +63,34 @@ const DEFAULT_LOGO_STYLE = "mask";
 const CHROME_SURFACES = ["auto", "ink"];
 const DEFAULT_CHROME_SURFACE = "auto";
 
+/**
+ * The icons a flavor can replace besides the macOS `.icns`, keyed by the file
+ * in `src-tauri/icons/` each one stands in for.
+ *
+ * `tauri.conf.json` names five icons and `icon` only covers one of them, so a
+ * Windows or Linux bundle of a fully branded flavor wore the Buzz bee: the
+ * `.ico` on the taskbar and in Add/Remove Programs, the PNGs in the Linux
+ * launcher. Keying by the stock filename rather than inventing names of our own
+ * is what makes the staging rule a copy — `cp <value> src-tauri/icons/<key>` —
+ * and what makes a flavor file say out loud which shipped asset it replaces.
+ *
+ * `icon.icns` is deliberately not a key here. It already has its own required
+ * `icon` field, and a second way to declare the same file is a second thing to
+ * disagree with the first.
+ *
+ * {@link flavorBuildEnv} does not carry these: they are files a bundler reads
+ * from a fixed path, not values a compiler bakes in, so they are staged into
+ * `src-tauri/icons/` by `stage-flavor-icons.mjs` before the bundle is built.
+ * `flavor-config.test.mjs` holds this list against `tauri.conf.json`, so a
+ * sixth icon added to the bundle cannot quietly stay un-brandable.
+ */
+export const PLATFORM_ICON_TARGETS = {
+  "32x32.png": ".png",
+  "128x128.png": ".png",
+  "128x128@2x.png": ".png",
+  "icon.ico": ".ico",
+};
+
 function fail(flavorId, message) {
   throw new Error(`flavor ${flavorId}: ${message}`);
 }
@@ -158,6 +186,57 @@ export function validateFlavor(flavor, flavorId) {
 
   if (escapesRepo(flavor.icon)) {
     fail(flavorId, "icon must be a repo-relative path without `..`");
+  }
+
+  if (flavor.platformIcons !== undefined) {
+    const icons = flavor.platformIcons;
+    if (icons === null || typeof icons !== "object" || Array.isArray(icons)) {
+      fail(
+        flavorId,
+        "platformIcons must be an object keyed by the icon it replaces",
+      );
+    }
+    const targets = Object.keys(PLATFORM_ICON_TARGETS);
+    for (const [target, declared] of Object.entries(icons)) {
+      if (!(target in PLATFORM_ICON_TARGETS)) {
+        fail(
+          flavorId,
+          `platformIcons key "${target}" is not an icon the bundle reads ` +
+            `(expected one of ${targets.join(", ")})`,
+        );
+      }
+      if (typeof declared !== "string" || declared.trim().length === 0) {
+        fail(flavorId, `platformIcons["${target}"] must be a non-empty string`);
+      }
+      if (escapesRepo(declared)) {
+        fail(
+          flavorId,
+          `platformIcons["${target}"] must be a repo-relative path without \`..\``,
+        );
+      }
+      const extension = PLATFORM_ICON_TARGETS[target];
+      if (!declared.endsWith(extension)) {
+        // The staging copy keeps the key's name, so the bundler reads the file
+        // as whatever the key says it is. A `.png` under `icon.ico` is not a
+        // wrong-looking icon, it is an undecodable one, and the Windows
+        // bundler's own error points at `src-tauri/icons/icon.ico` — a path
+        // that has nothing to do with the flavor file that caused it.
+        fail(flavorId, `platformIcons["${target}"] must be a ${extension}`);
+      }
+    }
+    const missing = targets.filter((target) => !(target in icons));
+    if (missing.length > 0) {
+      // All four or none. A flavor that declares the `.ico` alone builds a
+      // branded Windows installer and a Linux launcher still showing the bee,
+      // and the two platforms are bundled by the same command from the same
+      // config — so a partial set is not a smaller scope, it is a build that
+      // is half-branded in a way only a Linux user would ever see.
+      fail(
+        flavorId,
+        `platformIcons is missing ${missing.join(", ")} — declare every ` +
+          "non-macOS icon or none of them",
+      );
+    }
   }
 
   if (flavor.logo !== undefined) {
@@ -367,6 +446,10 @@ export function validateFlavor(flavor, flavorId) {
     deepLinkScheme: derived.deepLinkScheme,
     cliName: derived.cliName,
     icon: flavor.icon,
+    platformIcons:
+      flavor.platformIcons === undefined
+        ? undefined
+        : { ...flavor.platformIcons },
     logo: typeof flavor.logo === "string" ? flavor.logo : undefined,
     logoLight:
       typeof flavor.logoLight === "string" ? flavor.logoLight : undefined,
