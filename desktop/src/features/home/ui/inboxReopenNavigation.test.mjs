@@ -19,6 +19,7 @@
  * the hook, the panes, and the action all run their production code.
  */
 
+import { withI18n } from "@/testing/withI18n.mjs";
 import assert from "node:assert/strict";
 import { registerHooks } from "node:module";
 import { after, before, test } from "node:test";
@@ -432,19 +433,24 @@ async function mountInbox(options = {}) {
   dom.window.document.body.appendChild(container);
   const root = createRoot(container);
   const tree = () =>
-    React.createElement(
-      RouterContextProvider,
-      { router },
+    // `withI18n` because both panes now call `useLingui()`. Without it the
+    // render throws an error that blames a duplicate `@lingui/react` install
+    // and names neither the component nor the missing provider.
+    withI18n(
       React.createElement(
-        QueryClientProvider,
-        { client },
+        RouterContextProvider,
+        { router },
         React.createElement(
-          CommunitiesProvider,
-          null,
+          QueryClientProvider,
+          { client },
           React.createElement(
-            TooltipProvider,
+            CommunitiesProvider,
             null,
-            React.createElement(Surface),
+            React.createElement(
+              TooltipProvider,
+              null,
+              React.createElement(Surface),
+            ),
           ),
         ),
       ),

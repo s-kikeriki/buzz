@@ -36,6 +36,8 @@ export default defineConfig({
         "**/collapsed-posts.spec.ts",
         "**/i18n-appearance.spec.ts",
         "**/sidebar-german-screenshots.spec.ts",
+        "**/search-german-screenshots.spec.ts",
+        "**/inbox-german-screenshots.spec.ts",
         "**/institutional-chrome.spec.ts",
         "**/kikeriki-theme.spec.ts",
         "**/onboarding-brand.spec.ts",

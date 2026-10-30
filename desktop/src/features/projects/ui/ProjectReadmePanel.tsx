@@ -11,6 +11,7 @@ import type { ProjectRepoFile } from "@/features/projects/hooks";
 import { projectExternalRefUrl } from "@/features/projects/lib/projectExternalUrl";
 import type { ProjectRepoUnavailableReason } from "@/features/projects/lib/projectRepoAvailability";
 import { formatLastChangedAt } from "@/features/projects/lib/projectsViewHelpers";
+import { useLocale } from "@/shared/lib/localePreference";
 import { Button } from "@/shared/ui/button";
 import { BuzzLoadingState } from "@/shared/ui/BuzzLoadingState";
 import { Markdown, SyntaxHighlightedCode } from "@/shared/ui/markdown";
@@ -125,6 +126,7 @@ export function ReadmePanel({
   /** Branch picker + remote/local toggle rendered in the panel header. */
   sourceControls?: RepoSourceHeaderControls;
 }) {
+  const locale = useLocale();
   const fileContent = useRepositoryFileContent(file, fileContentSource);
   const externalOpenUrl = projectExternalRefUrl(
     externalUrl,
@@ -163,7 +165,7 @@ export function ReadmePanel({
         </span>
         {file ? (
           <span className="hidden shrink-0 text-2xs text-muted-foreground sm:block">
-            Last changed {formatLastChangedAt(file.lastChangedAt)}
+            Last changed {formatLastChangedAt(file.lastChangedAt, locale)}
           </span>
         ) : null}
       </div>

@@ -1,3 +1,4 @@
+import { Trans, useLingui } from "@lingui/react/macro";
 import {
   AlertCircle,
   ArrowLeft,
@@ -18,7 +19,10 @@ import { getProjectInboxReference } from "@/features/home/lib/projectInbox";
 import { ProjectInboxDetail } from "@/features/home/ui/ProjectInboxDetail";
 import { ChannelMembersBar } from "@/features/channels/ui/ChannelMembersBar";
 import { useCommunities } from "@/features/communities/useCommunities";
-import { formatInboxTypeLabel } from "@/features/home/lib/inbox";
+import {
+  formatInboxTypeLabel,
+  resolveInboxCopy,
+} from "@/features/home/lib/inbox";
 import {
   hasInboxThreadContext,
   toTimelineMessage,
@@ -29,6 +33,7 @@ import {
 } from "@/features/home/ui/InboxMessageRow";
 import type { TimelineMessage } from "@/features/messages/types";
 import { formatTime } from "@/features/messages/lib/dateFormatters";
+import { useLocale } from "@/shared/lib/localePreference";
 import {
   hasSameMessageAuthor,
   isWithinGroupingWindow,
@@ -199,6 +204,8 @@ function InboxMessageDetailPane({
   onSendReply,
   onToggleReaction,
 }: InboxDetailPaneProps) {
+  const { i18n, t } = useLingui();
+  const locale = useLocale();
   const detailPaneRef = React.useRef<HTMLElement | null>(null);
   const { activeCommunity } = useCommunities();
   // Refs for the shared anchored-scroll hook's container and content roots.
@@ -240,7 +247,7 @@ function InboxMessageDetailPane({
         authorLabel: item.senderLabel,
         authorPubkey: item.item.pubkey,
         avatarUrl: item.avatarUrl,
-        content: item.preview,
+        content: resolveInboxCopy(i18n, item.preview),
         createdAt: item.item.createdAt,
         depth: 0,
         fullTimestampLabel: item.fullTimestampLabel,
@@ -252,11 +259,16 @@ function InboxMessageDetailPane({
         parentId: threadReference.parentId,
         rootId: threadReference.rootId,
         tags: item.item.tags,
-        timeLabel: formatTime(item.item.createdAt),
+        timeLabel: formatTime(item.item.createdAt, locale),
       },
       ...pendingReplyMessages,
     ];
-  }, [item, messages, replies]);
+    // `i18n` is a real dependency, not lint appeasement: the memo resolves the
+    // preview descriptor, so without it a language switch would leave this
+    // timeline in the old language until the feed next changed — the exact
+    // stale-locale failure the descriptors in `inbox.ts` exist to prevent,
+    // reintroduced one layer up.
+  }, [i18n, item, locale, messages, replies]);
   const videoReviewMessages = React.useMemo(
     () => displayMessages.map(toTimelineMessage),
     [displayMessages],
@@ -444,9 +456,13 @@ function InboxMessageDetailPane({
           <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-muted text-muted-foreground">
             <Mail className="h-6 w-6" />
           </div>
-          <p className="mt-4 text-base font-semibold">Select a message</p>
+          <p className="mt-4 text-base font-semibold">
+            <Trans>Select a message</Trans>
+          </p>
           <p className="mt-1 text-sm text-muted-foreground">
-            Pick an inbox item to see the full message and react to it.
+            <Trans>
+              Pick an inbox item to see the full message and react to it.
+            </Trans>
           </p>
         </div>
       </section>
@@ -512,15 +528,15 @@ function InboxMessageDetailPane({
       ? `DM with ${item.senderLabel}`
       : channelContextName
         ? `Message in #${channelContextName}`
-        : formatInboxTypeLabel(item);
+        : formatInboxTypeLabel(i18n, item);
   const contextChannelId = item.item.channelId;
   const sourceEventId = selectedEventId ?? item.id;
   const contextThreadRootId = isThreadContext ? item.conversationId : null;
   const openContextLabel = isThreadContext
-    ? "Open full thread"
+    ? t`Open full thread`
     : isDirectMessage
-      ? "Open conversation"
-      : "Open in channel";
+      ? t`Open conversation`
+      : t`Open in channel`;
 
   const handleSelectReplyTarget = (message: InboxDisplayMessage) => {
     setReplyTargetId((currentReplyTargetId) =>
@@ -555,7 +571,7 @@ function InboxMessageDetailPane({
               >
                 {onBack ? (
                   <Button
-                    aria-label="Back to inbox list"
+                    aria-label={t`Back to inbox list`}
                     className="rounded-full text-muted-foreground hover:bg-muted/60 hover:text-foreground"
                     onClick={onBack}
                     size="icon"
@@ -617,12 +633,16 @@ function InboxMessageDetailPane({
                       {reopenPending ? (
                         <>
                           <LoaderCircle className="h-3.5 w-3.5 shrink-0 animate-spin" />
-                          <span>Reopening…</span>
+                          <span>
+                            <Trans>Reopening…</Trans>
+                          </span>
                         </>
                       ) : (
                         <>
                           <AlertCircle className="h-3.5 w-3.5 shrink-0" />
-                          <span>Couldn’t reopen</span>
+                          <span>
+                            <Trans>Couldn’t reopen</Trans>
+                          </span>
                           {contextChannelId ? (
                             <button
                               className="ml-0.5 rounded font-semibold underline underline-offset-2 hover:no-underline focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-ring"
@@ -636,7 +656,7 @@ function InboxMessageDetailPane({
                               }
                               type="button"
                             >
-                              Retry
+                              <Trans>Retry</Trans>
                             </button>
                           ) : null}
                         </>
@@ -712,7 +732,9 @@ function InboxMessageDetailPane({
                 data-testid="home-inbox-context-loading"
               >
                 <LoaderCircle className="h-4 w-4 shrink-0 animate-spin" />
-                <span>Loading surrounding context...</span>
+                <span>
+                  <Trans>Loading surrounding context...</Trans>
+                </span>
               </div>
             ) : null}
             {hasThreadContextLoadError ? (
@@ -721,7 +743,9 @@ function InboxMessageDetailPane({
                 data-testid="home-inbox-context-error"
               >
                 <AlertCircle className="h-4 w-4 shrink-0" />
-                <span>Some message context could not be loaded.</span>
+                <span>
+                  <Trans>Some message context could not be loaded.</Trans>
+                </span>
               </div>
             ) : null}
             {displayMessages.map((message, index) => {
@@ -749,7 +773,6 @@ function InboxMessageDetailPane({
                   depth: message.depth,
                   kind: message.kind,
                   pubkey: message.authorPubkey,
-                  time: message.timeLabel ?? message.fullTimestampLabel,
                 },
                 currentPubkey,
                 profiles,
@@ -875,10 +898,12 @@ function InboxMessageDetailPane({
               placeholder={
                 canReply
                   ? isDirectMessage
-                    ? `Message ${item.senderLabel}`
-                    : `Send reply to ${item.channelLabel ? `#${item.channelLabel} thread` : "channel thread"}`
+                    ? t`Message ${item.senderLabel}`
+                    : item.channelLabel
+                      ? t`Send reply to #${item.channelLabel} thread`
+                      : t`Send reply to channel thread`
                   : (disabledReplyReason ??
-                    "Replies are not available for this item.")
+                    t`Replies are not available for this item.`)
               }
               replyTarget={composerReplyTarget}
             />
@@ -908,9 +933,10 @@ function HeaderMoreMenu({
   isDeletingMessage: boolean;
   onDelete: () => void;
 }) {
+  const { t } = useLingui();
   const trigger = (
     <Button
-      aria-label="More actions"
+      aria-label={t`More actions`}
       className="rounded-full text-muted-foreground"
       size="icon"
       type="button"
@@ -926,7 +952,9 @@ function HeaderMoreMenu({
         <TooltipTrigger asChild>
           <DropdownMenuTrigger asChild>{trigger}</DropdownMenuTrigger>
         </TooltipTrigger>
-        <TooltipContent>More actions</TooltipContent>
+        <TooltipContent>
+          <Trans>More actions</Trans>
+        </TooltipContent>
       </Tooltip>
       <DropdownMenuContent align="end">
         <DropdownMenuItem
@@ -935,7 +963,7 @@ function HeaderMoreMenu({
           onClick={onDelete}
         >
           <Trash2 className="h-4 w-4" />
-          Delete message
+          <Trans>Delete message</Trans>
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

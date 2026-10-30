@@ -29,6 +29,57 @@ const CONVERTED_FILES = [
   "src/features/sidebar/ui/CommunityRail.tsx",
   "src/features/sidebar/ui/SectionUnreadThreadCount.tsx",
   "src/features/sidebar/ui/SidebarSection.tsx",
+  // Tranche 1 — the surfaces Ian named, plus the rest of the sidebar.
+  // Search palette: the dialog, its scope chip, the rotating placeholder and
+  // every result row.
+  "src/features/search/ui/HighlightedSearchText.tsx",
+  "src/features/search/ui/SearchPromptPlaceholder.tsx",
+  "src/features/search/ui/SearchResultItem.tsx",
+  "src/features/search/ui/SearchScopeControls.tsx",
+  "src/features/search/ui/TopbarSearch.tsx",
+  // Channel browser.
+  "src/features/channels/ui/ChannelBrowserDialog.tsx",
+  // Keyboard-shortcut help, and the table it reads. The table is the reason
+  // the detector had to learn about copy fields in object literals: 58 of its
+  // strings appear in no JSX node at all.
+  "src/features/settings/ui/KeyboardShortcutsCard.tsx",
+  "src/shared/lib/keyboard-shortcuts.ts",
+  // The rest of the sidebar.
+  "src/features/sidebar/ui/ChannelActivityPopover.tsx",
+  "src/features/sidebar/ui/ChannelSectionDialogs.tsx",
+  "src/features/sidebar/ui/CreateChannelDialog.tsx",
+  "src/features/sidebar/ui/CreateChannelFormFields.tsx",
+  "src/features/sidebar/ui/CustomChannelSection.tsx",
+  "src/features/sidebar/ui/MoreUnreadButton.tsx",
+  "src/features/sidebar/ui/SidebarDnd.tsx",
+  "src/features/sidebar/ui/SidebarProfileCard.tsx",
+  "src/features/sidebar/ui/SidebarProjectsSection.tsx",
+  "src/features/sidebar/ui/SidebarRelayConnectionCard.tsx",
+  "src/features/sidebar/ui/sidebarLoadingSkeleton.tsx",
+  "src/features/sidebar/ui/sidebarMenuHelpers.tsx",
+  // Tranche 2 — the inbox Ian named, and the home screen it lives on.
+  // `inbox.ts` and `homeMessageCapabilities.ts` are libraries, not UI, and are
+  // listed because they *produce* copy: the inbox row phrases, the eleven
+  // event-kind headlines and the three empty-body previews all come from
+  // there, and no JSX node mentions any of them.
+  "src/features/home/lib/homeMessageCapabilities.ts",
+  "src/features/home/lib/inbox.ts",
+  "src/features/home/ui/FeedSection.tsx",
+  "src/features/home/ui/HomeView.tsx",
+  "src/features/home/ui/InboxDetailPane.tsx",
+  "src/features/home/ui/InboxFilterMenu.tsx",
+  "src/features/home/ui/InboxListPane.tsx",
+  "src/features/home/ui/ProjectInboxDetail.tsx",
+  "src/features/home/ui/ProjectInboxDetailPane.tsx",
+  "src/features/home/ui/RecentNotesSection.tsx",
+  // The drafts view *is* the inbox's Drafts filter, so leaving it English
+  // would have made that one filter half-German — the exact seam this tranche
+  // exists to close. Its own e2e assertion is what found it.
+  "src/features/messages/ui/DraftDetailPane.tsx",
+  "src/features/messages/ui/DraftsPanel.tsx",
+  // The shared ladder grew a forward-pointing half for the reminder
+  // countdown, so it now holds copy of its own ("in less than a minute").
+  "src/shared/lib/relativeTime.ts",
 ];
 
 /**

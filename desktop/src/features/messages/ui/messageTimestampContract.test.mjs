@@ -18,7 +18,7 @@ test("a message header shows the relative label, including the time", () => {
   // last week read "9:05 AM" once its day divider scrolled out of view.
   assert.match(
     source,
-    /: formatItemTimestamp\(createdAt, \{ withTime: true \}\)/,
+    /: formatItemTimestamp\(createdAt, \{ locale, withTime: true \}\)/,
   );
 });
 
@@ -26,7 +26,7 @@ test("the continuation gutter stays clock-only", () => {
   // 36px of width (w-9). A relative label would not fit.
   assert.match(
     source,
-    /hideDayPeriod \? formatTimeWithoutDayPeriod\(formatTime\(createdAt\)\)/,
+    /hideDayPeriod \? formatTimeWithoutDayPeriod\(formatTime\(createdAt, locale\)\)/,
   );
 });
 
@@ -37,5 +37,13 @@ test("both labels derive from createdAt, not a pre-formatted prop", () => {
 });
 
 test("the tooltip still carries the unabbreviated timestamp", () => {
-  assert.match(source, /formatFullDateTime\(createdAt\)/);
+  assert.match(source, /formatFullDateTime\(createdAt, locale\)/);
+});
+
+test("the row subscribes to the language preference", () => {
+  // `useLocale()` rather than `getLocale()`: a module-level read would format
+  // once and leave the previous language's label on screen until the next
+  // message arrived, because `MessageRow` is memoized.
+  assert.match(source, /const locale = useLocale\(\)/);
+  assert.doesNotMatch(source, /getLocale\(\)/);
 });

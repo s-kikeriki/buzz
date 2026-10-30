@@ -1,4 +1,7 @@
 import * as React from "react";
+import { i18n } from "@lingui/core";
+import { msg } from "@lingui/core/macro";
+import { useLingui } from "@lingui/react/macro";
 import type { LucideIcon } from "lucide-react";
 import {
   Archive,
@@ -35,6 +38,9 @@ import {
 } from "@/features/profile/ui/UserProfilePanelFields";
 import type { ProfilePanelTab } from "@/features/profile/ui/UserProfilePanelUtils";
 import { cn } from "@/shared/lib/cn";
+import type { AppLocale } from "@/shared/lib/localePreference";
+import { useLocale } from "@/shared/lib/localePreference";
+import { formatRelativeTime } from "@/shared/lib/relativeTime";
 import { useNow } from "@/shared/lib/useNow";
 import { Button } from "@/shared/ui/button";
 import {
@@ -339,6 +345,8 @@ function ProfileLiveActivityEmbed({
   feedScope: ProfileActivityFeedScope;
   onOpenActivity: (channelId?: string | null) => void;
 }) {
+  const locale = useLocale();
+  const { t } = useLingui();
   const [carouselApi, setCarouselApi] = React.useState<CarouselApi>();
   const [selectedChannelId, setSelectedChannelId] = React.useState<
     string | null
@@ -421,7 +429,12 @@ function ProfileLiveActivityEmbed({
     selectedTurn?.anchorAt ??
     null;
   const emptyState = feedScope.isLive ? "loading" : "idle";
-  const emptyDescription = "Live activity will appear here.";
+  const emptyDescription = t`Live activity will appear here.`;
+  // Computed once rather than inline in four `aria-label`s: a template read
+  // `Date.now()` at each of them, so the same card could announce two
+  // different "last live" values in one render.
+  const lastLiveLabel = formatLastLiveLabel(lastLiveAt, Date.now(), locale);
+  const activityAriaLabel = t`Open activity feed. Last live ${lastLiveLabel}.`;
   const openSelectedActivity = React.useCallback(() => {
     onOpenActivity(activeChannelId);
   }, [activeChannelId, onOpenActivity]);
@@ -440,12 +453,12 @@ function ProfileLiveActivityEmbed({
   if (slides.length === 0) {
     return (
       <section
-        aria-label={`Open activity feed. Last live ${formatLastLiveLabel(lastLiveAt, Date.now())}.`}
+        aria-label={activityAriaLabel}
         className="relative flex h-56 cursor-pointer flex-col overflow-hidden rounded-2xl border bg-background text-left shadow-none transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
         data-testid={`user-profile-live-activity-${activityAgent.pubkey}`}
       >
         <button
-          aria-label={`Open activity feed. Last live ${formatLastLiveLabel(lastLiveAt, Date.now())}.`}
+          aria-label={activityAriaLabel}
           className="absolute inset-0 z-10 rounded-2xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
           onClick={openSelectedActivity}
           type="button"
@@ -485,12 +498,12 @@ function ProfileLiveActivityEmbed({
   return (
     <div>
       <section
-        aria-label={`Open activity feed. Last live ${formatLastLiveLabel(lastLiveAt, Date.now())}.`}
+        aria-label={activityAriaLabel}
         className="relative flex h-56 cursor-pointer flex-col overflow-hidden rounded-2xl border bg-background text-left shadow-none transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
         data-testid={`user-profile-live-activity-${activityAgent.pubkey}`}
       >
         <button
-          aria-label={`Open activity feed. Last live ${formatLastLiveLabel(lastLiveAt, Date.now())}.`}
+          aria-label={activityAriaLabel}
           className="absolute inset-0 z-10 rounded-2xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
           onClick={openSelectedActivity}
           type="button"
@@ -637,19 +650,21 @@ function LiveActivityOpenButton({
   lastLiveAt: number | null;
   onOpenActivity: (channelId?: string | null) => void;
 }) {
+  const locale = useLocale();
+  const { t } = useLingui();
   const now = useNow(15_000);
-  const label = formatLastLiveLabel(lastLiveAt, now);
+  const label = formatLastLiveLabel(lastLiveAt, now, locale);
 
   return (
     <Button
-      aria-label={`Open full activity. Last live ${label}.`}
+      aria-label={t`Open full activity. Last live ${label}.`}
       className="absolute right-3 top-3 z-40 rounded-full bg-primary px-2.5 text-xs font-semibold text-primary-foreground hover:bg-primary/90"
       onClick={(event) => {
         event.stopPropagation();
         onOpenActivity(activeChannelId);
       }}
       size="xs"
-      title={`Last live ${label}`}
+      title={t`Last live ${label}`}
       type="button"
     >
       {label}
@@ -657,34 +672,25 @@ function LiveActivityOpenButton({
   );
 }
 
-function formatLastLiveLabel(timestamp: number | null, now: number): string {
+const NO_ACTIVITY_YET = msg`No activity yet`;
+
+function formatLastLiveLabel(
+  timestamp: number | null,
+  now: number,
+  locale: AppLocale,
+): string {
   if (timestamp === null) {
-    return "No activity yet";
+    // `msg` + `i18n._` rather than `t`: this is module scope, where `t` from
+    // `useLingui` is not in scope and a plain string would freeze in the boot
+    // locale. The descriptor is resolved on every call instead.
+    return i18n._(NO_ACTIVITY_YET);
   }
 
-  const elapsedMs = Math.max(0, now - timestamp);
-  const totalSeconds = Math.floor(elapsedMs / 1000);
-  if (totalSeconds < 60) {
-    return "Just now";
-  }
-
-  const totalMinutes = Math.floor(totalSeconds / 60);
-  if (totalMinutes < 60) {
-    return `${totalMinutes}m ago`;
-  }
-
-  const totalHours = Math.floor(totalMinutes / 60);
-  if (totalHours < 24) {
-    return `${totalHours}h ago`;
-  }
-
-  const totalDays = Math.floor(totalHours / 24);
-  if (totalDays < 7) {
-    return `${totalDays}d ago`;
-  }
-
-  const totalWeeks = Math.floor(totalDays / 7);
-  return `${totalWeeks}w ago`;
+  // `now` and `timestamp` are milliseconds here; the ladder works in seconds.
+  return formatRelativeTime(timestamp / 1_000, {
+    locale,
+    nowSeconds: now / 1_000,
+  });
 }
 
 function ArchiveStatusTooltip() {

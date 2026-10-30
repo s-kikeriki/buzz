@@ -1,13 +1,38 @@
+import { i18n } from "@lingui/core";
 import assert from "node:assert/strict";
 import test from "node:test";
 
-import { buildInboxItems, getInboxTypeLabel } from "./inbox.ts";
+import {
+  buildInboxItems,
+  getInboxTypeLabel,
+  resolveInboxCopy,
+} from "./inbox.ts";
 import { matchesInboxFilter } from "./inboxViewHelpers.ts";
 import {
   getProjectInboxReference,
   isProjectInboxItem,
   resolveProjectInboxWorkItem,
 } from "./projectInbox.ts";
+
+/**
+ * The type label with its copy resolved, through the production path.
+ *
+ * `getInboxTypeLabel` returns descriptors now, because the rows are built in a
+ * `useMemo` keyed on feed data and would otherwise freeze in whichever locale
+ * was active when the feed last changed. Asserting on `descriptor.message`
+ * here would read the source string straight back out and never exercise
+ * `resolveInboxCopy` or `i18n._` at all; going through both means a phrase
+ * that is wired up wrong fails here rather than on screen. `test-loader.mjs`
+ * activates `en` process-wide, and the English catalogue is the source text,
+ * so the expected values stay the English they always were.
+ */
+function typeLabel(item) {
+  const label = getInboxTypeLabel(item);
+  return {
+    text: resolveInboxCopy(i18n, label.text),
+    channelLabel: label.channelLabel,
+  };
+}
 
 const OWNER = "a".repeat(64);
 const REVIEWER = "b".repeat(64);
@@ -156,6 +181,7 @@ test("matches a selected inbox event to its canonical pull request or issue", ()
 
 test("presents project work with its canonical subject and project filter", () => {
   const [item] = buildInboxItems({
+    locale: "en",
     feed: {
       feed: {
         mentions: [feedItem()],
@@ -168,7 +194,7 @@ test("presents project work with its canonical subject and project filter", () =
   });
 
   assert.equal(item.subject, "Add project work items to Inbox");
-  assert.deepEqual(getInboxTypeLabel(item), {
+  assert.deepEqual(typeLabel(item), {
     text: "Review",
     channelLabel: null,
   });
@@ -199,6 +225,7 @@ test("groups uppercase NIP-34 pull request updates with their root", () => {
     ],
   });
   const items = buildInboxItems({
+    locale: "en",
     feed: {
       feed: {
         mentions: [feedItem(), update],
@@ -218,6 +245,7 @@ test("groups uppercase NIP-34 pull request updates with their root", () => {
 test("does not group project events from different repositories", () => {
   const otherRepoAddress = `30617:${"e".repeat(64)}:other`;
   const items = buildInboxItems({
+    locale: "en",
     feed: {
       feed: {
         mentions: [

@@ -1,3 +1,4 @@
+import { i18n } from "@lingui/core";
 import assert from "node:assert/strict";
 import test from "node:test";
 
@@ -6,7 +7,28 @@ import {
   findInboxItemByEventId,
   getInboxConversationId,
   getInboxTypeLabel,
+  resolveInboxCopy,
 } from "./inbox.ts";
+
+/**
+ * The type label with its copy resolved, through the production path.
+ *
+ * `getInboxTypeLabel` returns descriptors now, because the rows are built in a
+ * `useMemo` keyed on feed data and would otherwise freeze in whichever locale
+ * was active when the feed last changed. Asserting on `descriptor.message`
+ * here would read the source string straight back out and never exercise
+ * `resolveInboxCopy` or `i18n._` at all; going through both means a phrase
+ * that is wired up wrong fails here rather than on screen. `test-loader.mjs`
+ * activates `en` process-wide, and the English catalogue is the source text,
+ * so the expected values stay the English they always were.
+ */
+function typeLabel(item) {
+  const label = getInboxTypeLabel(item);
+  return {
+    text: resolveInboxCopy(i18n, label.text),
+    channelLabel: label.channelLabel,
+  };
+}
 
 const CHANNEL_ID = "9a1657ac-f7aa-5db0-b632-d8bbeb6dfb50";
 const DM_CHANNEL_ID = "8ad375a7-6990-4b22-985f-e3fd34f634d7";
@@ -56,13 +78,14 @@ function item(overrides) {
 
 test("mention rows use the channel list when feed channelName is blank", () => {
   const [inboxItem] = buildInboxItems({
+    locale: "en",
     channels,
     feed: feedWith({
       mentions: [item({ category: "mention" })],
     }),
   });
 
-  assert.deepEqual(getInboxTypeLabel(inboxItem), {
+  assert.deepEqual(typeLabel(inboxItem), {
     text: "Mentioned in",
     channelLabel: "buzz-bugs",
   });
@@ -70,6 +93,7 @@ test("mention rows use the channel list when feed channelName is blank", () => {
 
 test("thread activity rows use the channel list when feed channelName is blank", () => {
   const [inboxItem] = buildInboxItems({
+    locale: "en",
     channels,
     feed: feedWith({
       activity: [
@@ -85,7 +109,7 @@ test("thread activity rows use the channel list when feed channelName is blank",
     }),
   });
 
-  assert.deepEqual(getInboxTypeLabel(inboxItem), {
+  assert.deepEqual(typeLabel(inboxItem), {
     text: "Thread in",
     channelLabel: "buzz-bugs",
   });
@@ -93,6 +117,7 @@ test("thread activity rows use the channel list when feed channelName is blank",
 
 test("thread groups are represented by the latest reply rather than the root", () => {
   const [inboxItem] = buildInboxItems({
+    locale: "en",
     channels,
     feed: feedWith({
       activity: [
@@ -123,7 +148,7 @@ test("thread groups are represented by the latest reply rather than the root", (
     inboxItem.groupItems.map((groupItem) => groupItem.id),
     ["root-event", "reply-event"],
   );
-  assert.deepEqual(getInboxTypeLabel(inboxItem), {
+  assert.deepEqual(typeLabel(inboxItem), {
     text: "Thread in",
     channelLabel: "buzz-bugs",
   });
@@ -131,6 +156,7 @@ test("thread groups are represented by the latest reply rather than the root", (
 
 test("thread groups use the latest row label even when the root was a mention", () => {
   const [inboxItem] = buildInboxItems({
+    locale: "en",
     channels,
     feed: feedWith({
       mentions: [
@@ -162,7 +188,7 @@ test("thread groups use the latest row label even when the root was a mention", 
     inboxItem.groupItems.map((groupItem) => groupItem.id),
     ["root-event", "reply-event"],
   );
-  assert.deepEqual(getInboxTypeLabel(inboxItem), {
+  assert.deepEqual(typeLabel(inboxItem), {
     text: "Thread in",
     channelLabel: "buzz-bugs",
   });
@@ -170,6 +196,7 @@ test("thread groups use the latest row label even when the root was a mention", 
 
 test("thread groups resume at the oldest unread reply", () => {
   const [inboxItem] = buildInboxItems({
+    locale: "en",
     channels,
     feed: feedWith({
       activity: [
@@ -219,6 +246,7 @@ test("thread groups resume at the oldest unread reply", () => {
 
 test("thread groups skip an individually read reply when choosing the resume point", () => {
   const [inboxItem] = buildInboxItems({
+    locale: "en",
     channels,
     feed: feedWith({
       activity: [
@@ -252,6 +280,7 @@ test("thread groups skip an individually read reply when choosing the resume poi
 
 test("thread groups follow per-message unread state when the aggregate thread marker is newer", () => {
   const [inboxItem] = buildInboxItems({
+    locale: "en",
     channels,
     feed: feedWith({
       activity: [
@@ -285,6 +314,7 @@ test("thread groups follow per-message unread state when the aggregate thread ma
 
 test("DMs are grouped by channel and represented by the first unread message", () => {
   const inboxItems = buildInboxItems({
+    locale: "en",
     channels,
     feed: feedWith({
       activity: [
@@ -332,6 +362,7 @@ test("DMs are grouped by channel and represented by the first unread message", (
 
 test("a fully read DM conversation falls back to its latest message", () => {
   const [inboxItem] = buildInboxItems({
+    locale: "en",
     channels,
     feed: feedWith({
       activity: [
@@ -364,6 +395,7 @@ test("a fully read DM conversation falls back to its latest message", () => {
 test("conversationId is stable when a live reply advances the representative", () => {
   // Simulate initial feed: thread root is the latest item.
   const before = buildInboxItems({
+    locale: "en",
     channels,
     feed: feedWith({
       activity: [
@@ -382,6 +414,7 @@ test("conversationId is stable when a live reply advances the representative", (
 
   // Simulate live reply arriving — root-event is now no longer the latest.
   const after = buildInboxItems({
+    locale: "en",
     channels,
     feed: feedWith({
       activity: [
@@ -414,6 +447,7 @@ test("conversationId is stable when a live reply advances the representative", (
 
 test("conversationId equals the thread root event id when a root tag is present", () => {
   const [inboxItem] = buildInboxItems({
+    locale: "en",
     channels,
     feed: feedWith({
       activity: [
@@ -435,6 +469,7 @@ test("conversationId equals the thread root event id when a root tag is present"
 
 test("conversationId falls back to event id for a top-level item with no thread tags", () => {
   const [inboxItem] = buildInboxItems({
+    locale: "en",
     channels,
     feed: feedWith({
       mentions: [
@@ -487,6 +522,7 @@ test("old event still resolves to its conversation row via groupItems", () => {
   // root event id is still present in groupItems even when a newer reply
   // becomes the representative.
   const [inboxItem] = buildInboxItems({
+    locale: "en",
     channels,
     feed: feedWith({
       activity: [
@@ -539,6 +575,7 @@ test("nested-anchor: old selected event stays resolvable by conversationId after
 
   // Build inboxItems from the feed AFTER the advance (reply-1 is gone).
   const [inboxItem] = buildInboxItems({
+    locale: "en",
     channels,
     feed: feedWith({
       activity: [

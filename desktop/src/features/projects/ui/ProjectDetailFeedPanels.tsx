@@ -13,9 +13,11 @@ import type {
   Repository,
 } from "@/features/projects/hooks";
 import { selectionItemFromCommit } from "@/features/projects/lib/projectSelection";
+import { localeDateTime } from "@/shared/lib/intlLocale";
 import { commitShareLink } from "@/features/projects/lib/projectShareLinks";
 import { relativeTime } from "@/features/projects/lib/projectsViewHelpers";
 import type { ProjectRepoCommit } from "@/shared/api/types";
+import { useLocale } from "@/shared/lib/localePreference";
 import { truncateNpub } from "@/shared/lib/pubkey";
 import { BuzzLoadingState } from "@/shared/ui/BuzzLoadingState";
 import {
@@ -272,6 +274,7 @@ export function ActivityPanel({
   repoContributors: ProjectRepoContributor[];
   viewerGitIdentity?: ViewerGitIdentity | null;
 }) {
+  const locale = useLocale();
   const items =
     commitItems ??
     (snapshot?.commits ?? []).map((commit) => ({
@@ -426,11 +429,12 @@ export function ActivityPanel({
                   <span
                     className="hidden w-20 shrink-0 whitespace-nowrap text-right text-xs text-muted-foreground/55 sm:block"
                     data-testid="project-commit-row-date"
-                    title={new Date(
-                      item.commit.timestamp * 1_000,
-                    ).toLocaleString()}
+                    title={localeDateTime(
+                      new Date(item.commit.timestamp * 1_000),
+                      locale,
+                    )}
                   >
-                    {relativeTime(item.commit.timestamp)}
+                    {relativeTime(item.commit.timestamp, locale)}
                   </span>
                 </>
               }

@@ -37,7 +37,18 @@ export type TimelineMessage = {
   personaDisplayName?: string;
   /** For bot messages, the respond-to mode (who can interact with this bot). */
   respondTo?: "owner-only" | "allowlist" | "anyone";
-  time: string;
+  /**
+   * There is deliberately no pre-formatted `time` here.
+   *
+   * There used to be: `formatTimelineMessages` ran an `en-US` clock formatter
+   * over every event and stored the result. A label formatted once, in a pure
+   * module, outside React, cannot follow a locale the user changes later — and
+   * nothing in the chat timeline even read it (`MessageTimestamp` derives its
+   * own from `createdAt`). Its single reader was the Inbox row mapper, which
+   * now formats from `createdAt` with the active locale in hand.
+   *
+   * Keep it that way: carry the timestamp, format at render.
+   */
   body: string;
   parentId?: string | null;
   rootId?: string | null;

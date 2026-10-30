@@ -1,4 +1,7 @@
 import { Search } from "lucide-react";
+import type { MessageDescriptor } from "@lingui/core";
+import { msg } from "@lingui/core/macro";
+import { Trans, useLingui } from "@lingui/react/macro";
 import * as React from "react";
 import { resolveUserLabel } from "@/features/profile/lib/identity";
 import { getMinimumSearchQueryLength } from "@/features/search/hooks";
@@ -20,6 +23,9 @@ import { HighlightedSearchText } from "@/features/search/ui/HighlightedSearchTex
 import { useSearchMenuKeyboardNavigation } from "@/features/search/ui/useSearchMenuKeyboardNavigation";
 import type { Channel, SearchHit, UserSearchResult } from "@/shared/api/types";
 import { cn } from "@/shared/lib/cn";
+import type { AppLocale } from "@/shared/lib/localePreference";
+import { useLocale } from "@/shared/lib/localePreference";
+import { formatRelativeTimeOrDate } from "@/shared/lib/relativeTime";
 import { normalizePubkey, truncateNpub } from "@/shared/lib/pubkey";
 import { Dialog, DialogContent, DialogTitle } from "@/shared/ui/dialog";
 import { useDeferredModalOpen } from "@/shared/ui/deferredModalOpen";
@@ -62,36 +68,12 @@ type SearchResultSectionKey = (typeof SEARCH_RESULT_SECTION_ORDER)[number];
 type SearchResultSection = {
   key: SearchResultSectionKey;
   results: SearchResult[];
-  title: string;
+  title: MessageDescriptor;
 };
 type SearchHitContextLabel = {
   channelLabel: string | null;
-  text: string;
+  text: MessageDescriptor;
 };
-function formatRelativeTime(unixSeconds: number) {
-  const diff = Math.floor(Date.now() / 1_000) - unixSeconds;
-  if (diff < 60) {
-    return "just now";
-  }
-
-  if (diff < 60 * 60) {
-    return `${Math.floor(diff / 60)}m ago`;
-  }
-
-  if (diff < 60 * 60 * 24) {
-    return `${Math.floor(diff / (60 * 60))}h ago`;
-  }
-
-  if (diff < 60 * 60 * 24 * 7) {
-    return `${Math.floor(diff / (60 * 60 * 24))}d ago`;
-  }
-
-  return new Intl.DateTimeFormat("en-US", {
-    month: "short",
-    day: "numeric",
-  }).format(new Date(unixSeconds * 1_000));
-}
-
 function getChannelActivityTime(channel: Channel) {
   if (!channel.lastMessageAt) {
     return 0;
@@ -101,11 +83,13 @@ function getChannelActivityTime(channel: Channel) {
   return Number.isFinite(timestamp) ? timestamp : 0;
 }
 
-function getChannelSuggestionMeta(channel: Channel) {
+function getChannelSuggestionMeta(channel: Channel, locale: AppLocale) {
   const activityTime = getChannelActivityTime(channel);
 
   if (activityTime > 0) {
-    return formatRelativeTime(Math.floor(activityTime / 1_000));
+    return formatRelativeTimeOrDate(Math.floor(activityTime / 1_000), {
+      locale,
+    });
   }
 
   return null;
@@ -168,6 +152,19 @@ function getSearchHitChannelName(
   return channelName;
 }
 
+/**
+ * The "Message in" / "Thread in" prefix and its standalone forms.
+ *
+ * `in` is separated from the channel chip that follows it because the chip is
+ * a styled element, not text — German keeps the same order here, and the
+ * translator sees the preposition with the noun it belongs to.
+ */
+const MESSAGE_CONTEXT_DIRECT_MESSAGE = msg`Direct message`;
+const MESSAGE_CONTEXT_THREAD_IN = msg`Thread in`;
+const MESSAGE_CONTEXT_MESSAGE_IN = msg`Message in`;
+const MESSAGE_CONTEXT_THREAD = msg`Thread`;
+const MESSAGE_CONTEXT_MESSAGE = msg`Message`;
+
 function getSearchHitContextLabel(
   hit: SearchHit,
   channelLookup: ReadonlyMap<string, Channel>,
@@ -183,19 +180,24 @@ function getSearchHitContextLabel(
   if (channel?.channelType === "dm") {
     return {
       channelLabel: null,
-      text: "Direct message",
+      text: MESSAGE_CONTEXT_DIRECT_MESSAGE,
     };
   }
 
   const isThread = hit.kind === 45003 || Boolean(hit.threadRootId);
 
+  // Descriptors, not strings: this is called from a `useMemo` over the hits,
+  // so a resolved string would be cached in the locale that happened to be
+  // active when the results arrived and survive a language switch.
   return {
     channelLabel: channelName,
     text: channelName
-      ? `${isThread ? "Thread" : "Message"} in`
+      ? isThread
+        ? MESSAGE_CONTEXT_THREAD_IN
+        : MESSAGE_CONTEXT_MESSAGE_IN
       : isThread
-        ? "Thread"
-        : "Message",
+        ? MESSAGE_CONTEXT_THREAD
+        : MESSAGE_CONTEXT_MESSAGE,
   };
 }
 
@@ -215,24 +217,28 @@ function getResultSectionKey(result: SearchResult): SearchResultSectionKey {
   return "messages";
 }
 
-function getSectionTitle(sectionKey: SearchResultSectionKey) {
+function getSectionTitle(
+  sectionKey: SearchResultSectionKey,
+): MessageDescriptor {
   switch (sectionKey) {
     case "channels":
-      return "Channels";
+      return msg`Channels`;
     case "direct-messages":
-      return "Direct messages";
+      return msg`Direct messages`;
     case "people":
-      return "People";
+      return msg`People`;
     case "agents":
-      return "Agents";
+      return msg`Agents`;
     case "messages":
-      return "Most relevant";
+      return msg`Most relevant`;
     case "actions":
-      return "Actions";
+      return msg`Actions`;
   }
 }
 
 function SearchHitContextLine({ label }: { label: SearchHitContextLabel }) {
+  const { i18n } = useLingui();
+
   return (
     <span
       className={cn(
@@ -240,7 +246,7 @@ function SearchHitContextLine({ label }: { label: SearchHitContextLabel }) {
         "mt-0 flex min-w-0 items-center gap-1.5 text-2xs font-medium leading-3 text-muted-foreground/80",
       )}
     >
-      <span className="shrink-0">{label.text}</span>
+      <span className="shrink-0">{i18n._(label.text)}</span>
       {label.channelLabel ? (
         <span
           className={cn(
@@ -390,6 +396,8 @@ export function TopbarSearch({
   suggestionChannels,
   variant = "bar",
 }: TopbarSearchProps) {
+  const { i18n, t } = useLingui();
+  const locale = useLocale();
   const [isOpen, setIsOpen] = React.useState(false);
   const [scopeChannelId, setScopeChannelId] = React.useState<string | null>(
     null,
@@ -447,7 +455,7 @@ export function TopbarSearch({
         kind: "action",
         action: {
           id: "browse-channels",
-          title: "Browse channels",
+          title: t`Browse channels`,
         },
       });
     }
@@ -457,7 +465,7 @@ export function TopbarSearch({
         kind: "action",
         action: {
           id: "create-channel",
-          title: "Create a new channel",
+          title: t`Create a new channel`,
         },
       });
     }
@@ -467,13 +475,16 @@ export function TopbarSearch({
         kind: "action",
         action: {
           id: "create-agent",
-          title: "Create a new agent",
+          title: t`Create a new agent`,
         },
       });
     }
 
     return actions;
-  }, [onBrowseChannels, onCreateAgent, onCreateChannel]);
+    // `t` is in the dependency list because it changes identity when the
+    // catalogue does: without it these three titles would stay in the language
+    // the palette first rendered in.
+  }, [onBrowseChannels, onCreateAgent, onCreateChannel, t]);
   const suggestionResults = React.useMemo(
     () => [...suggestedResults, ...suggestionActionResults],
     [suggestedResults, suggestionActionResults],
@@ -691,9 +702,9 @@ export function TopbarSearch({
             : buildSearchResultPreview(result.hit.content, resultQuery);
     const trailingLabel =
       result.kind === "channel"
-        ? getChannelSuggestionMeta(result.channel)
+        ? getChannelSuggestionMeta(result.channel, locale)
         : result.kind === "message"
-          ? formatRelativeTime(result.hit.createdAt)
+          ? formatRelativeTimeOrDate(result.hit.createdAt, { locale })
           : null;
 
     return (
@@ -800,7 +811,9 @@ export function TopbarSearch({
 
     return sections.map((section) => (
       <div data-search-section={section.key} key={section.key}>
-        <div className={SEARCH_SECTION_TITLE_CLASS}>{section.title}</div>
+        <div className={SEARCH_SECTION_TITLE_CLASS}>
+          {i18n._(section.title)}
+        </div>
         {section.results.map((result) =>
           renderSearchResultRow(result, resultIndex++),
         )}
@@ -831,12 +844,14 @@ export function TopbarSearch({
             currentChannelSearchAction ? "pb-5" : "py-5",
           )}
         >
-          <p>No recent activity yet.</p>
+          <p>
+            <Trans>No recent activity yet.</Trans>
+          </p>
         </div>
       </div>
     ) : (
       <div
-        aria-label="Recent activity"
+        aria-label={t`Recent activity`}
         className="max-h-96 overflow-y-auto"
         role="listbox"
       >
@@ -850,7 +865,7 @@ export function TopbarSearch({
                 {suggestedResults.length > 0 ? (
                   <div>
                     <div className={SEARCH_SECTION_TITLE_CLASS}>
-                      Recent activity
+                      <Trans>Recent activity</Trans>
                     </div>
                     {suggestedResults.map((result) =>
                       renderSearchResultRow(result, resultIndex++),
@@ -859,7 +874,9 @@ export function TopbarSearch({
                 ) : null}
                 {suggestionActionResults.length > 0 ? (
                   <div>
-                    <div className={SEARCH_SECTION_TITLE_CLASS}>Actions</div>
+                    <div className={SEARCH_SECTION_TITLE_CLASS}>
+                      <Trans>Actions</Trans>
+                    </div>
                     {suggestionActionResults.map((result) =>
                       renderSearchResultRow(result, resultIndex++),
                     )}
@@ -898,15 +915,18 @@ export function TopbarSearch({
           currentChannelSearchAction ? "pb-5" : "py-5",
         )}
       >
-        No {scopeChannel ? "messages" : "matches"} for{" "}
-        <span className="font-semibold">{trimmedQuery}</span>
         {scopeLabel ? (
-          <>
-            {" "}
-            in <span className="font-semibold">{scopeLabel}</span>
-          </>
-        ) : null}
-        .
+          <Trans>
+            No messages for{" "}
+            <span className="font-semibold">{trimmedQuery}</span> in{" "}
+            <span className="font-semibold">{scopeLabel}</span>.
+          </Trans>
+        ) : (
+          <Trans>
+            No matches for <span className="font-semibold">{trimmedQuery}</span>
+            .
+          </Trans>
+        )}
       </p>
     </div>
   ) : (
@@ -925,7 +945,7 @@ export function TopbarSearch({
     <div className={cn("relative", className)}>
       <Dialog open={isOpen} onOpenChange={handleSearchOpenChange}>
         <button
-          aria-label="Search everything"
+          aria-label={t`Search everything`}
           className={
             isIconVariant
               ? "group/search flex size-6 items-center justify-center rounded p-1 text-sidebar-foreground/50 transition-colors hover:bg-sidebar-border/35 hover:text-sidebar-foreground focus-visible:bg-sidebar-border/35 focus-visible:text-sidebar-foreground focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-sidebar-ring"
@@ -934,7 +954,7 @@ export function TopbarSearch({
           data-testid="open-search"
           onClick={() => openSearchDialog(null)}
           ref={triggerRef}
-          title="Search everything"
+          title={t`Search everything`}
           type="button"
         >
           <Search
@@ -954,7 +974,7 @@ export function TopbarSearch({
                     : "text-sidebar-foreground/55",
                 )}
               >
-                {query || "Search everything"}
+                {query || t`Search everything`}
               </span>
               <kbd className="shrink-0 text-2xs text-sidebar-foreground/45">
                 &#x2318;K
@@ -977,7 +997,7 @@ export function TopbarSearch({
           showCloseButton={false}
         >
           <DialogTitle className="sr-only">
-            {scopeLabel ? `Search in ${scopeLabel}` : "Search everything"}
+            {scopeLabel ? t`Search in ${scopeLabel}` : t`Search everything`}
           </DialogTitle>
           <SearchDialogInputRow
             inputRef={dialogInputRef}

@@ -9,6 +9,7 @@ import {
 import { useUsersBatchQuery } from "@/features/profile/hooks";
 import type { CanvasRevision } from "@/shared/api/types";
 import { formatItemTimestamp } from "@/shared/lib/datetime";
+import { useLocale } from "@/shared/lib/localePreference";
 import { truncatePubkey } from "@/shared/lib/pubkey";
 import {
   isRelayUnreachableError,
@@ -54,6 +55,7 @@ export function CanvasHistoryPanel({
   currentRevision,
   canRestore,
 }: CanvasHistoryPanelProps) {
+  const locale = useLocale();
   const historyQuery = useCanvasHistoryQuery(channelId, true);
   const restoreMutation = useSetCanvasMutation(channelId);
   const [selectedId, setSelectedId] = React.useState<string | null>(null);
@@ -228,7 +230,10 @@ export function CanvasHistoryPanel({
                   ) : null}
                 </span>
                 <span className="shrink-0 text-xs text-muted-foreground">
-                  {formatItemTimestamp(revision.createdAt, { withTime: true })}
+                  {formatItemTimestamp(revision.createdAt, {
+                    locale,
+                    withTime: true,
+                  })}
                 </span>
               </button>
               {isSelected ? (
@@ -293,7 +298,7 @@ export function CanvasHistoryPanel({
             <AlertDialogDescription>
               This publishes{" "}
               {confirmRevision
-                ? `${authorLabel(confirmRevision.revision.author)}'s revision from ${formatItemTimestamp(confirmRevision.revision.createdAt, { withTime: true })}`
+                ? `${authorLabel(confirmRevision.revision.author)}'s revision from ${formatItemTimestamp(confirmRevision.revision.createdAt, { locale, withTime: true })}`
                 : "the selected revision"}{" "}
               as the current canvas for everyone in this channel. History is
               preserved.

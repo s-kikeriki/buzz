@@ -1,3 +1,4 @@
+import { useLingui } from "@lingui/react/macro";
 import type { ReactNode } from "react";
 
 import type { ChannelVisibility } from "@/shared/api/types";
@@ -53,8 +54,7 @@ export function CreateChannelDialog({
     onCreate: onCreate as (input: CreateChannelInput) => Promise<void>,
     onCreated: () => onOpenChange(false),
   });
-
-  const kindLabel = channelKind === "forum" ? "forum" : "channel";
+  const { t } = useLingui();
 
   return (
     <Dialog
@@ -70,12 +70,17 @@ export function CreateChannelDialog({
         data-testid={testId}
         footerClassName="border-t-0 pt-0"
         headerClassName="pb-2"
-        title={title ?? `Create a new ${kindLabel}`}
+        title={
+          title ??
+          (channelKind === "forum"
+            ? t`Create a new forum`
+            : t`Create a new channel`)
+        }
         description={
           description ??
           (channelKind === "forum"
-            ? "Forums organize threaded discussions around a topic."
-            : "Channels are real-time streams for team conversation.")
+            ? t`Forums organize threaded discussions around a topic.`
+            : t`Channels are real-time streams for team conversation.`)
         }
         footer={<CreateChannelFormFooter form={form} />}
       >

@@ -533,6 +533,15 @@ test("rehypeImageGallery: leaves a single trailing image in the text flow", () =
 
 import React from "react";
 import { renderToStaticMarkup } from "react-dom/server";
+
+import { withI18n } from "../../testing/withI18n.mjs";
+
+/**
+ * Every static render in this file goes through the Lingui provider. The
+ * markdown tree contains converted components (`MessageLinkPill`,
+ * `ChannelDeepLink`), and `useLingui()` throws without it.
+ */
+const renderStatic = (element) => renderToStaticMarkup(withI18n(element));
 import ReactMarkdown, { defaultUrlTransform } from "react-markdown";
 
 import { isChannelLink } from "../../features/messages/lib/channelLink.ts";
@@ -553,7 +562,7 @@ function buzzDeepLinkUrlTransform(value, key) {
 }
 
 function renderMarkdown(content) {
-  return renderToStaticMarkup(
+  return renderStatic(
     React.createElement(
       ReactMarkdown,
       { urlTransform: buzzDeepLinkUrlTransform },
@@ -699,7 +708,7 @@ test("renderEntityLinkAnchor_matchingOriginCloneUrl_returnsEntityAnchor", () => 
     null,
     "matching-origin clone URL must produce an entity anchor",
   );
-  const html = renderToStaticMarkup(el);
+  const html = renderStatic(el);
   // The entity anchor must be rendered — it carries the original href (for display)
   // and navigates in-app via onClick. Verify the anchor is present with the cursor style.
   assert.match(
@@ -757,7 +766,7 @@ test("renderEntityLinkAnchor_directEntityLink_returnsAnchorRegardlessOfOrigin", 
 
 test("remarkSpoilers: block delimiter spoilers expose a block prop to React", () => {
   let spoilerProps;
-  renderToStaticMarkup(
+  renderStatic(
     React.createElement(
       ReactMarkdown,
       {
@@ -987,7 +996,7 @@ function GuardStub({ content, configNudgeAuthorPubkey, leadingInlineContent }) {
 
 test("nudgeGuard_sentinelPresentMatchingAuthor_cardRenderedProseAbsent", () => {
   const body = nudgeBody(AGENT_PUBKEY);
-  const html = renderToStaticMarkup(
+  const html = renderStatic(
     React.createElement(GuardStub, {
       content: body,
       configNudgeAuthorPubkey: AGENT_PUBKEY,
@@ -1011,7 +1020,7 @@ test("nudgeGuard_sentinelPresentMatchingAuthor_cardRenderedProseAbsent", () => {
 
 test("nudgeGuard_sentinelPresentMatchingAuthor_preservesLeadingContent", () => {
   const body = nudgeBody(AGENT_PUBKEY);
-  const html = renderToStaticMarkup(
+  const html = renderStatic(
     React.createElement(GuardStub, {
       content: body,
       configNudgeAuthorPubkey: AGENT_PUBKEY,
@@ -1034,7 +1043,7 @@ test("nudgeGuard_sentinelPresentMatchingAuthor_preservesLeadingContent", () => {
 test("nudgeGuard_sentinelPresentWrongAuthor_proseRenderedCardAbsent", () => {
   // Sentinel present, but author pubkey is human — auth guard rejects, prose shown.
   const body = nudgeBody(AGENT_PUBKEY);
-  const html = renderToStaticMarkup(
+  const html = renderStatic(
     React.createElement(GuardStub, {
       content: body,
       configNudgeAuthorPubkey: HUMAN_PUBKEY,
@@ -1052,7 +1061,7 @@ test("nudgeGuard_sentinelPresentWrongAuthor_proseRenderedCardAbsent", () => {
 
 test("nudgeGuard_noSentinel_proseRenderedCardAbsent", () => {
   const plain = "Hello, this is a normal message with no sentinel.";
-  const html = renderToStaticMarkup(
+  const html = renderStatic(
     React.createElement(GuardStub, {
       content: plain,
       configNudgeAuthorPubkey: AGENT_PUBKEY,
@@ -1086,7 +1095,7 @@ test("bare Buzz permalinks render cohesive icon-prefixed chips", () => {
     content: links.join(" "),
     variant: "entity-link-integration-test",
   });
-  const html = renderToStaticMarkup(
+  const html = renderStatic(
     React.createElement(
       QueryClientProvider,
       { client: new QueryClient() },
@@ -1133,7 +1142,7 @@ test("bare Buzz permalinks render cohesive icon-prefixed chips", () => {
 
 test("inline issue and pull-request chips show the repository name without the event hash", () => {
   const renderEntityChip = (href) =>
-    renderToStaticMarkup(
+    renderStatic(
       renderEntityLinkAnchor({
         children: null,
         href,
@@ -1168,7 +1177,7 @@ test("inline issue and pull-request chips show the repository name without the e
 
 test("inline entity chip labels are bounded without truncating their accessible names", () => {
   const longRepository = `repo-${"x".repeat(50)}`;
-  const html = renderToStaticMarkup(
+  const html = renderStatic(
     renderEntityLinkAnchor({
       children: null,
       href: `buzz://repo?owner=${OWNER_HEX}&d=${longRepository}`,
@@ -1194,7 +1203,7 @@ test("inline message chips omit fetched metadata and the event hash", () => {
   });
   // A readable channel is the case that used to swap the chip label from the
   // truncated event hash to the fetched snippet once metadata resolved.
-  const html = renderToStaticMarkup(
+  const html = renderStatic(
     React.createElement(
       QueryClientProvider,
       { client: new QueryClient() },
@@ -1241,7 +1250,7 @@ test("authored Buzz permalink labels remain ordinary links", () => {
     content: links.join(" "),
     variant: "authored-buzz-link-integration-test",
   });
-  const html = renderToStaticMarkup(
+  const html = renderStatic(
     React.createElement(
       QueryClientProvider,
       { client: new QueryClient() },
@@ -1279,7 +1288,7 @@ test("generic audio attachments render outside paragraph markup", () => {
     content: `[meeting.mp3](${href})`,
     variant: "generic-audio-block-integration-test",
   });
-  const html = renderToStaticMarkup(
+  const html = renderStatic(
     React.createElement(
       MarkdownRuntimeContext.Provider,
       {
@@ -1320,7 +1329,7 @@ test("bare Buzz permalinks shorten unavailable channel identifiers", () => {
     ].join(" "),
     variant: "unknown-channel-buzz-link-integration-test",
   });
-  const html = renderToStaticMarkup(
+  const html = renderStatic(
     React.createElement(
       MarkdownRuntimeContext.Provider,
       {
@@ -1352,7 +1361,7 @@ test("channel references replace the authored hash with the channel icon", () =>
     content: "See #engineering",
     variant: "channel-reference-icon-integration-test",
   });
-  const html = renderToStaticMarkup(
+  const html = renderStatic(
     React.createElement(
       MarkdownRuntimeContext.Provider,
       {
@@ -1382,7 +1391,7 @@ test("resolved human mentions replace the authored at-sign with the shared icon"
     mentionNames: ["alice"],
     variant: "human-mention-icon-integration-test",
   });
-  const html = renderToStaticMarkup(
+  const html = renderStatic(
     React.createElement(
       MarkdownRuntimeContext.Provider,
       {
@@ -1418,7 +1427,7 @@ test("agent mentions retain the bot treatment instead of the human icon", () => 
     mentionNames: ["alice"],
     variant: "agent-mention-icon-integration-test",
   });
-  const html = renderToStaticMarkup(
+  const html = renderStatic(
     React.createElement(
       MarkdownRuntimeContext.Provider,
       {
@@ -1457,7 +1466,7 @@ test("renderEntityLinkAnchor renders Buzz entity links as chips", () => {
     onOpenEntityLink: () => {},
     relayOrigin: null,
   });
-  const html = renderToStaticMarkup(el);
+  const html = renderStatic(el);
   assert.match(html, /data-buzz-link=""/);
   assert.match(html, /<span/);
   assert.match(html, /role="button"/);
@@ -1479,7 +1488,7 @@ test("renderEntityLinkAnchor keeps chip styling when interaction is disabled", (
     onOpenEntityLink: () => {},
     relayOrigin: null,
   });
-  const html = renderToStaticMarkup(el);
+  const html = renderStatic(el);
   assert.match(html, /data-buzz-link=""/);
   assert.match(html, /<span/);
   assert.match(html, /class="mention-chip\s/);
@@ -1512,7 +1521,7 @@ test("ambiguous longer aliases stay literal rather than rendering a shorter tagg
       mentionNames: props.mentionNames,
       variant: "ambiguous-prefix-test",
     });
-    const html = renderToStaticMarkup(
+    const html = renderStatic(
       React.createElement(
         MarkdownRuntimeContext.Provider,
         {

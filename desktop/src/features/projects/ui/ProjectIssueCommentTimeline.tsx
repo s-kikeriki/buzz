@@ -11,6 +11,7 @@ import {
   resolveUserLabel,
   type UserProfileLookup,
 } from "@/features/profile/lib/identity";
+import { useLocale } from "@/shared/lib/localePreference";
 import { normalizePubkey } from "@/shared/lib/pubkey";
 import { UserAvatar } from "@/shared/ui/UserAvatar";
 import { ProfileAuthorName } from "./ProjectProfileIdentity";
@@ -25,6 +26,7 @@ export function ProjectIssueCommentTimeline({
   comments: ProjectIssue["comments"];
   profiles?: UserProfileLookup;
 }) {
+  const locale = useLocale();
   const [isCollapsed, setIsCollapsed] = React.useState(false);
   const [isExpanded, setIsExpanded] = React.useState(false);
   const orderedComments = React.useMemo(
@@ -138,9 +140,9 @@ export function ProjectIssueCommentTimeline({
                 </span>
                 <span
                   className="ml-auto w-20 shrink-0 text-right text-muted-foreground/70"
-                  title={formatExactTimestamp(comment.createdAt)}
+                  title={formatExactTimestamp(comment.createdAt, locale)}
                 >
-                  {relativeTime(comment.createdAt)}
+                  {relativeTime(comment.createdAt, locale)}
                 </span>
               </div>
               <ProjectRichContent

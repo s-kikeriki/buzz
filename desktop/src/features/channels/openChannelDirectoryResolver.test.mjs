@@ -89,6 +89,7 @@ const ipc = {
 
 let React;
 let act;
+let withI18n;
 let createRoot;
 let QueryClient;
 let QueryClientProvider;
@@ -241,6 +242,9 @@ async function mountReference(client, channelId) {
 
 before(async () => {
   ({ default: React, act } = await import("react"));
+  // Lazy like React itself: this module imports react, which must not load
+  // before the JSDOM globals are installed above.
+  ({ withI18n } = await import("@/testing/withI18n.mjs"));
   ({ createRoot } = await import("react-dom/client"));
   ({ QueryClient, QueryClientProvider } = await import(
     "@tanstack/react-query"
@@ -466,25 +470,27 @@ async function mountMarkdownReference(client, content, variant) {
   const root = createRoot(container);
   await act(async () => {
     root.render(
-      React.createElement(
-        QueryClientProvider,
-        { client },
+      withI18n(
         React.createElement(
-          CommunitiesProvider,
-          null,
+          QueryClientProvider,
+          { client },
           React.createElement(
-            MarkdownRuntimeContext.Provider,
-            {
-              value: {
-                channels: [],
-                onOpenChannel: () => {},
-                onOpenEntityLink: () => {},
-                onOpenMessageLink: () => {},
-                relayOrigin: null,
-                resolveChannelReferences: true,
+            CommunitiesProvider,
+            null,
+            React.createElement(
+              MarkdownRuntimeContext.Provider,
+              {
+                value: {
+                  channels: [],
+                  onOpenChannel: () => {},
+                  onOpenEntityLink: () => {},
+                  onOpenMessageLink: () => {},
+                  relayOrigin: null,
+                  resolveChannelReferences: true,
+                },
               },
-            },
-            markdown,
+              markdown,
+            ),
           ),
         ),
       ),

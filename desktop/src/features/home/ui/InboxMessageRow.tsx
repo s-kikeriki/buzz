@@ -5,6 +5,7 @@ import type { InboxContextMessage } from "@/features/home/lib/inbox";
 import { toTimelineMessage } from "@/features/home/lib/inboxViewHelpers";
 import { formatTimeWithoutDayPeriod } from "@/features/messages/lib/dateFormatters";
 import { formatItemTimestamp } from "@/shared/lib/datetime";
+import { useLocale } from "@/shared/lib/localePreference";
 import type { TimelineMessage } from "@/features/messages/types";
 import { getConfigNudgeAuthorPubkey } from "@/features/messages/ui/configNudgeAuthPubkey";
 import { MessageActionBar } from "@/features/messages/ui/MessageActionBar";
@@ -69,6 +70,7 @@ export function InboxMessageRow({
   videoReviewCommentRootId,
   videoReviewContext,
 }: InboxMessageRowProps) {
+  const locale = useLocale();
   const timelineMessage = React.useMemo(
     () => toTimelineMessage(message),
     [message],
@@ -115,6 +117,7 @@ export function InboxMessageRow({
   // keep saying "Today" after midnight. `fullTimestampLabel` stays the absolute
   // value behind the hover title.
   const timestampLabel = formatItemTimestamp(message.createdAt, {
+    locale,
     withTime: true,
   });
   const timestampNode = (

@@ -1,3 +1,9 @@
+import type { MessageDescriptor } from "@lingui/core";
+import { msg } from "@lingui/core/macro";
+import { Plural, Trans, useLingui } from "@lingui/react/macro";
+
+import { useLocale } from "@/shared/lib/localePreference";
+import { formatTimeUntil } from "@/shared/lib/relativeTime";
 import {
   AlertCircle,
   Bell,
@@ -10,10 +16,11 @@ import {
 import * as React from "react";
 
 import {
-  getInboxTypeLabel,
   type InboxFilter,
   type InboxItem,
   type InboxTypeLabel,
+  getInboxTypeLabel,
+  resolveInboxCopy,
 } from "@/features/home/lib/inbox";
 import { buildInboxListRows } from "@/features/home/lib/inboxListRows";
 import { hasRenderedVideoAttachment } from "@/features/messages/lib/videoReviewContext";
@@ -52,27 +59,42 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "@/shared/ui/tooltip";
 import { UserAvatar } from "@/shared/ui/UserAvatar";
 import { VirtualizedList } from "@/shared/ui/VirtualizedList";
 
-const INBOX_EMPTY_STATE_TITLES: Record<InboxFilter, string> = {
-  all: "No activity yet",
-  project: "No project work found",
-  mention: "No mentions found",
-  thread: "No threads found",
-  needs_action: "Nothing needs action",
-  agent_activity: "No agent updates found",
-  reminders: "No reminders",
-  drafts: "No drafts",
+/**
+ * Empty-state headings, one per filter, as descriptors.
+ *
+ * Module-level tables, so `msg` rather than `t` for the usual reason: a `t`
+ * here resolves once at import and then keeps the boot locale for the session.
+ *
+ * These sixteen strings are also why `check-i18n-coverage-core.mjs` grew a
+ * sixth rule. Its object-literal rule matches copy-bearing *field names*
+ * (`label`, `description`, `title`), and these are keyed by filter id — `all`,
+ * `mention`, `needs_action` — so the detector read this file as clean while
+ * every empty state in the inbox was hardcoded English. The new rule keys off
+ * the values instead: an object whose every value is prose is a copy table,
+ * whatever its keys are called.
+ */
+const INBOX_EMPTY_STATE_TITLES: Record<InboxFilter, MessageDescriptor> = {
+  all: msg`No activity yet`,
+  project: msg`No project work found`,
+  mention: msg`No mentions found`,
+  thread: msg`No threads found`,
+  needs_action: msg`Nothing needs action`,
+  agent_activity: msg`No agent updates found`,
+  reminders: msg`No reminders`,
+  drafts: msg`No drafts`,
 };
 
-const INBOX_UNREAD_EMPTY_STATE_TITLES: Record<InboxFilter, string> = {
-  all: "No unread activity",
-  project: "No unread project work",
-  mention: "No unread mentions",
-  thread: "No unread threads",
-  needs_action: "No unread items needing action",
-  agent_activity: "No unread agent updates",
-  reminders: "No unread reminders",
-  drafts: "No unread drafts",
-};
+const INBOX_UNREAD_EMPTY_STATE_TITLES: Record<InboxFilter, MessageDescriptor> =
+  {
+    all: msg`No unread activity`,
+    project: msg`No unread project work`,
+    mention: msg`No unread mentions`,
+    thread: msg`No unread threads`,
+    needs_action: msg`No unread items needing action`,
+    agent_activity: msg`No unread agent updates`,
+    reminders: msg`No unread reminders`,
+    drafts: msg`No unread drafts`,
+  };
 
 const INBOX_HEADER_ICON_BUTTON_CLASS =
   "inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-muted/70 hover:text-foreground focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-ring data-[state=open]:bg-muted/70 data-[state=open]:text-foreground disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0";
@@ -88,6 +110,12 @@ function InboxLabel({
   isActionRequired: boolean;
   label: InboxTypeLabel;
 }) {
+  const { i18n, t } = useLingui();
+  const text = resolveInboxCopy(i18n, label.text);
+  // The fixed phrases already end in the word that links them to the chip
+  // ("Mentioned in"); a dynamic headline does not, because `inbox.ts` hands
+  // out descriptors and has no resolved string to splice one onto.
+  const labelText = label.joinsChannel ? t`${text} in` : text;
   return (
     <div
       className={cn(
@@ -101,7 +129,7 @@ function InboxLabel({
       )}
       data-inbox-type-label=""
     >
-      <span className="shrink-0">{label.text}</span>
+      <span className="shrink-0">{labelText}</span>
       {label.channelLabel ? (
         <span
           className={cn(
@@ -117,18 +145,25 @@ function InboxLabel({
   );
 }
 
-function formatReminderStatus(notBefore: number | undefined) {
-  if (notBefore === undefined) return "Pending";
-  const secondsUntil = notBefore - Math.floor(Date.now() / 1_000);
-  if (secondsUntil <= 0) return "Reminder due";
-  if (secondsUntil < 60) return "Reminder in less than a minute";
-  if (secondsUntil < 3_600) {
-    return `Reminder in ${Math.floor(secondsUntil / 60)}m`;
-  }
-  if (secondsUntil < 86_400) {
-    return `Reminder in ${Math.floor(secondsUntil / 3_600)}h`;
-  }
-  return `Reminder in ${Math.floor(secondsUntil / 86_400)}d`;
+/**
+ * "Reminder in 5m", from the shared ladder rather than a private one.
+ *
+ * The four rungs here were the twelfth copy of the ladder tranche 1 collapsed,
+ * pointing the other way: `` `Reminder in ${minutes}m` `` cannot be
+ * translated, because there is no message for a catalogue to hold. The
+ * `null` that `formatTimeUntil` returns for a moment that has passed is what
+ * distinguishes "due" from "in 0 minutes".
+ */
+function useReminderStatus() {
+  const { i18n } = useLingui();
+  const locale = useLocale();
+  return (notBefore: number | undefined) => {
+    if (notBefore === undefined) return i18n._(msg`Pending`);
+    const until = formatTimeUntil(notBefore, { ceiling: "day", locale });
+    return until === null
+      ? i18n._(msg`Reminder due`)
+      : i18n._(msg`Reminder ${until}`);
+  };
 }
 
 function getInboxVideoReviewCommentRootId(item: InboxItem) {
@@ -190,7 +225,7 @@ function PersonalItemRow({
       </span>
       <span className="min-w-0 flex-1">
         <span className="block text-sm font-semibold text-foreground">
-          Reminder
+          <Trans>Reminder</Trans>
         </span>
         {location ? (
           <InboxLabel
@@ -269,6 +304,8 @@ export function InboxListPane({
   selectedReminderId,
   unreadOnly,
 }: InboxListPaneProps) {
+  const { i18n, t } = useLingui();
+  const reminderStatus = useReminderStatus();
   const isReminders = filter === "reminders";
   const isDrafts = filter === "drafts";
   const isMixedInboxView = filter === "all";
@@ -319,10 +356,10 @@ export function InboxListPane({
     const hasReopenError = isReopenErrored?.(item.item.channelId) ?? false;
     const canOpen = hasChannelTarget && !isReopening;
     const openLabel = !hasChannelTarget
-      ? "No channel link"
+      ? t`No channel link`
       : isReopening
-        ? "Reopening…"
-        : "Open in channel";
+        ? t`Reopening…`
+        : t`Open in channel`;
     const typeLabel = getInboxTypeLabel(item);
     const videoReviewCommentRootId = getInboxVideoReviewCommentRootId(item);
     const isSenderAgent =
@@ -353,7 +390,7 @@ export function InboxListPane({
         }
       >
         <button
-          aria-label={`Open inbox item from ${item.senderLabel}`}
+          aria-label={t`Open inbox item from ${item.senderLabel}`}
           className="absolute inset-0 z-0 block w-full border-l border-l-transparent text-left"
           onClick={() => onSelect(item.id)}
           type="button"
@@ -433,7 +470,11 @@ export function InboxListPane({
                   ) : null}
                   {item.unreadCount > 1 ? (
                     <span data-testid="home-inbox-unread-count">
-                      {item.unreadCount} unread
+                      <Plural
+                        one="# unread"
+                        other="# unread"
+                        value={item.unreadCount}
+                      />
                     </span>
                   ) : null}
                   {item.timestampLabel}
@@ -450,7 +491,7 @@ export function InboxListPane({
                   data-testid="home-inbox-reminder-due"
                 >
                   <Bell className="h-3 w-3" />
-                  Reminder due
+                  <Trans>Reminder due</Trans>
                 </div>
               ) : null}
 
@@ -469,12 +510,12 @@ export function InboxListPane({
                   {isReopening ? (
                     <>
                       <LoaderCircle className="h-3 w-3 shrink-0 animate-spin" />
-                      Reopening…
+                      <Trans>Reopening…</Trans>
                     </>
                   ) : (
                     <>
                       <AlertCircle className="h-3 w-3 shrink-0" />
-                      Couldn’t reopen
+                      <Trans>Couldn’t reopen</Trans>
                       {canOpen ? (
                         <button
                           className="ml-0.5 rounded font-semibold underline underline-offset-2 hover:no-underline focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-ring"
@@ -487,7 +528,7 @@ export function InboxListPane({
                           }}
                           type="button"
                         >
-                          Retry
+                          <Trans>Retry</Trans>
                         </button>
                       ) : null}
                     </>
@@ -505,7 +546,7 @@ export function InboxListPane({
               >
                 <VideoReviewCommentMarkdown
                   className="inbox-preview-markdown text-inherit"
-                  content={item.preview}
+                  content={resolveInboxCopy(i18n, item.preview)}
                   interactive={false}
                   mentionNames={item.mentionNames}
                   videoReviewCommentRootId={videoReviewCommentRootId}
@@ -518,14 +559,14 @@ export function InboxListPane({
         <div className="pointer-events-none absolute right-3 top-2 z-10 flex items-center gap-0.5 rounded-full bg-[var(--inbox-row-highlight-bg)] p-1 opacity-0 transition-opacity duration-150 ease-out group-hover/inbox-item:pointer-events-auto group-hover/inbox-item:opacity-100 group-focus-within/inbox-item:pointer-events-auto group-focus-within/inbox-item:opacity-100">
           {isDone ? (
             <InboxRowActionButton
-              label="Mark unread"
+              label={t`Mark unread`}
               onClick={() => onMarkUnread(item.id)}
             >
               <MailOpen className="!h-4 !w-4" />
             </InboxRowActionButton>
           ) : (
             <InboxRowActionButton
-              label="Mark as read"
+              label={t`Mark as read`}
               onClick={() => onMarkRead(item.id)}
             >
               <MailOpen className="!h-4 !w-4" />
@@ -544,9 +585,9 @@ export function InboxListPane({
             label={
               hasChannelTarget
                 ? hasActiveReminder
-                  ? "Reminder set"
-                  : "Remind me later"
-                : "Cannot remind without a channel"
+                  ? t`Reminder set`
+                  : t`Remind me later`
+                : t`Cannot remind without a channel`
             }
             onClick={() => onRemindLater(item)}
           >
@@ -563,12 +604,12 @@ export function InboxListPane({
           {isDone ? (
             <ContextMenuItem onClick={() => onMarkUnread(item.id)}>
               <MailOpen className="h-4 w-4" />
-              Mark unread
+              <Trans>Mark unread</Trans>
             </ContextMenuItem>
           ) : (
             <ContextMenuItem onClick={() => onMarkRead(item.id)}>
               <MailOpen className="h-4 w-4" />
-              Mark as read
+              <Trans>Mark as read</Trans>
             </ContextMenuItem>
           )}
           <ContextMenuSeparator />
@@ -592,7 +633,7 @@ export function InboxListPane({
             }}
           >
             <Clock className="h-4 w-4" />
-            {hasActiveReminder ? "Reminder set" : "Remind me later"}
+            {hasActiveReminder ? t`Reminder set` : t`Remind me later`}
           </ContextMenuItem>
         </ContextMenuContent>
       </ContextMenu>
@@ -613,7 +654,7 @@ export function InboxListPane({
               <Popover>
                 <PopoverTrigger asChild>
                   <button
-                    aria-label="Inbox options"
+                    aria-label={t`Inbox options`}
                     className={cn(INBOX_HEADER_ICON_BUTTON_CLASS, "-mr-4")}
                     data-testid="inbox-options-trigger"
                     type="button"
@@ -632,7 +673,7 @@ export function InboxListPane({
                       className="text-sm font-medium text-foreground"
                       htmlFor="inbox-unread-only-switch"
                     >
-                      Show unread only
+                      <Trans>Show unread only</Trans>
                     </label>
                     <Switch
                       checked={unreadOnly}
@@ -650,7 +691,9 @@ export function InboxListPane({
                     onClick={handleMarkAllRead}
                     type="button"
                   >
-                    <span>Mark all as read</span>
+                    <span>
+                      <Trans>Mark all as read</Trans>
+                    </span>
                     {unreadVisibleItemCount > 0 ? (
                       <span className="ml-auto text-xs text-muted-foreground">
                         {unreadVisibleItemCount}
@@ -735,10 +778,10 @@ export function InboxListPane({
                     preview={
                       row.reminder.content.target?.preview ||
                       row.reminder.content.note ||
-                      "Reminder"
+                      t`Reminder`
                     }
                     selected={selectedReminderId === row.reminder.id}
-                    status={formatReminderStatus(row.reminder.notBefore)}
+                    status={reminderStatus(row.reminder.notBefore)}
                   />
                 );
               }}
@@ -748,16 +791,18 @@ export function InboxListPane({
             <div className="flex h-full min-h-64 items-center justify-center px-6 text-center">
               <div>
                 <p className="text-sm font-medium text-foreground">
-                  {unreadOnly
-                    ? INBOX_UNREAD_EMPTY_STATE_TITLES[filter]
-                    : INBOX_EMPTY_STATE_TITLES[filter]}
+                  {i18n._(
+                    unreadOnly
+                      ? INBOX_UNREAD_EMPTY_STATE_TITLES[filter]
+                      : INBOX_EMPTY_STATE_TITLES[filter],
+                  )}
                 </p>
                 <p className="mt-1 text-sm text-muted-foreground">
                   {unreadOnly
-                    ? "Turn off Show unread only to see read activity."
+                    ? t`Turn off Show unread only to see read activity.`
                     : filter === "all"
-                      ? "New activity will appear here."
-                      : "Switch back to All to see other activity."}
+                      ? t`New activity will appear here.`
+                      : t`Switch back to All to see other activity.`}
                 </p>
               </div>
             </div>

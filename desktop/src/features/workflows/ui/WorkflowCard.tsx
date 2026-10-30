@@ -12,6 +12,8 @@ import {
   Zap,
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
+import { localeDate } from "@/shared/lib/intlLocale";
+import { useLocale } from "@/shared/lib/localePreference";
 import { motion, useReducedMotion } from "motion/react";
 import * as React from "react";
 
@@ -206,6 +208,7 @@ export function WorkflowCard({
   onDuplicate,
   onDelete,
 }: WorkflowCardProps) {
+  const locale = useLocale();
   const [triggerAnimationSequence, setTriggerAnimationSequence] =
     React.useState(0);
   const isEnabled = getWorkflowEnabled(workflow.definition);
@@ -319,7 +322,7 @@ export function WorkflowCard({
             </p>
           </div>
           <span className="shrink-0 text-2xs">
-            {new Date(workflow.updatedAt * 1000).toLocaleDateString()}
+            {localeDate(new Date(workflow.updatedAt * 1000), locale)}
           </span>
         </div>
       </div>

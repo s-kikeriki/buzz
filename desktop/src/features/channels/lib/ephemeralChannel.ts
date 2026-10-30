@@ -1,14 +1,29 @@
-import type { Channel } from "@/shared/api/types";
+import { plural, t } from "@lingui/core/macro";
 
-const relativeTimeFormatter = new Intl.RelativeTimeFormat("en-US", {
-  numeric: "auto",
-});
-const absoluteTimeFormatter = new Intl.DateTimeFormat("en-US", {
+import type { Channel } from "@/shared/api/types";
+import { intlLocale, localeDateTimeFormat } from "@/shared/lib/intlLocale";
+import type { AppLocale } from "@/shared/lib/localePreference";
+
+const relativeFormatterCache = new Map<AppLocale, Intl.RelativeTimeFormat>();
+
+function relativeTimeFormatter(locale: AppLocale): Intl.RelativeTimeFormat {
+  const cached = relativeFormatterCache.get(locale);
+  if (cached) return cached;
+  // `numeric: "auto"` is kept: this is a countdown, where "tomorrow" reads
+  // better than "in 1 day".
+  const created = new Intl.RelativeTimeFormat(intlLocale(locale), {
+    numeric: "auto",
+  });
+  relativeFormatterCache.set(locale, created);
+  return created;
+}
+
+const ABSOLUTE_DEADLINE = {
   month: "short",
   day: "numeric",
   hour: "numeric",
   minute: "2-digit",
-});
+} as const;
 
 type EphemeralChannelLike = Pick<Channel, "ttlSeconds" | "ttlDeadline">;
 
@@ -42,50 +57,56 @@ function resolveRemainingSeconds(
   return Math.ceil((deadlineMs - nowMs) / 1_000);
 }
 
+/**
+ * Compact "time left" badge text.
+ *
+ * `plural` rather than a concatenated suffix: German needs "1 Min. übrig" and
+ * "5 Min. übrig" from the same message, and the unit word itself inflects.
+ */
 function formatCompactRemaining(remainingSeconds: number): string {
   if (remainingSeconds <= 0) {
-    return "Cleanup due";
-  }
-
-  if (remainingSeconds <= 60) {
-    return "1m left";
+    return t`Cleanup due`;
   }
 
   if (remainingSeconds < 60 * 60) {
-    return `${Math.max(1, Math.ceil(remainingSeconds / 60))}m left`;
+    const minutes = Math.max(1, Math.ceil(remainingSeconds / 60));
+    return plural(minutes, { one: "#m left", other: "#m left" });
   }
 
   if (remainingSeconds < 60 * 60 * 24) {
-    return `${Math.max(1, Math.ceil(remainingSeconds / (60 * 60)))}h left`;
+    const hours = Math.max(1, Math.ceil(remainingSeconds / (60 * 60)));
+    return plural(hours, { one: "#h left", other: "#h left" });
   }
 
-  return `${Math.max(1, Math.ceil(remainingSeconds / (60 * 60 * 24)))}d left`;
+  const days = Math.max(1, Math.ceil(remainingSeconds / (60 * 60 * 24)));
+  return plural(days, { one: "#d left", other: "#d left" });
 }
 
-function formatVerboseRemaining(remainingSeconds: number): string {
+/** "in 5 minutes" / "in 5 Minuten", from `Intl`. */
+function formatVerboseRemaining(
+  remainingSeconds: number,
+  locale: AppLocale,
+): string {
   if (remainingSeconds <= 0) {
-    return "now";
+    return t`now`;
   }
 
-  if (remainingSeconds <= 60) {
-    return relativeTimeFormatter.format(1, "minute");
-  }
-
-  if (remainingSeconds < 60 * 60) {
-    return relativeTimeFormatter.format(
+  const formatter = relativeTimeFormatter(locale);
+  if (remainingSeconds <= 60 * 60) {
+    return formatter.format(
       Math.max(1, Math.ceil(remainingSeconds / 60)),
       "minute",
     );
   }
 
   if (remainingSeconds < 60 * 60 * 24) {
-    return relativeTimeFormatter.format(
+    return formatter.format(
       Math.max(1, Math.ceil(remainingSeconds / (60 * 60))),
       "hour",
     );
   }
 
-  return relativeTimeFormatter.format(
+  return formatter.format(
     Math.max(1, Math.ceil(remainingSeconds / (60 * 60 * 24))),
     "day",
   );
@@ -93,42 +114,47 @@ function formatVerboseRemaining(remainingSeconds: number): string {
 
 function formatCompactTtl(ttlSeconds: number): string {
   if (ttlSeconds < 60) {
-    return `${Math.max(1, ttlSeconds)}s TTL`;
+    const seconds = Math.max(1, ttlSeconds);
+    return plural(seconds, { one: "#s TTL", other: "#s TTL" });
   }
 
   if (ttlSeconds < 60 * 60) {
-    return `${Math.max(1, Math.ceil(ttlSeconds / 60))}m TTL`;
+    const minutes = Math.max(1, Math.ceil(ttlSeconds / 60));
+    return plural(minutes, { one: "#m TTL", other: "#m TTL" });
   }
 
   if (ttlSeconds < 60 * 60 * 24) {
-    return `${Math.max(1, Math.ceil(ttlSeconds / (60 * 60)))}h TTL`;
+    const hours = Math.max(1, Math.ceil(ttlSeconds / (60 * 60)));
+    return plural(hours, { one: "#h TTL", other: "#h TTL" });
   }
 
-  return `${Math.max(1, Math.ceil(ttlSeconds / (60 * 60 * 24)))}d TTL`;
+  const days = Math.max(1, Math.ceil(ttlSeconds / (60 * 60 * 24)));
+  return plural(days, { one: "#d TTL", other: "#d TTL" });
 }
 
 function formatVerboseTtl(ttlSeconds: number): string {
   if (ttlSeconds < 60) {
     const seconds = Math.max(1, ttlSeconds);
-    return `${seconds} second${seconds === 1 ? "" : "s"}`;
+    return plural(seconds, { one: "# second", other: "# seconds" });
   }
 
   if (ttlSeconds < 60 * 60) {
     const minutes = Math.max(1, Math.ceil(ttlSeconds / 60));
-    return `${minutes} minute${minutes === 1 ? "" : "s"}`;
+    return plural(minutes, { one: "# minute", other: "# minutes" });
   }
 
   if (ttlSeconds < 60 * 60 * 24) {
     const hours = Math.max(1, Math.ceil(ttlSeconds / (60 * 60)));
-    return `${hours} hour${hours === 1 ? "" : "s"}`;
+    return plural(hours, { one: "# hour", other: "# hours" });
   }
 
   const days = Math.max(1, Math.ceil(ttlSeconds / (60 * 60 * 24)));
-  return `${days} day${days === 1 ? "" : "s"}`;
+  return plural(days, { one: "# day", other: "# days" });
 }
 
 export function getEphemeralChannelDisplay(
   channel: EphemeralChannelLike,
+  locale: AppLocale,
   nowMs = Date.now(),
 ): EphemeralChannelDisplay | null {
   if (!isEphemeralChannel(channel)) {
@@ -138,34 +164,38 @@ export function getEphemeralChannelDisplay(
   const remainingSeconds = resolveRemainingSeconds(channel.ttlDeadline, nowMs);
   const absoluteDeadlineLabel =
     channel.ttlDeadline && !Number.isNaN(Date.parse(channel.ttlDeadline))
-      ? absoluteTimeFormatter.format(new Date(channel.ttlDeadline))
+      ? localeDateTimeFormat(locale, ABSOLUTE_DEADLINE).format(
+          new Date(channel.ttlDeadline),
+        )
       : null;
   if (remainingSeconds === null) {
+    if (channel.ttlSeconds === null) {
+      return {
+        detailLabel: null,
+        tooltipLabel: t`Ephemeral channel. Cleans up automatically after inactivity.`,
+      };
+    }
+    const window = formatVerboseTtl(channel.ttlSeconds);
     return {
-      detailLabel:
-        channel.ttlSeconds === null
-          ? null
-          : formatCompactTtl(channel.ttlSeconds),
-      tooltipLabel:
-        channel.ttlSeconds === null
-          ? "Ephemeral channel. Cleans up automatically after inactivity."
-          : `Ephemeral channel. Cleans up after ${formatVerboseTtl(
-              channel.ttlSeconds,
-            )} of inactivity.`,
+      detailLabel: formatCompactTtl(channel.ttlSeconds),
+      tooltipLabel: t`Ephemeral channel. Cleans up after ${window} of inactivity.`,
     };
   }
 
   const compactRemaining = formatCompactRemaining(remainingSeconds);
-  const verboseRemaining = formatVerboseRemaining(remainingSeconds);
+  if (remainingSeconds <= 0) {
+    return {
+      detailLabel: compactRemaining,
+      tooltipLabel: t`Ephemeral channel. Cleanup is due now.`,
+    };
+  }
 
+  const when = formatVerboseRemaining(remainingSeconds, locale);
   return {
     detailLabel: compactRemaining,
-    tooltipLabel:
-      compactRemaining === "Cleanup due"
-        ? "Ephemeral channel. Cleanup is due now."
-        : absoluteDeadlineLabel
-          ? `Ephemeral channel. Cleans up ${verboseRemaining}. Scheduled for ${absoluteDeadlineLabel}.`
-          : `Ephemeral channel. Cleans up ${verboseRemaining}.`,
+    tooltipLabel: absoluteDeadlineLabel
+      ? t`Ephemeral channel. Cleans up ${when}. Scheduled for ${absoluteDeadlineLabel}.`
+      : t`Ephemeral channel. Cleans up ${when}.`,
   };
 }
 

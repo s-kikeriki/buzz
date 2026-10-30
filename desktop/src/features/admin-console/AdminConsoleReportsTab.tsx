@@ -43,6 +43,7 @@ import {
   adminErrorMessage,
   preserveRequestIdOnError,
 } from "./AdminConsolePanelHelpers";
+import { useLocale } from "@/shared/lib/localePreference";
 
 // ── Display-name helper (mirrors AdminConsoleStaffingTab) ─────────────────
 
@@ -785,6 +786,7 @@ export function ReportsTab({
 }
 
 function ReportFields({ data }: { data: AdminReportDetailDto }) {
+  const locale = useLocale();
   const status = data.status ?? "";
   // Valid 64-char hex pubkeys get the PubKey widget (compact npub + hover
   // popover). Shorter/invalid strings (test fixtures, placeholder values)
@@ -862,9 +864,15 @@ function ReportFields({ data }: { data: AdminReportDetailDto }) {
       <DetailRow label="Channel" value={data.channelId ?? null} mono />
       <DetailRow label="Note" value={data.note ?? null} />
       <DetailRow label="Resolved by" value={data.resolvedBy ?? null} mono />
-      <DetailRow label="Resolved at" value={formatTimestamp(data.resolvedAt)} />
+      <DetailRow
+        label="Resolved at"
+        value={formatTimestamp(data.resolvedAt, locale)}
+      />
       <DetailRow label="Action ID" value={data.actionId ?? null} mono />
-      <DetailRow label="Created" value={formatTimestamp(data.createdAt)} />
+      <DetailRow
+        label="Created"
+        value={formatTimestamp(data.createdAt, locale)}
+      />
       {data.message != null && (
         <div className="mt-3 space-y-1.5 rounded-md border border-border/40 px-3 py-2.5">
           <p className="mb-1 text-xs font-semibold text-muted-foreground">
@@ -892,7 +900,7 @@ function ReportFields({ data }: { data: AdminReportDetailDto }) {
           <DetailRow label="Content" value={data.message.content} />
           <DetailRow
             label="Msg created"
-            value={formatTimestamp(data.message.createdAt)}
+            value={formatTimestamp(data.message.createdAt, locale)}
           />
         </div>
       )}

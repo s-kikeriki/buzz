@@ -20,6 +20,7 @@ import { relativeTime } from "@/features/projects/lib/projectsViewHelpers";
 import { useSearchMessagesQuery } from "@/features/search/hooks";
 import type { SearchHit } from "@/shared/api/searchTypes";
 import { KIND_FORUM_COMMENT, KIND_FORUM_POST } from "@/shared/constants/kinds";
+import { useLocale } from "@/shared/lib/localePreference";
 import { cn } from "@/shared/lib/cn";
 import { BuzzLoadingState } from "@/shared/ui/BuzzLoadingState";
 import { Markdown } from "@/shared/ui/markdown";
@@ -153,6 +154,7 @@ export function DiscussedInChannels({
   query: string;
   testId?: string;
 }) {
+  const locale = useLocale();
   const {
     channels: discussed,
     hits,
@@ -270,7 +272,7 @@ export function DiscussedInChannels({
                   </button>
                   <span className="text-xs text-muted-foreground">
                     {" "}
-                    · {relativeTime(channel.lastActivityAt)}
+                    · {relativeTime(channel.lastActivityAt, locale)}
                   </span>
                 </span>
                 {latestHit ? (

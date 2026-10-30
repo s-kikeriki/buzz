@@ -1,4 +1,5 @@
 import * as React from "react";
+import { Plural, Trans, useLingui } from "@lingui/react/macro";
 
 import type {
   TimelineThreadSummary,
@@ -17,6 +18,7 @@ import {
   THREAD_REPLY_ROW_MARGIN_INLINE_REM,
 } from "@/features/messages/lib/threadTreeLayout";
 import { cn } from "@/shared/lib/cn";
+import { useLocale } from "@/shared/lib/localePreference";
 import { UserAvatar } from "@/shared/ui/UserAvatar";
 
 const THREAD_SUMMARY_CONTENT_OFFSET_REM =
@@ -108,6 +110,8 @@ export function MessageThreadSummaryRow({
   summaryIndentOffsetRem?: number;
   unreadCount?: number;
 }) {
+  const locale = useLocale();
+  const { t } = useLingui();
   const indentRem = getThreadReplyIndentRem(depth);
   const hoverLeftRem =
     indentRem + THREAD_REPLY_ROW_MARGIN_INLINE_REM + summaryIndentOffsetRem;
@@ -118,10 +122,18 @@ export function MessageThreadSummaryRow({
   const surfaceInsetStart = `calc(${contentPaddingStart} - ${threadReplyLength(
     THREAD_SUMMARY_SURFACE_AVATAR_INSET_REM,
   )})`;
-  const replyLabel = summary.replyCount === 1 ? "reply" : "replies";
-  const summaryAriaLabel = summary.lastReplyAt
-    ? `View thread with ${summary.replyCount} ${replyLabel}, last reply ${formatThreadSummaryLastReplyTime(summary.lastReplyAt)}`
-    : `View thread with ${summary.replyCount} ${replyLabel}`;
+  const replyCount = summary.replyCount;
+  const lastReply = summary.lastReplyAt
+    ? formatThreadSummaryLastReplyTime(summary.lastReplyAt, { locale })
+    : null;
+  // One message per branch rather than a concatenation: German puts the reply
+  // count and the "last reply" clause in a different order, and a sentence
+  // assembled from a plural fragment plus a comma cannot be reordered by a
+  // translator.
+  const summaryAriaLabel =
+    lastReply === null
+      ? t`View thread with ${replyCount} replies`
+      : t`View thread with ${replyCount} replies, last reply ${lastReply}`;
   const guideDepths = depthGuideDepths
     ? [...depthGuideDepths]
     : Array.from({ length: Math.max(0, depth - 1) }, (_, index) => index + 1);
@@ -270,11 +282,11 @@ export function MessageThreadSummaryRow({
         <div className="relative z-10 min-w-0">
           <div>
             <span className="font-medium transition-colors group-hover:text-foreground">
-              {summary.replyCount} {replyLabel}
+              <Plural one="# reply" other="# replies" value={replyCount} />
             </span>
             {unreadCount != null && unreadCount > 0 ? (
               <span className="ml-1" data-testid="thread-unread-badge">
-                ({unreadCount} new)
+                <Trans>({unreadCount} new)</Trans>
               </span>
             ) : null}
             {summary.lastReplyAt ? (
@@ -287,14 +299,13 @@ export function MessageThreadSummaryRow({
                     className="col-start-1 row-start-1 transition-opacity group-hover:opacity-0 group-focus-visible:opacity-0"
                     data-testid="message-thread-summary-last-reply"
                   >
-                    last reply{" "}
-                    {formatThreadSummaryLastReplyTime(summary.lastReplyAt)}
+                    <Trans>last reply {lastReply}</Trans>
                   </span>
                   <span
                     className="col-start-1 row-start-1 opacity-0 transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100"
                     data-testid="message-thread-summary-hover-action"
                   >
-                    View thread
+                    <Trans>View thread</Trans>
                   </span>
                 </span>
               </>

@@ -1,10 +1,13 @@
 import type { WorkflowApproval } from "@/shared/api/types";
+import { localeDateTime } from "@/shared/lib/intlLocale";
+import { useLocale } from "@/shared/lib/localePreference";
 
 type WorkflowApprovalCardProps = {
   approval: WorkflowApproval;
 };
 
 export function WorkflowApprovalCard({ approval }: WorkflowApprovalCardProps) {
+  const locale = useLocale();
   const isExpired = new Date(approval.expiresAt) < new Date();
 
   if (approval.status !== "pending" || isExpired) {
@@ -21,7 +24,7 @@ export function WorkflowApprovalCard({ approval }: WorkflowApprovalCardProps) {
         Approver: {approval.approverSpec}
       </p>
       <p className="mb-2 text-xs text-muted-foreground">
-        Expires: {new Date(approval.expiresAt).toLocaleString()}
+        Expires: {localeDateTime(new Date(approval.expiresAt), locale)}
       </p>
       <p className="text-xs text-muted-foreground" role="status">
         Approval actions are not yet available in Desktop.

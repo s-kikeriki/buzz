@@ -1,3 +1,4 @@
+import { Trans, useLingui } from "@lingui/react/macro";
 import * as React from "react";
 import { RefreshCcw } from "lucide-react";
 
@@ -13,6 +14,7 @@ import {
   findInboxItemByEventId,
   formatInboxFullTimestamp,
   getInboxItemConversationId,
+  resolveInboxCopy,
 } from "@/features/home/lib/inbox";
 import { useInboxSelectionAnchor } from "@/features/home/useInboxSelectionAnchor";
 import { useInboxEditMessage } from "@/features/home/useInboxEditMessage";
@@ -65,6 +67,7 @@ import type { Channel, HomeFeedResponse } from "@/shared/api/types";
 import { KIND_REACTION } from "@/shared/constants/kinds";
 import { topChromeInset } from "@/shared/layout/chromeLayout";
 import { cn } from "@/shared/lib/cn";
+import { useLocale } from "@/shared/lib/localePreference";
 import { normalizePubkey } from "@/shared/lib/pubkey";
 import { getStorageItem, setStorageItem } from "@/shared/lib/safeStorage";
 import { useElementWidth } from "@/shared/hooks/use-mobile";
@@ -107,6 +110,8 @@ export function HomeView({
   onOpenContext,
   onRefresh,
 }: HomeViewProps) {
+  const { i18n, t } = useLingui();
+  const locale = useLocale();
   const relaySelfPubkey = useRelaySelfQuery().data;
   const [homeInboxRef, homeInboxWidthPx] = useElementWidth<HTMLDivElement>();
   const isNarrowHomeViewport =
@@ -378,6 +383,7 @@ export function HomeView({
       getChannelReadAt,
       getMessageReadAt,
       getThreadReadAt,
+      locale,
       profiles: feedProfiles,
     });
     return filterInboxItems(items);
@@ -389,6 +395,7 @@ export function HomeView({
     getChannelReadAt,
     getMessageReadAt,
     getThreadReadAt,
+    locale,
     readStateVersion,
   ]);
   const { effectiveDoneSet, markItemRead, markItemUnread } =
@@ -601,14 +608,14 @@ export function HomeView({
         <div className="flex w-full max-w-3xl flex-col gap-4">
           <div className="rounded-md border border-destructive/30 bg-destructive/5 px-4 py-5">
             <p className="text-base font-semibold tracking-tight">
-              Home feed unavailable
+              <Trans>Home feed unavailable</Trans>
             </p>
             <p className="mt-2 text-sm text-muted-foreground">
-              {errorMessage ?? "The relay did not return a feed response."}
+              {errorMessage ?? t`The relay did not return a feed response.`}
             </p>
             <Button className="mt-5" onClick={onRefresh} type="button">
               <RefreshCcw className="h-4 w-4" />
-              Try again
+              <Trans>Try again</Trans>
             </Button>
           </div>
         </div>
@@ -726,7 +733,7 @@ export function HomeView({
                   authorPubkey: item.item.pubkey,
                   channelId,
                   eventId: item.id,
-                  preview: item.preview.slice(0, 100),
+                  preview: resolveInboxCopy(i18n, item.preview).slice(0, 100),
                 });
               }}
               onSelect={(itemId) => {
@@ -768,7 +775,7 @@ export function HomeView({
           ) : null}
 
           <button
-            aria-label="Resize inbox list"
+            aria-label={t`Resize inbox list`}
             className={cn(
               "group absolute bottom-0 z-40 w-3 -translate-x-1/2 cursor-col-resize",
               topChromeInset.top,
@@ -782,8 +789,8 @@ export function HomeView({
             style={{ left: `${effectiveInboxListWidthPx}px` }}
             title={
               canResetInboxListWidth
-                ? "Drag to resize. Double-click to reset width."
-                : "Drag to resize."
+                ? t`Drag to resize. Double-click to reset width.`
+                : t`Drag to resize.`
             }
             type="button"
           >
@@ -884,12 +891,13 @@ export function HomeView({
                     depth: result.depth,
                     fullTimestampLabel: formatInboxFullTimestamp(
                       result.createdAt,
+                      locale,
                     ),
                     id: result.eventId,
                     parentId: result.parentEventId,
                     rootId: result.rootEventId,
                     tags: [...imetaTags, ...emojiTags, ...mentionTags],
-                    timeLabel: formatTime(result.createdAt),
+                    timeLabel: formatTime(result.createdAt, locale),
                   };
                   setLocalRepliesByItemId((current) => ({
                     ...current,

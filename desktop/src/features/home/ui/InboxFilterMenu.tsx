@@ -1,3 +1,6 @@
+import type { MessageDescriptor } from "@lingui/core";
+import { msg, plural } from "@lingui/core/macro";
+import { useLingui } from "@lingui/react/macro";
 import { ChevronDown } from "lucide-react";
 
 import type { InboxFilter } from "@/features/home/lib/inbox";
@@ -11,18 +14,26 @@ import {
   DropdownMenuTrigger,
 } from "@/shared/ui/dropdown-menu";
 
+/**
+ * The filter names, as descriptors rather than `t` template literals.
+ *
+ * This is a module-level table, so a `t` here would be resolved once when the
+ * module first loads and then keep whichever locale happened to be active at
+ * that moment for the rest of the session. `msg` defers it; the component
+ * resolves each one with `i18n._()` on render.
+ */
 const INBOX_FILTER_OPTIONS: Array<{
-  label: string;
+  label: MessageDescriptor;
   value: InboxFilter;
 }> = [
-  { value: "all", label: "All" },
-  { value: "project", label: "Projects" },
-  { value: "mention", label: "Mentions" },
-  { value: "thread", label: "Threads" },
-  { value: "needs_action", label: "Needs action" },
-  { value: "agent_activity", label: "Agents" },
-  { value: "reminders", label: "Reminders" },
-  { value: "drafts", label: "Drafts" },
+  { value: "all", label: msg`All` },
+  { value: "project", label: msg`Projects` },
+  { value: "mention", label: msg`Mentions` },
+  { value: "thread", label: msg`Threads` },
+  { value: "needs_action", label: msg`Needs action` },
+  { value: "agent_activity", label: msg`Agents` },
+  { value: "reminders", label: msg`Reminders` },
+  { value: "drafts", label: msg`Drafts` },
 ];
 
 const TRIGGER_CLASS =
@@ -43,26 +54,43 @@ export function InboxFilterMenu({
   onFilterChange,
   reminderCount,
 }: InboxFilterMenuProps) {
+  const { i18n, t } = useLingui();
   const activeFilter = INBOX_FILTER_OPTIONS.find(
     (option) => option.value === filter,
   );
+  const activeLabel = i18n._(
+    activeFilter?.label ?? INBOX_FILTER_OPTIONS[0].label,
+  );
+  // `plural`, not a conditional `"s"`. English pluralises by appending a
+  // letter and German does not — "1 fällige Erinnerung" / "2 fällige
+  // Erinnerungen" changes the adjective too, which no suffix rule reaches.
   const statusLabel =
     dueReminderCount > 0
-      ? `${dueReminderCount} due reminder${dueReminderCount === 1 ? "" : "s"}`
+      ? plural(dueReminderCount, {
+          one: "# due reminder",
+          other: "# due reminders",
+        })
       : activeDraftCount > 0
-        ? `${activeDraftCount} active draft${activeDraftCount === 1 ? "" : "s"}`
+        ? plural(activeDraftCount, {
+            one: "# active draft",
+            other: "# active drafts",
+          })
         : null;
 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <button
-          aria-label={`Filter inbox: ${activeFilter?.label ?? "All"}${statusLabel ? `. ${statusLabel}` : ""}`}
+          aria-label={
+            statusLabel
+              ? t`Filter inbox: ${activeLabel}. ${statusLabel}`
+              : t`Filter inbox: ${activeLabel}`
+          }
           className={cn(TRIGGER_CLASS)}
           data-testid="inbox-filter-trigger"
           type="button"
         >
-          <span>{activeFilter?.label ?? "All"}</span>
+          <span>{activeLabel}</span>
           <ChevronDown className="text-muted-foreground" />
         </button>
       </DropdownMenuTrigger>
@@ -78,7 +106,7 @@ export function InboxFilterMenu({
               ) : null}
               <DropdownMenuRadioItem value={option.value}>
                 <span className="flex flex-1 items-center gap-2">
-                  <span>{option.label}</span>
+                  <span>{i18n._(option.label)}</span>
                   <span className="ml-auto flex items-center gap-1.5">
                     {option.value === "reminders" && reminderCount > 0 ? (
                       <span

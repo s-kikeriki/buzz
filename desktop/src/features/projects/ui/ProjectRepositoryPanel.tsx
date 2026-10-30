@@ -37,6 +37,7 @@ import {
 import { useUserSearchQuery } from "@/features/profile/hooks";
 import type { UserProfileLookup } from "@/features/profile/lib/identity";
 import type { UserSearchResult } from "@/shared/api/types";
+import { useLocale } from "@/shared/lib/localePreference";
 import { cn } from "@/shared/lib/cn";
 import { normalizePubkey } from "@/shared/lib/pubkey";
 import { BuzzLoadingState } from "@/shared/ui/BuzzLoadingState";
@@ -545,6 +546,7 @@ function FileContentPanel({
   fileContentSource?: RepositoryFileContentSource;
   onOpenPath: (path: string) => void;
 }) {
+  const locale = useLocale();
   const fileContent = useRepositoryFileContent(file, fileContentSource);
   const language = languageForPath(file.path);
   const pathSegments = file.path.split("/").filter(Boolean);
@@ -574,7 +576,9 @@ function FileContentPanel({
           {fileName}
         </span>
         <div className="hidden shrink-0 items-center gap-3 text-2xs text-muted-foreground sm:flex">
-          <span>Last changed {formatLastChangedAt(file.lastChangedAt)}</span>
+          <span>
+            Last changed {formatLastChangedAt(file.lastChangedAt, locale)}
+          </span>
           <span>{formatFileSize(file.size)}</span>
         </div>
         <span className="shrink-0 text-2xs text-muted-foreground sm:hidden">
@@ -582,7 +586,7 @@ function FileContentPanel({
         </span>
       </div>
       <div className="border-border/50 border-b bg-muted/10 px-4 py-2 text-2xs text-muted-foreground sm:hidden">
-        Last changed {formatLastChangedAt(file.lastChangedAt)}
+        Last changed {formatLastChangedAt(file.lastChangedAt, locale)}
       </div>
       {fileContent.isLoading ? (
         <BuzzLoadingState label="Loading file" />
@@ -639,6 +643,7 @@ export function RepositoryFilesPanel({
   sourceControls?: RepoSourceHeaderControls;
   unavailableMessage?: string;
 }) {
+  const locale = useLocale();
   const {
     currentPath,
     openPath,
@@ -896,7 +901,7 @@ export function RepositoryFilesPanel({
                         latestCommit.timestamp * 1_000,
                       ).toISOString()}
                     >
-                      {relativeTime(latestCommit.timestamp)}
+                      {relativeTime(latestCommit.timestamp, locale)}
                     </time>
                   </div>
                 ) : (
@@ -946,7 +951,7 @@ export function RepositoryFilesPanel({
                           latestCommit.timestamp * 1_000,
                         ).toISOString()}
                       >
-                        {relativeTime(latestCommit.timestamp)}
+                        {relativeTime(latestCommit.timestamp, locale)}
                       </time>
                     ) : (
                       "—"

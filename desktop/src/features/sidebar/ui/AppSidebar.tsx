@@ -594,7 +594,7 @@ export function AppSidebar({
   const resolvedDisplayName =
     profile?.displayName?.trim() ||
     fallbackDisplayName?.trim() ||
-    "Current identity";
+    t`Current identity`;
   const isCreatingAny =
     createDialogKind === "stream"
       ? isCreatingChannel

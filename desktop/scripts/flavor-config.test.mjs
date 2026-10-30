@@ -7,6 +7,7 @@ import { fileURLToPath } from "node:url";
 
 import { demoBuildConfig } from "./demo-build-config.mjs";
 import {
+  PLATFORM_ICON_TARGETS,
   flavorBuildEnv,
   flavorBuildEnvShell,
   listFlavorIds,
@@ -995,4 +996,238 @@ test("only ki.keriki replaces the burst; the others keep the bee", () => {
   assert.ok(!sets["ki.keriki"].includes("🍯"), "the honey must be gone");
   assert.equal(sets.zeniad, undefined);
   assert.equal(sets["KI.keri.KI"], undefined);
+});
+
+/** A PNG's IHDR dimensions, read from the file's own bytes. */
+function pngSize(file) {
+  const bytes = readFileSync(file);
+  assert.ok(
+    bytes
+      .subarray(0, 8)
+      .equals(Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a])),
+    `${file} is not a PNG`,
+  );
+  return { width: bytes.readUInt32BE(16), height: bytes.readUInt32BE(20) };
+}
+
+/** The sizes inside an `.ico`, read from its directory. */
+function icoSizes(file) {
+  const bytes = readFileSync(file);
+  assert.equal(bytes.readUInt16LE(0), 0, `${file} is not an .ico`);
+  assert.equal(bytes.readUInt16LE(2), 1, `${file} is not an .ico`);
+  const count = bytes.readUInt16LE(4);
+  return Array.from({ length: count }, (_, index) => {
+    const entry = 6 + index * 16;
+    // 0 means 256 in an icon directory: the field is one byte.
+    return bytes[entry] === 0 ? 256 : bytes[entry];
+  }).sort((a, b) => a - b);
+}
+
+test("platformIcons covers exactly the bundle's non-macOS icons", () => {
+  // The drift gate. `PLATFORM_ICON_TARGETS` is a hand-written list and
+  // `tauri.conf.json` is the thing that actually decides which files get
+  // bundled, so a sixth icon added there would otherwise stay un-brandable
+  // with nothing failing — the next Windows build would just quietly ship one
+  // Buzz asset. Asserting equality in both directions is the point: a missing
+  // key and a key for a file the bundle no longer reads are different bugs.
+  const conf = JSON.parse(
+    readFileSync(path.join(desktopDir, "src-tauri", "tauri.conf.json"), "utf8"),
+  );
+  const bundled = conf.bundle.icon.map((entry) => path.basename(entry)).sort();
+  const declarable = [
+    ...Object.keys(PLATFORM_ICON_TARGETS),
+    "icon.icns",
+  ].sort();
+  assert.deepEqual(
+    declarable,
+    bundled,
+    "every icon the bundle reads must be one a flavor can replace — " +
+      "`icon.icns` through `icon`, the rest through `platformIcons`",
+  );
+});
+
+test("a flavor's platform icons survive validation unchanged", () => {
+  const icons = {
+    "32x32.png": "flavors/icons/acme-32x32.png",
+    "128x128.png": "flavors/icons/acme-128x128.png",
+    "128x128@2x.png": "flavors/icons/acme-128x128@2x.png",
+    "icon.ico": "flavors/icons/acme.ico",
+  };
+  const flavor = validateFlavor(goodFlavor({ platformIcons: icons }), "acme");
+  assert.deepEqual(flavor.platformIcons, icons);
+
+  // Absent stays absent rather than becoming an empty object: "this flavor is
+  // macOS-only" and "this flavor replaces nothing" read the same downstream,
+  // and `stagedIcons` would iterate an empty map either way, so the only
+  // reader that can tell them apart is a human looking at the flavor file.
+  assert.equal(validateFlavor(goodFlavor(), "acme").platformIcons, undefined);
+});
+
+test("a malformed platformIcons is refused", () => {
+  const full = {
+    "32x32.png": "flavors/icons/acme-32x32.png",
+    "128x128.png": "flavors/icons/acme-128x128.png",
+    "128x128@2x.png": "flavors/icons/acme-128x128@2x.png",
+    "icon.ico": "flavors/icons/acme.ico",
+  };
+  for (const platformIcons of ["", [], null, 7, [full]]) {
+    assert.throws(
+      () => validateFlavor(goodFlavor({ platformIcons }), "acme"),
+      /platformIcons must be an object/,
+      `platformIcons ${JSON.stringify(platformIcons)} must be refused`,
+    );
+  }
+
+  assert.throws(
+    () =>
+      validateFlavor(
+        goodFlavor({ platformIcons: { ...full, "icon.icns": "x.icns" } }),
+        "acme",
+      ),
+    /platformIcons key "icon.icns" is not an icon the bundle reads/,
+    "the macOS icon has its own field and must not be declarable twice",
+  );
+  assert.throws(
+    () =>
+      validateFlavor(
+        goodFlavor({ platformIcons: { ...full, "512x512.png": "x.png" } }),
+        "acme",
+      ),
+    /platformIcons key "512x512.png" is not an icon the bundle reads/,
+  );
+
+  for (const bad of ["", "   ", 7, null]) {
+    assert.throws(
+      () =>
+        validateFlavor(
+          goodFlavor({ platformIcons: { ...full, "icon.ico": bad } }),
+          "acme",
+        ),
+      /platformIcons\["icon.ico"\] must be a non-empty string/,
+      `icon.ico ${JSON.stringify(bad)} must be refused`,
+    );
+  }
+
+  // Same traversal corpus the single-icon field is held to, including the
+  // Windows forms `path.isAbsolute` does not recognise on this host.
+  for (const suffix of [
+    "../secrets/acme",
+    "..\\secrets\\acme",
+    "/etc/acme",
+    "\\\\server\\share\\acme",
+    "C:\\acme",
+  ]) {
+    assert.throws(
+      () =>
+        validateFlavor(
+          goodFlavor({
+            platformIcons: { ...full, "icon.ico": `${suffix}.ico` },
+          }),
+          "acme",
+        ),
+      /platformIcons\["icon.ico"\] must be a repo-relative path without/,
+      `icon.ico ${suffix}.ico must be refused`,
+    );
+  }
+
+  // The staging copy renames the file to the key, so the bundler reads it as
+  // whatever the key claims. A PNG under `icon.ico` is undecodable, not ugly.
+  assert.throws(
+    () =>
+      validateFlavor(
+        goodFlavor({ platformIcons: { ...full, "icon.ico": "a/acme.png" } }),
+        "acme",
+      ),
+    /platformIcons\["icon.ico"\] must be a \.ico/,
+    "a .png declared under icon.ico must be refused",
+  );
+  assert.throws(
+    () =>
+      validateFlavor(
+        goodFlavor({ platformIcons: { ...full, "32x32.png": "a/acme.ico" } }),
+        "acme",
+      ),
+    /platformIcons\["32x32.png"\] must be a \.png/,
+    "an .ico declared under 32x32.png must be refused",
+  );
+});
+
+test("a partial platformIcons is refused, one key at a time", () => {
+  const full = {
+    "32x32.png": "flavors/icons/acme-32x32.png",
+    "128x128.png": "flavors/icons/acme-128x128.png",
+    "128x128@2x.png": "flavors/icons/acme-128x128@2x.png",
+    "icon.ico": "flavors/icons/acme.ico",
+  };
+  // Every key dropped in turn, not just one: the `.ico` alone is the tempting
+  // half (Windows is the platform anyone asks about) and the PNGs alone is the
+  // one a Linux-only job would produce, and both ship a bundle that is branded
+  // on one OS and wearing the bee on the other.
+  for (const omitted of Object.keys(full)) {
+    const partial = { ...full };
+    delete partial[omitted];
+    assert.throws(
+      () => validateFlavor(goodFlavor({ platformIcons: partial }), "acme"),
+      new RegExp(
+        `platformIcons is missing ${omitted.replace(/[.@]/g, "\\$&")}`,
+      ),
+      `platformIcons without ${omitted} must be refused`,
+    );
+  }
+  assert.throws(
+    () => validateFlavor(goodFlavor({ platformIcons: {} }), "acme"),
+    /platformIcons is missing 32x32.png, 128x128.png, 128x128@2x.png, icon.ico/,
+    "an empty platformIcons must be refused, naming all four",
+  );
+});
+
+test("every declared platform icon is committed, and is the size its key promises", () => {
+  // The dimensions half matters as much as the existence half. Tauri's Linux
+  // bundler installs `128x128.png` into `.../icons/128x128/apps/` by that
+  // name, not by what is inside the file, so a 256px image copied over it is
+  // installed into the 128px directory and rendered by the launcher at
+  // whatever scale it assumes — a wrong icon size is invisible on the build
+  // machine and only shows up in somebody's app menu.
+  const expectedPngSize = {
+    "32x32.png": 32,
+    "128x128.png": 128,
+    "128x128@2x.png": 256,
+  };
+  const stockIco = icoSizes(
+    path.join(desktopDir, "src-tauri", "icons", "icon.ico"),
+  );
+  let checked = 0;
+  for (const id of listFlavorIds()) {
+    const flavor = loadFlavor(id);
+    if (flavor.frozen || flavor.example) continue;
+    for (const [target, declared] of Object.entries(
+      flavor.platformIcons ?? {},
+    )) {
+      const file = path.join(desktopDir, declared);
+      assert.ok(
+        existsSync(file),
+        `${id}: declares ${declared}, which is not in the repo`,
+      );
+      if (target === "icon.ico") {
+        assert.deepEqual(
+          icoSizes(file),
+          stockIco,
+          `${id}: ${declared} must carry the same sizes the stock icon.ico ` +
+            "does, or Windows picks a size we did not draw",
+        );
+      } else {
+        const size = expectedPngSize[target];
+        assert.deepEqual(
+          pngSize(file),
+          { width: size, height: size },
+          `${id}: ${declared} stands in for ${target} and must be ${size}px`,
+        );
+      }
+      checked += 1;
+    }
+  }
+  // ki.keriki's four. Without this the loop passes vacuously the day a
+  // refactor stops returning `platformIcons`, which is the same unfalsifiable
+  // shape as a guard whose skip is gated on the thing it asserts.
+  assert.equal(checked, 4, "ki.keriki's four platform icons must be checked");
 });

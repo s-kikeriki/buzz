@@ -1,3 +1,4 @@
+import { Plural, Trans, useLingui } from "@lingui/react/macro";
 import {
   AlertTriangle,
   ArrowLeft,
@@ -20,6 +21,7 @@ import {
   sendDraftEntry,
   type DraftViewItem,
 } from "@/features/messages/ui/DraftsPanel";
+import { useLocale } from "@/shared/lib/localePreference";
 import { TopChromeInsetHeader } from "@/shared/layout/TopChromeInsetHeader";
 import { Button } from "@/shared/ui/button";
 import { Markdown } from "@/shared/ui/markdown";
@@ -37,6 +39,8 @@ export function DraftDetailPane({
   onBack,
   onDelete,
 }: DraftDetailPaneProps) {
+  const { t } = useLingui();
+  const locale = useLocale();
   const { goChannel } = useAppNavigation();
   const [sendDialogOpen, setSendDialogOpen] = React.useState(false);
 
@@ -50,9 +54,13 @@ export function DraftDetailPane({
           <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-muted text-muted-foreground">
             <FileText className="h-6 w-6" />
           </div>
-          <p className="mt-4 text-base font-semibold">Select a draft</p>
+          <p className="mt-4 text-base font-semibold">
+            <Trans>Select a draft</Trans>
+          </p>
           <p className="mt-1 text-sm text-muted-foreground">
-            Pick a draft to preview it and choose what to do next.
+            <Trans>
+              Pick a draft to preview it and choose what to do next.
+            </Trans>
           </p>
         </div>
       </section>
@@ -67,7 +75,7 @@ export function DraftDetailPane({
     ? isDm
       ? source.label
       : `#${source.label}`
-    : "Unknown channel";
+    : t`Unknown channel`;
   const openEnabled = canOpenDraft(entry.draft, source) && !isOrphaned;
   const sendEnabled = canSendDraft(entry.draft, source, rootStatus);
   const content = entry.draft.content.trim();
@@ -84,7 +92,7 @@ export function DraftDetailPane({
             <div className="flex min-w-0 items-center gap-1">
               {onBack ? (
                 <Button
-                  aria-label="Back to drafts list"
+                  aria-label={t`Back to drafts list`}
                   className="rounded-full text-muted-foreground hover:bg-muted/60 hover:text-foreground"
                   onClick={onBack}
                   size="icon"
@@ -115,8 +123,10 @@ export function DraftDetailPane({
           >
             <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0" />
             <span>
-              The original thread was deleted. This draft can no longer be
-              opened or sent.
+              <Trans>
+                The original thread was deleted. This draft can no longer be
+                opened or sent.
+              </Trans>
             </span>
           </div>
         ) : null}
@@ -141,13 +151,13 @@ export function DraftDetailPane({
             <div className="min-w-0 flex-1">
               <div className="flex min-w-0 flex-wrap items-center gap-x-2 gap-y-0">
                 <span className="text-sm font-semibold text-foreground">
-                  You
+                  <Trans>You</Trans>
                 </span>
                 <span className="text-xs font-medium text-muted-foreground">
-                  Draft
+                  <Trans>Draft</Trans>
                 </span>
                 <span className="shrink-0 text-xs font-normal tabular-nums text-muted-foreground/55">
-                  {formatDraftCreatedAt(entry.draft)}
+                  {formatDraftCreatedAt(entry.draft, locale)}
                 </span>
               </div>
 
@@ -159,8 +169,11 @@ export function DraftDetailPane({
                 />
                 {attachmentCount > 0 && content ? (
                   <p className="mt-2 text-sm text-muted-foreground">
-                    {attachmentCount} attachment
-                    {attachmentCount === 1 ? "" : "s"}
+                    <Plural
+                      one="# attachment"
+                      other="# attachments"
+                      value={attachmentCount}
+                    />
                   </p>
                 ) : null}
               </div>
@@ -198,6 +211,7 @@ function DraftActionBar({
   onOpen: () => void;
   onSend: () => void;
 }) {
+  const { t } = useLingui();
   return (
     <div className="absolute right-2 top-1 z-10">
       <div
@@ -208,19 +222,19 @@ function DraftActionBar({
           <div className="flex items-center gap-0.5 p-1">
             <DraftActionButton
               disabled={!canOpen}
-              label="Open draft"
+              label={t`Open draft`}
               onClick={onOpen}
             >
               <Pencil className="h-4 w-4" />
             </DraftActionButton>
             <DraftActionButton
               disabled={!canSend}
-              label="Send"
+              label={t`Send`}
               onClick={onSend}
             >
               <Send className="h-4 w-4" />
             </DraftActionButton>
-            <DraftActionButton destructive label="Delete" onClick={onDelete}>
+            <DraftActionButton destructive label={t`Delete`} onClick={onDelete}>
               <Trash2 className="h-4 w-4" />
             </DraftActionButton>
           </div>

@@ -33,6 +33,7 @@ import { canReviewProjectPullRequest } from "@/features/projects/pullRequestRevi
 import type { UserProfileLookup } from "@/features/profile/lib/identity";
 import { useIdentityQuery } from "@/shared/api/hooks";
 import type { ChannelMember } from "@/shared/api/types";
+import { useLocale } from "@/shared/lib/localePreference";
 import { normalizePubkey, truncateNpub } from "@/shared/lib/pubkey";
 import {
   ProjectFeedRow,
@@ -195,6 +196,7 @@ function PullRequestCommitRow({
   onOpenCommit?: (commitHash: string) => void;
   profiles?: UserProfileLookup;
 }) {
+  const locale = useLocale();
   const authorProfile = profileForPubkey(author, profiles);
   const authorLabel = labelForPubkey(author, profiles);
   const openCommit =
@@ -243,9 +245,9 @@ function PullRequestCommitRow({
           <span
             className="hidden w-20 shrink-0 text-right text-xs text-muted-foreground sm:block"
             data-testid="project-pull-request-commit-row-date"
-            title={formatExactTimestamp(createdAt)}
+            title={formatExactTimestamp(createdAt, locale)}
           >
-            {relativeTime(createdAt)}
+            {relativeTime(createdAt, locale)}
           </span>
         </>
       }
@@ -279,6 +281,7 @@ function PullRequestRow({
   pullRequest: ProjectPullRequest;
   rangeItems: ReturnType<typeof reviewSelectionItem>[];
 }) {
+  const locale = useLocale();
   const authorProfile = profileForPubkey(pullRequest.author, profiles);
   const authorLabel = labelForPubkey(pullRequest.author, profiles);
   const statusClassName = pullRequestStatusClassName(pullRequest.status);
@@ -344,9 +347,9 @@ function PullRequestRow({
           <span
             className="hidden w-20 shrink-0 text-right text-xs text-muted-foreground/55 sm:block"
             data-testid="project-pull-request-row-date"
-            title={formatExactTimestamp(pullRequest.createdAt)}
+            title={formatExactTimestamp(pullRequest.createdAt, locale)}
           >
-            {relativeTime(pullRequest.createdAt)}
+            {relativeTime(pullRequest.createdAt, locale)}
           </span>
         </>
       }
@@ -361,6 +364,7 @@ export function PullRequestDetailHeader({
 }: {
   pullRequest: ProjectPullRequest;
 }) {
+  const locale = useLocale();
   return (
     <header className="min-w-0 space-y-2 px-6 pb-3 pt-5">
       <h3 className="line-clamp-2 min-w-0 text-lg font-semibold leading-6 text-foreground">
@@ -383,9 +387,9 @@ export function PullRequestDetailHeader({
         <span
           className="shrink-0 whitespace-nowrap"
           data-project-metadata-phrase
-          title={formatExactTimestamp(pullRequest.createdAt)}
+          title={formatExactTimestamp(pullRequest.createdAt, locale)}
         >
-          {relativeTime(pullRequest.createdAt)}
+          {relativeTime(pullRequest.createdAt, locale)}
         </span>
         <ProjectOriginReference
           agentName={pullRequest.originAgentName}
@@ -420,6 +424,7 @@ export function ProjectPullRequestDetail({
   project: Project;
   pullRequest: ProjectPullRequest;
 }) {
+  const locale = useLocale();
   const identityQuery = useIdentityQuery();
   const commentMutation = useCreateProjectPullRequestCommentMutation(project);
   const [
@@ -548,8 +553,10 @@ export function ProjectPullRequestDetail({
                       profiles={profiles}
                       pubkey={update.author}
                       role={
-                        <span title={formatExactTimestamp(update.createdAt)}>
-                          {relativeTime(update.createdAt)}
+                        <span
+                          title={formatExactTimestamp(update.createdAt, locale)}
+                        >
+                          {relativeTime(update.createdAt, locale)}
                         </span>
                       }
                     />
@@ -772,9 +779,9 @@ export function ProjectPullRequestDetail({
                       </span>
                       <span
                         className="ml-auto w-20 shrink-0 text-right text-xs text-muted-foreground/70"
-                        title={formatExactTimestamp(item.createdAt)}
+                        title={formatExactTimestamp(item.createdAt, locale)}
                       >
-                        {relativeTime(item.createdAt)}
+                        {relativeTime(item.createdAt, locale)}
                       </span>
                     </div>
                     {activityContent ? (

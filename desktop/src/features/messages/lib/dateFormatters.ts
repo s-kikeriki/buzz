@@ -1,3 +1,9 @@
+import { t } from "@lingui/core/macro";
+
+import { localeDateTimeFormat } from "@/shared/lib/intlLocale";
+import type { AppLocale } from "@/shared/lib/localePreference";
+import { formatRelativeTime } from "@/shared/lib/relativeTime";
+
 /**
  * Shared date/time formatters for the message timeline.
  *
@@ -17,40 +23,51 @@
  * scrolls away while the messages under it stay on screen.
  */
 
-const TIME_FORMATTER = new Intl.DateTimeFormat("en-US", {
-  hour: "numeric",
-  minute: "2-digit",
-});
+const TIME = { hour: "numeric", minute: "2-digit" } as const;
 
 const DAY_PERIOD_SUFFIX_RE = /[\s\u00a0\u202f]*(?:AM|PM)$/i;
 
-const FULL_DATE_TIME_FORMATTER = new Intl.DateTimeFormat("en-US", {
+const FULL_DATE_TIME = {
   weekday: "long",
   year: "numeric",
   month: "long",
   day: "numeric",
   hour: "numeric",
   minute: "2-digit",
-});
+} as const;
 
-const SHORT_MONTH_DAY_FORMATTER = new Intl.DateTimeFormat("en-US", {
-  month: "short",
-  day: "numeric",
-});
+const SHORT_MONTH_DAY = { month: "short", day: "numeric" } as const;
 
-/** Short clock time, e.g. "2:34 PM". */
-export function formatTime(unixSeconds: number): string {
-  return TIME_FORMATTER.format(new Date(unixSeconds * 1_000));
+/** Short clock time, e.g. "2:34 PM" / "14:34". */
+export function formatTime(unixSeconds: number, locale: AppLocale): string {
+  return localeDateTimeFormat(locale, TIME).format(
+    new Date(unixSeconds * 1_000),
+  );
 }
 
-/** Short clock time with the AM/PM marker removed, e.g. "2:34". */
+/**
+ * Short clock time with the AM/PM marker removed, e.g. "2:34".
+ *
+ * A no-op on a locale that already formats 24-hour time, which is the correct
+ * behaviour rather than a gap: German has no day period to strip, so the
+ * caller asking for the narrower form simply gets the same "14:34" back.
+ */
 export function formatTimeWithoutDayPeriod(time: string): string {
   return time.replace(DAY_PERIOD_SUFFIX_RE, "").trim();
 }
 
-/** Full date + time for tooltips, e.g. "Wednesday, April 2, 2026 at 2:34 PM". */
-export function formatFullDateTime(unixSeconds: number): string {
-  return FULL_DATE_TIME_FORMATTER.format(new Date(unixSeconds * 1_000));
+/**
+ * Full date + time for tooltips, e.g. "Wednesday, April 2, 2026 at 2:34 PM" /
+ * "Mittwoch, 2. April 2026 um 14:34". The joiner comes from `Intl`, so this
+ * one needs no message of its own.
+ */
+export function formatFullDateTime(
+  unixSeconds: number,
+  locale: AppLocale,
+): string {
+  return localeDateTimeFormat(locale, FULL_DATE_TIME).format(
+    new Date(unixSeconds * 1_000),
+  );
 }
 
 /** True when two unix-second timestamps fall on the same calendar day (local time). */
@@ -71,8 +88,13 @@ export function startOfLocalDaySeconds(unixSeconds: number): number {
 }
 
 /** Short month + day, e.g. "May 19". No ordinal suffix, per the writing standard. */
-export function formatShortMonthDay(unixSeconds: number): string {
-  return SHORT_MONTH_DAY_FORMATTER.format(new Date(unixSeconds * 1_000));
+export function formatShortMonthDay(
+  unixSeconds: number,
+  locale: AppLocale,
+): string {
+  return localeDateTimeFormat(locale, SHORT_MONTH_DAY).format(
+    new Date(unixSeconds * 1_000),
+  );
 }
 
 /**
@@ -81,16 +103,24 @@ export function formatShortMonthDay(unixSeconds: number): string {
  */
 export function formatThreadSummaryLastReplyTime(
   unixSeconds: number,
-  nowSeconds = Date.now() / 1_000,
+  {
+    locale,
+    nowSeconds = Date.now() / 1_000,
+  }: { locale: AppLocale; nowSeconds?: number },
 ): string {
   const diff = Math.max(0, nowSeconds - unixSeconds);
 
-  if (diff < 60) return "just now";
-  if (diff < 3_600) return formatAgo(Math.floor(diff / 60), "minute");
-  if (diff < 86_400) return formatAgo(Math.floor(diff / 3_600), "hour");
-  if (diff < 604_800) return formatAgo(Math.floor(diff / 86_400), "day");
+  if (diff < 604_800) {
+    return formatRelativeTime(unixSeconds, {
+      ceiling: "day",
+      locale,
+      nowSeconds,
+      style: "long",
+    });
+  }
 
-  return `on ${formatShortMonthDay(unixSeconds)}`;
+  const date = formatShortMonthDay(unixSeconds, locale);
+  return t`on ${date}`;
 }
 
 function isSameDayDate(a: Date, b: Date): boolean {
@@ -99,8 +129,4 @@ function isSameDayDate(a: Date, b: Date): boolean {
     a.getMonth() === b.getMonth() &&
     a.getDate() === b.getDate()
   );
-}
-
-function formatAgo(value: number, unit: string): string {
-  return `${value} ${unit}${value === 1 ? "" : "s"} ago`;
 }

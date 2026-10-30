@@ -8,6 +8,12 @@
     "buildId": "857f685ce21f5788"
   },
   "icon": "flavors/icons/ki.keriki.icns",
+  "platformIcons": {
+    "32x32.png": "flavors/icons/ki.keriki-32x32.png",
+    "128x128.png": "flavors/icons/ki.keriki-128x128.png",
+    "128x128@2x.png": "flavors/icons/ki.keriki-128x128@2x.png",
+    "icon.ico": "flavors/icons/ki.keriki.ico"
+  },
   "logo": "flavors/logos/ki.keriki.svg",
   "logoLight": "flavors/logos/ki.keriki-light.svg",
   "logoMark": "flavors/logos/ki.keriki-mark.svg",

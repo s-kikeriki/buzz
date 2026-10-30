@@ -1,4 +1,5 @@
 import * as React from "react";
+import { useLingui } from "@lingui/react/macro";
 
 import {
   isChannelReferenceOpenable,
@@ -6,6 +7,8 @@ import {
 } from "@/features/channels/openChannelDirectory";
 import { buildMessageLink } from "@/features/messages/lib/messageLink";
 import { getMessageLinkLabel } from "@/features/messages/lib/messageLinkLabel";
+import { useLocale } from "@/shared/lib/localePreference";
+import { formatRelativeTime } from "@/shared/lib/relativeTime";
 import { cn } from "@/shared/lib/cn";
 import {
   Tooltip,
@@ -51,20 +54,6 @@ function segmentLinkLabel(label: string): Array<{
   return segments;
 }
 
-function formatMessageAge(createdAt: number): string {
-  const elapsedMinutes = Math.max(
-    0,
-    Math.floor((Date.now() - createdAt * 1_000) / 60_000),
-  );
-  if (elapsedMinutes < 1) return "just now";
-  if (elapsedMinutes < 60) return `${elapsedMinutes}m ago`;
-  const elapsedHours = Math.floor(elapsedMinutes / 60);
-  if (elapsedHours < 24) return `${elapsedHours}h ago`;
-  const elapsedDays = Math.floor(elapsedHours / 24);
-  if (elapsedDays < 7) return `${elapsedDays}d ago`;
-  return `${Math.floor(elapsedDays / 7)}w ago`;
-}
-
 function MessageLinkMetadataTooltip({
   children,
   footer,
@@ -74,6 +63,8 @@ function MessageLinkMetadataTooltip({
   footer: string;
   metadata: ReturnType<typeof useMessageLinkMetadata>;
 }) {
+  const locale = useLocale();
+  const { t } = useLingui();
   const { contentRef, onPointerMove } = useInlineTooltipPosition();
   if (
     metadata.state.kind === "deleted" ||
@@ -81,8 +72,8 @@ function MessageLinkMetadataTooltip({
   ) {
     const message =
       metadata.state.kind === "deleted"
-        ? "Message deleted"
-        : "Message unavailable";
+        ? t`Message deleted`
+        : t`Message unavailable`;
     return (
       <TooltipProvider delayDuration={500} skipDelayDuration={0}>
         <Tooltip>
@@ -101,7 +92,7 @@ function MessageLinkMetadataTooltip({
   }
   const content = metadata.state.snippet;
   const sender = metadata.state.author;
-  const age = formatMessageAge(metadata.state.createdAt);
+  const age = formatRelativeTime(metadata.state.createdAt, { locale });
   return (
     <TooltipProvider delayDuration={500} skipDelayDuration={0}>
       <Tooltip>
@@ -162,6 +153,7 @@ function MessageLinkPillContents({
   channelLabel?: string;
   openable?: boolean;
 }) {
+  const { t } = useLingui();
   const [isHovered, setIsHovered] = React.useState(false);
   const channelLabel = resolvedChannelLabel ?? link.channelId.slice(0, 8);
   const isSentFromThread = variant === "sent-from-thread";
@@ -171,11 +163,11 @@ function MessageLinkPillContents({
   const destination =
     channel?.channelType === "dm" ? channelLabel : `#${channelLabel}`;
   const tooltipFooter = link.threadRootId
-    ? `Thread in ${destination}`
+    ? t`Thread in ${destination}`
     : channel?.channelType === "dm"
-      ? `Direct message with ${destination}`
+      ? t`Direct message with ${destination}`
       : channel?.channelType === "forum"
-        ? `Forum post in ${destination}`
+        ? t`Forum post in ${destination}`
         : destination;
   const label = getMessageLinkLabel({
     channelName: channelLabel,
@@ -196,12 +188,12 @@ function MessageLinkPillContents({
         icon="message"
         aria-label={
           !openable
-            ? `Message in channel ${channelLabel}`
+            ? t`Message in channel ${channelLabel}`
             : isDeleted
               ? link.threadRootId
-                ? `Open thread in channel ${channelLabel}; linked message was deleted`
-                : `Open channel ${channelLabel}; linked message was deleted`
-              : `Open message in channel ${channelLabel}`
+                ? t`Open thread in channel ${channelLabel}; linked message was deleted`
+                : t`Open channel ${channelLabel}; linked message was deleted`
+              : t`Open message in channel ${channelLabel}`
         }
         className={cn(
           metadata.state.kind === "unavailable" && "buzz-link-unavailable",
