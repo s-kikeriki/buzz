@@ -338,10 +338,20 @@ pub fn cli_link_name(is_dev: bool) -> String {
 /// for human Terminal use; agents find the CLI via PATH augmentation.
 #[cfg(unix)]
 pub fn ensure_cli_symlink(exe_parent: &Path, is_dev: bool) -> Result<(), String> {
-    let buzz_bin = exe_parent.join("buzz");
-    if !buzz_bin.exists() {
+    // The first directory that actually holds the bundled CLI, not the first
+    // candidate: a flavored `.deb` keeps it in `/usr/lib/<bundle name>/
+    // sidecars/`, and on a box that *also* has stock Buzz installed the
+    // executable's own `/usr/bin` holds a `buzz` belonging to that other
+    // package. Linking our own name at `~/.local/bin` to someone else's
+    // binary is worse than not linking it, so the search order matters here
+    // as much as it does in `resolve_command`.
+    let Some(buzz_bin) = crate::build_identity::sidecar_dirs(exe_parent)
+        .into_iter()
+        .map(|dir| dir.join("buzz"))
+        .find(|candidate| candidate.exists())
+    else {
         return Ok(()); // CLI not bundled (e.g., dev builds without sidecars).
-    }
+    };
 
     let local_bin = dirs::home_dir()
         .ok_or("cannot resolve home directory")?
