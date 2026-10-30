@@ -11,38 +11,53 @@
  *
  * German forces a choice English never makes: every sentence that addresses
  * the reader picks either the formal *Sie* or the informal *du*, and the verb
- * agrees with it. The choice itself is a product decision. Mixing the two in
- * one interface is not — it reads as two different products stitched
- * together, and that is what this branch shipped before this rule: two
- * appearance-settings strings said *du* while 257 new ones said *Sie*.
+ * agrees with it. The choice itself is a product decision — kikeriki addresses
+ * its clients as *du*, so that is what this app speaks. Mixing the two in one
+ * interface is not a product decision — it reads as two different products
+ * stitched together, and that is what this branch shipped before this rule.
  *
  * `forbid` is the register we are **not** using. It is a closed set of
  * pronouns rather than an attempt to parse German: pronouns are what actually
- * drifted, and they are cheap to match without false positives. To switch the
- * whole app to *du*, swap the two arrays and retranslate — the gate then
- * holds the opposite line with no other change.
+ * drifted, and they are cheap to match without false positives.
  *
- * Known limit: a bare informal imperative with no pronoun ("Klicke hier")
- * passes. Detecting that needs real morphology and would fire on legitimate
- * formal infinitives, so it is out of scope by choice, not by oversight.
- * `check-i18n-catalogs-core.test.mjs` asserts that limit, so a future version
- * that closes it has to update the test deliberately.
+ * `matchCase` is why switching register was not the "swap two arrays" this
+ * comment first claimed. The informal pronouns are unambiguous in any casing,
+ * so forbidding them could ignore case. The formal ones are only formal when
+ * capitalized: lowercase *sie* is "she/they", *ihr* is "her/their", *ihnen*
+ * "to them" — all ordinary words in correct *du* prose ("Mitglieder
+ * erscheinen hier, sobald sie da sind"). Measured honestly, a
+ * case-insensitive formal rule flags 0 of today's 377 entries, because they
+ * are mostly short labels; the cost lands on the ~2,400 strings still to be
+ * translated, where third-person prose is unavoidable. A gate that fires on
+ * correct prose is a gate somebody deletes. So the direction we forbid
+ * decides whether case matters, and the register declares it.
+ *
+ * This direction has the smaller blind spot of the two. German formal address
+ * cannot drop its pronoun — "Klicken Sie hier" carries *Sie* and there is no
+ * polite imperative without it — whereas the informal imperative can
+ * ("Klicke hier"), which is what the old formal rule had to concede.
+ *
+ * Known limit: the rule reads pronouns, not agreement, so a half-converted
+ * sentence whose pronoun is already *du* but whose verb still agrees formally
+ * ("damit du … vergleichen können") passes. `check-i18n-catalogs-core.test.mjs`
+ * asserts that limit, so a future version that closes it has to update the
+ * test deliberately.
  */
 export const REGISTERS = new Map([
   [
     "de",
     {
-      name: "formal (Sie)",
+      name: "informal (du)",
+      matchCase: true,
       forbid: [
-        "du",
-        "dich",
-        "dir",
-        "dein",
-        "deine",
-        "deinem",
-        "deinen",
-        "deiner",
-        "deines",
+        "Sie",
+        "Ihnen",
+        "Ihr",
+        "Ihre",
+        "Ihrem",
+        "Ihren",
+        "Ihrer",
+        "Ihres",
       ],
     },
   ],
@@ -86,14 +101,25 @@ export function catalogEntries(po) {
   return entries;
 }
 
-/** Entries written in the register this locale does not use. */
-export function registerViolations(locale, po) {
-  const register = REGISTERS.get(locale);
+/**
+ * Entries written in the register this locale does not use.
+ *
+ * `register` defaults to the declared one and exists so the rule can be
+ * tested in both directions rather than only in whichever one the app
+ * currently ships. The two are not symmetric — see `matchCase` above — and a
+ * rule only tested in today's direction breaks silently the day it is
+ * swapped. The gate always passes two arguments.
+ */
+export function registerViolations(
+  locale,
+  po,
+  register = REGISTERS.get(locale),
+) {
   if (register === undefined) return [];
 
   const pattern = new RegExp(
     `(?<!\\p{L})(${register.forbid.join("|")})(?!\\p{L})`,
-    "giu",
+    register.matchCase === true ? "gu" : "giu",
   );
 
   const violations = [];

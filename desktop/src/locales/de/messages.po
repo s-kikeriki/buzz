@@ -205,11 +205,11 @@ msgstr "Alle Foren"
 
 #: src/features/channels/ui/ChannelBrowserDialog.tsx
 msgid "All open channels are available in the sidebar. Create a new channel to get started."
-msgstr "Alle offenen Kanäle finden Sie in der Seitenleiste. Legen Sie einen neuen Kanal an, um loszulegen."
+msgstr "Alle offenen Kanäle findest du in der Seitenleiste. Lege einen neuen Kanal an, um loszulegen."
 
 #: src/features/channels/ui/ChannelBrowserDialog.tsx
 msgid "All open forums are available in the sidebar. Create a new forum to get started."
-msgstr "Alle offenen Foren finden Sie in der Seitenleiste. Legen Sie ein neues Forum an, um loszulegen."
+msgstr "Alle offenen Foren findest du in der Seitenleiste. Lege ein neues Forum an, um loszulegen."
 
 #: src/features/channels/ui/ChannelBrowserDialog.tsx
 msgid "Alphabetical"
@@ -255,11 +255,11 @@ msgstr "Archiviert"
 
 #: src/features/channels/ui/ChannelBrowserDialog.tsx
 msgid "Archived channels you have joined will appear here."
-msgstr "Archivierte Kanäle, denen Sie beigetreten sind, erscheinen hier."
+msgstr "Archivierte Kanäle, denen du beigetreten bist, erscheinen hier."
 
 #: src/features/channels/ui/ChannelBrowserDialog.tsx
 msgid "Archived forums you have joined will appear here."
-msgstr "Archivierte Foren, denen Sie beigetreten sind, erscheinen hier."
+msgstr "Archivierte Foren, denen du beigetreten bist, erscheinen hier."
 
 #: src/features/settings/ui/AppearanceSettingsControls.tsx
 msgid "Available in the macOS desktop app."
@@ -332,7 +332,7 @@ msgstr "Kanäle sind Echtzeit-Streams für die Team-Kommunikation."
 
 #: src/features/channels/ui/ChannelBrowserDialog.tsx
 msgid "Channels you join will appear here."
-msgstr "Kanäle, denen Sie beitreten, erscheinen hier."
+msgstr "Kanäle, denen du beitrittst, erscheinen hier."
 
 #: src/features/settings/ui/SettingsView.tsx
 msgid "Checking invite permissions…"
@@ -405,7 +405,7 @@ msgstr "Kompakt"
 
 #: src/features/sidebar/ui/SidebarRelayConnectionCard.tsx
 msgid "Complete any prompts opened by the reconnect helper to continue."
-msgstr "Bestätigen Sie die Abfragen des Verbindungshelfers, um fortzufahren."
+msgstr "Bestätige die Abfragen des Verbindungshelfers, um fortzufahren."
 
 #: src/features/settings/ui/SettingsPanels.tsx
 msgid "Compute"
@@ -564,7 +564,7 @@ msgstr "Relay-Hinweis schließen"
 
 #: src/features/sidebar/ui/ChannelSectionDialogs.tsx
 msgid "Enter a new name for this section."
-msgstr "Geben Sie einen neuen Namen für diesen Bereich ein."
+msgstr "Gib einen neuen Namen für diesen Bereich ein."
 
 #: src/features/channels/lib/ephemeralChannel.ts
 msgid "Ephemeral channel. Cleans up {when}."
@@ -644,7 +644,7 @@ msgstr "Foren organisieren Diskussionen rund um ein Thema in Threads."
 
 #: src/features/channels/ui/ChannelBrowserDialog.tsx
 msgid "Forums you join will appear here."
-msgstr "Foren, denen Sie beitreten, erscheinen hier."
+msgstr "Foren, denen du beitrittst, erscheinen hier."
 
 #: src/features/settings/ui/AppearanceSettingsControls.tsx
 msgid "Give the selected navigation item a higher-contrast background."
@@ -684,7 +684,7 @@ msgstr "Gehostete Communitys"
 
 #: src/features/settings/ui/AppearanceSettingsControls.tsx
 msgid "I added a longer message so you can compare line height and text spacing."
-msgstr "Ich habe eine längere Nachricht hinzugefügt, damit Sie Zeilenhöhe und Textabstände vergleichen können."
+msgstr "Ich habe eine längere Nachricht hinzugefügt, damit du Zeilenhöhe und Textabstände vergleichen kannst."
 
 #: src/features/sidebar/ui/AppSidebarPinnedHeader.tsx
 msgid "Inbox"
@@ -970,7 +970,7 @@ msgstr "Keine archivierten Foren"
 
 #: src/features/channels/ui/ChannelBrowserDialog.tsx
 msgid "No channel by that name yet — create it to get started."
-msgstr "Noch kein Kanal mit diesem Namen – legen Sie ihn an, um loszulegen."
+msgstr "Noch kein Kanal mit diesem Namen – lege ihn an, um loszulegen."
 
 #: src/features/channels/ui/ChannelBrowserDialog.tsx
 msgid "No channels match your search"
@@ -986,7 +986,7 @@ msgstr "Keine Community"
 
 #: src/features/channels/ui/ChannelBrowserDialog.tsx
 msgid "No forum by that name yet — create it to get started."
-msgstr "Noch kein Forum mit diesem Namen – legen Sie es an, um loszulegen."
+msgstr "Noch kein Forum mit diesem Namen – lege es an, um loszulegen."
 
 #: src/features/channels/ui/ChannelBrowserDialog.tsx
 msgid "No forums match your search"
@@ -1107,7 +1107,7 @@ msgstr "Optional"
 
 #: src/features/settings/ui/AppearanceSettingsControls.tsx
 msgid "Orders every list in the sidebar. Recent also floats the sections themselves, so dragging them waits for A–Z. A section you have set from its own menu keeps that order."
-msgstr "Ordnet jede Liste in der Seitenleiste. „Zuletzt“ lässt außerdem die Abschnitte selbst nach oben rücken, sodass das Verschieben per Drag-and-drop erst bei A–Z möglich ist. Ein Abschnitt, den Sie über sein eigenes Menü festgelegt haben, behält seine Sortierung."
+msgstr "Ordnet jede Liste in der Seitenleiste. „Zuletzt“ lässt außerdem die Abschnitte selbst nach oben rücken, sodass das Verschieben per Drag-and-drop erst bei A–Z möglich ist. Ein Abschnitt, den du über sein eigenes Menü festgelegt hast, behält seine Sortierung."
 
 #: src/features/sidebar/ui/SidebarProjectsSection.tsx
 msgid "Owned by me"
@@ -1301,7 +1301,7 @@ msgstr "Bereichsname"
 
 #: src/features/sidebar/ui/ChannelSectionDialogs.tsx
 msgid "Sections let you group related channels in the sidebar."
-msgstr "Mit Bereichen gruppieren Sie zusammengehörige Kanäle in der Seitenleiste."
+msgstr "Mit Bereichen gruppierst du zusammengehörige Kanäle in der Seitenleiste."
 
 #: src/shared/lib/keyboard-shortcuts.ts
 msgid "Send message"
@@ -1476,7 +1476,7 @@ msgstr "Durchstreichen ein-/ausschalten"
 
 #: src/features/channels/ui/ChannelBrowserDialog.tsx
 msgid "Try a different name or keyword."
-msgstr "Versuchen Sie einen anderen Namen oder ein anderes Stichwort."
+msgstr "Versuche einen anderen Namen oder ein anderes Stichwort."
 
 #: src/features/settings/ui/SettingsView.tsx
 msgid "Try again"
