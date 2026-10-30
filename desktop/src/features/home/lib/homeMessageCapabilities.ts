@@ -1,4 +1,15 @@
+import { t } from "@lingui/core/macro";
+
 import type { InboxItem } from "@/features/home/lib/inbox";
+
+/**
+ * `t` from the core macro, not `msg` + `i18n._`.
+ *
+ * This is a plain function called during render, so `t` resolves against the
+ * active catalogue each time it runs — which is what we want. The descriptors
+ * in `inbox.ts` are a different case: `buildInboxItems` runs inside a `useMemo`
+ * keyed on feed data, so its output survives a language change untouched.
+ */
 
 export function getHomeMessageCapabilities(
   item: InboxItem | null,
@@ -15,9 +26,9 @@ export function getHomeMessageCapabilities(
       ? null
       : item.item.channelId
         ? availableChannelIds.has(item.item.channelId)
-          ? "This item does not support inline replies yet."
-          : "Open the linked channel to reply."
-        : "This inbox item does not have a reply target.";
+          ? t`This item does not support inline replies yet.`
+          : t`Open the linked channel to reply.`
+        : t`This inbox item does not have a reply target.`;
 
   return {
     canDelete:

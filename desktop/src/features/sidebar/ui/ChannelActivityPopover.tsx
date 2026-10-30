@@ -7,7 +7,11 @@ import { useAppNavigation } from "@/app/navigation/useAppNavigation";
 import type { ActiveChannelTurnSummary } from "@/features/agents/activeAgentTurnsStore";
 import { formatElapsed } from "@/features/agents/ui/agentSessionUtils";
 import { useOpenAgentActivity } from "@/features/agents/useOpenAgentActivity";
-import { buildInboxItems, type InboxItem } from "@/features/home/lib/inbox";
+import {
+  buildInboxItems,
+  resolveInboxCopy,
+  type InboxItem,
+} from "@/features/home/lib/inbox";
 import { getGroupedInboxItemIds } from "@/features/home/useHomeInboxReadState";
 import { useUsersBatchQuery } from "@/features/profile/hooks";
 import type { UserProfileLookup } from "@/features/profile/lib/identity";
@@ -92,7 +96,7 @@ function ThreadPreviewRow({
   onOpen: () => void;
   onRemindLater: () => void;
 }) {
-  const { t } = useLingui();
+  const { i18n, t } = useLingui();
   return (
     <div
       className="group/activity-row relative border-t border-border/50 first:border-t-0"
@@ -140,7 +144,7 @@ function ThreadPreviewRow({
           </div>
           <Markdown
             className="inbox-preview-markdown mt-1.5 line-clamp-2 text-sm font-medium leading-5 text-foreground"
-            content={item.preview}
+            content={resolveInboxCopy(i18n, item.preview)}
             interactive={false}
             mentionNames={item.mentionNames}
           />
@@ -259,7 +263,7 @@ export function ChannelActivityPopover({
   channel: Channel;
   children: React.ReactNode;
 }) {
-  const { t } = useLingui();
+  const { i18n, t } = useLingui();
   const locale = useLocale();
   const [open, setOpen] = React.useState(false);
   const hoverTimerRef = React.useRef<ReturnType<typeof setTimeout> | null>(
@@ -474,7 +478,10 @@ export function ChannelActivityPopover({
                         authorPubkey: item.item.pubkey,
                         channelId: channel.id,
                         eventId: item.id,
-                        preview: item.preview.slice(0, 100),
+                        preview: resolveInboxCopy(i18n, item.preview).slice(
+                          0,
+                          100,
+                        ),
                       });
                     }}
                   />

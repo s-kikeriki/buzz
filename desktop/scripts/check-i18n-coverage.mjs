@@ -57,6 +57,24 @@ const CONVERTED_FILES = [
   "src/features/sidebar/ui/SidebarRelayConnectionCard.tsx",
   "src/features/sidebar/ui/sidebarLoadingSkeleton.tsx",
   "src/features/sidebar/ui/sidebarMenuHelpers.tsx",
+  // Tranche 2 — the inbox Ian named, and the home screen it lives on.
+  // `inbox.ts` and `homeMessageCapabilities.ts` are libraries, not UI, and are
+  // listed because they *produce* copy: the inbox row phrases, the eleven
+  // event-kind headlines and the three empty-body previews all come from
+  // there, and no JSX node mentions any of them.
+  "src/features/home/lib/homeMessageCapabilities.ts",
+  "src/features/home/lib/inbox.ts",
+  "src/features/home/ui/FeedSection.tsx",
+  "src/features/home/ui/HomeView.tsx",
+  "src/features/home/ui/InboxDetailPane.tsx",
+  "src/features/home/ui/InboxFilterMenu.tsx",
+  "src/features/home/ui/InboxListPane.tsx",
+  "src/features/home/ui/ProjectInboxDetail.tsx",
+  "src/features/home/ui/ProjectInboxDetailPane.tsx",
+  "src/features/home/ui/RecentNotesSection.tsx",
+  // The shared ladder grew a forward-pointing half for the reminder
+  // countdown, so it now holds copy of its own ("in less than a minute").
+  "src/shared/lib/relativeTime.ts",
 ];
 
 /**

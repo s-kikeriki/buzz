@@ -1,3 +1,4 @@
+import { i18n } from "@lingui/core";
 import assert from "node:assert/strict";
 import test from "node:test";
 
@@ -6,7 +7,28 @@ import {
   findInboxItemByEventId,
   getInboxConversationId,
   getInboxTypeLabel,
+  resolveInboxCopy,
 } from "./inbox.ts";
+
+/**
+ * The type label with its copy resolved, through the production path.
+ *
+ * `getInboxTypeLabel` returns descriptors now, because the rows are built in a
+ * `useMemo` keyed on feed data and would otherwise freeze in whichever locale
+ * was active when the feed last changed. Asserting on `descriptor.message`
+ * here would read the source string straight back out and never exercise
+ * `resolveInboxCopy` or `i18n._` at all; going through both means a phrase
+ * that is wired up wrong fails here rather than on screen. `test-loader.mjs`
+ * activates `en` process-wide, and the English catalogue is the source text,
+ * so the expected values stay the English they always were.
+ */
+function typeLabel(item) {
+  const label = getInboxTypeLabel(item);
+  return {
+    text: resolveInboxCopy(i18n, label.text),
+    channelLabel: label.channelLabel,
+  };
+}
 
 const CHANNEL_ID = "9a1657ac-f7aa-5db0-b632-d8bbeb6dfb50";
 const DM_CHANNEL_ID = "8ad375a7-6990-4b22-985f-e3fd34f634d7";
@@ -63,7 +85,7 @@ test("mention rows use the channel list when feed channelName is blank", () => {
     }),
   });
 
-  assert.deepEqual(getInboxTypeLabel(inboxItem), {
+  assert.deepEqual(typeLabel(inboxItem), {
     text: "Mentioned in",
     channelLabel: "buzz-bugs",
   });
@@ -87,7 +109,7 @@ test("thread activity rows use the channel list when feed channelName is blank",
     }),
   });
 
-  assert.deepEqual(getInboxTypeLabel(inboxItem), {
+  assert.deepEqual(typeLabel(inboxItem), {
     text: "Thread in",
     channelLabel: "buzz-bugs",
   });
@@ -126,7 +148,7 @@ test("thread groups are represented by the latest reply rather than the root", (
     inboxItem.groupItems.map((groupItem) => groupItem.id),
     ["root-event", "reply-event"],
   );
-  assert.deepEqual(getInboxTypeLabel(inboxItem), {
+  assert.deepEqual(typeLabel(inboxItem), {
     text: "Thread in",
     channelLabel: "buzz-bugs",
   });
@@ -166,7 +188,7 @@ test("thread groups use the latest row label even when the root was a mention", 
     inboxItem.groupItems.map((groupItem) => groupItem.id),
     ["root-event", "reply-event"],
   );
-  assert.deepEqual(getInboxTypeLabel(inboxItem), {
+  assert.deepEqual(typeLabel(inboxItem), {
     text: "Thread in",
     channelLabel: "buzz-bugs",
   });
