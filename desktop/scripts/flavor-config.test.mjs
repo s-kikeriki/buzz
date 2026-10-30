@@ -576,6 +576,7 @@ test("the build env carries every value a build needs to pick an identity", () =
       DMG_BACKGROUND: "flavors/icons/ki.keriki-dmg-background.png",
       VITE_BUZZ_CELEBRATION_EMOJIS: "🎉,✨,🔑,💛,✅,🔒",
       VITE_BUZZ_CHROME_SURFACE: "ink",
+      VITE_BUZZ_COLLAPSE_LONG_POSTS: "1",
       VITE_BUZZ_DEFAULT_ACCENT_COLOR: "#d4f247",
       VITE_BUZZ_PRODUCT_LOGO: "data:image/svg+xml;base64,PHN2Zy8+",
       VITE_BUZZ_PRODUCT_LOGO_LIGHT: "data:image/svg+xml;base64,PHN2Zy8+",

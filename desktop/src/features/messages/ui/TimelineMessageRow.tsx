@@ -9,6 +9,11 @@ import type { UserProfileLookup } from "@/features/profile/lib/identity";
 import { cn } from "@/shared/lib/cn";
 import { MessageRow } from "./MessageRow";
 import { MessageThreadSummaryRow } from "./MessageThreadSummaryRow";
+import {
+  isCollapsiblePost,
+  shouldOpenThreadFromPostClick,
+} from "@/features/messages/lib/collapseLongPosts";
+import { BRAND } from "@/shared/branding/brand";
 import { SystemMessageRow } from "./SystemMessageRow";
 
 type ToggleReaction = (
@@ -123,6 +128,43 @@ export function MessageRowItem({
   videoReviewContext,
 }: MessageRowItemProps) {
   const { message, summary } = entry;
+  /**
+   * Whether this row collapses a long body and opens its thread on click.
+   *
+   * `BRAND.collapseLongPosts` is read here rather than inside `MessageRow`
+   * because this component *is* the channel's middle pane. The thread panel
+   * renders the same `MessageRow` and must keep showing the whole post —
+   * sending a reader to the pane they are already in would be a dead end.
+   */
+  const collapsible =
+    BRAND.collapseLongPosts &&
+    Boolean(onOpenThread) &&
+    isCollapsiblePost(message);
+  const openThisThread = React.useCallback(() => {
+    onOpenThread?.(message);
+  }, [message, onOpenThread]);
+  /**
+   * A click anywhere on the post opens its thread — except where it would
+   * take something away. `shouldOpenThreadFromPostClick` holds the four
+   * exceptions and is tested on its own; this only wires it up.
+   */
+  const handlePostClick = React.useCallback(
+    (event: React.MouseEvent<HTMLDivElement>) => {
+      if (
+        !shouldOpenThreadFromPostClick(
+          event,
+          typeof window === "undefined" ? null : window.getSelection(),
+        )
+      ) {
+        return;
+      }
+      openThisThread();
+    },
+    [openThisThread],
+  );
+  const postClickProps = collapsible
+    ? { "data-collapsible-post": "", onClick: handlePostClick }
+    : {};
   const canManage = canManageMessageForCurrentUser(
     message,
     currentPubkey,
@@ -136,6 +178,7 @@ export function MessageRowItem({
     const isHighlighted = message.id === highlightedMessageId;
     return (
       <div
+        {...postClickProps}
         className={cn(
           "group/message relative mx-1 mb-1 flex flex-col gap-0 rounded-2xl px-0 py-1 transition-colors hover:bg-muted/50 focus-within:bg-muted/50",
           isHighlighted &&
@@ -144,6 +187,7 @@ export function MessageRowItem({
       >
         <MessageRow
           channelId={channelId}
+          collapseLongBody={collapsible}
           highlighted={false}
           hoverBackground={false}
           huddleMemberPubkeys={huddleMemberPubkeys}
@@ -168,6 +212,7 @@ export function MessageRowItem({
           }
           onMarkRead={onMarkRead}
           onMarkUnread={onMarkUnread}
+          onOpenThread={collapsible ? openThisThread : undefined}
           onToggleReaction={onToggleReaction}
           onReply={onReply}
           onUnfollowThread={
@@ -198,6 +243,7 @@ export function MessageRowItem({
 
   return (
     <div
+      {...postClickProps}
       className={cn(
         "flex flex-col gap-1",
         isFollowedByContinuation ? "pb-0" : "pb-2.5",
@@ -205,6 +251,7 @@ export function MessageRowItem({
     >
       <MessageRow
         channelId={channelId}
+        collapseLongBody={collapsible}
         highlighted={message.id === highlightedMessageId || isSearchActive}
         huddleMemberPubkeys={huddleMemberPubkeys}
         huddleMemberPubkeysPending={huddleMemberPubkeysPending}
@@ -228,6 +275,7 @@ export function MessageRowItem({
         }
         onMarkRead={onMarkRead}
         onMarkUnread={onMarkUnread}
+        onOpenThread={collapsible ? openThisThread : undefined}
         onToggleReaction={onToggleReaction}
         onReply={onReply}
         onUnfollowThread={

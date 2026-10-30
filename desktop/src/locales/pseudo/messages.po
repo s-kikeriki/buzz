@@ -1434,6 +1434,10 @@ msgstr ""
 msgid "Open thread in channel {channelLabel}; linked message was deleted"
 msgstr ""
 
+#: src/features/messages/ui/CollapsedPostBody.tsx
+msgid "Open thread to read the rest"
+msgstr ""
+
 #: src/features/sidebar/ui/CreateChannelFormFields.tsx
 msgid "Optional"
 msgstr ""

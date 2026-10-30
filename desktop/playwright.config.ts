@@ -33,6 +33,7 @@ export default defineConfig({
       name: "smoke",
       testMatch: [
         "**/smoke.spec.ts",
+        "**/collapsed-posts.spec.ts",
         "**/i18n-appearance.spec.ts",
         "**/sidebar-german-screenshots.spec.ts",
         "**/search-german-screenshots.spec.ts",
