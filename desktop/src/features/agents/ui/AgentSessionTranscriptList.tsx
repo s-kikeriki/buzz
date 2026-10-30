@@ -1,4 +1,5 @@
 import * as React from "react";
+import { localeDateTime } from "@/shared/lib/intlLocale";
 import { motion, useReducedMotion } from "motion/react";
 import { CheckCheck, Clock, Radio } from "lucide-react";
 
@@ -13,6 +14,7 @@ import {
 import type { UserProfileLookup } from "@/features/profile/lib/identity";
 import { useAnchoredScroll } from "@/features/messages/ui/useAnchoredScroll";
 import { useStableArrayShallow } from "@/shared/hooks/useStableReference";
+import { useLocale } from "@/shared/lib/localePreference";
 import { cn } from "@/shared/lib/cn";
 import {
   Dialog,
@@ -503,6 +505,7 @@ function SameKindSummaryItem({
   profiles?: UserProfileLookup;
   summary: Extract<TranscriptTurnSegment, { kind: "summary" }>["summary"];
 }) {
+  const locale = useLocale();
   const groupedFileEditDiffs = React.useMemo(
     () =>
       summary.renderClass === "file-edit" || summary.variant === "mixed"
@@ -528,7 +531,7 @@ function SameKindSummaryItem({
         className="flex flex-col gap-0.5"
         openToneScope="summary"
         testId="transcript-same-kind-summary"
-        title={formatTranscriptTimestampTitle(summary.timestamp)}
+        title={formatTranscriptTimestampTitle(summary.timestamp, locale)}
       >
         <ToolRunSummaryLabel
           label={summary.label}
@@ -919,6 +922,7 @@ function TurnSetupStatus({
 }: {
   items: Extract<TranscriptItem, { type: "lifecycle" }>[];
 }) {
+  const locale = useLocale();
   const timestamp = turnSetupTimestamp(items);
   if (items.length === 0 || !timestamp) {
     return null;
@@ -927,7 +931,7 @@ function TurnSetupStatus({
   return (
     <div
       className="rounded-md px-2"
-      title={formatTranscriptTimestampTitle(timestamp)}
+      title={formatTranscriptTimestampTitle(timestamp, locale)}
     >
       <TurnSetupFooter
         items={items}
@@ -954,13 +958,14 @@ function SessionBoundaryDivider({
   labelState: "current" | "most-recent" | "earlier";
   sessionStartTimestamp: string;
 }) {
+  const locale = useLocale();
   const label =
     labelState === "current"
       ? "Latest live-observed session"
       : labelState === "most-recent"
         ? "Most recent observed session"
         : "Earlier observed session";
-  const formattedDate = new Date(sessionStartTimestamp).toLocaleString();
+  const formattedDate = localeDateTime(new Date(sessionStartTimestamp), locale);
   return (
     <div
       className="flex items-center gap-2 px-3 py-2"

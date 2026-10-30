@@ -1,4 +1,5 @@
 import type { UserProfileLookup } from "@/features/profile/lib/identity";
+import { useLocale } from "@/shared/lib/localePreference";
 import { Markdown } from "@/shared/ui/markdown";
 import { useAgentSessionTranscriptVariant } from "../agentSessionTranscriptContext";
 import { formatTranscriptTimestampTitle } from "../agentSessionUtils";
@@ -26,6 +27,7 @@ function MessageItem({
   item: Extract<TranscriptItem, { type: "message" }>;
   profiles?: UserProfileLookup;
 }) {
+  const locale = useLocale();
   const variant = useAgentSessionTranscriptVariant();
   const isCompactPreview = variant === "compactPreview";
   const isAssistant = item.role === "assistant";
@@ -60,7 +62,7 @@ function MessageItem({
               ? "w-full min-w-0 text-xs leading-4"
               : "w-full min-w-0 text-sm"
           }
-          title={formatTranscriptTimestampTitle(item.timestamp)}
+          title={formatTranscriptTimestampTitle(item.timestamp, locale)}
         >
           <Markdown
             className={isCompactPreview ? "text-xs leading-4" : "leading-5"}

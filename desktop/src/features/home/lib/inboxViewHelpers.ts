@@ -17,6 +17,8 @@ import type {
   UserProfileSummary,
 } from "@/shared/api/types";
 import { KIND_REMINDER } from "@/shared/constants/kinds";
+import { formatItemTimestamp } from "@/shared/lib/datetime";
+import type { AppLocale } from "@/shared/lib/localePreference";
 import { normalizePubkey } from "@/shared/lib/pubkey";
 import { resolveMentionProps } from "@/shared/lib/resolveMentionNames";
 
@@ -183,6 +185,8 @@ export function toInboxContextMessage(
   context: {
     eventById: ReadonlyMap<string, RelayEvent>;
     fallbackAuthorPubkey: string;
+    /** Interface language both timestamp labels are formatted in. */
+    locale: AppLocale;
     profiles: Record<string, UserProfileSummary> | undefined;
     selectedItemId: string;
   },
@@ -208,7 +212,10 @@ export function toInboxContextMessage(
     depth: event
       ? getContextMessageDepth(event, context.eventById)
       : message.depth,
-    fullTimestampLabel: formatInboxFullTimestamp(message.createdAt),
+    fullTimestampLabel: formatInboxFullTimestamp(
+      message.createdAt,
+      context.locale,
+    ),
     isSelected: message.id === context.selectedItemId,
     kind: message.kind,
     mentionNames: mentionNames ?? [],
@@ -216,7 +223,11 @@ export function toInboxContextMessage(
     reactions: message.reactions,
     signerPubkey: message.signerPubkey,
     tags: message.tags,
-    timeLabel: message.time,
+    // Formatted here from the timestamp rather than read off a `time` field the
+    // formatter baked in English. See the note on `TimelineMessage`.
+    timeLabel: formatItemTimestamp(message.createdAt, {
+      locale: context.locale,
+    }),
   };
 }
 
@@ -247,6 +258,5 @@ export function toTimelineMessage(
     rootId: message.rootId ?? threadReference.rootId,
     signerPubkey: message.signerPubkey,
     tags: message.tags,
-    time: message.timeLabel ?? message.fullTimestampLabel,
   };
 }

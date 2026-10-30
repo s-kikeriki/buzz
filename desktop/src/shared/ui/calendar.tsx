@@ -1,4 +1,6 @@
 import * as React from "react";
+import { localeDateTimeFormat } from "@/shared/lib/intlLocale";
+import { useLocale } from "@/shared/lib/localePreference";
 import {
   ChevronDownIcon,
   ChevronLeftIcon,
@@ -25,6 +27,7 @@ function Calendar({
 }: React.ComponentProps<typeof DayPicker> & {
   buttonVariant?: React.ComponentProps<typeof Button>["variant"];
 }) {
+  const locale = useLocale();
   const defaultClassNames = getDefaultClassNames();
 
   return (
@@ -162,8 +165,14 @@ function Calendar({
         ...components,
       }}
       formatters={{
+        // `"default"` meant the operating system's locale. The weekday and
+        // caption strings around it still come from react-day-picker's own
+        // `locale` prop, which needs a `date-fns` locale object and so a direct
+        // dependency this fork does not have yet — tracked separately. The
+        // month dropdown is the one formatter this component owns, so it is the
+        // one this change can correct.
         formatMonthDropdown: (date) =>
-          date.toLocaleString("default", { month: "short" }),
+          localeDateTimeFormat(locale, { month: "short" }).format(date),
         ...formatters,
       }}
       showOutsideDays={showOutsideDays}
@@ -192,7 +201,9 @@ function CalendarDayButton({
         defaultClassNames.day,
         className,
       )}
-      data-day={day.date.toLocaleDateString()}
+      // Not copy: an identifier other code and tests select on. Localising it
+      // would make the selector depend on the interface language.
+      data-day={day.date.toLocaleDateString("en-US")}
       data-range-end={modifiers.range_end}
       data-range-middle={modifiers.range_middle}
       data-range-start={modifiers.range_start}

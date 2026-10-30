@@ -1,5 +1,6 @@
 import * as React from "react";
 
+import { useLocale } from "@/shared/lib/localePreference";
 import { useNow } from "@/shared/lib/useNow";
 
 import {
@@ -350,6 +351,7 @@ function ActivityCard({
   onOpenProject: () => void;
   profiles?: UserProfileLookup;
 }) {
+  const locale = useLocale();
   const visual = PROJECT_EVENT_VISUALS[item.kind];
   const TypeIcon = visual.icon;
   const profile = item.actorPubkey
@@ -469,11 +471,11 @@ function ActivityCard({
                     onClick={onOpen}
                     type="button"
                   >
-                    {relativeTime(item.createdAt)}
+                    {relativeTime(item.createdAt, locale)}
                   </button>
                 </TooltipTrigger>
                 <TooltipContent>
-                  {formatExactTimestamp(item.createdAt)}
+                  {formatExactTimestamp(item.createdAt, locale)}
                 </TooltipContent>
               </Tooltip>
             </div>

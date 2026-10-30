@@ -24,6 +24,9 @@ import {
 import { useUsersBatchQuery } from "@/features/profile/hooks";
 import type { UserProfileLookup } from "@/features/profile/lib/identity";
 import { resolveChannelDisplayLabel } from "@/features/sidebar/lib/channelLabels";
+import { localeDateTimeFormat } from "@/shared/lib/intlLocale";
+import type { AppLocale } from "@/shared/lib/localePreference";
+import { useLocale } from "@/shared/lib/localePreference";
 import { useIdentityQuery } from "@/shared/api/hooks";
 import { getEventById } from "@/shared/api/tauri";
 import type { Channel } from "@/shared/api/types";
@@ -65,23 +68,26 @@ const UNKNOWN_DRAFT_SOURCE: DraftSource = {
   label: UNKNOWN_CHANNEL_LABEL,
 };
 
-const draftTimeFormatter = new Intl.DateTimeFormat("en-US", {
+const DRAFT_TIME = {
   month: "short",
   day: "numeric",
   hour: "numeric",
   minute: "2-digit",
-});
+} as const;
 
 function parseDraftTime(value: string): number {
   const time = new Date(value).getTime();
   return Number.isFinite(time) ? time : 0;
 }
 
-export function formatDraftCreatedAt(draft: DraftState): string {
+export function formatDraftCreatedAt(
+  draft: DraftState,
+  locale: AppLocale,
+): string {
   const time = parseDraftTime(draft.createdAt);
   return time === 0
     ? "Unknown time"
-    : draftTimeFormatter.format(new Date(time));
+    : localeDateTimeFormat(locale, DRAFT_TIME).format(new Date(time));
 }
 
 function getOriginalDraftKey(draftKey: string): string {
@@ -351,6 +357,7 @@ function DraftRow({
   selected: boolean;
   source: DraftSource;
 }) {
+  const locale = useLocale();
   const isSent = entry.draft.status === "sent";
   const isOrphaned = rootStatus === "deleted";
   const canOpen = canOpenDraft(entry.draft, source) && !isOrphaned;
@@ -391,7 +398,7 @@ function DraftRow({
               {channelLabel}
             </span>
             <span className="shrink-0 text-muted-foreground/70">
-              {formatDraftCreatedAt(entry.draft)}
+              {formatDraftCreatedAt(entry.draft, locale)}
             </span>
             {isOrphaned ? (
               <span

@@ -1,4 +1,5 @@
 import { ChevronDown } from "lucide-react";
+import { useLocale } from "@/shared/lib/localePreference";
 
 import {
   ActivityRow,
@@ -11,6 +12,7 @@ import { PromptSectionList } from "../PromptSectionAccordion";
 import type { ActivityRenderClassItemProps } from "./types";
 
 export function RawRailActivity(props: ActivityRenderClassItemProps) {
+  const locale = useLocale();
   if (props.item.type === "tool") {
     return <ToolActivity {...props} />;
   }
@@ -25,7 +27,7 @@ export function RawRailActivity(props: ActivityRenderClassItemProps) {
   return (
     <ActivityRow
       testId="transcript-metadata-item"
-      title={formatTranscriptTimestampTitle(props.item.timestamp)}
+      title={formatTranscriptTimestampTitle(props.item.timestamp, locale)}
     >
       <ActivityRowLabel
         object={sectionSuffix}

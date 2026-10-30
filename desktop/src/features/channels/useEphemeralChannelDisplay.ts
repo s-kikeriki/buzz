@@ -2,8 +2,10 @@ import * as React from "react";
 
 import { getEphemeralChannelDisplay } from "@/features/channels/lib/ephemeralChannel";
 import type { Channel } from "@/shared/api/types";
+import { useLocale } from "@/shared/lib/localePreference";
 
 export function useEphemeralChannelDisplay(channel: Channel | null) {
+  const locale = useLocale();
   const [, setClockTick] = React.useState(0);
   const deadlineKey =
     channel?.ttlDeadline === null || channel === null
@@ -25,7 +27,7 @@ export function useEphemeralChannelDisplay(channel: Channel | null) {
   }, [deadlineKey]);
 
   const display = channel
-    ? getEphemeralChannelDisplay(channel, Date.now())
+    ? getEphemeralChannelDisplay(channel, locale, Date.now())
     : null;
   // Stabilise the reference across renders when the rendered content is
   // unchanged: this object is recomputed from Date.now() every render, and it

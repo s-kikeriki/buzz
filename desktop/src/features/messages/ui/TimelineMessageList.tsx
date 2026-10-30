@@ -3,6 +3,7 @@ import { VList } from "virtua";
 import type { VListHandle } from "virtua";
 
 import { formatDayGroupLabel } from "@/shared/lib/datetime";
+import { useLocale } from "@/shared/lib/localePreference";
 import {
   buildTimelineDayGroups,
   buildTimelineItems,
@@ -171,6 +172,7 @@ export const TimelineMessageList = React.memo(function TimelineMessageList({
   onVirtualizerRangeChanged,
   onVirtualizerScrollerChange,
 }: TimelineMessageListProps) {
+  const locale = useLocale();
   const entries = React.useMemo(
     () =>
       mainEntries ??
@@ -356,14 +358,14 @@ export const TimelineMessageList = React.memo(function TimelineMessageList({
           data-day-label={
             group.headingTimestamp === null
               ? undefined
-              : formatDayGroupLabel(group.headingTimestamp)
+              : formatDayGroupLabel(group.headingTimestamp, { locale })
           }
           data-testid="message-timeline-day-group"
           key={group.key}
         >
           {hideDayDividers || group.headingTimestamp === null ? null : (
             <DayDivider
-              label={formatDayGroupLabel(group.headingTimestamp)}
+              label={formatDayGroupLabel(group.headingTimestamp, { locale })}
               sticky={stickyDayDividers}
             />
           )}
@@ -439,6 +441,7 @@ function VirtualizedTimelineRows({
   onVirtualizerScrollerChange,
   renderItem,
 }: VirtualizedTimelineRowsProps) {
+  const locale = useLocale();
   const listRef = React.useRef<VListHandle>(null);
   const hostRef = React.useRef<HTMLDivElement>(null);
   const itemsLengthRef = React.useRef(0);
@@ -520,7 +523,9 @@ function VirtualizedTimelineRows({
       const renderedDividerPillTop = (
         divider: (typeof dayDividerItems)[number],
       ) => {
-        const label = formatDayGroupLabel(divider.item.headingTimestamp);
+        const label = formatDayGroupLabel(divider.item.headingTimestamp, {
+          locale,
+        });
         const source = [
           ...scroller.querySelectorAll<HTMLElement>(
             '[data-testid="message-timeline-day-divider"]',
@@ -577,11 +582,11 @@ function VirtualizedTimelineRows({
         pinnedLabel.style.transform = `translateY(${nextTranslateY}px)`;
       }
       const nextLabel = activeDivider
-        ? formatDayGroupLabel(activeDivider.item.headingTimestamp)
+        ? formatDayGroupLabel(activeDivider.item.headingTimestamp, { locale })
         : null;
       const incomingLabel =
         nextDivider && nextTranslateY < 0
-          ? formatDayGroupLabel(nextDivider.item.headingTimestamp)
+          ? formatDayGroupLabel(nextDivider.item.headingTimestamp, { locale })
           : null;
       const activeSourcePill = sourcePills.find(
         (pill) => pill.parentElement?.dataset.dayLabel === nextLabel,
@@ -619,7 +624,7 @@ function VirtualizedTimelineRows({
           : { label: nextLabel, incomingLabel },
       );
     },
-    [dayDividerItems],
+    [dayDividerItems, locale],
   );
 
   React.useEffect(
@@ -775,7 +780,9 @@ function VirtualizedTimelineRows({
               return <div key={virtualizedItemKey(item)}>{item.content}</div>;
             }
             if (item.kind === "day-divider") {
-              const dayLabel = formatDayGroupLabel(item.headingTimestamp);
+              const dayLabel = formatDayGroupLabel(item.headingTimestamp, {
+                locale,
+              });
               return (
                 <div
                   className="relative flex flex-col before:absolute before:inset-x-0 before:top-1/2 before:h-px before:-translate-y-1/2 before:bg-border/35 before:content-['']"

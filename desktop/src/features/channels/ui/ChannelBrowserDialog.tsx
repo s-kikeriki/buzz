@@ -1,3 +1,6 @@
+import type { MessageDescriptor } from "@lingui/core";
+import { msg, plural } from "@lingui/core/macro";
+import { Trans, useLingui } from "@lingui/react/macro";
 import * as React from "react";
 import {
   ArrowLeft,
@@ -55,10 +58,81 @@ import {
 type BrowserTab = "all" | "joined" | "archived";
 type ChannelSort = ChannelSortMode | "members";
 
-const CHANNEL_SORT_OPTIONS: { label: string; value: ChannelSort }[] = [
-  { label: "Alphabetical", value: "alpha" },
-  { label: "Recent", value: "recent" },
-  { label: "Most members", value: "members" },
+/**
+ * Every sentence in this dialog, once per mode.
+ *
+ * It used to be one set of templates with `${entityLabel}` and a bare `s`
+ * spliced in — `` `No ${entityLabel}s match your search` ``. That cannot be
+ * translated at all: German pluralises "Kanal" as "Kanäle" and "Forum" as
+ * "Foren", neither by appending a letter, and the article in front of the noun
+ * changes with it. The German build rendered "Neuen channel anlegen", half a
+ * sentence in each language, because the interpolated noun stayed English.
+ *
+ * Two full sets of messages is more lines and the right shape: each entry is a
+ * whole sentence a translator can read.
+ */
+type BrowseCopy = {
+  title: MessageDescriptor;
+  newEntity: MessageDescriptor;
+  searchAndCreate: MessageDescriptor;
+  searchOnly: MessageDescriptor;
+  createNew: MessageDescriptor;
+  sortLabel: (selected: string) => MessageDescriptor;
+  emptyNoMatch: MessageDescriptor;
+  emptyArchived: MessageDescriptor;
+  emptyJoined: MessageDescriptor;
+  emptyBrowse: MessageDescriptor;
+  describeNoMatchCreate: MessageDescriptor;
+  describeNoMatch: MessageDescriptor;
+  describeArchived: MessageDescriptor;
+  describeJoined: MessageDescriptor;
+  describeBrowse: MessageDescriptor;
+};
+
+const BROWSE_COPY: Record<"channel" | "forum", BrowseCopy> = {
+  channel: {
+    title: msg`Browse channels`,
+    newEntity: msg`New channel`,
+    searchAndCreate: msg`Search or create a channel`,
+    searchOnly: msg`Search channels by name or description`,
+    createNew: msg`Create a new channel`,
+    sortLabel: (selected) => msg`Sort channels: ${selected}`,
+    emptyNoMatch: msg`No channels match your search`,
+    emptyArchived: msg`No archived channels`,
+    emptyJoined: msg`No joined channels`,
+    emptyBrowse: msg`No channels to browse`,
+    describeNoMatchCreate: msg`No channel by that name yet — create it to get started.`,
+    describeNoMatch: msg`Try a different name or keyword.`,
+    describeArchived: msg`Archived channels you have joined will appear here.`,
+    describeJoined: msg`Channels you join will appear here.`,
+    describeBrowse: msg`All open channels are available in the sidebar. Create a new channel to get started.`,
+  },
+  forum: {
+    title: msg`Add a forum`,
+    newEntity: msg`New forum`,
+    searchAndCreate: msg`Search or create a forum`,
+    searchOnly: msg`Search forums by name or description`,
+    createNew: msg`Create a new forum`,
+    sortLabel: (selected) => msg`Sort forums: ${selected}`,
+    emptyNoMatch: msg`No forums match your search`,
+    emptyArchived: msg`No archived forums`,
+    emptyJoined: msg`No joined forums`,
+    emptyBrowse: msg`No forums to browse`,
+    describeNoMatchCreate: msg`No forum by that name yet — create it to get started.`,
+    describeNoMatch: msg`Try a different name or keyword.`,
+    describeArchived: msg`Archived forums you have joined will appear here.`,
+    describeJoined: msg`Forums you join will appear here.`,
+    describeBrowse: msg`All open forums are available in the sidebar. Create a new forum to get started.`,
+  },
+};
+
+const CHANNEL_SORT_OPTIONS: {
+  label: MessageDescriptor;
+  value: ChannelSort;
+}[] = [
+  { label: msg`Alphabetical`, value: "alpha" },
+  { label: msg`Recent`, value: "recent" },
+  { label: msg`Most members`, value: "members" },
 ];
 
 function BrowseState({
@@ -109,6 +183,7 @@ export function ChannelBrowserDialog({
   onCreateChannel,
   isCreatingChannel = false,
 }: ChannelBrowserDialogProps) {
+  const { i18n, t } = useLingui();
   const [query, setQuery] = React.useState("");
   const [activeTab, setActiveTab] = React.useState<BrowserTab>("all");
   const [sort, setSort] = React.useState<ChannelSort>("alpha");
@@ -142,15 +217,11 @@ export function ChannelBrowserDialog({
   const isForumMode = channelTypeFilter === "forum";
   const canCreate = Boolean(onCreateChannel);
   const createKind = isForumMode ? "forum" : "stream";
-  const browseTitle = isForumMode ? "Add a forum" : "Browse channels";
-  const searchPlaceholder = canCreate
-    ? isForumMode
-      ? "Search or create a forum"
-      : "Search or create a channel"
-    : isForumMode
-      ? "Search forums by name or description"
-      : "Search channels by name or description";
-  const entityLabel = isForumMode ? "forum" : "channel";
+  const copy = BROWSE_COPY[isForumMode ? "forum" : "channel"];
+  const browseTitle = i18n._(copy.title);
+  const searchPlaceholder = i18n._(
+    canCreate ? copy.searchAndCreate : copy.searchOnly,
+  );
 
   const noopCreate = React.useCallback(async () => {}, []);
   const createForm = useCreateChannelForm({
@@ -236,11 +307,12 @@ export function ChannelBrowserDialog({
     );
   }, [isSearching, matchScoreById, sort, visibleChannels]);
 
-  const selectedSortLabel =
+  const selectedSortLabel = i18n._(
     CHANNEL_SORT_OPTIONS.find((option) => option.value === sort)?.label ??
-    "Alphabetical";
+      msg`Alphabetical`,
+  );
 
-  const allTabLabel = isForumMode ? "All forums" : "All channels";
+  const allTabLabel = isForumMode ? t`All forums` : t`All channels`;
 
   // Whether an exact name match already exists — if so we don't offer to
   // create a duplicate, mirroring how you'd never make two "#general"s.
@@ -394,22 +466,20 @@ export function ChannelBrowserDialog({
       : undefined;
   const emptyTitle =
     deferredQuery.length > 0
-      ? `No ${entityLabel}s match your search`
+      ? i18n._(copy.emptyNoMatch)
       : activeTab === "archived"
-        ? `No archived ${entityLabel}s`
+        ? i18n._(copy.emptyArchived)
         : activeTab === "joined"
-          ? `No joined ${entityLabel}s`
-          : `No ${entityLabel}s to browse`;
+          ? i18n._(copy.emptyJoined)
+          : i18n._(copy.emptyBrowse);
   const emptyDescription =
     deferredQuery.length > 0
-      ? canCreate
-        ? `No ${entityLabel} by that name yet — create it to get started.`
-        : "Try a different name or keyword."
+      ? i18n._(canCreate ? copy.describeNoMatchCreate : copy.describeNoMatch)
       : activeTab === "archived"
-        ? `Archived ${entityLabel}s you have joined will appear here.`
+        ? i18n._(copy.describeArchived)
         : activeTab === "joined"
-          ? `${entityLabel[0].toUpperCase()}${entityLabel.slice(1)}s you join will appear here.`
-          : `All open ${entityLabel}s are available in the sidebar. Create a new ${entityLabel} to get started.`;
+          ? i18n._(copy.describeJoined)
+          : i18n._(copy.describeBrowse);
 
   return (
     <Dialog onOpenChange={onOpenChange} open={open}>
@@ -429,7 +499,7 @@ export function ChannelBrowserDialog({
       >
         {mode === "create" ? (
           <ChannelCreateView
-            entityLabel={entityLabel}
+            copy={copy}
             form={createForm}
             onBack={exitCreateMode}
             onClose={() => onOpenChange(false)}
@@ -441,7 +511,9 @@ export function ChannelBrowserDialog({
                 <DialogTitle>{browseTitle}</DialogTitle>
                 <DialogClose className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md text-muted-foreground transition-colors duration-150 ease-out hover:bg-accent hover:text-accent-foreground focus:outline-hidden focus:ring-1 focus:ring-ring">
                   <X className="h-4 w-4" />
-                  <span className="sr-only">Close</span>
+                  <span className="sr-only">
+                    <Trans>Close</Trans>
+                  </span>
                 </DialogClose>
               </div>
               <div className={MODAL_SEARCH_SHELL_CLASS}>
@@ -517,7 +589,7 @@ export function ChannelBrowserDialog({
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <Button
-                      aria-label={`Sort ${entityLabel}s: ${selectedSortLabel}`}
+                      aria-label={i18n._(copy.sortLabel(selectedSortLabel))}
                       data-testid="channel-browser-sort"
                       size="icon-xs"
                       type="button"
@@ -527,7 +599,9 @@ export function ChannelBrowserDialog({
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end">
-                    <DropdownMenuLabel>Sort by</DropdownMenuLabel>
+                    <DropdownMenuLabel>
+                      <Trans>Sort by</Trans>
+                    </DropdownMenuLabel>
                     <DropdownMenuRadioGroup
                       onValueChange={(value) => {
                         setSort(value as ChannelSort);
@@ -541,7 +615,7 @@ export function ChannelBrowserDialog({
                           key={option.value}
                           value={option.value}
                         >
-                          {option.label}
+                          {i18n._(option.label)}
                         </DropdownMenuRadioItem>
                       ))}
                     </DropdownMenuRadioGroup>
@@ -589,7 +663,7 @@ export function ChannelBrowserDialog({
                       }}
                       value="joined"
                     >
-                      Joined
+                      <Trans>Joined</Trans>
                     </TabsTrigger>
                     <TabsTrigger
                       className="rounded-none border-b-2 border-transparent bg-transparent px-0 py-2 text-sm font-medium shadow-none transition-colors duration-150 ease-out data-[state=active]:bg-transparent data-[state=active]:text-foreground data-[state=active]:shadow-none"
@@ -598,7 +672,7 @@ export function ChannelBrowserDialog({
                       }}
                       value="archived"
                     >
-                      Archived
+                      <Trans>Archived</Trans>
                     </TabsTrigger>
                   </TabsList>
                 </Tabs>
@@ -607,7 +681,7 @@ export function ChannelBrowserDialog({
                   {showCreateRow ? (
                     <div className="mb-3">
                       <CreateChannelRow
-                        entityLabel={entityLabel}
+                        copy={copy}
                         isSelected={isCreateRowSelected}
                         onClick={() => enterCreateMode(trimmedQuery)}
                         query={trimmedQuery}
@@ -654,16 +728,17 @@ export function ChannelBrowserDialog({
 }
 
 function CreateChannelRow({
-  entityLabel,
+  copy,
   isSelected,
   onClick,
   query,
 }: {
-  entityLabel: string;
+  copy: BrowseCopy;
   isSelected: boolean;
   onClick: () => void;
   query: string;
 }) {
+  const { i18n } = useLingui();
   const hasQuery = query.length > 0;
   return (
     <button
@@ -682,14 +757,21 @@ function CreateChannelRow({
       </span>
       {hasQuery ? (
         <span className="min-w-0 text-sm">
-          <span className="font-medium text-foreground">
-            Create {entityLabel}{" "}
-          </span>
-          <span className="font-semibold text-foreground">“{query}”</span>
+          {/*
+            The quoted query sits inside the message: German moves the object
+            ("Kanal »X« anlegen"), so the verb and the name cannot stay two
+            nodes in a fixed order.
+          */}
+          <Trans>
+            <span className="font-medium text-foreground">
+              {i18n._(copy.newEntity)}
+            </span>{" "}
+            <span className="font-semibold text-foreground">“{query}”</span>
+          </Trans>
         </span>
       ) : (
         <span className="min-w-0 text-sm font-medium text-foreground">
-          Create a new {entityLabel}
+          {i18n._(copy.createNew)}
         </span>
       )}
     </button>
@@ -697,23 +779,24 @@ function CreateChannelRow({
 }
 
 function ChannelCreateView({
-  entityLabel,
+  copy,
   form,
   onBack,
   onClose,
 }: {
-  entityLabel: string;
+  copy: BrowseCopy;
   form: ReturnType<typeof useCreateChannelForm>;
   onBack: () => void;
   onClose: () => void;
 }) {
+  const { i18n, t } = useLingui();
   return (
     <div className="flex h-[min(72vh,38rem)] flex-col">
       <DialogHeader className="space-y-0 pb-4">
         <div className="flex items-center justify-between gap-4">
           <div className="flex min-w-0 items-center gap-2">
             <button
-              aria-label="Back to search"
+              aria-label={t`Back to search`}
               className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md text-muted-foreground transition-colors duration-150 ease-out hover:bg-accent hover:text-accent-foreground focus:outline-hidden focus:ring-1 focus:ring-ring"
               data-testid="channel-browser-create-back"
               onClick={onBack}
@@ -722,17 +805,19 @@ function ChannelCreateView({
               <ArrowLeft className="h-4 w-4" />
             </button>
             <DialogTitle className="truncate">
-              {`New ${entityLabel}`}
+              {i18n._(copy.newEntity)}
             </DialogTitle>
           </div>
           <button
-            aria-label="Close"
+            aria-label={t`Close`}
             className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md text-muted-foreground transition-colors duration-150 ease-out hover:bg-accent hover:text-accent-foreground focus:outline-hidden focus:ring-1 focus:ring-ring"
             onClick={onClose}
             type="button"
           >
             <X className="h-4 w-4" />
-            <span className="sr-only">Close</span>
+            <span className="sr-only">
+              <Trans>Close</Trans>
+            </span>
           </button>
         </div>
       </DialogHeader>
@@ -767,9 +852,16 @@ function ChannelCard({
   onJoin?: () => void;
   onSelect: () => void;
 }) {
-  const memberLabel = `${channel.memberCount} ${
-    channel.memberCount === 1 ? "member" : "members"
-  }`;
+  const { i18n } = useLingui();
+  // A plural message, not a count plus a noun: German inflects the noun
+  // ("1 Mitglied" / "3 Mitglieder") the same way English does, and a
+  // concatenated version has no message for a catalogue to hold.
+  const memberLabel = i18n._(
+    plural(channel.memberCount, {
+      one: "# member",
+      other: "# members",
+    }),
+  );
 
   return (
     <div
@@ -798,7 +890,7 @@ function ChannelCard({
             </p>
             {channel.archivedAt ? (
               <Badge className="ml-1 shrink-0" variant="warning">
-                archived
+                <Trans>archived</Trans>
               </Badge>
             ) : null}
           </div>

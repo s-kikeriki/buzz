@@ -14,7 +14,8 @@ import { Markdown } from "@/shared/ui/markdown";
 import { hasLinkPreviewSuppression } from "@/features/messages/lib/formatTimelineMessages";
 import { parseImetaTags } from "@/shared/ui/markdown/parseImeta";
 
-import { formatRelativeTime } from "../lib/time";
+import { useLocale } from "@/shared/lib/localePreference";
+import { formatRelativeTimeLabel } from "../lib/time";
 import { DeleteActionMenu } from "./DeleteActionMenu";
 
 type ForumPostCardProps = {
@@ -38,6 +39,7 @@ export function ForumPostCard({
   onClick,
   onDelete,
 }: ForumPostCardProps) {
+  const locale = useLocale();
   const authorLabel = resolveUserLabel({
     pubkey: post.pubkey,
     currentPubkey,
@@ -107,7 +109,7 @@ export function ForumPostCard({
           </UserProfilePopover>
         </div>
         <span className="text-xs text-muted-foreground">
-          {formatRelativeTime(post.createdAt)}
+          {formatRelativeTimeLabel(post.createdAt, locale)}
         </span>
 
         {canDelete && onDelete ? (
@@ -148,7 +150,9 @@ export function ForumPostCard({
           {summary.lastReplyAt ? (
             <>
               <span className="text-muted-foreground/50">·</span>
-              <span>last {formatRelativeTime(summary.lastReplyAt)}</span>
+              <span>
+                last {formatRelativeTimeLabel(summary.lastReplyAt, locale)}
+              </span>
             </>
           ) : null}
         </div>

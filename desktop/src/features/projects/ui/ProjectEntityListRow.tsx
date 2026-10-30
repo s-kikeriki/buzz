@@ -1,4 +1,5 @@
 import { Check, MessageSquare, Minus } from "lucide-react";
+import { localeDateTime } from "@/shared/lib/intlLocale";
 import type * as React from "react";
 
 import {
@@ -9,6 +10,7 @@ import { UserProfilePopover } from "@/features/profile/ui/UserProfilePopover";
 import type { ProjectSelectionItem } from "@/features/projects/lib/projectSelection";
 import { relativeTime } from "@/features/projects/lib/projectsViewHelpers";
 import { useProjectSelection } from "@/features/projects/lib/useProjectSelection";
+import { useLocale } from "@/shared/lib/localePreference";
 import { cn } from "@/shared/lib/cn";
 import { UserAvatar } from "@/shared/ui/UserAvatar";
 
@@ -194,6 +196,7 @@ export function ProjectEntityListRow({
   titleSecondaryTestId?: string;
   trailing?: React.ReactNode;
 }) {
+  const locale = useLocale();
   const projectSelection = useProjectSelection();
   const selected = Boolean(
     selection && projectSelection?.isSelected(selection.item.id),
@@ -350,9 +353,9 @@ export function ProjectEntityListRow({
           className="hidden w-24 shrink-0 whitespace-nowrap text-right text-xs text-muted-foreground/55 sm:block"
           data-projects-text-priority="secondary"
           data-testid={dateTestId}
-          title={new Date(dateSeconds * 1_000).toLocaleString()}
+          title={localeDateTime(new Date(dateSeconds * 1_000), locale)}
         >
-          {relativeTime(dateSeconds)}
+          {relativeTime(dateSeconds, locale)}
         </span>
       ) : (
         <span className="hidden w-24 shrink-0 sm:block" />

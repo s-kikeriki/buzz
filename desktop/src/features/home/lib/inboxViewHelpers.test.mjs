@@ -454,6 +454,7 @@ function mapThroughInboxPipeline(event) {
   const contextMessage = toInboxContextMessage(formatted, {
     eventById: new Map([[event.id, event]]),
     fallbackAuthorPubkey: event.pubkey,
+    locale: "en",
     profiles: undefined,
     selectedItemId: event.id,
   });

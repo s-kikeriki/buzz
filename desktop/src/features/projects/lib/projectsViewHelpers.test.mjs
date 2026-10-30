@@ -190,35 +190,48 @@ test("a project is accessible when any repository is, or when owned", () => {
 test("relativeTime switches to an absolute date at seven days", () => {
   const now = localSeconds(2025, 5, 15);
 
-  assert.equal(relativeTime(now - 7 * DAY_SECONDS + 1, now), "6 days ago");
-
-  const createdAt = now - 7 * DAY_SECONDS;
-  const expected = new Date(createdAt * 1_000).toLocaleDateString(undefined, {
-    month: "short",
-    day: "numeric",
-  });
-  assert.equal(relativeTime(createdAt, now), expected);
+  assert.equal(
+    relativeTime(now - 7 * DAY_SECONDS + 1, "en", now),
+    "6 days ago",
+  );
+  assert.equal(relativeTime(now - 7 * DAY_SECONDS, "en", now), "Jun 8");
 });
 
 test("relativeTime includes the year only across a year boundary", () => {
   const sameYearNow = localSeconds(2025, 5, 15);
-  const sameYearCreatedAt = sameYearNow - 7 * DAY_SECONDS;
-  const sameYearExpected = new Intl.DateTimeFormat(undefined, {
-    month: "short",
-    day: "numeric",
-  }).format(new Date(sameYearCreatedAt * 1_000));
-  assert.equal(relativeTime(sameYearCreatedAt, sameYearNow), sameYearExpected);
-
-  const crossYearNow = localSeconds(2025, 0, 8);
-  const crossYearCreatedAt = localSeconds(2024, 11, 31);
-  const crossYearExpected = new Intl.DateTimeFormat(undefined, {
-    month: "short",
-    day: "numeric",
-    year: "numeric",
-  }).format(new Date(crossYearCreatedAt * 1_000));
   assert.equal(
-    relativeTime(crossYearCreatedAt, crossYearNow),
-    crossYearExpected,
+    relativeTime(sameYearNow - 7 * DAY_SECONDS, "en", sameYearNow),
+    "Jun 8",
+  );
+
+  assert.equal(
+    relativeTime(localSeconds(2024, 11, 31), "en", localSeconds(2025, 0, 8)),
+    "Dec 31, 2024",
+  );
+});
+
+test("relativeTime is German on both sides of the seven-day switch", () => {
+  // The expectations used to be computed with `toLocaleDateString(undefined)`,
+  // which is the *machine's* locale — so they asserted whatever this Mac does
+  // and could not have caught a locale regression in either direction.
+  const now = localSeconds(2025, 5, 15);
+
+  assert.equal(
+    relativeTime(now - 7 * DAY_SECONDS + 1, "de", now),
+    "vor 6 Tagen",
+  );
+  assert.equal(relativeTime(now - 7 * DAY_SECONDS, "de", now), "8. Juni");
+  assert.equal(
+    relativeTime(localSeconds(2024, 11, 31), "de", localSeconds(2025, 0, 8)),
+    "31. Dez. 2024",
+  );
+});
+
+test("relativeTime refuses a missing locale instead of using the host's", () => {
+  const now = localSeconds(2025, 5, 15);
+  assert.throws(
+    () => relativeTime(now - 7 * DAY_SECONDS, undefined, now),
+    /not an app locale/,
   );
 });
 

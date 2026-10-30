@@ -5,6 +5,7 @@ import {
 } from "@/features/messages/lib/dateFormatters";
 import { cn } from "@/shared/lib/cn";
 import { formatItemTimestamp } from "@/shared/lib/datetime";
+import { useLocale } from "@/shared/lib/localePreference";
 import {
   Tooltip,
   TooltipContent,
@@ -45,9 +46,13 @@ export function MessageTimestamp({
   createdAt: number;
   hideDayPeriod?: boolean;
 }) {
+  // `useLocale` rather than a captured constant: this subscribes the row to the
+  // language preference, so switching it re-renders the timestamp instead of
+  // leaving the old language's label on screen until the next message arrives.
+  const locale = useLocale();
   const displayTime = hideDayPeriod
-    ? formatTimeWithoutDayPeriod(formatTime(createdAt))
-    : formatItemTimestamp(createdAt, { withTime: true });
+    ? formatTimeWithoutDayPeriod(formatTime(createdAt, locale))
+    : formatItemTimestamp(createdAt, { locale, withTime: true });
 
   return (
     <TooltipProvider
@@ -67,7 +72,7 @@ export function MessageTimestamp({
           </p>
         </TooltipTrigger>
         <TooltipContent side="top">
-          {formatFullDateTime(createdAt)}
+          {formatFullDateTime(createdAt, locale)}
         </TooltipContent>
       </Tooltip>
     </TooltipProvider>

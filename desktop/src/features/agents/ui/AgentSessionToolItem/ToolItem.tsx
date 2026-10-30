@@ -4,6 +4,7 @@ import {
   resolveUserLabel,
   type UserProfileLookup,
 } from "@/features/profile/lib/identity";
+import { useLocale } from "@/shared/lib/localePreference";
 import { cn } from "@/shared/lib/cn";
 import { normalizePubkey } from "@/shared/lib/pubkey";
 import type { TranscriptItem } from "../agentSessionTypes";
@@ -33,6 +34,7 @@ export function ToolItem({
   item: Extract<TranscriptItem, { type: "tool" }>;
   profiles?: UserProfileLookup;
 }) {
+  const locale = useLocale();
   const [isExpanded, setIsExpanded] = React.useState(false);
   const hasArgs = Object.keys(item.args).length > 0;
   const hasResult = item.result.trim().length > 0;
@@ -41,7 +43,7 @@ export function ToolItem({
   const compactSummary = buildCompactToolSummary(item);
   const duration = getToolDurationDisplay(item);
   const messageLink = getSentMessageLink(item);
-  const timestampTitle = formatTranscriptTimestampTitle(item.timestamp);
+  const timestampTitle = formatTranscriptTimestampTitle(item.timestamp, locale);
   const agentProfile = profiles?.[normalizePubkey(agentPubkey)] ?? null;
   const agentLabel = resolveUserLabel({
     pubkey: agentPubkey,

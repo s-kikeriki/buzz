@@ -35,6 +35,7 @@ export default defineConfig({
         "**/smoke.spec.ts",
         "**/i18n-appearance.spec.ts",
         "**/sidebar-german-screenshots.spec.ts",
+        "**/search-german-screenshots.spec.ts",
         "**/institutional-chrome.spec.ts",
         "**/kikeriki-theme.spec.ts",
         "**/onboarding-brand.spec.ts",

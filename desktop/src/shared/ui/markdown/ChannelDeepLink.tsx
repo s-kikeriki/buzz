@@ -22,31 +22,35 @@ import {
 import { BuzzInlineLink, BuzzLinkChip } from "./BuzzLinkChip";
 import { MessageLinkPill } from "./MessageLinkPill";
 import { useMarkdownRuntime } from "./runtimeContext";
+import { t } from "@lingui/core/macro";
+
+import type { AppLocale } from "@/shared/lib/localePreference";
+import { useLocale } from "@/shared/lib/localePreference";
+import { formatRelativeTime } from "@/shared/lib/relativeTime";
 import { useInlineTooltipPosition } from "./useInlineTooltipPosition";
 import { getReactNodeText } from "./utils";
 
-function formatChannelActivity(timestamp: string): string | null {
+function formatChannelActivity(
+  timestamp: string,
+  locale: AppLocale,
+): string | null {
   const activityAt = Date.parse(timestamp);
   if (!Number.isFinite(activityAt)) return null;
-  const elapsedMinutes = Math.max(
-    0,
-    Math.floor((Date.now() - activityAt) / 60_000),
-  );
-  if (elapsedMinutes < 1) return "Active just now";
-  if (elapsedMinutes < 60) return `Active ${elapsedMinutes}m ago`;
-  const elapsedHours = Math.floor(elapsedMinutes / 60);
-  if (elapsedHours < 24) return `Active ${elapsedHours}h ago`;
-  const elapsedDays = Math.floor(elapsedHours / 24);
-  if (elapsedDays < 7) return `Active ${elapsedDays}d ago`;
-  return `Active ${Math.floor(elapsedDays / 7)}w ago`;
+  // One message with the elapsed label interpolated, not "Active " + label:
+  // German fronts the preposition ("Aktiv vor 5 Min."), so the prefix and the
+  // elapsed time cannot be concatenated in a fixed order.
+  const when = formatRelativeTime(activityAt / 1_000, { locale });
+  return t`Active ${when}`;
 }
 
-export function channelTooltipFooter(channel: Channel) {
+export function channelTooltipFooter(channel: Channel, locale: AppLocale) {
   const details = [
-    channel.visibility === "private" ? "Private channel" : "Public channel",
-    channel.channelType === "forum" ? "Forum" : null,
-    channel.archivedAt ? "Archived" : null,
-    channel.lastMessageAt ? formatChannelActivity(channel.lastMessageAt) : null,
+    channel.visibility === "private" ? t`Private channel` : t`Public channel`,
+    channel.channelType === "forum" ? t`Forum` : null,
+    channel.archivedAt ? t`Archived` : null,
+    channel.lastMessageAt
+      ? formatChannelActivity(channel.lastMessageAt, locale)
+      : null,
   ];
   return details.filter(Boolean).join(" · ");
 }
@@ -58,6 +62,7 @@ function ChannelMetadataTooltip({
   channel: Channel | undefined;
   children: React.ReactElement;
 }) {
+  const locale = useLocale();
   const { contentRef, onPointerMove } = useInlineTooltipPosition();
   const description = channel?.description?.trim();
   if (!channel) return children;
@@ -87,7 +92,7 @@ function ChannelMetadataTooltip({
             )}
             data-buzz-tooltip-metadata-type=""
           >
-            {channelTooltipFooter(channel)}
+            {channelTooltipFooter(channel, locale)}
           </span>
         </TooltipContent>
       </Tooltip>

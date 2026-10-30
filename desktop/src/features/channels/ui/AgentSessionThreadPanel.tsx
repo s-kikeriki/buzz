@@ -1,4 +1,6 @@
 import * as React from "react";
+import { localeDateTime } from "@/shared/lib/intlLocale";
+import { t } from "@lingui/core/macro";
 import {
   Clock3,
   Octagon,
@@ -32,6 +34,9 @@ import {
 import type { Channel } from "@/shared/api/types";
 import { useEscapeKey } from "@/shared/hooks/useEscapeKey";
 import { useIsThreadPanelOverlay } from "@/shared/hooks/use-mobile";
+import type { AppLocale } from "@/shared/lib/localePreference";
+import { useLocale } from "@/shared/lib/localePreference";
+import { formatRelativeTime } from "@/shared/lib/relativeTime";
 import { useNow } from "@/shared/lib/useNow";
 import { AuxiliaryPanel } from "@/shared/layout/AuxiliaryPanel";
 import { AuxiliaryPanelBody } from "@/shared/layout/AuxiliaryPanel";
@@ -100,6 +105,7 @@ export function AgentSessionThreadPanel({
   widthPx,
   transparentChrome = false,
 }: AgentSessionThreadPanelProps) {
+  const locale = useLocale();
   const isLive = agent.status === "running" || agent.status === "deployed";
   const isOverlay = useIsThreadPanelOverlay();
   const sessionChannelId = channelId ?? channel?.id ?? null;
@@ -137,11 +143,15 @@ export function AgentSessionThreadPanel({
     () => getLatestActivityTimestamp(combinedHeaderEvents),
     [combinedHeaderEvents],
   );
-  const lastUpdatedLabel = formatLastUpdatedLabel(latestActivityAt, now);
+  const lastUpdatedLabel = formatLastUpdatedLabel(
+    latestActivityAt,
+    now,
+    locale,
+  );
   const lastUpdatedTitle =
     latestActivityAt === null
       ? undefined
-      : `Last updated ${new Date(latestActivityAt).toLocaleString()}`;
+      : t`Last updated ${localeDateTime(new Date(latestActivityAt), locale)}`;
 
   const { fetchOlderArchived, hasOlderArchived } =
     useLoadArchivedObserverEvents(
@@ -567,37 +577,20 @@ function getLatestActivityTimestamp(
   return latest;
 }
 
-function formatLastUpdatedLabel(timestamp: number | null, now: number): string {
+function formatLastUpdatedLabel(
+  timestamp: number | null,
+  now: number,
+  locale: AppLocale,
+): string {
   if (timestamp === null) {
-    return "No updates yet";
+    return t`No updates yet`;
   }
 
-  return `Last updated ${formatRelativeActivityTime(timestamp, now)}`;
-}
-
-function formatRelativeActivityTime(timestamp: number, now: number): string {
-  const elapsedMs = Math.max(0, now - timestamp);
-  const totalSeconds = Math.floor(elapsedMs / 1_000);
-
-  if (totalSeconds < 60) {
-    return "just now";
-  }
-
-  const totalMinutes = Math.floor(totalSeconds / 60);
-  if (totalMinutes < 60) {
-    return `${totalMinutes}m ago`;
-  }
-
-  const totalHours = Math.floor(totalMinutes / 60);
-  if (totalHours < 24) {
-    return `${totalHours}h ago`;
-  }
-
-  const totalDays = Math.floor(totalHours / 24);
-  if (totalDays < 7) {
-    return `${totalDays}d ago`;
-  }
-
-  const totalWeeks = Math.floor(totalDays / 7);
-  return `${totalWeeks}w ago`;
+  // `now` and `timestamp` are milliseconds here; the shared ladder works in
+  // unix seconds.
+  const when = formatRelativeTime(timestamp / 1_000, {
+    locale,
+    nowSeconds: now / 1_000,
+  });
+  return t`Last updated ${when}`;
 }

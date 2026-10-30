@@ -1,4 +1,6 @@
 import { ChevronDown, ChevronRight, Pencil, Play, X } from "lucide-react";
+import { localeDateTime } from "@/shared/lib/intlLocale";
+import { useLocale } from "@/shared/lib/localePreference";
 import * as React from "react";
 
 import {
@@ -33,6 +35,7 @@ export function WorkflowDetailPanel({
   showDefinition = true,
   showHeader = true,
 }: WorkflowDetailPanelProps) {
+  const locale = useLocale();
   const workflowQuery = useWorkflowQuery(workflowId);
   const runsQuery = useWorkflowRunsQuery(workflowId);
   const triggerMutation = useTriggerWorkflowMutation(workflowId);
@@ -260,9 +263,10 @@ export function WorkflowDetailPanel({
                               </div>
                               <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 pl-6 text-2xs text-muted-foreground">
                                 <span>
-                                  {new Date(
-                                    run.createdAt * 1000,
-                                  ).toLocaleString()}
+                                  {localeDateTime(
+                                    new Date(run.createdAt * 1000),
+                                    locale,
+                                  )}
                                 </span>
                                 <span>
                                   {run.executionTrace.length}{" "}

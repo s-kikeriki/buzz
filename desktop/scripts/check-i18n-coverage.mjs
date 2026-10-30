@@ -29,6 +29,34 @@ const CONVERTED_FILES = [
   "src/features/sidebar/ui/CommunityRail.tsx",
   "src/features/sidebar/ui/SectionUnreadThreadCount.tsx",
   "src/features/sidebar/ui/SidebarSection.tsx",
+  // Tranche 1 — the surfaces Ian named, plus the rest of the sidebar.
+  // Search palette: the dialog, its scope chip, the rotating placeholder and
+  // every result row.
+  "src/features/search/ui/HighlightedSearchText.tsx",
+  "src/features/search/ui/SearchPromptPlaceholder.tsx",
+  "src/features/search/ui/SearchResultItem.tsx",
+  "src/features/search/ui/SearchScopeControls.tsx",
+  "src/features/search/ui/TopbarSearch.tsx",
+  // Channel browser.
+  "src/features/channels/ui/ChannelBrowserDialog.tsx",
+  // Keyboard-shortcut help, and the table it reads. The table is the reason
+  // the detector had to learn about copy fields in object literals: 58 of its
+  // strings appear in no JSX node at all.
+  "src/features/settings/ui/KeyboardShortcutsCard.tsx",
+  "src/shared/lib/keyboard-shortcuts.ts",
+  // The rest of the sidebar.
+  "src/features/sidebar/ui/ChannelActivityPopover.tsx",
+  "src/features/sidebar/ui/ChannelSectionDialogs.tsx",
+  "src/features/sidebar/ui/CreateChannelDialog.tsx",
+  "src/features/sidebar/ui/CreateChannelFormFields.tsx",
+  "src/features/sidebar/ui/CustomChannelSection.tsx",
+  "src/features/sidebar/ui/MoreUnreadButton.tsx",
+  "src/features/sidebar/ui/SidebarDnd.tsx",
+  "src/features/sidebar/ui/SidebarProfileCard.tsx",
+  "src/features/sidebar/ui/SidebarProjectsSection.tsx",
+  "src/features/sidebar/ui/SidebarRelayConnectionCard.tsx",
+  "src/features/sidebar/ui/sidebarLoadingSkeleton.tsx",
+  "src/features/sidebar/ui/sidebarMenuHelpers.tsx",
 ];
 
 /**

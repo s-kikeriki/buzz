@@ -6,6 +6,8 @@ import {
   SquareArrowOutUpRight,
 } from "lucide-react";
 import * as React from "react";
+import { useLocale } from "@/shared/lib/localePreference";
+import { formatRelativeTimeOrDate } from "@/shared/lib/relativeTime";
 
 import { ForumComposer } from "@/features/forum/ui/ForumComposer";
 import { useUserProfileQuery } from "@/features/profile/hooks";
@@ -119,21 +121,6 @@ function ReplyParentContext({
   );
 }
 
-function formatRelativeTime(unixSeconds: number): string {
-  const now = Date.now() / 1_000;
-  const diff = now - unixSeconds;
-
-  if (diff < 60) return "just now";
-  if (diff < 3_600) return `${Math.floor(diff / 60)}m`;
-  if (diff < 86_400) return `${Math.floor(diff / 3_600)}h`;
-  if (diff < 604_800) return `${Math.floor(diff / 86_400)}d`;
-
-  return new Date(unixSeconds * 1_000).toLocaleDateString(undefined, {
-    month: "short",
-    day: "numeric",
-  });
-}
-
 export function NoteCard({
   note,
   profile,
@@ -149,6 +136,7 @@ export function NoteCard({
   members = [],
   actions,
 }: NoteCardProps) {
+  const locale = useLocale();
   const displayName = profile?.displayName ?? truncateNpub(note.pubkey);
   const avatarUrl = profile?.avatarUrl ?? null;
   const [isReplyComposerOpen, setIsReplyComposerOpen] = React.useState(false);
@@ -209,7 +197,7 @@ export function NoteCard({
             </span>
           ) : null}
           <span className="shrink-0 text-xs text-muted-foreground/70">
-            {formatRelativeTime(note.createdAt)}
+            {formatRelativeTimeOrDate(note.createdAt, { locale })}
           </span>
         </div>
 

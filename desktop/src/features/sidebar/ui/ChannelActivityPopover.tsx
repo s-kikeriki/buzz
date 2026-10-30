@@ -1,5 +1,6 @@
-import * as React from "react";
+import { Plural, Trans, useLingui } from "@lingui/react/macro";
 import { Clock, Loader2, MailOpen } from "lucide-react";
+import * as React from "react";
 
 import { useAppShell } from "@/app/AppShellContext";
 import { useAppNavigation } from "@/app/navigation/useAppNavigation";
@@ -13,6 +14,7 @@ import type { UserProfileLookup } from "@/features/profile/lib/identity";
 import { useRemindLater } from "@/features/reminders/ui/RemindMeLaterProvider";
 import { useIdentityQuery } from "@/shared/api/hooks";
 import type { Channel, FeedItem, HomeFeedResponse } from "@/shared/api/types";
+import { useLocale } from "@/shared/lib/localePreference";
 import { normalizePubkey, truncateNpub } from "@/shared/lib/pubkey";
 import { useNow } from "@/shared/lib/useNow";
 import { Markdown } from "@/shared/ui/markdown";
@@ -90,13 +92,14 @@ function ThreadPreviewRow({
   onOpen: () => void;
   onRemindLater: () => void;
 }) {
+  const { t } = useLingui();
   return (
     <div
       className="group/activity-row relative border-t border-border/50 first:border-t-0"
       data-testid={`channel-activity-item-${item.conversationId}`}
     >
       <button
-        aria-label={`Open thread from ${item.senderLabel}`}
+        aria-label={t`Open thread from ${item.senderLabel}`}
         className="absolute inset-0 z-0 w-full text-left"
         onClick={onOpen}
         type="button"
@@ -119,11 +122,19 @@ function ThreadPreviewRow({
             </span>
           </div>
           <div className="mt-0.5 flex items-center gap-1.5 text-xs leading-4 text-muted-foreground">
-            <span>Thread</span>
+            <span>
+              <Trans>Thread</Trans>
+            </span>
             {item.unreadCount > 1 ? (
               <>
                 <span aria-hidden="true">·</span>
-                <span>{item.unreadCount} unread</span>
+                <span>
+                  <Plural
+                    one="# unread"
+                    other="# unread"
+                    value={item.unreadCount}
+                  />
+                </span>
               </>
             ) : null}
           </div>
@@ -136,10 +147,10 @@ function ThreadPreviewRow({
         </div>
       </div>
       <div className="pointer-events-none absolute right-2 top-2 z-20 flex items-center gap-0.5 rounded-full bg-muted/95 p-0.5 opacity-0 shadow-xs transition-opacity group-hover/activity-row:pointer-events-auto group-hover/activity-row:opacity-100 group-focus-within/activity-row:pointer-events-auto group-focus-within/activity-row:opacity-100">
-        <RowActionButton label="Mark as read" onClick={onMarkRead}>
+        <RowActionButton label={t`Mark as read`} onClick={onMarkRead}>
           <MailOpen />
         </RowActionButton>
-        <RowActionButton label="Remind me later" onClick={onRemindLater}>
+        <RowActionButton label={t`Remind me later`} onClick={onRemindLater}>
           <Clock />
         </RowActionButton>
       </div>
@@ -189,7 +200,7 @@ function WorkingAgentRow({
         </div>
         <span className="mt-0.5 flex items-center gap-1.5 text-xs leading-4 text-muted-foreground">
           <Loader2 className="h-3.5 w-3.5 animate-spin text-primary/70" />
-          Working
+          <Trans>Working</Trans>
         </span>
       </div>
     </button>
@@ -248,6 +259,8 @@ export function ChannelActivityPopover({
   channel: Channel;
   children: React.ReactNode;
 }) {
+  const { t } = useLingui();
+  const locale = useLocale();
   const [open, setOpen] = React.useState(false);
   const hoverTimerRef = React.useRef<ReturnType<typeof setTimeout> | null>(
     null,
@@ -303,12 +316,14 @@ export function ChannelActivityPopover({
       feed: buildChannelActivityFeed(unreadChannelFeedItems),
       getMessageReadAt: (messageId) =>
         activityReadAtByMessageId.get(messageId) ?? null,
+      locale,
       profiles,
     });
   }, [
     channel,
     activityReadAtByMessageId,
     identityQuery.data?.pubkey,
+    locale,
     open,
     profiles,
     unreadChannelFeedItems,
@@ -411,14 +426,14 @@ export function ChannelActivityPopover({
         style={ACTIVITY_POPOVER_MOTION_STYLE}
       >
         <section
-          aria-label="Channel activity"
+          aria-label={t`Channel activity`}
           className="flex max-h-96 min-h-0 flex-col overflow-hidden"
         >
           <h3
             className="relative z-20 shrink-0 border-b border-border/70 bg-background/95 px-3 py-2 text-sm font-semibold text-foreground backdrop-blur-md supports-[backdrop-filter]:bg-background/90"
             data-testid="channel-activity-header"
           >
-            Channel activity
+            <Trans>Channel activity</Trans>
           </h3>
           <div
             className="buzz-channel-activity-scrollbar min-h-0 overflow-y-auto overscroll-contain"

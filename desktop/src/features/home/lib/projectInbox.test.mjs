@@ -156,6 +156,7 @@ test("matches a selected inbox event to its canonical pull request or issue", ()
 
 test("presents project work with its canonical subject and project filter", () => {
   const [item] = buildInboxItems({
+    locale: "en",
     feed: {
       feed: {
         mentions: [feedItem()],
@@ -199,6 +200,7 @@ test("groups uppercase NIP-34 pull request updates with their root", () => {
     ],
   });
   const items = buildInboxItems({
+    locale: "en",
     feed: {
       feed: {
         mentions: [feedItem(), update],
@@ -218,6 +220,7 @@ test("groups uppercase NIP-34 pull request updates with their root", () => {
 test("does not group project events from different repositories", () => {
   const otherRepoAddress = `30617:${"e".repeat(64)}:other`;
   const items = buildInboxItems({
+    locale: "en",
     feed: {
       feed: {
         mentions: [

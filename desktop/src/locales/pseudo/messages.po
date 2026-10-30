@@ -7,12 +7,30 @@ msgstr ""
 "X-Generator: @lingui/cli\n"
 "Language: pseudo\n"
 
+#: src/features/messages/ui/MessageThreadSummaryRow.tsx
+msgid "({unreadCount} new)"
+msgstr ""
+
 #: src/features/settings/ui/AppearanceSettingsControls.tsx
 msgid "(all communities)"
 msgstr ""
 
 #: src/features/settings/ui/AppearanceSettingsPanel.tsx
 msgid "(per community)"
+msgstr ""
+
+#. placeholder {0}: channel.memberCount
+#: src/features/channels/ui/ChannelBrowserDialog.tsx
+msgid "{0, plural, one {# member} other {# members}}"
+msgstr ""
+
+#. placeholder {0}: item.unreadCount
+#: src/features/sidebar/ui/ChannelActivityPopover.tsx
+msgid "{0, plural, one {# unread} other {# unread}}"
+msgstr ""
+
+#: src/features/sidebar/ui/ChannelSectionDialogs.tsx
+msgid "{channelCount, plural, one {Delete section \"{sectionName}\"? Its 1 channel will move back to the default Channels group.} other {Delete section \"{sectionName}\"? Its # channels will move back to the default Channels group.}}"
 msgstr ""
 
 #: src/features/sidebar/ui/SidebarSection.tsx
@@ -23,15 +41,98 @@ msgstr ""
 msgid "{count, plural, one {unread thread} other {unread threads}}"
 msgstr ""
 
+#: src/shared/lib/datetime.ts
+msgid "{dayLabel} at {time}"
+msgstr ""
+
+#: src/features/channels/lib/ephemeralChannel.ts
+msgid "{days, plural, one {# day} other {# days}}"
+msgstr ""
+
+#: src/features/channels/lib/ephemeralChannel.ts
+msgid "{days, plural, one {#d left} other {#d left}}"
+msgstr ""
+
+#: src/features/channels/lib/ephemeralChannel.ts
+msgid "{days, plural, one {#d TTL} other {#d TTL}}"
+msgstr ""
+
 #: src/features/settings/ui/AppearanceSettingsControls.tsx
 msgid "{glassOpacity}% opacity"
+msgstr ""
+
+#: src/features/channels/lib/ephemeralChannel.ts
+msgid "{hours, plural, one {# hour} other {# hours}}"
+msgstr ""
+
+#: src/features/channels/lib/ephemeralChannel.ts
+msgid "{hours, plural, one {#h left} other {#h left}}"
+msgstr ""
+
+#: src/features/channels/lib/ephemeralChannel.ts
+msgid "{hours, plural, one {#h TTL} other {#h TTL}}"
 msgstr ""
 
 #: src/features/settings/ui/SettingsView.tsx
 msgid "{label} settings sections"
 msgstr ""
 
+#: src/features/channels/lib/ephemeralChannel.ts
+msgid "{minutes, plural, one {# minute} other {# minutes}}"
+msgstr ""
+
+#: src/features/channels/lib/ephemeralChannel.ts
+msgid "{minutes, plural, one {#m left} other {#m left}}"
+msgstr ""
+
+#: src/features/channels/lib/ephemeralChannel.ts
+msgid "{minutes, plural, one {#m TTL} other {#m TTL}}"
+msgstr ""
+
+#: src/features/messages/ui/MessageThreadSummaryRow.tsx
+msgid "{replyCount, plural, one {# reply} other {# replies}}"
+msgstr ""
+
+#: src/features/channels/lib/ephemeralChannel.ts
+msgid "{seconds, plural, one {# second} other {# seconds}}"
+msgstr ""
+
+#: src/features/channels/lib/ephemeralChannel.ts
+msgid "{seconds, plural, one {#s TTL} other {#s TTL}}"
+msgstr ""
+
+#: src/features/sidebar/ui/CreateChannelFormFields.tsx
+msgid "{selectedTemplatePersonaCount, plural, one {# agent} other {# agents}}"
+msgstr ""
+
+#: src/features/sidebar/ui/CreateChannelFormFields.tsx
+msgid "{selectedTemplateTeamCount, plural, one {# team} other {# teams}}"
+msgstr ""
+
+#: src/features/sidebar/ui/ChannelSectionDialogs.tsx
+msgid "{subsectionCount, plural, one {Its subsection moves to the top level.} other {Its # subsections move to the top level.}}"
+msgstr ""
+
+#. placeholder {0}: i18n._(copy.newEntity)
+#: src/features/channels/ui/ChannelBrowserDialog.tsx
+msgid "<0>{0}</0> <1>“{query}”</1>"
+msgstr ""
+
+#: src/features/search/ui/SearchPromptPlaceholder.tsx
+msgid "a channel"
+msgstr ""
+
+#: src/features/search/ui/SearchPromptPlaceholder.tsx
+msgid "a message"
+msgstr ""
+
+#: src/features/search/ui/SearchPromptPlaceholder.tsx
+msgid "a thread"
+msgstr ""
+
 #: src/features/settings/ui/AppearanceSettingsControls.tsx
+#: src/features/sidebar/ui/CustomChannelSection.tsx
+#: src/features/sidebar/ui/SidebarProjectsSection.tsx
 msgid "A–Z"
 msgstr ""
 
@@ -39,17 +140,87 @@ msgstr ""
 msgid "Accent color"
 msgstr ""
 
+#: src/features/search/ui/TopbarSearch.tsx
+msgid "Actions"
+msgstr ""
+
+#: src/shared/ui/markdown/ChannelDeepLink.tsx
+msgid "Active {when}"
+msgstr ""
+
+#: src/features/channels/ui/ChannelBrowserDialog.tsx
+msgid "Add a forum"
+msgstr ""
+
+#. placeholder {0}: section.name
+#: src/features/sidebar/ui/CustomChannelSection.tsx
+msgid "Add channel to {0}"
+msgstr ""
+
 #: src/features/sidebar/ui/CommunityRail.tsx
 msgid "Add community"
+msgstr ""
+
+#: src/features/sidebar/ui/SidebarProjectsSection.tsx
+msgid "Add project"
+msgstr ""
+
+#: src/features/sidebar/ui/SidebarProjectsSection.tsx
+msgid "Added"
+msgstr ""
+
+#: src/shared/lib/keyboard-shortcuts.ts
+msgid "Address the default agent, or toggle the highlighted agent"
 msgstr ""
 
 #: src/features/settings/ui/SettingsPanels.tsx
 msgid "Admin"
 msgstr ""
 
+#: src/features/search/ui/SearchResultItem.tsx
+msgid "Agent job"
+msgstr ""
+
+#: src/features/search/ui/SearchResultItem.tsx
+msgid "Agent update"
+msgstr ""
+
+#: src/features/search/ui/TopbarSearch.tsx
 #: src/features/settings/ui/SettingsPanels.tsx
 #: src/features/sidebar/ui/AppSidebarPinnedHeader.tsx
 msgid "Agents"
+msgstr ""
+
+#: src/features/settings/ui/KeyboardShortcutsCard.tsx
+msgid "All available keyboard shortcuts. Shortcuts are read-only."
+msgstr ""
+
+#: src/features/channels/ui/ChannelBrowserDialog.tsx
+msgid "All channels"
+msgstr ""
+
+#: src/features/channels/ui/ChannelBrowserDialog.tsx
+msgid "All forums"
+msgstr ""
+
+#: src/features/channels/ui/ChannelBrowserDialog.tsx
+msgid "All open channels are available in the sidebar. Create a new channel to get started."
+msgstr ""
+
+#: src/features/channels/ui/ChannelBrowserDialog.tsx
+msgid "All open forums are available in the sidebar. Create a new forum to get started."
+msgstr ""
+
+#: src/features/channels/ui/ChannelBrowserDialog.tsx
+msgid "Alphabetical"
+msgstr ""
+
+#: src/shared/lib/keyboard-shortcuts.ts
+msgid "Always address agent"
+msgstr ""
+
+#: src/features/search/ui/SearchPromptPlaceholder.tsx
+msgid "an agent"
 msgstr ""
 
 #: src/features/settings/ui/SettingsView.tsx
@@ -65,8 +236,29 @@ msgstr ""
 msgid "Applies across conversations and interface text"
 msgstr ""
 
+#: src/features/search/ui/SearchResultItem.tsx
+msgid "Approval request"
+msgstr ""
+
 #: src/features/sidebar/ui/ChannelContextMenu.tsx
 msgid "Archive channel"
+msgstr ""
+
+#: src/features/channels/ui/ChannelBrowserDialog.tsx
+msgid "archived"
+msgstr ""
+
+#: src/features/channels/ui/ChannelBrowserDialog.tsx
+#: src/shared/ui/markdown/ChannelDeepLink.tsx
+msgid "Archived"
+msgstr ""
+
+#: src/features/channels/ui/ChannelBrowserDialog.tsx
+msgid "Archived channels you have joined will appear here."
+msgstr ""
+
+#: src/features/channels/ui/ChannelBrowserDialog.tsx
+msgid "Archived forums you have joined will appear here."
 msgstr ""
 
 #: src/features/settings/ui/AppearanceSettingsControls.tsx
@@ -77,20 +269,69 @@ msgstr ""
 msgid "Back to app"
 msgstr ""
 
+#: src/features/channels/ui/ChannelBrowserDialog.tsx
+msgid "Back to search"
+msgstr ""
+
 #: src/features/settings/ui/AppearanceSettingsControls.tsx
 msgid "Blur the desktop behind navigation while keeping content solid."
+msgstr ""
+
+#: src/shared/lib/keyboard-shortcuts.ts
+msgid "Bold"
+msgstr ""
+
+#: src/features/sidebar/ui/SidebarProjectsSection.tsx
+msgid "Browse all projects"
+msgstr ""
+
+#: src/features/channels/ui/ChannelBrowserDialog.tsx
+#: src/features/search/ui/TopbarSearch.tsx
+#: src/features/sidebar/ui/CustomChannelSection.tsx
+#: src/shared/lib/keyboard-shortcuts.ts
+msgid "Browse channels"
+msgstr ""
+
+#: src/features/sidebar/ui/SidebarRelayConnectionCard.tsx
+msgid "Can't reach the relay"
+msgstr ""
+
+#: src/features/sidebar/ui/ChannelSectionDialogs.tsx
+#: src/features/sidebar/ui/SidebarProjectsSection.tsx
+msgid "Cancel"
+msgstr ""
+
+#: src/features/sidebar/ui/CreateChannelFormFields.tsx
+msgid "Canvas included"
+msgstr ""
+
+#: src/features/search/ui/SearchResultItem.tsx
+msgid "Channel"
 msgstr ""
 
 #: src/features/sidebar/ui/ChannelContextMenu.tsx
 msgid "Channel actions unavailable"
 msgstr ""
 
+#: src/features/sidebar/ui/ChannelActivityPopover.tsx
+msgid "Channel activity"
+msgstr ""
+
 #: src/features/settings/ui/SettingsPanels.tsx
 msgid "Channel templates"
 msgstr ""
 
+#: src/features/search/ui/TopbarSearch.tsx
 #: src/features/sidebar/ui/AppSidebar.tsx
 msgid "Channels"
+msgstr ""
+
+#: src/features/sidebar/ui/CreateChannelDialog.tsx
+msgid "Channels are real-time streams for team conversation."
+msgstr ""
+
+#: src/features/channels/ui/ChannelBrowserDialog.tsx
+msgid "Channels you join will appear here."
 msgstr ""
 
 #: src/features/settings/ui/SettingsView.tsx
@@ -101,6 +342,10 @@ msgstr ""
 msgid "Choose how {productName} looks and feels."
 msgstr ""
 
+#: src/features/sidebar/ui/ChannelSectionDialogs.tsx
+msgid "Choose section icon"
+msgstr ""
+
 #: src/features/settings/ui/AppearanceSettingsPanel.tsx
 msgid "Choose the colors used throughout {productName}."
 msgstr ""
@@ -109,8 +354,32 @@ msgstr ""
 msgid "Choose the highlight color used throughout {productName}."
 msgstr ""
 
+#: src/features/channels/lib/ephemeralChannel.ts
+msgid "Cleanup due"
+msgstr ""
+
+#: src/features/sidebar/ui/ChannelSectionDialogs.tsx
+msgid "Clear section icon"
+msgstr ""
+
+#: src/features/sidebar/ui/SidebarRelayConnectionCard.tsx
+msgid "Click to connect"
+msgstr ""
+
+#: src/features/channels/ui/ChannelBrowserDialog.tsx
+msgid "Close"
+msgstr ""
+
+#: src/shared/lib/keyboard-shortcuts.ts
+msgid "Close dialog"
+msgstr ""
+
 #: src/features/sidebar/ui/SidebarSection.tsx
 msgid "Close direct message"
+msgstr ""
+
+#: src/shared/lib/keyboard-shortcuts.ts
+msgid "Close the current dialog or settings"
 msgstr ""
 
 #: src/features/settings/ui/AppearanceSettingsPanel.tsx
@@ -134,8 +403,24 @@ msgstr ""
 msgid "Compact"
 msgstr ""
 
+#: src/features/sidebar/ui/SidebarRelayConnectionCard.tsx
+msgid "Complete any prompts opened by the reconnect helper to continue."
+msgstr ""
+
 #: src/features/settings/ui/SettingsPanels.tsx
 msgid "Compute"
+msgstr ""
+
+#: src/features/sidebar/ui/SidebarRelayConnectionCard.tsx
+msgid "Connect to relay"
+msgstr ""
+
+#: src/features/sidebar/ui/SidebarRelayConnectionCard.tsx
+msgid "Connected"
+msgstr ""
+
+#: src/features/sidebar/ui/SidebarRelayConnectionCard.tsx
+msgid "Connecting"
 msgstr ""
 
 #: src/features/settings/ui/AppearanceSettingsControls.tsx
@@ -158,6 +443,49 @@ msgstr ""
 msgid "Copy community URL"
 msgstr ""
 
+#: src/features/sidebar/ui/SidebarProjectsSection.tsx
+msgid "Copy link"
+msgstr ""
+
+#: src/features/sidebar/ui/ChannelSectionDialogs.tsx
+msgid "Create"
+msgstr ""
+
+#: src/features/search/ui/TopbarSearch.tsx
+msgid "Create a new agent"
+msgstr ""
+
+#: src/features/channels/ui/ChannelBrowserDialog.tsx
+#: src/features/search/ui/TopbarSearch.tsx
+#: src/features/sidebar/ui/CreateChannelDialog.tsx
+msgid "Create a new channel"
+msgstr ""
+
+#: src/features/channels/ui/ChannelBrowserDialog.tsx
+#: src/features/sidebar/ui/CreateChannelDialog.tsx
+msgid "Create a new forum"
+msgstr ""
+
+#: src/features/sidebar/ui/CustomChannelSection.tsx
+msgid "Create channel"
+msgstr ""
+
+#: src/features/sidebar/ui/CreateChannelFormFields.tsx
+msgid "Create new channel template…"
+msgstr ""
+
+#: src/features/sidebar/ui/ChannelSectionDialogs.tsx
+msgid "Create section"
+msgstr ""
+
+#: src/features/sidebar/ui/ChannelSectionDialogs.tsx
+msgid "Create subsection"
+msgstr ""
+
+#: src/features/sidebar/ui/AppSidebar.tsx
+msgid "Current identity"
+msgstr ""
+
 #: src/features/settings/ui/SettingsPanels.tsx
 msgid "Custom emoji"
 msgstr ""
@@ -166,20 +494,112 @@ msgstr ""
 msgid "Dark"
 msgstr ""
 
+#: src/shared/lib/keyboard-shortcuts.ts
+msgid "Decrease the zoom level"
+msgstr ""
+
 #: src/features/settings/ui/AppearanceSettingsControls.tsx
 msgid "Default"
+msgstr ""
+
+#: src/features/sidebar/ui/ChannelSectionDialogs.tsx
+msgid "Delete"
+msgstr ""
+
+#. placeholder {0}: project.name
+#: src/features/sidebar/ui/SidebarProjectsSection.tsx
+msgid "Delete {0}"
+msgstr ""
+
+#. placeholder {0}: projectToDelete?.name
+#: src/features/sidebar/ui/SidebarProjectsSection.tsx
+msgid "Delete {0} from Projects for everyone. This can only be done for projects you own and cannot be undone."
 msgstr ""
 
 #: src/features/sidebar/ui/ChannelContextMenu.tsx
 msgid "Delete channel"
 msgstr ""
 
+#: src/features/sidebar/ui/SidebarProjectsSection.tsx
+msgid "Delete project"
+msgstr ""
+
+#: src/features/sidebar/ui/SidebarProjectsSection.tsx
+msgid "Delete project?"
+msgstr ""
+
+#: src/features/sidebar/ui/ChannelSectionDialogs.tsx
+#: src/features/sidebar/ui/CustomChannelSection.tsx
+msgid "Delete section"
+msgstr ""
+
+#: src/features/sidebar/ui/ChannelSectionDialogs.tsx
+msgid "Delete section \"{sectionName}\"? It has no channels."
+msgstr ""
+
+#: src/features/sidebar/ui/SidebarProjectsSection.tsx
+msgid "Deleting..."
+msgstr ""
+
+#: src/features/sidebar/ui/CreateChannelFormFields.tsx
+msgid "Description"
+msgstr ""
+
+#: src/features/search/ui/TopbarSearch.tsx
+msgid "Direct message"
+msgstr ""
+
+#: src/shared/ui/markdown/MessageLinkPill.tsx
+msgid "Direct message with {destination}"
+msgstr ""
+
+#: src/features/search/ui/TopbarSearch.tsx
 #: src/features/sidebar/ui/AppSidebar.tsx
 msgid "Direct messages"
 msgstr ""
 
+#: src/features/sidebar/ui/SidebarRelayConnectionCard.tsx
+msgid "Dismiss relay notification"
+msgstr ""
+
+#: src/features/sidebar/ui/ChannelSectionDialogs.tsx
+msgid "Enter a new name for this section."
+msgstr ""
+
+#: src/features/channels/lib/ephemeralChannel.ts
+msgid "Ephemeral channel. Cleans up {when}."
+msgstr ""
+
+#: src/features/channels/lib/ephemeralChannel.ts
+msgid "Ephemeral channel. Cleans up {when}. Scheduled for {absoluteDeadlineLabel}."
+msgstr ""
+
+#: src/features/channels/lib/ephemeralChannel.ts
+msgid "Ephemeral channel. Cleans up after {window} of inactivity."
+msgstr ""
+
+#: src/features/channels/lib/ephemeralChannel.ts
+msgid "Ephemeral channel. Cleans up automatically after inactivity."
+msgstr ""
+
+#: src/features/channels/lib/ephemeralChannel.ts
+msgid "Ephemeral channel. Cleanup is due now."
+msgstr ""
+
+#: src/features/search/ui/SearchPromptPlaceholder.tsx
+msgid "everything"
+msgstr ""
+
 #: src/features/settings/ui/SettingsPanels.tsx
 msgid "Experiments"
+msgstr ""
+
+#: src/features/sidebar/ui/SidebarProjectsSection.tsx
+msgid "Failed to delete project"
+msgstr ""
+
+#: src/shared/lib/keyboard-shortcuts.ts
+msgid "Find in channel"
 msgstr ""
 
 #: src/features/settings/ui/AppearanceSettingsControls.tsx
@@ -194,8 +614,36 @@ msgstr ""
 msgid "Font size"
 msgstr ""
 
+#: src/shared/lib/keyboard-shortcuts.ts
+msgid "Formatting"
+msgstr ""
+
+#: src/shared/ui/markdown/ChannelDeepLink.tsx
+msgid "Forum"
+msgstr ""
+
+#: src/features/search/ui/SearchResultItem.tsx
+msgid "Forum post"
+msgstr ""
+
+#: src/shared/ui/markdown/MessageLinkPill.tsx
+msgid "Forum post in {destination}"
+msgstr ""
+
+#: src/features/search/ui/SearchResultItem.tsx
+msgid "Forum reply"
+msgstr ""
+
 #: src/features/sidebar/ui/AppSidebar.tsx
 msgid "Forums"
+msgstr ""
+
+#: src/features/sidebar/ui/CreateChannelDialog.tsx
+msgid "Forums organize threaded discussions around a topic."
+msgstr ""
+
+#: src/features/channels/ui/ChannelBrowserDialog.tsx
+msgid "Forums you join will appear here."
 msgstr ""
 
 #: src/features/settings/ui/AppearanceSettingsControls.tsx
@@ -210,8 +658,24 @@ msgstr ""
 msgid "Glass opacity"
 msgstr ""
 
+#: src/shared/lib/keyboard-shortcuts.ts
+msgid "Go back"
+msgstr ""
+
+#: src/shared/lib/keyboard-shortcuts.ts
+msgid "Go forward"
+msgstr ""
+
 #: src/features/settings/ui/AppearanceSettingsControls.tsx
 msgid "Highlights from this release: refreshed conversation layout, quicker link handling, and readability improvements."
+msgstr ""
+
+#: src/shared/lib/keyboard-shortcuts.ts
+msgid "Hold to unmute in a huddle"
+msgstr ""
+
+#: src/shared/lib/keyboard-shortcuts.ts
+msgid "Home"
 msgstr ""
 
 #: src/features/settings/ui/SettingsPanels.tsx
@@ -224,6 +688,22 @@ msgstr ""
 
 #: src/features/sidebar/ui/AppSidebarPinnedHeader.tsx
 msgid "Inbox"
+msgstr ""
+
+#: src/shared/lib/keyboard-shortcuts.ts
+msgid "Increase the zoom level"
+msgstr ""
+
+#: src/shared/lib/keyboard-shortcuts.ts
+msgid "Inline code"
+msgstr ""
+
+#: src/shared/lib/keyboard-shortcuts.ts
+msgid "Insert a line break in the composer"
+msgstr ""
+
+#: src/shared/lib/keyboard-shortcuts.ts
+msgid "Insert link"
 msgstr ""
 
 #: src/features/settings/ui/SettingsView.tsx
@@ -242,6 +722,27 @@ msgstr ""
 msgid "Invites"
 msgstr ""
 
+#: src/shared/lib/keyboard-shortcuts.ts
+msgid "Italic"
+msgstr ""
+
+#: src/features/channels/ui/ChannelBrowserDialog.tsx
+msgid "Joined"
+msgstr ""
+
+#. placeholder {0}: formatRelativeDate(member.createdAt, locale)
+#: src/features/community-members/ui/CommunityMembersCard.tsx
+msgid "Joined {0}"
+msgstr ""
+
+#: src/shared/lib/relativeTime.ts
+msgid "just now"
+msgstr ""
+
+#: src/features/settings/ui/KeyboardShortcutsCard.tsx
+msgid "Keyboard shortcuts"
+msgstr ""
+
 #: src/features/settings/ui/LanguageSettingsControl.tsx
 msgid "Language"
 msgstr ""
@@ -258,7 +759,29 @@ msgstr ""
 msgid "Larger"
 msgstr ""
 
+#: src/features/profile/ui/UserProfilePanelTabs.tsx
+msgid "Last live {label}"
+msgstr ""
+
+#: src/features/messages/ui/MessageThreadSummaryRow.tsx
+msgid "last reply {lastReply}"
+msgstr ""
+
+#. placeholder {0}: localeDateTime(new Date(latestActivityAt), locale)
+#: src/features/channels/ui/AgentSessionThreadPanel.tsx
+msgid "Last updated {0}"
+msgstr ""
+
+#: src/features/channels/ui/AgentSessionThreadPanel.tsx
+msgid "Last updated {when}"
+msgstr ""
+
+#: src/features/sidebar/ui/ChannelSectionDialogs.tsx
+msgid "Leave"
+msgstr ""
+
 #: src/features/sidebar/ui/ChannelContextMenu.tsx
+#: src/features/sidebar/ui/ChannelSectionDialogs.tsx
 msgid "Leave channel"
 msgstr ""
 
@@ -268,6 +791,14 @@ msgstr ""
 
 #: src/features/settings/ui/AppearanceSettingsControls.tsx
 msgid "Link previews"
+msgstr ""
+
+#: src/shared/lib/keyboard-shortcuts.ts
+msgid "Link the selected composer text, or edit the link under the caret"
+msgstr ""
+
+#: src/features/profile/ui/UserProfilePanelTabs.tsx
+msgid "Live activity will appear here."
 msgstr ""
 
 #: src/features/sidebar/ui/ChannelContextMenu.tsx
@@ -283,30 +814,133 @@ msgid "Lower values reveal more of the desktop blur."
 msgstr ""
 
 #: src/features/sidebar/ui/CommunityRail.tsx
+#: src/features/sidebar/ui/CustomChannelSection.tsx
+#: src/shared/lib/keyboard-shortcuts.ts
 msgid "Mark all as read"
 msgstr ""
 
+#: src/shared/lib/keyboard-shortcuts.ts
+msgid "Mark all conversations as read"
+msgstr ""
+
+#: src/features/sidebar/ui/ChannelActivityPopover.tsx
 #: src/features/sidebar/ui/ChannelContextMenu.tsx
+#: src/shared/lib/keyboard-shortcuts.ts
 msgid "Mark as read"
+msgstr ""
+
+#: src/shared/lib/keyboard-shortcuts.ts
+msgid "Mark the current conversation as read"
 msgstr ""
 
 #: src/features/sidebar/ui/ChannelContextMenu.tsx
 msgid "Mark unread"
 msgstr ""
 
+#: src/features/search/ui/SearchResultItem.tsx
+#: src/features/search/ui/TopbarSearch.tsx
+msgid "Message"
+msgstr ""
+
+#: src/shared/ui/markdown/MessageLinkPill.tsx
+msgid "Message deleted"
+msgstr ""
+
+#: src/features/search/ui/TopbarSearch.tsx
+msgid "Message in"
+msgstr ""
+
+#: src/shared/ui/markdown/MessageLinkPill.tsx
+msgid "Message in channel {channelLabel}"
+msgstr ""
+
+#: src/shared/ui/markdown/MessageLinkPill.tsx
+msgid "Message unavailable"
+msgstr ""
+
+#: src/shared/lib/keyboard-shortcuts.ts
+msgid "Messages"
+msgstr ""
+
 #: src/features/settings/ui/SettingsPanels.tsx
 msgid "Mobile"
+msgstr ""
+
+#: src/features/sidebar/ui/CustomChannelSection.tsx
+msgid "More actions for {sectionLabel}"
+msgstr ""
+
+#: src/features/sidebar/ui/SidebarProjectsSection.tsx
+msgid "More actions for Projects"
+msgstr ""
+
+#: src/features/channels/ui/ChannelBrowserDialog.tsx
+msgid "Most members"
+msgstr ""
+
+#: src/features/search/ui/TopbarSearch.tsx
+msgid "Most relevant"
+msgstr ""
+
+#: src/features/sidebar/ui/CustomChannelSection.tsx
+msgid "Move down"
+msgstr ""
+
+#: src/features/sidebar/ui/CustomChannelSection.tsx
+msgid "Move out of subsection"
 msgstr ""
 
 #: src/features/sidebar/ui/ChannelContextMenu.tsx
 msgid "Move to section"
 msgstr ""
 
+#: src/features/sidebar/ui/CustomChannelSection.tsx
+msgid "Move up"
+msgstr ""
+
 #: src/features/sidebar/ui/ChannelContextMenu.tsx
 msgid "Mute channel"
 msgstr ""
 
+#: src/features/sidebar/ui/CreateChannelFormFields.tsx
+msgid "Name"
+msgstr ""
+
+#: src/shared/lib/keyboard-shortcuts.ts
+msgid "Navigate to the home feed"
+msgstr ""
+
+#: src/shared/lib/keyboard-shortcuts.ts
+msgid "Navigate to the next page"
+msgstr ""
+
+#: src/shared/lib/keyboard-shortcuts.ts
+msgid "Navigate to the previous page"
+msgstr ""
+
+#: src/shared/lib/keyboard-shortcuts.ts
+msgid "Navigation"
+msgstr ""
+
+#: src/features/channels/ui/ChannelBrowserDialog.tsx
+#: src/shared/lib/keyboard-shortcuts.ts
+msgid "New channel"
+msgstr ""
+
+#: src/shared/lib/keyboard-shortcuts.ts
+msgid "New direct message"
+msgstr ""
+
+#: src/features/channels/ui/ChannelBrowserDialog.tsx
+msgid "New forum"
+msgstr ""
+
+#: src/shared/lib/keyboard-shortcuts.ts
+msgid "New line"
+msgstr ""
+
 #: src/features/sidebar/ui/AppSidebar.tsx
+#: src/features/sidebar/ui/CustomChannelSection.tsx
 msgid "New message"
 msgstr ""
 
@@ -314,12 +948,173 @@ msgstr ""
 msgid "New section..."
 msgstr ""
 
+#: src/features/sidebar/ui/CustomChannelSection.tsx
+msgid "New subsection..."
+msgstr ""
+
+#: src/features/sidebar/ui/SidebarProjectsSection.tsx
+msgid "Newest"
+msgstr ""
+
+#: src/features/profile/ui/UserProfilePanelTabs.tsx
+msgid "No activity yet"
+msgstr ""
+
+#: src/features/channels/ui/ChannelBrowserDialog.tsx
+msgid "No archived channels"
+msgstr ""
+
+#: src/features/channels/ui/ChannelBrowserDialog.tsx
+msgid "No archived forums"
+msgstr ""
+
+#: src/features/channels/ui/ChannelBrowserDialog.tsx
+msgid "No channel by that name yet — create it to get started."
+msgstr ""
+
+#: src/features/channels/ui/ChannelBrowserDialog.tsx
+msgid "No channels match your search"
+msgstr ""
+
+#: src/features/channels/ui/ChannelBrowserDialog.tsx
+msgid "No channels to browse"
+msgstr ""
+
+#: src/features/sidebar/ui/SidebarProfileCard.tsx
+msgid "No community"
+msgstr ""
+
+#: src/features/channels/ui/ChannelBrowserDialog.tsx
+msgid "No forum by that name yet — create it to get started."
+msgstr ""
+
+#: src/features/channels/ui/ChannelBrowserDialog.tsx
+msgid "No forums match your search"
+msgstr ""
+
+#: src/features/channels/ui/ChannelBrowserDialog.tsx
+msgid "No forums to browse"
+msgstr ""
+
+#: src/features/channels/ui/ChannelBrowserDialog.tsx
+msgid "No joined channels"
+msgstr ""
+
+#: src/features/channels/ui/ChannelBrowserDialog.tsx
+msgid "No joined forums"
+msgstr ""
+
+#: src/features/search/ui/TopbarSearch.tsx
+msgid "No matches for <0>{trimmedQuery}</0>."
+msgstr ""
+
+#: src/features/search/ui/SearchResultItem.tsx
+msgid "No message body."
+msgstr ""
+
+#: src/features/search/ui/TopbarSearch.tsx
+msgid "No messages for <0>{trimmedQuery}</0> in <1>{scopeLabel}</1>."
+msgstr ""
+
+#: src/features/sidebar/ui/SidebarProjectsSection.tsx
+msgid "No projects yet"
+msgstr ""
+
+#: src/features/search/ui/TopbarSearch.tsx
+msgid "No recent activity yet."
+msgstr ""
+
+#: src/features/channels/ui/AgentSessionThreadPanel.tsx
+msgid "No updates yet"
+msgstr ""
+
+#: src/features/sidebar/ui/CreateChannelFormFields.tsx
+msgid "None"
+msgstr ""
+
+#: src/features/search/ui/SearchResultItem.tsx
+msgid "Note"
+msgstr ""
+
 #: src/features/settings/ui/SettingsPanels.tsx
 msgid "Notifications"
 msgstr ""
 
+#: src/features/channels/lib/ephemeralChannel.ts
+msgid "now"
+msgstr ""
+
+#: src/features/messages/lib/dateFormatters.ts
+msgid "on {date}"
+msgstr ""
+
+#: src/features/sidebar/ui/CreateChannelFormFields.tsx
+msgid "Open"
+msgstr ""
+
+#: src/features/profile/ui/UserProfilePanelTabs.tsx
+msgid "Open activity feed. Last live {lastLiveLabel}."
+msgstr ""
+
+#: src/shared/ui/markdown/MessageLinkPill.tsx
+msgid "Open channel {channelLabel}; linked message was deleted"
+msgstr ""
+
+#: src/features/profile/ui/UserProfilePanelTabs.tsx
+msgid "Open full activity. Last live {label}."
+msgstr ""
+
+#: src/shared/ui/markdown/MessageLinkPill.tsx
+msgid "Open message in channel {channelLabel}"
+msgstr ""
+
+#: src/shared/lib/keyboard-shortcuts.ts
+msgid "Open or close settings"
+msgstr ""
+
+#: src/features/sidebar/ui/SidebarProfileCard.tsx
+msgid "Open profile menu for {resolvedDisplayName}"
+msgstr ""
+
+#: src/shared/lib/keyboard-shortcuts.ts
+msgid "Open the channel browser"
+msgstr ""
+
+#: src/shared/lib/keyboard-shortcuts.ts
+msgid "Open the create channel dialog"
+msgstr ""
+
+#: src/shared/lib/keyboard-shortcuts.ts
+msgid "Open the new message composer"
+msgstr ""
+
+#: src/shared/lib/keyboard-shortcuts.ts
+msgid "Open the search dialog"
+msgstr ""
+
+#. placeholder {0}: item.senderLabel
+#: src/features/sidebar/ui/ChannelActivityPopover.tsx
+msgid "Open thread from {0}"
+msgstr ""
+
+#: src/shared/ui/markdown/MessageLinkPill.tsx
+msgid "Open thread in channel {channelLabel}; linked message was deleted"
+msgstr ""
+
+#: src/features/sidebar/ui/CreateChannelFormFields.tsx
+msgid "Optional"
+msgstr ""
+
 #: src/features/settings/ui/AppearanceSettingsControls.tsx
 msgid "Orders every list in the sidebar. Recent also floats the sections themselves, so dragging them waits for A–Z. A section you have set from its own menu keeps that order."
+msgstr ""
+
+#: src/features/sidebar/ui/SidebarProjectsSection.tsx
+msgid "Owned by me"
+msgstr ""
+
+#: src/features/search/ui/TopbarSearch.tsx
+msgid "People"
 msgstr ""
 
 #: src/features/settings/ui/SettingsView.tsx
@@ -342,6 +1137,14 @@ msgstr ""
 msgid "Preview"
 msgstr ""
 
+#: src/features/sidebar/ui/CreateChannelFormFields.tsx
+msgid "Private"
+msgstr ""
+
+#: src/shared/ui/markdown/ChannelDeepLink.tsx
+msgid "Private channel"
+msgstr ""
+
 #: src/features/settings/ui/AppearanceSettingsControls.tsx
 msgid "Product updates — a fresh look at conversations"
 msgstr ""
@@ -351,6 +1154,7 @@ msgid "Profile"
 msgstr ""
 
 #: src/features/sidebar/ui/AppSidebarPinnedHeader.tsx
+#: src/features/sidebar/ui/SidebarProjectsSection.tsx
 msgid "Projects"
 msgstr ""
 
@@ -358,20 +1162,75 @@ msgstr ""
 msgid "Prominent active tab"
 msgstr ""
 
+#: src/shared/ui/markdown/ChannelDeepLink.tsx
+msgid "Public channel"
+msgstr ""
+
+#: src/shared/lib/keyboard-shortcuts.ts
+msgid "Publish a Pulse note"
+msgstr ""
+
+#: src/shared/lib/keyboard-shortcuts.ts
+msgid "Publish note"
+msgstr ""
+
 #: src/features/sidebar/ui/AppSidebarPinnedHeader.tsx
 msgid "Pulse"
 msgstr ""
 
+#: src/shared/lib/keyboard-shortcuts.ts
+msgid "Push to talk"
+msgstr ""
+
+#: src/shared/lib/keyboard-shortcuts.ts
+msgid "Quick search"
+msgstr ""
+
+#: src/features/channels/ui/ChannelBrowserDialog.tsx
 #: src/features/settings/ui/AppearanceSettingsControls.tsx
+#: src/features/sidebar/ui/CustomChannelSection.tsx
 msgid "Recent"
+msgstr ""
+
+#: src/features/search/ui/TopbarSearch.tsx
+msgid "Recent activity"
+msgstr ""
+
+#: src/features/sidebar/ui/SidebarRelayConnectionCard.tsx
+msgid "Reconnecting"
+msgstr ""
+
+#: src/features/sidebar/ui/ChannelActivityPopover.tsx
+msgid "Remind me later"
+msgstr ""
+
+#: src/features/search/ui/SearchScopeControls.tsx
+msgid "Remove {scopeLabel} search scope"
 msgstr ""
 
 #: src/features/sidebar/ui/ChannelContextMenu.tsx
 msgid "Remove from section"
 msgstr ""
 
+#: src/features/sidebar/ui/SidebarProjectsSection.tsx
+msgid "Remove from sidebar"
+msgstr ""
+
+#: src/features/sidebar/ui/ChannelSectionDialogs.tsx
+#: src/features/sidebar/ui/CustomChannelSection.tsx
+msgid "Rename section"
+msgstr ""
+
 #: src/features/settings/ui/AppearanceSettingsControls.tsx
 msgid "Reset glass opacity"
+msgstr ""
+
+#: src/shared/lib/keyboard-shortcuts.ts
+msgid "Reset zoom"
+msgstr ""
+
+#: src/shared/lib/keyboard-shortcuts.ts
+msgid "Reset zoom to default level"
 msgstr ""
 
 #: src/features/settings/ui/AppearanceSettingsControls.tsx
@@ -382,8 +1241,90 @@ msgstr ""
 msgid "Row height and the spacing around section headers"
 msgstr ""
 
+#: src/features/channels/ui/ChannelBrowserDialog.tsx
+msgid "Search channels by name or description"
+msgstr ""
+
+#: src/features/search/ui/SearchScopeControls.tsx
+msgid "Search conversation with {scopeLabel}"
+msgstr ""
+
+#: src/features/search/ui/SearchScopeControls.tsx
+#: src/features/search/ui/TopbarSearch.tsx
+msgid "Search everything"
+msgstr ""
+
+#: src/features/search/ui/SearchPromptPlaceholder.tsx
+msgid "Search for"
+msgstr ""
+
+#: src/features/search/ui/SearchPromptPlaceholder.tsx
+msgid "Search for {activeLabel}"
+msgstr ""
+
+#: src/features/channels/ui/ChannelBrowserDialog.tsx
+msgid "Search forums by name or description"
+msgstr ""
+
+#: src/features/search/ui/SearchScopeControls.tsx
+#: src/features/search/ui/TopbarSearch.tsx
+msgid "Search in {scopeLabel}"
+msgstr ""
+
+#: src/features/search/ui/SearchScopeControls.tsx
+msgid "Search messages"
+msgstr ""
+
+#: src/shared/lib/keyboard-shortcuts.ts
+msgid "Search messages in current channel"
+msgstr ""
+
+#: src/features/search/ui/SearchScopeControls.tsx
+msgid "Search messages in this channel"
+msgstr ""
+
+#: src/features/search/ui/SearchScopeControls.tsx
+msgid "Search messages in this conversation."
+msgstr ""
+
+#: src/features/channels/ui/ChannelBrowserDialog.tsx
+msgid "Search or create a channel"
+msgstr ""
+
+#: src/features/channels/ui/ChannelBrowserDialog.tsx
+msgid "Search or create a forum"
+msgstr ""
+
+#: src/features/sidebar/ui/ChannelSectionDialogs.tsx
+msgid "Section name"
+msgstr ""
+
+#: src/features/sidebar/ui/ChannelSectionDialogs.tsx
+msgid "Sections let you group related channels in the sidebar."
+msgstr ""
+
+#: src/shared/lib/keyboard-shortcuts.ts
+msgid "Send message"
+msgstr ""
+
+#: src/shared/lib/keyboard-shortcuts.ts
+msgid "Send the current message"
+msgstr ""
+
+#: src/shared/lib/keyboard-shortcuts.ts
+msgid "Settings"
+msgstr ""
+
 #: src/features/settings/ui/SettingsPanels.tsx
 msgid "Shortcuts"
+msgstr ""
+
+#: src/features/sidebar/ui/SidebarProjectsSection.tsx
+msgid "Show"
+msgstr ""
+
+#: src/shared/lib/keyboard-shortcuts.ts
+msgid "Show or hide the sidebar"
 msgstr ""
 
 #: src/features/settings/ui/AppearanceSettingsControls.tsx
@@ -402,6 +1343,23 @@ msgstr ""
 msgid "Smaller"
 msgstr ""
 
+#: src/features/sidebar/ui/CustomChannelSection.tsx
+#: src/features/sidebar/ui/SidebarProjectsSection.tsx
+msgid "Sort"
+msgstr ""
+
+#: src/features/channels/ui/ChannelBrowserDialog.tsx
+msgid "Sort by"
+msgstr ""
+
+#: src/features/channels/ui/ChannelBrowserDialog.tsx
+msgid "Sort channels: {selected}"
+msgstr ""
+
+#: src/features/channels/ui/ChannelBrowserDialog.tsx
+msgid "Sort forums: {selected}"
+msgstr ""
+
 #: src/features/settings/ui/AppearanceSettingsControls.tsx
 msgid "Spacing in conversations and Markdown content across {productName}"
 msgstr ""
@@ -414,8 +1372,33 @@ msgstr ""
 msgid "Split"
 msgstr ""
 
+#: src/shared/lib/keyboard-shortcuts.ts
+msgid "Start or join a huddle in the current channel; leave when connected"
+msgstr ""
+
+#: src/shared/lib/keyboard-shortcuts.ts
+msgid "Start or leave huddle"
+msgstr ""
+
+#: src/shared/lib/keyboard-shortcuts.ts
+msgid "Strikethrough"
+msgstr ""
+
+#: src/features/sidebar/ui/ChannelSectionDialogs.tsx
+msgid "Subsections group channels one level under \"{parentName}\"."
+msgstr ""
+
 #: src/features/settings/ui/AppearanceSettingsPanel.tsx
 msgid "System"
+msgstr ""
+
+#: src/features/sidebar/ui/CreateChannelFormFields.tsx
+msgid "Template"
+msgstr ""
+
+#. placeholder {0}: selectedTemplate?.name ?? "None"
+#: src/features/sidebar/ui/CreateChannelFormFields.tsx
+msgid "Template: {0}"
 msgstr ""
 
 #: src/features/settings/ui/AppearanceSettingsControls.tsx
@@ -442,6 +1425,19 @@ msgstr ""
 msgid "this community"
 msgstr ""
 
+#: src/features/search/ui/TopbarSearch.tsx
+#: src/features/sidebar/ui/ChannelActivityPopover.tsx
+msgid "Thread"
+msgstr ""
+
+#: src/features/search/ui/TopbarSearch.tsx
+msgid "Thread in"
+msgstr ""
+
+#: src/shared/ui/markdown/MessageLinkPill.tsx
+msgid "Thread in {destination}"
+msgstr ""
+
 #: src/features/settings/ui/AppearanceSettingsControls.tsx
 msgid "Thread layout"
 msgstr ""
@@ -454,8 +1450,40 @@ msgstr ""
 msgid "Threads open over the channel"
 msgstr ""
 
+#: src/shared/lib/datetime.ts
+msgid "Today"
+msgstr ""
+
+#: src/shared/lib/keyboard-shortcuts.ts
+msgid "Toggle bold formatting"
+msgstr ""
+
+#: src/shared/lib/keyboard-shortcuts.ts
+msgid "Toggle inline code formatting"
+msgstr ""
+
+#: src/shared/lib/keyboard-shortcuts.ts
+msgid "Toggle italic formatting"
+msgstr ""
+
+#: src/shared/lib/keyboard-shortcuts.ts
+msgid "Toggle sidebar"
+msgstr ""
+
+#: src/shared/lib/keyboard-shortcuts.ts
+msgid "Toggle strikethrough formatting"
+msgstr ""
+
+#: src/features/channels/ui/ChannelBrowserDialog.tsx
+msgid "Try a different name or keyword."
+msgstr ""
+
 #: src/features/settings/ui/SettingsView.tsx
 msgid "Try again"
+msgstr ""
+
+#: src/features/sidebar/ui/CreateChannelFormFields.tsx
+msgid "Type"
 msgstr ""
 
 #: src/features/sidebar/ui/ChannelContextMenu.tsx
@@ -483,10 +1511,50 @@ msgstr ""
 msgid "v{appVersion}"
 msgstr ""
 
+#: src/features/messages/ui/MessageThreadSummaryRow.tsx
+msgid "View thread"
+msgstr ""
+
+#: src/features/messages/ui/MessageThreadSummaryRow.tsx
+msgid "View thread with {replyCount} replies"
+msgstr ""
+
+#: src/features/messages/ui/MessageThreadSummaryRow.tsx
+msgid "View thread with {replyCount} replies, last reply {lastReply}"
+msgstr ""
+
 #: src/features/settings/ui/SettingsPanels.tsx
 msgid "Voice"
 msgstr ""
 
+#: src/features/sidebar/ui/SidebarRelayConnectionCard.tsx
+msgid "Waiting to reconnect"
+msgstr ""
+
+#: src/features/sidebar/ui/CreateChannelFormFields.tsx
+msgid "What this {kindLabel} is for"
+msgstr ""
+
 #: src/features/sidebar/ui/AppSidebarPinnedHeader.tsx
 msgid "Workflows"
+msgstr ""
+
+#: src/features/sidebar/ui/ChannelActivityPopover.tsx
+msgid "Working"
+msgstr ""
+
+#: src/shared/lib/datetime.ts
+msgid "Yesterday"
+msgstr ""
+
+#: src/shared/lib/keyboard-shortcuts.ts
+msgid "Zoom"
+msgstr ""
+
+#: src/shared/lib/keyboard-shortcuts.ts
+msgid "Zoom in"
+msgstr ""
+
+#: src/shared/lib/keyboard-shortcuts.ts
+msgid "Zoom out"
 msgstr ""

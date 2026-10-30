@@ -20,6 +20,7 @@ import {
   sendDraftEntry,
   type DraftViewItem,
 } from "@/features/messages/ui/DraftsPanel";
+import { useLocale } from "@/shared/lib/localePreference";
 import { TopChromeInsetHeader } from "@/shared/layout/TopChromeInsetHeader";
 import { Button } from "@/shared/ui/button";
 import { Markdown } from "@/shared/ui/markdown";
@@ -37,6 +38,7 @@ export function DraftDetailPane({
   onBack,
   onDelete,
 }: DraftDetailPaneProps) {
+  const locale = useLocale();
   const { goChannel } = useAppNavigation();
   const [sendDialogOpen, setSendDialogOpen] = React.useState(false);
 
@@ -147,7 +149,7 @@ export function DraftDetailPane({
                   Draft
                 </span>
                 <span className="shrink-0 text-xs font-normal tabular-nums text-muted-foreground/55">
-                  {formatDraftCreatedAt(entry.draft)}
+                  {formatDraftCreatedAt(entry.draft, locale)}
                 </span>
               </div>
 

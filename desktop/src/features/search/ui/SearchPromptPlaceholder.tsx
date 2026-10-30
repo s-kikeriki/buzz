@@ -1,3 +1,6 @@
+import type { MessageDescriptor } from "@lingui/core";
+import { msg } from "@lingui/core/macro";
+import { Trans, useLingui } from "@lingui/react/macro";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import * as React from "react";
 
@@ -8,6 +11,27 @@ const SEARCH_PROMPT_WORDS = [
   "a thread",
   "an agent",
 ] as const;
+
+type SearchPromptWord = (typeof SEARCH_PROMPT_WORDS)[number];
+
+/**
+ * The rotating half of "Search for a message".
+ *
+ * `msg` + `i18n._()` rather than `t`: a `t` in a module-level table is
+ * evaluated once at import and freezes in whichever locale booted, so the
+ * placeholder would keep rotating English words after a switch to German.
+ *
+ * The English keys stay the identity of each option — they key this table, the
+ * animation, and the `data-` attributes — so only the displayed text is
+ * translated and nothing locale-dependent leaks into a selector.
+ */
+const SEARCH_PROMPT_LABELS: Record<SearchPromptWord, MessageDescriptor> = {
+  everything: msg`everything`,
+  "a channel": msg`a channel`,
+  "a message": msg`a message`,
+  "a thread": msg`a thread`,
+  "an agent": msg`an agent`,
+};
 const SEARCH_PROMPT_ROTATION_MS = 3200;
 const SEARCH_PROMPT_EASE = [0.22, 1, 0.36, 1] as const;
 const SEARCH_PROMPT_EXIT_EASE = [0.64, 0, 0.78, 0] as const;
@@ -81,12 +105,17 @@ function getPromptEnterTotalSeconds(characterCount: number) {
 }
 
 export function SearchPromptPlaceholder() {
+  const { i18n } = useLingui();
   const shouldReduceMotion = useReducedMotion();
   const [wordIndex, setWordIndex] = React.useState(0);
   const activeWord = SEARCH_PROMPT_WORDS[wordIndex];
+  // The rendered word. `activeWord` stays the English key: it drives the
+  // rotation, the React keys and the `data-` attributes, none of which should
+  // change with the language.
+  const activeLabel = i18n._(SEARCH_PROMPT_LABELS[activeWord]);
   const activeCharacters = React.useMemo(
-    () => getPromptCharacters(activeWord),
-    [activeWord],
+    () => getPromptCharacters(activeLabel),
+    [activeLabel],
   );
   const widthAnimationDurationSeconds = getPromptEnterTotalSeconds(
     activeCharacters.length,
@@ -111,7 +140,7 @@ export function SearchPromptPlaceholder() {
   }, [shouldReduceMotion]);
 
   React.useLayoutEffect(() => {
-    if (shouldReduceMotion || activeWord.length === 0) {
+    if (shouldReduceMotion || activeLabel.length === 0) {
       return;
     }
 
@@ -123,7 +152,7 @@ export function SearchPromptPlaceholder() {
         pendingWordWidthRef.current = width;
       }
     }
-  }, [activeWord, shouldReduceMotion, wordWidth]);
+  }, [activeLabel, shouldReduceMotion, wordWidth]);
 
   const handleWordExitComplete = React.useCallback(() => {
     const nextWidth = pendingWordWidthRef.current;
@@ -142,7 +171,7 @@ export function SearchPromptPlaceholder() {
         className="text-muted-foreground"
         data-testid="search-placeholder"
       >
-        Search for {activeWord}
+        <Trans>Search for {activeLabel}</Trans>
       </span>
     );
   }
@@ -155,7 +184,16 @@ export function SearchPromptPlaceholder() {
       data-search-prompt-options={SEARCH_PROMPT_WORDS.join(",")}
       data-testid="search-placeholder"
     >
-      <span>Search for&nbsp;</span>
+      {/*
+        Split from the rotating word because the word animates per character,
+        so the two cannot be one text node. German keeps the same order
+        ("Suche nach " + noun phrase), and each phrase carries its own article
+        so the inflection travels with it.
+      */}
+      <span>
+        <Trans>Search for</Trans>
+        &nbsp;
+      </span>
       <span
         className="relative inline-block overflow-visible whitespace-nowrap align-baseline leading-[inherit] motion-safe:transition-[width] motion-safe:ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none"
         data-width-animation-duration-ms={Math.round(
@@ -166,13 +204,15 @@ export function SearchPromptPlaceholder() {
           ...(wordWidth === null ? {} : { width: wordWidth }),
         }}
       >
-        <span className="sr-only">everything</span>
+        <span className="sr-only">
+          <Trans>everything</Trans>
+        </span>
         <span
           aria-hidden="true"
           className="pointer-events-none invisible inline-block whitespace-nowrap leading-[inherit]"
           ref={measureRef}
         >
-          {activeWord}
+          {activeLabel}
         </span>
         <AnimatePresence
           initial={false}
@@ -185,7 +225,7 @@ export function SearchPromptPlaceholder() {
             className="absolute inset-x-0 top-0 inline-block whitespace-nowrap leading-[inherit] [transform-style:preserve-3d]"
             exit="exit"
             initial="initial"
-            key={activeWord}
+            key={activeLabel}
             variants={searchPromptPhraseVariants}
           >
             {activeCharacters.map(({ character, key }) => (

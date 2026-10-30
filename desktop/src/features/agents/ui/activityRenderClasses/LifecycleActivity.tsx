@@ -1,4 +1,5 @@
 import { AlertCircle, CheckCircle2, ShieldCheck, XCircle } from "lucide-react";
+import { useLocale } from "@/shared/lib/localePreference";
 
 import { formatTranscriptTimestampTitle } from "../agentSessionUtils";
 import { ActivityRow, ActivityRowLabel } from "./ActivityRow";
@@ -38,6 +39,7 @@ function permissionOutcomeTone(outcome: string): "approve" | "deny" | "cancel" {
 }
 
 export function LifecycleActivity(props: ActivityRenderClassItemProps) {
+  const locale = useLocale();
   if (props.item.type === "tool") {
     return <ToolActivity {...props} />;
   }
@@ -49,7 +51,10 @@ export function LifecycleActivity(props: ActivityRenderClassItemProps) {
     props.item.renderClass === "error" ||
     props.item.title.toLowerCase().includes("error");
   const isPermission = props.item.renderClass === "permission";
-  const timestampTitle = formatTranscriptTimestampTitle(props.item.timestamp);
+  const timestampTitle = formatTranscriptTimestampTitle(
+    props.item.timestamp,
+    locale,
+  );
 
   if (isPermission) {
     const { requestLines, optionsLine } = splitPermissionText(props.item.text);

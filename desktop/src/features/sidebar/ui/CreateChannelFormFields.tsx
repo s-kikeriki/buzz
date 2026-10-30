@@ -1,3 +1,5 @@
+import { plural } from "@lingui/core/macro";
+import { Trans, useLingui } from "@lingui/react/macro";
 import { ChevronDown, Plus } from "lucide-react";
 import * as React from "react";
 
@@ -41,6 +43,7 @@ export function CreateChannelFormFields({
 }: {
   form: CreateChannelFormState;
 }) {
+  const { i18n, t } = useLingui();
   const { channelKind, kindLabel, isCreating } = form;
   const [isCreateTemplateOpen, setIsCreateTemplateOpen] = React.useState(false);
   const selectedTemplate = form.templates.find(
@@ -51,13 +54,23 @@ export function CreateChannelFormFields({
   const selectedTemplateTeamCount = selectedTemplate?.agents.teams.length ?? 0;
   const selectedTemplateSummary = selectedTemplate
     ? [
-        form.visibility === "private" ? "Private" : "Open",
-        selectedTemplate.canvasTemplate ? "Canvas included" : null,
+        form.visibility === "private" ? t`Private` : t`Open`,
+        selectedTemplate.canvasTemplate ? t`Canvas included` : null,
         selectedTemplatePersonaCount > 0
-          ? `${selectedTemplatePersonaCount} ${selectedTemplatePersonaCount === 1 ? "agent" : "agents"}`
+          ? i18n._(
+              plural(selectedTemplatePersonaCount, {
+                one: "# agent",
+                other: "# agents",
+              }),
+            )
           : null,
         selectedTemplateTeamCount > 0
-          ? `${selectedTemplateTeamCount} ${selectedTemplateTeamCount === 1 ? "team" : "teams"}`
+          ? i18n._(
+              plural(selectedTemplateTeamCount, {
+                one: "# team",
+                other: "# teams",
+              }),
+            )
           : null,
       ]
         .filter(Boolean)
@@ -71,7 +84,7 @@ export function CreateChannelFormFields({
           className="text-sm font-medium text-foreground"
           htmlFor="create-channel-name"
         >
-          Name
+          <Trans>Name</Trans>
         </label>
         <div
           className={cn(
@@ -106,8 +119,10 @@ export function CreateChannelFormFields({
           className="text-sm font-medium text-foreground"
           htmlFor="create-channel-description"
         >
-          Description
-          <span className={CREATE_LABEL_OPTIONAL_CLASS}>Optional</span>
+          <Trans>Description</Trans>
+          <span className={CREATE_LABEL_OPTIONAL_CLASS}>
+            <Trans>Optional</Trans>
+          </span>
         </label>
         <div className={CHANNEL_FORM_FIELD_SHELL_CLASS}>
           <Textarea
@@ -119,7 +134,7 @@ export function CreateChannelFormFields({
             disabled={isCreating}
             id="create-channel-description"
             onChange={(event) => form.setDescription(event.target.value)}
-            placeholder={`What this ${kindLabel} is for`}
+            placeholder={t`What this ${kindLabel} is for`}
             rows={2}
             value={form.description}
           />
@@ -128,7 +143,7 @@ export function CreateChannelFormFields({
 
       <ChannelTypeSettings
         disabled={isCreating}
-        label="Type"
+        label={t`Type`}
         onTemporaryChange={form.setEphemeral}
         onTtlSecondsChange={form.setTtlSeconds}
         temporary={form.ephemeral}
@@ -155,13 +170,15 @@ export function CreateChannelFormFields({
             isCreating && "opacity-50",
           )}
         >
-          Template
-          <span className={CREATE_LABEL_OPTIONAL_CLASS}>Optional</span>
+          <Trans>Template</Trans>
+          <span className={CREATE_LABEL_OPTIONAL_CLASS}>
+            <Trans>Optional</Trans>
+          </span>
         </span>
         <DropdownMenu modal={false}>
           <DropdownMenuTrigger asChild>
             <Button
-              aria-label={`Template: ${selectedTemplate?.name ?? "None"}`}
+              aria-label={t`Template: ${selectedTemplate?.name ?? "None"}`}
               className="-mr-2.5 ml-auto h-9 min-w-0 max-w-[60%] justify-end px-2.5 text-right text-sm font-medium text-foreground hover:bg-muted/50"
               data-testid="create-channel-template"
               disabled={isCreating}
@@ -191,7 +208,7 @@ export function CreateChannelFormFields({
               value={form.selectedTemplateId ?? NO_TEMPLATE_VALUE}
             >
               <DropdownMenuRadioItem value={NO_TEMPLATE_VALUE}>
-                None
+                <Trans>None</Trans>
               </DropdownMenuRadioItem>
               {form.templates.map((template) => (
                 <DropdownMenuRadioItem key={template.id} value={template.id}>
@@ -202,7 +219,7 @@ export function CreateChannelFormFields({
             <DropdownMenuSeparator />
             <DropdownMenuItem onSelect={() => setIsCreateTemplateOpen(true)}>
               <Plus className="size-4" />
-              Create new channel template…
+              <Trans>Create new channel template…</Trans>
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

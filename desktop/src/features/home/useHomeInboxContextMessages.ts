@@ -9,6 +9,7 @@ import { formatTimelineMessages } from "@/features/messages/lib/formatTimelineMe
 import type { UserProfileLookup } from "@/features/profile/lib/identity";
 import type { Channel, RelayEvent } from "@/shared/api/types";
 import { KIND_REACTION } from "@/shared/constants/kinds";
+import { useLocale } from "@/shared/lib/localePreference";
 
 type UseHomeInboxContextMessagesOptions = {
   channelMessages?: RelayEvent[];
@@ -37,6 +38,7 @@ export function useHomeInboxContextMessages({
   selectedItem,
   structuralEvents = [],
 }: UseHomeInboxContextMessagesOptions): InboxContextMessage[] {
+  const locale = useLocale();
   return React.useMemo(() => {
     if (!selectedItem) return [];
 
@@ -70,6 +72,7 @@ export function useHomeInboxContextMessages({
       toInboxContextMessage(message, {
         eventById,
         fallbackAuthorPubkey: selectedItem.item.pubkey,
+        locale,
         profiles,
         selectedItemId: selectedEventId ?? selectedItem.id,
       }),
@@ -78,6 +81,7 @@ export function useHomeInboxContextMessages({
     channelMessages,
     currentPubkey,
     events,
+    locale,
     ownerProfiles,
     profiles,
     reactionEvents,

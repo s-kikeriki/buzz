@@ -17,45 +17,63 @@ import {
   KIND_JOB_RESULT,
   KIND_REMINDER,
 } from "@/shared/constants/kinds";
+import { intlLocale, localeDateTimeFormat } from "@/shared/lib/intlLocale";
+import type { AppLocale } from "@/shared/lib/localePreference";
+import { useLocale } from "@/shared/lib/localePreference";
 import { resolveMentionProps } from "@/shared/lib/resolveMentionNames";
 import { Button } from "@/shared/ui/button";
 import { Markdown } from "@/shared/ui/markdown";
 import { hasLinkPreviewSuppression } from "@/features/messages/lib/formatTimelineMessages";
 import { UserAvatar } from "@/shared/ui/UserAvatar";
 
-const relativeTimeFormatter = new Intl.RelativeTimeFormat("en-US", {
-  numeric: "auto",
-});
+const relativeFormatterCache = new Map<AppLocale, Intl.RelativeTimeFormat>();
 
-function formatRelativeTime(unixSeconds: number) {
+/**
+ * Feed items can be in the future (a scheduled reminder), so this keeps its own
+ * signed formatter rather than using the shared past-only ladder: `numeric:
+ * "auto"` gives "tomorrow" / "morgen" as well as "2 days ago".
+ */
+function relativeTimeFormatter(locale: AppLocale): Intl.RelativeTimeFormat {
+  const cached = relativeFormatterCache.get(locale);
+  if (cached) return cached;
+  const created = new Intl.RelativeTimeFormat(intlLocale(locale), {
+    numeric: "auto",
+  });
+  relativeFormatterCache.set(locale, created);
+  return created;
+}
+
+const FEED_ABSOLUTE = {
+  month: "short",
+  day: "numeric",
+  hour: "numeric",
+  minute: "2-digit",
+} as const;
+
+function formatFeedTime(unixSeconds: number, locale: AppLocale) {
   const diff = unixSeconds - Math.floor(Date.now() / 1_000);
   const absoluteDiff = Math.abs(diff);
+  const formatter = relativeTimeFormatter(locale);
 
   if (absoluteDiff < 60) {
-    return relativeTimeFormatter.format(diff, "second");
+    return formatter.format(diff, "second");
   }
 
   if (absoluteDiff < 60 * 60) {
-    return relativeTimeFormatter.format(Math.round(diff / 60), "minute");
+    return formatter.format(Math.round(diff / 60), "minute");
   }
 
   if (absoluteDiff < 60 * 60 * 24) {
-    return relativeTimeFormatter.format(Math.round(diff / (60 * 60)), "hour");
+    return formatter.format(Math.round(diff / (60 * 60)), "hour");
   }
 
   if (absoluteDiff < 60 * 60 * 24 * 7) {
-    return relativeTimeFormatter.format(
-      Math.round(diff / (60 * 60 * 24)),
-      "day",
-    );
+    return formatter.format(Math.round(diff / (60 * 60 * 24)), "day");
   }
 
-  return new Intl.DateTimeFormat("en-US", {
-    month: "short",
-    day: "numeric",
-    hour: "numeric",
-    minute: "2-digit",
-  }).format(new Date(unixSeconds * 1_000));
+  return localeDateTimeFormat(locale, FEED_ABSOLUTE).format(
+    new Date(unixSeconds * 1_000),
+  );
 }
 
 function feedHeadline(item: FeedItem) {
@@ -141,6 +159,7 @@ export function FeedSection({
   onMarkDone,
   onUndoDone,
 }: FeedSectionProps) {
+  const locale = useLocale();
   return (
     <section>
       <div className="flex items-center gap-2 pb-2">
@@ -227,7 +246,7 @@ export function FeedSection({
                     </span>
                   ) : null}
                   <span className="ml-auto shrink-0 text-2xs text-muted-foreground/60">
-                    {formatRelativeTime(item.createdAt)}
+                    {formatFeedTime(item.createdAt, locale)}
                   </span>
                 </div>
 

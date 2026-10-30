@@ -22,6 +22,7 @@ import {
 } from "@/features/profile/ui/ProfileAvatarWithStatus";
 import type { Channel, PresenceStatus } from "@/shared/api/types";
 import { cn } from "@/shared/lib/cn";
+import { useLocale } from "@/shared/lib/localePreference";
 import { useNow } from "@/shared/lib/useNow";
 import {
   SidebarGroup,
@@ -272,8 +273,9 @@ export function ChannelMenuButton({
   presenceStatus?: PresenceStatus;
   onSelectChannel: (channelId: string) => void;
 }) {
+  const locale = useLocale();
   const resolvedLabel = label ?? channel.name;
-  const ephemeralDisplay = getEphemeralChannelDisplay(channel);
+  const ephemeralDisplay = getEphemeralChannelDisplay(channel, locale);
   const { hasSidebarUnreadProjections, unreadThreadChannelIds } = useAppShell();
   const hasThreadUnread =
     channel.channelType !== "dm" &&
