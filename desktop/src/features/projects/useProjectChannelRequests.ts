@@ -1,3 +1,4 @@
+import { t } from "@lingui/core/macro";
 import * as React from "react";
 import { toast } from "sonner";
 
@@ -160,7 +161,7 @@ export function useProjectChannelRequests() {
       setError(
         nextError instanceof Error
           ? nextError.message
-          : "Failed to create the project channel.",
+          : t`Failed to create the project channel.`,
       );
     }
   }

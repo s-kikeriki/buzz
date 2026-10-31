@@ -1,3 +1,5 @@
+import { t } from "@lingui/core/macro";
+import { useLingui } from "@lingui/react/macro";
 import type * as React from "react";
 
 import { BuzzLoadingState } from "@/shared/ui/BuzzLoadingState";
@@ -36,13 +38,15 @@ export function PullRequestsPanelSurface({
   pullRequests: { length: number };
   selectedPullRequest: unknown;
 }) {
+  const { i18n } = useLingui();
+  void i18n;
   const kind = pullRequestsPanelKind({
     isLoading,
     pullRequests,
     selectedPullRequest,
   });
   if (kind === "loading") {
-    return <BuzzLoadingState label="Loading reviews" />;
+    return <BuzzLoadingState label={t`Loading reviews`} />;
   }
   if (kind === "detail") {
     return detail;
@@ -52,12 +56,12 @@ export function PullRequestsPanelSurface({
       <ProjectPanelState
         description={
           error
-            ? "Refresh the repository and try again."
-            : "Reviews opened for this repository will appear here."
+            ? t`Refresh the repository and try again.`
+            : t`Reviews opened for this repository will appear here.`
         }
         error={Boolean(error)}
         testId="project-pull-requests-empty"
-        title={error ? "Could not load reviews" : "No reviews yet"}
+        title={error ? t`Could not load reviews` : t`No reviews yet`}
       />
     );
   }

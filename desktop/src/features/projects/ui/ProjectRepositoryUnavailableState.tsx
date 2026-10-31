@@ -1,3 +1,5 @@
+import { t } from "@lingui/core/macro";
+import { Trans, useLingui } from "@lingui/react/macro";
 import {
   CircleAlert,
   CloudOff,
@@ -39,8 +41,10 @@ function RepositoryOwnerReference({
   ownerIsAgent?: boolean;
   ownerName?: string;
 }) {
+  const { i18n } = useLingui();
+  void i18n;
   if (!ownerName) {
-    return <>the repository owner</>;
+    return <Trans>the repository owner</Trans>;
   }
   return (
     <>
@@ -63,7 +67,7 @@ function RepositoryOwnerReference({
           {ownerName}
         </span>
       </span>
-      , the repository owner,
+      <Trans>, the repository owner,</Trans>
     </>
   );
 }
@@ -79,13 +83,15 @@ function AccessRestrictedDescription({
   ownerIsAgent?: boolean;
   ownerName?: string;
 }) {
+  const { i18n } = useLingui();
+  void i18n;
   const { goChannel } = useAppNavigation();
   const channel = useChannelReference(accessChannelId);
   const isOpenable = isChannelReferenceOpenable(channel);
 
   if (!isOpenable) {
     return (
-      <>
+      <Trans>
         Repository access is granted through a channel you can’t see. Ask{" "}
         <RepositoryOwnerReference
           ownerAvatarUrl={ownerAvatarUrl}
@@ -93,15 +99,15 @@ function AccessRestrictedDescription({
           ownerName={ownerName}
         />{" "}
         for an invite.
-      </>
+      </Trans>
     );
   }
 
   return (
-    <>
+    <Trans>
       Repository access is granted through{" "}
       <button
-        aria-label={`Open repository access channel #${channel.name}`}
+        aria-label={t`Open repository access channel #${channel.name}`}
         className="font-medium text-foreground underline-offset-2 hover:underline"
         onClick={() => void goChannel(channel.id)}
         type="button"
@@ -115,7 +121,7 @@ function AccessRestrictedDescription({
         ownerName={ownerName}
       />{" "}
       for an invite.
-    </>
+    </Trans>
   );
 }
 
@@ -138,6 +144,8 @@ export function ProjectRepositoryUnavailableState({
   reason?: ProjectRepoUnavailableReason;
   retryPending?: boolean;
 }) {
+  const { i18n } = useLingui();
+  void i18n;
   const unavailable = projectRepoUnavailablePresentation(reason);
   const UnavailableIcon = UNAVAILABLE_ICONS[reason];
 
@@ -177,13 +185,12 @@ export function ProjectRepositoryUnavailableState({
             ) : (
               <RefreshCw className="h-4 w-4" />
             )}
-            {retryPending ? "Retrying…" : "Retry"}
+            {retryPending ? t`Retrying…` : t`Retry`}
           </Button>
         ) : null}
         {reason === "access" && onAskForAccess ? (
           <Button onClick={onAskForAccess} size="sm">
-            <MessageCircle className="h-4 w-4" />
-            Ask for access
+            <MessageCircle className="h-4 w-4" /> <Trans>Ask for access</Trans>
           </Button>
         ) : null}
       </div>

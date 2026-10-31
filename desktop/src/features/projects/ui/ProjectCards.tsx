@@ -1,3 +1,5 @@
+import { plural, t } from "@lingui/core/macro";
+import { Trans, useLingui } from "@lingui/react/macro";
 import {
   CircleAlert,
   CircleDot,
@@ -55,6 +57,8 @@ import { PROJECT_GRID_CARD_BODY_CLASS } from "./projectGridCardStyles";
 import { ProjectListRowMenu } from "./ProjectListRowMenu";
 import { BRAND } from "@/shared/branding/brand";
 
+const { productName } = BRAND;
+
 export function ProjectPeopleStack({
   pubkeys,
   profiles,
@@ -64,6 +68,8 @@ export function ProjectPeopleStack({
   profiles?: UserProfileLookup;
   workOwnerPubkey: string;
 }) {
+  const { i18n } = useLingui();
+  void i18n;
   const visible = pubkeys.slice(0, 5);
   const remaining = pubkeys.length - visible.length;
 
@@ -85,7 +91,7 @@ export function ProjectPeopleStack({
           >
             <UserProfilePopover pubkey={pubkey} triggerElement="span">
               <button
-                aria-label={`View ${label}'s profile`}
+                aria-label={t`View ${label}'s profile`}
                 className={cn(
                   "inline-flex focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-ring",
                   profile?.isAgent ? "rounded-[30%]" : "rounded-full",
@@ -123,7 +129,8 @@ const PROJECT_STAT_ITEMS = [
     iconClass: "text-primary/60",
     barClass: "bg-primary/60",
     columnClass: "w-24",
-    label: (count: number) => (count === 1 ? "commit" : "commits"),
+    label: (count: number) =>
+      plural(count, { one: `commit`, other: `commits` }),
   },
   {
     key: "prCount",
@@ -131,7 +138,8 @@ const PROJECT_STAT_ITEMS = [
     iconClass: "text-primary",
     barClass: "bg-primary",
     columnClass: "w-16",
-    label: (count: number) => (count === 1 ? "review" : "reviews"),
+    label: (count: number) =>
+      plural(count, { one: `review`, other: `reviews` }),
   },
   {
     key: "issueCount",
@@ -139,7 +147,7 @@ const PROJECT_STAT_ITEMS = [
     iconClass: "text-orange-500",
     barClass: "bg-orange-500",
     columnClass: "w-20",
-    label: (count: number) => (count === 1 ? "task" : "tasks"),
+    label: (count: number) => plural(count, { one: `task`, other: `tasks` }),
   },
 ] as const;
 
@@ -154,6 +162,8 @@ export function ProjectStatsRow({
   /** Give each stat a fixed width so stats align vertically across list rows. */
   fixedColumns?: boolean;
 }) {
+  const { i18n } = useLingui();
+  void i18n;
   return (
     <div
       className={cn(
@@ -191,6 +201,8 @@ export function ProjectActivityBar({
 }: {
   summary: ProjectActivitySummary | undefined;
 }) {
+  const { i18n } = useLingui();
+  void i18n;
   const items = PROJECT_STAT_ITEMS.map(({ key, barClass, label }) => {
     const count = summary?.[key] ?? 0;
     return { barClass, count, text: label(count) };
@@ -213,7 +225,7 @@ export function ProjectActivityBar({
                 <Tooltip key={item.barClass}>
                   <TooltipTrigger asChild>
                     <div
-                      aria-label={`${item.count} ${item.text}`}
+                      aria-label={t`${item.count} ${item.text}`}
                       className={cn("h-full", item.barClass)}
                       data-testid="project-activity-segment"
                       role="img"
@@ -237,6 +249,8 @@ export function ProjectActivityBar({
 }
 
 function StatusPill({ status }: { status: string }) {
+  const { i18n } = useLingui();
+  void i18n;
   if (status === "active") {
     return null;
   }
@@ -253,37 +267,37 @@ function RepositoryUnavailableIndicator({
 }: {
   reason: ProjectRepoUnavailableReason | undefined;
 }) {
+  const { i18n } = useLingui();
+  void i18n;
   if (!reason) return null;
   const status = {
     authentication: {
-      description: `${BRAND.productName} could not authenticate with this repository.`,
-      label: "Access failed",
+      description: t`${productName} could not authenticate with this repository.`,
+      label: t`Access failed`,
     },
     missing: {
-      description: `No git repository was found on the ${BRAND.productName} relay.`,
-      label: "Uninitialized",
+      description: t`No git repository was found on the ${productName} relay.`,
+      label: t`Uninitialized`,
     },
     access: {
-      description:
-        "You’re not a member of the channel that grants access to this repository.",
-      label: "No access",
+      description: t`You’re not a member of the channel that grants access to this repository.`,
+      label: t`No access`,
     },
     unbound: {
-      description:
-        "The repository has no access channel binding, so the relay cannot authorize reads.",
-      label: "No access channel",
+      description: t`The repository has no access channel binding, so the relay cannot authorize reads.`,
+      label: t`No access channel`,
     },
     network: {
-      description: `The ${BRAND.productName} git service could not be reached.`,
-      label: "Unreachable",
+      description: t`The ${productName} git service could not be reached.`,
+      label: t`Unreachable`,
     },
     ref: {
-      description: "The advertised branch is missing from the git remote.",
-      label: "Branch missing",
+      description: t`The advertised branch is missing from the git remote.`,
+      label: t`Branch missing`,
     },
     unknown: {
-      description: `${BRAND.productName} could not load this repository.`,
-      label: "Unavailable",
+      description: t`${productName} could not load this repository.`,
+      label: t`Unavailable`,
     },
   } satisfies Record<
     ProjectRepoUnavailableReason,
@@ -295,7 +309,7 @@ function RepositoryUnavailableIndicator({
     <Tooltip>
       <TooltipTrigger asChild>
         <span
-          aria-label={`Repository ${label.toLowerCase()}`}
+          aria-label={t`Repository ${label.toLowerCase()}`}
           className="inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-md text-amber-600 hover:bg-amber-500/10 dark:text-amber-300"
           role="img"
         >
@@ -315,33 +329,38 @@ export function EmptyState({
 }: {
   onCreateProject: () => void;
 }) {
+  const { i18n } = useLingui();
+  void i18n;
   return (
     <div className="flex flex-1 flex-col items-center justify-center gap-3 px-4 py-16 text-center">
       <Folders className="h-10 w-10 text-muted-foreground/40" />
       <div className="space-y-1">
-        <p className="text-sm font-medium text-foreground">No projects yet</p>
+        <p className="text-sm font-medium text-foreground">
+          <Trans>No projects yet</Trans>
+        </p>
         <p className="text-sm text-muted-foreground">
-          Projects published to this relay will appear here.
+          <Trans>Projects published to this relay will appear here.</Trans>
         </p>
       </div>
       <Button onClick={onCreateProject} size="sm" type="button">
-        <Plus className="h-4 w-4" />
-        Create project
+        <Plus className="h-4 w-4" /> <Trans>Create project</Trans>
       </Button>
     </div>
   );
 }
 
 export function EmptyFilteredState() {
+  const { i18n } = useLingui();
+  void i18n;
   return (
     <div className="flex flex-1 flex-col items-center justify-center gap-3 border border-dashed border-border/60 px-4 py-12 text-center">
       <Folders className="h-9 w-9 text-muted-foreground/40" />
       <div className="space-y-1">
         <p className="text-sm font-medium text-foreground">
-          No matching projects
+          <Trans>No matching projects</Trans>
         </p>
         <p className="text-sm text-muted-foreground">
-          Try another owner filter or sort mode.
+          <Trans>Try another owner filter or sort mode.</Trans>
         </p>
       </div>
     </div>
@@ -355,13 +374,17 @@ function ProjectCardButton({
   project: Project;
   onOpen: (project: Project) => void;
 }) {
+  const { i18n } = useLingui();
+  void i18n;
   return (
     <button
       className="absolute inset-0 z-0 cursor-pointer"
       onClick={() => onOpen(project)}
       type="button"
     >
-      <span className="sr-only">View {project.name}</span>
+      <span className="sr-only">
+        <Trans>View {project.name}</Trans>
+      </span>
     </button>
   );
 }
@@ -381,11 +404,13 @@ function ProjectActionsMenu({
   onDelete: (project: Project) => Promise<void> | void;
   onOpenTerminal: (project: Project) => Promise<void> | void;
 }) {
+  const { i18n } = useLingui();
+  void i18n;
   const [confirmOpen, setConfirmOpen] = React.useState(false);
 
   return (
     <AlertDialog onOpenChange={setConfirmOpen} open={confirmOpen}>
-      <ProjectListRowMenu label={`More options for ${project.name}`}>
+      <ProjectListRowMenu label={t`More options for ${project.name}`}>
         <CopyShareLinkMenuItem
           link={projectShareLink(project)}
           testId={`project-copy-link-${project.dtag}`}
@@ -411,24 +436,27 @@ function ProjectActionsMenu({
             }
           }}
         >
-          <Trash2 className="h-4 w-4" />
-          Delete project
+          <Trash2 className="h-4 w-4" /> <Trans>Delete project</Trans>
         </DropdownMenuItem>
       </ProjectListRowMenu>
       <AlertDialogContent
         data-testid={`project-delete-confirm-${project.dtag}`}
       >
         <AlertDialogHeader>
-          <AlertDialogTitle>Delete project?</AlertDialogTitle>
+          <AlertDialogTitle>
+            <Trans>Delete project?</Trans>
+          </AlertDialogTitle>
           <AlertDialogDescription>
-            Delete {project.name} from Projects for everyone. This can only be
-            done for projects you own and cannot be undone.
+            <Trans>
+              Delete {project.name} from Projects for everyone. This can only be
+              done for projects you own and cannot be undone.
+            </Trans>
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel asChild>
             <Button disabled={disabled} type="button" variant="outline">
-              Cancel
+              <Trans>Cancel</Trans>
             </Button>
           </AlertDialogCancel>
           <AlertDialogAction asChild>
@@ -444,7 +472,7 @@ function ProjectActionsMenu({
               type="button"
               variant="destructive"
             >
-              {disabled ? "Deleting..." : "Delete project"}
+              {disabled ? t`Deleting…` : t`Delete project`}
             </Button>
           </AlertDialogAction>
         </AlertDialogFooter>
@@ -483,6 +511,8 @@ export const ProjectGridCard = React.memo(function ProjectGridCard({
   onOpen,
   onOpenTerminal,
 }: ProjectItemProps) {
+  const { i18n } = useLingui();
+  void i18n;
   return (
     <Card
       className="group relative flex h-full min-h-40 flex-col overflow-hidden border-border/60 bg-transparent shadow-none transition-colors duration-150 hover:bg-muted/20"
@@ -510,9 +540,10 @@ export const ProjectGridCard = React.memo(function ProjectGridCard({
               >
                 <span>
                   {project.repositoryAddresses.length}{" "}
-                  {project.repositoryAddresses.length === 1
-                    ? "repository"
-                    : "repositories"}
+                  {plural(project.repositoryAddresses.length, {
+                    one: `repository`,
+                    other: `repositories`,
+                  })}
                 </span>
                 <StatusPill status={project.status} />
                 <RepositoryUnavailableIndicator
@@ -540,7 +571,7 @@ export const ProjectGridCard = React.memo(function ProjectGridCard({
           )}
           data-testid="projects-grid-card-body"
         >
-          {project.description || "A shared space for internal git work."}
+          {project.description || t`A shared space for internal git work.`}
         </p>
 
         <div className="relative z-10 flex items-center px-4 pb-1">
@@ -573,6 +604,8 @@ export const ProjectListRow = React.memo(function ProjectListRow({
   onOpen,
   onOpenTerminal,
 }: ProjectItemProps) {
+  const { i18n } = useLingui();
+  void i18n;
   const repositoryCount = project.repositoryAddresses.length;
   const selectionItem = selectionItemFromProject({
     channelId: project.projectChannelId,
@@ -591,9 +624,10 @@ export const ProjectListRow = React.memo(function ProjectListRow({
       }
       affiliationClassName="w-auto"
       affiliationTestId="projects-row-context"
-      affiliationTitle={`${repositoryCount} ${
-        repositoryCount === 1 ? "repository" : "repositories"
-      }`}
+      affiliationTitle={`${repositoryCount} ${plural(repositoryCount, {
+        one: `repository`,
+        other: `repositories`,
+      })}`}
       dateSeconds={getProjectUpdatedAt(project, summary)}
       dateTestId="projects-row-date"
       icon={<Folders className="h-3.5 w-3.5 text-muted-foreground/70" />}
@@ -641,6 +675,8 @@ export function ProjectRailRow({
   summary,
   onOpen,
 }: Pick<ProjectItemProps, "project" | "summary" | "onOpen">) {
+  const { i18n } = useLingui();
+  void i18n;
   return (
     <div
       className="group relative rounded-lg py-1.5 transition-colors duration-150 hover:bg-muted/30"

@@ -1,3 +1,5 @@
+import { t } from "@lingui/core/macro";
+import { useLingui } from "@lingui/react/macro";
 import { Check, MessageSquare, Minus } from "lucide-react";
 import { localeDateTime } from "@/shared/lib/intlLocale";
 import type * as React from "react";
@@ -29,6 +31,8 @@ export function ProjectEntityFacepile({
   participants: string[];
   profiles: UserProfileLookup | undefined;
 }) {
+  const { i18n } = useLingui();
+  void i18n;
   const shown = participants.slice(0, 4);
   const overflow = participants.length - shown.length;
   if (shown.length === 0) return null;
@@ -100,6 +104,8 @@ export function ProjectEntitySelectControl({
   onToggle: (event: { shiftKey: boolean }) => void;
   testId?: string;
 }) {
+  const { i18n } = useLingui();
+  void i18n;
   return (
     <label
       className={cn(
@@ -196,6 +202,8 @@ export function ProjectEntityListRow({
   titleSecondaryTestId?: string;
   trailing?: React.ReactNode;
 }) {
+  const { i18n } = useLingui();
+  void i18n;
   const locale = useLocale();
   const projectSelection = useProjectSelection();
   const selected = Boolean(
@@ -241,7 +249,7 @@ export function ProjectEntityListRow({
           >
             <ProjectEntitySelectControl
               checked={selected}
-              label={`Select ${selection.item.title}`}
+              label={t`Select ${selection.item.title}`}
               onToggle={({ shiftKey }) =>
                 projectSelection.toggle(selection.item, {
                   rangeItems: selection.rangeItems,

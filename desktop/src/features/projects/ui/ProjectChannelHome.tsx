@@ -1,3 +1,5 @@
+import { t } from "@lingui/core/macro";
+import { Trans, useLingui } from "@lingui/react/macro";
 import { useSearch } from "@tanstack/react-router";
 import { Maximize2, Plus } from "lucide-react";
 import * as React from "react";
@@ -62,6 +64,8 @@ function ProjectHomeHeaderToggle({
   open: boolean;
   testId: string;
 }) {
+  const { i18n } = useLingui();
+  void i18n;
   return (
     <Tooltip disableHoverableContent>
       <TooltipTrigger asChild>
@@ -99,6 +103,8 @@ export function ProjectChannelHome({
   targetMessageEvents?: RelayEvent[];
   targetMessageId?: string | null;
 }) {
+  const { i18n } = useLingui();
+  void i18n;
   const { goChannel, goProject, goProjects } = useAppNavigation();
   const sidebar = useOptionalSidebar();
   const identityQuery = useIdentityQuery();
@@ -228,7 +234,7 @@ export function ProjectChannelHome({
   ]);
   const expandLabel = workspaceSheetTab
     ? `Open ${projectHomeWorkspaceSheetTitle(workspaceSheetTab)} in repository`
-    : "Open in repository";
+    : t`Open in repository`;
   const workspaceSheet =
     workspaceSheetOpen && workspaceSheetTab && workspaceRepository ? (
       <ProjectHomeWorkspaceSheet
@@ -272,7 +278,7 @@ export function ProjectChannelHome({
           <ProjectDetailChrome
             actions={
               <ProjectHomeHeaderToggle
-                label="Overview"
+                label={t`Overview`}
                 onClick={() => {
                   if (workspaceSheetOpen) {
                     closeWorkspaceSheet();
@@ -388,7 +394,7 @@ export function ProjectChannelHome({
           ) : (
             <div className="flex min-h-0 flex-1 items-center justify-center px-6 py-8">
               <p className="text-sm text-muted-foreground">
-                This project's channel could not be found.
+                <Trans>This project's channel could not be found.</Trans>
               </p>
             </div>
           )}

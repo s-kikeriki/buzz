@@ -1,3 +1,5 @@
+import { t } from "@lingui/core/macro";
+import { Trans, useLingui } from "@lingui/react/macro";
 import {
   Check,
   GitPullRequest,
@@ -53,6 +55,8 @@ export function PullRequestReviewCard({
   project: Project;
   pullRequest: ProjectPullRequest;
 }) {
+  const { i18n } = useLingui();
+  void i18n;
   const identityQuery = useIdentityQuery();
   const { isPending: isUpdatingStatus, mutateAsync: updatePullRequestStatus } =
     useUpdateProjectPullRequestStatusMutation(project);
@@ -93,16 +97,16 @@ export function PullRequestReviewCard({
         });
         toast.success(
           status === "draft"
-            ? "Converted to draft."
+            ? t`Converted to draft.`
             : status === "closed"
-              ? "Review closed."
+              ? t`Review closed.`
               : pullRequest.status === "Closed"
-                ? "Review reopened."
-                : "Marked as ready for review.",
+                ? t`Review reopened.`
+                : t`Marked as ready for review.`,
         );
       } catch (error) {
         toast.error(
-          error instanceof Error ? error.message : "Failed to update status.",
+          error instanceof Error ? error.message : t`Failed to update status.`,
         );
       }
     },
@@ -199,8 +203,7 @@ export function PullRequestReviewCard({
               size="xs"
               type="button"
             >
-              <Check className="h-3.5 w-3.5" />
-              Approve
+              <Check className="h-3.5 w-3.5" /> <Trans>Approve</Trans>
             </Button>
           ) : null}
           {canMerge ? (
@@ -221,8 +224,8 @@ export function PullRequestReviewCard({
               type="button"
               variant="secondary"
             >
-              <GitPullRequest className="h-3.5 w-3.5" />
-              Ready for review
+              <GitPullRequest className="h-3.5 w-3.5" />{" "}
+              <Trans>Ready for review</Trans>
             </Button>
           ) : null}
           {canReopen ? (
@@ -236,15 +239,14 @@ export function PullRequestReviewCard({
               type="button"
               variant="secondary"
             >
-              <RotateCcw className="h-3.5 w-3.5" />
-              Reopen review
+              <RotateCcw className="h-3.5 w-3.5" /> <Trans>Reopen review</Trans>
             </Button>
           ) : null}
           {hasOverflowAction ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button
-                  aria-label="More review actions"
+                  aria-label={t`More review actions`}
                   className="ml-auto h-8 w-8"
                   disabled={isUpdatingStatus}
                   size="icon-xs"
@@ -261,8 +263,8 @@ export function PullRequestReviewCard({
                       void handleStatusChange("draft");
                     }}
                   >
-                    <GitPullRequestDraft className="h-4 w-4" />
-                    Convert to draft
+                    <GitPullRequestDraft className="h-4 w-4" />{" "}
+                    <Trans>Convert to draft</Trans>
                   </DropdownMenuItem>
                 ) : null}
                 {canClose ? (
@@ -272,8 +274,7 @@ export function PullRequestReviewCard({
                       void handleStatusChange("closed");
                     }}
                   >
-                    <X className="h-4 w-4" />
-                    Close review
+                    <X className="h-4 w-4" /> <Trans>Close review</Trans>
                   </DropdownMenuItem>
                 ) : null}
               </DropdownMenuContent>
@@ -291,16 +292,20 @@ export function PullRequestReviewCard({
       >
         <DialogContent className="max-w-md">
           <DialogHeader>
-            <DialogTitle>Approve review</DialogTitle>
+            <DialogTitle>
+              <Trans>Approve review</Trans>
+            </DialogTitle>
             <DialogDescription>
-              Add an optional summary for the author and other reviewers.
+              <Trans>
+                Add an optional summary for the author and other reviewers.
+              </Trans>
             </DialogDescription>
           </DialogHeader>
           <Textarea
-            aria-label="Approval summary"
+            aria-label={t`Approval summary`}
             disabled={isApproving}
             onChange={(event) => setApprovalSummary(event.target.value)}
-            placeholder="What looks good?"
+            placeholder={t`What looks good?`}
             value={approvalSummary}
           />
           <DialogFooter>
@@ -310,7 +315,7 @@ export function PullRequestReviewCard({
               type="button"
               variant="ghost"
             >
-              Cancel
+              <Trans>Cancel</Trans>
             </Button>
             <Button
               className="bg-green-600 text-white hover:bg-green-700"
@@ -320,8 +325,7 @@ export function PullRequestReviewCard({
               }}
               type="button"
             >
-              <Check className="h-4 w-4" />
-              Approve
+              <Check className="h-4 w-4" /> <Trans>Approve</Trans>
             </Button>
           </DialogFooter>
         </DialogContent>

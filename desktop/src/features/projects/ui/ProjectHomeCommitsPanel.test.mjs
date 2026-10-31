@@ -3,6 +3,8 @@ import { after, before, test } from "node:test";
 
 import { JSDOM } from "jsdom";
 
+import { withI18n } from "../../../testing/withI18n.mjs";
+
 const dom = new JSDOM("<!doctype html><html><body></body></html>", {
   url: "http://localhost",
 });
@@ -38,37 +40,39 @@ test("multi-repository commits remain visibly degraded when one repository fails
   const React = await import("react");
   try {
     render(
-      React.createElement(ProjectHomeCommitsPanel, {
-        onSelectCommit: () => {},
-        projectId: "project-1",
-        pullRequests: [],
-        results: [
-          {
-            error: null,
-            isLoading: false,
-            repository: loadedRepository,
-            snapshot: {
-              contributors: [],
-              commits: [
-                {
-                  hash: "a".repeat(40),
-                  shortHash: "aaaaaaa",
-                  authorName: "Alice",
-                  authorEmail: "alice@example.com",
-                  timestamp: 2,
-                  subject: "Loaded commit",
-                },
-              ],
+      withI18n(
+        React.createElement(ProjectHomeCommitsPanel, {
+          onSelectCommit: () => {},
+          projectId: "project-1",
+          pullRequests: [],
+          results: [
+            {
+              error: null,
+              isLoading: false,
+              repository: loadedRepository,
+              snapshot: {
+                contributors: [],
+                commits: [
+                  {
+                    hash: "a".repeat(40),
+                    shortHash: "aaaaaaa",
+                    authorName: "Alice",
+                    authorEmail: "alice@example.com",
+                    timestamp: 2,
+                    subject: "Loaded commit",
+                  },
+                ],
+              },
             },
-          },
-          {
-            error: new Error("unavailable"),
-            isLoading: false,
-            repository: failedRepository,
-            snapshot: null,
-          },
-        ],
-      }),
+            {
+              error: new Error("unavailable"),
+              isLoading: false,
+              repository: failedRepository,
+              snapshot: null,
+            },
+          ],
+        }),
+      ),
     );
 
     assert.match(
@@ -108,15 +112,17 @@ test("multi-repository commits are merged in descending timestamp order", async 
 
   try {
     render(
-      React.createElement(ProjectHomeCommitsPanel, {
-        onSelectCommit: () => {},
-        projectId: "project-1",
-        pullRequests: [],
-        results: [
-          result("a", "Older commit", 1),
-          result("b", "Newer commit", 2),
-        ],
-      }),
+      withI18n(
+        React.createElement(ProjectHomeCommitsPanel, {
+          onSelectCommit: () => {},
+          projectId: "project-1",
+          pullRequests: [],
+          results: [
+            result("a", "Older commit", 1),
+            result("b", "Newer commit", 2),
+          ],
+        }),
+      ),
     );
 
     assert.ok(

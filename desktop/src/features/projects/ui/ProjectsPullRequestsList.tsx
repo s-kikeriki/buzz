@@ -1,3 +1,5 @@
+import { t } from "@lingui/core/macro";
+import { Trans, useLingui } from "@lingui/react/macro";
 import { FolderKanban, GitPullRequest } from "lucide-react";
 import * as React from "react";
 
@@ -55,10 +57,10 @@ type ProjectsPullRequestsListProps = {
 };
 
 function nextStepLabel(status: ProjectPullRequest["status"]) {
-  if (status === "Draft") return "View draft";
-  if (status === "Merged") return "View merge";
-  if (status === "Closed") return "View closed";
-  return "Open review";
+  if (status === "Draft") return t`View draft`;
+  if (status === "Merged") return t`View merge`;
+  if (status === "Closed") return t`View closed`;
+  return t`Open review`;
 }
 
 const PullRequestGridCard = React.memo(function PullRequestGridCard({
@@ -76,6 +78,8 @@ const PullRequestGridCard = React.memo(function PullRequestGridCard({
   ) => void;
   repository: Repository;
 }) {
+  const { i18n } = useLingui();
+  void i18n;
   return (
     <Card
       className="group relative flex min-h-32 flex-col overflow-hidden border-border/60 bg-transparent p-4 shadow-none transition-colors duration-150 hover:bg-muted/20"
@@ -86,7 +90,9 @@ const PullRequestGridCard = React.memo(function PullRequestGridCard({
         onClick={() => onOpen(project, repository, pullRequest)}
         type="button"
       >
-        <span className="sr-only">View review {pullRequest.title}</span>
+        <span className="sr-only">
+          <Trans>View review {pullRequest.title}</Trans>
+        </span>
       </button>
       <div className="flex min-h-0 flex-1 flex-col gap-2">
         <h3
@@ -99,7 +105,7 @@ const PullRequestGridCard = React.memo(function PullRequestGridCard({
           className={cn(PROJECT_GRID_CARD_BODY_CLASS, "text-muted-foreground")}
           data-testid="projects-grid-card-body"
         >
-          {pullRequest.content || "No description provided."}
+          {pullRequest.content || t`No description provided.`}
         </p>
         <div
           className="mt-auto flex items-center gap-1.5 text-xs font-medium text-muted-foreground"
@@ -149,6 +155,8 @@ const PullRequestListRow = React.memo(function PullRequestListRow({
     pullRequest: ProjectPullRequest,
   ) => void;
 }) {
+  const { i18n } = useLingui();
+  void i18n;
   const authorLabel = resolveUserLabel({
     profiles,
     pubkey: pullRequest.author,
@@ -182,7 +190,7 @@ const PullRequestListRow = React.memo(function PullRequestListRow({
         <ProjectEventTypeIcon className="h-3.5 w-3.5" kind="pull-request" />
       }
       trailing={
-        <ProjectListRowMenu label={`More options for ${pullRequest.title}`}>
+        <ProjectListRowMenu label={t`More options for ${pullRequest.title}`}>
           <DropdownMenuItem
             onSelect={() => onOpen(project, repository, pullRequest)}
           >
@@ -191,7 +199,7 @@ const PullRequestListRow = React.memo(function PullRequestListRow({
           </DropdownMenuItem>
           <CopyShareLinkMenuItem
             link={pullRequestShareLink(pullRequest)}
-            label="Copy review link"
+            label={t`Copy review link`}
             testId={`projects-pull-request-copy-link-${pullRequest.id}`}
           />
         </ProjectListRowMenu>
@@ -213,6 +221,8 @@ export function ProjectsPullRequestsList({
   pullRequests,
   viewMode,
 }: ProjectsPullRequestsListProps) {
+  const { i18n } = useLingui();
+  void i18n;
   // Grouping and per-group selection arrays are identity-stable across
   // re-renders so the memoized rows only re-render when their data changes.
   const allGroups = React.useMemo(
@@ -248,7 +258,7 @@ export function ProjectsPullRequestsList({
   );
 
   if (isLoading) {
-    return <BuzzLoadingState label="Loading reviews" />;
+    return <BuzzLoadingState label={t`Loading reviews`} />;
   }
 
   const loadNotice = (
@@ -271,15 +281,15 @@ export function ProjectsPullRequestsList({
             size="sm"
             variant="outline"
           >
-            {isRetrying ? "Retrying..." : "Retry"}
+            {isRetrying ? t`Retrying…` : t`Retry`}
           </Button>
         }
         description={
-          error instanceof Error ? error.message : "The relay request failed."
+          error instanceof Error ? error.message : t`The relay request failed.`
         }
         error
         panel={false}
-        title="Could not load reviews"
+        title={t`Could not load reviews`}
       />
     );
   }

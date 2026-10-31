@@ -4,6 +4,8 @@ import test from "node:test";
 import React from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 
+import { withI18n } from "../../../testing/withI18n.mjs";
+
 import { ProjectChannelRequestDetails } from "./ProjectChannelRequestDialog.tsx";
 
 function request(overrides = {}) {
@@ -17,9 +19,11 @@ function request(overrides = {}) {
 
 test("owner review shows an agent-requested temporary channel lifetime and cleanup consequence", () => {
   const html = renderToStaticMarkup(
-    React.createElement(ProjectChannelRequestDetails, {
-      request: request({ ttlSeconds: 90_000 }),
-    }),
+    withI18n(
+      React.createElement(ProjectChannelRequestDetails, {
+        request: request({ ttlSeconds: 90_000 }),
+      }),
+    ),
   );
 
   assert.match(html, />Lifetime</);
@@ -32,7 +36,9 @@ test("owner review shows an agent-requested temporary channel lifetime and clean
 
 test("owner review omits temporary-channel lifetime when none was requested", () => {
   const html = renderToStaticMarkup(
-    React.createElement(ProjectChannelRequestDetails, { request: request() }),
+    withI18n(
+      React.createElement(ProjectChannelRequestDetails, { request: request() }),
+    ),
   );
 
   assert.doesNotMatch(html, />Lifetime</);

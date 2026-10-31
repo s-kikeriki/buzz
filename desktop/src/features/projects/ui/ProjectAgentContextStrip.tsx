@@ -1,3 +1,5 @@
+import { t } from "@lingui/core/macro";
+import { useLingui } from "@lingui/react/macro";
 import { X } from "lucide-react";
 
 import type { ProjectDetailAgentContext } from "@/features/projects/lib/projectDetailAgentContext";
@@ -6,7 +8,7 @@ import { PROJECT_COLUMN_HEADER_BACKDROP_CLASS } from "./projectPanelStyles";
 
 function contextLabel(context: ProjectDetailAgentContext) {
   if (context.selection?.length) {
-    return "Agent chat";
+    return t`Agent chat`;
   }
   if (context.workItem) {
     return context.workItem.title;
@@ -26,6 +28,8 @@ export function ProjectAgentContextStrip({
   onClose?: () => void;
   sharedBackdrop?: boolean;
 }) {
+  const { i18n } = useLingui();
+  void i18n;
   const label = contextLabel(context);
 
   return (
@@ -41,11 +45,11 @@ export function ProjectAgentContextStrip({
       </p>
       {onClose ? (
         <Button
-          aria-label="Close agent chat"
+          aria-label={t`Close agent chat`}
           className="h-7 w-7 shrink-0"
           onClick={onClose}
           size="icon"
-          title="Close agent chat"
+          title={t`Close agent chat`}
           type="button"
           variant="ghost"
         >

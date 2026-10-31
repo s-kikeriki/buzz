@@ -1,3 +1,4 @@
+import { Trans, useLingui } from "@lingui/react/macro";
 import { ArrowLeft, FolderGit2 } from "lucide-react";
 
 import type { Project } from "@/features/projects/hooks";
@@ -22,18 +23,22 @@ type ProjectDetailUnavailableStateProps =
 export function ProjectDetailUnavailableState(
   props: ProjectDetailUnavailableStateProps,
 ) {
+  const { i18n } = useLingui();
+  void i18n;
   if (props.kind === "load-error") {
     return (
       <div className="flex flex-1 flex-col items-center justify-center gap-3 px-4 py-16 text-center">
         <FolderGit2 className="h-10 w-10 text-muted-foreground/40" />
-        <p className="text-sm text-red-400">Failed to load project</p>
+        <p className="text-sm text-red-400">
+          <Trans>Failed to load project</Trans>
+        </p>
         <div className="flex items-center gap-2">
           <Button onClick={props.onRetry} size="sm" variant="outline">
-            Retry
+            <Trans>Retry</Trans>
           </Button>
           <Button onClick={props.onBack} size="sm" variant="ghost">
-            <ArrowLeft className="mr-1.5 h-4 w-4" />
-            Back to Projects
+            <ArrowLeft className="mr-1.5 h-4 w-4" />{" "}
+            <Trans>Back to Projects</Trans>
           </Button>
         </div>
       </div>
@@ -45,11 +50,11 @@ export function ProjectDetailUnavailableState(
       <div className="flex flex-1 flex-col items-center justify-center gap-3 px-4 py-16 text-center">
         <FolderGit2 className="h-10 w-10 text-muted-foreground/40" />
         <p className="text-sm text-muted-foreground">
-          This project could not be found.
+          <Trans>This project could not be found.</Trans>
         </p>
         <Button onClick={props.onBack} size="sm" variant="outline">
-          <ArrowLeft className="mr-1.5 h-4 w-4" />
-          Back to Projects
+          <ArrowLeft className="mr-1.5 h-4 w-4" />{" "}
+          <Trans>Back to Projects</Trans>
         </Button>
       </div>
     );
@@ -62,7 +67,9 @@ export function ProjectDetailUnavailableState(
         {props.project.name}
       </p>
       <p className="text-sm text-muted-foreground">
-        This project does not have any available repositories yet.
+        <Trans>
+          This project does not have any available repositories yet.
+        </Trans>
       </p>
       <UnavailableProjectRepositories project={props.project} />
     </div>

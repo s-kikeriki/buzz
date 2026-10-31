@@ -1,3 +1,4 @@
+import { Trans, useLingui } from "@lingui/react/macro";
 import { ChevronDown, Hash, MessageSquare, Search } from "lucide-react";
 import * as React from "react";
 
@@ -21,6 +22,8 @@ export function ProjectSelectionDiscussAction({
   onSelectChannel: (channelId: string) => void;
   testIdPrefix?: string;
 }) {
+  const { i18n } = useLingui();
+  void i18n;
   const [expanded, setExpanded] = React.useState(false);
   const [browserOpen, setBrowserOpen] = React.useState(false);
   const channels = useChannelsQuery().data ?? [];
@@ -40,8 +43,8 @@ export function ProjectSelectionDiscussAction({
         type="button"
         variant="ghost"
       >
-        <MessageSquare className="h-3.5 w-3.5" />
-        Discuss in a channel
+        <MessageSquare className="h-3.5 w-3.5" />{" "}
+        <Trans>Discuss in a channel</Trans>{" "}
         <ChevronDown
           className={cn(
             "ml-auto h-3.5 w-3.5 transition-transform",
@@ -85,8 +88,8 @@ export function ProjectSelectionDiscussAction({
             type="button"
             variant="ghost"
           >
-            <Search className="h-3.5 w-3.5 text-muted-foreground" />
-            Search channels…
+            <Search className="h-3.5 w-3.5 text-muted-foreground" />{" "}
+            <Trans>Search channels…</Trans>
           </Button>
         </div>
       ) : null}

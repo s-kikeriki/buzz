@@ -1,3 +1,5 @@
+import { t } from "@lingui/core/macro";
+import { useLingui } from "@lingui/react/macro";
 import * as React from "react";
 
 import { useAppNavigation } from "@/app/navigation/useAppNavigation";
@@ -69,6 +71,8 @@ export function ProjectHomeWorkspaceSheet({
   repository: Project["repositories"][number];
   tab: ProjectHomeWorkspaceSheetTab;
 }) {
+  const { i18n } = useLingui();
+  void i18n;
   const { goProject } = useAppNavigation();
   const { activeCommunity } = useCommunities();
   const [selectedIssueId, setSelectedIssueId] = React.useState<string | null>(
@@ -273,7 +277,7 @@ export function ProjectHomeWorkspaceSheet({
     if (tab === "issues" && !selectedIssueId) {
       onCreateActionChange?.({
         disabled: project.repositories.length === 0,
-        label: "Create task",
+        label: t`Create task`,
         onClick: () => setCreateIssueOpen(true),
       });
       return;
@@ -281,9 +285,9 @@ export function ProjectHomeWorkspaceSheet({
     if (tab === "prs" && !selectedPullRequestId) {
       onCreateActionChange?.({
         disabled: projects.length === 0,
-        label: "Create review",
+        label: t`Create review`,
         onClick: () => setCreatePullRequestOpen(true),
-        title: "Create review — choose a repository and branches to compare",
+        title: t`Create review — choose a repository and branches to compare`,
       });
       return;
     }

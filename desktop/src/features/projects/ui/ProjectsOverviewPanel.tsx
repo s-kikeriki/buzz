@@ -1,3 +1,4 @@
+import { Trans, useLingui } from "@lingui/react/macro";
 import {
   CheckCircle2,
   CircleDot,
@@ -90,6 +91,8 @@ function OverviewCreateButton({
   onCreateProject: () => void;
   onCreatePullRequest: () => void;
 }) {
+  const { i18n } = useLingui();
+  void i18n;
   const actionHandler =
     action.kind === "issue"
       ? onCreateIssue
@@ -130,6 +133,8 @@ function OverviewStatRow({
   label: string;
   onClick: () => void;
 }) {
+  const { i18n } = useLingui();
+  void i18n;
   return (
     <button
       className="-mx-2 flex h-7 w-[calc(100%+1rem)] items-center justify-between gap-3 rounded-md px-2 text-left text-sm hover:bg-muted/70 [&_svg]:h-4 [&_svg]:w-4 [&_svg]:shrink-0 [&_svg]:text-muted-foreground"
@@ -151,6 +156,8 @@ function OverviewStatRow({
 export function ProjectsOverviewPanel({
   children,
 }: ProjectsOverviewPanelProps) {
+  const { i18n } = useLingui();
+  void i18n;
   return (
     <section data-testid="projects-overview-panel">
       <div className="min-w-0">{children}</div>
@@ -163,6 +170,8 @@ export function ProjectsActivityIntro({
 }: {
   digest: ProjectsActivityDigest;
 }) {
+  const { i18n } = useLingui();
+  void i18n;
   return (
     <section
       className="pb-6 pt-8 text-left"
@@ -172,7 +181,7 @@ export function ProjectsActivityIntro({
         className="text-xl font-semibold tracking-tight text-foreground"
         data-testid="projects-page-header"
       >
-        Projects Activity
+        <Trans>Projects Activity</Trans>
       </h2>
       <p
         className="mt-2 max-w-2xl text-sm text-muted-foreground"
@@ -215,6 +224,8 @@ export function ProjectsOverviewContextPanel({
   repositorySummaries,
   summaries,
 }: ProjectsOverviewContextPanelProps) {
+  const { i18n } = useLingui();
+  void i18n;
   const selection = useProjectSelection();
   const selectionItems = selection?.items;
   const selectionPresentation = React.useMemo(

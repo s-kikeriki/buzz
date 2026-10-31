@@ -4,6 +4,8 @@ import { after, before, test } from "node:test";
 
 import { JSDOM } from "jsdom";
 
+import { withI18n } from "../../../testing/withI18n.mjs";
+
 import { buildProjectDetailAgentContext } from "../lib/projectDetailAgentContext.ts";
 import { projectDetailSelectionItem } from "../lib/projectDetailSelectionItem.ts";
 import { reviewDiffWorkspaceBranch } from "../lib/projectReviewDisplay.ts";
@@ -350,19 +352,21 @@ async function renderWorkspaceReviews(initialProps) {
   document.body.appendChild(container);
   const root = createRoot(container);
   const tree = () =>
-    React.createElement(
-      QueryClientProvider,
-      { client },
+    withI18n(
       React.createElement(
-        TooltipProvider,
-        null,
+        QueryClientProvider,
+        { client },
         React.createElement(
-          CommunitiesProvider,
+          TooltipProvider,
           null,
           React.createElement(
-            HuddleProvider,
+            CommunitiesProvider,
             null,
-            React.createElement(RouterProvider, { router }),
+            React.createElement(
+              HuddleProvider,
+              null,
+              React.createElement(RouterProvider, { router }),
+            ),
           ),
         ),
       ),

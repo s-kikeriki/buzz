@@ -3,6 +3,8 @@ import { after, afterEach, before, test } from "node:test";
 
 import { JSDOM } from "jsdom";
 
+import { withI18n } from "../../../testing/withI18n.mjs";
+
 const dom = new JSDOM("<!doctype html><html><body></body></html>", {
   url: "http://localhost",
 });
@@ -37,7 +39,9 @@ test("keeps submitted context collapsed until explicitly expanded", async () => 
   const payload =
     '---\nCurrent Buzz project page:\n- Project: "Projects"\n- View: Activity';
 
-  render(createElement(ProjectAgentSubmittedContextPill, { payload }));
+  render(
+    withI18n(createElement(ProjectAgentSubmittedContextPill, { payload })),
+  );
 
   const trigger = screen.getByRole("button", { name: "Show sent context" });
   assert.equal(trigger.getAttribute("aria-expanded"), "false");

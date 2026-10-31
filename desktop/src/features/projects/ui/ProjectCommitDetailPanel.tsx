@@ -1,3 +1,5 @@
+import { t } from "@lingui/core/macro";
+import { Trans, useLingui } from "@lingui/react/macro";
 import { Calendar, GitCommitHorizontal, Hash, UserRound } from "lucide-react";
 import { localeDateTimeFormat } from "@/shared/lib/intlLocale";
 import type { AppLocale } from "@/shared/lib/localePreference";
@@ -50,6 +52,8 @@ export function ProjectCommitDetailPanel({
   originChannelId?: string | null;
   project: Repository;
 }) {
+  const { i18n } = useLingui();
+  void i18n;
   const locale = useLocale();
   const shortHash = commit?.shortHash ?? commitHash.slice(0, 7);
 
@@ -65,13 +69,15 @@ export function ProjectCommitDetailPanel({
             {commit?.subject ?? shortHash}{" "}
             <ShareLinkButton
               className="ml-0.5 inline-flex h-auto w-auto align-middle hover:bg-transparent"
-              label="Copy commit link"
+              label={t`Copy commit link`}
               link={commitShareLink(project, commit?.hash ?? commitHash)}
               testId="project-commit-copy-link"
             />
           </h3>
           <p className="flex flex-wrap items-center gap-x-1.5 gap-y-1 text-xs text-muted-foreground">
-            <span>Committed</span>
+            <span>
+              <Trans>Committed</Trans>
+            </span>
             {commit ? (
               <span
                 className="shrink-0 whitespace-nowrap"
@@ -87,7 +93,7 @@ export function ProjectCommitDetailPanel({
           </p>
         </header>
         <ProjectDetailMetaList>
-          <ProjectDetailMetaRow icon={Hash} label="Commit">
+          <ProjectDetailMetaRow icon={Hash} label={t`Commit`}>
             <span className="inline-flex min-w-0 items-center gap-1 font-mono text-xs">
               {shortHash}
               <CopyCommitHashButton
@@ -97,7 +103,7 @@ export function ProjectCommitDetailPanel({
             </span>
           </ProjectDetailMetaRow>
           {commit?.authorName ? (
-            <ProjectDetailMetaRow icon={UserRound} label="Author">
+            <ProjectDetailMetaRow icon={UserRound} label={t`Author`}>
               <span
                 className="min-w-0 truncate text-muted-foreground"
                 title={commit.authorEmail}
@@ -107,14 +113,14 @@ export function ProjectCommitDetailPanel({
             </ProjectDetailMetaRow>
           ) : null}
           {commit ? (
-            <ProjectDetailMetaRow icon={Calendar} label="Date">
+            <ProjectDetailMetaRow icon={Calendar} label={t`Date`}>
               <span className="text-muted-foreground">
                 {commitDateLabel(commit.timestamp, locale)}
               </span>
             </ProjectDetailMetaRow>
           ) : null}
           {diff ? (
-            <ProjectDetailMetaRow icon={GitCommitHorizontal} label="Changes">
+            <ProjectDetailMetaRow icon={GitCommitHorizontal} label={t`Changes`}>
               <span className="flex items-center gap-1.5">
                 <span className="text-green-500">+{diff.additions}</span>
                 <span className="text-destructive">-{diff.deletions}</span>
@@ -123,7 +129,7 @@ export function ProjectCommitDetailPanel({
           ) : null}
         </ProjectDetailMetaList>
         {diff?.commitBody ? (
-          <ProjectDetailSection defaultOpen title="Description">
+          <ProjectDetailSection defaultOpen title={t`Description`}>
             <ProjectRichContent
               content={diff.commitBody}
               hardLineBreaks={false}
@@ -145,7 +151,7 @@ export function ProjectCommitDetailPanel({
         contentClassName="flex min-h-0 flex-1 flex-col"
         defaultOpen
         headerClassName="mx-auto max-w-3xl"
-        title="Files changed"
+        title={t`Files changed`}
       >
         {/* Full-bleed: cancel the section's inner padding so the file
             tree + diff grid spans the whole content column, and let it

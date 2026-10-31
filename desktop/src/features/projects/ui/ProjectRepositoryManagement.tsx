@@ -1,3 +1,5 @@
+import { t } from "@lingui/core/macro";
+import { Trans, useLingui } from "@lingui/react/macro";
 import * as React from "react";
 import { Check, FolderPlus, Link, Plus, ShieldCheck } from "lucide-react";
 import { toast } from "sonner";
@@ -42,6 +44,8 @@ export function ProjectRepositoryManagement({
   projects: Project[];
   repository?: Repository | null;
 }) {
+  const { i18n } = useLingui();
+  void i18n;
   const [uncontrolledCreateOpen, setUncontrolledCreateOpen] =
     React.useState(false);
   const createOpen = createOpenProp ?? uncontrolledCreateOpen;
@@ -146,7 +150,7 @@ export function ProjectRepositoryManagement({
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button
-              aria-label="Add repository"
+              aria-label={t`Add repository`}
               className={
                 compact
                   ? "h-6 w-6 shrink-0 rounded-md text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
@@ -157,8 +161,8 @@ export function ProjectRepositoryManagement({
               size={compact ? "icon" : "sm"}
               title={
                 canEdit
-                  ? "Add repository"
-                  : "Only the project owner can add repositories"
+                  ? t`Add repository`
+                  : t`Only the project owner can add repositories`
               }
               type="button"
               variant={compact ? "ghost" : "outline"}
@@ -172,15 +176,15 @@ export function ProjectRepositoryManagement({
               data-testid="create-project-repository"
               onSelect={() => setCreateOpen(true)}
             >
-              <FolderPlus className="h-4 w-4" />
-              Create new repository
+              <FolderPlus className="h-4 w-4" />{" "}
+              <Trans>Create new repository</Trans>
             </DropdownMenuItem>
             <DropdownMenuItem
               data-testid="attach-project-repository"
               onSelect={() => setAttachOpen(true)}
             >
-              <Link className="h-4 w-4" />
-              Select existing repository
+              <Link className="h-4 w-4" />{" "}
+              <Trans>Select existing repository</Trans>
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
@@ -189,7 +193,7 @@ export function ProjectRepositoryManagement({
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button
-              aria-label="Manage repository access"
+              aria-label={t`Manage repository access`}
               className={
                 compact
                   ? "h-6 w-6 shrink-0 rounded-md text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
@@ -209,7 +213,9 @@ export function ProjectRepositoryManagement({
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="min-w-56">
-            <DropdownMenuLabel>Repository access channel</DropdownMenuLabel>
+            <DropdownMenuLabel>
+              <Trans>Repository access channel</Trans>
+            </DropdownMenuLabel>
             {accessChannels.map((channel) => (
               <DropdownMenuItem
                 className="justify-between gap-4"
@@ -231,7 +237,7 @@ export function ProjectRepositoryManagement({
                       toast.error(
                         error instanceof Error
                           ? error.message
-                          : "Failed to update repository access.",
+                          : t`Failed to update repository access.`,
                       );
                     });
                 }}

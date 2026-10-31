@@ -1,3 +1,4 @@
+import { plural, t } from "@lingui/core/macro";
 /** Clustered overview selection that drives the context pod. */
 
 export type ProjectSelectionKind =
@@ -58,15 +59,81 @@ export function projectSelectionNoun(
   kind: ProjectSelectionKind,
   count: number,
 ) {
-  const [singular, plural] = KIND_NOUNS[kind];
-  return count === 1 ? singular : plural;
+  const [singular, pluralNoun] = KIND_NOUNS[kind];
+  return count === 1 ? singular : pluralNoun;
+}
+
+/** "# channels" and its siblings, so the noun and the number stay one message. */
+export function projectSelectionCountLabel(
+  kind: ProjectSelectionKind,
+  count: number,
+) {
+  // Stringify first. Lingui's `#` placeholder formats with grouping
+  // ("2,001"), and this label is copied into the agent prompt, which tests
+  // and agents read as raw digits.
+  const n = String(count);
+  switch (kind) {
+    case "channel":
+      return plural(count, { one: `${n} channel`, other: `${n} channels` });
+    case "commit":
+      return plural(count, { one: `${n} commit`, other: `${n} commits` });
+    case "project":
+      return plural(count, { one: `${n} project`, other: `${n} projects` });
+    case "repository":
+      return plural(count, {
+        one: `${n} repository`,
+        other: `${n} repositories`,
+      });
+    case "review":
+      return plural(count, { one: `${n} review`, other: `${n} reviews` });
+    case "task":
+      return plural(count, { one: `${n} task`, other: `${n} tasks` });
+  }
+}
+
+function projectSelectionDiscussHeading(
+  kind: ProjectSelectionKind,
+  count: number,
+) {
+  switch (kind) {
+    case "channel":
+      return plural(count, {
+        one: "Let's talk about this channel:",
+        other: "Let's talk about these channels:",
+      });
+    case "commit":
+      return plural(count, {
+        one: "Let's talk about this commit:",
+        other: "Let's talk about these commits:",
+      });
+    case "project":
+      return plural(count, {
+        one: "Let's talk about this project:",
+        other: "Let's talk about these projects:",
+      });
+    case "repository":
+      return plural(count, {
+        one: "Let's talk about this repository:",
+        other: "Let's talk about these repositories:",
+      });
+    case "review":
+      return plural(count, {
+        one: "Let's talk about this review:",
+        other: "Let's talk about these reviews:",
+      });
+    case "task":
+      return plural(count, {
+        one: "Let's talk about this task:",
+        other: "Let's talk about these tasks:",
+      });
+  }
 }
 
 export function projectSelectionTitle(items: ProjectSelectionItem[]) {
   if (items.length === 0) return "";
   const kind = items[0]?.kind;
   if (!kind) return "";
-  return `${items.length} ${projectSelectionNoun(kind, items.length)}`;
+  return projectSelectionCountLabel(kind, items.length);
 }
 
 export function nextProjectSelection(
@@ -188,11 +255,7 @@ export function projectSelectionDiscussContent(items: ProjectSelectionItem[]) {
   if (items.length === 0) return "";
   const kind = items[0]?.kind;
   if (!kind) return "";
-  const noun = projectSelectionNoun(kind, items.length);
-  const heading =
-    items.length === 1
-      ? `Let's talk about this ${noun}:`
-      : `Let's talk about these ${noun}:`;
+  const heading = projectSelectionDiscussHeading(kind, items.length);
   const links = projectSelectionShareLinks(items);
   const lines = links.length > 0 ? links : items.map((item) => item.title);
   return `${heading}\n\n${lines.join("\n")}`;
@@ -217,26 +280,29 @@ export function projectSelectionPresentation(
   const actions: ProjectSelectionAction[] = [
     {
       id: "chat-agent",
-      label: "Chat with an agent",
+      label: t`Chat with an agent`,
       testId: "projects-selection-chat-agent",
     },
   ];
   actions.push({
     id: "discuss",
-    label: "Discuss in a channel",
+    label: t`Discuss in a channel`,
     testId: "projects-selection-discuss",
   });
   if (kind === "commit") {
     actions.push({
       id: "create-review",
-      label: items.length === 1 ? "Create review" : "Create reviews",
+      label: plural(items.length, {
+        one: `Create review`,
+        other: `Create reviews`,
+      }),
       testId: "projects-selection-create-review",
     });
   }
   if (projectSelectionShareLinks(items).length > 0) {
     actions.push({
       id: "copy",
-      label: items.length === 1 ? "Copy link" : "Copy links",
+      label: plural(items.length, { one: `Copy link`, other: `Copy links` }),
       testId: "projects-selection-copy",
     });
   }

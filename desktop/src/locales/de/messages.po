@@ -7,6 +7,14 @@ msgstr ""
 "X-Generator: @lingui/cli\n"
 "Language: de\n"
 
+#: src/features/projects/ui/ProjectRepositoryUnavailableState.tsx
+msgid ", the repository owner,"
+msgstr ", Inhaber des Repositorys,"
+
+#: src/features/projects/ui/ProjectBranchDialogs.tsx
+msgid ". This cannot be undone and may be rejected by repository protection rules."
+msgstr ". Das lässt sich nicht rückgängig machen und kann an den Schutzregeln des Repositorys scheitern."
+
 #: src/features/messages/ui/MessageThreadSummaryRow.tsx
 msgid "({unreadCount} new)"
 msgstr "({unreadCount} neu)"
@@ -15,20 +23,151 @@ msgstr "({unreadCount} neu)"
 msgid "(all communities)"
 msgstr "(alle Communitys)"
 
+#: src/features/projects/ui/ProjectOriginReference.tsx
+msgid "(author-claimed)"
+msgstr "(laut Autor)"
+
 #: src/features/settings/ui/AppearanceSettingsPanel.tsx
 msgid "(per community)"
 msgstr "(pro Community)"
+
+#. placeholder {0}: activeProjectIds.size
+#: src/features/projects/lib/projectsActivityDigest.ts
+msgid "{0, plural, one {# active project} other {# active projects}}"
+msgstr "{0, plural, one {# aktives Projekt} other {# aktive Projekte}}"
+
+#. placeholder {0}: row.commitCount
+#. placeholder {0}: summary.commitCount
+#: src/features/projects/lib/projectsViewHelpers.ts
+#: src/features/projects/ui/ProjectDetailFeedPanels.tsx
+msgid "{0, plural, one {# commit} other {# commits}}"
+msgstr "{0, plural, one {# Commit} other {# Commits}}"
+
+#. placeholder {0}: files.length
+#: src/features/projects/ui/ProjectRepositoryPanel.tsx
+msgid "{0, plural, one {# file} other {# files}}"
+msgstr "{0, plural, one {# Datei} other {# Dateien}}"
 
 #. placeholder {0}: channel.memberCount
 #: src/features/channels/ui/ChannelBrowserDialog.tsx
 msgid "{0, plural, one {# member} other {# members}}"
 msgstr "{0, plural, one {# Mitglied} other {# Mitglieder}}"
 
+#. placeholder {0}: projects.length
+#: src/features/projects/lib/projectsActivityDigest.ts
+msgid "{0, plural, one {# project} other {# projects}}"
+msgstr "{0, plural, one {# Projekt} other {# Projekte}}"
+
+#. placeholder {0}: row.reviewCount
+#. placeholder {0}: summary.prCount
+#. placeholder {0}: totals.reviews
+#: src/features/projects/lib/projectsActivityDigest.ts
+#: src/features/projects/lib/projectsViewHelpers.ts
+#: src/features/projects/ui/ProjectDetailFeedPanels.tsx
+msgid "{0, plural, one {# review} other {# reviews}}"
+msgstr "{0, plural, one {# Review} other {# Reviews}}"
+
+#. placeholder {0}: row.taskCount
+#. placeholder {0}: summary.issueCount
+#. placeholder {0}: totals.tasks
+#: src/features/projects/lib/projectsActivityDigest.ts
+#: src/features/projects/lib/projectsViewHelpers.ts
+#: src/features/projects/ui/ProjectDetailFeedPanels.tsx
+msgid "{0, plural, one {# task} other {# tasks}}"
+msgstr "{0, plural, one {# Aufgabe} other {# Aufgaben}}"
+
 #. placeholder {0}: item.unreadCount
 #: src/features/home/ui/InboxListPane.tsx
 #: src/features/sidebar/ui/ChannelActivityPopover.tsx
 msgid "{0, plural, one {# unread} other {# unread}}"
 msgstr "{0, plural, one {# ungelesen} other {# ungelesen}}"
+
+#. placeholder {0}: items.length
+#: src/features/projects/lib/projectSelection.ts
+msgid "{0, plural, one {Copy link} other {Copy links}}"
+msgstr "{0, plural, one {Link kopieren} other {Links kopieren}}"
+
+#. placeholder {0}: items.length
+#: src/features/projects/lib/projectSelection.ts
+msgid "{0, plural, one {Create review} other {Create reviews}}"
+msgstr "{0, plural, one {Review anlegen} other {Reviews anlegen}}"
+
+#. placeholder {0}: items.length
+#: src/features/projects/ui/ProjectAgentSelectionComposerBanner.tsx
+msgid "{0, plural, one {element} other {elements}}"
+msgstr "{0, plural, one {Element} other {Elemente}}"
+
+#. placeholder {0}: links.length
+#: src/features/projects/ui/ProjectsSelectionCountMenu.tsx
+msgid "{0, plural, one {Link copied to clipboard} other {Links copied}}"
+msgstr "{0, plural, one {Link in die Zwischenablage kopiert} other {Links kopiert}}"
+
+#. placeholder {0}: channel.memberCount
+#: src/features/projects/ui/ProjectsChannelsList.tsx
+msgid "{0, plural, one {member} other {members}}"
+msgstr "{0, plural, one {Mitglied} other {Mitglieder}}"
+
+#. placeholder {0}: channel.messageCount
+#: src/features/projects/ui/DiscussionChannels.tsx
+msgid "{0, plural, one {message} other {messages}}"
+msgstr "{0, plural, one {Nachricht} other {Nachrichten}}"
+
+#. placeholder {0}: project.repositories.length
+#. placeholder {0}: project.repositoryAddresses.length
+#: src/features/projects/ui/ProjectBrowserDialog.tsx
+#: src/features/projects/ui/ProjectCards.tsx
+msgid "{0, plural, one {repository} other {repositories}}"
+msgstr "{0, plural, one {Repository} other {Repositories}}"
+
+#. placeholder {0}: reviewHistory.length
+#: src/features/projects/ui/ProjectPullRequestsPanel.tsx
+msgid "{0, plural, one {Show # earlier activity} other {Show # earlier activities}}"
+msgstr "{0, plural, one {# frühere Aktivität anzeigen} other {# frühere Aktivitäten anzeigen}}"
+
+#. placeholder {0}: orderedComments.length
+#: src/features/projects/ui/ProjectIssueCommentTimeline.tsx
+msgid "{0, plural, one {Show # earlier comment} other {Show # earlier comments}}"
+msgstr "{0, plural, one {# früheren Kommentar anzeigen} other {# frühere Kommentare anzeigen}}"
+
+#. placeholder {0}: failed.length
+#. placeholder {1}: loaded.length
+#. placeholder {2}: results.length
+#. placeholder {3}: loaded.length
+#. placeholder {4}: results.length
+#: src/features/projects/ui/ProjectHomeCommitsPanel.tsx
+msgid "{0, plural, one {Showing commits from {1} of {2} repositories. # repository could not be loaded.} other {Showing commits from {3} of {4} repositories. # repositories could not be loaded.}}"
+msgstr "{0, plural, one {Commits aus {1} von {2} Repositories. # Repository konnte nicht geladen werden.} other {Commits aus {3} von {4} Repositories. # Repositories konnten nicht geladen werden.}}"
+
+#. placeholder {0}: issue.comments.length
+#: src/features/projects/ui/ProjectIssuesPanel.tsx
+msgid "{0, plural, one {View # comment} other {View # comments}}"
+msgstr "{0, plural, one {# Kommentar anzeigen} other {# Kommentare anzeigen}}"
+
+#. placeholder {0}: heuristicProfile.profile.nip05Handle || contributor.email || t`Git contributor`
+#: src/features/projects/ui/ProjectDetailFeedPanels.tsx
+msgid "{0} · unverified match"
+msgstr "{0} · ungeprüfte Übereinstimmung"
+
+#. placeholder {0}: item.count
+#. placeholder {1}: item.text
+#: src/features/projects/ui/ProjectCards.tsx
+msgid "{0} {1}"
+msgstr "{0} {1}"
+
+#. placeholder {0}: files.length
+#: src/features/projects/ui/ProjectPullRequestFilesChangedPanel.tsx
+msgid "{0} changed files"
+msgstr "{0} geänderte Dateien"
+
+#. placeholder {0}: files.length
+#: src/features/projects/ui/ProjectPullRequestFilesChangedPanel.tsx
+msgid "{0} files changed"
+msgstr "{0} Dateien geändert"
+
+#. placeholder {0}: overflowItems.length
+#: src/features/projects/ui/ProjectAgentSelectionComposerBanner.tsx
+msgid "{0} more"
+msgstr "{0} weitere"
 
 #. placeholder {0}: BRAND.productName
 #. placeholder {1}: BRAND.productName
@@ -48,6 +187,71 @@ msgstr "{attachmentCount, plural, one {# Anhang} other {# Anhänge}}"
 #: src/features/sidebar/ui/ChannelSectionDialogs.tsx
 msgid "{channelCount, plural, one {Delete section \"{sectionName}\"? Its 1 channel will move back to the default Channels group.} other {Delete section \"{sectionName}\"? Its # channels will move back to the default Channels group.}}"
 msgstr "{channelCount, plural, one {Bereich „{sectionName}“ löschen? Sein 1 Kanal wird in die Standardgruppe „Kanäle“ zurückverschoben.} other {Bereich „{sectionName}“ löschen? Seine # Kanäle werden in die Standardgruppe „Kanäle“ zurückverschoben.}}"
+
+#: src/features/projects/lib/projectsActivityDigest.ts
+msgid "{commitCount, plural, one {# new commit} other {# new commits}}"
+msgstr "{commitCount, plural, one {# neuer Commit} other {# neue Commits}}"
+
+#: src/features/projects/lib/projectSelection.ts
+msgid "{count, plural, one {{n} channel} other {{n} channels}}"
+msgstr "{count, plural, one {{n} Kanal} other {{n} Kanäle}}"
+
+#: src/features/projects/lib/projectSelection.ts
+msgid "{count, plural, one {{n} commit} other {{n} commits}}"
+msgstr "{count, plural, one {{n} Commit} other {{n} Commits}}"
+
+#: src/features/projects/lib/projectSelection.ts
+msgid "{count, plural, one {{n} project} other {{n} projects}}"
+msgstr "{count, plural, one {{n} Projekt} other {{n} Projekte}}"
+
+#: src/features/projects/lib/projectSelection.ts
+msgid "{count, plural, one {{n} repository} other {{n} repositories}}"
+msgstr "{count, plural, one {{n} Repository} other {{n} Repositories}}"
+
+#: src/features/projects/lib/projectSelection.ts
+msgid "{count, plural, one {{n} review} other {{n} reviews}}"
+msgstr "{count, plural, one {{n} Review} other {{n} Reviews}}"
+
+#: src/features/projects/lib/projectSelection.ts
+msgid "{count, plural, one {{n} task} other {{n} tasks}}"
+msgstr "{count, plural, one {{n} Aufgabe} other {{n} Aufgaben}}"
+
+#: src/features/projects/ui/ProjectCards.tsx
+#: src/features/projects/ui/projectDetailHelpers.ts
+msgid "{count, plural, one {commit} other {commits}}"
+msgstr "{count, plural, one {Commit} other {Commits}}"
+
+#: src/features/projects/lib/projectSelection.ts
+msgid "{count, plural, one {Let's talk about this channel:} other {Let's talk about these channels:}}"
+msgstr "{count, plural, one {Lass uns über diesen Kanal sprechen:} other {Lass uns über diese Kanäle sprechen:}}"
+
+#: src/features/projects/lib/projectSelection.ts
+msgid "{count, plural, one {Let's talk about this commit:} other {Let's talk about these commits:}}"
+msgstr "{count, plural, one {Lass uns über diesen Commit sprechen:} other {Lass uns über diese Commits sprechen:}}"
+
+#: src/features/projects/lib/projectSelection.ts
+msgid "{count, plural, one {Let's talk about this project:} other {Let's talk about these projects:}}"
+msgstr "{count, plural, one {Lass uns über dieses Projekt sprechen:} other {Lass uns über diese Projekte sprechen:}}"
+
+#: src/features/projects/lib/projectSelection.ts
+msgid "{count, plural, one {Let's talk about this repository:} other {Let's talk about these repositories:}}"
+msgstr "{count, plural, one {Lass uns über dieses Repository sprechen:} other {Lass uns über diese Repositories sprechen:}}"
+
+#: src/features/projects/lib/projectSelection.ts
+msgid "{count, plural, one {Let's talk about this review:} other {Let's talk about these reviews:}}"
+msgstr "{count, plural, one {Lass uns über diesen Review sprechen:} other {Lass uns über diese Reviews sprechen:}}"
+
+#: src/features/projects/lib/projectSelection.ts
+msgid "{count, plural, one {Let's talk about this task:} other {Let's talk about these tasks:}}"
+msgstr "{count, plural, one {Lass uns über diese Aufgabe sprechen:} other {Lass uns über diese Aufgaben sprechen:}}"
+
+#: src/features/projects/ui/ProjectCards.tsx
+msgid "{count, plural, one {review} other {reviews}}"
+msgstr "{count, plural, one {Review} other {Reviews}}"
+
+#: src/features/projects/ui/ProjectCards.tsx
+msgid "{count, plural, one {task} other {tasks}}"
+msgstr "{count, plural, one {Aufgabe} other {Aufgaben}}"
 
 #: src/features/sidebar/ui/SidebarSection.tsx
 msgid "{count, plural, one {unread notification} other {unread notifications}}"
@@ -77,9 +281,21 @@ msgstr "{days, plural, one {# Tag TTL} other {# Tage TTL}}"
 msgid "{dueReminderCount, plural, one {# due reminder} other {# due reminders}}"
 msgstr "{dueReminderCount, plural, one {# fällige Erinnerung} other {# fällige Erinnerungen}}"
 
+#: src/features/projects/ui/ProjectIssueCommentTimeline.tsx
+msgid "{earlierCommentCount, plural, one {Show # earlier comment} other {Show # earlier comments}}"
+msgstr "{earlierCommentCount, plural, one {# früheren Kommentar anzeigen} other {# frühere Kommentare anzeigen}}"
+
+#: src/features/projects/ui/ProjectPullRequestsPanel.tsx
+msgid "{earlierReviewHistoryCount, plural, one {Show # earlier activity} other {Show # earlier activities}}"
+msgstr "{earlierReviewHistoryCount, plural, one {# frühere Aktivität anzeigen} other {# frühere Aktivitäten anzeigen}}"
+
 #: src/features/settings/ui/AppearanceSettingsControls.tsx
 msgid "{glassOpacity}% opacity"
 msgstr "{glassOpacity} % Deckkraft"
+
+#: src/features/projects/ui/DiscussionChannels.tsx
+msgid "{hiddenCount, plural, one {Show # more conversation} other {Show # more conversations}}"
+msgstr "{hiddenCount, plural, one {# weitere Unterhaltung anzeigen} other {# weitere Unterhaltungen anzeigen}}"
 
 #: src/features/channels/lib/ephemeralChannel.ts
 msgid "{hours, plural, one {# hour} other {# hours}}"
@@ -109,9 +325,62 @@ msgstr "{minutes, plural, one {# Min. übrig} other {# Min. übrig}}"
 msgid "{minutes, plural, one {#m TTL} other {#m TTL}}"
 msgstr "{minutes, plural, one {# Min. TTL} other {# Min. TTL}}"
 
+#: src/features/projects/ui/ProjectDetailFeedPanels.tsx
+msgid "{productName} contributor"
+msgstr "{productName}-Mitwirkender"
+
+#: src/features/projects/ui/ProjectCards.tsx
+msgid "{productName} could not authenticate with this repository."
+msgstr "{productName} konnte sich bei diesem Repository nicht authentifizieren."
+
+#: src/features/projects/lib/projectGitError.ts
+#: src/features/projects/lib/projectRepoAvailability.ts
+msgid "{productName} could not authenticate with this repository. Check your access and try again."
+msgstr "{productName} konnte sich bei diesem Repository nicht authentifizieren. Prüf deinen Zugriff und versuch es erneut."
+
+#: src/features/projects/ui/useProjectRepositoryOpenActions.ts
+msgid "{productName} could not find this repository’s local checkout."
+msgstr "{productName} konnte den lokalen Checkout dieses Repositorys nicht finden."
+
+#: src/features/projects/ui/ProjectCards.tsx
+msgid "{productName} could not load this repository."
+msgstr "{productName} konnte dieses Repository nicht laden."
+
+#: src/features/projects/lib/projectRepoAvailability.ts
+msgid "{productName} could not load this repository. Try again or contact the project owner."
+msgstr "{productName} konnte dieses Repository nicht laden. Versuch es erneut oder wende dich an die Projektinhaberin oder den Projektinhaber."
+
+#: src/features/projects/ui/useOpenProjectTerminal.ts
+msgid "{productName} could not open this checkout in your configured terminal."
+msgstr "{productName} konnte diesen Checkout nicht in deinem konfigurierten Terminal öffnen."
+
+#: src/features/projects/ui/useProjectRepositoryOpenActions.ts
+msgid "{productName} could not open this checkout in your file browser."
+msgstr "{productName} konnte diesen Checkout nicht in deinem Dateibrowser öffnen."
+
+#: src/features/projects/useAddProjectChannel.ts
+msgid "{productName} could not verify the project after creating the channel, and could not remove the unlinked channel. Delete it manually, then refresh and try again."
+msgstr "{productName} konnte das Projekt nach dem Anlegen des Kanals nicht prüfen und den unverbundenen Kanal nicht entfernen. Lösch ihn manuell, aktualisiere dann und versuch es erneut."
+
+#: src/features/projects/ui/ProjectRightPanelControls.tsx
+msgid "{productName} Term (⌘J)"
+msgstr "{productName}-Terminal (⌘J)"
+
+#: src/features/projects/ui/RepositoryCards.tsx
+msgid "{productName}-hosted repository"
+msgstr "Repository auf {productName}"
+
 #: src/features/messages/ui/MessageThreadSummaryRow.tsx
 msgid "{replyCount, plural, one {# reply} other {# replies}}"
 msgstr "{replyCount, plural, one {# Antwort} other {# Antworten}}"
+
+#: src/features/projects/ui/ProjectCards.tsx
+msgid "{repositoryCount, plural, one {repository} other {repositories}}"
+msgstr "{repositoryCount, plural, one {Repository} other {Repositories}}"
+
+#: src/features/projects/lib/projectsActivityDigest.ts
+msgid "{reviewCount, plural, one {# review opened} other {# reviews opened}}"
+msgstr "{reviewCount, plural, one {# Review eröffnet} other {# Reviews eröffnet}}"
 
 #: src/features/channels/lib/ephemeralChannel.ts
 msgid "{seconds, plural, one {# second} other {# seconds}}"
@@ -133,15 +402,34 @@ msgstr "{selectedTemplateTeamCount, plural, one {# Team} other {# Teams}}"
 msgid "{subsectionCount, plural, one {Its subsection moves to the top level.} other {Its # subsections move to the top level.}}"
 msgstr "{subsectionCount, plural, one {Sein Unterbereich wird auf die oberste Ebene verschoben.} other {Seine # Unterbereiche werden auf die oberste Ebene verschoben.}}"
 
+#: src/features/projects/lib/projectsActivityDigest.ts
+msgid "{taskCount, plural, one {# task opened} other {# tasks opened}}"
+msgstr "{taskCount, plural, one {# Aufgabe eröffnet} other {# Aufgaben eröffnet}}"
+
 #: src/features/home/lib/inbox.ts
 #: src/features/home/ui/InboxListPane.tsx
 msgid "{text} in"
 msgstr "{text} in"
 
+#. placeholder {0}: channel?.name ?? row.channelId.slice(0, 8)
+#. placeholder {0}: channelName(channel.id, channel.name)
+#: src/features/projects/ui/buildProjectsViewAgentContext.ts
+#: src/features/projects/ui/DiscussionChannels.tsx
+msgid "#{0}"
+msgstr "#{0}"
+
+#: src/features/projects/ui/DiscussionChannels.tsx
+msgid "#{name}"
+msgstr "#{name}"
+
 #. placeholder {0}: i18n._(copy.newEntity)
 #: src/features/channels/ui/ChannelBrowserDialog.tsx
 msgid "<0>{0}</0> <1>“{query}”</1>"
 msgstr "<0>{0}</0> <1>„{query}“</1>"
+
+#: src/features/projects/lib/projectBranches.ts
+msgid "A branch with this name already exists."
+msgstr "Ein Branch mit diesem Namen gibt es schon."
 
 #: src/features/search/ui/SearchPromptPlaceholder.tsx
 msgid "a channel"
@@ -151,9 +439,21 @@ msgstr "einem Kanal"
 msgid "a message"
 msgstr "einer Nachricht"
 
+#: src/features/projects/ui/ProjectOriginReference.tsx
+msgid "a private channel"
+msgstr "einem privaten Kanal"
+
 #: src/features/home/lib/inbox.ts
 msgid "A reminder is waiting for you."
 msgstr "Eine Erinnerung wartet auf dich."
+
+#: src/features/projects/ui/RepositoryCards.tsx
+msgid "A repository in this project."
+msgstr "Ein Repository in diesem Projekt."
+
+#: src/features/projects/ui/ProjectCards.tsx
+msgid "A shared space for internal git work."
+msgstr "Ein gemeinsamer Raum für interne Git-Arbeit."
 
 #: src/features/search/ui/SearchPromptPlaceholder.tsx
 msgid "a thread"
@@ -173,21 +473,75 @@ msgstr "A–Z"
 msgid "Accent color"
 msgstr "Akzentfarbe"
 
+#: src/features/projects/ui/AddProjectRepositoryDialog.tsx
+msgid "Access channel"
+msgstr "Zugriffskanal"
+
+#: src/features/projects/ui/ProjectCards.tsx
+msgid "Access failed"
+msgstr "Zugriff fehlgeschlagen"
+
+#: src/features/projects/ui/ProjectsWorkItemTable.tsx
 #: src/features/search/ui/TopbarSearch.tsx
 msgid "Actions"
 msgstr "Aktionen"
+
+#: src/features/projects/ui/ProjectRepositoryActionsPanel.tsx
+#: src/features/projects/ui/projectsOverviewContext.ts
+msgid "Active"
+msgstr "Aktiv"
 
 #: src/shared/ui/markdown/ChannelDeepLink.tsx
 msgid "Active {when}"
 msgstr "Aktiv {when}"
 
+#: src/features/projects/ui/ProjectRepositoryActionsPanel.tsx
+#: src/features/projects/ui/projectsOverviewContext.ts
+msgid "Active tasks"
+msgstr "Aktive Aufgaben"
+
 #: src/features/home/lib/inbox.ts
+#: src/features/projects/ui/ProjectIssuesPanel.tsx
+#: src/features/projects/ui/ProjectPullRequestsPanel.tsx
+#: src/features/projects/ui/ProjectsAgentPromptPage.tsx
+#: src/features/projects/ui/projectsOverviewContext.ts
+#: src/features/projects/ui/ProjectsToolbar.tsx
 msgid "Activity"
 msgstr "Aktivität"
+
+#: src/features/projects/ui/ProjectIssuesPanel.tsx
+#: src/features/projects/ui/ProjectPullRequestsPanel.tsx
+msgid "Add a comment…"
+msgstr "Kommentar hinzufügen…"
 
 #: src/features/channels/ui/ChannelBrowserDialog.tsx
 msgid "Add a forum"
 msgstr "Forum hinzufügen"
+
+#: src/features/projects/ui/ProjectBrowserDialog.tsx
+msgid "Add a project"
+msgstr "Projekt hinzufügen"
+
+#: src/features/projects/ui/ProjectReadmePanel.tsx
+msgid "Add a README to describe setup, usage, and project context."
+msgstr "Füg ein README hinzu, das Einrichtung, Nutzung und den Projektkontext beschreibt."
+
+#: src/features/projects/ui/ProjectHomeContextPanel.tsx
+msgid "Add a repository to this project"
+msgstr "Repository zu diesem Projekt hinzufügen"
+
+#: src/features/projects/ui/PullRequestReviewCard.tsx
+msgid "Add an optional summary for the author and other reviewers."
+msgstr "Füg optional eine Zusammenfassung für die Autorin oder den Autor und die anderen Reviewer hinzu."
+
+#: src/features/projects/ui/ProjectChannelManagement.tsx
+msgid "Add another stream to this project. A template can keep the same canvas and agents."
+msgstr "Füg diesem Projekt einen weiteren Stream hinzu. Eine Vorlage kann dieselbe Arbeitsfläche und dieselben Agents behalten."
+
+#: src/features/projects/ui/ProjectChannelManagement.tsx
+#: src/features/projects/ui/projectsOverviewContext.ts
+msgid "Add channel"
+msgstr "Kanal hinzufügen"
 
 #. placeholder {0}: section.name
 #: src/features/sidebar/ui/CustomChannelSection.tsx
@@ -198,13 +552,36 @@ msgstr "Kanal zu {0} hinzufügen"
 msgid "Add community"
 msgstr "Community hinzufügen"
 
+#: src/features/projects/ui/AttachProjectRepositoryDialog.tsx
+msgid "Add existing repository"
+msgstr "Vorhandenes Repository hinzufügen"
+
+#: src/features/projects/ui/ProjectPullRequestFilesChangedPanel.tsx
+msgid "Add line comment"
+msgstr "Zeilenkommentar hinzufügen"
+
 #: src/features/sidebar/ui/SidebarProjectsSection.tsx
 msgid "Add project"
 msgstr "Projekt hinzufügen"
 
+#: src/features/projects/ui/AddProjectRepositoryDialog.tsx
+#: src/features/projects/ui/ProjectRepositoryManagement.tsx
+#: src/features/projects/ui/projectsOverviewContext.ts
+msgid "Add repository"
+msgstr "Repository hinzufügen"
+
+#: src/features/projects/ui/PullRequestReviewersRow.tsx
+msgid "Add reviewer"
+msgstr "Reviewer hinzufügen"
+
+#: src/features/projects/ui/ProjectBrowserDialog.tsx
 #: src/features/sidebar/ui/SidebarProjectsSection.tsx
 msgid "Added"
 msgstr "Hinzugefügt"
+
+#: src/features/projects/ui/AddProjectRepositoryDialog.tsx
+msgid "Adding…"
+msgstr "Wird hinzugefügt…"
 
 #: src/shared/lib/keyboard-shortcuts.ts
 msgid "Address the default agent, or toggle the highlighted agent"
@@ -213,6 +590,23 @@ msgstr "Den Standard-Agenten ansprechen oder den markierten Agenten umschalten"
 #: src/features/settings/ui/SettingsPanels.tsx
 msgid "Admin"
 msgstr "Administration"
+
+#: src/features/projects/ui/ProjectAuthorIdentity.tsx
+msgid "Agent"
+msgstr "Agent"
+
+#: src/features/projects/ui/IssueAssigneesRow.tsx
+#: src/features/projects/ui/PullRequestReviewersRow.tsx
+msgid "Agent · "
+msgstr "Agent · "
+
+#: src/features/projects/ui/ProjectAgentContextStrip.tsx
+msgid "Agent chat"
+msgstr "Agent-Chat"
+
+#: src/features/projects/ui/ProjectDetailFeedPanels.tsx
+msgid "Agent contributor"
+msgstr "Agent als Mitwirkender"
 
 #: src/features/search/ui/SearchResultItem.tsx
 msgid "Agent job"
@@ -266,6 +660,18 @@ msgstr "Immer den Agenten ansprechen"
 msgid "an agent"
 msgstr "einem Agenten"
 
+#: src/features/projects/useAddProjectRepository.ts
+msgid "an event that could not be signed"
+msgstr "ein Ereignis, das nicht signiert werden konnte"
+
+#: src/features/projects/ui/CreatePullRequestDialog.tsx
+msgid "An open review already compares these branches."
+msgstr "Ein offener Review vergleicht diese Branches schon."
+
+#: src/features/projects/ui/DiscussionChannels.tsx
+msgid "and {others} others"
+msgstr "und {others} weitere"
+
 #: src/features/settings/ui/SettingsView.tsx
 msgid "App"
 msgstr "App"
@@ -286,6 +692,38 @@ msgstr "Freigabeanfrage"
 #: src/features/home/lib/inbox.ts
 msgid "Approval requested"
 msgstr "Freigabe angefragt"
+
+#: src/features/projects/ui/PullRequestReviewCard.tsx
+msgid "Approval summary"
+msgstr "Freigabe-Zusammenfassung"
+
+#: src/features/projects/ui/ProjectWorkItemContextDetails.tsx
+msgid "Approvals"
+msgstr "Freigaben"
+
+#: src/features/projects/projectPullRequests.mjs
+msgid "Approvals from reviewers will show up here."
+msgstr "Freigaben von Reviewern erscheinen hier."
+
+#: src/features/projects/ui/PullRequestReviewCard.tsx
+msgid "Approve"
+msgstr "Genehmigen"
+
+#: src/features/projects/ui/PullRequestReviewCard.tsx
+msgid "Approve review"
+msgstr "Review genehmigen"
+
+#: src/features/projects/ui/ProjectsActivityFeed.tsx
+msgid "approved a review in"
+msgstr "hat einen Review genehmigt in"
+
+#: src/features/projects/ui/ProjectPullRequestsPanel.tsx
+msgid "approved an earlier commit"
+msgstr "hat einen früheren Commit genehmigt"
+
+#: src/features/projects/ui/ProjectPullRequestsPanel.tsx
+msgid "approved these changes"
+msgstr "hat diese Änderungen genehmigt"
 
 #: src/features/sidebar/ui/ChannelContextMenu.tsx
 msgid "Archive channel"
@@ -308,13 +746,91 @@ msgstr "Archivierte Kanäle, denen du beigetreten bist, erscheinen hier."
 msgid "Archived forums you have joined will appear here."
 msgstr "Archivierte Foren, denen du beigetreten bist, erscheinen hier."
 
+#: src/features/projects/ui/ProjectsAgentPromptPage.tsx
+msgid "Are we safe to cut a release of {firstRepo} this week?"
+msgstr "Können wir {firstRepo} diese Woche veröffentlichen?"
+
+#: src/features/projects/ui/ProjectsAgentPromptPage.tsx
+msgid "Are we safe to cut a release this week?"
+msgstr "Können wir diese Woche eine Veröffentlichung schneiden?"
+
+#: src/features/projects/ui/ProjectsAgentPromptPage.tsx
+msgid "Are we safe to release this week?"
+msgstr "Können wir diese Woche veröffentlichen?"
+
 #: src/features/messages/ui/DraftsPanel.tsx
 msgid "Are you sure you want to send this message to {destination}?"
 msgstr "Willst du diese Nachricht wirklich an {destination} senden?"
 
+#: src/features/projects/ui/ProjectsAgentPromptPage.tsx
+msgid "Ask"
+msgstr "Fragen"
+
+#: src/features/projects/ui/ProjectAgentChatPanel.tsx
+msgid "Ask about this page"
+msgstr "Nach dieser Seite fragen"
+
+#: src/features/projects/ui/ProjectsAgentPromptPage.tsx
+msgid "Ask an agent about your projects"
+msgstr "Frag einen Agent nach deinen Projekten"
+
+#: src/features/projects/ui/ProjectReadmePanel.tsx
+msgid "Ask an agent to create the initial codebase or connect an existing repository."
+msgstr "Bitte einen Agent, die erste Codebasis anzulegen oder ein vorhandenes Repository zu verbinden."
+
+#: src/features/projects/ui/ProjectRepositoryActionsPanel.tsx
+#: src/features/projects/ui/ProjectRepositoryUnavailableState.tsx
+msgid "Ask for access"
+msgstr "Um Zugriff bitten"
+
+#: src/features/projects/ui/IssueAssigneesRow.tsx
+msgid "Assign"
+msgstr "Zuweisen"
+
+#: src/features/projects/ui/IssueAssigneesRow.tsx
+msgid "Assign task"
+msgstr "Aufgabe zuweisen"
+
+#: src/features/projects/ui/IssueAssigneesRow.tsx
+msgid "Assign to me"
+msgstr "Mir zuweisen"
+
+#: src/features/projects/ui/IssueAssigneesRow.tsx
+msgid "Assigned to {label}"
+msgstr "Zugewiesen an {label}"
+
+#: src/features/projects/ui/IssueAssigneesRow.tsx
+msgid "Assigned to me"
+msgstr "Mir zugewiesen"
+
+#: src/features/projects/ui/ProjectIssuesPanel.tsx
+#: src/features/projects/ui/ProjectWorkItemContextDetails.tsx
+msgid "Assignees"
+msgstr "Zugewiesene"
+
+#: src/features/projects/ui/ProjectHomeCodebasePanel.tsx
+msgid "Attach a repository to browse the file tree beside this channel."
+msgstr "Häng ein Repository an, um den Dateibaum neben diesem Kanal zu durchsuchen."
+
+#: src/features/projects/ui/ProjectCommitDetailPanel.tsx
+msgid "Author"
+msgstr "Autor"
+
+#: src/features/projects/ui/ProjectPullRequestsPanel.tsx
+msgid "authored"
+msgstr "hat verfasst"
+
 #: src/features/settings/ui/AppearanceSettingsControls.tsx
 msgid "Available in the macOS desktop app."
 msgstr "Verfügbar in der macOS-Desktop-App."
+
+#: src/features/projects/ui/PullRequestReviewersRow.tsx
+msgid "Awaiting review"
+msgstr "Wartet auf Review"
+
+#: src/features/projects/ui/ProjectWorkspaceTabList.tsx
+msgid "Back"
+msgstr "Zurück"
 
 #: src/features/settings/ui/SettingsView.tsx
 msgid "Back to app"
@@ -333,9 +849,25 @@ msgstr "Zurück zum Posteingang"
 msgid "Back to inbox list"
 msgstr "Zurück zur Posteingangsliste"
 
+#: src/features/projects/ui/CreateProjectFormContent.tsx
+msgid "Back to projects"
+msgstr "Zurück zu den Projekten"
+
+#: src/features/projects/ui/ProjectDetailUnavailableState.tsx
+msgid "Back to Projects"
+msgstr "Zurück zu den Projekten"
+
 #: src/features/channels/ui/ChannelBrowserDialog.tsx
 msgid "Back to search"
 msgstr "Zurück zur Suche"
+
+#: src/features/projects/ui/CreatePullRequestDialog.tsx
+msgid "Base"
+msgstr "Basis"
+
+#: src/features/projects/ui/CreateProjectFormContent.tsx
+msgid "bee-garden-game"
+msgstr "bee-garden-game"
 
 #: src/features/settings/ui/AppearanceSettingsControls.tsx
 msgid "Blur the desktop behind navigation while keeping content solid."
@@ -348,6 +880,27 @@ msgstr "Fett"
 #: src/features/home/ui/RecentNotesSection.tsx
 msgid "bot"
 msgstr "Bot"
+
+#: src/features/projects/ui/ProjectWorkItemContextDetails.tsx
+#: src/features/projects/ui/PullRequestMetaRail.tsx
+msgid "Branch"
+msgstr "Branch"
+
+#: src/features/projects/ui/ProjectCards.tsx
+msgid "Branch missing"
+msgstr "Branch fehlt"
+
+#: src/features/projects/ui/ProjectBranchDialogs.tsx
+msgid "Branch name"
+msgstr "Branch-Name"
+
+#: src/features/projects/lib/projectRepoAvailability.ts
+msgid "Branch unavailable"
+msgstr "Branch nicht verfügbar"
+
+#: src/features/projects/ui/ProjectRepositorySource.tsx
+msgid "Branches"
+msgstr "Branches"
 
 #: src/features/sidebar/ui/SidebarProjectsSection.tsx
 msgid "Browse all projects"
@@ -365,6 +918,11 @@ msgid "Can't reach the relay"
 msgstr "Relay nicht erreichbar"
 
 #: src/features/messages/ui/DraftsPanel.tsx
+#: src/features/projects/ui/MergePullRequestButton.tsx
+#: src/features/projects/ui/ProjectBranchDialogs.tsx
+#: src/features/projects/ui/ProjectCards.tsx
+#: src/features/projects/ui/ProjectChannelRequestDialog.tsx
+#: src/features/projects/ui/PullRequestReviewCard.tsx
 #: src/features/sidebar/ui/ChannelSectionDialogs.tsx
 #: src/features/sidebar/ui/SidebarProjectsSection.tsx
 msgid "Cancel"
@@ -377,6 +935,29 @@ msgstr "Ohne Kanal ist keine Erinnerung möglich"
 #: src/features/sidebar/ui/CreateChannelFormFields.tsx
 msgid "Canvas included"
 msgstr "Canvas enthalten"
+
+#: src/features/projects/ui/CreateProjectWorkItemDialog.tsx
+#: src/features/projects/ui/ProjectIssuesPanel.tsx
+msgid "Category"
+msgstr "Kategorie"
+
+#: src/features/projects/projectTaskCategories.ts
+msgid "Change request"
+msgstr "Änderungswunsch"
+
+#: src/features/projects/ui/ProjectCommitDetailPanel.tsx
+msgid "Changes"
+msgstr "Änderungen"
+
+#: src/features/projects/ui/ProjectsActivityFeed.tsx
+#: src/features/projects/ui/PullRequestReviewersRow.tsx
+msgid "Changes requested"
+msgstr "Änderungen angefragt"
+
+#: src/features/projects/ui/ProjectPullRequestFilesChangedPanel.tsx
+#: src/features/projects/ui/ProjectPullRequestsPanel.tsx
+msgid "Changes requested."
+msgstr "Änderungen angefragt."
 
 #: src/features/home/ui/FeedSection.tsx
 msgid "channel"
@@ -394,14 +975,28 @@ msgstr "Kanalaktionen nicht verfügbar"
 msgid "Channel activity"
 msgstr "Kanalaktivität"
 
+#: src/features/projects/ui/ProjectsChannelsList.tsx
+msgid "Channel details are unavailable"
+msgstr "Kanaldetails sind nicht verfügbar"
+
 #: src/features/settings/ui/SettingsPanels.tsx
 msgid "Channel templates"
 msgstr "Kanalvorlagen"
+
+#: src/features/projects/ui/ProjectsChannelsList.tsx
+msgid "Channel unavailable"
+msgstr "Kanal nicht verfügbar"
 
 #: src/features/home/lib/inbox.ts
 msgid "Channel update"
 msgstr "Kanal-Update"
 
+#: src/features/projects/lib/projectDetailAgentContext.ts
+#: src/features/projects/ui/ProjectHomeContextPanel.tsx
+#: src/features/projects/ui/projectsOverviewContext.ts
+#: src/features/projects/ui/ProjectsToolbar.tsx
+#: src/features/projects/ui/ProjectWorkspaceTabList.tsx
+#: src/features/projects/ui/ProjectWorkspaceTabs.tsx
 #: src/features/search/ui/TopbarSearch.tsx
 #: src/features/sidebar/ui/AppSidebar.tsx
 msgid "Channels"
@@ -415,9 +1010,89 @@ msgstr "Kanäle sind Echtzeit-Streams für die Team-Kommunikation."
 msgid "Channels you join will appear here."
 msgstr "Kanäle, denen du beitrittst, erscheinen hier."
 
+#: src/features/projects/lib/projectSelection.ts
+#: src/features/projects/ui/ProjectReadmePanel.tsx
+#: src/features/projects/ui/ProjectWorkItemCommunicationActions.tsx
+msgid "Chat with an agent"
+msgstr "Mit einem Agent chatten"
+
+#: src/features/projects/ui/ProjectsOverviewChromeActions.tsx
+msgid "Chat with an agent about {sectionTitle}"
+msgstr "Mit einem Agent über {sectionTitle} chatten"
+
+#: src/features/projects/ui/ProjectDetailScreen.tsx
+#: src/features/projects/ui/ProjectRepositorySource.tsx
+msgid "Check for remote changes"
+msgstr "Nach Remote-Änderungen suchen"
+
+#: src/features/projects/lib/projectGitError.ts
+msgid "Check that the repository link is correct and that the repository still exists."
+msgstr "Prüf, ob der Repository-Link stimmt und das Repository noch existiert."
+
+#: src/features/projects/lib/projectGitError.ts
+msgid "Check your connection and try cloning again."
+msgstr "Prüf deine Verbindung und versuch das Klonen erneut."
+
 #: src/features/settings/ui/SettingsView.tsx
 msgid "Checking invite permissions…"
 msgstr "Einladungsberechtigungen werden geprüft …"
+
+#: src/features/projects/ui/ProjectPullRequestsPanel.tsx
+msgid "Checks"
+msgstr "Checks"
+
+#: src/features/projects/ui/CreatePullRequestDialog.tsx
+msgid "Choose a base branch."
+msgstr "Wähl einen Basis-Branch."
+
+#: src/features/projects/lib/projectBranches.ts
+msgid "Choose a branch first."
+msgstr "Wähl zuerst einen Branch."
+
+#: src/features/projects/ui/CreatePullRequestDialog.tsx
+msgid "Choose a compare branch."
+msgstr "Wähl einen Vergleichs-Branch."
+
+#: src/features/projects/lib/projectGitError.ts
+msgid "Choose a different repositories directory or remove the existing checkout."
+msgstr "Wähl ein anderes Repository-Verzeichnis oder entfern den vorhandenen Checkout."
+
+#: src/features/projects/ui/PullRequestReviewersRow.tsx
+msgid "Choose a person or agent to review these changes."
+msgstr "Wähl eine Person oder einen Agent, die diese Änderungen reviewen."
+
+#: src/features/projects/ui/IssueAssigneesRow.tsx
+msgid "Choose a person or agent to work on this task."
+msgstr "Wähl eine Person oder einen Agent für diese Aufgabe."
+
+#: src/features/projects/ui/ProjectsCategoryCreateDialogs.tsx
+msgid "Choose a project for this channel."
+msgstr "Wähl ein Projekt für diesen Kanal."
+
+#: src/features/projects/ui/AddProjectRepositoryDialog.tsx
+msgid "Choose a project for this repository."
+msgstr "Wähl ein Projekt für dieses Repository."
+
+#: src/features/projects/branchMutations.ts
+msgid "Choose a remote branch."
+msgstr "Wähl einen Remote-Branch."
+
+#: src/features/projects/ui/CreatePullRequestDialog.tsx
+msgid "Choose a repository and branches to compare."
+msgstr "Wähl ein Repository und Branches zum Vergleichen."
+
+#: src/features/projects/ui/CreateProjectIssueDialog.tsx
+msgid "Choose a repository for this task."
+msgstr "Wähl ein Repository für diese Aufgabe."
+
+#: src/features/projects/ui/CreatePullRequestDialog.tsx
+msgid "Choose a repository."
+msgstr "Wähl ein Repository."
+
+#. placeholder {0}: project.name
+#: src/features/projects/ui/AttachProjectRepositoryDialog.tsx
+msgid "Choose an existing repository to add to {0}."
+msgstr "Wähl ein vorhandenes Repository, das du zu {0} hinzufügst."
 
 #: src/features/settings/ui/AppearanceSettingsPanel.tsx
 msgid "Choose how {productName} looks and feels."
@@ -444,17 +1119,66 @@ msgstr "Wähle die Hervorhebungsfarbe, die in {productName} durchgängig verwend
 msgid "Cleanup due"
 msgstr "Aufräumen fällig"
 
+#: src/features/projects/ui/ProjectSelectableGroup.tsx
+msgid "Clear all {label}"
+msgstr "Alle {label} abwählen"
+
+#: src/features/projects/ui/ProjectAgentChatPanel.tsx
+#: src/features/projects/ui/ProjectsAgentPromptPage.tsx
+msgid "Clear conversation"
+msgstr "Unterhaltung leeren"
+
+#: src/features/projects/ui/ProjectAgentChatPanel.tsx
+msgid "Clear project agent chat"
+msgstr "Projekt-Agent-Chat leeren"
+
 #: src/features/sidebar/ui/ChannelSectionDialogs.tsx
 msgid "Clear section icon"
 msgstr "Bereichssymbol entfernen"
+
+#: src/features/projects/ui/ProjectsSelectionCountMenu.tsx
+msgid "Clear selection"
+msgstr "Auswahl aufheben"
 
 #: src/features/sidebar/ui/SidebarRelayConnectionCard.tsx
 msgid "Click to connect"
 msgstr "Zum Verbinden klicken"
 
+#: src/features/projects/ui/ProjectRepositoryActionsPanel.tsx
+#: src/features/projects/ui/ProjectRepositorySource.tsx
+msgid "Clone"
+msgstr "Klonen"
+
+#: src/features/projects/ui/ProjectReadmePanel.tsx
+msgid "Clone locally"
+msgstr "Lokal klonen"
+
+#: src/features/projects/lib/projectsViewHelpers.ts
+msgid "Clone path pending"
+msgstr "Klonpfad steht noch aus"
+
+#: src/features/projects/ui/ProjectReadmePanel.tsx
+msgid "Clone this repository locally to explore its files, commits, and contributors in {productName}."
+msgstr "Klon dieses Repository lokal, um Dateien, Commits und Mitwirkende in {productName} anzusehen."
+
+#: src/features/projects/ui/AddProjectRepositoryDialog.tsx
+msgid "Clone URL"
+msgstr "Klon-URL"
+
+#: src/features/projects/ui/ProjectReadmePanel.tsx
+#: src/features/projects/ui/ProjectRepositoryActionsPanel.tsx
+#: src/features/projects/ui/ProjectRepositorySource.tsx
+msgid "Cloning…"
+msgstr "Wird geklont…"
+
 #: src/features/channels/ui/ChannelBrowserDialog.tsx
+#: src/features/projects/ui/ProjectConversationPanel.tsx
 msgid "Close"
 msgstr "Schließen"
+
+#: src/features/projects/ui/ProjectAgentContextStrip.tsx
+msgid "Close agent chat"
+msgstr "Agent-Chat schließen"
 
 #: src/shared/lib/keyboard-shortcuts.ts
 msgid "Close dialog"
@@ -464,9 +1188,49 @@ msgstr "Dialog schließen"
 msgid "Close direct message"
 msgstr "Direktnachricht schließen"
 
+#: src/features/projects/ui/ProjectsSectionSearch.tsx
+msgid "Close project search"
+msgstr "Projektsuche schließen"
+
+#: src/features/projects/ui/PullRequestReviewCard.tsx
+msgid "Close review"
+msgstr "Review schließen"
+
+#: src/features/projects/ui/ProjectsSectionSearch.tsx
+msgid "Close search"
+msgstr "Suche schließen"
+
+#: src/features/projects/lib/projectBranches.ts
+msgid "Close the branch's review before deleting it."
+msgstr "Schließ den Review des Branch, bevor du ihn löschst."
+
 #: src/shared/lib/keyboard-shortcuts.ts
 msgid "Close the current dialog or settings"
 msgstr "Den aktuellen Dialog oder die Einstellungen schließen"
+
+#: src/features/projects/ui/ProjectReadmePanel.tsx
+msgid "Code hosted on {externalHost}"
+msgstr "Code liegt auf {externalHost}"
+
+#: src/features/projects/ui/ProjectHomeContextPanel.tsx
+msgid "Codebase"
+msgstr "Codebasis"
+
+#: src/features/projects/ui/CreateProjectFormSettings.tsx
+msgid "Coding agent"
+msgstr "Coding-Agent"
+
+#: src/features/projects/ui/CreateProjectFormSettings.tsx
+msgid "Coding agent: {agentLabel}"
+msgstr "Coding-Agent: {agentLabel}"
+
+#: src/features/projects/ui/ProjectIssueCommentTimeline.tsx
+msgid "Collapse comment history"
+msgstr "Kommentarverlauf einklappen"
+
+#: src/features/projects/ui/ProjectPullRequestsPanel.tsx
+msgid "Collapse review history"
+msgstr "Review-Verlauf einklappen"
 
 #: src/features/settings/ui/AppearanceSettingsPanel.tsx
 msgid "Color mode"
@@ -475,6 +1239,63 @@ msgstr "Farbmodus"
 #: src/features/settings/ui/AppearanceSettingsControls.tsx
 msgid "Comfy"
 msgstr "Bequem"
+
+#. placeholder {0}: anchor.path
+#. placeholder {1}: anchor.side
+#. placeholder {2}: anchor.line
+#: src/features/projects/ui/ProjectPullRequestFilesChangedPanel.tsx
+msgid "Comment on {0} {1} line {2}"
+msgstr "Kommentar zu {0} {1} Zeile {2}"
+
+#: src/features/projects/ui/ProjectPullRequestsPanel.tsx
+msgid "Comment posted."
+msgstr "Kommentar gepostet."
+
+#: src/features/projects/ui/ProjectsActivityFeed.tsx
+msgid "commented on a review in"
+msgstr "hat einen Review kommentiert in"
+
+#: src/features/projects/ui/ProjectWorkItemContextDetails.tsx
+msgid "Comments"
+msgstr "Kommentare"
+
+#: src/features/projects/ui/ProjectCommitDetailPanel.tsx
+msgid "Commit"
+msgstr "Commit"
+
+#: src/features/projects/lib/projectDetailAgentContext.ts
+#: src/features/projects/ui/ProjectHomeContextPanel.tsx
+#: src/features/projects/ui/ProjectPullRequestsPanel.tsx
+#: src/features/projects/ui/ProjectWorkspaceTabList.tsx
+#: src/features/projects/ui/ProjectWorkspaceTabs.tsx
+msgid "Commits"
+msgstr "Commits"
+
+#: src/features/projects/ui/ProjectDetailFeedPanels.tsx
+#: src/features/projects/ui/ProjectHomeCommitsPanel.tsx
+msgid "Commits pushed to this project's repositories will appear here."
+msgstr "Commits, die in die Repositories dieses Projekts gepusht werden, erscheinen hier."
+
+#: src/features/projects/ui/ProjectDetailFeedPanels.tsx
+msgid "Commits pushed to this repository will appear here."
+msgstr "Commits, die in dieses Repository gepusht werden, erscheinen hier."
+
+#: src/features/projects/ui/ProjectRepositoryPanel.tsx
+msgid "committed"
+msgstr "hat committet"
+
+#: src/features/projects/ui/ProjectCommitDetailPanel.tsx
+msgid "Committed"
+msgstr "Committet"
+
+#: src/features/projects/ui/ProjectDetailFeedPanels.tsx
+msgid "Committed by {authorLabel}"
+msgstr "Committet von {authorLabel}"
+
+#. placeholder {0}: matchingContributor.commitCount
+#: src/features/projects/ui/ProjectDetailFeedPanels.tsx
+msgid "Committed by {authorLabel} · {0, plural, one {# commit} other {# commits}}"
+msgstr "Committet von {authorLabel} · {0, plural, one {# Commit} other {# Commits}}"
 
 #: src/features/settings/ui/SettingsView.tsx
 #: src/features/sidebar/ui/CommunityRail.tsx
@@ -489,13 +1310,26 @@ msgstr "Community-Einstellungen"
 msgid "Compact"
 msgstr "Kompakt"
 
+#: src/features/projects/ui/CreatePullRequestDialog.tsx
+msgid "Compare"
+msgstr "Vergleichen"
+
 #: src/features/sidebar/ui/SidebarRelayConnectionCard.tsx
 msgid "Complete any prompts opened by the reconnect helper to continue."
 msgstr "Bestätige die Abfragen des Verbindungshelfers, um fortzufahren."
 
+#: src/features/projects/ui/ProjectRepositoryActionsPanel.tsx
+#: src/features/projects/ui/projectsOverviewContext.ts
+msgid "Completed"
+msgstr "Erledigt"
+
 #: src/features/settings/ui/SettingsPanels.tsx
 msgid "Compute"
 msgstr "Rechenleistung"
+
+#: src/features/projects/ui/ProjectBrowserDialog.tsx
+msgid "Configure its repository and access options"
+msgstr "Repository und Zugriffsoptionen einrichten"
 
 #: src/features/onboarding/ui/MachineOnboardingFlow.tsx
 msgid "Confirm the code before sharing your identity."
@@ -517,9 +1351,28 @@ msgstr "Verbindung wird hergestellt"
 msgid "Continue setup"
 msgstr "Einrichtung fortsetzen"
 
+#: src/features/projects/lib/projectDetailAgentContext.ts
+#: src/features/projects/ui/ProjectRepositoryActionsPanel.tsx
+#: src/features/projects/ui/ProjectWorkspaceTabList.tsx
+#: src/features/projects/ui/ProjectWorkspaceTabs.tsx
+msgid "Contributors"
+msgstr "Mitwirkende"
+
+#: src/features/projects/ui/ProjectDetailFeedPanels.tsx
+msgid "Contributors appear after signed project or repository activity."
+msgstr "Mitwirkende erscheinen nach signierter Projekt- oder Repository-Aktivität."
+
 #: src/features/settings/ui/AppearanceSettingsControls.tsx
 msgid "Conversation density"
 msgstr "Dichte der Unterhaltungen"
+
+#: src/features/projects/ui/PullRequestReviewCard.tsx
+msgid "Convert to draft"
+msgstr "In Entwurf umwandeln"
+
+#: src/features/projects/ui/PullRequestReviewCard.tsx
+msgid "Converted to draft."
+msgstr "In Entwurf umgewandelt."
 
 #: src/features/sidebar/ui/ChannelContextMenu.tsx
 msgid "Copy"
@@ -533,6 +1386,18 @@ msgstr "Kanal-ID kopieren"
 msgid "Copy channel name"
 msgstr "Kanalname kopieren"
 
+#: src/features/projects/ui/MergePullRequestButton.tsx
+msgid "Copy commands"
+msgstr "Befehle kopieren"
+
+#: src/features/projects/ui/ProjectCommitCopyButton.tsx
+msgid "Copy commit hash"
+msgstr "Commit-Hash kopieren"
+
+#: src/features/projects/ui/ProjectCommitDetailPanel.tsx
+msgid "Copy commit link"
+msgstr "Commit-Link kopieren"
+
 #: src/features/sidebar/ui/CommunityRail.tsx
 msgid "Copy community URL"
 msgstr "Community-URL kopieren"
@@ -541,9 +1406,65 @@ msgstr "Community-URL kopieren"
 msgid "Copy link"
 msgstr "Link kopieren"
 
+#: src/features/projects/ui/ProjectPullRequestsPanel.tsx
+#: src/features/projects/ui/ProjectsPullRequestsList.tsx
+msgid "Copy review link"
+msgstr "Review-Link kopieren"
+
+#: src/features/projects/ui/ProjectIssuesPanel.tsx
+#: src/features/projects/ui/ProjectsIssuesList.tsx
+msgid "Copy task link"
+msgstr "Aufgaben-Link kopieren"
+
+#: src/features/projects/ui/ProjectPullRequestFilesChangedPanel.tsx
+msgid "Could not load changed files for this {subjectLabel}."
+msgstr "Geänderte Dateien für {subjectLabel} konnten nicht geladen werden."
+
+#: src/features/projects/ui/ProjectDetailFeedPanels.tsx
+msgid "Could not load commits"
+msgstr "Commits konnten nicht geladen werden"
+
+#: src/features/projects/ui/ProjectsPullRequestsList.tsx
+#: src/features/projects/ui/PullRequestsPanelSurface.tsx
+msgid "Could not load reviews"
+msgstr "Reviews konnten nicht geladen werden"
+
+#: src/features/projects/ui/ProjectIssuesPanel.tsx
+#: src/features/projects/ui/ProjectsIssuesList.tsx
+msgid "Could not load tasks"
+msgstr "Aufgaben konnten nicht geladen werden"
+
+#: src/features/projects/ui/ProjectReadmePanel.tsx
+msgid "Could not load the README"
+msgstr "README konnte nicht geladen werden"
+
+#: src/features/projects/ui/ProjectRepositoryPanel.tsx
+msgid "Could not load the repository file tree."
+msgstr "Der Dateibaum des Repositorys konnte nicht geladen werden."
+
+#: src/features/projects/ui/ProjectRepositoryPanel.tsx
+msgid "Could not load this file. Try again after refreshing the repository."
+msgstr "Diese Datei konnte nicht geladen werden. Aktualisiere das Repository und versuch es erneut."
+
 #: src/features/home/ui/ProjectInboxDetail.tsx
 msgid "Could not load this project item."
 msgstr "Dieser Projekteintrag konnte nicht geladen werden."
+
+#: src/features/projects/lib/projectGitError.ts
+msgid "Couldn’t clone repository"
+msgstr "Repository konnte nicht geklont werden"
+
+#: src/features/projects/ui/useOpenProjectTerminal.ts
+msgid "Couldn’t open terminal"
+msgstr "Terminal konnte nicht geöffnet werden"
+
+#: src/features/projects/lib/projectRepoAvailability.ts
+msgid "Couldn’t reach repository"
+msgstr "Repository nicht erreichbar"
+
+#: src/features/projects/lib/projectGitError.ts
+msgid "Couldn’t reach the repository"
+msgstr "Das Repository war nicht erreichbar"
 
 #: src/features/home/ui/InboxDetailPane.tsx
 #: src/features/home/ui/InboxListPane.tsx
@@ -553,6 +1474,10 @@ msgstr "Öffnen fehlgeschlagen"
 #: src/features/sidebar/ui/ChannelSectionDialogs.tsx
 msgid "Create"
 msgstr "Anlegen"
+
+#: src/features/projects/ui/CreateProjectWorkItemDialog.tsx
+msgid "Create {itemLabel}"
+msgstr "{itemLabel} anlegen"
 
 #: src/features/search/ui/TopbarSearch.tsx
 msgid "Create a new agent"
@@ -573,10 +1498,46 @@ msgstr "Neues Forum anlegen"
 msgid "Create a new identity key"
 msgstr "Neuen Identitätsschlüssel erstellen"
 
+#: src/features/projects/ui/CreateProjectFormContent.tsx
+#: src/features/projects/ui/ProjectBrowserDialog.tsx
+msgid "Create a new project"
+msgstr "Neues Projekt anlegen"
+
 #: src/features/onboarding/ui/IdentityKeyIntroduction.tsx
 msgid "Create a private identity key"
 msgstr "Privaten Identitätsschlüssel erstellen"
 
+#: src/features/projects/ui/ProjectChannelManagement.tsx
+#: src/features/projects/ui/ProjectsCategoryCreateDialogs.tsx
+msgid "Create a project channel"
+msgstr "Projektkanal anlegen"
+
+#: src/features/projects/ui/ProjectDetailScreen.tsx
+msgid "Create a remote branch"
+msgstr "Remote-Branch anlegen"
+
+#: src/features/projects/ui/ProjectBranchDialogs.tsx
+msgid "Create a remote branch from"
+msgstr "Remote-Branch anlegen von"
+
+#: src/features/projects/ui/CreateIssueDialog.tsx
+#: src/features/projects/ui/CreateProjectIssueDialog.tsx
+msgid "Create a task"
+msgstr "Aufgabe anlegen"
+
+#: src/features/projects/ui/CreateIssueDialog.tsx
+msgid "Create a task in {projectName}"
+msgstr "Aufgabe in {projectName} anlegen"
+
+#: src/features/projects/ui/ProjectBranchDialogs.tsx
+msgid "Create branch"
+msgstr "Branch anlegen"
+
+#: src/features/projects/ui/ProjectRepositorySource.tsx
+msgid "Create branch…"
+msgstr "Branch anlegen…"
+
+#: src/features/projects/ui/ProjectChannelRequestDialog.tsx
 #: src/features/sidebar/ui/CustomChannelSection.tsx
 msgid "Create channel"
 msgstr "Kanal anlegen"
@@ -585,9 +1546,37 @@ msgstr "Kanal anlegen"
 msgid "Create my private key"
 msgstr "Meinen privaten Schlüssel erstellen"
 
+#: src/features/projects/ui/CreateProjectFormSettings.tsx
 #: src/features/sidebar/ui/CreateChannelFormFields.tsx
 msgid "Create new channel template…"
 msgstr "Neue Kanalvorlage anlegen …"
+
+#: src/features/projects/ui/ProjectRepositoryManagement.tsx
+msgid "Create new repository"
+msgstr "Neues Repository anlegen"
+
+#: src/features/projects/ui/CreateProjectFormContent.tsx
+#: src/features/projects/ui/ProjectCards.tsx
+#: src/features/projects/ui/projectsOverviewContext.ts
+msgid "Create project"
+msgstr "Projekt anlegen"
+
+#: src/features/projects/ui/ProjectChannelRequestDialog.tsx
+msgid "Create project channel?"
+msgstr "Projektkanal anlegen?"
+
+#: src/features/projects/ui/ProjectHomeWorkspaceSheet.tsx
+#: src/features/projects/ui/ProjectRepositoryActionsPanel.tsx
+#: src/features/projects/ui/projectsOverviewContext.ts
+#: src/features/projects/ui/ProjectWorkspaceTabs.tsx
+msgid "Create review"
+msgstr "Review anlegen"
+
+#: src/features/projects/ui/ProjectHomeWorkspaceSheet.tsx
+#: src/features/projects/ui/ProjectRepositoryActionsPanel.tsx
+#: src/features/projects/ui/ProjectWorkspaceTabs.tsx
+msgid "Create review — choose a repository and branches to compare"
+msgstr "Review anlegen — wähl ein Repository und Branches zum Vergleichen"
 
 #: src/features/sidebar/ui/ChannelSectionDialogs.tsx
 msgid "Create section"
@@ -597,13 +1586,43 @@ msgstr "Bereich anlegen"
 msgid "Create subsection"
 msgstr "Unterbereich anlegen"
 
+#: src/features/projects/ui/ProjectHomeWorkspaceSheet.tsx
+#: src/features/projects/ui/ProjectRepositoryActionsPanel.tsx
+#: src/features/projects/ui/projectsOverviewContext.ts
+#: src/features/projects/ui/ProjectWorkspaceTabs.tsx
+msgid "Create task"
+msgstr "Aufgabe anlegen"
+
+#: src/features/projects/lib/projectBranches.ts
+msgid "Create the repository's first commit before creating another branch."
+msgstr "Leg den ersten Commit des Repositorys an, bevor du einen weiteren Branch anlegst."
+
+#: src/features/projects/ui/ProjectIssuesPanel.tsx
+msgid "Created by {authorLabel}"
+msgstr "Angelegt von {authorLabel}"
+
+#: src/features/projects/ui/ProjectsListHeaderBar.tsx
+msgid "Created date"
+msgstr "Erstellungsdatum"
+
 #: src/features/onboarding/ui/IdentityKeyIntroduction.tsx
 msgid "Creating key…"
 msgstr "Schlüssel wird erstellt…"
 
+#: src/features/projects/ui/CreateProjectFormContent.tsx
+#: src/features/projects/ui/CreateProjectWorkItemDialog.tsx
+#: src/features/projects/ui/ProjectBranchDialogs.tsx
+#: src/features/projects/ui/ProjectChannelRequestDialog.tsx
+msgid "Creating…"
+msgstr "Wird angelegt…"
+
 #: src/features/sidebar/ui/AppSidebar.tsx
 msgid "Current identity"
 msgstr "Aktuelle Identität"
+
+#: src/features/projects/lib/projectsActivityDigest.ts
+msgid "Currently tracking"
+msgstr "Aktuell erfasst"
 
 #: src/features/settings/ui/SettingsPanels.tsx
 msgid "Custom emoji"
@@ -613,6 +1632,10 @@ msgstr "Eigene Emojis"
 msgid "Dark"
 msgstr "Dunkel"
 
+#: src/features/projects/ui/ProjectCommitDetailPanel.tsx
+msgid "Date"
+msgstr "Datum"
+
 #: src/shared/lib/keyboard-shortcuts.ts
 msgid "Decrease the zoom level"
 msgstr "Die Zoomstufe verringern"
@@ -621,7 +1644,16 @@ msgstr "Die Zoomstufe verringern"
 msgid "Default"
 msgstr "Standard"
 
+#: src/features/projects/ui/PullRequestMetaRail.tsx
+msgid "default branch"
+msgstr "Standard-Branch"
+
+#: src/features/projects/ui/ProjectWorkItemContextDetails.tsx
+msgid "Default branch"
+msgstr "Standard-Branch"
+
 #: src/features/messages/ui/DraftDetailPane.tsx
+#: src/features/projects/ui/ProjectRepositorySource.tsx
 #: src/features/sidebar/ui/ChannelSectionDialogs.tsx
 msgid "Delete"
 msgstr "Löschen"
@@ -631,10 +1663,20 @@ msgstr "Löschen"
 msgid "Delete {0}"
 msgstr "{0} löschen"
 
+#. placeholder {0}: project.name
 #. placeholder {0}: projectToDelete?.name
+#: src/features/projects/ui/ProjectCards.tsx
 #: src/features/sidebar/ui/SidebarProjectsSection.tsx
 msgid "Delete {0} from Projects for everyone. This can only be done for projects you own and cannot be undone."
 msgstr "{0} für alle aus den Projekten löschen. Das ist nur für eigene Projekte möglich und kann nicht rückgängig gemacht werden."
+
+#: src/features/projects/ui/ProjectBranchDialogs.tsx
+msgid "Delete branch"
+msgstr "Branch löschen"
+
+#: src/features/projects/ui/ProjectBranchDialogs.tsx
+msgid "Delete branch?"
+msgstr "Branch löschen?"
 
 #: src/features/sidebar/ui/ChannelContextMenu.tsx
 msgid "Delete channel"
@@ -648,10 +1690,12 @@ msgstr "Entwurf löschen"
 msgid "Delete message"
 msgstr "Nachricht löschen"
 
+#: src/features/projects/ui/ProjectCards.tsx
 #: src/features/sidebar/ui/SidebarProjectsSection.tsx
 msgid "Delete project"
 msgstr "Projekt löschen"
 
+#: src/features/projects/ui/ProjectCards.tsx
 #: src/features/sidebar/ui/SidebarProjectsSection.tsx
 msgid "Delete project?"
 msgstr "Projekt löschen?"
@@ -665,13 +1709,36 @@ msgstr "Bereich löschen"
 msgid "Delete section \"{sectionName}\"? It has no channels."
 msgstr "Bereich „{sectionName}“ löschen? Er enthält keine Kanäle."
 
+#: src/features/projects/ui/ProjectBranchDialogs.tsx
+msgid "Delete the remote branch"
+msgstr "Remote-Branch löschen"
+
+#: src/features/projects/ui/ProjectDetailScreen.tsx
+msgid "Delete this remote branch"
+msgstr "Diesen Remote-Branch löschen"
+
 #: src/features/sidebar/ui/SidebarProjectsSection.tsx
 msgid "Deleting..."
 msgstr "Wird gelöscht …"
 
+#: src/features/projects/ui/ProjectBranchDialogs.tsx
+#: src/features/projects/ui/ProjectCards.tsx
+msgid "Deleting…"
+msgstr "Wird gelöscht…"
+
+#: src/features/projects/ui/CreateProjectFormContent.tsx
+#: src/features/projects/ui/CreateProjectWorkItemDialog.tsx
+#: src/features/projects/ui/ProjectChannelRequestDialog.tsx
+#: src/features/projects/ui/ProjectCommitDetailPanel.tsx
+#: src/features/projects/ui/ProjectIssuesPanel.tsx
+#: src/features/projects/ui/ProjectPullRequestsPanel.tsx
 #: src/features/sidebar/ui/CreateChannelFormFields.tsx
 msgid "Description"
 msgstr "Beschreibung"
+
+#: src/features/projects/ui/ProjectRepositoryActionsPanel.tsx
+msgid "Details"
+msgstr "Details"
 
 #: src/features/search/ui/TopbarSearch.tsx
 msgid "Direct message"
@@ -685,6 +1752,15 @@ msgstr "Direktnachricht mit {destination}"
 #: src/features/sidebar/ui/AppSidebar.tsx
 msgid "Direct messages"
 msgstr "Direktnachrichten"
+
+#: src/features/projects/lib/projectSelection.ts
+#: src/features/projects/ui/ProjectSelectionDiscussAction.tsx
+msgid "Discuss in a channel"
+msgstr "In einem Kanal besprechen"
+
+#: src/features/projects/lib/projectLabels.ts
+msgid "Discussion linked"
+msgstr "Diskussion verknüpft"
 
 #: src/features/sidebar/ui/SidebarRelayConnectionCard.tsx
 msgid "Dismiss relay notification"
@@ -703,6 +1779,10 @@ msgstr "DM von {0}"
 msgid "Draft"
 msgstr "Entwurf"
 
+#: src/features/projects/projectPullRequests.mjs
+msgid "Draft reviews cannot be merged."
+msgstr "Entwurfs-Reviews können nicht zusammengeführt werden."
+
 #: src/features/home/ui/InboxFilterMenu.tsx
 #: src/features/messages/ui/DraftsPanel.tsx
 msgid "Drafts"
@@ -716,6 +1796,14 @@ msgstr "Zum Ändern der Breite ziehen."
 msgid "Drag to resize. Double-click to reset width."
 msgstr "Zum Ändern der Breite ziehen. Doppelklick setzt die Breite zurück."
 
+#: src/features/projects/ui/ProjectsActivityFeed.tsx
+msgid "Earlier"
+msgstr "Früher"
+
+#: src/features/projects/ui/PullRequestReviewersRow.tsx
+msgid "Earlier decision applies to another commit"
+msgstr "Eine frühere Entscheidung gilt für einen anderen Commit"
+
 #: src/features/messages/ui/DraftsPanel.tsx
 msgid "Empty draft"
 msgstr "Leerer Entwurf"
@@ -723,6 +1811,10 @@ msgstr "Leerer Entwurf"
 #: src/features/sidebar/ui/ChannelSectionDialogs.tsx
 msgid "Enter a new name for this section."
 msgstr "Gib einen neuen Namen für diesen Bereich ein."
+
+#: src/features/projects/lib/projectBranches.ts
+msgid "Enter a valid Git branch name."
+msgstr "Gib einen gültigen Git-Branch-Namen ein."
 
 #: src/features/onboarding/ui/MachineOnboardingFlow.tsx
 msgid "Enter your backup password to restore your identity."
@@ -752,6 +1844,10 @@ msgstr "Temporärer Kanal. Wird nach Inaktivität automatisch aufgeräumt."
 msgid "Ephemeral channel. Cleanup is due now."
 msgstr "Temporärer Kanal. Das Aufräumen ist jetzt fällig."
 
+#: src/features/projects/ui/AttachProjectRepositoryDialog.tsx
+msgid "Every available repository is already in this project."
+msgstr "Jedes verfügbare Repository ist schon in diesem Projekt."
+
 #: src/features/search/ui/SearchPromptPlaceholder.tsx
 msgid "everything"
 msgstr "allem"
@@ -760,6 +1856,39 @@ msgstr "allem"
 msgid "Experiments"
 msgstr "Experimente"
 
+#: src/features/projects/ui/ProjectAgentChatPanel.tsx
+msgid "Explain what this project should be"
+msgstr "Beschreib, was dieses Projekt sein soll"
+
+#: src/features/projects/ui/AddProjectRepositoryDialog.tsx
+msgid "Failed to add repository."
+msgstr "Repository konnte nicht hinzugefügt werden."
+
+#: src/features/projects/ui/IssueAssigneesRow.tsx
+msgid "Failed to assign task."
+msgstr "Aufgabe konnte nicht zugewiesen werden."
+
+#: src/features/projects/ui/AttachProjectRepositoryDialog.tsx
+msgid "Failed to attach repository."
+msgstr "Repository konnte nicht angehängt werden."
+
+#: src/features/projects/ui/CreateProjectWorkItemDialog.tsx
+msgid "Failed to create {itemLabel}."
+msgstr "{itemLabel} konnte nicht angelegt werden."
+
+#: src/features/projects/ui/CreateProjectFormContent.tsx
+msgid "Failed to create project."
+msgstr "Projekt konnte nicht angelegt werden."
+
+#: src/features/projects/useProjectChannelRequests.ts
+msgid "Failed to create the project channel."
+msgstr "Der Projektkanal konnte nicht angelegt werden."
+
+#: src/features/projects/useAddProjectRepository.ts
+msgid "Failed to create the repository."
+msgstr "Das Repository konnte nicht angelegt werden."
+
+#: src/features/projects/ui/projectsViewWorkItems.ts
 #: src/features/sidebar/ui/SidebarProjectsSection.tsx
 msgid "Failed to delete project"
 msgstr "Projekt konnte nicht gelöscht werden"
@@ -768,9 +1897,102 @@ msgstr "Projekt konnte nicht gelöscht werden"
 msgid "Failed to load identity"
 msgstr "Identität konnte nicht geladen werden"
 
+#: src/features/projects/ui/ProjectDetailUnavailableState.tsx
+msgid "Failed to load project"
+msgstr "Projekt konnte nicht geladen werden"
+
+#: src/features/projects/ui/ProjectsView.tsx
+msgid "Failed to load projects"
+msgstr "Projekte konnten nicht geladen werden"
+
+#: src/features/projects/ui/MergePullRequestButton.tsx
+msgid "Failed to merge review."
+msgstr "Review konnte nicht zusammengeführt werden."
+
+#: src/features/projects/ui/ProjectIssuesPanel.tsx
+#: src/features/projects/ui/ProjectPullRequestsPanel.tsx
+msgid "Failed to post comment."
+msgstr "Kommentar konnte nicht gepostet werden."
+
+#: src/features/projects/ui/ProjectPullRequestFilesChangedPanel.tsx
+msgid "Failed to post line comment."
+msgstr "Zeilenkommentar konnte nicht gepostet werden."
+
+#: src/features/projects/ui/MergePullRequestButton.tsx
+msgid "Failed to prepare merge recovery."
+msgstr "Die Merge-Wiederherstellung konnte nicht vorbereitet werden."
+
+#: src/features/projects/ui/MergePullRequestButton.tsx
+msgid "Failed to publish merged review status."
+msgstr "Der zusammengeführte Review-Status konnte nicht veröffentlicht werden."
+
+#: src/features/projects/ui/ProjectDetailScreen.tsx
+msgid "Failed to pull repository"
+msgstr "Repository konnte nicht gepullt werden"
+
+#: src/features/projects/ui/ProjectDetailScreen.tsx
+msgid "Failed to push repository"
+msgstr "Repository konnte nicht gepusht werden"
+
+#: src/features/projects/ui/ProjectAgentChatPanel.tsx
+#: src/features/projects/ui/ProjectsAgentPromptPage.tsx
+msgid "Failed to reach the agent"
+msgstr "Agent nicht erreichbar"
+
+#: src/features/projects/ui/PullRequestReviewersRow.tsx
+msgid "Failed to request review."
+msgstr "Review konnte nicht angefragt werden."
+
 #: src/features/onboarding/ui/MachineOnboardingFlow.tsx
 msgid "Failed to save identity"
 msgstr "Identität konnte nicht gespeichert werden"
+
+#: src/features/projects/ui/IssueAssigneesRow.tsx
+msgid "Failed to unassign task."
+msgstr "Aufgabenzuweisung konnte nicht aufgehoben werden."
+
+#: src/features/projects/ui/ProjectRepositoryManagement.tsx
+msgid "Failed to update repository access."
+msgstr "Repository-Zugriff konnte nicht aktualisiert werden."
+
+#: src/features/projects/ui/ProjectDetailScreen.tsx
+msgid "Failed to update review"
+msgstr "Review konnte nicht aktualisiert werden"
+
+#: src/features/projects/ui/PullRequestReviewCard.tsx
+msgid "Failed to update status."
+msgstr "Status konnte nicht aktualisiert werden."
+
+#: src/features/projects/ui/ProjectBranchDialogs.tsx
+msgid "feature/my-change"
+msgstr "feature/my-change"
+
+#: src/features/projects/ui/ProjectRepositoryActionsPanel.tsx
+#: src/features/projects/ui/ProjectRepositorySource.tsx
+msgid "Fetch"
+msgstr "Fetch"
+
+#: src/features/projects/lib/projectDetailAgentContext.ts
+#: src/features/projects/ui/ProjectHomeContextPanel.tsx
+#: src/features/projects/ui/ProjectRepositoryActionsPanel.tsx
+#: src/features/projects/ui/ProjectRepositoryPanel.tsx
+#: src/features/projects/ui/ProjectWorkspaceTabList.tsx
+#: src/features/projects/ui/ProjectWorkspaceTabs.tsx
+msgid "Files"
+msgstr "Dateien"
+
+#: src/features/projects/ui/ProjectCommitDetailPanel.tsx
+#: src/features/projects/ui/ProjectPullRequestsPanel.tsx
+msgid "Files changed"
+msgstr "Geänderte Dateien"
+
+#: src/features/projects/ui/ProjectRepositoryPanel.tsx
+msgid "Files pushed to this repository will appear here."
+msgstr "Dateien, die in dieses Repository gepusht werden, erscheinen hier."
+
+#: src/features/projects/ui/ProjectPullRequestFilesChangedPanel.tsx
+msgid "Filter files…"
+msgstr "Dateien filtern…"
 
 #: src/features/home/ui/InboxFilterMenu.tsx
 msgid "Filter inbox: {activeLabel}"
@@ -796,6 +2018,7 @@ msgstr "Dem System folgen oder eine helle bzw. dunkle Darstellung wählen."
 msgid "Font size"
 msgstr "Schriftgröße"
 
+#: src/features/projects/ui/ProjectsAgentPromptPage.tsx
 #: src/shared/lib/keyboard-shortcuts.ts
 msgid "Formatting"
 msgstr "Formatierung"
@@ -830,6 +2053,15 @@ msgstr "Foren organisieren Diskussionen rund um ein Thema in Threads."
 msgid "Forums you join will appear here."
 msgstr "Foren, denen du beitrittst, erscheinen hier."
 
+#: src/features/projects/ui/ProjectDetailFeedPanels.tsx
+msgid "Git contributor"
+msgstr "Git-Mitwirkender"
+
+#. placeholder {0}: host.host
+#: src/features/projects/ui/RepositoryCards.tsx
+msgid "Git data hosted on {0}"
+msgstr "Git-Daten auf {0}"
+
 #: src/features/settings/ui/AppearanceSettingsControls.tsx
 msgid "Give the selected navigation item a higher-contrast background."
 msgstr "Dem ausgewählten Navigationseintrag einen kontrastreicheren Hintergrund geben."
@@ -849,6 +2081,28 @@ msgstr "Zurück"
 #: src/shared/lib/keyboard-shortcuts.ts
 msgid "Go forward"
 msgstr "Vorwärts"
+
+#: src/features/projects/ui/ProjectsToolbar.tsx
+msgid "Grid layout"
+msgstr "Rasterlayout"
+
+#: src/features/projects/ui/ProjectRightPanelControls.tsx
+msgid "Hide {productName} Term"
+msgstr "{productName}-Terminal ausblenden"
+
+#: src/features/projects/ui/ProjectRightPanelControls.tsx
+msgid "Hide project chat"
+msgstr "Projekt-Chat ausblenden"
+
+#: src/features/projects/ui/ProjectRightPanelControls.tsx
+#: src/features/projects/ui/ProjectsOverviewChromeActions.tsx
+#: src/features/projects/ui/ProjectsOverviewContextSheet.tsx
+msgid "Hide project context"
+msgstr "Projektkontext ausblenden"
+
+#: src/features/projects/ui/ProjectAgentSubmittedContextPill.tsx
+msgid "Hide sent context"
+msgstr "Gesendeten Kontext ausblenden"
 
 #: src/features/settings/ui/AppearanceSettingsControls.tsx
 msgid "Highlights from this release: refreshed conversation layout, quicker link handling, and readability improvements."
@@ -870,9 +2124,17 @@ msgstr "Start-Feed nicht verfügbar"
 msgid "Hosted communities"
 msgstr "Gehostete Communitys"
 
+#: src/features/projects/ui/AddProjectRepositoryDialog.tsx
+msgid "https://relay.example.com/git/mobile-app.git"
+msgstr "https://relay.example.com/git/mobile-app.git"
+
 #: src/features/settings/ui/AppearanceSettingsControls.tsx
 msgid "I added a longer message so you can compare line height and text spacing."
 msgstr "Ich habe eine längere Nachricht hinzugefügt, damit du Zeilenhöhe und Textabstände vergleichen kannst."
+
+#: src/features/projects/projectTaskCategories.ts
+msgid "Improvement"
+msgstr "Verbesserung"
 
 #: src/shared/lib/relativeTime.ts
 msgid "in less than a minute"
@@ -918,6 +2180,14 @@ msgstr "Zur Community einladen"
 msgid "Invites"
 msgstr "Einladungen"
 
+#: src/features/projects/ui/ProjectsAgentPromptPage.tsx
+msgid "is working…"
+msgstr "arbeitet…"
+
+#: src/features/projects/projectTaskCategories.ts
+msgid "Issue"
+msgstr "Issue"
+
 #: src/shared/lib/keyboard-shortcuts.ts
 msgid "Italic"
 msgstr "Kursiv"
@@ -959,6 +2229,11 @@ msgstr "gerade eben"
 msgid "Keyboard shortcuts"
 msgstr "Tastaturkürzel"
 
+#: src/features/projects/ui/ProjectIssuesPanel.tsx
+#: src/features/projects/ui/PullRequestMetaRail.tsx
+msgid "Labels"
+msgstr "Labels"
+
 #: src/features/settings/ui/LanguageSettingsControl.tsx
 msgid "Language"
 msgstr "Sprache"
@@ -967,6 +2242,11 @@ msgstr "Sprache"
 msgid "Language used across menus, settings, and system messages"
 msgstr "Sprache für Menüs, Einstellungen und Systemmeldungen"
 
+#. placeholder {0}: rows.length
+#: src/features/projects/ui/ProjectPullRequestFilesChangedPanel.tsx
+msgid "Large diff truncated — showing the first {0} lines. Use a local checkout to review the full change."
+msgstr "Diff gekürzt — die ersten {0} Zeilen. Nutz einen lokalen Checkout, um die ganze Änderung zu prüfen."
+
 #: src/features/settings/ui/AppearanceSettingsControls.tsx
 msgid "Large previews with images and descriptions"
 msgstr "Große Vorschauen mit Bildern und Beschreibungen"
@@ -974,6 +2254,12 @@ msgstr "Große Vorschauen mit Bildern und Beschreibungen"
 #: src/features/settings/ui/AppearanceSettingsControls.tsx
 msgid "Larger"
 msgstr "Größer"
+
+#. placeholder {0}: formatLastChangedAt(file.lastChangedAt, locale)
+#: src/features/projects/ui/ProjectReadmePanel.tsx
+#: src/features/projects/ui/ProjectRepositoryPanel.tsx
+msgid "Last changed {0}"
+msgstr "Zuletzt geändert {0}"
 
 #: src/features/profile/ui/UserProfilePanelTabs.tsx
 msgid "Last live {label}"
@@ -992,6 +2278,14 @@ msgstr "Zuletzt aktualisiert {0}"
 msgid "Last updated {when}"
 msgstr "Zuletzt aktualisiert {when}"
 
+#: src/features/projects/ui/ProjectsActivityFeed.tsx
+msgid "Last week"
+msgstr "Letzte Woche"
+
+#: src/features/projects/ui/ProjectRepositoryActionsPanel.tsx
+msgid "Latest"
+msgstr "Neueste"
+
 #: src/features/onboarding/ui/IdentityKeyHelpDialog.tsx
 msgid "Learn how identity keys work"
 msgstr "So funktionieren Identitätsschlüssel"
@@ -1000,14 +2294,34 @@ msgstr "So funktionieren Identitätsschlüssel"
 msgid "Leave"
 msgstr "Verlassen"
 
+#: src/features/projects/ui/ProjectPullRequestInlineComments.tsx
+msgid "Leave a comment on this line…"
+msgstr "Kommentar zu dieser Zeile…"
+
 #: src/features/sidebar/ui/ChannelContextMenu.tsx
 #: src/features/sidebar/ui/ChannelSectionDialogs.tsx
 msgid "Leave channel"
 msgstr "Kanal verlassen"
 
+#: src/features/projects/ui/ProjectChannelRequestDialog.tsx
+msgid "Lifetime"
+msgstr "Lebensdauer"
+
 #: src/features/settings/ui/AppearanceSettingsPanel.tsx
 msgid "Light"
 msgstr "Hell"
+
+#: src/features/projects/ui/ProjectPullRequestFilesChangedPanel.tsx
+msgid "Line comment posted."
+msgstr "Zeilenkommentar gepostet."
+
+#: src/features/projects/ui/ProjectsChannelsList.tsx
+msgid "Link a discussion channel to a project or repository and it will appear here."
+msgstr "Verknüpf einen Diskussionskanal mit einem Projekt oder Repository, dann erscheint er hier."
+
+#: src/features/projects/ui/ShareLinkButton.tsx
+msgid "Link copied"
+msgstr "Link kopiert"
 
 #: src/features/settings/ui/AppearanceSettingsControls.tsx
 msgid "Link previews"
@@ -1017,33 +2331,111 @@ msgstr "Linkvorschauen"
 msgid "Link the selected composer text, or edit the link under the caret"
 msgstr "Den markierten Text verlinken oder den Link an der Schreibmarke bearbeiten"
 
+#: src/features/projects/ui/ProjectsToolbar.tsx
+msgid "List layout"
+msgstr "Listenlayout"
+
+#: src/features/projects/ui/CreateProjectFormSettings.tsx
+msgid "Listed"
+msgstr "Gelistet"
+
 #: src/features/profile/ui/UserProfilePanelTabs.tsx
 msgid "Live activity will appear here."
 msgstr "Live-Aktivität erscheint hier."
+
+#: src/features/projects/ui/ProjectDetailFeedPanels.tsx
+msgid "Loading activity"
+msgstr "Aktivität wird geladen"
+
+#: src/features/projects/ui/ProjectPullRequestFilesChangedPanel.tsx
+msgid "Loading changed files"
+msgstr "Geänderte Dateien werden geladen"
 
 #: src/features/sidebar/ui/ChannelContextMenu.tsx
 msgid "Loading channel actions..."
 msgstr "Kanalaktionen werden geladen …"
 
+#: src/features/projects/ui/DiscussionChannels.tsx
+msgid "Loading channel discussions"
+msgstr "Kanaldiskussionen werden geladen"
+
+#: src/features/projects/ui/ProjectHomeCommitsPanel.tsx
+msgid "Loading commits"
+msgstr "Commits werden geladen"
+
+#: src/features/projects/ui/ProjectWorkspaceTabs.tsx
+msgid "Loading contributors"
+msgstr "Mitwirkende werden geladen"
+
+#: src/features/projects/ui/ProjectRepositoryPanel.tsx
+msgid "Loading file"
+msgstr "Datei wird geladen"
+
 #: src/features/onboarding/ui/MachineOnboardingFlow.tsx
 msgid "Loading identity…"
 msgstr "Identität wird geladen…"
+
+#: src/features/projects/ui/ProjectsActivityFeed.tsx
+msgid "Loading project activity"
+msgstr "Projektaktivität wird geladen"
+
+#: src/features/projects/ui/ProjectsChannelsList.tsx
+msgid "Loading project channels"
+msgstr "Projektkanäle werden geladen"
 
 #: src/features/home/ui/ProjectInboxDetail.tsx
 msgid "Loading project item…"
 msgstr "Projekteintrag wird geladen …"
 
+#: src/features/projects/ui/ProjectReadmePanel.tsx
+msgid "Loading README"
+msgstr "README wird geladen"
+
+#: src/features/projects/ui/ProjectReadmePanel.tsx
+msgid "Loading repository"
+msgstr "Repository wird geladen"
+
+#: src/features/projects/ui/ProjectRepositoryPanel.tsx
+msgid "Loading repository files"
+msgstr "Repository-Dateien werden geladen"
+
+#: src/features/projects/ui/ProjectsPullRequestsList.tsx
+#: src/features/projects/ui/PullRequestsPanelSurface.tsx
+msgid "Loading reviews"
+msgstr "Reviews werden geladen"
+
 #: src/features/home/ui/InboxDetailPane.tsx
 msgid "Loading surrounding context..."
 msgstr "Umgebender Kontext wird geladen …"
+
+#: src/features/projects/ui/ProjectIssuesPanel.tsx
+#: src/features/projects/ui/ProjectsIssuesList.tsx
+msgid "Loading tasks"
+msgstr "Aufgaben werden geladen"
 
 #: src/features/settings/ui/SettingsPanels.tsx
 msgid "Local archive"
 msgstr "Lokales Archiv"
 
+#: src/features/projects/ui/ProjectDetailScreen.tsx
+msgid "Local checking"
+msgstr "Lokale Prüfung"
+
+#: src/features/projects/lib/projectGitError.ts
+msgid "Local folder already exists"
+msgstr "Lokaler Ordner existiert schon"
+
+#: src/features/projects/ui/ProjectDetailScreen.tsx
+msgid "Local missing"
+msgstr "Lokal fehlt"
+
 #: src/features/settings/ui/AppearanceSettingsControls.tsx
 msgid "Lower values reveal more of the desktop blur."
 msgstr "Niedrigere Werte lassen mehr vom weichgezeichneten Schreibtisch durchscheinen."
+
+#: src/features/projects/ui/ProjectRepositoryManagement.tsx
+msgid "Manage repository access"
+msgstr "Repository-Zugriff verwalten"
 
 #: src/features/home/ui/InboxListPane.tsx
 #: src/features/sidebar/ui/CommunityRail.tsx
@@ -1076,6 +2468,14 @@ msgstr "Die aktuelle Unterhaltung als gelesen markieren"
 msgid "Mark unread"
 msgstr "Als ungelesen markieren"
 
+#: src/features/projects/ui/PullRequestReviewCard.tsx
+msgid "Marked as ready for review."
+msgstr "Als bereit für den Review markiert."
+
+#: src/features/projects/ui/AddProjectRepositoryDialog.tsx
+msgid "Members of this channel can access the repository."
+msgstr "Mitglieder dieses Kanals können auf das Repository zugreifen."
+
 #: src/features/home/lib/inbox.ts
 msgid "Mention"
 msgstr "Erwähnung"
@@ -1091,6 +2491,28 @@ msgstr "Erwähnt in"
 #: src/features/home/ui/InboxFilterMenu.tsx
 msgid "Mentions"
 msgstr "Erwähnungen"
+
+#. placeholder {0}: pullRequest.branchName
+#: src/features/projects/ui/MergePullRequestButton.tsx
+msgid "Merge {0} into {targetBranch} and push the result to the repository. The remote will reject the operation if the branch changed or conflicts."
+msgstr "Führ {0} in {targetBranch} zusammen und push das Ergebnis ins Repository. Die Remote-Seite lehnt den Vorgang ab, wenn der Branch sich geändert hat oder Konflikte bestehen."
+
+#: src/features/projects/ui/MergePullRequestButton.tsx
+msgid "Merge review"
+msgstr "Review zusammenführen"
+
+#: src/features/projects/ui/MergePullRequestButton.tsx
+msgid "Merge review?"
+msgstr "Review zusammenführen?"
+
+#: src/features/projects/ui/ProjectRepositoryActionsPanel.tsx
+#: src/features/projects/ui/projectsOverviewContext.ts
+msgid "Merged"
+msgstr "Zusammengeführt"
+
+#: src/features/projects/ui/MergePullRequestButton.tsx
+msgid "Merging…"
+msgstr "Wird zusammengeführt…"
 
 #: src/features/search/ui/SearchResultItem.tsx
 #: src/features/search/ui/TopbarSearch.tsx
@@ -1122,9 +2544,17 @@ msgstr "Nachricht nicht verfügbar"
 msgid "Messages"
 msgstr "Nachrichten"
 
+#: src/features/projects/ui/ProjectsOverviewItems.tsx
+msgid "Mine"
+msgstr "Meine"
+
 #: src/features/settings/ui/SettingsPanels.tsx
 msgid "Mobile"
 msgstr "Mobil"
+
+#: src/features/projects/ui/AddProjectRepositoryDialog.tsx
+msgid "mobile-app"
+msgstr "mobile-app"
 
 #: src/features/home/ui/InboxDetailPane.tsx
 msgid "More actions"
@@ -1137,6 +2567,20 @@ msgstr "Weitere Aktionen für {sectionLabel}"
 #: src/features/sidebar/ui/SidebarProjectsSection.tsx
 msgid "More actions for Projects"
 msgstr "Weitere Aktionen für Projekte"
+
+#. placeholder {0}: issue.title
+#. placeholder {0}: project.name
+#. placeholder {0}: pullRequest.title
+#: src/features/projects/ui/ProjectCards.tsx
+#: src/features/projects/ui/ProjectsIssuesList.tsx
+#: src/features/projects/ui/ProjectsPullRequestsList.tsx
+#: src/features/projects/ui/RepositoryCards.tsx
+msgid "More options for {0}"
+msgstr "Weitere Optionen für {0}"
+
+#: src/features/projects/ui/PullRequestReviewCard.tsx
+msgid "More review actions"
+msgstr "Weitere Review-Aktionen"
 
 #: src/features/channels/ui/ChannelBrowserDialog.tsx
 msgid "Most members"
@@ -1166,6 +2610,10 @@ msgstr "Nach oben"
 msgid "Mute channel"
 msgstr "Kanal stummschalten"
 
+#: src/features/projects/ui/AddProjectRepositoryDialog.tsx
+#: src/features/projects/ui/CreateProjectFormContent.tsx
+#: src/features/projects/ui/ProjectChannelRequestDialog.tsx
+#: src/features/projects/ui/ProjectsListHeaderBar.tsx
 #: src/features/sidebar/ui/CreateChannelFormFields.tsx
 msgid "Name"
 msgstr "Name"
@@ -1241,8 +2689,21 @@ msgstr "Neuer Unterbereich …"
 msgid "Newest"
 msgstr "Neueste"
 
+#: src/features/projects/ui/ProjectCards.tsx
+msgid "No access"
+msgstr "Kein Zugriff"
+
+#: src/features/projects/ui/ProjectCards.tsx
+msgid "No access channel"
+msgstr "Kein Zugriffskanal"
+
+#: src/features/projects/lib/projectRepoAvailability.ts
+msgid "No access channel bound"
+msgstr "Kein Zugriffskanal gebunden"
+
 #: src/features/home/ui/InboxListPane.tsx
 #: src/features/profile/ui/UserProfilePanelTabs.tsx
+#: src/features/projects/lib/projectsViewHelpers.ts
 msgid "No activity yet"
 msgstr "Noch keine Aktivität"
 
@@ -1250,9 +2711,22 @@ msgstr "Noch keine Aktivität"
 msgid "No additional details were attached to this event."
 msgstr "Zu diesem Ereignis wurden keine weiteren Details hinterlegt."
 
+#: src/features/projects/ui/useCreateProjectFormSettings.ts
+msgid "No agent runtimes are available. Install a runtime to add agents."
+msgstr "Keine Agent-Runtimes verfügbar. Installier eine Runtime, um Agents hinzuzufügen."
+
 #: src/features/home/ui/InboxListPane.tsx
 msgid "No agent updates found"
 msgstr "Keine Agent-Updates gefunden"
+
+#: src/features/projects/ui/ProjectAgentChatPanel.tsx
+#: src/features/projects/ui/ProjectsAgentPromptPage.tsx
+msgid "No agents available"
+msgstr "Keine Agents verfügbar"
+
+#: src/features/projects/ui/ProjectsAgentPromptPage.tsx
+msgid "No agents available yet — create or start one from the Agents view to ask about your repositories."
+msgstr "Noch keine Agents verfügbar — leg einen an oder start einen in der Agents-Ansicht, um nach deinen Repositories zu fragen."
 
 #: src/features/channels/ui/ChannelBrowserDialog.tsx
 msgid "No archived channels"
@@ -1261,6 +2735,10 @@ msgstr "Keine archivierten Kanäle"
 #: src/features/channels/ui/ChannelBrowserDialog.tsx
 msgid "No archived forums"
 msgstr "Keine archivierten Foren"
+
+#: src/features/projects/ui/ProjectPullRequestFilesChangedPanel.tsx
+msgid "No changed files are available for this {subjectLabel} yet."
+msgstr "Für {subjectLabel} gibt es noch keine geänderten Dateien."
 
 #: src/features/channels/ui/ChannelBrowserDialog.tsx
 msgid "No channel by that name yet — create it to get started."
@@ -1279,14 +2757,52 @@ msgstr "Keine Kanäle passen zur Suche"
 msgid "No channels to browse"
 msgstr "Keine Kanäle zum Durchsuchen"
 
+#: src/features/projects/ui/ProjectPullRequestsPanel.tsx
+msgid "No checks have been reported for this review yet."
+msgstr "Für diesen Review wurden noch keine Checks gemeldet."
+
+#: src/features/projects/ui/PullRequestReviewersRow.tsx
+msgid "No commit reported"
+msgstr "Kein Commit gemeldet"
+
+#: src/features/projects/ui/ProjectDetailFeedPanels.tsx
+#: src/features/projects/ui/ProjectHomeCommitsPanel.tsx
+msgid "No commits yet"
+msgstr "Noch keine Commits"
+
 #: src/features/sidebar/ui/SidebarProfileCard.tsx
 msgid "No community"
 msgstr "Keine Community"
+
+#: src/features/projects/ui/ProjectDetailFeedPanels.tsx
+msgid "No contributors yet"
+msgstr "Noch keine Mitwirkenden"
+
+#: src/features/projects/ui/ProjectsIssuesList.tsx
+#: src/features/projects/ui/ProjectsPullRequestsList.tsx
+msgid "No description provided."
+msgstr "Keine Beschreibung angegeben."
+
+#: src/features/projects/lib/projectLabels.ts
+msgid "No discussion"
+msgstr "Keine Diskussion"
 
 #: src/features/home/ui/InboxListPane.tsx
 #: src/features/messages/ui/DraftsPanel.tsx
 msgid "No drafts"
 msgstr "Keine Entwürfe"
+
+#: src/features/projects/ui/ProjectReadmePanel.tsx
+msgid "No files have been pushed yet"
+msgstr "Noch keine Dateien gepusht"
+
+#: src/features/projects/ui/ProjectRepositoryPanel.tsx
+msgid "No files have been pushed yet."
+msgstr "Noch keine Dateien gepusht."
+
+#: src/features/projects/ui/ProjectPullRequestFilesChangedPanel.tsx
+msgid "No files match this filter."
+msgstr "Keine Dateien passen zu diesem Filter."
 
 #: src/features/channels/ui/ChannelBrowserDialog.tsx
 msgid "No forum by that name yet — create it to get started."
@@ -1300,6 +2816,14 @@ msgstr "Keine Foren passen zur Suche"
 msgid "No forums to browse"
 msgstr "Keine Foren zum Durchsuchen"
 
+#: src/features/projects/ui/ProjectDetailFeedPanels.tsx
+msgid "No git commits"
+msgstr "Keine Git-Commits"
+
+#: src/features/projects/ui/ProjectCards.tsx
+msgid "No git repository was found on the {productName} relay."
+msgstr "Auf dem Relay von {productName} wurde kein Git-Repository gefunden."
+
 #: src/features/channels/ui/ChannelBrowserDialog.tsx
 msgid "No joined channels"
 msgstr "Keine beigetretenen Kanäle"
@@ -1308,9 +2832,50 @@ msgstr "Keine beigetretenen Kanäle"
 msgid "No joined forums"
 msgstr "Keine beigetretenen Foren"
 
+#: src/features/projects/ui/DiscussionChannels.tsx
+msgid "No linked channels yet"
+msgstr "Noch keine verknüpften Kanäle"
+
+#: src/features/projects/ui/ProjectDetailFeedPanels.tsx
+msgid "No linked reviews"
+msgstr "Keine verknüpften Reviews"
+
+#: src/features/projects/ui/ProjectDetailFeedPanels.tsx
+msgid "No linked tasks"
+msgstr "Keine verknüpften Aufgaben"
+
+#: src/features/projects/ui/ProjectWorkspaceTabs.tsx
+msgid "No local checkout found"
+msgstr "Kein lokaler Checkout gefunden"
+
 #: src/features/search/ui/TopbarSearch.tsx
 msgid "No matches for <0>{trimmedQuery}</0>."
 msgstr "Keine Treffer für <0>{trimmedQuery}</0>."
+
+#: src/features/projects/ui/ProjectsActivityFeed.tsx
+msgid "No matching activity"
+msgstr "Keine passende Aktivität"
+
+#: src/features/projects/ui/ProjectsChannelsList.tsx
+msgid "No matching channels"
+msgstr "Keine passenden Kanäle"
+
+#: src/features/projects/ui/IssueAssigneesRow.tsx
+#: src/features/projects/ui/PullRequestReviewersRow.tsx
+msgid "No matching people or agents."
+msgstr "Keine passenden Personen oder Agents."
+
+#: src/features/projects/ui/ProjectCards.tsx
+msgid "No matching projects"
+msgstr "Keine passenden Projekte"
+
+#: src/features/projects/ui/ProjectsView.tsx
+msgid "No matching reviews"
+msgstr "Keine passenden Reviews"
+
+#: src/features/projects/ui/ProjectsView.tsx
+msgid "No matching tasks"
+msgstr "Keine passenden Aufgaben"
 
 #: src/features/home/ui/InboxListPane.tsx
 msgid "No mentions found"
@@ -1324,13 +2889,30 @@ msgstr "Kein Nachrichtentext."
 msgid "No messages for <0>{trimmedQuery}</0> in <1>{scopeLabel}</1>."
 msgstr "Keine Nachrichten für <0>{trimmedQuery}</0> in <1>{scopeLabel}</1>."
 
+#: src/features/projects/ui/ProjectsActivityFeed.tsx
+msgid "No project activity yet"
+msgstr "Noch keine Projektaktivität"
+
+#: src/features/projects/ui/ProjectsChannelsList.tsx
+msgid "No project channels yet"
+msgstr "Noch keine Projektkanäle"
+
 #: src/features/home/ui/InboxListPane.tsx
 msgid "No project work found"
 msgstr "Keine Projektarbeit gefunden"
 
+#: src/features/projects/ui/ProjectBrowserDialog.tsx
+msgid "No projects found"
+msgstr "Keine Projekte gefunden"
+
+#: src/features/projects/ui/ProjectCards.tsx
 #: src/features/sidebar/ui/SidebarProjectsSection.tsx
 msgid "No projects yet"
 msgstr "Noch keine Projekte"
+
+#: src/features/projects/ui/ProjectReadmePanel.tsx
+msgid "No README yet"
+msgstr "Noch kein README"
 
 #: src/features/search/ui/TopbarSearch.tsx
 msgid "No recent activity yet."
@@ -1339,6 +2921,26 @@ msgstr "Noch keine Aktivität."
 #: src/features/home/ui/InboxListPane.tsx
 msgid "No reminders"
 msgstr "Keine Erinnerungen"
+
+#: src/features/projects/ui/PullRequestReviewersRow.tsx
+msgid "No reviewers"
+msgstr "Keine Reviewer"
+
+#: src/features/projects/ui/PullRequestsPanelSurface.tsx
+msgid "No reviews yet"
+msgstr "Noch keine Reviews"
+
+#: src/features/projects/projectPullRequests.mjs
+msgid "No reviews yet."
+msgstr "Noch keine Reviews."
+
+#: src/features/projects/ui/ProjectIssuesPanel.tsx
+msgid "No tasks yet"
+msgstr "Noch keine Aufgaben"
+
+#: src/features/projects/ui/ProjectPullRequestFilesChangedPanel.tsx
+msgid "No textual diff is available for this file."
+msgstr "Für diese Datei gibt es keinen Text-Diff."
 
 #: src/features/home/ui/InboxListPane.tsx
 msgid "No threads found"
@@ -1380,9 +2982,18 @@ msgstr "Keine ungelesenen Threads"
 msgid "No updates yet"
 msgstr "Noch keine Updates"
 
+#: src/features/projects/ui/CreateProjectFormSettings.tsx
 #: src/features/sidebar/ui/CreateChannelFormFields.tsx
 msgid "None"
 msgstr "Keine"
+
+#: src/features/projects/ui/ProjectHomeContextPanel.tsx
+msgid "None yet"
+msgstr "Noch keine"
+
+#: src/features/projects/ui/ProjectWorkspaceTabs.tsx
+msgid "Not mirrored on {productName}. Repository files are hosted on {externalHost}."
+msgstr "Nicht auf {productName} gespiegelt. Die Repository-Dateien liegen auf {externalHost}."
 
 #: src/features/search/ui/SearchResultItem.tsx
 msgid "Note"
@@ -1404,6 +3015,21 @@ msgstr "jetzt"
 msgid "on {date}"
 msgstr "am {date}"
 
+#: src/features/projects/lib/projectBranches.ts
+msgid "Only a published remote branch can be deleted."
+msgstr "Nur ein veröffentlichter Remote-Branch kann gelöscht werden."
+
+#: src/features/projects/ui/ProjectChannelManagement.tsx
+msgid "Only the project owner can add channels"
+msgstr "Nur die Projektinhaberin oder der Projektinhaber kann Kanäle hinzufügen"
+
+#: src/features/projects/ui/ProjectRepositoryManagement.tsx
+msgid "Only the project owner can add repositories"
+msgstr "Nur die Projektinhaberin oder der Projektinhaber kann Repositories hinzufügen"
+
+#: src/features/projects/ui/ProjectRepositoryActionsPanel.tsx
+#: src/features/projects/ui/ProjectRepositorySource.tsx
+#: src/features/projects/ui/projectsOverviewContext.ts
 #: src/features/sidebar/ui/CreateChannelFormFields.tsx
 msgid "Open"
 msgstr "Offen"
@@ -1413,9 +3039,45 @@ msgstr "Offen"
 msgid "Open {0}"
 msgstr "{0} öffnen"
 
+#. placeholder {0}: entry.type
+#. placeholder {1}: entry.name
+#: src/features/projects/ui/ProjectRepositoryPanel.tsx
+msgid "Open {0} {1}"
+msgstr "{0} {1} öffnen"
+
+#. placeholder {0}: item.anchor.path
+#. placeholder {1}: item.anchor.side
+#. placeholder {2}: item.anchor.line
+#: src/features/projects/ui/ProjectPullRequestsPanel.tsx
+msgid "Open {0} {1} line {2} in Files changed"
+msgstr "{0} {1} Zeile {2} in „Geänderte Dateien“ öffnen"
+
+#. placeholder {0}: item.title
+#. placeholder {1}: item.target.project.name
+#: src/features/projects/ui/ProjectsActivityFeed.tsx
+msgid "Open {0} in {1}"
+msgstr "{0} in {1} öffnen"
+
+#: src/features/projects/ui/ProjectRightPanelControls.tsx
+msgid "Open {productName} Term"
+msgstr "{productName}-Terminal öffnen"
+
+#: src/features/projects/ui/DiscussionChannels.tsx
+msgid "Open #{name}"
+msgstr "#{name} öffnen"
+
+#: src/features/projects/ui/CreatePullRequestDialog.tsx
+msgid "Open a review"
+msgstr "Review öffnen"
+
 #: src/features/profile/ui/UserProfilePanelTabs.tsx
 msgid "Open activity feed. Last live {lastLiveLabel}."
 msgstr "Aktivitätsfeed öffnen. Zuletzt live {lastLiveLabel}."
+
+#. placeholder {0}: channel.name
+#: src/features/projects/ui/ProjectOriginReference.tsx
+msgid "Open author-claimed origin channel #{0}"
+msgstr "Autorangegebenen Ursprungskanal #{0} öffnen"
 
 #: src/shared/ui/markdown/MessageLinkPill.tsx
 msgid "Open channel {channelLabel}; linked message was deleted"
@@ -1443,14 +3105,30 @@ msgstr "Ganzen Thread öffnen"
 msgid "Open in channel"
 msgstr "Im Kanal öffnen"
 
+#: src/features/projects/ui/ProjectChannelHome.tsx
+msgid "Open in repository"
+msgstr "Im Repository öffnen"
+
+#: src/features/projects/ui/useOpenProjectTerminal.ts
+msgid "Open in Terminal"
+msgstr "Im Terminal öffnen"
+
 #. placeholder {0}: item.senderLabel
 #: src/features/home/ui/InboxListPane.tsx
 msgid "Open inbox item from {0}"
 msgstr "Posteingangseintrag von {0} öffnen"
 
+#: src/features/projects/ui/ProjectRepositoryActionsPanel.tsx
+msgid "Open local repository folder"
+msgstr "Lokalen Repository-Ordner öffnen"
+
 #: src/shared/ui/markdown/MessageLinkPill.tsx
 msgid "Open message in channel {channelLabel}"
 msgstr "Nachricht im Kanal {channelLabel} öffnen"
+
+#: src/features/projects/ui/ProjectReadmePanel.tsx
+msgid "Open on {externalHost}"
+msgstr "Auf {externalHost} öffnen"
 
 #: src/shared/lib/keyboard-shortcuts.ts
 msgid "Open or close settings"
@@ -1460,13 +3138,38 @@ msgstr "Einstellungen öffnen oder schließen"
 msgid "Open profile menu for {resolvedDisplayName}"
 msgstr "Profilmenü für {resolvedDisplayName} öffnen"
 
+#: src/features/projects/ui/ProjectRepositoryActionsPanel.tsx
+msgid "Open project chat to ask for repository access"
+msgstr "Projekt-Chat öffnen, um Repository-Zugriff zu erbitten"
+
+#. placeholder {0}: channel.name
+#: src/features/projects/ui/ProjectRepositoryUnavailableState.tsx
+msgid "Open repository access channel #{0}"
+msgstr "Repository-Zugriffskanal #{0} öffnen"
+
+#. placeholder {0}: controls.remoteLabel
+#: src/features/projects/ui/ProjectRepositorySource.tsx
+msgid "Open repository on {0}"
+msgstr "Repository auf {0} öffnen"
+
 #: src/features/home/ui/ProjectInboxDetailPane.tsx
+#: src/features/projects/ui/ProjectsPullRequestsList.tsx
 msgid "Open review"
 msgstr "Review öffnen"
 
+#: src/features/projects/ui/ProjectRepositoryActionsPanel.tsx
+#: src/features/projects/ui/projectsOverviewContext.ts
+msgid "Open reviews"
+msgstr "Offene Reviews"
+
 #: src/features/home/ui/ProjectInboxDetailPane.tsx
+#: src/features/projects/ui/ProjectsIssuesList.tsx
 msgid "Open task"
 msgstr "Aufgabe öffnen"
+
+#: src/features/projects/ui/ProjectRepositoryActionsPanel.tsx
+msgid "Open terminal"
+msgstr "Terminal öffnen"
 
 #: src/shared/lib/keyboard-shortcuts.ts
 msgid "Open the channel browser"
@@ -1501,6 +3204,14 @@ msgstr "Thread im Kanal {channelLabel} öffnen; die verknüpfte Nachricht wurde 
 msgid "Open thread to read the rest"
 msgstr "Thread öffnen, um den Rest zu lesen"
 
+#: src/features/projects/ui/ProjectsChannelsList.tsx
+msgid "Open unavailable channel"
+msgstr "Nicht verfügbaren Kanal öffnen"
+
+#: src/features/projects/ui/AddProjectRepositoryDialog.tsx
+#: src/features/projects/ui/CreateProjectFormContent.tsx
+#: src/features/projects/ui/CreateProjectFormSettings.tsx
+#: src/features/projects/ui/CreateProjectWorkItemDialog.tsx
 #: src/features/sidebar/ui/CreateChannelFormFields.tsx
 msgid "Optional"
 msgstr "Optional"
@@ -1509,9 +3220,39 @@ msgstr "Optional"
 msgid "Orders every list in the sidebar. Recent also floats the sections themselves, so dragging them waits for A–Z. A section you have set from its own menu keeps that order."
 msgstr "Ordnet jede Liste in der Seitenleiste. „Zuletzt“ lässt außerdem die Abschnitte selbst nach oben rücken, sodass das Verschieben per Drag-and-drop erst bei A–Z möglich ist. Ein Abschnitt, den du über sein eigenes Menü festgelegt hast, behält seine Sortierung."
 
+#: src/features/projects/ui/ProjectOriginReference.tsx
+msgid "Origin channel {channelId} is not visible to you. Origin is claimed by the event author and is not relay-verified."
+msgstr "Der Ursprungskanal {channelId} ist für dich nicht sichtbar. Die Herkunft gibt die Autorin oder der Autor an, das Relay hat sie nicht geprüft."
+
+#: src/features/projects/ui/ProjectOriginReference.tsx
+msgid "Origin is claimed by the event author and is not relay-verified."
+msgstr "Die Herkunft gibt die Autorin oder der Autor an, das Relay hat sie nicht geprüft."
+
+#: src/features/projects/ui/ProjectsOverviewItems.tsx
+msgid "Other projects"
+msgstr "Andere Projekte"
+
+#: src/features/projects/ui/ProjectsOverviewItems.tsx
+msgid "Other repositories"
+msgstr "Andere Repositories"
+
+#: src/features/projects/ui/ProjectPullRequestsPanel.tsx
+msgid "Outdated"
+msgstr "Veraltet"
+
+#: src/features/projects/lib/projectDetailAgentContext.ts
+#: src/features/projects/ui/ProjectChannelHome.tsx
+#: src/features/projects/ui/ProjectWorkspaceTabList.tsx
+msgid "Overview"
+msgstr "Übersicht"
+
 #: src/features/sidebar/ui/SidebarProjectsSection.tsx
 msgid "Owned by me"
 msgstr "Meine Projekte"
+
+#: src/features/projects/ui/DiscussionChannels.tsx
+msgid "Paste this repository, review, or task link in a channel and it will appear here."
+msgstr "Füg den Link zu diesem Repository, Review oder dieser Aufgabe in einen Kanal ein, dann erscheint er hier."
 
 #. placeholder {0}: BRAND.productName
 #: src/features/onboarding/ui/MachineOnboardingFlow.tsx
@@ -1522,9 +3263,14 @@ msgstr "Füge deinen privaten Schlüssel ein, um dich bei {0} anzumelden. Du kan
 msgid "Pending"
 msgstr "Ausstehend"
 
+#: src/features/projects/ui/ProjectHomeContextPanel.tsx
 #: src/features/search/ui/TopbarSearch.tsx
 msgid "People"
 msgstr "Personen"
+
+#: src/features/projects/ui/ProjectAuthorIdentity.tsx
+msgid "Person"
+msgstr "Person"
 
 #: src/features/settings/ui/SettingsView.tsx
 msgid "Personal"
@@ -1550,9 +3296,26 @@ msgstr "Angeheftet"
 msgid "Preferences"
 msgstr "Einstellungen"
 
+#. placeholder {0}: conflictRecovery.targetBranch
+#: src/features/projects/ui/MergePullRequestButton.tsx
+msgid "Prepare the local checkout, then switch to {0} with the commands shown. After resolving and committing, push the target branch and retry the merge."
+msgstr "Bereite den lokalen Checkout vor und wechsle dann mit den gezeigten Befehlen zu {0}. Nach dem Auflösen und Committen push den Ziel-Branch und versuch den Merge erneut."
+
+#: src/features/projects/ui/MergePullRequestButton.tsx
+msgid "Preparing…"
+msgstr "Wird vorbereitet…"
+
 #: src/features/settings/ui/AppearanceSettingsControls.tsx
 msgid "Preview"
 msgstr "Vorschau"
+
+#: src/features/projects/ui/AgentContextPayloadPreview.tsx
+msgid "Preview the exact context appended to your message"
+msgstr "Sieh dir genau den Kontext an, der an deine Nachricht angehängt wird"
+
+#: src/features/projects/ui/ProjectRepositoryPanel.tsx
+msgid "Preview unavailable for this file. Large and binary files only show metadata."
+msgstr "Keine Vorschau für diese Datei. Große und binäre Dateien zeigen nur Metadaten."
 
 #: src/features/sidebar/ui/CreateChannelFormFields.tsx
 msgid "Private"
@@ -1574,15 +3337,77 @@ msgstr "Profil"
 msgid "Progress update"
 msgstr "Fortschritts-Update"
 
+#: src/features/projects/ui/AddProjectRepositoryDialog.tsx
+#: src/features/projects/ui/ProjectsCategoryCreateDialogs.tsx
+msgid "Project"
+msgstr "Projekt"
+
+#: src/features/projects/ui/ProjectAgentChatPanel.tsx
+msgid "project agent"
+msgstr "Projekt-Agent"
+
+#: src/features/projects/ui/ProjectDetailChrome.tsx
+msgid "Project breadcrumb"
+msgstr "Projekt-Brotkrumen"
+
+#: src/features/projects/ui/ProjectsChannelsList.tsx
+msgid "Project channel"
+msgstr "Projektkanal"
+
+#: src/features/projects/ui/ProjectRightPanelControls.tsx
+msgid "Project chat"
+msgstr "Projekt-Chat"
+
+#: src/features/projects/ui/ProjectRightPanelControls.tsx
+#: src/features/projects/ui/ProjectsOverviewContextSheet.tsx
+#: src/features/projects/ui/ProjectsView.tsx
+msgid "Project context"
+msgstr "Projektkontext"
+
+#: src/features/projects/ui/CreateProjectFormSettings.tsx
+msgid "Project home by default"
+msgstr "Projektstart als Standard"
+
+#: src/features/projects/ui/ProjectsToolbar.tsx
+msgid "Project layout"
+msgstr "Projektlayout"
+
+#: src/features/projects/ui/CreateProjectFormSettings.tsx
+msgid "Project list"
+msgstr "Projektliste"
+
+#: src/features/projects/ui/CreateProjectFormSettings.tsx
+msgid "Project list: {listingLabel}"
+msgstr "Projektliste: {listingLabel}"
+
+#: src/features/projects/ui/ProjectsToolbar.tsx
+msgid "Project owner filter"
+msgstr "Filter nach Projektinhaber"
+
 #: src/features/home/lib/inbox.ts
 msgid "Project update"
 msgstr "Projekt-Update"
 
 #: src/features/home/ui/InboxFilterMenu.tsx
+#: src/features/projects/ui/ProjectDetailChrome.tsx
+#: src/features/projects/ui/projectsOverviewContext.ts
+#: src/features/projects/ui/ProjectsToolbar.tsx
 #: src/features/sidebar/ui/AppSidebarPinnedHeader.tsx
 #: src/features/sidebar/ui/SidebarProjectsSection.tsx
 msgid "Projects"
 msgstr "Projekte"
+
+#: src/features/projects/ui/ProjectsOverviewPanel.tsx
+msgid "Projects Activity"
+msgstr "Projektaktivität"
+
+#: src/features/projects/ui/ProjectDetailChrome.tsx
+msgid "Projects breadcrumb"
+msgstr "Projekt-Brotkrumen"
+
+#: src/features/projects/ui/ProjectCards.tsx
+msgid "Projects published to this relay will appear here."
+msgstr "Projekte, die auf diesem Relay veröffentlicht sind, erscheinen hier."
 
 #: src/features/settings/ui/AppearanceSettingsControls.tsx
 msgid "Prominent active tab"
@@ -1596,13 +3421,53 @@ msgstr "Öffentlicher Kanal"
 msgid "Publish a Pulse note"
 msgstr "Eine Pulse-Notiz veröffentlichen"
 
+#: src/features/projects/ui/MergePullRequestButton.tsx
+msgid "Publish merged status"
+msgstr "Zusammengeführten Status veröffentlichen"
+
 #: src/shared/lib/keyboard-shortcuts.ts
 msgid "Publish note"
 msgstr "Notiz veröffentlichen"
 
+#: src/features/projects/ui/ProjectWorkspaceTabs.tsx
+msgid "Publish the pushed commit to this review"
+msgstr "Den gepushten Commit in diesem Review veröffentlichen"
+
+#: src/features/projects/ui/ProjectRepositoryActionsPanel.tsx
+#: src/features/projects/ui/ProjectRepositorySource.tsx
+msgid "Pull"
+msgstr "Pull"
+
+#. placeholder {0}: sourceControls.behindCount
+#: src/features/projects/ui/ProjectRepositoryActionsPanel.tsx
+msgid "Pull {0}"
+msgstr "Pull {0}"
+
+#: src/features/projects/ui/ProjectRepositorySource.tsx
+msgid "Pull {count}"
+msgstr "Pull {count}"
+
+#: src/features/projects/ui/ProjectRepositorySource.tsx
+msgid "Pull remote commits"
+msgstr "Remote-Commits pullen"
+
 #: src/features/sidebar/ui/AppSidebarPinnedHeader.tsx
 msgid "Pulse"
 msgstr "Pulse"
+
+#: src/features/projects/ui/ProjectRepositoryActionsPanel.tsx
+#: src/features/projects/ui/ProjectRepositorySource.tsx
+msgid "Push"
+msgstr "Push"
+
+#. placeholder {0}: sourceControls.aheadCount
+#: src/features/projects/ui/ProjectRepositoryActionsPanel.tsx
+msgid "Push {0}"
+msgstr "Push {0}"
+
+#: src/features/projects/ui/ProjectRepositorySource.tsx
+msgid "Push local commits"
+msgstr "Lokale Commits pushen"
 
 #: src/shared/lib/keyboard-shortcuts.ts
 msgid "Push to talk"
@@ -1612,12 +3477,21 @@ msgstr "Sprechtaste"
 msgid "Quick search"
 msgstr "Schnellsuche"
 
+#: src/features/projects/ui/PullRequestReviewersRow.tsx
+msgid "Re-review needed"
+msgstr "Erneuter Review nötig"
+
+#: src/features/projects/ui/PullRequestReviewCard.tsx
+msgid "Ready for review"
+msgstr "Bereit für den Review"
+
 #: src/features/channels/ui/ChannelBrowserDialog.tsx
 #: src/features/settings/ui/AppearanceSettingsControls.tsx
 #: src/features/sidebar/ui/CustomChannelSection.tsx
 msgid "Recent"
 msgstr "Zuletzt"
 
+#: src/features/projects/ui/ProjectsListHeaderBar.tsx
 #: src/features/search/ui/TopbarSearch.tsx
 msgid "Recent activity"
 msgstr "Letzte Aktivität"
@@ -1633,6 +3507,35 @@ msgstr "Neuverbindung läuft"
 #: src/features/onboarding/ui/MachineOnboardingFlow.tsx
 msgid "Recover from your phone"
 msgstr "Von deinem Handy wiederherstellen"
+
+#: src/features/projects/ui/ProjectIssuesPanel.tsx
+msgid "Refresh the project and try again."
+msgstr "Aktualisiere das Projekt und versuch es erneut."
+
+#: src/features/projects/ui/ProjectDetailFeedPanels.tsx
+#: src/features/projects/ui/PullRequestsPanelSurface.tsx
+msgid "Refresh the repository and try again."
+msgstr "Aktualisiere das Repository und versuch es erneut."
+
+#: src/features/projects/ui/ProjectBranchDialogs.tsx
+msgid "Refresh the repository before creating a branch."
+msgstr "Aktualisiere das Repository, bevor du einen Branch anlegst."
+
+#: src/features/projects/ui/ProjectReadmePanel.tsx
+msgid "Refresh the repository or ask an agent to investigate."
+msgstr "Aktualisiere das Repository oder bitte einen Agent, nachzusehen."
+
+#: src/features/projects/ui/ProjectRepositoryPanel.tsx
+msgid "Refresh the repository or check its access settings."
+msgstr "Aktualisiere das Repository oder prüf die Zugriffseinstellungen."
+
+#: src/features/projects/ui/DiscussionChannels.tsx
+msgid "Related Conversations"
+msgstr "Verwandte Unterhaltungen"
+
+#: src/features/projects/ui/ProjectsAgentPromptPage.tsx
+msgid "Release check"
+msgstr "Veröffentlichungs-Check"
 
 #: src/features/home/ui/InboxListPane.tsx
 #: src/features/sidebar/ui/ChannelActivityPopover.tsx
@@ -1677,14 +3580,108 @@ msgstr "Aus der Seitenleiste entfernen"
 msgid "Rename section"
 msgstr "Bereich umbenennen"
 
+#: src/features/projects/ui/PullRequestReviewCard.tsx
+msgid "Reopen review"
+msgstr "Review wieder öffnen"
+
 #: src/features/home/ui/InboxDetailPane.tsx
 #: src/features/home/ui/InboxListPane.tsx
 msgid "Reopening…"
 msgstr "Wird wieder geöffnet …"
 
+#: src/features/projects/ui/ProjectsWorkItemTable.tsx
+msgid "Replies"
+msgstr "Antworten"
+
 #: src/features/home/ui/InboxDetailPane.tsx
 msgid "Replies are not available for this item."
 msgstr "Für diesen Eintrag sind keine Antworten möglich."
+
+#: src/features/projects/ui/projectsOverviewContext.ts
+#: src/features/projects/ui/ProjectsToolbar.tsx
+msgid "Repositories"
+msgstr "Repositories"
+
+#: src/features/projects/ui/CreateProjectIssueDialog.tsx
+#: src/features/projects/ui/CreatePullRequestDialog.tsx
+msgid "Repository"
+msgstr "Repository"
+
+#. placeholder {0}: label.toLowerCase()
+#: src/features/projects/ui/ProjectCards.tsx
+msgid "Repository {0}"
+msgstr "Repository {0}"
+
+#: src/features/projects/ui/ProjectRepositoryManagement.tsx
+msgid "Repository access channel"
+msgstr "Repository-Zugriffskanal"
+
+#: src/features/projects/lib/projectRepoAvailability.ts
+msgid "Repository access failed"
+msgstr "Repository-Zugriff fehlgeschlagen"
+
+#. placeholder {0}: channel.name
+#: src/features/projects/ui/ProjectRepositoryUnavailableState.tsx
+msgid "Repository access is granted through <0>#{0}</0>, and you’re not a member. Join the channel or ask <1/> for an invite."
+msgstr "Der Repository-Zugriff läuft über <0>#{0}</0>, und du bist kein Mitglied. Tritt dem Kanal bei oder bitte <1/> um eine Einladung."
+
+#: src/features/projects/ui/ProjectRepositoryUnavailableState.tsx
+msgid "Repository access is granted through a channel you can’t see. Ask <0/> for an invite."
+msgstr "Der Repository-Zugriff läuft über einen Kanal, den du nicht sehen kannst. Bitte <0/> um eine Einladung."
+
+#: src/features/projects/lib/projectRepoAvailability.ts
+msgid "Repository access is granted through its channel, and you’re not a member. Ask the repository owner for an invite."
+msgstr "Der Repository-Zugriff läuft über seinen Kanal, und du bist kein Mitglied. Bitte die Person, der das Repository gehört, um eine Einladung."
+
+#: src/features/projects/lib/projectGitError.ts
+msgid "Repository access required"
+msgstr "Repository-Zugriff erforderlich"
+
+#: src/features/projects/lib/projectGitError.ts
+#: src/features/projects/lib/projectRepoAvailability.ts
+msgid "Repository access restricted"
+msgstr "Repository-Zugriff eingeschränkt"
+
+#. placeholder {0}: files.length
+#: src/features/projects/ui/ProjectRepositoryPanel.tsx
+msgid "Repository files · {0} tracked files"
+msgstr "Repository-Dateien · {0} erfasste Dateien"
+
+#: src/features/projects/ui/RepositoryCards.tsx
+msgid "Repository host"
+msgstr "Repository-Host"
+
+#: src/features/projects/lib/projectGitError.ts
+msgid "Repository not found"
+msgstr "Repository nicht gefunden"
+
+#: src/features/projects/lib/projectRepoAvailability.ts
+msgid "Repository not initialized"
+msgstr "Repository nicht initialisiert"
+
+#: src/features/projects/lib/projectRepoAvailability.ts
+msgid "Repository unavailable"
+msgstr "Repository nicht verfügbar"
+
+#: src/features/projects/ui/ProjectPullRequestsPanel.tsx
+msgid "requested a review"
+msgstr "hat einen Review angefragt"
+
+#: src/features/projects/ui/ProjectPullRequestsPanel.tsx
+msgid "requested changes"
+msgstr "hat Änderungen angefragt"
+
+#: src/features/projects/ui/ProjectPullRequestsPanel.tsx
+msgid "requested changes on an earlier commit"
+msgstr "hat Änderungen an einem früheren Commit angefragt"
+
+#: src/features/projects/ui/ProjectsActivityFeed.tsx
+msgid "requested changes to a review in"
+msgstr "hat Änderungen an einem Review angefragt in"
+
+#: src/features/projects/ui/ProjectsActivityFeed.tsx
+msgid "requested review in"
+msgstr "hat Review angefragt in"
 
 #: src/features/settings/ui/AppearanceSettingsControls.tsx
 msgid "Reset glass opacity"
@@ -1702,6 +3699,18 @@ msgstr "Die Zoomstufe auf den Standard zurücksetzen"
 msgid "Resize inbox list"
 msgstr "Breite der Posteingangsliste ändern"
 
+#: src/features/projects/ui/MergePullRequestButton.tsx
+msgid "Resolve conflicts in your local checkout"
+msgstr "Konflikte im lokalen Checkout lösen"
+
+#: src/features/projects/ui/MergePullRequestButton.tsx
+msgid "Resolve in Terminal"
+msgstr "Im Terminal lösen"
+
+#: src/features/projects/ui/MergePullRequestButton.tsx
+msgid "Resolve in Terminal securely fetches the target and review commits before showing copyable commands."
+msgstr "„Im Terminal lösen“ holt Ziel- und Review-Commits sicher, bevor kopierbare Befehle erscheinen."
+
 #: src/features/onboarding/ui/MachineOnboardingFlow.tsx
 msgid "Restore from a backup file"
 msgstr "Aus einer Backup-Datei wiederherstellen"
@@ -1709,16 +3718,85 @@ msgstr "Aus einer Backup-Datei wiederherstellen"
 #: src/features/home/ui/InboxDetailPane.tsx
 #: src/features/home/ui/InboxListPane.tsx
 #: src/features/home/ui/ProjectInboxDetail.tsx
+#: src/features/projects/ui/ProjectDetailUnavailableState.tsx
+#: src/features/projects/ui/ProjectRepositoryUnavailableState.tsx
+#: src/features/projects/ui/ProjectsIssuesList.tsx
+#: src/features/projects/ui/ProjectsPullRequestsList.tsx
+#: src/features/projects/ui/ProjectsView.tsx
+#: src/features/projects/ui/ProjectsWorkItemsLoadNotice.tsx
 msgid "Retry"
 msgstr "Erneut versuchen"
+
+#: src/features/projects/ui/ProjectRepositoryUnavailableState.tsx
+#: src/features/projects/ui/ProjectsIssuesList.tsx
+#: src/features/projects/ui/ProjectsPullRequestsList.tsx
+#: src/features/projects/ui/ProjectsWorkItemsLoadNotice.tsx
+msgid "Retrying…"
+msgstr "Wird erneut versucht…"
 
 #: src/features/onboarding/ui/MachineOnboardingFlow.tsx
 msgid "Return to onboarding"
 msgstr "Zurück zur Einrichtung"
 
+#: src/features/projects/ui/CreateProjectWorkItemDialog.tsx
+msgid "review"
+msgstr "Review"
+
 #: src/features/home/lib/inbox.ts
+#: src/features/projects/ui/ProjectWorkspaceTabList.tsx
 msgid "Review"
 msgstr "Review"
+
+#: src/features/projects/ui/CreatePullRequestDialog.tsx
+msgid "Review branches are incomplete."
+msgstr "Die Review-Branches sind unvollständig."
+
+#: src/features/projects/ui/PullRequestReviewCard.tsx
+msgid "Review closed."
+msgstr "Review geschlossen."
+
+#: src/features/projects/ui/ProjectDetailScreen.tsx
+msgid "Review is already current."
+msgstr "Der Review ist schon aktuell."
+
+#: src/features/projects/ui/ProjectPullRequestsPanel.tsx
+msgid "Review opened"
+msgstr "Review eröffnet"
+
+#: src/features/projects/ui/PullRequestReviewCard.tsx
+msgid "Review reopened."
+msgstr "Review wieder geöffnet."
+
+#: src/features/projects/projectPullRequests.mjs
+msgid "Review requested — no approvals yet."
+msgstr "Review angefragt — noch keine Freigaben."
+
+#: src/features/projects/ui/ProjectsIssuesList.tsx
+msgid "Review task"
+msgstr "Aufgabe prüfen"
+
+#: src/features/projects/ui/ProjectDetailScreen.tsx
+msgid "Review updated."
+msgstr "Review aktualisiert."
+
+#: src/features/projects/ui/ProjectWorkItemContextDetails.tsx
+#: src/features/projects/ui/PullRequestReviewersRow.tsx
+msgid "Reviewers"
+msgstr "Reviewer"
+
+#: src/features/projects/lib/projectDetailAgentContext.ts
+#: src/features/projects/ui/ProjectHomeContextPanel.tsx
+#: src/features/projects/ui/ProjectRepositoryActionsPanel.tsx
+#: src/features/projects/ui/ProjectsAgentPromptPage.tsx
+#: src/features/projects/ui/projectsOverviewContext.ts
+#: src/features/projects/ui/ProjectsToolbar.tsx
+#: src/features/projects/ui/ProjectWorkspaceTabs.tsx
+msgid "Reviews"
+msgstr "Reviews"
+
+#: src/features/projects/ui/PullRequestsPanelSurface.tsx
+msgid "Reviews opened for this repository will appear here."
+msgstr "Reviews, die für dieses Repository eröffnet werden, erscheinen hier."
 
 #: src/features/settings/ui/AppearanceSettingsControls.tsx
 msgid "Rich"
@@ -1737,9 +3815,19 @@ msgstr "Scanne diesen Code mit einem Gerät, auf dem du gerade bei {0} angemelde
 msgid "Scan to sign in"
 msgstr "Zum Anmelden scannen"
 
+#. placeholder {0}: projectsSectionTitle(filter)
+#. placeholder {0}: projectsSectionTitle(filter).toLocaleLowerCase()
+#: src/features/projects/ui/ProjectsSectionSearch.tsx
+msgid "Search {0}"
+msgstr "{0} durchsuchen"
+
 #: src/features/channels/ui/ChannelBrowserDialog.tsx
 msgid "Search channels by name or description"
 msgstr "Kanäle nach Name oder Beschreibung durchsuchen"
+
+#: src/features/projects/ui/ProjectSelectionDiscussAction.tsx
+msgid "Search channels…"
+msgstr "Kanäle suchen…"
 
 #: src/features/search/ui/SearchScopeControls.tsx
 msgid "Search conversation with {scopeLabel}"
@@ -1791,6 +3879,24 @@ msgstr "Kanal suchen oder anlegen"
 msgid "Search or create a forum"
 msgstr "Forum suchen oder anlegen"
 
+#: src/features/projects/ui/ProjectBrowserDialog.tsx
+msgid "Search or create a project"
+msgstr "Projekt suchen oder anlegen"
+
+#: src/features/projects/ui/IssueAssigneesRow.tsx
+#: src/features/projects/ui/PullRequestReviewersRow.tsx
+msgid "Search people and agents"
+msgstr "Personen und Agents suchen"
+
+#: src/features/projects/ui/ProjectBrowserDialog.tsx
+msgid "Search projects"
+msgstr "Projekte suchen"
+
+#: src/features/projects/ui/IssueAssigneesRow.tsx
+#: src/features/projects/ui/PullRequestReviewersRow.tsx
+msgid "Searching…"
+msgstr "Suche läuft…"
+
 #: src/features/sidebar/ui/ChannelSectionDialogs.tsx
 msgid "Section name"
 msgstr "Bereichsname"
@@ -1799,6 +3905,16 @@ msgstr "Bereichsname"
 msgid "Sections let you group related channels in the sidebar."
 msgstr "Mit Bereichen gruppierst du zusammengehörige Kanäle in der Seitenleiste."
 
+#. placeholder {0}: selection.item.title
+#: src/features/projects/ui/ProjectEntityListRow.tsx
+#: src/features/projects/ui/ProjectWorkItemRow.tsx
+msgid "Select {0}"
+msgstr "{0} auswählen"
+
+#: src/features/projects/ui/AddProjectRepositoryDialog.tsx
+msgid "Select a channel"
+msgstr "Kanal auswählen"
+
 #: src/features/messages/ui/DraftDetailPane.tsx
 msgid "Select a draft"
 msgstr "Wähle einen Entwurf"
@@ -1806,6 +3922,18 @@ msgstr "Wähle einen Entwurf"
 #: src/features/home/ui/InboxDetailPane.tsx
 msgid "Select a message"
 msgstr "Wähle eine Nachricht"
+
+#: src/features/projects/ui/ProjectSelectableGroup.tsx
+msgid "Select all {label}"
+msgstr "Alle {label} auswählen"
+
+#: src/features/projects/ui/CreatePullRequestDialog.tsx
+msgid "Select branch"
+msgstr "Branch auswählen"
+
+#: src/features/projects/ui/ProjectRepositoryManagement.tsx
+msgid "Select existing repository"
+msgstr "Vorhandenes Repository auswählen"
 
 #: src/features/messages/ui/DraftDetailPane.tsx
 #: src/features/messages/ui/DraftsPanel.tsx
@@ -1830,9 +3958,21 @@ msgstr "Antwort an den Kanal-Thread senden"
 msgid "Send the current message"
 msgstr "Die aktuelle Nachricht senden"
 
+#: src/features/projects/ui/ProjectAgentSubmittedContextPill.tsx
+msgid "Sent context"
+msgstr "Gesendeter Kontext"
+
+#: src/features/projects/ui/ProjectAgentSubmittedContextPill.tsx
+msgid "Sent project context"
+msgstr "Gesendeter Projektkontext"
+
 #: src/shared/lib/keyboard-shortcuts.ts
 msgid "Settings"
 msgstr "Einstellungen"
+
+#: src/features/projects/lib/discussionChannels.ts
+msgid "Shared a link to this."
+msgstr "Hat einen Link dazu geteilt."
 
 #: src/features/settings/ui/SettingsPanels.tsx
 msgid "Shortcuts"
@@ -1842,13 +3982,50 @@ msgstr "Tastenkürzel"
 msgid "Show"
 msgstr "Anzeigen"
 
+#: src/features/projects/ui/ProjectRepositoryPanel.tsx
+msgid "Show next {nextEntryCount}"
+msgstr "Nächste {nextEntryCount} anzeigen"
+
+#. placeholder {0}: entries.length
+#: src/features/projects/ui/ProjectRepositoryPanel.tsx
+msgid "Show next {nextEntryCount} entries, {nextVisibleEntryCount} of {0} total"
+msgstr "Nächste {nextEntryCount} Einträge anzeigen, {nextVisibleEntryCount} von {0} insgesamt"
+
 #: src/shared/lib/keyboard-shortcuts.ts
 msgid "Show or hide the sidebar"
 msgstr "Die Seitenleiste ein- oder ausblenden"
 
+#: src/features/projects/ui/ProjectRightPanelControls.tsx
+msgid "Show project chat"
+msgstr "Projekt-Chat anzeigen"
+
+#: src/features/projects/ui/ProjectRightPanelControls.tsx
+#: src/features/projects/ui/ProjectsOverviewChromeActions.tsx
+#: src/features/projects/ui/ProjectsOverviewContextSheet.tsx
+msgid "Show project context"
+msgstr "Projektkontext anzeigen"
+
+#: src/features/projects/ui/ProjectAgentSubmittedContextPill.tsx
+msgid "Show sent context"
+msgstr "Gesendeten Kontext anzeigen"
+
 #: src/features/home/ui/InboxListPane.tsx
 msgid "Show unread only"
 msgstr "Nur ungelesene anzeigen"
+
+#. placeholder {0}: visibleEntries.length
+#. placeholder {1}: entries.length
+#: src/features/projects/ui/ProjectRepositoryPanel.tsx
+msgid "Showing {0} of {1} entries."
+msgstr "{0} von {1} Einträgen."
+
+#: src/features/projects/ui/DiscussionChannels.tsx
+msgid "Showing mentions from the 500 most recent search results."
+msgstr "Erwähnungen aus den 500 neuesten Suchergebnissen."
+
+#: src/features/projects/ui/DiscussionChannels.tsx
+msgid "Showing the latest {DISCUSSION_SEARCH_LIMIT} mentions; totals may be higher."
+msgstr "Die letzten {DISCUSSION_SEARCH_LIMIT} Erwähnungen; die Gesamtzahl kann höher sein."
 
 #: src/features/settings/ui/AppearanceSettingsControls.tsx
 msgid "Sidebar density"
@@ -1887,6 +4064,10 @@ msgstr "Kanäle sortieren: {selected}"
 msgid "Sort forums: {selected}"
 msgstr "Foren sortieren: {selected}"
 
+#: src/features/projects/ui/ProjectsListHeaderBar.tsx
+msgid "Sort projects"
+msgstr "Projekte sortieren"
+
 #: src/features/settings/ui/AppearanceSettingsControls.tsx
 msgid "Spacing in conversations and Markdown content across {productName}"
 msgstr "Abstände in Unterhaltungen und Markdown-Inhalten in {productName}"
@@ -1898,6 +4079,10 @@ msgstr "Großzügig"
 #: src/features/settings/ui/AppearanceSettingsControls.tsx
 msgid "Split"
 msgstr "Geteilt"
+
+#: src/features/projects/ui/ProjectAgentChatPanel.tsx
+msgid "Start a conversation with the project agent."
+msgstr "Start eine Unterhaltung mit dem Projekt-Agent."
 
 #: src/features/onboarding/ui/MachineOnboardingFlow.tsx
 msgid "Start new identity"
@@ -1911,6 +4096,21 @@ msgstr "Im aktuellen Kanal ein Huddle starten oder beitreten; bei bestehender Ve
 msgid "Start or leave huddle"
 msgstr "Huddle starten oder verlassen"
 
+#: src/features/projects/ui/ProjectOriginReference.tsx
+msgid "started from"
+msgstr "gestartet aus"
+
+#: src/features/projects/ui/ProjectOriginReference.tsx
+msgid "started privately with"
+msgstr "privat gestartet mit"
+
+#: src/features/projects/ui/ProjectIssuesPanel.tsx
+#: src/features/projects/ui/ProjectsWorkItemTable.tsx
+#: src/features/projects/ui/ProjectWorkItemContextDetails.tsx
+#: src/features/projects/ui/PullRequestMetaRail.tsx
+msgid "Status"
+msgstr "Status"
+
 #: src/features/onboarding/ui/IdentityKeyIntroduction.tsx
 msgid "Stored securely on this device"
 msgstr "Sicher auf diesem Gerät gespeichert"
@@ -1923,34 +4123,160 @@ msgstr "Durchgestrichen"
 msgid "Subsections group channels one level under \"{parentName}\"."
 msgstr "Unterbereiche gruppieren Kanäle eine Ebene unter „{parentName}“."
 
+#: src/features/projects/ui/ProjectsAgentPromptPage.tsx
+msgid "Summarize recent activity in {firstRepo}."
+msgstr "Fass die letzte Aktivität in {firstRepo} zusammen."
+
+#: src/features/projects/ui/ProjectsAgentPromptPage.tsx
+msgid "Summarize recent repository activity."
+msgstr "Fass die letzte Repository-Aktivität zusammen."
+
+#: src/features/projects/ui/ProjectsAgentPromptPage.tsx
+msgid "Summarize the open tasks and flag anything urgent."
+msgstr "Fass die offenen Aufgaben zusammen und markier, was dringend ist."
+
 #: src/features/home/ui/InboxListPane.tsx
 msgid "Switch back to All to see other activity."
 msgstr "Wechsle zurück zu Alle, um andere Aktivität zu sehen."
+
+#: src/features/projects/ui/ProjectWorkspaceTabs.tsx
+msgid "Switch to the remote source or clone this repository locally."
+msgstr "Wechsle zur Remote-Quelle oder klon dieses Repository lokal."
 
 #: src/features/settings/ui/AppearanceSettingsPanel.tsx
 msgid "System"
 msgstr "System"
 
+#: src/features/projects/ui/ProjectRepositorySource.tsx
+msgid "Tags"
+msgstr "Tags"
+
+#: src/features/projects/ui/CreateProjectWorkItemDialog.tsx
+msgid "task"
+msgstr "Aufgabe"
+
 #: src/features/home/lib/inbox.ts
 msgid "Task"
 msgstr "Aufgabe"
 
+#: src/features/projects/ui/ProjectIssuesPanel.tsx
+msgid "Task created"
+msgstr "Aufgabe angelegt"
+
+#: src/features/projects/lib/projectDetailAgentContext.ts
+#: src/features/projects/ui/ProjectHomeContextPanel.tsx
+#: src/features/projects/ui/ProjectRepositoryActionsPanel.tsx
+#: src/features/projects/ui/ProjectsAgentPromptPage.tsx
+#: src/features/projects/ui/projectsOverviewContext.ts
+#: src/features/projects/ui/ProjectsToolbar.tsx
+#: src/features/projects/ui/ProjectWorkspaceTabList.tsx
+#: src/features/projects/ui/ProjectWorkspaceTabs.tsx
+msgid "Tasks"
+msgstr "Aufgaben"
+
+#: src/features/projects/ui/ProjectIssuesPanel.tsx
+msgid "Tasks created for this project's repositories will appear here."
+msgstr "Aufgaben, die für die Repositories dieses Projekts angelegt werden, erscheinen hier."
+
+#: src/features/projects/ui/ProjectIssuesPanel.tsx
+msgid "Tasks created for this repository will appear here."
+msgstr "Aufgaben, die für dieses Repository angelegt werden, erscheinen hier."
+
+#: src/features/projects/ui/CreateProjectFormSettings.tsx
+msgid "Team"
+msgstr "Team"
+
+#. placeholder {0}: selectedTeam?.name ?? "None"
+#: src/features/projects/ui/CreateProjectFormSettings.tsx
+msgid "Team: {0}"
+msgstr "Team: {0}"
+
+#: src/features/projects/ui/CreateProjectFormSettings.tsx
+#: src/features/projects/ui/ProjectChannelRequestDialog.tsx
 #: src/features/sidebar/ui/CreateChannelFormFields.tsx
 msgid "Template"
 msgstr "Vorlage"
 
 #. placeholder {0}: selectedTemplate?.name ?? "None"
+#: src/features/projects/ui/CreateProjectFormSettings.tsx
 #: src/features/sidebar/ui/CreateChannelFormFields.tsx
 msgid "Template: {0}"
 msgstr "Vorlage: {0}"
+
+#. placeholder {0}: formatTtlDuration(request.ttlSeconds)
+#: src/features/projects/ui/ProjectChannelRequestDialog.tsx
+msgid "Temporary · {0}. Cleans up automatically after that period of inactivity."
+msgstr "Temporär · {0}. Wird nach dieser Inaktivitätszeit automatisch aufgeräumt."
+
+#: src/features/projects/ui/ProjectRepositoryActionsPanel.tsx
+msgid "Terminal"
+msgstr "Terminal"
+
+#: src/features/projects/ui/ProjectCards.tsx
+msgid "The {productName} git service could not be reached."
+msgstr "Der Git-Dienst von {productName} war nicht erreichbar."
+
+#: src/features/projects/lib/projectRepoAvailability.ts
+msgid "The {productName} git service could not be reached. Check your connection and try again."
+msgstr "Der Git-Dienst von {productName} war nicht erreichbar. Prüf deine Verbindung und versuch es erneut."
+
+#: src/features/projects/ui/ProjectCards.tsx
+msgid "The advertised branch is missing from the git remote."
+msgstr "Der angekündigte Branch fehlt auf der Git-Remote."
+
+#: src/features/projects/projectOwnerControl.ts
+msgid "The agent could not update this project."
+msgstr "Der Agent konnte dieses Projekt nicht aktualisieren."
+
+#: src/features/projects/ui/CreatePullRequestDialog.tsx
+msgid "The base and compare branches must be different."
+msgstr "Basis- und Vergleichs-Branch müssen sich unterscheiden."
+
+#: src/features/projects/ui/CreatePullRequestDialog.tsx
+msgid "The compare branch must be pushed before opening a review."
+msgstr "Der Vergleichs-Branch muss gepusht sein, bevor du einen Review öffnest."
 
 #: src/features/messages/ui/DraftDetailPane.tsx
 msgid "The original thread was deleted. This draft can no longer be opened or sent."
 msgstr "Der ursprüngliche Thread wurde gelöscht. Dieser Entwurf lässt sich nicht mehr öffnen oder senden."
 
+#: src/features/projects/ui/ProjectOriginReference.tsx
+msgid "The private conversation identifier is intentionally omitted."
+msgstr "Die Kennung der privaten Unterhaltung wird absichtlich weggelassen."
+
+#: src/features/projects/ui/ProjectAgentChatPanel.tsx
+msgid "The project agent will build it out from this channel."
+msgstr "Der Projekt-Agent baut es aus diesem Kanal auf."
+
+#: src/features/projects/lib/projectRepoAvailability.ts
+msgid "The project announcement exists, but its git repository was not found on the {productName} relay."
+msgstr "Die Projektankündigung existiert, aber das Git-Repository wurde auf dem Relay von {productName} nicht gefunden."
+
 #: src/features/home/ui/HomeView.tsx
 msgid "The relay did not return a feed response."
 msgstr "Das Relay hat keine Feed-Antwort zurückgegeben."
+
+#: src/features/projects/ui/ProjectsIssuesList.tsx
+#: src/features/projects/ui/ProjectsPullRequestsList.tsx
+#: src/features/projects/ui/ProjectsWorkItemsLoadNotice.tsx
+msgid "The relay request failed."
+msgstr "Die Relay-Anfrage ist fehlgeschlagen."
+
+#: src/features/projects/ui/ProjectCards.tsx
+msgid "The repository has no access channel binding, so the relay cannot authorize reads."
+msgstr "Das Repository hat keine Zugriffskanal-Bindung, deshalb kann das Relay Lesezugriff nicht freigeben."
+
+#: src/features/projects/ui/ProjectRepositoryUnavailableState.tsx
+msgid "the repository owner"
+msgstr "die Person, der das Repository gehört"
+
+#: src/features/projects/lib/projectBranches.ts
+msgid "The repository's default branch cannot be deleted."
+msgstr "Der Standard-Branch des Repositorys kann nicht gelöscht werden."
+
+#: src/features/projects/repoSyncHooks.ts
+msgid "The review update could not be published."
+msgstr "Das Review-Update konnte nicht veröffentlicht werden."
 
 #: src/features/settings/ui/AppearanceSettingsControls.tsx
 msgid "The revised conversation layout is ready to review."
@@ -1959,6 +4285,10 @@ msgstr "Das überarbeitete Layout für Unterhaltungen kann geprüft werden."
 #: src/features/settings/ui/AppearanceSettingsControls.tsx
 msgid "The same rhythm carries through channels, threads, DMs, and Inbox."
 msgstr "Derselbe Rhythmus zieht sich durch Kanäle, Threads, Direktnachrichten und den Posteingang."
+
+#: src/features/projects/lib/projectRepoAvailability.ts
+msgid "The selected branch is advertised by the project but is missing from its git remote."
+msgstr "Der gewählte Branch wird vom Projekt angekündigt, fehlt aber auf seiner Git-Remote."
 
 #: src/features/settings/ui/AppearanceSettingsPanel.tsx
 msgid "Theme"
@@ -1975,6 +4305,14 @@ msgstr "Designstil, {selectedThemeLabel}"
 #: src/features/settings/ui/AppearanceSettingsPanel.tsx
 msgid "this community"
 msgstr "diese Community"
+
+#: src/features/projects/ui/ProjectConversationPanel.tsx
+msgid "This conversation could not be loaded."
+msgstr "Diese Unterhaltung konnte nicht geladen werden."
+
+#: src/features/projects/ui/AgentContextPayloadPreview.tsx
+msgid "This exact text is appended to your message before it is signed and sent. Quoted values are untrusted workspace metadata —{productName} does not verify or rewrite them."
+msgstr "Genau dieser Text wird an deine Nachricht angehängt, bevor sie signiert und gesendet wird. Werte in Anführungszeichen sind ungeprüfte Workspace-Metadaten — {productName} prüft oder verändert sie nicht."
 
 #. placeholder {0}: BRAND.productName
 #. placeholder {1}: BRAND.productName
@@ -1996,9 +4334,45 @@ msgstr "Dieser Eintrag unterstützt noch keine direkten Antworten."
 msgid "This key will be how you log into {0}. You can use it across {1} communities and other platforms."
 msgstr "Mit diesem Schlüssel meldest du dich bei {0} an. Du kannst ihn in allen {1}-Communities und auf anderen Plattformen verwenden."
 
+#: src/features/projects/ui/ProjectChannelRequestDialog.tsx
+msgid "this project"
+msgstr "diesem Projekt"
+
+#: src/features/projects/ui/ProjectDetailUnavailableState.tsx
+msgid "This project could not be found."
+msgstr "Dieses Projekt wurde nicht gefunden."
+
+#: src/features/projects/ui/ProjectDetailUnavailableState.tsx
+msgid "This project does not have any available repositories yet."
+msgstr "Dieses Projekt hat noch keine verfügbaren Repositories."
+
 #: src/features/home/ui/ProjectInboxDetail.tsx
 msgid "This project item could not be found."
 msgstr "Dieser Projekteintrag wurde nicht gefunden."
+
+#: src/features/projects/ui/ProjectChannelHome.tsx
+msgid "This project's channel could not be found."
+msgstr "Der Kanal dieses Projekts wurde nicht gefunden."
+
+#: src/features/projects/lib/projectRepoAvailability.ts
+msgid "This repository has no access channel binding, so the relay cannot authorize anyone to read it. The repository owner can bind a channel from the Access menu."
+msgstr "Dieses Repository hat keine Zugriffskanal-Bindung, deshalb kann das Relay niemandem Lesezugriff geben. Die Person, der das Repository gehört, kann im Menü Zugriff einen Kanal binden."
+
+#: src/features/projects/lib/projectGitError.ts
+msgid "This repository requires GitHub authentication. {productName} currently clones public GitHub repositories without credentials."
+msgstr "Dieses Repository verlangt eine GitHub-Authentifizierung. {productName} klont öffentliche GitHub-Repositories derzeit ohne Zugangsdaten."
+
+#: src/features/projects/projectPullRequests.mjs
+msgid "This review is still a work in progress."
+msgstr "Dieser Review ist noch in Arbeit."
+
+#: src/features/projects/ui/ProjectsActivityFeed.tsx
+msgid "This week"
+msgstr "Diese Woche"
+
+#: src/features/projects/lib/projectsActivityDigest.ts
+msgid "This week:"
+msgstr "Diese Woche:"
 
 #: src/features/onboarding/ui/MachineOnboardingFlow.tsx
 msgid "This will create a new identity and abandon your previous key. This cannot be undone. Continue?"
@@ -2043,6 +4417,10 @@ msgstr "Threads öffnen sich in einem Seitenbereich neben dem Kanal"
 msgid "Threads open over the channel"
 msgstr "Threads öffnen sich über dem Kanal"
 
+#: src/features/projects/ui/CreateProjectWorkItemDialog.tsx
+msgid "Title"
+msgstr "Titel"
+
 #: src/shared/lib/datetime.ts
 msgid "Today"
 msgstr "Heute"
@@ -2050,6 +4428,10 @@ msgstr "Heute"
 #: src/shared/lib/keyboard-shortcuts.ts
 msgid "Toggle bold formatting"
 msgstr "Fettschrift ein-/ausschalten"
+
+#: src/features/projects/ui/ProjectsAgentPromptPage.tsx
+msgid "Toggle formatting"
+msgstr "Formatierung umschalten"
 
 #: src/shared/lib/keyboard-shortcuts.ts
 msgid "Toggle inline code formatting"
@@ -2067,14 +4449,39 @@ msgstr "Seitenleiste ein-/ausblenden"
 msgid "Toggle strikethrough formatting"
 msgstr "Durchstreichen ein-/ausschalten"
 
+#: src/features/projects/ui/ProjectsIssuesList.tsx
+msgid "Triage task"
+msgstr "Aufgabe triagieren"
+
 #: src/features/channels/ui/ChannelBrowserDialog.tsx
 msgid "Try a different name or keyword."
 msgstr "Versuche einen anderen Namen oder ein anderes Stichwort."
+
+#: src/features/projects/ui/ProjectsActivityFeed.tsx
+#: src/features/projects/ui/ProjectsChannelsList.tsx
+msgid "Try a different search."
+msgstr "Versuch eine andere Suche."
 
 #: src/features/home/ui/HomeView.tsx
 #: src/features/settings/ui/SettingsView.tsx
 msgid "Try again"
 msgstr "Erneut versuchen"
+
+#: src/features/projects/lib/projectGitError.ts
+msgid "Try again, or open the repository on GitHub for more information."
+msgstr "Versuch es erneut oder öffne das Repository auf GitHub, um mehr zu erfahren."
+
+#: src/features/projects/lib/projectGitError.ts
+msgid "Try again. If the problem continues, contact the repository owner."
+msgstr "Versuch es erneut. Wenn das Problem bleibt, wende dich an die Person, der das Repository gehört."
+
+#: src/features/projects/ui/ProjectCards.tsx
+msgid "Try another owner filter or sort mode."
+msgstr "Versuch einen anderen Inhaber-Filter oder eine andere Sortierung."
+
+#: src/features/projects/ui/ProjectBrowserDialog.tsx
+msgid "Try another search or create a new project."
+msgstr "Versuch eine andere Suche oder leg ein neues Projekt an."
 
 #: src/features/home/ui/InboxListPane.tsx
 msgid "Turn off Show unread only to see read activity."
@@ -2084,18 +4491,60 @@ msgstr "Schalte „Nur ungelesene anzeigen“ aus, um gelesene Aktivität zu seh
 msgid "Type"
 msgstr "Typ"
 
+#: src/features/projects/ui/IssueAssigneesRow.tsx
+msgid "Unassign {label}"
+msgstr "Zuweisung von {label} aufheben"
+
+#: src/features/projects/ui/ProjectIssuesPanel.tsx
+msgid "Unassigned"
+msgstr "Nicht zugewiesen"
+
+#: src/features/projects/ui/ProjectCards.tsx
+#: src/features/projects/ui/ProjectHomeContextPanel.tsx
+#: src/features/projects/ui/UnavailableProjectRepositories.tsx
+msgid "Unavailable"
+msgstr "Nicht verfügbar"
+
 #: src/features/home/ui/FeedSection.tsx
 msgid "Undo done"
 msgstr "Erledigt rückgängig machen"
+
+#: src/features/projects/ui/ProjectCards.tsx
+msgid "Uninitialized"
+msgstr "Nicht initialisiert"
+
+#: src/features/projects/ui/ProjectDetailFeedPanels.tsx
+msgid "Unknown author"
+msgstr "Unbekannte Autorin oder unbekannter Autor"
+
+#: src/features/projects/ui/PullRequestMetaRail.tsx
+msgid "unknown branch"
+msgstr "unbekannter Branch"
+
+#: src/features/projects/ui/ProjectWorkItemContextDetails.tsx
+msgid "Unknown branch"
+msgstr "Unbekannter Branch"
 
 #: src/features/messages/ui/DraftDetailPane.tsx
 #: src/features/messages/ui/DraftsPanel.tsx
 msgid "Unknown channel"
 msgstr "Unbekannter Kanal"
 
+#: src/features/projects/ui/ProjectDetailFeedPanels.tsx
+msgid "Unknown contributor"
+msgstr "Unbekannte mitwirkende Person"
+
+#: src/features/projects/projectEnumeration.ts
+msgid "Unknown error"
+msgstr "Unbekannter Fehler"
+
 #: src/features/messages/ui/DraftsPanel.tsx
 msgid "Unknown time"
 msgstr "Unbekannte Zeit"
+
+#: src/features/projects/ui/CreateProjectFormSettings.tsx
+msgid "Unlisted"
+msgstr "Ungelistet"
 
 #: src/features/onboarding/ui/MachineOnboardingFlow.tsx
 msgid "Unlock your account"
@@ -2109,11 +4558,36 @@ msgstr "Stummschaltung aufheben"
 msgid "Unpin channel"
 msgstr "Kanal nicht mehr anheften"
 
+#: src/features/projects/ui/ProjectCards.tsx
+msgid "Unreachable"
+msgstr "Nicht erreichbar"
+
 #: src/features/sidebar/ui/CommunityRail.tsx
 #: src/features/sidebar/ui/SidebarSection.tsx
 msgid "unread"
 msgstr "ungelesen"
 
+#: src/features/projects/projectPullRequests.mjs
+msgid "Untitled review"
+msgstr "Review ohne Titel"
+
+#: src/features/projects/projectIssues.mjs
+msgid "Untitled task"
+msgstr "Aufgabe ohne Titel"
+
+#: src/features/projects/ui/ProjectWorkspaceTabs.tsx
+msgid "Update review"
+msgstr "Review aktualisieren"
+
+#: src/features/projects/ui/ProjectsWorkItemTable.tsx
+msgid "Updated"
+msgstr "Aktualisiert"
+
+#: src/features/projects/ui/ProjectPullRequestsPanel.tsx
+msgid "Updated review branch"
+msgstr "Review-Branch aktualisiert"
+
+#: src/features/projects/ui/ProjectPullRequestsPanel.tsx
 #: src/features/settings/ui/SettingsPanels.tsx
 msgid "Updates"
 msgstr "Updates"
@@ -2138,13 +4612,68 @@ msgstr "Vorhandenen Schlüssel verwenden"
 msgid "v{appVersion}"
 msgstr "v{appVersion}"
 
+#. placeholder {0}: project.name
+#. placeholder {0}: repository.name
+#: src/features/projects/ui/ProjectCards.tsx
+#: src/features/projects/ui/RepositoryCards.tsx
+msgid "View {0}"
+msgstr "{0} anzeigen"
+
+#: src/features/projects/ui/ProjectsActivityFeed.tsx
+msgid "View {actorLabel}'s profile"
+msgstr "Profil von {actorLabel} anzeigen"
+
+#: src/features/projects/ui/ProjectCards.tsx
+msgid "View {label}'s profile"
+msgstr "Profil von {label} anzeigen"
+
 #: src/features/home/ui/RecentNotesSection.tsx
 msgid "View all in Pulse"
 msgstr "Alle in Pulse ansehen"
 
+#: src/features/projects/ui/ProjectsPullRequestsList.tsx
+msgid "View closed"
+msgstr "Geschlossene anzeigen"
+
+#: src/features/projects/ui/ProjectIssuesPanel.tsx
+#: src/features/projects/ui/ProjectPullRequestsPanel.tsx
+msgid "View comments"
+msgstr "Kommentare anzeigen"
+
+#. placeholder {0}: hash.slice(0, 7)
+#: src/features/projects/ui/ProjectPullRequestsPanel.tsx
+msgid "View commit {0}"
+msgstr "Commit {0} anzeigen"
+
+#: src/features/projects/ui/ProjectPullRequestsPanel.tsx
+msgid "View commit {short}"
+msgstr "Commit {short} anzeigen"
+
+#: src/features/projects/ui/ProjectsPullRequestsList.tsx
+msgid "View draft"
+msgstr "Entwurf anzeigen"
+
 #: src/features/messages/ui/DraftsPanel.tsx
 msgid "View draft in {channelLabel}"
 msgstr "Entwurf in {channelLabel} ansehen"
+
+#: src/features/projects/ui/ProjectsPullRequestsList.tsx
+msgid "View merge"
+msgstr "Merge anzeigen"
+
+#. placeholder {0}: pullRequest.title
+#: src/features/projects/ui/ProjectsPullRequestsList.tsx
+msgid "View review {0}"
+msgstr "Review {0} anzeigen"
+
+#: src/features/projects/ui/ProjectsIssuesList.tsx
+msgid "View task"
+msgstr "Aufgabe anzeigen"
+
+#. placeholder {0}: issue.title
+#: src/features/projects/ui/ProjectsIssuesList.tsx
+msgid "View task {0}"
+msgstr "Aufgabe {0} anzeigen"
 
 #: src/features/messages/ui/MessageThreadSummaryRow.tsx
 msgid "View thread"
@@ -2158,6 +4687,10 @@ msgstr "Thread mit {replyCount} ansehen"
 msgid "View thread with {replyCount} replies, last reply {lastReply}"
 msgstr "Thread mit {replyCount} ansehen, letzte Antwort {lastReply}"
 
+#: src/features/projects/ui/ProjectChannelRequestDialog.tsx
+msgid "Visibility"
+msgstr "Sichtbarkeit"
+
 #: src/features/settings/ui/SettingsPanels.tsx
 msgid "Voice"
 msgstr "Sprache"
@@ -2166,13 +4699,25 @@ msgstr "Sprache"
 msgid "Waiting to reconnect"
 msgstr "Warten auf Neuverbindung"
 
+#: src/features/projects/ui/PullRequestReviewCard.tsx
+msgid "What looks good?"
+msgstr "Was sieht gut aus?"
+
 #: src/features/sidebar/ui/CreateChannelFormFields.tsx
 msgid "What this {kindLabel} is for"
 msgstr "Wofür dieser {kindLabel} gedacht ist"
 
+#: src/features/projects/ui/CreateProjectFormContent.tsx
+msgid "What this project should become"
+msgstr "Was aus diesem Projekt werden soll"
+
 #: src/features/onboarding/ui/IdentityKeyHelpDialog.tsx
 msgid "What’s an identity key?"
 msgstr "Was ist ein Identitätsschlüssel?"
+
+#: src/features/projects/ui/ProjectsAgentPromptPage.tsx
+msgid "Which reviews need attention today?"
+msgstr "Welche Reviews brauchen heute Aufmerksamkeit?"
 
 #: src/features/sidebar/ui/AppSidebarPinnedHeader.tsx
 msgid "Workflows"
@@ -2189,6 +4734,18 @@ msgstr "Gestern"
 #: src/features/messages/ui/DraftDetailPane.tsx
 msgid "You"
 msgstr "Du"
+
+#: src/features/projects/lib/projectGitError.ts
+msgid "You need access to the repository’s channel before you can clone it."
+msgstr "Du brauchst Zugriff auf den Kanal des Repositorys, bevor du es klonen kannst."
+
+#: src/features/projects/ui/ProjectCards.tsx
+msgid "You’re not a member of the channel that grants access to this repository."
+msgstr "Du bist kein Mitglied des Kanals, der den Zugriff auf dieses Repository vergibt."
+
+#: src/features/projects/ui/ProjectChannelRequestDialog.tsx
+msgid "Your agent requested a new channel in {projectName}. Review the details before creating it."
+msgstr "Dein Agent hat einen neuen Kanal in {projectName} angefragt. Prüf die Details, bevor du ihn anlegst."
 
 #: src/features/onboarding/ui/MachineOnboardingFlow.tsx
 msgid "Your people, your agents, your projects —<0/>all in one place."

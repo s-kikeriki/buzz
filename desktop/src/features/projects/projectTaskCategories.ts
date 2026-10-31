@@ -1,7 +1,10 @@
+import { i18n } from "@lingui/core";
+import { msg } from "@lingui/core/macro";
+
 export const PROJECT_TASK_CATEGORIES = [
-  { label: "Issue", value: "issue" },
-  { label: "Change request", value: "change-request" },
-  { label: "Improvement", value: "improvement" },
+  { label: msg`Issue`, value: "issue" },
+  { label: msg`Change request`, value: "change-request" },
+  { label: msg`Improvement`, value: "improvement" },
 ] as const;
 
 export type ProjectTaskCategory =
@@ -28,9 +31,9 @@ export function projectTaskCategoryFromLabels(
 }
 
 export function projectTaskCategoryLabel(category: ProjectTaskCategory) {
-  return (
+  return i18n._(
     PROJECT_TASK_CATEGORIES.find((option) => option.value === category)
-      ?.label ?? "Issue"
+      ?.label ?? msg`Issue`,
   );
 }
 

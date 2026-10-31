@@ -1,3 +1,5 @@
+import { t } from "@lingui/core/macro";
+import { useLingui } from "@lingui/react/macro";
 import * as React from "react";
 
 import type { UserProfileLookup } from "@/features/profile/lib/identity";
@@ -54,6 +56,8 @@ function CollectionGroup({
   items: ProjectSelectionItem[];
   title: string;
 }) {
+  const { i18n } = useLingui();
+  void i18n;
   return (
     <ProjectSelectableGroup
       contentClassName="mt-2 space-y-0"
@@ -141,6 +145,8 @@ export function ProjectsOverviewProjectItems({
   viewMode: ProjectsViewMode;
   visibleProjects: Project[];
 }) {
+  const { i18n } = useLingui();
+  void i18n;
   // One selection array shared by every row (was rebuilt per row per render —
   // O(n²) object churn that also defeated row memoization).
   const selectionRangeItems = React.useMemo(
@@ -198,13 +204,13 @@ export function ProjectsOverviewProjectItems({
       items: visibleProjects.filter((project) =>
         isProjectMine(project, currentPubkey),
       ),
-      title: "Mine",
+      title: t`Mine`,
     },
     {
       items: visibleProjects.filter(
         (project) => !isProjectMine(project, currentPubkey),
       ),
-      title: "Other projects",
+      title: t`Other projects`,
     },
   ].filter((group) => group.items.length > 0);
   if (viewMode === "grid") {
@@ -321,6 +327,8 @@ export function ProjectsOverviewRepositoryItems({
   viewMode: ProjectsViewMode;
   visibleRepositories: Array<{ project: Project; repository: Repository }>;
 }) {
+  const { i18n } = useLingui();
+  void i18n;
   // Shared, identity-stable selection array (see ProjectsOverviewProjectItems).
   const selectionRangeItems = React.useMemo(
     () =>
@@ -363,13 +371,13 @@ export function ProjectsOverviewRepositoryItems({
       items: visibleRepositories.filter(({ repository }) =>
         repositoryIsMine(repository, currentPubkey),
       ),
-      title: "Mine",
+      title: t`Mine`,
     },
     {
       items: visibleRepositories.filter(
         ({ repository }) => !repositoryIsMine(repository, currentPubkey),
       ),
-      title: "Other repositories",
+      title: t`Other repositories`,
     },
   ].filter((group) => group.items.length > 0);
   if (viewMode === "grid") {

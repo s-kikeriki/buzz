@@ -1,7 +1,9 @@
+import { t } from "@lingui/core/macro";
+
 import {
   type ProjectSelectionItem,
   type ProjectSelectionKind,
-  projectSelectionNoun,
+  projectSelectionCountLabel,
 } from "./projectSelection.ts";
 
 const PROJECT_PAGE_CONTEXT_MARKER = "Current Buzz project page:";
@@ -149,7 +151,7 @@ function boundedProjectSelection(items: ProjectSelectionItem[]) {
         title: normalizedPromptValue(title, 160) ?? "",
       })),
     kind,
-    title: total > 0 ? `${total} ${projectSelectionNoun(kind, total)}` : "",
+    title: total > 0 ? projectSelectionCountLabel(kind, total) : "",
     total,
   };
 }
@@ -177,13 +179,13 @@ export function buildProjectDetailAgentContext({
 }): ProjectDetailAgentContext {
   const [commit, issue, pullRequest] = workItems;
   const viewLabels: Record<string, string> = {
-    activity: "Commits",
-    channels: "Channels",
-    contributors: "Contributors",
-    files: "Files",
-    issues: "Tasks",
-    overview: "Overview",
-    prs: "Reviews",
+    activity: t`Commits`,
+    channels: t`Channels`,
+    contributors: t`Contributors`,
+    files: t`Files`,
+    issues: t`Tasks`,
+    overview: t`Overview`,
+    prs: t`Reviews`,
   };
   const workItem = pullRequest
     ? {
@@ -257,10 +259,10 @@ export function projectDetailAgentContextBlock(
       context.selection.length,
     );
     const selectionKind = context.selection[0]?.kind ?? "project";
-    const selectionTitle = `${selectionTotal} ${projectSelectionNoun(
+    const selectionTitle = projectSelectionCountLabel(
       selectionKind,
       selectionTotal,
-    )}`;
+    );
     lines.push(
       `- Selection: ${
         context.selection.length < selectionTotal

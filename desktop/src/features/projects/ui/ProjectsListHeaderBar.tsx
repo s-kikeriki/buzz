@@ -1,3 +1,4 @@
+import { Trans, useLingui } from "@lingui/react/macro";
 import type {
   ProjectsSort,
   ProjectsViewMode,
@@ -17,17 +18,27 @@ export function ProjectsSortSelect({
   onChange: (sort: ProjectsSort) => void;
   sort: ProjectsSort;
 }) {
+  const { i18n } = useLingui();
+  void i18n;
   return (
     <label className="flex items-center gap-2 text-xs text-muted-foreground">
-      <span className="sr-only">Sort projects</span>
+      <span className="sr-only">
+        <Trans>Sort projects</Trans>
+      </span>
       <select
         className="h-8 rounded-md bg-transparent px-2 text-xs text-foreground outline-hidden hover:bg-muted/50 focus:ring-1 focus:ring-ring"
         onChange={(event) => onChange(event.target.value as ProjectsSort)}
         value={sort}
       >
-        <option value="updated">Recent activity</option>
-        <option value="created">Created date</option>
-        <option value="name">Name</option>
+        <option value="updated">
+          <Trans>Recent activity</Trans>
+        </option>
+        <option value="created">
+          <Trans>Created date</Trans>
+        </option>
+        <option value="name">
+          <Trans>Name</Trans>
+        </option>
       </select>
     </label>
   );
@@ -38,6 +49,8 @@ export function ProjectsListHeaderBar({
   onViewModeChange,
   viewMode,
 }: ProjectsListHeaderBarProps) {
+  const { i18n } = useLingui();
+  void i18n;
   return (
     <div
       className="ml-auto flex flex-wrap items-center justify-end gap-2"

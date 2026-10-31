@@ -1,3 +1,5 @@
+import { t } from "@lingui/core/macro";
+import { Trans, useLingui } from "@lingui/react/macro";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -20,36 +22,50 @@ export function ProjectChannelRequestDetails({
 }: {
   request: RequestedChannel;
 }) {
+  const { i18n } = useLingui();
+  void i18n;
   return (
     <dl className="space-y-2 rounded-xl border border-border/60 bg-muted/25 p-3 text-sm">
       <div className="flex gap-3">
-        <dt className="w-24 shrink-0 text-muted-foreground">Name</dt>
+        <dt className="w-24 shrink-0 text-muted-foreground">
+          <Trans>Name</Trans>
+        </dt>
         <dd className="min-w-0 break-words text-foreground">#{request.name}</dd>
       </div>
       {request.description ? (
         <div className="flex gap-3">
-          <dt className="w-24 shrink-0 text-muted-foreground">Description</dt>
+          <dt className="w-24 shrink-0 text-muted-foreground">
+            <Trans>Description</Trans>
+          </dt>
           <dd className="min-w-0 break-words text-foreground">
             {request.description}
           </dd>
         </div>
       ) : null}
       <div className="flex gap-3">
-        <dt className="w-24 shrink-0 text-muted-foreground">Visibility</dt>
+        <dt className="w-24 shrink-0 text-muted-foreground">
+          <Trans>Visibility</Trans>
+        </dt>
         <dd className="text-foreground">{request.visibility}</dd>
       </div>
       {request.ttlSeconds ? (
         <div className="flex gap-3">
-          <dt className="w-24 shrink-0 text-muted-foreground">Lifetime</dt>
+          <dt className="w-24 shrink-0 text-muted-foreground">
+            <Trans>Lifetime</Trans>
+          </dt>
           <dd className="min-w-0 break-words text-foreground">
-            Temporary · {formatTtlDuration(request.ttlSeconds)}. Cleans up
-            automatically after that period of inactivity.
+            <Trans>
+              Temporary · {formatTtlDuration(request.ttlSeconds)}. Cleans up
+              automatically after that period of inactivity.
+            </Trans>
           </dd>
         </div>
       ) : null}
       {request.templateName ? (
         <div className="flex gap-3">
-          <dt className="w-24 shrink-0 text-muted-foreground">Template</dt>
+          <dt className="w-24 shrink-0 text-muted-foreground">
+            <Trans>Template</Trans>
+          </dt>
           <dd className="min-w-0 break-words text-foreground">
             {request.templateName}
           </dd>
@@ -61,8 +77,11 @@ export function ProjectChannelRequestDetails({
 
 /** Global owner-review surface for project-channel requests from managed agents. */
 export function ProjectChannelRequestDialog() {
+  const { i18n } = useLingui();
+  void i18n;
   const management = useProjectChannelRequests();
   const request = management.request?.request;
+  const projectName = management.project?.name ?? t`this project`;
 
   return (
     <AlertDialog
@@ -73,11 +92,14 @@ export function ProjectChannelRequestDialog() {
     >
       <AlertDialogContent data-testid="project-channel-request-dialog">
         <AlertDialogHeader>
-          <AlertDialogTitle>Create project channel?</AlertDialogTitle>
+          <AlertDialogTitle>
+            <Trans>Create project channel?</Trans>
+          </AlertDialogTitle>
           <AlertDialogDescription>
-            Your agent requested a new channel in{" "}
-            {management.project?.name ?? "this project"}. Review the details
-            before creating it.
+            <Trans>
+              Your agent requested a new channel in {projectName}. Review the
+              details before creating it.
+            </Trans>
           </AlertDialogDescription>
         </AlertDialogHeader>
         {request ? <ProjectChannelRequestDetails request={request} /> : null}
@@ -86,7 +108,7 @@ export function ProjectChannelRequestDialog() {
         ) : null}
         <AlertDialogFooter>
           <AlertDialogCancel disabled={management.isPending}>
-            Cancel
+            <Trans>Cancel</Trans>
           </AlertDialogCancel>
           <AlertDialogAction
             data-testid="project-channel-request-approve"
@@ -96,7 +118,7 @@ export function ProjectChannelRequestDialog() {
               void management.approve();
             }}
           >
-            {management.isPending ? "Creating…" : "Create channel"}
+            {management.isPending ? t`Creating…` : t`Create channel`}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

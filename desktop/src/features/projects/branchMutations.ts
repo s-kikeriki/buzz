@@ -1,3 +1,4 @@
+import { t } from "@lingui/core/macro";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import * as React from "react";
 import { toast } from "sonner";
@@ -102,7 +103,7 @@ export function useProjectBranchActions(input: {
       !input.activeRemoteBranch ||
       input.deleteBranchReason
     ) {
-      throw new Error(input.deleteBranchReason ?? "Choose a remote branch.");
+      throw new Error(input.deleteBranchReason ?? t`Choose a remote branch.`);
     }
     const result = await deleteBranch({
       branch: input.activeBranch,

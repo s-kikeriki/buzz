@@ -1,3 +1,5 @@
+import { t } from "@lingui/core/macro";
+import { Trans, useLingui } from "@lingui/react/macro";
 import * as React from "react";
 import { toast } from "sonner";
 
@@ -37,6 +39,8 @@ export function CreatePullRequestDialog({
   projects: Project[];
   reposDir?: string | null;
 }) {
+  const { i18n } = useLingui();
+  void i18n;
   const repositoryOptions = React.useMemo(
     () =>
       projects.flatMap((project) =>
@@ -127,26 +131,26 @@ export function CreatePullRequestDialog({
       (pullRequest.targetBranch ?? repository?.defaultBranch) === targetBranch,
   );
   const selectionError = !repository
-    ? "Choose a repository."
+    ? t`Choose a repository.`
     : !targetBranch
-      ? "Choose a base branch."
+      ? t`Choose a base branch.`
       : !sourceBranch
-        ? "Choose a compare branch."
+        ? t`Choose a compare branch.`
         : sourceBranch === targetBranch
-          ? "The base and compare branches must be different."
+          ? t`The base and compare branches must be different.`
           : hasOpenPullRequest
-            ? "An open review already compares these branches."
+            ? t`An open review already compares these branches.`
             : !sourceCommit
-              ? "The compare branch must be pushed before opening a review."
+              ? t`The compare branch must be pushed before opening a review.`
               : null;
   const description =
     repository && sourceBranch && targetBranch
       ? `${repository.name}: ${sourceBranch} → ${targetBranch}${sourceCommit ? ` at ${sourceCommit.slice(0, 7)}` : ""}`
-      : "Choose a repository and branches to compare.";
+      : t`Choose a repository and branches to compare.`;
 
   async function handleCreate(input: CreatePullRequestDialogInput) {
     if (!project || !repository || !sourceCommit || selectionError) {
-      throw new Error(selectionError ?? "Review branches are incomplete.");
+      throw new Error(selectionError ?? t`Review branches are incomplete.`);
     }
     const pullRequestId = await createMutation.mutateAsync({
       ...input,
@@ -173,12 +177,14 @@ export function CreatePullRequestDialog({
       }}
       open={open}
       submitDisabled={Boolean(selectionError)}
-      title="Open a review"
+      title={t`Open a review`}
       titlePlaceholder="Describe the change"
     >
       <div className="grid gap-3 rounded-xl border border-border/60 bg-muted/25 p-3 sm:grid-cols-2">
         <label className="space-y-1.5 text-sm font-medium sm:col-span-2">
-          <span>Repository</span>
+          <span>
+            <Trans>Repository</Trans>
+          </span>
           <select
             className="h-10 w-full rounded-lg border border-input bg-background px-3 text-sm font-normal outline-hidden focus:ring-1 focus:ring-ring"
             data-testid="create-pull-request-repository"
@@ -199,7 +205,9 @@ export function CreatePullRequestDialog({
           </select>
         </label>
         <label className="space-y-1.5 text-sm font-medium">
-          <span>Base</span>
+          <span>
+            <Trans>Base</Trans>
+          </span>
           <select
             className="h-10 w-full rounded-lg border border-input bg-background px-3 text-sm font-normal outline-hidden focus:ring-1 focus:ring-ring"
             data-testid="create-pull-request-base-branch"
@@ -215,7 +223,9 @@ export function CreatePullRequestDialog({
           </select>
         </label>
         <label className="space-y-1.5 text-sm font-medium">
-          <span>Compare</span>
+          <span>
+            <Trans>Compare</Trans>
+          </span>
           <select
             className="h-10 w-full rounded-lg border border-input bg-background px-3 text-sm font-normal outline-hidden focus:ring-1 focus:ring-ring"
             data-testid="create-pull-request-compare-branch"
@@ -224,7 +234,7 @@ export function CreatePullRequestDialog({
             value={sourceBranch}
           >
             <option disabled value="">
-              Select branch
+              <Trans>Select branch</Trans>
             </option>
             {branchOptions.map((branch) => (
               <option key={branch} value={branch}>

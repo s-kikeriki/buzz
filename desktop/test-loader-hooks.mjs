@@ -150,7 +150,8 @@ function hasLinguiMacroImport(source) {
 
 /** A `.ts` module (no JSX) can still use `msg` / `t`; it needs the pass too. */
 function usesLinguiMacro(url) {
-  if (!url.endsWith(".ts") || url.endsWith(".d.ts")) return false;
+  if (url.includes("/node_modules/") || url.endsWith(".d.ts")) return false;
+  if (!/\.(?:ts|tsx|mjs|js)$/.test(url)) return false;
   try {
     return hasLinguiMacroImport(fs.readFileSync(fileURLToPath(url), "utf8"));
   } catch {

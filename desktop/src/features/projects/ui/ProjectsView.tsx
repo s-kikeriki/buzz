@@ -1,3 +1,5 @@
+import { t } from "@lingui/core/macro";
+import { Trans, useLingui } from "@lingui/react/macro";
 import * as React from "react";
 
 import { useAppNavigation } from "@/app/navigation/useAppNavigation";
@@ -109,6 +111,8 @@ const MANY_PROJECTS_THRESHOLD = 12;
 const PROJECTS_CONTEXT_POD_MIN_VIEWPORT_PX = 1024;
 
 export function ProjectsView() {
+  const { i18n } = useLingui();
+  void i18n;
   const { goProject } = useAppNavigation();
   const { activeCommunity } = useCommunities();
   const relayOrigin = useRelayOrigin();
@@ -550,13 +554,15 @@ export function ProjectsView() {
   if (projectsQuery.isError) {
     return (
       <div className="flex flex-1 flex-col items-center justify-center gap-2 text-muted-foreground">
-        <p className="text-sm text-red-400">Failed to load projects</p>
+        <p className="text-sm text-red-400">
+          <Trans>Failed to load projects</Trans>
+        </p>
         <Button
           onClick={() => void projectsQuery.refetch()}
           size="sm"
           variant="outline"
         >
-          Retry
+          <Trans>Retry</Trans>
         </Button>
       </div>
     );
@@ -845,7 +851,7 @@ export function ProjectsView() {
                                   embedded={viewMode === "list"}
                                   emptyMessage={
                                     searchQuery.trim()
-                                      ? "No matching reviews"
+                                      ? t`No matching reviews`
                                       : undefined
                                   }
                                   error={projectsWorkItemsQuery.error}
@@ -871,7 +877,7 @@ export function ProjectsView() {
                                   embedded={viewMode === "list"}
                                   emptyMessage={
                                     searchQuery.trim()
-                                      ? "No matching tasks"
+                                      ? t`No matching tasks`
                                       : undefined
                                   }
                                   error={projectsWorkItemsQuery.error}
@@ -939,7 +945,7 @@ export function ProjectsView() {
           testId="projects-overview-context-rail"
         >
           <aside
-            aria-label="Project context"
+            aria-label={t`Project context`}
             className="relative z-30 flex h-full flex-col overflow-hidden bg-sidebar text-sidebar-foreground"
           >
             <div className="min-h-0 flex-1 overflow-y-auto">

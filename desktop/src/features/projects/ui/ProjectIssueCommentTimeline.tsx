@@ -1,10 +1,11 @@
+import { plural, t } from "@lingui/core/macro";
+import { useLingui } from "@lingui/react/macro";
 import { ChevronDown, ChevronUp, History } from "lucide-react";
 import * as React from "react";
 
 import type { ProjectIssue } from "@/features/projects/hooks";
 import {
   formatExactTimestamp,
-  pluralize,
   relativeTime,
 } from "@/features/projects/lib/projectsViewHelpers";
 import {
@@ -26,6 +27,8 @@ export function ProjectIssueCommentTimeline({
   comments: ProjectIssue["comments"];
   profiles?: UserProfileLookup;
 }) {
+  const { i18n } = useLingui();
+  void i18n;
   const locale = useLocale();
   const [isCollapsed, setIsCollapsed] = React.useState(false);
   const [isExpanded, setIsExpanded] = React.useState(false);
@@ -70,8 +73,11 @@ export function ProjectIssueCommentTimeline({
         </span>
         <span className="flex min-h-5 min-w-0 flex-1 items-center text-left">
           {isCollapsed
-            ? `Show ${pluralize(orderedComments.length, "earlier comment")}`
-            : "Collapse comment history"}
+            ? plural(orderedComments.length, {
+                one: "Show # earlier comment",
+                other: "Show # earlier comments",
+              })
+            : t`Collapse comment history`}
         </span>
         {isCollapsed ? (
           <ChevronDown className="mt-0.5 h-3.5 w-3.5" />
@@ -94,7 +100,10 @@ export function ProjectIssueCommentTimeline({
             </span>
           </span>
           <span className="min-w-0 flex-1 text-left">
-            Show {pluralize(earlierCommentCount, "earlier comment")}
+            {plural(earlierCommentCount, {
+              one: "Show # earlier comment",
+              other: "Show # earlier comments",
+            })}
           </span>
         </button>
       ) : null}

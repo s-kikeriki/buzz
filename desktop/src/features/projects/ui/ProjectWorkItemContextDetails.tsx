@@ -1,3 +1,5 @@
+import { t } from "@lingui/core/macro";
+import { useLingui } from "@lingui/react/macro";
 import {
   CheckCircle2,
   CircleDot,
@@ -24,6 +26,8 @@ function ContextDetailRow({
   label: string;
   value: React.ReactNode;
 }) {
+  const { i18n } = useLingui();
+  void i18n;
   return (
     <div className="flex items-center justify-between gap-3">
       <dt className="flex items-center gap-3 text-muted-foreground">
@@ -44,22 +48,24 @@ export function ProjectWorkItemContextDetails({
   pullRequest?: ProjectPullRequest | null;
   repository: Repository;
 }) {
+  const { i18n } = useLingui();
+  void i18n;
   if (issue) {
     return (
       <>
         <ContextDetailRow
           icon={CircleDot}
-          label="Status"
+          label={t`Status`}
           value={issue.status}
         />
         <ContextDetailRow
           icon={Users}
-          label="Assignees"
+          label={t`Assignees`}
           value={issue.assignees.length}
         />
         <ContextDetailRow
           icon={MessageCircle}
-          label="Comments"
+          label={t`Comments`}
           value={issue.comments.length}
         />
       </>
@@ -67,15 +73,15 @@ export function ProjectWorkItemContextDetails({
   }
 
   if (pullRequest) {
-    const sourceBranch = pullRequest.branchName || "Unknown branch";
+    const sourceBranch = pullRequest.branchName || t`Unknown branch`;
     const targetBranch =
-      pullRequest.targetBranch || repository.defaultBranch || "Default branch";
+      pullRequest.targetBranch || repository.defaultBranch || t`Default branch`;
     const branchLabel = `${sourceBranch} → ${targetBranch}`;
     return (
       <>
         <ContextDetailRow
           icon={GitBranch}
-          label="Branch"
+          label={t`Branch`}
           value={
             <span
               className="block max-w-40 truncate"
@@ -88,17 +94,17 @@ export function ProjectWorkItemContextDetails({
         />
         <ContextDetailRow
           icon={GitPullRequest}
-          label="Status"
+          label={t`Status`}
           value={pullRequest.status}
         />
         <ContextDetailRow
           icon={Users}
-          label="Reviewers"
+          label={t`Reviewers`}
           value={pullRequest.reviewers.length}
         />
         <ContextDetailRow
           icon={CheckCircle2}
-          label="Approvals"
+          label={t`Approvals`}
           value={pullRequest.approvals.length}
         />
       </>

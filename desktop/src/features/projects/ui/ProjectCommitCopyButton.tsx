@@ -1,3 +1,5 @@
+import { t } from "@lingui/core/macro";
+import { useLingui } from "@lingui/react/macro";
 import { Check, Copy } from "lucide-react";
 import * as React from "react";
 
@@ -14,6 +16,8 @@ export function CopyTextButton({
   className?: string;
   text: string;
 }) {
+  const { i18n } = useLingui();
+  void i18n;
   const [copied, setCopied] = React.useState(false);
   const handleCopy = React.useCallback(
     (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -54,9 +58,11 @@ export function CopyCommitHashButton({
   className?: string;
   hash: string;
 }) {
+  const { i18n } = useLingui();
+  void i18n;
   return (
     <CopyTextButton
-      ariaLabel="Copy commit hash"
+      ariaLabel={t`Copy commit hash`}
       className={className}
       text={hash}
     />

@@ -1,3 +1,5 @@
+import { t } from "@lingui/core/macro";
+import { Trans, useLingui } from "@lingui/react/macro";
 import { FolderGit2 } from "lucide-react";
 import * as React from "react";
 
@@ -21,6 +23,8 @@ export function AttachProjectRepositoryDialog({
   project: Project;
   repositories: Repository[];
 }) {
+  const { i18n } = useLingui();
+  void i18n;
   const [errorMessage, setErrorMessage] = React.useState<string | null>(null);
 
   React.useEffect(() => {
@@ -34,7 +38,9 @@ export function AttachProjectRepositoryDialog({
       onOpenChange(false);
     } catch (error) {
       setErrorMessage(
-        error instanceof Error ? error.message : "Failed to attach repository.",
+        error instanceof Error
+          ? error.message
+          : t`Failed to attach repository.`,
       );
     }
   }
@@ -51,13 +57,15 @@ export function AttachProjectRepositoryDialog({
         className="max-w-lg"
         contentClassName="max-h-96 overflow-y-auto pt-3"
         data-testid="attach-project-repository-dialog"
-        description={`Choose an existing repository to add to ${project.name}.`}
-        title="Add existing repository"
+        description={t`Choose an existing repository to add to ${project.name}.`}
+        title={t`Add existing repository`}
       >
         <div className="space-y-2">
           {repositories.length === 0 ? (
             <p className="py-6 text-center text-sm text-muted-foreground">
-              Every available repository is already in this project.
+              <Trans>
+                Every available repository is already in this project.
+              </Trans>
             </p>
           ) : (
             repositories.map((repository) => (

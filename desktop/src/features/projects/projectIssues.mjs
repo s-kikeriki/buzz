@@ -1,3 +1,4 @@
+import { t } from "@lingui/core/macro";
 import { sortEvents } from "../../shared/api/relayClientShared.ts";
 import { projectTaskCategoryFromLabels } from "./projectTaskCategories.ts";
 
@@ -193,7 +194,9 @@ export function eventToProjectIssue(
   const assignmentState = assignmentStateForIssue(issue, issueCommentEvents);
   const labels = getAllTags(issue, "t");
   const title =
-    getTag(issue, "subject") || issue.content.split("\n")[0] || "Untitled task";
+    getTag(issue, "subject") ||
+    issue.content.split("\n")[0] ||
+    t`Untitled task`;
 
   return {
     id: issue.id,

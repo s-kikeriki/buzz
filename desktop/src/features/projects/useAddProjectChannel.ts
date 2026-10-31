@@ -1,3 +1,4 @@
+import { t } from "@lingui/core/macro";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import {
@@ -18,6 +19,8 @@ import { deleteChannel as deleteChannelApi } from "@/shared/api/tauriChannels";
 import type { Channel, ChannelVisibility } from "@/shared/api/types";
 import { KIND_PROJECT_ANNOUNCEMENT } from "@/shared/constants/kinds";
 import { BRAND } from "@/shared/branding/brand";
+
+const { productName } = BRAND;
 
 export type AddProjectChannelInput = {
   description?: string;
@@ -94,7 +97,7 @@ export async function addProjectChannel(
     } catch (cleanupError) {
       throw new AggregateError(
         [error, cleanupError],
-        `${BRAND.productName} could not verify the project after creating the channel, and could not remove the unlinked channel. Delete it manually, then refresh and try again.`,
+        t`${productName} could not verify the project after creating the channel, and could not remove the unlinked channel. Delete it manually, then refresh and try again.`,
       );
     }
     throw error;

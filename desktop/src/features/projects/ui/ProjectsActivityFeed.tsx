@@ -1,3 +1,5 @@
+import { t } from "@lingui/core/macro";
+import { useLingui } from "@lingui/react/macro";
 import * as React from "react";
 
 import { useLocale } from "@/shared/lib/localePreference";
@@ -212,19 +214,19 @@ function buildActivityItems({
         actorName: null,
         action:
           kind === "approval"
-            ? "approved a review in"
+            ? t`approved a review in`
             : kind === "changes-requested"
-              ? "requested changes to a review in"
+              ? t`requested changes to a review in`
               : kind === "review-request"
-                ? "requested review in"
-                : "commented on a review in",
+                ? t`requested review in`
+                : t`commented on a review in`,
         title: pullRequest.title,
         body: comment.content,
         detail:
           kind === "approval"
             ? "Approved"
             : kind === "changes-requested"
-              ? "Changes requested"
+              ? t`Changes requested`
               : null,
         target,
       });
@@ -316,9 +318,9 @@ function groupActivityItems(items: ProjectActivityItem[], nowMs: number) {
   const thisWeek = startOfWeek(Math.floor(nowMs / 1_000));
   const lastWeek = thisWeek - WEEK_SECONDS;
   const groups: ProjectActivityGroup[] = [
-    { key: "this-week", label: "This week", items: [] },
-    { key: "last-week", label: "Last week", items: [] },
-    { key: "earlier", label: "Earlier", items: [] },
+    { key: "this-week", label: t`This week`, items: [] },
+    { key: "last-week", label: t`Last week`, items: [] },
+    { key: "earlier", label: t`Earlier`, items: [] },
   ];
 
   for (const item of items) {
@@ -351,6 +353,8 @@ function ActivityCard({
   onOpenProject: () => void;
   profiles?: UserProfileLookup;
 }) {
+  const { i18n } = useLingui();
+  void i18n;
   const locale = useLocale();
   const visual = PROJECT_EVENT_VISUALS[item.kind];
   const TypeIcon = visual.icon;
@@ -369,7 +373,7 @@ function ActivityCard({
       data-testid="projects-activity-card"
     >
       <button
-        aria-label={`Open ${item.title} in ${item.target.project.name}`}
+        aria-label={t`Open ${item.title} in ${item.target.project.name}`}
         className="absolute inset-0 rounded-xl focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring"
         onClick={onOpen}
         type="button"
@@ -406,7 +410,7 @@ function ActivityCard({
           {item.actorPubkey ? (
             <UserProfilePopover pubkey={item.actorPubkey} triggerElement="span">
               <button
-                aria-label={`View ${actorLabel}'s profile`}
+                aria-label={t`View ${actorLabel}'s profile`}
                 className={cn(
                   "pointer-events-auto relative z-10 shrink-0 focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-ring",
                   profile?.isAgent ? "rounded-[30%]" : "rounded-full",
@@ -524,6 +528,8 @@ function ActivityCard({
 
 /** Mixed GitHub-style workspace activity shown beneath the overview callouts. */
 export function ProjectsActivityFeed(props: ProjectsActivityFeedProps) {
+  const { i18n } = useLingui();
+  void i18n;
   const { issues, projects, pullRequests, snapshots } = props;
   // Memoized: this feed re-renders with every parent state change (profiles
   // landing, selection, hover), and an unmemoized rebuild re-flattened and
@@ -559,7 +565,7 @@ export function ProjectsActivityFeed(props: ProjectsActivityFeedProps) {
   );
 
   if (props.isLoading && items.length === 0) {
-    return <BuzzLoadingState label="Loading project activity" />;
+    return <BuzzLoadingState label={t`Loading project activity`} />;
   }
 
   if (items.length === 0) {
@@ -567,11 +573,11 @@ export function ProjectsActivityFeed(props: ProjectsActivityFeedProps) {
     return (
       <div className="rounded-xl border border-dashed border-border/60 px-4 py-12 text-center">
         <p className="text-sm font-medium text-foreground">
-          {searching ? "No matching activity" : "No project activity yet"}
+          {searching ? t`No matching activity` : t`No project activity yet`}
         </p>
         <p className="mt-1 text-sm text-muted-foreground">
           {searching
-            ? "Try a different search."
+            ? t`Try a different search.`
             : "Commits, reviews, review decisions, and tasks will appear here."}
         </p>
       </div>

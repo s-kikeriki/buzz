@@ -15,6 +15,7 @@
  * can read (the relay re-authorizes each hit).
  */
 
+import { t } from "@lingui/core/macro";
 import type { SearchHit } from "@/shared/api/searchTypes";
 
 export type DiscussionChannel = {
@@ -176,7 +177,7 @@ export function discussionSnippet(content: string): string {
     .replace(/\s+/g, " ")
     .trim();
   if (cleaned.length === 0) {
-    return "Shared a link to this.";
+    return t`Shared a link to this.`;
   }
   if (cleaned.length <= SNIPPET_MAX_CHARS) {
     return cleaned;

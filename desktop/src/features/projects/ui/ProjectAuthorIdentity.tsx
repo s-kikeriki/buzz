@@ -1,3 +1,5 @@
+import { t } from "@lingui/core/macro";
+import { useLingui } from "@lingui/react/macro";
 import type { UserProfileLookup } from "@/features/profile/lib/identity";
 import { UserProfilePopover } from "@/features/profile/ui/UserProfilePopover";
 import { normalizePubkey } from "@/shared/lib/pubkey";
@@ -18,8 +20,10 @@ export function ProjectAuthorIdentity({
   pubkey: string;
   testId?: string;
 }) {
+  const { i18n } = useLingui();
+  void i18n;
   const profile = profiles?.[normalizePubkey(pubkey)];
-  const roleLabel = profile?.isAgent === true ? "Agent" : "Person";
+  const roleLabel = profile?.isAgent === true ? t`Agent` : t`Person`;
 
   return (
     <span className="inline-flex align-middle">

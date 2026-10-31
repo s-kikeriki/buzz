@@ -1,3 +1,4 @@
+import { Trans } from "@lingui/react/macro";
 import { FolderGit2 } from "lucide-react";
 
 import type { Project } from "@/features/projects/hooks";
@@ -16,7 +17,9 @@ export function UnavailableProjectRepositories({
       <span className="max-w-80 truncate">
         {address.slice(address.indexOf(":", 6) + 1)}
       </span>
-      <span>Unavailable</span>
+      <span>
+        <Trans>Unavailable</Trans>
+      </span>
     </div>
   ));
 }

@@ -1,3 +1,5 @@
+import { t } from "@lingui/core/macro";
+import { Trans, useLingui } from "@lingui/react/macro";
 import { ChevronRight, Folders } from "lucide-react";
 import type * as React from "react";
 
@@ -28,6 +30,8 @@ export function ProjectDetailChrome({
   project: Project;
   repository?: Repository | null;
 }) {
+  const { i18n } = useLingui();
+  void i18n;
   const repositoryCrumb = repository ? (
     activeWorkItemCrumb ? (
       <>
@@ -91,7 +95,7 @@ export function ProjectDetailChrome({
         data-testid="project-detail-chrome"
       >
         <nav
-          aria-label="Project breadcrumb"
+          aria-label={t`Project breadcrumb`}
           className="absolute flex max-w-[50%] min-w-0 -translate-x-1/2 -translate-y-px items-center gap-0.5 text-xs text-sidebar-foreground/65 transition-[left] duration-200 ease-linear motion-reduce:transition-none"
           style={{
             left: "calc(50% + var(--app-top-chrome-center-offset, 0rem))",
@@ -102,8 +106,7 @@ export function ProjectDetailChrome({
             onClick={onGoProjects}
             type="button"
           >
-            <Folders className="h-3.5 w-3.5" />
-            Projects
+            <Folders className="h-3.5 w-3.5" /> <Trans>Projects</Trans>
           </button>
           <ChevronRight className="h-3 w-3 shrink-0 opacity-60" />
           {repositoryCrumb ? (
@@ -149,6 +152,8 @@ export function ProjectsWorkspaceChrome({
   onGoActivity: () => void;
   section: string;
 }) {
+  const { i18n } = useLingui();
+  void i18n;
   const onActivity = section === "Activity";
 
   return (
@@ -159,7 +164,7 @@ export function ProjectsWorkspaceChrome({
         data-testid="projects-workspace-chrome"
       >
         <nav
-          aria-label="Projects breadcrumb"
+          aria-label={t`Projects breadcrumb`}
           className="absolute flex max-w-[50%] min-w-0 -translate-x-1/2 -translate-y-px items-center gap-0.5 text-xs text-sidebar-foreground/65 transition-[left] duration-200 ease-linear motion-reduce:transition-none"
           style={{
             left: "calc(50% + var(--app-top-chrome-center-offset, 0rem))",
@@ -167,8 +172,8 @@ export function ProjectsWorkspaceChrome({
         >
           {onActivity ? (
             <span className="flex min-w-0 items-center gap-1.5 px-1 py-1 font-medium">
-              <Folders className="h-3.5 w-3.5 shrink-0" />
-              Projects
+              <Folders className="h-3.5 w-3.5 shrink-0" />{" "}
+              <Trans>Projects</Trans>
             </span>
           ) : (
             <button
@@ -176,8 +181,8 @@ export function ProjectsWorkspaceChrome({
               onClick={onGoActivity}
               type="button"
             >
-              <Folders className="h-3.5 w-3.5 shrink-0" />
-              Projects
+              <Folders className="h-3.5 w-3.5 shrink-0" />{" "}
+              <Trans>Projects</Trans>
             </button>
           )}
           <ChevronRight className="h-3 w-3 shrink-0 opacity-60" />

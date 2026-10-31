@@ -1,3 +1,5 @@
+import { plural, t } from "@lingui/core/macro";
+import { Trans, useLingui } from "@lingui/react/macro";
 import {
   Circle,
   CircleCheck,
@@ -171,6 +173,8 @@ function IssueRow({
   project: Project;
   rangeItems: ReturnType<typeof issueSelectionItem>[];
 }) {
+  const { i18n } = useLingui();
+  void i18n;
   const locale = useLocale();
   const authorProfile = profiles?.[normalizePubkey(issue.author)];
   const authorLabel = resolveUserLabel({ profiles, pubkey: issue.author });
@@ -207,7 +211,7 @@ function IssueRow({
             <span
               className="flex h-5 w-5 shrink-0 items-center justify-center"
               data-testid="project-issue-creator"
-              title={`Created by ${authorLabel}`}
+              title={t`Created by ${authorLabel}`}
             >
               <ProfileIdentityButton
                 avatarClassName="shrink-0"
@@ -232,10 +236,12 @@ function IssueRow({
                 <span
                   className="flex h-5 w-5 items-center justify-center rounded-full border border-border/70 bg-muted/35"
                   data-testid="project-issue-assignee-placeholder"
-                  title="Unassigned"
+                  title={t`Unassigned`}
                 >
                   <User aria-hidden="true" className="h-3 w-3" />
-                  <span className="sr-only">Unassigned</span>
+                  <span className="sr-only">
+                    <Trans>Unassigned</Trans>
+                  </span>
                 </span>
               )}
             </span>
@@ -244,8 +250,11 @@ function IssueRow({
             <button
               aria-label={
                 issue.comments.length > 0
-                  ? `View ${issue.comments.length} comments`
-                  : "View comments"
+                  ? plural(issue.comments.length, {
+                      one: "View # comment",
+                      other: "View # comments",
+                    })
+                  : t`View comments`
               }
               className={`flex items-center gap-1 rounded-md text-xs hover:text-foreground focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-ring ${
                 issue.comments.length > 0
@@ -283,6 +292,8 @@ export function ProjectIssueDetail({
   profiles?: UserProfileLookup;
   project: Project;
 }) {
+  const { i18n } = useLingui();
+  void i18n;
   const locale = useLocale();
   const commentMutation = useCreateProjectIssueCommentMutation(project);
   const members = React.useMemo(
@@ -305,7 +316,7 @@ export function ProjectIssueDetail({
         toast.success("Comment posted.");
       } catch (error) {
         toast.error(
-          error instanceof Error ? error.message : "Failed to post comment.",
+          error instanceof Error ? error.message : t`Failed to post comment.`,
         );
         throw error;
       }
@@ -337,13 +348,15 @@ export function ProjectIssueDetail({
           </span>
           <ShareLinkButton
             className="ml-1 inline-flex h-7 w-7 align-text-bottom"
-            label="Copy task link"
+            label={t`Copy task link`}
             link={issueShareLink(issue)}
             testId="project-issue-copy-link"
           />
         </h3>
         <p className="flex flex-wrap items-center gap-x-1 gap-y-1 text-xs text-muted-foreground">
-          <span>Task created</span>
+          <span>
+            <Trans>Task created</Trans>
+          </span>
           <span
             className="shrink-0 whitespace-nowrap"
             title={localeDateTime(new Date(issue.createdAt * 1_000), locale)}
@@ -357,16 +370,16 @@ export function ProjectIssueDetail({
         </p>
       </header>
       <ProjectDetailMetaList>
-        <ProjectDetailMetaRow icon={status.icon} label="Status">
+        <ProjectDetailMetaRow icon={status.icon} label={t`Status`}>
           <span className={`font-medium ${status.className}`}>
             {issue.status}
           </span>
         </ProjectDetailMetaRow>
-        <ProjectDetailMetaRow icon={CircleDot} label="Category">
+        <ProjectDetailMetaRow icon={CircleDot} label={t`Category`}>
           {projectTaskCategoryLabel(issue.category)}
         </ProjectDetailMetaRow>
         {issue.assignees.length > 0 || viewer ? (
-          <ProjectDetailMetaRow icon={User} label="Assignees">
+          <ProjectDetailMetaRow icon={User} label={t`Assignees`}>
             <IssueAssigneesRow
               canAssignOthers={canAssignOthers}
               issue={issue}
@@ -378,17 +391,17 @@ export function ProjectIssueDetail({
           </ProjectDetailMetaRow>
         ) : null}
         {labels.length > 0 ? (
-          <ProjectDetailMetaRow icon={Tag} label="Labels">
+          <ProjectDetailMetaRow icon={Tag} label={t`Labels`}>
             <ProjectDetailMetaPills labels={labels} />
           </ProjectDetailMetaRow>
         ) : null}
       </ProjectDetailMetaList>
       {issue.content ? (
-        <ProjectDetailSection defaultOpen title="Description">
+        <ProjectDetailSection defaultOpen title={t`Description`}>
           <ProjectRichContent content={issue.content} tags={issue.tags} />
         </ProjectDetailSection>
       ) : null}
-      <ProjectDetailSection defaultOpen title="Activity">
+      <ProjectDetailSection defaultOpen title={t`Activity`}>
         <div className="space-y-3">
           <DiscussedInChannels
             entityLabel="this task"
@@ -415,7 +428,7 @@ export function ProjectIssueDetail({
           isSending={commentMutation.isPending}
           members={members}
           onSubmit={handleCommentSubmit}
-          placeholder="Add a comment…"
+          placeholder={t`Add a comment…`}
           profiles={profiles}
         />
       </div>
@@ -440,6 +453,8 @@ export function ProjectIssuesPanel({
   project: Project;
   selectedIssueId: string | null;
 }) {
+  const { i18n } = useLingui();
+  void i18n;
   const issuesQuery = useProjectIssuesQuery(
     issueItems === undefined ? project : null,
   );
@@ -451,7 +466,7 @@ export function ProjectIssuesPanel({
   const loadError = error ?? issuesQuery.error;
 
   if (loading) {
-    return <BuzzLoadingState label="Loading tasks" />;
+    return <BuzzLoadingState label={t`Loading tasks`} />;
   }
 
   if (resolvedItems.length === 0) {
@@ -459,13 +474,13 @@ export function ProjectIssuesPanel({
       <ProjectPanelState
         description={
           loadError
-            ? "Refresh the project and try again."
+            ? t`Refresh the project and try again.`
             : issueItems
-              ? "Tasks created for this project's repositories will appear here."
-              : "Tasks created for this repository will appear here."
+              ? t`Tasks created for this project's repositories will appear here.`
+              : t`Tasks created for this repository will appear here.`
         }
         error={Boolean(loadError)}
-        title={loadError ? "Could not load tasks" : "No tasks yet"}
+        title={loadError ? t`Could not load tasks` : t`No tasks yet`}
       />
     );
   }

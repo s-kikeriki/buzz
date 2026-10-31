@@ -1,3 +1,5 @@
+import { plural } from "@lingui/core/macro";
+import { Trans, useLingui } from "@lingui/react/macro";
 import {
   Bot,
   CircleDot,
@@ -52,6 +54,8 @@ export function ProjectsSelectionCountMenu({
   presentation: ProjectSelectionPresentation;
   selectionItems: ProjectSelectionItem[];
 }) {
+  const { i18n } = useLingui();
+  void i18n;
   const selection = useProjectSelection();
   const openChannelWithDraft = useProjectDiscussInChannel(selectionItems);
   const selectionKind = selectionItems[0]?.kind;
@@ -77,7 +81,10 @@ export function ProjectsSelectionCountMenu({
         if (links.length === 0) return;
         copyTextToClipboard(
           links.join("\n"),
-          links.length === 1 ? "Link copied to clipboard" : "Links copied",
+          plural(links.length, {
+            one: `Link copied to clipboard`,
+            other: `Links copied`,
+          }),
         );
         return;
       }
@@ -149,8 +156,7 @@ export function ProjectsSelectionCountMenu({
           type="button"
           variant="ghost"
         >
-          <X className="h-3.5 w-3.5" />
-          Clear selection
+          <X className="h-3.5 w-3.5" /> <Trans>Clear selection</Trans>
         </Button>
       </div>
     </div>

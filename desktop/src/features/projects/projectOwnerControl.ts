@@ -1,3 +1,4 @@
+import { t } from "@lingui/core/macro";
 import { subscribeControlResults } from "@/features/agents/observerRelayStore";
 import { sendAgentObserverControl } from "@/shared/api/observerRelay";
 import type { RelayEvent } from "@/shared/api/types";
@@ -90,7 +91,7 @@ export function publishOwnedAgentProjectAnnouncements(
         finish({ events: projectFrame.events });
       } else {
         const message =
-          projectFrame.error || "The agent could not update this project.";
+          projectFrame.error || t`The agent could not update this project.`;
         // The ACP side publishes announcements sequentially and reports the
         // ones that were already live when a later one failed. Preserve that
         // partial-success metadata instead of discarding it, so callers can

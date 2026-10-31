@@ -1,3 +1,4 @@
+import { plural, t } from "@lingui/core/macro";
 import type {
   Project,
   ProjectActivitySummary,
@@ -13,10 +14,6 @@ export type ProjectsActivityDigest = {
   prefix: string;
   suffix: string;
 };
-
-function plural(count: number, singular: string, pluralForm = `${singular}s`) {
-  return `${count} ${count === 1 ? singular : pluralForm}`;
-}
 
 /** Builds a short, deterministic sentence from the currently loaded activity. */
 export function buildProjectsActivityDigest({
@@ -55,16 +52,30 @@ export function buildProjectsActivityDigest({
     return recent;
   }).length;
   const highlights = [
-    commitCount > 0 ? `${plural(commitCount, "new commit")}` : null,
-    taskCount > 0 ? `${plural(taskCount, "task")} opened` : null,
-    reviewCount > 0 ? `${plural(reviewCount, "review")} opened` : null,
+    commitCount > 0
+      ? plural(commitCount, { one: "# new commit", other: "# new commits" })
+      : null,
+    taskCount > 0
+      ? plural(taskCount, { one: "# task opened", other: "# tasks opened" })
+      : null,
+    reviewCount > 0
+      ? plural(reviewCount, {
+          one: "# review opened",
+          other: "# reviews opened",
+        })
+      : null,
   ].filter((value): value is string => value !== null);
 
   if (highlights.length > 0) {
-    highlights.push(`${plural(activeProjectIds.size, "active project")}`);
+    highlights.push(
+      plural(activeProjectIds.size, {
+        one: "# active project",
+        other: "# active projects",
+      }),
+    );
     return {
       highlights,
-      prefix: "This week:",
+      prefix: t`This week:`,
       suffix: ".",
     };
   }
@@ -78,11 +89,11 @@ export function buildProjectsActivityDigest({
   );
   return {
     highlights: [
-      plural(projects.length, "project"),
-      plural(totals.tasks, "task"),
-      plural(totals.reviews, "review"),
+      plural(projects.length, { one: "# project", other: "# projects" }),
+      plural(totals.tasks, { one: "# task", other: "# tasks" }),
+      plural(totals.reviews, { one: "# review", other: "# reviews" }),
     ],
-    prefix: "Currently tracking",
+    prefix: t`Currently tracking`,
     suffix: ".",
   };
 }

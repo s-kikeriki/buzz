@@ -1,3 +1,5 @@
+import { t } from "@lingui/core/macro";
+import { useLingui } from "@lingui/react/macro";
 import * as React from "react";
 
 import type { ProjectSelectionItem } from "@/features/projects/lib/projectSelection";
@@ -32,6 +34,8 @@ export function ProjectSelectableGroup({
   labelTestId?: string;
   testId: string;
 }) {
+  const { i18n } = useLingui();
+  void i18n;
   const [expanded, setExpanded] = React.useState(true);
   const selection = useProjectSelection();
   const selectedCount =
@@ -81,7 +85,9 @@ export function ProjectSelectableGroup({
               <ProjectEntitySelectControl
                 checked={allSelected}
                 indeterminate={partiallySelected}
-                label={`${allSelected ? "Clear" : "Select"} all ${label}`}
+                label={
+                  allSelected ? t`Clear all ${label}` : t`Select all ${label}`
+                }
                 onToggle={() => selection.toggleGroup(items)}
                 testId="projects-group-select"
               />

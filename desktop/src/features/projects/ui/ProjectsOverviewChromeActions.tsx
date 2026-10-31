@@ -1,3 +1,5 @@
+import { t } from "@lingui/core/macro";
+import { useLingui } from "@lingui/react/macro";
 import { MessageCircle } from "lucide-react";
 
 import { cn } from "@/shared/lib/cn";
@@ -17,16 +19,18 @@ export function ProjectsOverviewChromeActions({
   onToggleContext: () => void;
   sectionTitle: string;
 }) {
+  const { i18n } = useLingui();
+  void i18n;
   return (
     <>
       <Button
-        aria-label={`Chat with an agent about ${sectionTitle}`}
+        aria-label={t`Chat with an agent about ${sectionTitle}`}
         aria-pressed={chatOpen}
         className="h-7 w-7 text-sidebar-foreground hover:bg-sidebar-accent"
         data-testid="projects-overview-chat-toggle"
         onClick={onToggleChat}
         size="icon"
-        title={`Chat with an agent about ${sectionTitle}`}
+        title={t`Chat with an agent about ${sectionTitle}`}
         type="button"
         variant="ghost"
       >
@@ -39,14 +43,14 @@ export function ProjectsOverviewChromeActions({
       </Button>
       <Button
         aria-label={
-          contextOpen ? "Hide project context" : "Show project context"
+          contextOpen ? t`Hide project context` : t`Show project context`
         }
         aria-pressed={contextOpen}
         className="h-7 w-7 text-sidebar-foreground hover:bg-sidebar-accent"
         data-testid="projects-overview-context-toggle"
         onClick={onToggleContext}
         size="icon"
-        title={contextOpen ? "Hide project context" : "Show project context"}
+        title={contextOpen ? t`Hide project context` : t`Show project context`}
         type="button"
         variant="ghost"
       >

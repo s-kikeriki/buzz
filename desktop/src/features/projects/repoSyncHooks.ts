@@ -1,3 +1,4 @@
+import { t } from "@lingui/core/macro";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import {
@@ -99,7 +100,7 @@ export function usePushProjectLocalRepositoryMutation(
             error:
               error instanceof Error
                 ? error.message
-                : "The review update could not be published.",
+                : t`The review update could not be published.`,
           };
         }
       }

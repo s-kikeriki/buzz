@@ -1,3 +1,5 @@
+import { t } from "@lingui/core/macro";
+import { useLingui } from "@lingui/react/macro";
 import { Trash2 } from "lucide-react";
 import * as React from "react";
 import { toast } from "sonner";
@@ -72,6 +74,8 @@ export function ProjectAgentChatPanel({
   sharedHeaderBackdrop?: boolean;
   widthPx?: number;
 }) {
+  const { i18n } = useLingui();
+  void i18n;
   const { activeCommunity } = useCommunities();
   const identityQuery = useIdentityQuery();
   // Repository coordinates (`kind:owner:dtag`) are not globally unique — the
@@ -230,7 +234,7 @@ export function ProjectAgentChatPanel({
         }
       } catch (error) {
         toast.error(
-          error instanceof Error ? error.message : "Failed to reach the agent",
+          error instanceof Error ? error.message : t`Failed to reach the agent`,
         );
       } finally {
         setIsSending(false);
@@ -292,13 +296,13 @@ export function ProjectAgentChatPanel({
             <div className="flex min-h-40 flex-1 flex-col items-center justify-center gap-2 text-center">
               <p className="text-sm font-medium text-foreground">
                 {homeChannel
-                  ? "Explain what this project should be"
-                  : "Ask about this page"}
+                  ? t`Explain what this project should be`
+                  : t`Ask about this page`}
               </p>
               <p className="max-w-72 text-xs text-muted-foreground">
                 {homeChannel
-                  ? "The project agent will build it out from this channel."
-                  : "Start a conversation with the project agent."}
+                  ? t`The project agent will build it out from this channel.`
+                  : t`Start a conversation with the project agent.`}
               </p>
             </div>
           )}
@@ -308,7 +312,7 @@ export function ProjectAgentChatPanel({
         ) : null}
         <MessageComposer
           channelId={conversation?.channel.id ?? homeChannel?.id ?? null}
-          channelName={selectedAgent?.name ?? "project agent"}
+          channelName={selectedAgent?.name ?? t`project agent`}
           channelType={homeChannel?.channelType ?? "dm"}
           containerClassName="px-3 pb-3"
           disabled={!selectedAgent || isSending}
@@ -319,7 +323,7 @@ export function ProjectAgentChatPanel({
           placeholder={
             selectedAgent
               ? `Message ${selectedAgent.name}`
-              : "No agents available"
+              : t`No agents available`
           }
           profiles={candidateProfilesQuery.data?.profiles}
           showBackgroundUploadProgress={false}
@@ -333,11 +337,11 @@ export function ProjectAgentChatPanel({
               />
               {conversation ? (
                 <Button
-                  aria-label="Clear project agent chat"
+                  aria-label={t`Clear project agent chat`}
                   className="h-7 w-7"
                   onClick={handleClear}
                   size="icon"
-                  title="Clear conversation"
+                  title={t`Clear conversation`}
                   type="button"
                   variant="ghost"
                 >

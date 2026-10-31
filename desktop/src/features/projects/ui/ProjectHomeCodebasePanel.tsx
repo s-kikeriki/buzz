@@ -1,3 +1,4 @@
+import { Trans, useLingui } from "@lingui/react/macro";
 import { ChevronDown, FolderGit2 } from "lucide-react";
 
 import {
@@ -41,6 +42,8 @@ export function ProjectHomeCodebasePanel({
   projects: Project[];
   repository: Repository | null;
 }) {
+  const { i18n } = useLingui();
+  void i18n;
   const repoStateQuery = useRepoStateQuery(repository);
   const defaultBranch = repository
     ? resolveProjectDefaultBranch(repository.defaultBranch, repoStateQuery.data)
@@ -70,7 +73,9 @@ export function ProjectHomeCodebasePanel({
         data-testid="project-home-codebase-empty"
       >
         <p className="text-sm text-muted-foreground">
-          Attach a repository to browse the file tree beside this channel.
+          <Trans>
+            Attach a repository to browse the file tree beside this channel.
+          </Trans>
         </p>
         <ProjectRepositoryManagement
           identityPubkey={identityPubkey}
