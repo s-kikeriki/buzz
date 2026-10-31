@@ -186,32 +186,14 @@ jobs:
       - name: Check the flavor really crossed
         env:
           FLAVOR: ${{ inputs.flavor }}
+        run: cd desktop && node scripts/check-flavor-crossed.mjs "$FLAVOR"
+
+      - name: Clear embedded assets restored from the cache
         run: |
-          # Read in a *child* process, not by echoing the variables this job
-          # just set. A value that was only ever set in the setting shell reads
-          # back perfectly from that shell and is invisible to `pnpm` and
-          # `cargo` — which is how a ki.keriki DMG once shipped with no brand
-          # mark, the stock accent and `ws://localhost:3000` baked in, with its
-          # build log printing the right values on the way past.
-          expected=$(cd desktop && node -e '
-            import("./scripts/flavor-config.mjs").then(({ flavorBuildEnv, loadFlavor }) => {
-              const env = flavorBuildEnv(loadFlavor(process.argv[1]));
-              for (const key of Object.keys(env).sort())
-                console.log(`${key}=${env[key]}`);
-            });
-          ' "$FLAVOR")
-          missing=0
-          while IFS= read -r line; do
-            key=${line%%=*}
-            want=${line#*=}
-            got=$(printenv "$key" || true)
-            if [ "$got" != "$want" ]; then
-              echo "::error::$key did not cross into the build environment"
-              missing=$((missing + 1))
-            fi
-          done <<< "$expected"
-          echo "$(printf '%s\n' "$expected" | wc -l) flavor variables checked, $missing wrong"
-          [ "$missing" -eq 0 ]
+          # See the Windows job's copy: `rust-cache` restores `target/`, and the
+          # brand read-back after the build reads whatever
+          # `tauri-codegen-assets` holds.
+          find desktop/src-tauri/target -type d -name tauri-codegen-assets -prune -print -exec rm -rf {} + 2>/dev/null || true
 
       - name: Build sidecars
         run: |
@@ -499,6 +481,18 @@ jobs:
           # failure here would fail a job whose real checks have all passed.
           dpkg --purge --force-all "$(dpkg-deb -f "$DEB" Package)" buzz || true
 
+      - name: Read the brand back out of what the build embedded
+        env:
+          FLAVOR: ${{ inputs.flavor }}
+        run: |
+          # The `.deb` read-back above covers the icons and the launcher name —
+          # files the packager copies. It says nothing about the in-app mark,
+          # which is 11 KB of base64 compiled into the binary, and that half now
+          # reaches the build through `desktop/.env.production.local` rather than
+          # the environment. Without this step a Linux package could pass every
+          # check above and still show the Buzz wordmark inside the window.
+          cd desktop && node scripts/check-frontend-brand.mjs "$FLAVOR"
+
       - name: Checksums
         run: |
           cd desktop/src-tauri/target/release/bundle
@@ -538,11 +532,26 @@ jobs:
     env:
       TARGET: ${{ matrix.target }}
     steps:
+      # The gate is a step rather than a job-level `if:` because `matrix` is not
+      # one of the contexts available to `jobs.<id>.if`. The cost is that an
+      # unwanted arm64 job still claims a `windows-11-arm` runner to skip every
+      # step on; the alternative is building the matrix with `fromJSON`, which
+      # moves the same condition into a string of JSON.
       - name: Skip arm64 unless asked
         id: gate
         shell: bash
+        env:
+          ARCH: ${{ matrix.arch }}
+          WANT_ARM: ${{ inputs.windows_arm }}
         run: |
-          if [[ "${{ matrix.arch }}" == "arm64" && "${{ inputs.windows_arm }}" != "true" ]]; then
+          # Through `env:`, not interpolated into the script. Both values are
+          # trusted here — one is a literal from the matrix, the other a
+          # dispatch boolean — but a `run:` block that substitutes a template
+          # expression into shell text is a habit that stops being safe the
+          # moment one of those values is free-form. (Writing the expression
+          # syntax out even inside a comment is itself a parse error for
+          # actionlint, which is its own small argument for not doing it.)
+          if [[ "$ARCH" == "arm64" && "$WANT_ARM" != "true" ]]; then
             echo "run=false" >> "$GITHUB_OUTPUT"
           else
             echo "run=true" >> "$GITHUB_OUTPUT"
@@ -572,7 +581,14 @@ jobs:
       - uses: Swatinem/rust-cache@e18b497796c12c097a38f9edb9d0641fb99eee32 # v2.9.1
         if: steps.gate.outputs.run == 'true'
         with:
-          workspaces: desktop/src-tauri
+          # Both workspaces. `desktop/src-tauri` declares its own `[workspace]`,
+          # so the five sidecar crates compile in the *root* one into a separate
+          # `target/` that this action was not caching at all — an uncached MSVC
+          # build of them plus a full Tauri build is what a 90-minute timeout is
+          # spent on. `windows-canary.yml` caches the same two paths.
+          workspaces: |
+            .
+            desktop/src-tauri
           key: ${{ matrix.target }}
 
       - name: Install desktop dependencies
@@ -606,26 +622,39 @@ jobs:
         shell: bash
         env:
           FLAVOR: ${{ inputs.flavor }}
+        run: cd desktop && node scripts/check-flavor-crossed.mjs "$FLAVOR"
+
+      - name: Check this flavor can be a Windows build at all
+        if: steps.gate.outputs.run == 'true'
+        shell: bash
+        env:
+          FLAVOR: ${{ inputs.flavor }}
         run: |
-          expected=$(cd desktop && node -e '
-            import("./scripts/flavor-config.mjs").then(({ flavorBuildEnv, loadFlavor }) => {
-              const env = flavorBuildEnv(loadFlavor(process.argv[1]));
-              for (const key of Object.keys(env).sort())
-                console.log(`${key}=${env[key]}`);
-            });
+          # Before the build, not after it. `platformIcons` is all-four-or-none,
+          # so a flavor that declares none — zeniad today — produces an
+          # installer wearing the Buzz bee, and the step that caught that used
+          # to be the one *after* the Tauri build. Failing here costs seconds
+          # instead of an hour, and the message names the file to add.
+          WANT=$(cd desktop && node -e '
+            import("./scripts/flavor-config.mjs").then(({ loadFlavor }) =>
+              console.log(loadFlavor(process.argv[1]).platformIcons?.["icon.ico"] ?? ""));
           ' "$FLAVOR")
-          missing=0
-          while IFS= read -r line; do
-            key=${line%%=*}
-            want=${line#*=}
-            got=$(printenv "$key" || true)
-            if [ "$got" != "$want" ]; then
-              echo "::error::$key did not cross into the build environment"
-              missing=$((missing + 1))
-            fi
-          done <<< "$expected"
-          echo "$(printf '%s\n' "$expected" | wc -l) flavor variables checked, $missing wrong"
-          [ "$missing" -eq 0 ]
+          if [[ -z "$WANT" ]]; then
+            echo "::error::$FLAVOR declares no platformIcons — add icon.ico (and the three PNGs) to desktop/flavors/$FLAVOR.json before building it for Windows"
+            exit 1
+          fi
+          echo "ok: $FLAVOR declares $WANT"
+
+      - name: Clear embedded assets restored from the cache
+        if: steps.gate.outputs.run == 'true'
+        shell: bash
+        run: |
+          # `rust-cache` restores `target/`, and the brand read-back after the
+          # build reads whatever `tauri-codegen-assets` holds. A previous run's
+          # assets left sitting there would let it find another flavor's logo
+          # and call this build branded — a gate passing on the artifact it was
+          # meant to replace.
+          find desktop/src-tauri/target -type d -name tauri-codegen-assets -prune -print -exec rm -rf {} + 2>/dev/null || true
 
       - name: Build sidecars
         if: steps.gate.outputs.run == 'true'
@@ -639,6 +668,17 @@ jobs:
         shell: bash
         run: |
           cd desktop
+          # No `webviewInstallMode` override. The default is
+          # `downloadBootstrapper`, and the obvious-looking change to
+          # `embedBootstrapper` does not buy what its name suggests: tauri-utils
+          # documents it as "Requires an internet connection" too — it embeds
+          # the 1.8 MB bootstrapper, which then downloads the runtime. The only
+          # mode that installs with no network is `offlineInstaller`, at +127 MB.
+          # If Ian's VM turns out to have no WebView2 and no network at install
+          # time, that is the one line to add:
+          #   {"bundle":{"windows":{"webviewInstallMode":{"type":"offlineInstaller"}}}}
+          # Windows 11 ships the Evergreen runtime, so the default is expected
+          # to be a no-op there.
           pnpm tauri build --verbose --target "$TARGET" \
             --bundles nsis \
             --config src-tauri/tauri.flavor.conf.json
@@ -651,29 +691,48 @@ jobs:
         env:
           FLAVOR: ${{ inputs.flavor }}
         run: |
-          # An NSIS installer is a self-extracting executable, so there is no
-          # cheap way to read the icon back out of the artifact the way the
-          # `.deb` allows. This asserts the next best thing: that the file the
-          # bundler read is the flavor's and was not restored underneath the
-          # build. It is a weaker claim and is stated as one — Windows gets its
-          # real icon check the first time Ian looks at the taskbar.
+          # An NSIS installer is a self-extracting executable, so the icon
+          # cannot be read back out of it the way the `.deb` allows. This is a
+          # claim about the input — that the file the bundler read is the
+          # flavor's and was not restored underneath the build — and it is
+          # stated as one. The read-back of what the build actually embedded is
+          # the next step.
           WANT=$(cd desktop && node -e '
             import("./scripts/flavor-config.mjs").then(({ loadFlavor }) =>
               console.log(loadFlavor(process.argv[1]).platformIcons?.["icon.ico"] ?? ""));
           ' "$FLAVOR")
-          if [[ -z "$WANT" ]]; then
-            echo "::error::$FLAVOR declares no icon.ico — this installer would wear the Buzz bee"
-            exit 1
-          fi
           a=$(sha256sum "desktop/$WANT" | cut -d' ' -f1)
           b=$(sha256sum desktop/src-tauri/icons/icon.ico | cut -d' ' -f1)
           [[ "$a" == "$b" ]] || { echo "::error::src-tauri/icons/icon.ico is not $WANT"; exit 1; }
           echo "ok: the bundler read $WANT ($a)"
 
+      - name: Read the brand back out of what the build embedded
+        if: steps.gate.outputs.run == 'true'
+        shell: bash
+        env:
+          FLAVOR: ${{ inputs.flavor }}
+        run: |
+          # The artifact read-back Windows was missing. `tauri-codegen` writes
+          # every frontend asset brotli-compressed under
+          # `target/<triple>/release/build/buzz-desktop-*/out/tauri-codegen-assets/`
+          # and `include_bytes!`s it, and unlike `dist/` — which
+          # `tauri-command.mjs` builds into a temp directory and deletes — those
+          # files survive. Finding the flavor's product name and its logo bytes
+          # in them proves the brand reached the bundle rather than the config
+          # that was meant to produce it, which is the distinction a DMG that
+          # logged every right value and shipped the Buzz bee was made of.
+          #
+          # It is also the only end-to-end proof that the oversized logo values
+          # travelling by `desktop/.env.production.local` were read by Vite.
+          cd desktop && node scripts/check-frontend-brand.mjs "$FLAVOR" --target "$TARGET"
+
       - name: Mark the installer unsigned
         if: steps.gate.outputs.run == 'true'
         id: artifacts
         shell: bash
+        env:
+          FLAVOR: ${{ inputs.flavor }}
+          ARCH: ${{ matrix.arch }}
         run: |
           BUNDLE_DIR="desktop/src-tauri/target/${TARGET}/release/bundle"
           EXE=$(find "$BUNDLE_DIR/nsis" -name '*.exe' -type f | head -1)
@@ -681,6 +740,48 @@ jobs:
             echo "::error::No NSIS installer found in $BUNDLE_DIR/nsis"
             exit 1
           fi
+
+          # What the filename is allowed to prove, and no more. Tauri builds it
+          # from the main binary's name, the version and the arch, but whether
+          # that name is `productName` or the Cargo bin name depends on
+          # `mainBinaryName` — which this branch does not set and #31 does — and
+          # nothing on the build Mac can run the Windows bundler to settle it.
+          # So the assertions below are the two that hold either way, and the
+          # full name is printed so the first real run states the format
+          # instead of this comment guessing it.
+          NAME=$(basename "$EXE")
+          echo "installer: $NAME" | tee -a "$GITHUB_STEP_SUMMARY"
+
+          # A build whose flavor `--config` was dropped is named after the
+          # trunk. This build passes three of them — `tauri-command.mjs` injects
+          # its own frontendDist override on top of the flavor delta — so "one
+          # of them silently won" is a real shape, not a hypothetical.
+          case "$NAME" in
+            Buzz_*|buzz_*)
+              echo "::error::the installer is named $NAME — the flavor config did not reach the bundler"
+              exit 1
+              ;;
+          esac
+          # The other leg's architecture in this leg's output means the matrix
+          # built the wrong thing. Checked by exclusion rather than by asserting
+          # the exact token's position, for the same reason as above.
+          case "$ARCH:$NAME" in
+            x64:*arm64*)
+              echo "::error::the x64 job produced $NAME"
+              exit 1
+              ;;
+            arm64:*_x64*)
+              echo "::error::the arm64 job produced $NAME"
+              exit 1
+              ;;
+          esac
+          case "$NAME" in
+            *-setup.exe) ;;
+            *)
+              echo "::error::$NAME is not an NSIS installer"
+              exit 1
+              ;;
+          esac
           # Same `_alpha-unsigned` marker release.yml uses. SmartScreen will
           # warn on first run and the filename should say why before the dialog
           # does.
