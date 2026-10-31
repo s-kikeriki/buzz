@@ -502,6 +502,45 @@ test("the parked workflow stages icons and checks they crossed", () => {
       );
     }
   }
+  // Linux only, and read back out of the `.deb` rather than derived from the
+  // flavor. These are the defects a human found by hand-installing the
+  // package — a path collision with a stock Buzz, `Maintainer: you`, and a
+  // launcher entry Tauri's own template filed under no category — and the
+  // steps that reproduce them live in this inert file alongside the step
+  // above. Rebasing anything onto this job conflicts in exactly one place, and
+  // resolving that conflict by taking one side deletes a verified fix with
+  // every other gate still green: measured, not assumed, by removing each step
+  // and watching this test stay silent.
+  //
+  // Checked against the job with its comments stripped. Two of these needles
+  // are also words the surrounding comments use to explain the step, so over
+  // the raw text the prose satisfies the assertion and the check passes on a
+  // job whose actual command is gone — which is how the first version of this
+  // loop scored two of six break tests as uncaught when the breaks were real.
+  const linuxExecutable = jobs.linux
+    .split("\n")
+    .filter((line) => !/^\s*#/.test(line))
+    .join("\n");
+  for (const needle of [
+    "Check the .deb wears the flavor",
+    "Check the .deb can be installed next to a real Buzz",
+    // The reproduction itself, not just the step's name. `--unpack` is the
+    // verb that detects a path collision; `-i` would go on to configure and
+    // fail on an unsatisfied dependency instead, reporting the wrong defect.
+    // Both calls, because the pair is the test: the decoy claims the paths and
+    // the flavored package has to unpack anyway.
+    "dpkg --unpack /tmp/stock-buzz-decoy.deb",
+    'dpkg --unpack "$DEB"',
+    'dpkg-deb -f "$DEB" Maintainer',
+    'desktop-file-validate "$DESKTOP_FILE"',
+  ]) {
+    assert.ok(
+      linuxExecutable.includes(needle),
+      `${needle} must appear in the linux job`,
+    );
+  }
+  // And prove the stripping did not just empty this haystack either.
+  assert.ok(linuxExecutable.includes("pnpm tauri build"));
   // No updater signing, as agreed. A secret reintroduced here would also be a
   // secret this fork does not have, so the build would fail at the end rather
   // than the start.
