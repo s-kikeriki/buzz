@@ -1,3 +1,4 @@
+import { Trans, useLingui } from "@lingui/react/macro";
 import {
   AlertDialog,
   AlertDialogContent,
@@ -25,6 +26,8 @@ export function RemoveMembersConfirmDialog({
   onKeepAgents,
   onRemoveAgents,
 }: RemoveMembersConfirmDialogProps) {
+  const { i18n } = useLingui();
+  void i18n;
   const count = memberNames.length;
   const plural = count !== 1;
 
@@ -33,11 +36,15 @@ export function RemoveMembersConfirmDialog({
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>
-            Remove {count} member{plural ? "s" : ""}?
+            <Trans>Remove</Trans> {count} <Trans>member</Trans>
+            {plural ? "s" : ""}?
           </AlertDialogTitle>
           <AlertDialogDescription>
-            {memberNames.join(", ")} will be removed from this team. Do you also
-            want to remove the {plural ? "agents" : "agent"} completely?
+            {memberNames.join(", ")}{" "}
+            <Trans>
+              will be removed from this team. Do you also want to remove the
+            </Trans>{" "}
+            {plural ? "agents" : "agent"} <Trans>completely?</Trans>
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
@@ -47,7 +54,7 @@ export function RemoveMembersConfirmDialog({
             type="button"
             variant="outline"
           >
-            Cancel
+            <Trans>Cancel</Trans>
           </Button>
           <Button
             disabled={isPending}
@@ -56,7 +63,7 @@ export function RemoveMembersConfirmDialog({
             type="button"
             variant="outline"
           >
-            Keep {plural ? "agents" : "agent"}
+            <Trans>Keep</Trans> {plural ? "agents" : "agent"}
           </Button>
           <Button
             disabled={isPending}
@@ -65,7 +72,7 @@ export function RemoveMembersConfirmDialog({
             type="button"
             variant="destructive"
           >
-            Remove {plural ? "agents" : "agent"}
+            <Trans>Remove</Trans> {plural ? "agents" : "agent"}
           </Button>
         </AlertDialogFooter>
       </AlertDialogContent>

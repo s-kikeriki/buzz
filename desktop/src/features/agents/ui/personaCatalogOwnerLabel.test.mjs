@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import React from "react";
 import { renderToStaticMarkup } from "react-dom/server";
+import { withI18n } from "@/testing/withI18n.mjs";
 
 import { AgentInstructionReview } from "./CommunityCatalogDialog.tsx";
 import { resolveCatalogOwnerLabel } from "./catalogOwnerLabel.ts";
@@ -87,7 +88,7 @@ test("agent instruction review renders markdown concealment syntax literally", (
     "![Image label](https://example.com/hidden-image-source)",
   ].join("\n");
   const html = renderToStaticMarkup(
-    React.createElement(AgentInstructionReview, { instructions }),
+    withI18n(React.createElement(AgentInstructionReview, { instructions })),
   );
 
   assert.ok(html.includes("||Hidden spoiler instruction.||"));

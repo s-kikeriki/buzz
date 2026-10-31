@@ -1,3 +1,4 @@
+import { t } from "@lingui/core/macro";
 import type {
   AgentPersona,
   CreatePersonaInput,
@@ -39,8 +40,8 @@ export function parsePersonaNamePoolText(text: string): string[] {
 
 export function createPersonaDialogState(): PersonaDialogState {
   return {
-    title: "Create agent",
-    description: "Create an agent and start it immediately.",
+    title: t`Create agent`,
+    description: t`Create an agent and start it immediately.`,
     submitLabel: "Create agent",
     initialValues: {
       displayName: "",
@@ -57,9 +58,8 @@ export function duplicatePersonaDialogState(
   persona: AgentPersona,
 ): PersonaDialogState {
   return {
-    title: `Duplicate ${persona.displayName}`,
-    description:
-      "Create a new agent by copying this profile and adjusting it as needed.",
+    title: t`Duplicate ${persona.displayName}`,
+    description: t`Create a new agent by copying this profile and adjusting it as needed.`,
     submitLabel: "Create agent",
     initialValues: {
       displayName: `${persona.displayName} copy`,
@@ -122,7 +122,7 @@ export function editPersonaDialogState(
       }
     : persona;
   return {
-    title: "Edit agent",
+    title: t`Edit agent`,
     description: "",
     submitLabel: "Save changes",
     initialValues: {

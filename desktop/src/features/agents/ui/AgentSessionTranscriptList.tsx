@@ -1,3 +1,5 @@
+import { Trans, useLingui } from "@lingui/react/macro";
+import { t } from "@lingui/core/macro";
 import * as React from "react";
 import { localeDateTime } from "@/shared/lib/intlLocale";
 import { motion, useReducedMotion } from "motion/react";
@@ -138,6 +140,8 @@ export function AgentSessionTranscriptList({
   scrollScopeKey?: string | null;
   variant?: AgentSessionTranscriptVariant;
 }) {
+  const { i18n } = useLingui();
+  void i18n;
   const activeTurns = useActiveAgentTurns(agentPubkey);
   const isTurnLive = React.useMemo(
     () => isAgentTurnLive(activeTurns, channelId),
@@ -215,19 +219,21 @@ export function AgentSessionTranscriptList({
               className="mx-auto w-6"
               fallback={
                 <FuzzyLogo
-                  ariaLabel="Waiting for ACP activity"
+                  ariaLabel={t`Waiting for ACP activity`}
                   className="mx-auto text-muted-foreground"
                   fuzz={false}
                   loop
                 />
               }
-              label="Waiting for ACP activity"
+              label={t`Waiting for ACP activity`}
               motion
             />
           ) : (
             <>
               <Radio className="mx-auto h-4 w-4 text-muted-foreground" />
-              <p className="mt-3 text-sm font-medium">No ACP activity yet</p>
+              <p className="mt-3 text-sm font-medium">
+                <Trans>No ACP activity yet</Trans>
+              </p>
               <p className="mt-1 text-sm text-muted-foreground">
                 {emptyDescription}
               </p>
@@ -246,7 +252,7 @@ export function AgentSessionTranscriptList({
       ref={autoTail ? scrollContainerRef : undefined}
     >
       <div
-        aria-label="Live ACP transcript"
+        aria-label={t`Live ACP transcript`}
         aria-live="polite"
         className={cn(
           "flex w-full flex-col",
@@ -348,11 +354,13 @@ function isRenderableCompactItem(item: TranscriptItem) {
 }
 
 function TranscriptAcpSourceBadge({ source }: { source: string }) {
+  const { i18n } = useLingui();
+  void i18n;
   return (
     <span
       className="mb-1 inline-flex max-w-full rounded border border-amber-500/25 bg-amber-500/10 px-1.5 py-0.5 font-mono text-xs leading-none text-amber-800 dark:text-amber-200"
       data-testid="transcript-acp-source"
-      title={`ACP wire source: ${source}`}
+      title={t`ACP wire source: ${source}`}
     >
       {source}
     </span>
@@ -369,6 +377,8 @@ function TranscriptDisplayBlockView({
   block: TranscriptDisplayBlock;
   profiles?: UserProfileLookup;
 }) {
+  const { i18n } = useLingui();
+  void i18n;
   const variant = useAgentSessionTranscriptVariant();
   const isCompactPreview = variant === "compactPreview";
   const animationPreferenceEnabled = useTranscriptAnimationEnabled();
@@ -434,12 +444,12 @@ function TranscriptDisplayBlockView({
 
 function getTurnSegmentKey(turnId: string, segment: TranscriptTurnSegment) {
   if (segment.kind === "setup") {
-    return `turn:${turnId}:setup`;
+    return t`turn:${turnId}:setup`;
   }
   if (segment.kind === "prompt") {
     // A turn can hold multiple prompt segments (initial prompt + mid-turn
     // steers), so key on the user message id rather than the bare turn id.
-    return `turn:${turnId}:prompt:${segment.user.id}`;
+    return t`turn:${turnId}:prompt:${segment.user.id}`;
   }
   if (segment.kind === "summary") {
     return segment.summary.id;
@@ -457,6 +467,8 @@ function TranscriptTurnSegmentView({
   profiles?: UserProfileLookup;
   segment: TranscriptTurnSegment;
 }) {
+  const { i18n } = useLingui();
+  void i18n;
   if (segment.kind === "prompt") {
     return (
       <TurnPromptBlock
@@ -505,6 +517,8 @@ function SameKindSummaryItem({
   profiles?: UserProfileLookup;
   summary: Extract<TranscriptTurnSegment, { kind: "summary" }>["summary"];
 }) {
+  const { i18n } = useLingui();
+  void i18n;
   const locale = useLocale();
   const groupedFileEditDiffs = React.useMemo(
     () =>
@@ -629,6 +643,8 @@ function ToolRunSummaryLabel({
   label: string;
   stats?: ActivityRowStats | null;
 }) {
+  const { i18n } = useLingui();
+  void i18n;
   const animationPreferenceEnabled = useTranscriptAnimationEnabled();
   const parts = splitActivityRowLabel(label);
 
@@ -674,6 +690,8 @@ function TurnPromptBlock({
   setup: Extract<TranscriptItem, { type: "lifecycle" }>[];
   user: Extract<TranscriptItem, { type: "message" }>;
 }) {
+  const { i18n } = useLingui();
+  void i18n;
   return (
     <div data-testid="transcript-prompt-bundle">
       {SHOW_TRANSCRIPT_ACP_SOURCE ? (
@@ -705,6 +723,8 @@ function PromptUserMessage({
   profiles?: UserProfileLookup;
   setup?: Extract<TranscriptItem, { type: "lifecycle" }>[];
 }) {
+  const { i18n } = useLingui();
+  void i18n;
   const [contextOpen, setContextOpen] = React.useState(false);
   const contextSections = React.useMemo(
     () => [...(context?.sections ?? [])],
@@ -749,6 +769,8 @@ function PromptContextDialog({
   sections: PromptSection[];
   setup: Extract<TranscriptItem, { type: "lifecycle" }>[];
 }) {
+  const { i18n } = useLingui();
+  void i18n;
   if (!open || sections.length === 0) {
     return null;
   }
@@ -760,7 +782,9 @@ function PromptContextDialog({
       <DialogContent className="max-w-xl overflow-hidden p-0">
         <div className="flex min-w-0 max-h-[85vh] flex-col">
           <DialogHeader className="px-6 pb-3 pt-5 pr-14">
-            <DialogTitle>Prompt context</DialogTitle>
+            <DialogTitle>
+              <Trans>Prompt context</Trans>
+            </DialogTitle>
             {setupText ? (
               <div className="flex items-center gap-1.5">
                 <CheckCheck className="h-3.5 w-3.5 shrink-0 text-muted-foreground" />
@@ -802,6 +826,8 @@ function TurnSetupFooter({
   showTimestamp?: boolean;
   timestamp: string;
 }) {
+  const { i18n } = useLingui();
+  void i18n;
   const label = formatTurnSetupLabel(items);
   const detail = turnSetupDetail(items);
   const tooltipText = [label, detail].filter(Boolean).join(" · ");
@@ -821,13 +847,13 @@ function TurnSetupFooter({
     >
       {showContext ? (
         <Toggle
-          aria-label={`${contextOpen ? "Hide" : "Show"} prompt context`}
+          aria-label={t`${contextOpen ? "Hide" : "Show"} prompt context`}
           className="data-[state=on]:bg-primary/10 data-[state=on]:text-primary dark:data-[state=on]:bg-primary/15"
           data-testid="transcript-prompt-context-toggle"
           onPressedChange={onContextOpenChange}
           pressed={contextOpen}
           size="xs"
-          title={tooltipText || "Show prompt context"}
+          title={tooltipText || t`Show prompt context`}
           variant="ghost"
         >
           <CheckCheck aria-hidden="true" />
@@ -865,6 +891,8 @@ function TranscriptItemRow({
   item: TranscriptItem;
   profiles?: UserProfileLookup;
 }) {
+  const { i18n } = useLingui();
+  void i18n;
   const variant = useAgentSessionTranscriptVariant();
   const timestampsEnabled = useTranscriptTimestampsEnabled();
   const showTimestamp = shouldShowTranscriptRowTimestamp(item, {
@@ -907,6 +935,8 @@ function TranscriptRowTimestamp({
   messageLink?: { channelId: string; messageId: string } | null;
   timestamp: string;
 }) {
+  const { i18n } = useLingui();
+  void i18n;
   return (
     <div
       className="mt-0.5 flex justify-start"
@@ -922,6 +952,8 @@ function TurnSetupStatus({
 }: {
   items: Extract<TranscriptItem, { type: "lifecycle" }>[];
 }) {
+  const { i18n } = useLingui();
+  void i18n;
   const locale = useLocale();
   const timestamp = turnSetupTimestamp(items);
   if (items.length === 0 || !timestamp) {
@@ -958,13 +990,15 @@ function SessionBoundaryDivider({
   labelState: "current" | "most-recent" | "earlier";
   sessionStartTimestamp: string;
 }) {
+  const { i18n } = useLingui();
+  void i18n;
   const locale = useLocale();
   const label =
     labelState === "current"
-      ? "Latest live-observed session"
+      ? t`Latest live-observed session`
       : labelState === "most-recent"
-        ? "Most recent observed session"
-        : "Earlier observed session";
+        ? t`Most recent observed session`
+        : t`Earlier observed session`;
   const formattedDate = localeDateTime(new Date(sessionStartTimestamp), locale);
   return (
     <div
@@ -997,6 +1031,8 @@ const TranscriptItemView = React.memo(function TranscriptItemView({
   item: TranscriptItem;
   profiles?: UserProfileLookup;
 }) {
+  const { i18n } = useLingui();
+  void i18n;
   return (
     <TranscriptActivityItem
       agentAvatarUrl={agentAvatarUrl}

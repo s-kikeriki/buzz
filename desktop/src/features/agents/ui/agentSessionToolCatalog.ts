@@ -1,3 +1,4 @@
+import { t } from "@lingui/core/macro";
 import {
   CheckCircle2,
   CircleDot,
@@ -13,6 +14,8 @@ import {
 
 import type { BuzzToolInfo, ToolStatus } from "./agentSessionTypes";
 import { BRAND } from "@/shared/branding/brand";
+
+const { productName } = BRAND;
 
 export function normalizeToolStatus(status: string): ToolStatus {
   const normalized = status.toLowerCase();
@@ -35,7 +38,7 @@ export function normalizeToolStatus(status: string): ToolStatus {
 export function getToolStatusDisplay(status: ToolStatus, isError: boolean) {
   if (isError || status === "failed") {
     return {
-      label: "Error",
+      label: t`Error`,
       Icon: XCircle,
       state: "output-error" as const,
       variant: "destructive" as const,
@@ -43,7 +46,7 @@ export function getToolStatusDisplay(status: ToolStatus, isError: boolean) {
   }
   if (status === "completed") {
     return {
-      label: "Done",
+      label: t`Done`,
       Icon: CheckCircle2,
       state: "output-available" as const,
       variant: "secondary" as const,
@@ -51,14 +54,14 @@ export function getToolStatusDisplay(status: ToolStatus, isError: boolean) {
   }
   if (status === "pending") {
     return {
-      label: "Pending",
+      label: t`Pending`,
       Icon: CircleDot,
       state: "input-streaming" as const,
       variant: "secondary" as const,
     };
   }
   return {
-    label: "Running",
+    label: t`Running`,
     Icon: Clock3,
     state: "input-available" as const,
     variant: "secondary" as const,
@@ -149,8 +152,8 @@ export function getBuzzToolInfo(title: string): BuzzToolInfo | null {
     return {
       icon: Workflow,
       label: isRead
-        ? `Reads workflow state from ${BRAND.productName}.`
-        : `Updates workflow state in ${BRAND.productName}.`,
+        ? t`Reads workflow state from ${productName}.`
+        : t`Updates workflow state in ${productName}.`,
       tone: isWrite ? "write" : "read",
     };
   }
@@ -162,8 +165,8 @@ export function getBuzzToolInfo(title: string): BuzzToolInfo | null {
     return {
       icon: Hash,
       label: isRead
-        ? `Reads channel context from the ${BRAND.productName} relay.`
-        : `Changes channel state in the ${BRAND.productName} relay.`,
+        ? t`Reads channel context from the ${productName} relay.`
+        : t`Changes channel state in the ${productName} relay.`,
       tone: isWrite ? "write" : "read",
     };
   }
@@ -175,15 +178,15 @@ export function getBuzzToolInfo(title: string): BuzzToolInfo | null {
     return {
       icon: Users,
       label: isRead
-        ? `Reads ${BRAND.productName} identity or presence data.`
-        : `Updates ${BRAND.productName} identity or membership data.`,
+        ? t`Reads ${productName} identity or presence data.`
+        : t`Updates ${productName} identity or membership data.`,
       tone: isWrite ? "write" : "admin",
     };
   }
   if (name.includes("search") || name === "get_feed") {
     return {
       icon: Search,
-      label: `Searches relay-visible ${BRAND.productName} history.`,
+      label: t`Searches relay-visible ${productName} history.`,
       tone: "read",
     };
   }
@@ -194,7 +197,7 @@ export function getBuzzToolInfo(title: string): BuzzToolInfo | null {
   ) {
     return {
       icon: Send,
-      label: `Publishes relay-visible ${BRAND.productName} activity.`,
+      label: t`Publishes relay-visible ${productName} activity.`,
       tone: "write",
     };
   }
@@ -202,8 +205,8 @@ export function getBuzzToolInfo(title: string): BuzzToolInfo | null {
   return {
     icon: MessageSquare,
     label: isRead
-      ? `Reads from ${BRAND.productName}.`
-      : `Writes to ${BRAND.productName}.`,
+      ? t`Reads from ${productName}.`
+      : t`Writes to ${productName}.`,
     tone: isWrite ? "write" : "read",
   };
 }

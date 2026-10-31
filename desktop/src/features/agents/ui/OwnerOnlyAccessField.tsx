@@ -1,3 +1,4 @@
+import { useLingui } from "@lingui/react/macro";
 import type { RespondToMode } from "@/shared/api/types";
 import {
   CreateAgentRespondToField,
@@ -19,12 +20,13 @@ export function OwnerOnlyAccessField({
   onAllowlistChange: (allowlist: string[]) => void;
   onModeChange: (mode: RespondToMode) => void;
 }) {
+  const { i18n } = useLingui();
   return (
     <CreateAgentRespondToField
       allowlist={accessLocked ? [] : allowlist}
       disabled={disabled || accessLocked}
       disabledReason={
-        accessLocked ? OWNER_ONLY_ACCESS_DISABLED_REASON : undefined
+        accessLocked ? i18n._(OWNER_ONLY_ACCESS_DISABLED_REASON) : undefined
       }
       mode={accessLocked ? "owner-only" : mode}
       onAllowlistChange={onAllowlistChange}

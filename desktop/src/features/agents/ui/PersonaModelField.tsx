@@ -1,3 +1,5 @@
+import { Trans, useLingui } from "@lingui/react/macro";
+import { t } from "@lingui/core/macro";
 import type * as React from "react";
 import { motion } from "motion/react";
 
@@ -39,6 +41,8 @@ export function PersonaModelField({
   showCustomModelInput,
   transition,
 }: PersonaModelFieldProps) {
+  const { i18n } = useLingui();
+  void i18n;
   return (
     <motion.div
       animate={{ height: "auto", opacity: 1, scale: 1 }}
@@ -53,9 +57,11 @@ export function PersonaModelField({
           className="text-sm font-medium text-foreground"
           htmlFor="persona-model"
         >
-          Model
+          <Trans>Model</Trans>
           {!isExplicitModelRequired ? (
-            <span className={PERSONA_LABEL_OPTIONAL_CLASS}>Optional</span>
+            <span className={PERSONA_LABEL_OPTIONAL_CLASS}>
+              <Trans>Optional</Trans>
+            </span>
           ) : null}
         </label>
         <PersonaModelCombobox
@@ -64,7 +70,7 @@ export function PersonaModelField({
           onValueChange={onModelValueChange}
           options={modelDropdownOptions}
           placeholder={
-            isExplicitModelRequired ? "Choose a model" : "Default model"
+            isExplicitModelRequired ? t`Choose a model` : t`Default model`
           }
           value={modelSelectValue}
         />
@@ -76,7 +82,7 @@ export function PersonaModelField({
             )}
           >
             <Input
-              aria-label="Custom model ID"
+              aria-label={t`Custom model ID`}
               autoCorrect="off"
               className={cn(
                 "h-8 px-0 py-0 leading-6",
@@ -85,15 +91,17 @@ export function PersonaModelField({
               disabled={disabled}
               id="persona-custom-model"
               onChange={(event) => onCustomModelChange(event.target.value)}
-              placeholder="Custom model ID"
+              placeholder={t`Custom model ID`}
               value={model}
             />
           </div>
         ) : null}
         {showSharedComputeAutoHint ? (
           <p className="text-xs text-muted-foreground">
-            Auto uses Mesh collective intelligence when two or more models stay
-            available, otherwise it chooses one available model.
+            <Trans>
+              Auto uses Mesh collective intelligence when two or more models
+              stay available, otherwise it chooses one available model.
+            </Trans>
           </p>
         ) : null}
         {modelDiscoveryStatus ? (

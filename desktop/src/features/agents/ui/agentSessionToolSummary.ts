@@ -1,3 +1,4 @@
+import { t } from "@lingui/core/macro";
 import type {
   AgentActivityAction,
   ToolStatus,
@@ -102,9 +103,9 @@ function labelForStatus(
 ) {
   const label = descriptor.label;
   if (descriptor.groupKey === "file-edit:str_replace") {
-    if (failed) return "Edit failed";
-    if (running) return "Editing file";
-    return "Edited file";
+    if (failed) return t`Edit failed`;
+    if (running) return t`Editing file`;
+    return t`Edited file`;
   }
   if (failed) {
     return label.endsWith("failed") ? label : `${label} failed`;

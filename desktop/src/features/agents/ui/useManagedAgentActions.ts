@@ -1,3 +1,4 @@
+import { t } from "@lingui/core/macro";
 import { isRelayRemovedError } from "@/features/agents/managedAgentRelayCleanup";
 import { useCommunities } from "@/features/communities/useCommunities";
 import * as React from "react";
@@ -187,7 +188,7 @@ export function useManagedAgentActions() {
     } catch (error) {
       if (isRelayRemovedError(error)) return;
       setActionErrorMessage(
-        error instanceof Error ? error.message : "Failed to start agent.",
+        error instanceof Error ? error.message : t`Failed to start agent.`,
       );
     }
   }
@@ -212,7 +213,7 @@ export function useManagedAgentActions() {
     } catch (error) {
       if (isRelayRemovedError(error)) return;
       setActionErrorMessage(
-        error instanceof Error ? error.message : "Failed to restart agent.",
+        error instanceof Error ? error.message : t`Failed to restart agent.`,
       );
     } finally {
       setRestartingAgentPubkey(null);
@@ -265,7 +266,7 @@ export function useManagedAgentActions() {
     } catch (error) {
       if (isRelayRemovedError(error)) return;
       setActionErrorMessage(
-        error instanceof Error ? error.message : "Failed to start agent.",
+        error instanceof Error ? error.message : t`Failed to start agent.`,
       );
     } finally {
       setPersonaStartPending(persona.id, false);
@@ -301,7 +302,7 @@ export function useManagedAgentActions() {
       }
     } catch (error) {
       setActionErrorMessage(
-        error instanceof Error ? error.message : "Failed to stop agent.",
+        error instanceof Error ? error.message : t`Failed to stop agent.`,
       );
     }
   }
@@ -345,7 +346,7 @@ export function useManagedAgentActions() {
       }
     } catch (error) {
       setActionErrorMessage(
-        error instanceof Error ? error.message : "Failed to delete agent.",
+        error instanceof Error ? error.message : t`Failed to delete agent.`,
       );
     }
   }
@@ -362,14 +363,14 @@ export function useManagedAgentActions() {
       });
       setActionNoticeMessage(
         updated.startOnAppLaunch
-          ? `Will start ${updated.name} automatically when the desktop app opens.`
-          : `${updated.name} will stay manual-start only.`,
+          ? t`Will start ${updated.name} automatically when the desktop app opens.`
+          : t`${updated.name} will stay manual-start only.`,
       );
     } catch (error) {
       setActionErrorMessage(
         error instanceof Error
           ? error.message
-          : "Failed to update startup preference.",
+          : t`Failed to update startup preference.`,
       );
     }
   }
@@ -381,12 +382,12 @@ export function useManagedAgentActions() {
     setActionErrorMessage(null);
     setActionNoticeMessage(() => {
       if (result.started) {
-        return `Added ${result.agent.name} to ${channel.name} and spawned it.`;
+        return t`Added ${result.agent.name} to ${channel.name} and spawned it.`;
       }
       if (result.membershipAdded) {
         return `Added ${result.agent.name} to ${channel.name}.`;
       }
-      return `${result.agent.name} is already in ${channel.name}.`;
+      return t`${result.agent.name} is already in ${channel.name}.`;
     });
     void managedAgentsQuery.refetch();
     void relayAgentsQuery.refetch();

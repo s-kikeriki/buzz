@@ -1,3 +1,4 @@
+import { t } from "@lingui/core/macro";
 import {
   commandsMatch,
   findReusableGenericAgent,
@@ -486,7 +487,7 @@ export async function createChannelManagedAgents(
         kind: input.personaId ? "persona" : "generic",
         name: input.name.trim() || "agent",
         personaId: input.personaId ?? null,
-        error: error instanceof Error ? error.message : "Failed to add agent.",
+        error: error instanceof Error ? error.message : t`Failed to add agent.`,
       });
     }
   }

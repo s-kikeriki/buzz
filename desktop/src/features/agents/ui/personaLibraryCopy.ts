@@ -1,20 +1,18 @@
+import { msg, t } from "@lingui/core/macro";
 export const personaLibraryCopy = {
-  title: "My agents",
-  description:
-    "The agents you have chosen for this app. Use them to create teams and launch agents.",
-  chooseFromCatalog: "Choose from catalog",
-  createNew: "New agent",
-  import: "Import snapshot",
-  emptyTitle: "No agents yet",
-  emptyDescription:
-    "Choose one from Agent Catalog, create your own, or import one to get started.",
-  emptyImportHint:
-    "Or drop an .agent.json or .agent.png snapshot here to import.",
+  title: msg`My agents`,
+  description: msg`The agents you have chosen for this app. Use them to create teams and launch agents.`,
+  chooseFromCatalog: msg`Choose from catalog`,
+  createNew: msg`New agent`,
+  import: msg`Import snapshot`,
+  emptyTitle: msg`No agents yet`,
+  emptyDescription: msg`Choose one from Agent Catalog, create your own, or import one to get started.`,
+  emptyImportHint: msg`Or drop an .agent.json or .agent.png snapshot here to import.`,
 } as const;
 
 export const personaCatalogCopy = {
-  title: "Agent Catalog",
-  description: "Browse agents shared to this relay.",
+  title: msg`Agent Catalog`,
+  description: msg`Browse agents shared to this relay.`,
   dialogTitle: "Add agent",
   dialogDescription: "Browse agents shared to this relay.",
   emptyTitle: "You're all set",
@@ -48,7 +46,7 @@ export function getPersonaCatalogSelectionAriaLabel(
   displayName: string,
   isActive: boolean,
 ) {
-  return `${isActive ? "Deselect" : "Select"} ${displayName} in My Agents`;
+  return t`${isActive ? "Deselect" : "Select"} ${displayName} in My Agents`;
 }
 
 export function getPersonaCatalogDetailSelectionCopy(isActive: boolean) {

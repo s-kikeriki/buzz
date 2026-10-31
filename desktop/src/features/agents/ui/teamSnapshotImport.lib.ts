@@ -1,3 +1,4 @@
+import { plural, t } from "@lingui/core/macro";
 import type {
   TeamSnapshotImportMemberResult,
   TeamSnapshotImportResult,
@@ -43,21 +44,24 @@ export function deriveImportToast(
     const parts: string[] = [];
     if (totalMemoryErrors > 0) {
       parts.push(
-        `${totalMemoryErrors} memory entr${totalMemoryErrors === 1 ? "y" : "ies"} failed to restore`,
+        plural(totalMemoryErrors, {
+          one: "# memory entry failed to restore",
+          other: "# memory entries failed to restore",
+        }),
       );
     }
     if (profileSyncFailureCount > 0) {
       parts.push(
-        `${profileSyncFailureCount} member${profileSyncFailureCount === 1 ? "" : "s"} failed to sync profile${profileSyncFailureCount === 1 ? "" : "s"}`,
+        t`${profileSyncFailureCount} member${profileSyncFailureCount === 1 ? "" : "s"} failed to sync profile${profileSyncFailureCount === 1 ? "" : "s"}`,
       );
     }
     return {
       type: "error",
-      message: `${result.team.name} imported, but ${parts.join(" and ")}.`,
+      message: t`${result.team.name} imported, but ${parts.join(" and ")}.`,
     };
   }
   return {
     type: "notice",
-    message: `Imported ${result.team.name} with ${memberCount} member${memberCount === 1 ? "" : "s"}.`,
+    message: t`Imported ${result.team.name} with ${memberCount} member${memberCount === 1 ? "" : "s"}.`,
   };
 }

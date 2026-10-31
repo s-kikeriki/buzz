@@ -1,3 +1,5 @@
+import { i18n } from "@lingui/core";
+import { msg, t } from "@lingui/core/macro";
 import type {
   AcpRuntimeCatalogEntry,
   GlobalAgentConfig,
@@ -5,6 +7,8 @@ import type {
 import { BUZZ_AGENT_THINKING_EFFORT } from "./buzzAgentConfig";
 import type { RuntimeFileConfigSubset } from "@/shared/api/tauri";
 import { BRAND } from "@/shared/branding/brand";
+
+const { productName } = BRAND;
 // Dialogs import getDefaultPersonaRuntime via this re-export; lib code imports
 // directly from lib/resolvePersonaRuntime.
 export { getDefaultPersonaRuntime } from "../lib/resolvePersonaRuntime";
@@ -140,24 +144,24 @@ const PROVIDER_CREDENTIAL_CONFIG: Partial<
   },
 };
 
-const DEFAULT_MODEL_OPTION: PersonaModelOption = {
+const DEFAULT_MODEL_OPTION = {
   id: "",
-  label: "Default model",
+  label: msg`Default model`,
 };
 
-export const PERSONA_LLM_PROVIDER_OPTIONS: readonly PersonaModelOption[] = [
-  { id: "anthropic", label: "Anthropic" },
-  { id: "openai", label: "OpenAI" },
-  { id: "openai-compat", label: "OpenAI-compatible" },
-  { id: "openrouter", label: "OpenRouter" },
-  { id: "relay-mesh", label: `${BRAND.productName} shared compute` },
-  { id: "databricks", label: "Databricks" },
-  { id: "databricks_v2", label: "Databricks v2" },
+export const PERSONA_LLM_PROVIDER_OPTIONS = [
+  { id: "anthropic", label: msg`Anthropic` },
+  { id: "openai", label: msg`OpenAI` },
+  { id: "openai-compat", label: msg`OpenAI-compatible` },
+  { id: "openrouter", label: msg`OpenRouter` },
+  { id: "relay-mesh", label: msg`${productName} shared compute` },
+  { id: "databricks", label: msg`Databricks` },
+  { id: "databricks_v2", label: msg`Databricks v2` },
 ];
 
 const PERSONA_MODEL_OPTIONS_BY_RUNTIME: Record<
   string,
-  readonly PersonaModelOption[]
+  readonly (typeof DEFAULT_MODEL_OPTION)[]
 > = {
   goose: [DEFAULT_MODEL_OPTION],
   "buzz-agent": [DEFAULT_MODEL_OPTION],
@@ -165,10 +169,19 @@ const PERSONA_MODEL_OPTIONS_BY_RUNTIME: Record<
   codex: [DEFAULT_MODEL_OPTION],
 };
 
+function resolveModelOption(option: {
+  id: string;
+  label: ReturnType<typeof msg>;
+}): PersonaModelOption {
+  return { ...option, label: i18n._(option.label) };
+}
+
 export function getRuntimePersonaModelOptions(
   runtimeId: string,
 ): readonly PersonaModelOption[] {
-  return PERSONA_MODEL_OPTIONS_BY_RUNTIME[runtimeId] ?? [DEFAULT_MODEL_OPTION];
+  return (
+    PERSONA_MODEL_OPTIONS_BY_RUNTIME[runtimeId] ?? [DEFAULT_MODEL_OPTION]
+  ).map(resolveModelOption);
 }
 
 function isKnownLlmProvider(
@@ -317,7 +330,7 @@ export function providerRequiresExplicitModel(
 export function providerDisplayLabel(providerId: string) {
   const trimmedProvider = providerId.trim();
   return trimmedProvider === "relay-mesh"
-    ? `${BRAND.productName} shared compute`
+    ? t`${productName} shared compute`
     : trimmedProvider;
 }
 
@@ -327,7 +340,7 @@ export function getDefaultLlmProviderLabel(
 ) {
   const trimmedGlobal = (globalProvider ?? "").trim();
   return trimmedGlobal
-    ? `Use agent defaults (${providerDisplayLabel(trimmedGlobal)})`
+    ? t`Use agent defaults (${providerDisplayLabel(trimmedGlobal)})`
     : "Select a provider\u2026";
 }
 
@@ -340,8 +353,8 @@ export function getDefaultLlmProviderLabel(
 export function getDefaultLlmModelLabel(globalModel?: string) {
   const trimmedGlobal = (globalModel ?? "").trim();
   return trimmedGlobal
-    ? `Use agent defaults (${trimmedGlobal})`
-    : "Default model";
+    ? t`Use agent defaults (${trimmedGlobal})`
+    : t`Default model`;
 }
 
 /**
@@ -402,9 +415,11 @@ export function getPersonaProviderOptions(
   const defaultProviderOptions = [
     { id: "", label: getDefaultLlmProviderLabel(runtimeId, globalProvider) },
   ];
-  const filteredOptions = hideProviderIds?.size
-    ? PERSONA_LLM_PROVIDER_OPTIONS.filter((o) => !hideProviderIds.has(o.id))
-    : PERSONA_LLM_PROVIDER_OPTIONS;
+  const filteredOptions = (
+    hideProviderIds?.size
+      ? PERSONA_LLM_PROVIDER_OPTIONS.filter((o) => !hideProviderIds.has(o.id))
+      : PERSONA_LLM_PROVIDER_OPTIONS
+  ).map(resolveModelOption);
   const options = [...defaultProviderOptions, ...filteredOptions];
   if (
     trimmedProvider.length === 0 ||
@@ -415,7 +430,7 @@ export function getPersonaProviderOptions(
 
   return [
     ...options,
-    { id: trimmedProvider, label: `${trimmedProvider} (current)` },
+    { id: trimmedProvider, label: t`${trimmedProvider} (current)` },
   ];
 }
 
@@ -503,10 +518,10 @@ export function buildPersonaRuntimeDropdownOptions({
   runtimeDropdownOptions: PersonaDropdownOption[];
 } {
   const blankRuntimeOptionLabel = runtimesLoading
-    ? "Loading harnesses..."
+    ? t`Loading harnesses...`
     : isCreateMode
-      ? "Choose a harness"
-      : "No preference (use app default)";
+      ? t`Choose a harness`
+      : t`No preference (use app default)`;
   const runtimeDropdownOptions: PersonaDropdownOption[] = [
     ...(!isCreateMode
       ? [
@@ -533,7 +548,7 @@ export function buildPersonaRuntimeDropdownOptions({
     !runtimeDropdownOptions.some((option) => option.value === currentRuntime)
   ) {
     runtimeDropdownOptions.push({
-      label: `${currentRuntime} (current)`,
+      label: t`${currentRuntime} (current)`,
       value: currentRuntime,
     });
   }

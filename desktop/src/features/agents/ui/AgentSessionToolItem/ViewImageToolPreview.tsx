@@ -1,3 +1,5 @@
+import { useLingui } from "@lingui/react/macro";
+import { t } from "@lingui/core/macro";
 import * as React from "react";
 
 import { SimpleImageLightbox } from "@/shared/ui/SimpleImageLightbox";
@@ -10,10 +12,12 @@ export function ViewImageToolPreview({
   src: string;
   title: string | null;
 }) {
+  const { i18n } = useLingui();
+  void i18n;
   const [lightboxOpen, setLightboxOpen] = React.useState(false);
   const [imageFailed, setImageFailed] = React.useState(false);
   const resolvedSrc = React.useMemo(() => resolveToolImageSrc(src), [src]);
-  const alt = title ?? "Viewed image";
+  const alt = title ?? t`Viewed image`;
 
   if (imageFailed) {
     return null;

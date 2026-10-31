@@ -1,3 +1,4 @@
+import { t } from "@lingui/core/macro";
 import type { TranscriptItem } from "./agentSessionTypes";
 import { buildCompactToolSummary } from "./agentSessionToolSummary";
 
@@ -46,7 +47,7 @@ export function getActivityHeadline(item: TranscriptItem): string | null {
       }
       return "Responding";
     }
-    return item.title || "User prompt";
+    return item.title || t`User prompt`;
   }
 
   if (item.type === "thought") {

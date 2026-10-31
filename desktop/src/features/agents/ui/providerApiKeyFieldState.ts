@@ -1,3 +1,4 @@
+import { t } from "@lingui/core/macro";
 import * as React from "react";
 
 import type { EnvVarsValue } from "./EnvVarsEditor";
@@ -80,13 +81,13 @@ export function getProviderApiKeyFieldState({
               : null;
   const inheritedLabel =
     source === "persona"
-      ? "Inherited from agent profile"
+      ? t`Inherited from agent profile`
       : source === "global"
-        ? "Inherited from global config"
+        ? t`Inherited from global config`
         : source === "build"
-          ? "Inherited from build"
+          ? t`Inherited from build`
           : source === "file"
-            ? "Set in runtime config"
+            ? t`Set in runtime config`
             : "";
 
   return {

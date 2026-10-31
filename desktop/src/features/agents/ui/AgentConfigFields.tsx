@@ -1,3 +1,5 @@
+import { Trans, useLingui } from "@lingui/react/macro";
+import { t } from "@lingui/core/macro";
 /**
  * Controlled field group for global agent config (provider, model, effort, env vars).
  *
@@ -229,6 +231,8 @@ export function AgentConfigFields({
   useCustomSelect = false,
   useChevronSelectIcon = false,
 }: AgentConfigFieldsProps) {
+  const { i18n } = useLingui();
+  void i18n;
   const shouldReduceMotion = useReducedMotion();
   const {
     showAdvancedFields,
@@ -622,7 +626,7 @@ export function AgentConfigFields({
         bakedProvider
       );
     }
-    return "Select a provider";
+    return t`Select a provider`;
   }, [bakedProvider, providerOptions]);
 
   const implicitEffortProvider =
@@ -696,7 +700,7 @@ export function AgentConfigFields({
         value: opt.id || AUTO_PROVIDER_DROPDOWN_VALUE,
       })),
     ...(showCustomProviderOption
-      ? [{ label: "Custom provider…", value: CUSTOM_PROVIDER_DROPDOWN_VALUE }]
+      ? [{ label: t`Custom provider…`, value: CUSTOM_PROVIDER_DROPDOWN_VALUE }]
       : []),
   ];
   const providerSelect = useCustomSelect ? (
@@ -707,7 +711,7 @@ export function AgentConfigFields({
       options={providerDropdownOptions}
       placeholder={
         showProviderPlaceholderOption
-          ? "Select provider"
+          ? t`Select provider`
           : compactProviderZeroLabel
       }
       placeholderClassName={placeholderClassName}
@@ -744,7 +748,7 @@ export function AgentConfigFields({
         className={cn("text-sm font-medium", fieldLabelClassName)}
         htmlFor="global-agent-provider"
       >
-        Provider
+        <Trans>Provider</Trans>
       </label>
       {!useCustomSelect && useChevronSelectIcon ? (
         <div className="relative">
@@ -759,10 +763,10 @@ export function AgentConfigFields({
       )}
       {isCustomProvider ? (
         <AgentConfigTextInput
-          aria-label="Custom global provider ID"
+          aria-label={t`Custom global provider ID`}
           autoCorrect="off"
           onChange={(e) => handleCustomProviderInput(e.target.value)}
-          placeholder="Custom provider ID"
+          placeholder={t`Custom provider ID`}
           usePersonaInputStyle={progressiveDefaults}
           value={providerValue}
         />
@@ -781,7 +785,7 @@ export function AgentConfigFields({
         inheritedRows={bakedGenericRows}
         inheritedRowsLabel="build"
         keyAnnotations={CARD_MINT_KEY_ANNOTATIONS}
-        label="Environment variables"
+        label={t`Environment variables`}
         onChange={handleEnvVarsChange}
         requiredKeys={advancedRequiredEnvKeys}
         value={config.env_vars}
@@ -806,7 +810,7 @@ export function AgentConfigFields({
             allowDefaultModel={fallbackModel !== null}
             defaultModelLabel={
               fallbackModel
-                ? `Default model (${resolveModelLabel(fallbackModel, undefined, effectiveProvider || undefined)})`
+                ? t`Default model (${resolveModelLabel(fallbackModel, undefined, effectiveProvider || undefined)})`
                 : undefined
             }
             disableSelectDuringDiscovery={disableModelSelectDuringDiscovery}
@@ -833,7 +837,7 @@ export function AgentConfigFields({
             onIsCustomModelEditingChange={onCustomModelEditingChange}
             onModelChange={handleModelChange}
             placeholderClassName={placeholderClassName}
-            placeholder="Select a model"
+            placeholder={t`Select a model`}
             provider={providerForDiscovery}
             fieldClassName={unstyled ? fieldClassName : undefined}
             labelClassName={fieldLabelClassName}
@@ -862,7 +866,7 @@ export function AgentConfigFields({
               // placeholder. Full disclosure lets EffortSelectField compute
               // its own label ("Default (medium)", "Inherit (high)", …).
               disclosure === "onboarding-essential"
-                ? "Select effort level"
+                ? t`Select effort level`
                 : undefined
             }
             effortDefault={effortDefaultForRenderer}
@@ -875,7 +879,7 @@ export function AgentConfigFields({
                 : undefined
             }
             inheritedEffort={bakedEffort ?? undefined}
-            label="Effort"
+            label={t`Effort`}
             labelClassName={fieldLabelClassName}
             onChange={(value) => {
               const nextEnvVars = { ...config.env_vars };
@@ -908,13 +912,13 @@ export function AgentConfigFields({
             envVarName={showApiKeyEnvVarName ? apiKeyEnvVar : undefined}
             inheritedLabel={
               apiKeyFileSatisfied
-                ? "Set in runtime config"
-                : "Provided by this build"
+                ? t`Set in runtime config`
+                : t`Provided by this build`
             }
             isInherited={apiKeyInherited}
             isRequired={!apiKeyInherited && apiKeyValue.length === 0}
             isValidating={apiKeyValidationPending}
-            label={getProviderApiKeyLabel(effectiveProvider) ?? "API Key"}
+            label={getProviderApiKeyLabel(effectiveProvider) ?? t`API Key`}
             onValueChange={(value) =>
               onConfigChange({
                 ...config,
@@ -923,7 +927,7 @@ export function AgentConfigFields({
             }
             validationMessage={
               apiKeyValidationFailed
-                ? "We couldn’t validate this API key. Check the key or your connection and try again."
+                ? t`We couldn’t validate this API key. Check the key or your connection and try again.`
                 : null
             }
             value={apiKeyValue}
@@ -954,7 +958,9 @@ export function AgentConfigFields({
             onClick={() => setAdvancedOpen((current) => !current)}
             type="button"
           >
-            <span>Advanced</span>
+            <span>
+              <Trans>Advanced</Trans>
+            </span>
             <AdvancedRequiredBadge
               show={advancedCredentialMissing}
               testId="global-agent-advanced-required-badge"

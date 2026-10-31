@@ -1,7 +1,10 @@
+import { t } from "@lingui/core/macro";
 import { buildTranscriptState } from "./agentSessionTranscript";
 import type { ObserverEvent, TranscriptItem } from "./agentSessionTypes";
 import { classifyToolItem } from "./agentSessionToolClassifier";
 import { BRAND } from "@/shared/branding/brand";
+
+const { productName } = BRAND;
 
 export type TranscriptTurnSegment =
   | { kind: "item"; item: TranscriptItem }
@@ -300,7 +303,7 @@ function groupMixedToolRuns(
         kind: "summary",
         summary: {
           id: `summary:mixed:${items[0].id}`,
-          label: `Ran ${items.length} tool calls`,
+          label: t`Ran ${items.length} tool calls`,
           count: items.length,
           items,
           renderClass: null,
@@ -375,9 +378,9 @@ function sameKindLabel(item: TranscriptItem, count: number): string {
   if (renderClass === "skill-read") {
     return `Read ${count} skill${count === 1 ? "" : "s"}`;
   }
-  if (renderClass === "shell") return `Ran ${count} commands`;
+  if (renderClass === "shell") return t`Ran ${count} commands`;
   if (renderClass === "relay-op")
-    return `Ran ${count} ${BRAND.productName} relay ops`;
+    return t`Ran ${count} ${productName} relay ops`;
   return `${label} ×${count}`;
 }
 

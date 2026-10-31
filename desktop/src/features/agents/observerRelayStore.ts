@@ -1,3 +1,4 @@
+import { t } from "@lingui/core/macro";
 import * as React from "react";
 
 import { subscribeToAgentObserverFrames } from "@/shared/api/observerRelay";
@@ -586,8 +587,8 @@ async function handleRelayObserverEvent(
     setConnectionState(
       "error",
       error instanceof Error
-        ? `Observer event decrypt failed: ${error.message}`
-        : "Observer event decrypt failed.",
+        ? t`Observer event decrypt failed: ${error.message}`
+        : t`Observer event decrypt failed.`,
     );
   }
 }
@@ -616,8 +617,8 @@ export function ensureRelayObserverSubscription() {
             setConnectionState(
               "error",
               error instanceof Error
-                ? `Observer event handling failed: ${error.message}`
-                : "Observer event handling failed.",
+                ? t`Observer event handling failed: ${error.message}`
+                : t`Observer event handling failed.`,
             );
           });
       },
@@ -635,7 +636,7 @@ export function ensureRelayObserverSubscription() {
           "error",
           error instanceof Error
             ? error.message
-            : "Observer relay subscription failed.",
+            : t`Observer relay subscription failed.`,
         );
       }
     })

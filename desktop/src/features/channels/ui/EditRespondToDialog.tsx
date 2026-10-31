@@ -1,3 +1,4 @@
+import { useLingui } from "@lingui/react/macro";
 import * as React from "react";
 
 import { useUpdateManagedAgentMutation } from "@/features/agents/hooks";
@@ -29,6 +30,7 @@ export function EditRespondToDialog({
   onOpenChange: (open: boolean) => void;
   open: boolean;
 }) {
+  const { i18n } = useLingui();
   const updateMutation = useUpdateManagedAgentMutation();
   const { data: agentAccessOwnerOnly } = useAgentAccessOwnerOnlyQuery({
     enabled: open,
@@ -74,7 +76,7 @@ export function EditRespondToDialog({
           allowlist={accessLocked ? [] : respondToAllowlist}
           disabled={updateMutation.isPending || accessLocked}
           disabledReason={
-            accessLocked ? OWNER_ONLY_ACCESS_DISABLED_REASON : undefined
+            accessLocked ? i18n._(OWNER_ONLY_ACCESS_DISABLED_REASON) : undefined
           }
           mode={accessLocked ? "owner-only" : respondTo}
           onAllowlistChange={setRespondToAllowlist}

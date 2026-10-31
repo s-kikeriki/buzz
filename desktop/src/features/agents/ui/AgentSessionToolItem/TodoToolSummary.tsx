@@ -1,3 +1,4 @@
+import { Trans, useLingui } from "@lingui/react/macro";
 import { useLocale } from "@/shared/lib/localePreference";
 import { cn } from "@/shared/lib/cn";
 import type { TranscriptItem } from "../agentSessionTypes";
@@ -29,6 +30,8 @@ export function TodoToolSummary({
   fallbackPreview: string | null;
   item: Extract<TranscriptItem, { type: "tool" }>;
 }) {
+  const { i18n } = useLingui();
+  void i18n;
   const locale = useLocale();
   const todos = buildTodoDisplayItems(item.args, item.result, fallbackPreview);
   const variant = useAgentSessionTranscriptVariant();
@@ -69,7 +72,7 @@ export function TodoToolSummary({
               isCompactPreview ? "text-xs" : "text-sm",
             )}
           >
-            No todos.
+            <Trans>No todos.</Trans>
           </p>
         )}
       </ActivityRowContent>
@@ -85,6 +88,8 @@ export function isTodoSummary(summary: CompactToolSummary) {
 }
 
 function TodoCheckboxRow({ todo }: { todo: TodoDisplayItem }) {
+  const { i18n } = useLingui();
+  void i18n;
   const variant = useAgentSessionTranscriptVariant();
   const isCompactPreview = variant === "compactPreview";
 

@@ -1,5 +1,8 @@
+import { t } from "@lingui/core/macro";
 import { toast } from "sonner";
 import { BRAND } from "@/shared/branding/brand";
+
+const { productName } = BRAND;
 
 export function showAgentProfileSyncWarning(
   agentName: string,
@@ -7,6 +10,6 @@ export function showAgentProfileSyncWarning(
 ) {
   if (!profileSyncError) return;
   toast.warning(
-    `${agentName} was saved locally, but relay sync failed: ${profileSyncError}. Remote users may still see the previous name or access policy until ${BRAND.productName} retries the sync.`,
+    t`${agentName} was saved locally, but relay sync failed: ${profileSyncError}. Remote users may still see the previous name or access policy until ${productName} retries the sync.`,
   );
 }

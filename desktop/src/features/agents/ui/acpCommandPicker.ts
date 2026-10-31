@@ -1,6 +1,9 @@
+import { t } from "@lingui/core/macro";
 import type { AcpCommandCandidate } from "@/shared/api/acpCommands";
 import type { PersonaDropdownOption } from "./agentConfigOptions";
 import { BRAND } from "@/shared/branding/brand";
+
+const { productName } = BRAND;
 
 export const DEFAULT_ACP_COMMAND_VALUE = "buzz-acp";
 
@@ -13,7 +16,7 @@ export function acpCommandPickerState(
 } {
   const options: PersonaDropdownOption[] = [
     {
-      label: `${BRAND.productName} ACP (default)`,
+      label: t`${productName} ACP (default)`,
       value: DEFAULT_ACP_COMMAND_VALUE,
     },
     ...candidates.map((candidate) => ({
@@ -24,7 +27,7 @@ export function acpCommandPickerState(
   if (command && !options.some((option) => option.value === command)) {
     options.push({
       disabled: true,
-      label: `${command} (unavailable)`,
+      label: t`${command} (unavailable)`,
       value: command,
     });
   }

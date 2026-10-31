@@ -1,3 +1,5 @@
+import { Trans, useLingui } from "@lingui/react/macro";
+import { t } from "@lingui/core/macro";
 import * as React from "react";
 import { CheckCheck, ChevronDown } from "lucide-react";
 
@@ -36,6 +38,8 @@ export function SentMessageContextDialog({
   preview: string | null;
   result: string;
 }) {
+  const { i18n } = useLingui();
+  void i18n;
   const sections = buildSentMessageContextSections({
     args,
     description,
@@ -51,7 +55,9 @@ export function SentMessageContextDialog({
       <DialogContent className="max-w-xl overflow-hidden p-0">
         <div className="flex max-h-[85vh] flex-col">
           <DialogHeader className="px-6 pb-3 pt-5 pr-14">
-            <DialogTitle>Sent message context</DialogTitle>
+            <DialogTitle>
+              <Trans>Sent message context</Trans>
+            </DialogTitle>
             <DialogDescription className="flex items-center gap-1.5">
               <CheckCheck className="h-3.5 w-3.5 shrink-0" />
               <span>{label}</span>
@@ -91,14 +97,14 @@ function buildSentMessageContextSections({
 }): SentMessageContextSection[] {
   const sections: SentMessageContextSection[] = [];
   if (preview) {
-    sections.push({ title: "Message", body: preview });
+    sections.push({ title: t`Message`, body: preview });
   }
   if (description) {
-    sections.push({ title: "Tool", body: description });
+    sections.push({ title: t`Tool`, body: description });
   }
   if (hasArgs) {
     sections.push({
-      title: "Parameters",
+      title: t`Parameters`,
       body: JSON.stringify(args, null, 2),
     });
   }
@@ -110,8 +116,8 @@ function buildSentMessageContextSections({
   }
   if (sections.length === 0) {
     sections.push({
-      title: "Status",
-      body: "Waiting for tool details.",
+      title: t`Status`,
+      body: t`Waiting for tool details.`,
     });
   }
   return sections;
@@ -122,6 +128,8 @@ function SentMessageContextSections({
 }: {
   sections: SentMessageContextSection[];
 }) {
+  const { i18n } = useLingui();
+  void i18n;
   return (
     <div className="space-y-3" data-testid="transcript-sent-message-context">
       {sections.map((section) => (
@@ -139,6 +147,8 @@ function SentMessageContextSectionAccordion({
 }: {
   section: SentMessageContextSection;
 }) {
+  const { i18n } = useLingui();
+  void i18n;
   const [open, setOpen] = React.useState(false);
   const body = section.body.trim();
 
@@ -169,7 +179,9 @@ function SentMessageContextSectionAccordion({
               {body.length > 0 ? (
                 body
               ) : (
-                <span className="italic text-foreground/50">No metadata.</span>
+                <span className="italic text-foreground/50">
+                  <Trans>No metadata.</Trans>
+                </span>
               )}
             </div>
           </div>

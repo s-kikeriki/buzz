@@ -23,3 +23,16 @@ import React from "react";
 export function withI18n(element) {
   return React.createElement(I18nProvider, { i18n }, element);
 }
+
+/**
+ * Wrap Testing Library's `render` so a converted component's `useLingui()`
+ * call has a provider, including on `rerender`.
+ */
+export function wrapTestingRender(render) {
+  return (ui, options) => {
+    const result = render(withI18n(ui), options);
+    const rerender = result.rerender.bind(result);
+    result.rerender = (next, ...rest) => rerender(withI18n(next), ...rest);
+    return result;
+  };
+}

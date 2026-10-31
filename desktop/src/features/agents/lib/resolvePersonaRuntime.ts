@@ -1,3 +1,4 @@
+import { t } from "@lingui/core/macro";
 import type { AcpRuntime, AcpRuntimeCatalogEntry } from "@/shared/api/types";
 
 /**
@@ -82,7 +83,7 @@ export function resolvePersonaRuntime(
       return {
         runtime: defaultRuntime,
         warnings: [
-          `Runtime override: using ${defaultRuntime.label} instead of ${matched.label}.`,
+          t`Runtime override: using ${defaultRuntime.label} instead of ${matched.label}.`,
         ],
         isOverridden: true,
       };
@@ -99,7 +100,7 @@ export function resolvePersonaRuntime(
     return {
       runtime: defaultRuntime,
       warnings: [
-        `This agent is configured for runtime "${personaRuntimeId}" but it is not available. Using ${defaultRuntime.label} instead.`,
+        t`This agent is configured for runtime "${personaRuntimeId}" but it is not available. Using ${defaultRuntime.label} instead.`,
       ],
       isOverridden: true,
     };
@@ -108,7 +109,7 @@ export function resolvePersonaRuntime(
   return {
     runtime: null,
     warnings: [
-      `This agent is configured for runtime "${personaRuntimeId}" but it is not available, and no other runtimes were found.`,
+      t`This agent is configured for runtime "${personaRuntimeId}" but it is not available, and no other runtimes were found.`,
     ],
     isOverridden: false,
   };

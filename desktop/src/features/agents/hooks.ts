@@ -1,3 +1,4 @@
+import { t } from "@lingui/core/macro";
 import * as React from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
@@ -790,7 +791,7 @@ export function useCreateChannelManagedAgentMutation(channelId: string | null) {
       }
 
       const failure = result.failures[0];
-      throw new Error(failure?.error ?? "Could not create agent.");
+      throw new Error(failure?.error ?? t`Could not create agent.`);
     },
     onSuccess: (result, variables) => {
       const effectiveChannelId = variables.channelId ?? channelId;

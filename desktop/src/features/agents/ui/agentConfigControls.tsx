@@ -1,3 +1,5 @@
+import { Trans, useLingui } from "@lingui/react/macro";
+import { t } from "@lingui/core/macro";
 /**
  * Shared provider and model field components for agent dialogs.
  *
@@ -49,7 +51,7 @@ export function appendNoModelsSentinel(
   if (options.length === 0 && !loading) {
     options.push({
       disabled: true,
-      label: "No models found",
+      label: t`No models found`,
       value: MODEL_NO_MODELS_VALUE,
     });
   }
@@ -65,10 +67,10 @@ export function resolveModelFieldStatusMessage({
   loading: boolean;
   status: PersonaModelDiscoveryStatus | null;
 }): string | null {
-  if (loading) return "Loading models...";
+  if (loading) return t`Loading models...`;
   if (status !== null) return status.message;
   return discoveredModelOptions !== null
-    ? "Saved changes take effect on the next start."
+    ? t`Saved changes take effect on the next start.`
     : null;
 }
 
@@ -84,6 +86,8 @@ export function AgentConfigTextInput({
 }: React.ComponentProps<typeof Input> & {
   usePersonaInputStyle?: boolean;
 }) {
+  const { i18n } = useLingui();
+  void i18n;
   const input = (
     <Input
       {...props}
@@ -142,6 +146,8 @@ export function AgentDropdownSelect({
   testId?: string;
   value: string;
 }) {
+  const { i18n } = useLingui();
+  void i18n;
   const [open, setOpen] = React.useState(false);
   const [query, setQuery] = React.useState("");
   const selectedOption = options.find((option) => option.value === value);
@@ -229,12 +235,12 @@ export function AgentDropdownSelect({
                 className="pointer-events-none absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-foreground/45"
               />
               <Input
-                aria-label="Search models"
+                aria-label={t`Search models`}
                 autoFocus
                 className="h-9 rounded-xl border-foreground/10 bg-white pl-9 text-sm"
                 data-testid={testId ? `${testId}-search` : undefined}
                 onChange={(event) => setQuery(event.target.value)}
-                placeholder="Search models…"
+                placeholder={t`Search models…`}
                 value={query}
               />
             </div>
@@ -245,7 +251,7 @@ export function AgentDropdownSelect({
               data-testid={testId ? `${testId}-empty` : undefined}
             >
               {showSearch && query.trim().length > 0
-                ? "No matches"
+                ? t`No matches`
                 : emptyOptionsLabel}
             </p>
           ) : null}
@@ -302,6 +308,8 @@ export function RequiredFieldLabel({
   htmlFor: string;
   isRequired: boolean;
 }) {
+  const { i18n } = useLingui();
+  void i18n;
   return (
     <label className={cn("text-sm font-medium", className)} htmlFor={htmlFor}>
       {children}
@@ -329,7 +337,7 @@ export function resolveDefaultModelLabel({
     defaultModelLabel ??
     discoveredModelOptions?.find((option) => option.id.trim() === "")?.label ??
     (isSharedCompute
-      ? "Auto (collective when available)"
+      ? t`Auto (collective when available)`
       : getDefaultLlmModelLabel(globalModel))
   );
 }
@@ -407,6 +415,8 @@ export function AgentModelField({
   /** Match custom agent text inputs when this field is shown in that flow. */
   usePersonaInputStyle?: boolean;
 }) {
+  const { i18n } = useLingui();
+  void i18n;
   const trimmedModel = model.trim();
   const isSharedCompute = provider?.trim() === "relay-mesh";
   const discoveredDefaultOption = discoveredModelOptions?.find(
@@ -498,14 +508,14 @@ export function AgentModelField({
       ? [
           {
             disabled: true,
-            label: "Loading models...",
+            label: t`Loading models...`,
             value: MODEL_DISCOVERY_LOADING_VALUE,
           },
         ]
       : []),
     ...(!isSharedCompute &&
     (showCustomModelOption || modelSelectValue === CUSTOM_MODEL_DROPDOWN_VALUE)
-      ? [{ label: "Custom model...", value: CUSTOM_MODEL_DROPDOWN_VALUE }]
+      ? [{ label: t`Custom model...`, value: CUSTOM_MODEL_DROPDOWN_VALUE }]
       : []),
   ];
   // An opened dropdown must never show a blank popover. When all the above
@@ -520,7 +530,7 @@ export function AgentModelField({
     discoveredModelOptions === null &&
     trimmedModel.length === 0 &&
     !isCustomModelEditing
-      ? "Loading models..."
+      ? t`Loading models...`
       : placeholder;
   const statusMessage = resolveModelFieldStatusMessage({
     discoveredModelOptions,
@@ -575,7 +585,7 @@ export function AgentModelField({
         htmlFor={id}
         isRequired={isRequired}
       >
-        Model
+        <Trans>Model</Trans>
       </RequiredFieldLabel>
       {!useCustomSelect && useChevronIcon ? (
         <div className="relative">
@@ -590,11 +600,11 @@ export function AgentModelField({
       )}
       {showCustomModelInput ? (
         <AgentConfigTextInput
-          aria-label="Custom model ID"
+          aria-label={t`Custom model ID`}
           autoCorrect="off"
           disabled={disabled}
           onChange={(event) => onModelChange(event.target.value)}
-          placeholder="Custom model ID"
+          placeholder={t`Custom model ID`}
           usePersonaInputStyle={usePersonaInputStyle}
           value={model}
         />
@@ -623,6 +633,8 @@ export function AgentProviderField({
   provider: string;
   selectedRuntime: AcpRuntimeCatalogEntry | undefined;
 }) {
+  const { i18n } = useLingui();
+  void i18n;
   const trimmedProvider = provider.trim();
   const providerOptions = getPersonaProviderOptions(
     trimmedProvider,
@@ -636,7 +648,7 @@ export function AgentProviderField({
   return (
     <div className="space-y-1.5">
       <RequiredFieldLabel htmlFor="agent-provider" isRequired={isRequired}>
-        LLM provider
+        <Trans>LLM provider</Trans>
       </RequiredFieldLabel>
       <select
         aria-required={isRequired}
@@ -655,21 +667,23 @@ export function AgentProviderField({
           </option>
         ))}
         <option value={CUSTOM_PROVIDER_DROPDOWN_VALUE}>
-          Custom provider...
+          <Trans>Custom provider...</Trans>
         </option>
       </select>
       {isCustomProviderEditing ? (
         <Input
-          aria-label="Custom provider ID"
+          aria-label={t`Custom provider ID`}
           autoCorrect="off"
           disabled={disabled}
           onChange={(event) => onProviderChange(event.target.value)}
-          placeholder="Custom provider ID"
+          placeholder={t`Custom provider ID`}
           value={provider}
         />
       ) : null}
       <p className="text-xs text-muted-foreground">
-        Changing the provider updates the available model list immediately.
+        <Trans>
+          Changing the provider updates the available model list immediately.
+        </Trans>
       </p>
     </div>
   );

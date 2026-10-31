@@ -1,3 +1,5 @@
+import { Trans, useLingui } from "@lingui/react/macro";
+import { t } from "@lingui/core/macro";
 import * as React from "react";
 
 import { AlertTriangle, ChevronDown, ChevronRight } from "lucide-react";
@@ -52,6 +54,8 @@ export function ManagedAgentRow({
   onOpenProfile: (pubkey: string) => void;
   onSelectLogAgent: (pubkey: string | null) => void;
 }) {
+  const { i18n } = useLingui();
+  void i18n;
   const isLocal = agent.backend.type === "local";
   const runtimeSource =
     agent.backend.type === "provider" ? `Remote (${agent.backend.id})` : null;
@@ -78,8 +82,8 @@ export function ManagedAgentRow({
       : agent.lastExitCode !== null
         ? `Exit ${agent.lastExitCode}`
         : isLocal
-          ? "Ready to launch"
-          : "Managed remotely";
+          ? t`Ready to launch`
+          : t`Managed remotely`;
   // When the harness recovered a meaningful error string from the agent's
   // log tail (Max's seam in `managed_agents/storage.rs`), promote it to
   // user-visible copy below the process detail. Specifically renders the
@@ -171,7 +175,7 @@ export function ManagedAgentRow({
             type="button"
             variant="outline"
           >
-            Manage
+            <Trans>Manage</Trans>
           </Button>
         </div>
       </div>
@@ -190,7 +194,7 @@ export function ManagedAgentRow({
           />
           <div className="mt-4 border-t border-border/50 pt-3">
             <p className="mb-2 text-xs font-medium text-muted-foreground">
-              Configuration
+              <Trans>Configuration</Trans>
             </p>
             <AgentConfigPanel pubkey={agent.pubkey} />
           </div>
@@ -217,6 +221,8 @@ function AgentSummary({
   personaLabel: string | null;
   presenceStatus: PresenceStatus | undefined;
 }) {
+  const { i18n } = useLingui();
+  void i18n;
   const { goChannel } = useAppNavigation();
   const { openAgentActivity } = useOpenAgentActivity();
 
@@ -247,13 +253,13 @@ function AgentSummary({
             {agent.personaOrphaned ? (
               <Badge className="gap-1" variant="warning">
                 <AlertTriangle className="h-3 w-3" />
-                Configuration missing
+                <Trans>Configuration missing</Trans>
               </Badge>
             ) : null}
             {agent.personaOutOfDate ? (
               <Badge className="gap-1" variant="warning">
                 <AlertTriangle className="h-3 w-3" />
-                Out of date
+                <Trans>Out of date</Trans>
               </Badge>
             ) : null}
           </div>
@@ -261,27 +267,35 @@ function AgentSummary({
             <PubKey pubkey={agent.pubkey} />
             {agent.backend.type === "local" ? (
               <span>
-                {agent.startOnAppLaunch ? "Auto-start" : "Manual start"}
+                {agent.startOnAppLaunch ? "Auto-start" : t`Manual start`}
               </span>
             ) : (
-              <span>Remote deployment</span>
+              <span>
+                <Trans>Remote deployment</Trans>
+              </span>
             )}
           </div>
           {agent.personaOrphaned ? (
             <p className="mt-1.5 text-xs text-amber-600 dark:text-amber-400">
-              This agent's configuration is missing — it may still be syncing or
-              was deleted on another device.
+              <Trans>
+                This agent's configuration is missing — it may still be syncing
+                or was deleted on another device.
+              </Trans>
             </p>
           ) : agent.needsRestart ? (
             <p className="mt-1.5 text-xs text-amber-600 dark:text-amber-400">
-              Configuration changed since this agent started. Restart to apply
-              it.
+              <Trans>
+                Configuration changed since this agent started. Restart to apply
+                it.
+              </Trans>
             </p>
           ) : null}
           {agent.personaOutOfDate ? (
             <p className="mt-1.5 text-xs text-amber-600 dark:text-amber-400">
-              Template updated since this agent was created. Respawn to apply
-              the new configuration.
+              <Trans>
+                Template updated since this agent was created. Respawn to apply
+                the new configuration.
+              </Trans>
             </p>
           ) : null}
           {channelNames.length > 0 ? (
@@ -335,6 +349,8 @@ function WorkingBadge({
   anchorAt: number;
   onNavigate: (channelId: string) => void;
 }) {
+  const { i18n } = useLingui();
+  void i18n;
   // The 1s tick lives here, at the leaf, so only visible working badges
   // re-render each second — idle rows never mount this hook.
   const now = useNow(1000);
@@ -348,7 +364,8 @@ function WorkingBadge({
         onNavigate(channelId);
       }}
     >
-      Working in #{name} · {formatElapsed(now - anchorAt)}
+      <Trans>Working in #</Trans>
+      {name} · {formatElapsed(now - anchorAt)}
     </Badge>
   );
 }
@@ -368,9 +385,13 @@ function StatusBlock({
   processDetail: string;
   status: ManagedAgent["status"];
 }) {
+  const { i18n } = useLingui();
+  void i18n;
   return (
     <div className="space-y-1 lg:pt-0.5">
-      <SubsectionLabel className="lg:hidden">Status</SubsectionLabel>
+      <SubsectionLabel className="lg:hidden">
+        <Trans>Status</Trans>
+      </SubsectionLabel>
       <AgentStatusBadge
         isWorking={isWorking}
         presenceLoaded={presenceLoaded}
@@ -402,9 +423,13 @@ function RuntimeBlock({
   agent: ManagedAgent;
   runtimeSource: string | null;
 }) {
+  const { i18n } = useLingui();
+  void i18n;
   return (
     <div className="space-y-1 lg:pt-0.5">
-      <SubsectionLabel className="lg:hidden">Runtime</SubsectionLabel>
+      <SubsectionLabel className="lg:hidden">
+        <Trans>Runtime</Trans>
+      </SubsectionLabel>
       <p className="truncate font-mono text-xs text-foreground">
         {agent.agentCommand}
       </p>
@@ -421,6 +446,8 @@ function RuntimeBlock({
 }
 
 function AgentOriginBadge({ agent }: { agent: ManagedAgent }) {
+  const { i18n } = useLingui();
+  void i18n;
   return (
     <Badge variant="outline">
       {agent.backend.type === "local" ? "Local" : "Remote"}

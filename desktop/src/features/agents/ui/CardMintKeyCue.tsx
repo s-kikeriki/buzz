@@ -1,3 +1,4 @@
+import { Trans, useLingui } from "@lingui/react/macro";
 /**
  * Always-visible cue shown in Agent Defaults when a global `OPENAI_API_KEY`
  * row exists (nonblank).  The Advanced section is collapsed by default, so
@@ -12,6 +13,8 @@ export function CardMintKeyCue({
 }: {
   envVars: Record<string, string>;
 }) {
+  const { i18n } = useLingui();
+  void i18n;
   const isSet =
     "OPENAI_API_KEY" in envVars &&
     (envVars.OPENAI_API_KEY ?? "").trim().length > 0;
@@ -22,8 +25,11 @@ export function CardMintKeyCue({
       className="text-xs text-muted-foreground"
       data-testid="card-mint-key-cue"
     >
-      Card-minting key <span className="font-mono">OPENAI_API_KEY</span> is set
-      under Advanced → Environment variables.
+      <Trans>Card-minting key</Trans>{" "}
+      <span className="font-mono">
+        <Trans>OPENAI_API_KEY</Trans>
+      </span>{" "}
+      <Trans>is set under Advanced → Environment variables.</Trans>
     </p>
   );
 }

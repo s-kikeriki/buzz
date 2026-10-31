@@ -1,3 +1,5 @@
+import { Trans, useLingui } from "@lingui/react/macro";
+import { t } from "@lingui/core/macro";
 import { CircleAlert } from "lucide-react";
 
 import type { ManagedAgent } from "@/shared/api/types";
@@ -21,6 +23,8 @@ export function ManagedAgentLogPanel({
   selectedAgent: ManagedAgent | null;
   variant?: "inline" | "section";
 }) {
+  const { i18n } = useLingui();
+  void i18n;
   const isInline = variant === "inline";
   const isBare = chrome === "bare";
   const logFileLabel = selectedAgent
@@ -44,10 +48,10 @@ export function ManagedAgentLogPanel({
         <div className="flex shrink-0 flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
           <div>
             <h3 className="text-sm font-semibold tracking-tight">
-              Harness Log
+              <Trans>Harness Log</Trans>
             </h3>
             <p className="text-sm text-muted-foreground">
-              Select a local agent to inspect recent output.
+              <Trans>Select a local agent to inspect recent output.</Trans>
             </p>
           </div>
         </div>
@@ -61,10 +65,12 @@ export function ManagedAgentLogPanel({
           )}
         >
           <p className="text-sm font-semibold tracking-tight">
-            No local agent selected
+            <Trans>No local agent selected</Trans>
           </p>
           <p className="mt-2 text-sm text-muted-foreground">
-            Pick a managed agent to view the latest ACP log output.
+            <Trans>
+              Pick a managed agent to view the latest ACP log output.
+            </Trans>
           </p>
         </div>
       ) : isLoading ? (
@@ -132,7 +138,7 @@ export function ManagedAgentLogPanel({
             )}
             data-testid="managed-agent-log-content"
           >
-            {logContent?.trim() ? logContent : "No log output yet."}
+            {logContent?.trim() ? logContent : t`No log output yet.`}
           </pre>
         </div>
       )}
@@ -156,13 +162,15 @@ function HarnessLogHeader({
   logFileLabel: string;
   selectedAgent: ManagedAgent;
 }) {
+  const { i18n } = useLingui();
+  void i18n;
   const fileTitle = `${selectedAgent.name} · ${logFileLabel}`;
 
   return (
     <div className="flex min-h-12 items-center justify-between gap-3 border-b border-white/10 px-3 py-2">
       <div className="flex min-w-0 flex-col gap-0.5">
         <span className="min-w-0 truncate text-2xs font-semibold uppercase tracking-wide text-zinc-300">
-          Harness Log
+          <Trans>Harness Log</Trans>
         </span>
         <span
           className="min-w-0 truncate font-mono text-2xs text-zinc-500"
@@ -173,7 +181,7 @@ function HarnessLogHeader({
       </div>
       <CopyButton
         className="h-6 rounded-md bg-black/40 px-2 text-zinc-300 hover:bg-black/70 hover:text-white"
-        label="Copy log"
+        label={t`Copy log`}
         size="xs"
         value={logContent}
         variant="ghost"

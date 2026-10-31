@@ -1,3 +1,4 @@
+import { t } from "@lingui/core/macro";
 import type { ObserverEvent, PromptSection } from "./agentSessionTypes";
 import {
   findBuzzToolName,
@@ -6,6 +7,8 @@ import {
 } from "./agentSessionToolCatalog";
 import { asRecord, asString, titleCase } from "./agentSessionUtils";
 import { BRAND } from "@/shared/branding/brand";
+
+const { productName } = BRAND;
 
 export function extractPromptBlocks(
   payload: Record<string, unknown>,
@@ -45,7 +48,7 @@ export function parsePromptBlocks(
   const parsed = parsePromptText(remainingBlocks.join("\n"));
   return {
     ...parsed,
-    sections: [{ title: "Prompt", body: firstBlock }, ...parsed.sections],
+    sections: [{ title: t`Prompt`, body: firstBlock }, ...parsed.sections],
   };
 }
 
@@ -89,7 +92,7 @@ export function parsePromptText(text: string): {
   return {
     sections,
     userText: eventContent,
-    userTitle: eventKind ? titleCase(eventKind) : `${BRAND.productName} event`,
+    userTitle: eventKind ? titleCase(eventKind) : `${productName} event`,
     userPubkey: eventAuthorPubkey,
     userEventId: eventId,
   };
@@ -225,8 +228,8 @@ export function parseSystemPromptSections(
   }
 
   const instructionFrames = [
-    { header: "[Agent Instructions]", title: "Agent Instructions" },
-    { header: "[System]", title: "System" },
+    { header: "[Agent Instructions]", title: t`Agent Instructions` },
+    { header: "[System]", title: t`System` },
   ] as const;
 
   function appendBaseAndWorkspace(raw: string): void {
@@ -245,9 +248,9 @@ export function parseSystemPromptSections(
         const workspaceBody = raw
           .slice(workspaceAt + workspaceMarker.length)
           .trim();
-        if (baseBody) sections.push({ title: "Base", body: baseBody });
+        if (baseBody) sections.push({ title: t`Base`, body: baseBody });
         if (workspaceBody)
-          sections.push({ title: "Workspace", body: workspaceBody });
+          sections.push({ title: t`Workspace`, body: workspaceBody });
         return;
       }
     }
@@ -262,14 +265,14 @@ export function parseSystemPromptSections(
           .trim();
         const baseBody = raw.slice(baseAt + baseMarker.length).trim();
         if (workspaceBody)
-          sections.push({ title: "Workspace", body: workspaceBody });
-        if (baseBody) sections.push({ title: "Base", body: baseBody });
+          sections.push({ title: t`Workspace`, body: workspaceBody });
+        if (baseBody) sections.push({ title: t`Base`, body: baseBody });
         return;
       }
     }
 
     const baseBody = raw.replace(/^\[Base]\n/, "").trim();
-    if (baseBody) sections.push({ title: "Base", body: baseBody });
+    if (baseBody) sections.push({ title: t`Base`, body: baseBody });
   }
 
   const baseAndInstructions = remainder;
@@ -283,7 +286,7 @@ export function parseSystemPromptSections(
       if (instructionsBody)
         sections.push({ title: leadingFrame.title, body: instructionsBody });
       if (teamBody)
-        sections.push({ title: "Team Instructions", body: teamBody });
+        sections.push({ title: t`Team Instructions`, body: teamBody });
     } else {
       const boundary = instructionFrames
         .map((frame) => ({
@@ -306,16 +309,16 @@ export function parseSystemPromptSections(
         if (instructionsBody)
           sections.push({ title: boundary.title, body: instructionsBody });
         if (teamBody)
-          sections.push({ title: "Team Instructions", body: teamBody });
+          sections.push({ title: t`Team Instructions`, body: teamBody });
       }
     }
   }
 
   // ── 5. Append team (modern), core, and canvas sections in producer order ──
   if (modernTeamBody)
-    sections.push({ title: "Team Instructions", body: modernTeamBody });
-  if (coreBody) sections.push({ title: "Core Memory", body: coreBody });
-  if (canvasBody) sections.push({ title: "Channel Canvas", body: canvasBody });
+    sections.push({ title: t`Team Instructions`, body: modernTeamBody });
+  if (coreBody) sections.push({ title: t`Core Memory`, body: coreBody });
+  if (canvasBody) sections.push({ title: t`Channel Canvas`, body: canvasBody });
 
   return sections;
 }
@@ -350,7 +353,7 @@ function parseSemanticStandingSections(
     return parsed.sections;
   }
 
-  return [{ title: "Prompt", body: systemPrompt }];
+  return [{ title: t`Prompt`, body: systemPrompt }];
 }
 
 function splitSemanticStandingPrefix(text: string): {
@@ -470,28 +473,28 @@ function semanticTurnTitle(
     case "thread-context":
     case "conversation-context": {
       const label =
-        tag === "thread-context" ? "Thread Context" : "Conversation Context";
+        tag === "thread-context" ? t`Thread Context` : t`Conversation Context`;
       const truncated = attributes.truncated === "true" ? ", truncated" : "";
-      return `${label} (${attributes.included} of ${attributes.total} messages${truncated})`;
+      return t`${label} (${attributes.included} of ${attributes.total} messages${truncated})`;
     }
     case "buzz-event":
       return attributes.type
-        ? `${BRAND.productName} event: ${attributes.type}`
-        : `${BRAND.productName} event`;
+        ? t`${productName} event: ${attributes.type}`
+        : t`${productName} event`;
     case "buzz-events":
-      return `${BRAND.productName} events — ${attributes.count} events`;
+      return t`${productName} events — ${attributes.count} events`;
     case "what-you-were-working-on":
-      return "What you were working on";
+      return t`What you were working on`;
     case "new-message-arrived-while-you-were-working":
       return attributes.count
-        ? `New messages — arrived while you were working — ${attributes.count} events`
-        : "New message — arrived while you were working";
+        ? t`New messages — arrived while you were working — ${attributes.count} events`
+        : t`New message — arrived while you were working`;
     case "previous-request-interrupted-before-completion":
-      return "Previous request — interrupted before completion";
+      return t`Previous request — interrupted before completion`;
     case "new-request-supersedes-previous":
       return attributes.count
-        ? `New request — supersedes previous — ${attributes.count} events`
-        : "New request — supersedes previous";
+        ? t`New request — supersedes previous — ${attributes.count} events`
+        : t`New request — supersedes previous`;
     default:
       return tag;
   }
@@ -518,7 +521,7 @@ function parsePromptSections(text: string): PromptSection[] {
           body: current.body.trim(),
         });
       } else if (preamble.join("\n").trim()) {
-        sections.push({ title: "Prompt", body: preamble.join("\n").trim() });
+        sections.push({ title: t`Prompt`, body: preamble.join("\n").trim() });
       }
       current = { title: header[1], body: "" };
       continue;
@@ -534,7 +537,7 @@ function parsePromptSections(text: string): PromptSection[] {
   if (current) {
     sections.push({ title: current.title, body: current.body.trim() });
   } else if (preamble.join("\n").trim()) {
-    sections.push({ title: "Prompt", body: preamble.join("\n").trim() });
+    sections.push({ title: t`Prompt`, body: preamble.join("\n").trim() });
   }
 
   return sections;
@@ -675,7 +678,7 @@ export function extractToolIdentity(update: Record<string, unknown>): {
     (candidate) => !isGenericToolTitle(candidate),
   );
   const title =
-    asString(update.title) ?? knownName ?? firstSpecific ?? "Tool call";
+    asString(update.title) ?? knownName ?? firstSpecific ?? t`Tool call`;
   return {
     title,
     toolName: knownName ?? normalizeToolName(firstSpecific ?? title),
@@ -732,14 +735,14 @@ export function extractTriggeringEventIds(payload: unknown): string[] {
 export function describeTurnStarted(payload: unknown): string {
   const ids = extractTriggeringEventIds(payload);
   return ids.length > 0
-    ? `Triggered by ${ids.length === 1 ? "1 event" : `${ids.length} events`}.`
+    ? t`Triggered by ${ids.length === 1 ? "1 event" : `${ids.length} events`}.`
     : "";
 }
 
 export function describeSessionResolved(payload: unknown): string {
   const record = asRecord(payload);
   const isNewSession = record.isNewSession === true;
-  return isNewSession ? "New session created." : "";
+  return isNewSession ? t`New session created.` : "";
 }
 
 export function describeRawEvent(event: ObserverEvent): string {

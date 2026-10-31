@@ -1,3 +1,5 @@
+import { Trans, useLingui } from "@lingui/react/macro";
+import { t } from "@lingui/core/macro";
 import type * as React from "react";
 import type { InheritedDefault } from "./bakedEnvHelpers";
 import { getPersonaProviderOptions } from "./agentConfigOptions";
@@ -22,7 +24,7 @@ export function formatAiDefaultsSummary({
     model.value || null,
   ].filter((value): value is string => Boolean(value));
 
-  return parts.length > 0 ? parts.join(" · ") : "Not configured";
+  return parts.length > 0 ? parts.join(" · ") : t`Not configured`;
 }
 
 export function AgentAiDefaultsNotice({
@@ -44,6 +46,8 @@ export function AgentAiDefaultsNotice({
   inheritedModel: InheritedDefault;
   inheritedProvider: InheritedDefault;
 }) {
+  const { i18n } = useLingui();
+  void i18n;
   const provider = explicitProvider.trim() || inheritedProvider.value;
   const model = explicitModel.trim() || inheritedModel.value;
 
@@ -54,7 +58,7 @@ export function AgentAiDefaultsNotice({
         data-testid="agent-ai-defaults-notice"
       >
         <p className="text-sm font-medium text-foreground">
-          Global defaults not set
+          <Trans>Global defaults not set</Trans>
         </p>
         <Button
           className="shrink-0"
@@ -65,7 +69,7 @@ export function AgentAiDefaultsNotice({
           type="button"
           variant="outline"
         >
-          Set
+          <Trans>Set</Trans>
         </Button>
       </div>
     );
@@ -76,19 +80,25 @@ export function AgentAiDefaultsNotice({
       <dl className="grid grid-cols-[auto_minmax(0,1fr)] gap-x-3 text-sm">
         {harness !== undefined ? (
           <>
-            <dt className="text-muted-foreground">Harness</dt>
+            <dt className="text-muted-foreground">
+              <Trans>Harness</Trans>
+            </dt>
             <dd className="truncate text-foreground">
-              {harness || "Not configured"}
+              {harness || t`Not configured`}
             </dd>
           </>
         ) : null}
-        <dt className="text-muted-foreground">Provider</dt>
+        <dt className="text-muted-foreground">
+          <Trans>Provider</Trans>
+        </dt>
         <dd className="truncate text-foreground">
-          {provider ? providerLabel(provider) : "Not configured"}
+          {provider ? providerLabel(provider) : t`Not configured`}
         </dd>
-        <dt className="text-muted-foreground">Model</dt>
+        <dt className="text-muted-foreground">
+          <Trans>Model</Trans>
+        </dt>
         <dd className="truncate text-foreground">
-          {model || "Not configured"}
+          {model || t`Not configured`}
         </dd>
       </dl>
       <Button
@@ -100,7 +110,7 @@ export function AgentAiDefaultsNotice({
         type="button"
         variant="link"
       >
-        Edit global defaults
+        <Trans>Edit global defaults</Trans>
       </Button>
     </div>
   );

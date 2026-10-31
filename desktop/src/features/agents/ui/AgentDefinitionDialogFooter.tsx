@@ -1,3 +1,5 @@
+import { Trans, useLingui } from "@lingui/react/macro";
+import { t } from "@lingui/core/macro";
 import { Button } from "@/shared/ui/button";
 
 type AgentDefinitionDialogFooterProps = {
@@ -17,6 +19,8 @@ export function AgentDefinitionDialogFooter({
   publishesCatalogUpdates,
   submitLabel,
 }: AgentDefinitionDialogFooterProps) {
+  const { i18n } = useLingui();
+  void i18n;
   return (
     <div className="flex w-full flex-wrap items-center justify-between gap-3">
       <div className="flex min-h-9 min-w-0 flex-wrap items-center gap-3">
@@ -25,8 +29,10 @@ export function AgentDefinitionDialogFooter({
             className="max-w-sm text-xs text-muted-foreground"
             data-testid="persona-dialog-catalog-publish-notice"
           >
-            This agent is in the community catalog. Your changes will be
-            published when you save.
+            <Trans>
+              This agent is in the community catalog. Your changes will be
+              published when you save.
+            </Trans>
           </p>
         ) : null}
       </div>
@@ -38,7 +44,7 @@ export function AgentDefinitionDialogFooter({
           type="button"
           variant="outline"
         >
-          Cancel
+          <Trans>Cancel</Trans>
         </Button>
         <Button
           data-testid="persona-dialog-submit"
@@ -51,7 +57,7 @@ export function AgentDefinitionDialogFooter({
             : isAvatarUploadPending
               ? "Uploading..."
               : publishesCatalogUpdates
-                ? "Save and publish"
+                ? t`Save and publish`
                 : submitLabel}
         </Button>
       </div>

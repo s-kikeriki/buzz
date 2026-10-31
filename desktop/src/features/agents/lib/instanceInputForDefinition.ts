@@ -1,3 +1,4 @@
+import { t } from "@lingui/core/macro";
 import type {
   AcpRuntime,
   AcpRuntimeCatalogEntry,
@@ -60,7 +61,7 @@ export function resolveStartRuntimeForDefinition(
   if (isOverridden) {
     throw new Error(
       warnings[0] ??
-        "This agent's configured runtime is not available. Install the runtime or edit the agent before starting it.",
+        t`This agent's configured runtime is not available. Install the runtime or edit the agent before starting it.`,
     );
   }
   return { runtime, warnings };

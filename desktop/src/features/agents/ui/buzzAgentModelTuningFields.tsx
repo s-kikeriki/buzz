@@ -1,3 +1,5 @@
+import { Trans, useLingui } from "@lingui/react/macro";
+import { msg, t } from "@lingui/core/macro";
 /**
  * Tier-1 buzz-agent model-tuning UI fields.
  *
@@ -110,10 +112,12 @@ export function EffortSelectField({
   /** Render the polished app dropdown instead of the native select. */
   useCustomSelect?: boolean;
 }) {
+  const { i18n } = useLingui();
+  void i18n;
   const inheritLabel = inheritedEffort
     ? `Inherit (${inheritedEffort})`
     : effortDefault === null
-      ? "Inherit (default)"
+      ? t`Inherit (default)`
       : (inheritFallbackLabel ?? "Inherit");
   // Build the option set as the union of the runtime's valid values and the
   // buzz-agent master list. This ensures runtime-native values like Goose's
@@ -226,10 +230,10 @@ export function useEffortAutoClear({
 
 export type { NumericDescriptor };
 
-const NUMERIC_KIND_LABELS: Record<NumericDescriptor["kind"], string> = {
-  maxOutputTokens: "Max output tokens",
-  contextLimit: "Context limit",
-  maxRounds: "Max rounds",
+const NUMERIC_KIND_LABELS = {
+  maxOutputTokens: msg`Max output tokens`,
+  contextLimit: msg`Context limit`,
+  maxRounds: msg`Max rounds`,
 };
 
 const NUMERIC_KIND_DESCRIPTIONS: Record<NumericDescriptor["kind"], string> = {
@@ -282,12 +286,14 @@ export function NumericTuningFields({
   inheritedEnvVars: EnvVarsValue;
   onEnvVarChange: (key: string, value: string) => void;
 }) {
+  const { i18n } = useLingui();
+  void i18n;
   if (descriptors.length === 0) return null;
   return (
     <div className="grid gap-4 md:grid-cols-2">
       {descriptors.map((d) => {
         const key = d.currentPersistence.key;
-        const label = NUMERIC_KIND_LABELS[d.kind];
+        const label = i18n._(NUMERIC_KIND_LABELS[d.kind]);
         const description = NUMERIC_KIND_DESCRIPTIONS[d.kind];
         const testId = NUMERIC_KIND_TEST_IDS[d.kind];
         const inheritedVal = inheritedEnvVars[key];
@@ -338,6 +344,8 @@ export function BuzzAgentModelTuningFields({
   /** Active LLM provider id (optional) — used for effort filtering + default labels. */
   provider?: string;
 }) {
+  const { i18n } = useLingui();
+  void i18n;
   const effortConfig = getProviderEffortConfig(provider ?? "", model);
   const { validValues: effortValid, defaultValue: effortDefault } =
     effortConfig;
@@ -352,7 +360,7 @@ export function BuzzAgentModelTuningFields({
   return (
     <div className="space-y-4">
       <p className="text-2xs font-semibold uppercase tracking-wide text-muted-foreground">
-        buzz-agent model tuning
+        <Trans>buzz-agent model tuning</Trans>
       </p>
 
       <div className="grid gap-4 md:grid-cols-2">
@@ -366,7 +374,7 @@ export function BuzzAgentModelTuningFields({
             htmlFor="ba-thinking-effort"
             inheritedEffort={inheritedEnvVars[BUZZ_AGENT_THINKING_EFFORT]}
             inheritFallbackLabel="Inherit (agent default)"
-            label="Thinking / Effort"
+            label={t`Thinking / Effort`}
             onChange={(value) =>
               onEnvVarChange(BUZZ_AGENT_THINKING_EFFORT, value)
             }
@@ -376,8 +384,10 @@ export function BuzzAgentModelTuningFields({
             className="text-xs text-muted-foreground"
             id="help-ba-thinking-effort"
           >
-            Controls how much reasoning effort the LLM applies per turn. Leave
-            blank to inherit from the global or persona default.
+            <Trans>
+              Controls how much reasoning effort the LLM applies per turn. Leave
+              blank to inherit from the global or persona default.
+            </Trans>
           </p>
         </div>
       </div>

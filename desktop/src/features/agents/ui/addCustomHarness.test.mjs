@@ -92,7 +92,7 @@ import { createRoot } from "react-dom/client";
 
 import { NO_RUNTIME_DROPDOWN_VALUE } from "./agentConfigOptions.tsx";
 import {
-  ADD_CUSTOM_HARNESS_OPTION,
+  addCustomHarnessOption,
   ADD_CUSTOM_HARNESS_VALUE,
   readyHarnessId,
   runtimeDropdownAction,
@@ -127,8 +127,8 @@ test("the add-custom sentinel cannot collide with a backend-valid harness id", (
   // Backend ids match [a-z0-9_][a-z0-9_-]* (custom_harnesses.rs), so a
   // NUL-prefixed value is unreachable as a real id.
   assert.equal(ADD_CUSTOM_HARNESS_VALUE.startsWith("\u0000"), true);
-  assert.equal(ADD_CUSTOM_HARNESS_OPTION.value, ADD_CUSTOM_HARNESS_VALUE);
-  assert.equal(ADD_CUSTOM_HARNESS_OPTION.label, "Add custom harness…");
+  assert.equal(addCustomHarnessOption().value, ADD_CUSTOM_HARNESS_VALUE);
+  assert.equal(addCustomHarnessOption().label, "Add custom harness…");
 });
 
 // ── Readiness: an id is selectable only once the catalog publishes it ────────

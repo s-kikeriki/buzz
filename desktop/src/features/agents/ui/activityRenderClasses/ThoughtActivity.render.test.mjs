@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
+import { withI18n } from "@/testing/withI18n.mjs";
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import {
@@ -36,17 +37,19 @@ function renderThought(text) {
     },
   });
   return renderToStaticMarkup(
-    React.createElement(
-      RouterContextProvider,
-      { router },
+    withI18n(
       React.createElement(
-        QueryClientProvider,
-        {
-          client: new QueryClient({
-            defaultOptions: { queries: { enabled: false } },
-          }),
-        },
-        thought,
+        RouterContextProvider,
+        { router },
+        React.createElement(
+          QueryClientProvider,
+          {
+            client: new QueryClient({
+              defaultOptions: { queries: { enabled: false } },
+            }),
+          },
+          thought,
+        ),
       ),
     ),
   );

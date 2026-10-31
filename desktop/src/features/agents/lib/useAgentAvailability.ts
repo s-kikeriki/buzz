@@ -1,3 +1,4 @@
+import { t } from "@lingui/core/macro";
 import * as React from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { presenceQueryKey, usePresenceQuery } from "@/features/presence/hooks";
@@ -26,7 +27,7 @@ export function agentPresenceStartBlockReason(
 ): string | undefined {
   return !isLifecycleActive &&
     (availability === "online" || availability === "away")
-    ? "This agent is present on the relay. Starting another instance is unavailable."
+    ? t`This agent is present on the relay. Starting another instance is unavailable.`
     : undefined;
 }
 

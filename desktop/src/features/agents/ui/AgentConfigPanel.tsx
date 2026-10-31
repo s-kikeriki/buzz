@@ -1,3 +1,5 @@
+import { Trans, useLingui } from "@lingui/react/macro";
+import { t } from "@lingui/core/macro";
 import * as React from "react";
 import type { LucideIcon } from "lucide-react";
 import {
@@ -53,6 +55,8 @@ type AgentConfigSurfaceRowsProps = {
 };
 
 function ConfigFieldLabel({ label }: { label: string }) {
+  const { i18n } = useLingui();
+  void i18n;
   return (
     <span className="inline-flex min-w-0 items-center gap-1.5 text-sm font-medium text-foreground">
       <span className="truncate">{label}</span>
@@ -134,6 +138,8 @@ function NormalizedRow({
   onEdit?: () => void;
   variant?: RowVariant;
 }) {
+  const { i18n } = useLingui();
+  void i18n;
   const Icon = NORMALIZED_ICONS[fieldKey];
   const rawDisplayValue = field.value ?? "—";
   const displayValue =
@@ -175,10 +181,10 @@ function NormalizedRow({
   if (isEditable) {
     return (
       <button
-        aria-label={`Edit ${label}`}
+        aria-label={t`Edit ${label}`}
         className="group flex min-h-16 w-full items-center gap-3 px-4 py-3 text-left transition-colors hover:bg-muted/40 focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring"
         onClick={onEdit}
-        title={`Edit ${label}`}
+        title={t`Edit ${label}`}
         type="button"
       >
         {content}
@@ -207,6 +213,8 @@ function AdvancedRow({
   field: ConfigField;
   variant?: RowVariant;
 }) {
+  const { i18n } = useLingui();
+  void i18n;
   const { copied, copy } = useCopyFeedback({
     label: field.label,
     value: field.value ?? "",
@@ -255,10 +263,10 @@ function AdvancedRow({
   if (isCopyable && field.value) {
     return (
       <button
-        aria-label={`Copy ${field.label}`}
+        aria-label={t`Copy ${field.label}`}
         className="group flex min-h-16 w-full items-center gap-3 px-4 py-3 text-left transition-colors hover:bg-muted/40 focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring"
         onClick={() => void copy()}
-        title={`Copy ${field.label}`}
+        title={t`Copy ${field.label}`}
         type="button"
       >
         {content}
@@ -282,6 +290,8 @@ function ProfileConfigSection({
   testId?: string;
   title: string;
 }) {
+  const { i18n } = useLingui();
+  void i18n;
   return (
     <PanelSectionGroup testId={testId} title={title}>
       {children}
@@ -297,17 +307,24 @@ function ProfileConfigSection({
  * default login.
  */
 function ClaudeConfigDirNotice() {
+  const { i18n } = useLingui();
+  void i18n;
   return (
     <div className="mt-3 border-t border-border/50 px-4 pt-2">
       <p className="text-xs text-muted-foreground/80">
-        ⚠ Custom <code className="font-mono text-xs">CLAUDE_CONFIG_DIR</code>{" "}
-        active — config is read from that directory. Claude Code keys its login
-        to the config-dir path, so a custom dir creates a new Keychain
-        namespace. The agent will need to re-authenticate unless you also set{" "}
+        <Trans>⚠ Custom</Trans>{" "}
         <code className="font-mono text-xs">
-          CLAUDE_SECURESTORAGE_CONFIG_DIR
+          <Trans>CLAUDE_CONFIG_DIR</Trans>
         </code>{" "}
-        to match your default login.
+        <Trans>
+          active — config is read from that directory. Claude Code keys its
+          login to the config-dir path, so a custom dir creates a new Keychain
+          namespace. The agent will need to re-authenticate unless you also set
+        </Trans>{" "}
+        <code className="font-mono text-xs">
+          <Trans>CLAUDE_SECURESTORAGE_CONFIG_DIR</Trans>
+        </code>{" "}
+        <Trans>to match your default login.</Trans>
       </p>
     </div>
   );
@@ -319,18 +336,20 @@ export function AgentConfigPanel({
   pubkey,
   sections = ALL_AGENT_CONFIG_SECTIONS,
 }: Props) {
+  const { i18n } = useLingui();
+  void i18n;
   const { data, isLoading, error } = useAgentConfigSurface(pubkey);
   const flatStateTitle = sections.includes("model")
-    ? "Model settings"
+    ? t`Model settings`
     : sections.includes("mcp")
-      ? "MCP servers"
+      ? t`MCP servers`
       : "Advanced";
 
   if (isLoading) {
     const loading = (
       <div className="flex items-center gap-2 px-4 py-4 text-sm text-muted-foreground">
         <Spinner className="h-3.5 w-3.5" />
-        Loading configuration…
+        <Trans>Loading configuration…</Trans>
       </div>
     );
     if (advancedMode === "flat") {
@@ -348,7 +367,7 @@ export function AgentConfigPanel({
       <p className="px-4 py-3 text-sm text-destructive">
         {error instanceof Error
           ? error.message
-          : "Couldn't load agent configuration."}
+          : t`Couldn't load agent configuration.`}
       </p>
     );
     if (advancedMode === "flat") {
@@ -377,6 +396,8 @@ export function AgentConfigSurfaceRows({
   onEdit,
   sections = ALL_AGENT_CONFIG_SECTIONS,
 }: AgentConfigSurfaceRowsProps) {
+  const { i18n } = useLingui();
+  void i18n;
   const [advancedOpen, setAdvancedOpen] = React.useState(false);
 
   const { normalized, advanced, extensions, runtimeId, sources } = data;
@@ -416,7 +437,7 @@ export function AgentConfigSurfaceRows({
         {showModelSection && normalizedEntries.length > 0 ? (
           <ProfileConfigSection
             testId="user-profile-model-settings-section"
-            title="Model settings"
+            title={t`Model settings`}
           >
             <div className="divide-y divide-border/55">
               {normalizedEntries.map(([key, field]) => (
@@ -436,7 +457,7 @@ export function AgentConfigSurfaceRows({
         {showMcpSection && showMcpServers ? (
           <ProfileConfigSection
             testId="user-profile-mcp-servers-section"
-            title="MCP servers"
+            title={t`MCP servers`}
           >
             <McpServersSection
               extensions={extensions}
@@ -450,7 +471,7 @@ export function AgentConfigSurfaceRows({
         {showAdvancedSection && advanced.length > 0 ? (
           <ProfileConfigSection
             testId="user-profile-advanced-section"
-            title="Advanced"
+            title={t`Advanced`}
           >
             {advanced.map((field) => (
               <AdvancedRow field={field} key={field.key} variant="profile" />
@@ -469,7 +490,7 @@ export function AgentConfigSurfaceRows({
       <div className="divide-y divide-border/50">
         {normalizedEntries.length === 0 ? (
           <p className="py-2 text-xs text-muted-foreground">
-            No config fields available.
+            <Trans>No config fields available.</Trans>
           </p>
         ) : (
           normalizedEntries.map(([key, field]) => (
@@ -503,7 +524,8 @@ export function AgentConfigSurfaceRows({
             ) : (
               <ChevronRight className="h-3 w-3" />
             )}
-            Advanced ({advanced.length})
+            <Trans>Advanced (</Trans>
+            {advanced.length})
           </button>
 
           {advancedOpen ? (

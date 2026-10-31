@@ -1,3 +1,4 @@
+import { t } from "@lingui/core/macro";
 import type { ManagedAgentBackend, RespondToMode } from "@/shared/api/types";
 
 /**
@@ -51,13 +52,13 @@ export function agentAccessWarningText(
   runLocation?: AgentRunLocation | null,
 ): string | null {
   if (mode !== "anyone" && mode !== "allowlist") return null;
-  const audience = mode === "anyone" ? "Anyone" : "Selected people";
+  const audience = mode === "anyone" ? "Anyone" : t`Selected people`;
   // The two locations differ in more than the noun: a local agent reaches the
   // owner's own files, while a remote host's files aren't theirs to describe —
   // only the accounts and tools provisioned there.
   const target =
     runLocation === "remote"
-      ? "the server it runs on, including any accounts and tools available there"
-      : "your computer, including files, accounts, and connected tools";
-  return `${audience} can use this agent to access ${target}.`;
+      ? t`the server it runs on, including any accounts and tools available there`
+      : t`your computer, including files, accounts, and connected tools`;
+  return t`${audience} can use this agent to access ${target}.`;
 }

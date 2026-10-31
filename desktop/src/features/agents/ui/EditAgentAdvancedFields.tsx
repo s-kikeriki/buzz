@@ -1,3 +1,5 @@
+import { Trans, useLingui } from "@lingui/react/macro";
+import { t } from "@lingui/core/macro";
 import * as React from "react";
 import { cn } from "@/shared/lib/cn";
 import { Input } from "@/shared/ui/input";
@@ -113,6 +115,8 @@ export function EditAgentAdvancedFields({
   onAutoRestartChange: (value: boolean) => void;
   onSystemPromptChange: (value: string) => void;
 }) {
+  const { i18n } = useLingui();
+  void i18n;
   const acpCommandPicker = React.useMemo(
     () => acpCommandPickerState(acpCommand, acpCommandCandidates),
     [acpCommand, acpCommandCandidates],
@@ -173,14 +177,14 @@ export function EditAgentAdvancedFields({
               onChange={(event) => onInheritHarnessChange(event.target.checked)}
               type="checkbox"
             />
-            Inherit runtime from template
+            <Trans>Inherit runtime from template</Trans>
           </label>
           <p className="text-xs text-muted-foreground">
             {inheritHarness
-              ? `Uses the ${linkedPersona.displayName} template's runtime${
+              ? t`Uses the ${linkedPersona.displayName} template's runtime${
                   linkedPersona.runtime ? ` (${linkedPersona.runtime})` : ""
                 }. Editing the template and respawning propagates the new runtime.`
-              : "Pins this agent to a specific runtime command, overriding the template's runtime."}
+              : t`Pins this agent to a specific runtime command, overriding the template's runtime.`}
           </p>
         </div>
       ) : null}
@@ -198,12 +202,12 @@ export function EditAgentAdvancedFields({
             onChange={(event) => onAutoRestartChange(event.target.checked)}
             type="checkbox"
           />
-          Auto-restart on config change
+          <Trans>Auto-restart on config change</Trans>
         </label>
         <p className="text-xs text-muted-foreground">
           {autoRestartOnConfigChange
-            ? "Restarts this agent automatically when its configuration changes, once it is idle and connected."
-            : "Configuration changes only show the restart badge; restart manually to apply them."}
+            ? t`Restarts this agent automatically when its configuration changes, once it is idle and connected.`
+            : t`Configuration changes only show the restart badge; restart manually to apply them.`}
         </p>
       </div>
 
@@ -213,8 +217,10 @@ export function EditAgentAdvancedFields({
           className="text-sm font-medium text-foreground"
           htmlFor="edit-agent-args"
         >
-          Agent runtime args
-          <span className={PERSONA_LABEL_OPTIONAL_CLASS}>Optional</span>
+          <Trans>Agent runtime args</Trans>
+          <span className={PERSONA_LABEL_OPTIONAL_CLASS}>
+            <Trans>Optional</Trans>
+          </span>
         </label>
         <div
           className={cn(
@@ -231,7 +237,7 @@ export function EditAgentAdvancedFields({
             disabled={disabled}
             id="edit-agent-args"
             onChange={(event) => onAgentArgsChange(event.target.value)}
-            placeholder="Comma-separated"
+            placeholder={t`Comma-separated`}
             value={agentArgs}
           />
         </div>
@@ -243,7 +249,7 @@ export function EditAgentAdvancedFields({
           className="text-sm font-medium text-foreground"
           htmlFor="edit-agent-parallelism"
         >
-          Parallelism
+          <Trans>Parallelism</Trans>
         </label>
         <div
           className={cn(
@@ -261,13 +267,13 @@ export function EditAgentAdvancedFields({
             id="edit-agent-parallelism"
             inputMode="numeric"
             onChange={(event) => onParallelismChange(event.target.value)}
-            placeholder="Current value"
+            placeholder={t`Current value`}
             type="text"
             value={parallelism}
           />
         </div>
         <p className="text-xs text-muted-foreground">
-          {EDIT_AGENT_PARALLELISM_HELP}
+          {i18n._(EDIT_AGENT_PARALLELISM_HELP)}
         </p>
         {parallelismHint !== null ? (
           <p className="text-xs text-amber-600 dark:text-amber-400">
@@ -288,14 +294,14 @@ export function EditAgentAdvancedFields({
             className="text-sm font-medium text-foreground"
             htmlFor="edit-agent-acp-command"
           >
-            ACP command
+            <Trans>ACP command</Trans>
           </label>
           <PersonaDropdownField
             disabled={disabled}
             id="edit-agent-acp-command"
             onValueChange={onAcpCommandChange}
             options={acpCommandPicker.options}
-            placeholder="Choose an ACP command"
+            placeholder={t`Choose an ACP command`}
             value={acpCommandPicker.selectValue}
           />
         </div>
@@ -309,8 +315,10 @@ export function EditAgentAdvancedFields({
             className="text-sm font-medium text-foreground"
             htmlFor="edit-agent-system-prompt"
           >
-            System prompt override
-            <span className={PERSONA_LABEL_OPTIONAL_CLASS}>Optional</span>
+            <Trans>System prompt override</Trans>
+            <span className={PERSONA_LABEL_OPTIONAL_CLASS}>
+              <Trans>Optional</Trans>
+            </span>
           </label>
           <div className={PERSONA_FIELD_SHELL_CLASS}>
             <Textarea
@@ -321,7 +329,7 @@ export function EditAgentAdvancedFields({
               disabled={disabled}
               id="edit-agent-system-prompt"
               onChange={(event) => onSystemPromptChange(event.target.value)}
-              placeholder="Leave blank to send no ACP system prompt"
+              placeholder={t`Leave blank to send no ACP system prompt`}
               value={systemPrompt}
             />
           </div>

@@ -1,3 +1,4 @@
+import { t } from "@lingui/core/macro";
 export const teamCatalogCopy = {
   chooseFromCatalog: "Choose from catalog",
   dialogTitle: "Team Catalog",
@@ -25,7 +26,7 @@ export function teamAutoRetractedNotice(
   teamName: string,
   reason: string,
 ): string {
-  return `"${teamName}" has been queued for removal from the community catalog because it can no longer be projected: ${reason}`;
+  return t`"${teamName}" has been queued for removal from the community catalog because it can no longer be projected: ${reason}`;
 }
 
 /**
@@ -42,10 +43,10 @@ export function teamShareNotice(
 ): string {
   if (publicationStatus === "queued") {
     return shared
-      ? `Sharing ${teamName} is queued. It will appear after the relay accepts the update.`
-      : `Removing ${teamName} is queued. It may remain discoverable until the relay accepts the update.`;
+      ? t`Sharing ${teamName} is queued. It will appear after the relay accepts the update.`
+      : t`Removing ${teamName} is queued. It may remain discoverable until the relay accepts the update.`;
   }
   return shared
-    ? `Published ${teamName} to the community catalog.`
-    : `${teamName} is no longer discoverable in the community catalog.`;
+    ? t`Published ${teamName} to the community catalog.`
+    : t`${teamName} is no longer discoverable in the community catalog.`;
 }

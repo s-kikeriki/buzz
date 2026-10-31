@@ -55,14 +55,17 @@ test("mcpConfigFileCaption_nullPath_returnsNull", () => {
 test("McpServersSection_customConfigDir_rendersIsolatedFilePath", async () => {
   const { render } = await import("@testing-library/react");
   const React = await import("react");
+  const { withI18n } = await import("@/testing/withI18n.mjs");
 
   const { container } = render(
-    React.createElement(McpServersSection, {
-      extensions: CLAUDE_MCP,
-      mcpConfigFilePath: "/tmp/iso/.claude.json",
-      runtimeId: "claude",
-      variant: "compact",
-    }),
+    withI18n(
+      React.createElement(McpServersSection, {
+        extensions: CLAUDE_MCP,
+        mcpConfigFilePath: "/tmp/iso/.claude.json",
+        runtimeId: "claude",
+        variant: "compact",
+      }),
+    ),
   );
 
   assert.match(container.textContent, /sentinel/);
@@ -75,14 +78,17 @@ test("McpServersSection_customConfigDir_rendersIsolatedFilePath", async () => {
 test("McpServersSection_noConfigPath_omitsFileAttribution", async () => {
   const { render } = await import("@testing-library/react");
   const React = await import("react");
+  const { withI18n } = await import("@/testing/withI18n.mjs");
 
   const { container } = render(
-    React.createElement(McpServersSection, {
-      extensions: CLAUDE_MCP,
-      mcpConfigFilePath: null,
-      runtimeId: "claude",
-      variant: "compact",
-    }),
+    withI18n(
+      React.createElement(McpServersSection, {
+        extensions: CLAUDE_MCP,
+        mcpConfigFilePath: null,
+        runtimeId: "claude",
+        variant: "compact",
+      }),
+    ),
   );
 
   assert.match(container.textContent, /sentinel/);

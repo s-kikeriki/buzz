@@ -1,3 +1,4 @@
+import { t } from "@lingui/core/macro";
 import type {
   AcpConfigOptionValue,
   ManagedAgentBackend,
@@ -63,7 +64,7 @@ export function effortPickerState({
     (Array.isArray(effortOptions) || stored.length > 0);
 
   const options: PersonaDropdownOption[] = [
-    { label: "Adapter default", value: EFFORT_DEFAULT_DROPDOWN_VALUE },
+    { label: t`Adapter default`, value: EFFORT_DEFAULT_DROPDOWN_VALUE },
     ...listed.map((option) => ({
       label: option.displayName ?? option.value,
       value: option.value,

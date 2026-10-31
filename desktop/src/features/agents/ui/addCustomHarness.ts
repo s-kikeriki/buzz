@@ -1,3 +1,5 @@
+import { i18n } from "@lingui/core";
+import { msg } from "@lingui/core/macro";
 /**
  * Shared pieces of the inline "Add custom harness…" entry the agent dialogs
  * append to their harness dropdown.
@@ -23,10 +25,14 @@ import {
  */
 export const ADD_CUSTOM_HARNESS_VALUE = "\u0000add-custom-harness";
 
-export const ADD_CUSTOM_HARNESS_OPTION: PersonaDropdownOption = {
-  label: "Add custom harness…",
-  value: ADD_CUSTOM_HARNESS_VALUE,
-};
+const ADD_CUSTOM_HARNESS_LABEL = msg`Add custom harness…`;
+
+export function addCustomHarnessOption(): PersonaDropdownOption {
+  return {
+    label: i18n._(ADD_CUSTOM_HARNESS_LABEL),
+    value: ADD_CUSTOM_HARNESS_VALUE,
+  };
+}
 
 export type RuntimeDropdownAction =
   | { kind: "add-custom-harness" }

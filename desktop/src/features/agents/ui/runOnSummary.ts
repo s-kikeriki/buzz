@@ -1,3 +1,4 @@
+import { t } from "@lingui/core/macro";
 import type { ManagedAgentBackend } from "@/shared/api/types";
 
 /**
@@ -85,15 +86,15 @@ export function humanizeConfigKey(key: string): string {
 }
 
 function displayValue(value: unknown): string {
-  if (value === null || value === undefined) return "Not set";
-  if (typeof value === "string") return value.length > 0 ? value : "Not set";
+  if (value === null || value === undefined) return t`Not set`;
+  if (typeof value === "string") return value.length > 0 ? value : t`Not set`;
   if (typeof value === "number" || typeof value === "boolean")
     return String(value);
   // Arrays/objects: summarize, never serialize. A nested structure could
   // carry values its own keys would have redacted.
   return Array.isArray(value)
-    ? `List (${value.length} items)`
-    : "Structured value";
+    ? t`List (${value.length} items)`
+    : t`Structured value`;
 }
 
 /**

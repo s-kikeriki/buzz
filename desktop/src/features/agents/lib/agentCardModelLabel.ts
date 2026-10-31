@@ -1,3 +1,4 @@
+import { t } from "@lingui/core/macro";
 import {
   formatAgentModelLabel,
   resolveModelLabel,
@@ -49,6 +50,6 @@ export function formatDefaultModelLabel(
 ) {
   const model = defaultModel.trim();
   return model
-    ? `Default model (${resolveModelLabel(model, undefined, provider)})`
-    : "Default model";
+    ? t`Default model (${resolveModelLabel(model, undefined, provider)})`
+    : t`Default model`;
 }

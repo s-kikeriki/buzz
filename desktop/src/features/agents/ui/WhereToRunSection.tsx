@@ -1,3 +1,5 @@
+import { Trans, useLingui } from "@lingui/react/macro";
+import { t } from "@lingui/core/macro";
 import { AlertTriangle } from "lucide-react";
 import * as React from "react";
 
@@ -22,11 +24,13 @@ export function WhereToRunSection({
   isPending: boolean;
   onDraftChange: (next: WhereToRunDraft) => void;
 }) {
+  const { i18n } = useLingui();
+  void i18n;
   const backendProviders = useBackendProvidersQuery().data ?? [];
   const [probeError, setProbeError] = React.useState<string | null>(null);
   const runOnOptions = React.useMemo(
     () => [
-      { label: "This computer", value: "local" },
+      { label: t`This computer`, value: "local" },
       ...backendProviders.map((provider) => ({
         label: provider.id,
         value: provider.id,
@@ -89,7 +93,7 @@ export function WhereToRunSection({
     <div className="space-y-4">
       <div className="space-y-1.5">
         <label className="text-sm font-medium" htmlFor="agent-run-on">
-          Run on
+          <Trans>Run on</Trans>
         </label>
         <PersonaDropdownField
           disabled={isPending}
@@ -101,7 +105,7 @@ export function WhereToRunSection({
             })
           }
           options={runOnOptions}
-          placeholder="Choose where to run"
+          placeholder={t`Choose where to run`}
           value={draft.runOn}
         />
       </div>
@@ -111,17 +115,19 @@ export function WhereToRunSection({
           <div className="flex gap-3 rounded-2xl border border-warning/30 bg-warning-bg px-4 py-3">
             <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-warning" />
             <p className="text-sm text-warning">
-              This provider at{" "}
+              <Trans>This provider at</Trans>{" "}
               <span className="font-mono font-medium">
                 {selectedBackendProvider.binaryPath}
               </span>{" "}
-              will receive your agent&apos;s private key. Only use providers
-              from trusted sources.
+              <Trans>
+                will receive your agent&apos;s private key. Only use providers
+                from trusted sources.
+              </Trans>
             </p>
           </div>
           {probeError ? (
             <p className="rounded-2xl border border-destructive/30 bg-destructive/10 px-4 py-3 text-sm text-destructive">
-              Could not probe provider: {probeError}
+              <Trans>Could not probe provider:</Trans> {probeError}
             </p>
           ) : null}
           {draft.probedProvider?.config_schema ? (

@@ -1,3 +1,5 @@
+import { Trans, useLingui } from "@lingui/react/macro";
+import { t } from "@lingui/core/macro";
 import { Markdown } from "@/shared/ui/markdown";
 import { useLocale } from "@/shared/lib/localePreference";
 import {
@@ -10,6 +12,8 @@ import { formatTranscriptTimestampTitle } from "../agentSessionUtils";
 import type { ActivityRenderClassItemProps } from "./types";
 
 export function PlanActivity(props: ActivityRenderClassItemProps) {
+  const { i18n } = useLingui();
+  void i18n;
   const locale = useLocale();
   if (props.item.type === "tool") {
     return <ToolActivity {...props} />;
@@ -42,7 +46,7 @@ export function PlanActivity(props: ActivityRenderClassItemProps) {
       <ActivityRowContent className="pt-1 pb-1.5 text-sm leading-5 text-muted-foreground">
         <Markdown
           className="leading-5"
-          content={props.item.text.trim() || "No plan details."}
+          content={props.item.text.trim() || t`No plan details.`}
         />
       </ActivityRowContent>
     </ActivityRow>
@@ -50,9 +54,11 @@ export function PlanActivity(props: ActivityRenderClassItemProps) {
 }
 
 function PlanUpdateLabelObject({ text }: { text: string }) {
+  const { i18n } = useLingui();
+  void i18n;
   return (
     <>
-      plan
+      <Trans>plan</Trans>
       {text ? (
         <>
           {" · "}

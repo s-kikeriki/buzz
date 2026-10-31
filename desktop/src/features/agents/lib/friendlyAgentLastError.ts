@@ -1,3 +1,5 @@
+import { i18n } from "@lingui/core";
+import { msg } from "@lingui/core/macro";
 /**
  * Promote certain machine-readable `lastError` strings to user-facing copy.
  *
@@ -36,14 +38,11 @@ export type FriendlyAgentLastError =
  * The exact copy for the relay-mesh denial. Centralized as a constant so the
  * test asserts the user-facing string verbatim rather than a fuzzy pattern.
  */
-export const RELAY_MESH_DENIED_COPY =
-  "Community access denied this agent — check its community membership.";
+export const RELAY_MESH_DENIED_COPY = msg`Community access denied this agent — check its community membership.`;
 
-export const MODEL_NOT_FOUND_COPY =
-  "The configured model is not available — open agent settings and select a different one from the dropdown.";
+export const MODEL_NOT_FOUND_COPY = msg`The configured model is not available — open agent settings and select a different one from the dropdown.`;
 
-export const CLI_ACP_INTERNAL_ERROR_COPY =
-  "The agent's harness reported an internal error. For Codex agents this can mean the configured model isn't supported by your installed codex-acp — check the model in `~/.codex/config.toml` or upgrade the adapter (`brew upgrade codex-acp`).";
+export const CLI_ACP_INTERNAL_ERROR_COPY = msg`The agent's harness reported an internal error. For Codex agents this can mean the configured model isn't supported by your installed codex-acp — check the model in \`~/.codex/config.toml\` or upgrade the adapter (\`brew upgrade codex-acp\`).`;
 
 const EMBEDDED_CODE_RE = /^Agent reported error \(code (-?\d+)\): /;
 /** Bare form of the standard JSON-RPC -32603 message (after stripping the ACP wrapper prefix). */
@@ -78,9 +77,9 @@ export function friendlyAgentLastError(
   if (effectiveCode != null) {
     switch (effectiveCode) {
       case -32001:
-        return { severity: "denied", copy: RELAY_MESH_DENIED_COPY };
+        return { severity: "denied", copy: i18n._(RELAY_MESH_DENIED_COPY) };
       case -32002:
-        return { severity: "denied", copy: MODEL_NOT_FOUND_COPY };
+        return { severity: "denied", copy: i18n._(MODEL_NOT_FOUND_COPY) };
       case -32603: {
         // Standard JSON-RPC "Internal error" — emitted by external harnesses
         // (e.g. codex-acp) when the configured model is unsupported. Only
@@ -94,7 +93,10 @@ export function friendlyAgentLastError(
         // ("Agent reported error (code -32603): Internal error").
         const remainder = embedded?.remainder ?? trimmed;
         if (remainder === BARE_INTERNAL_ERROR) {
-          return { severity: "generic", copy: CLI_ACP_INTERNAL_ERROR_COPY };
+          return {
+            severity: "generic",
+            copy: i18n._(CLI_ACP_INTERNAL_ERROR_COPY),
+          };
         }
         return { severity: "generic", copy: remainder };
       }
@@ -110,7 +112,7 @@ export function friendlyAgentLastError(
     trimmed.startsWith("Agent reported error: llm auth:") ||
     trimmed.startsWith("llm auth:")
   ) {
-    return { severity: "denied", copy: RELAY_MESH_DENIED_COPY };
+    return { severity: "denied", copy: i18n._(RELAY_MESH_DENIED_COPY) };
   }
 
   return { severity: "generic", copy: trimmed };

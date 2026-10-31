@@ -1,3 +1,5 @@
+import { Trans, useLingui } from "@lingui/react/macro";
+import { t } from "@lingui/core/macro";
 import type * as React from "react";
 import { Tabs, TabsList, TabsTrigger } from "@/shared/ui/tabs";
 import type { AgentAiConfigurationMode } from "./agentAiConfigurationPolicy";
@@ -13,18 +15,24 @@ export function HarnessModelDefaultNotice({
   harness: string;
   model?: string | null;
 }) {
+  const { i18n } = useLingui();
+  void i18n;
   return (
     <dl
       className="grid grid-cols-[auto_minmax(0,1fr)] gap-x-3 text-sm"
       data-testid="agent-harness-defaults-notice"
     >
-      <dt className="text-muted-foreground">Harness</dt>
+      <dt className="text-muted-foreground">
+        <Trans>Harness</Trans>
+      </dt>
       <dd className="truncate text-foreground">
-        {harness || "Not configured"}
+        {harness || t`Not configured`}
       </dd>
-      <dt className="text-muted-foreground">Model</dt>
+      <dt className="text-muted-foreground">
+        <Trans>Model</Trans>
+      </dt>
       <dd className="truncate text-foreground">
-        {model?.trim() || "Harness default"}
+        {model?.trim() || t`Harness default`}
       </dd>
     </dl>
   );
@@ -49,6 +57,8 @@ export function AgentCreateAiDefaultsSummary({
   onEditDefaults: () => void;
   triggerRef?: React.Ref<HTMLButtonElement>;
 }) {
+  const { i18n } = useLingui();
+  void i18n;
   return canChooseProvider ? (
     <AgentAiDefaultsNotice
       isConfigured={isConfigured}
@@ -74,9 +84,13 @@ export function AgentAiConfigurationModeField({
   needsProviderSelection?: boolean;
   onModeChange: (mode: AgentAiConfigurationMode) => void;
 }) {
+  const { i18n } = useLingui();
+  void i18n;
   return (
     <div className="space-y-1.5">
-      <p className="text-sm font-medium text-foreground">AI configuration</p>
+      <p className="text-sm font-medium text-foreground">
+        <Trans>AI configuration</Trans>
+      </p>
       <Tabs
         onValueChange={(value) =>
           onModeChange(value as AgentAiConfigurationMode)
@@ -88,7 +102,7 @@ export function AgentAiConfigurationModeField({
             aria-hidden="true"
             className="absolute bottom-0.5 left-0.5 top-0.5 z-0 rounded-md bg-background shadow-sm transition-transform duration-[250ms] ease-out"
             style={{
-              transform: `translateX(${mode === "custom" ? 100 : 0}%)`,
+              transform: t`translateX(${mode === "custom" ? 100 : 0}%)`,
               width: "calc((100% - 4px) / 2)",
             }}
           />
@@ -97,14 +111,14 @@ export function AgentAiConfigurationModeField({
             value="defaults"
           >
             {needsProviderSelection
-              ? "Use agent defaults"
-              : "Use harness defaults"}
+              ? t`Use agent defaults`
+              : t`Use harness defaults`}
           </TabsTrigger>
           <TabsTrigger
             className="relative z-10 h-full rounded-md bg-transparent text-xs font-medium shadow-none transition-colors data-[state=active]:bg-transparent data-[state=active]:shadow-none"
             value="custom"
           >
-            Customize for this agent
+            <Trans>Customize for this agent</Trans>
           </TabsTrigger>
         </TabsList>
       </Tabs>

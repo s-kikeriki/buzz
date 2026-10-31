@@ -12,6 +12,7 @@
 
 import assert from "node:assert/strict";
 import { test } from "node:test";
+import { withI18n } from "@/testing/withI18n.mjs";
 
 import React from "react";
 import { renderToStaticMarkup } from "react-dom/server";
@@ -46,7 +47,7 @@ function extractAllAttrs(html, attrName) {
 
 test("PersonaProviderApiKeyField_renders_semantic_label", () => {
   const html = renderToStaticMarkup(
-    React.createElement(PersonaProviderApiKeyField, makeProps()),
+    withI18n(React.createElement(PersonaProviderApiKeyField, makeProps())),
   );
   assert.ok(
     html.includes("OpenAI Runtime API Key"),
@@ -56,9 +57,11 @@ test("PersonaProviderApiKeyField_renders_semantic_label", () => {
 
 test("PersonaProviderApiKeyField_renders_env_var_hint_when_envVarName_present", () => {
   const html = renderToStaticMarkup(
-    React.createElement(
-      PersonaProviderApiKeyField,
-      makeProps({ envVarName: "OPENAI_COMPAT_API_KEY" }),
+    withI18n(
+      React.createElement(
+        PersonaProviderApiKeyField,
+        makeProps({ envVarName: "OPENAI_COMPAT_API_KEY" }),
+      ),
     ),
   );
   assert.ok(
@@ -69,9 +72,11 @@ test("PersonaProviderApiKeyField_renders_env_var_hint_when_envVarName_present", 
 
 test("PersonaProviderApiKeyField_wires_hint_id_via_aria_describedby", () => {
   const html = renderToStaticMarkup(
-    React.createElement(
-      PersonaProviderApiKeyField,
-      makeProps({ envVarName: "OPENAI_COMPAT_API_KEY" }),
+    withI18n(
+      React.createElement(
+        PersonaProviderApiKeyField,
+        makeProps({ envVarName: "OPENAI_COMPAT_API_KEY" }),
+      ),
     ),
   );
   // Extract the dynamically-generated hint id from the rendered paragraph.
@@ -92,7 +97,7 @@ test("PersonaProviderApiKeyField_wires_hint_id_via_aria_describedby", () => {
 
 test("PersonaProviderApiKeyField_omits_hint_when_envVarName_absent", () => {
   const html = renderToStaticMarkup(
-    React.createElement(PersonaProviderApiKeyField, makeProps()),
+    withI18n(React.createElement(PersonaProviderApiKeyField, makeProps())),
   );
   assert.ok(
     !html.includes("aria-describedby"),
@@ -112,22 +117,24 @@ test("PersonaProviderApiKeyField_two_instances_have_unique_ids_and_each_aria_des
   // makes React.useId() guarantee uniqueness; two separate renderToStaticMarkup
   // calls each reset the counter and would produce the same ID.
   const combined = renderToStaticMarkup(
-    React.createElement(
-      React.Fragment,
-      null,
+    withI18n(
       React.createElement(
-        PersonaProviderApiKeyField,
-        makeProps({
-          label: "Anthropic API Key",
-          envVarName: "ANTHROPIC_API_KEY",
-        }),
-      ),
-      React.createElement(
-        PersonaProviderApiKeyField,
-        makeProps({
-          label: "OpenAI Runtime API Key",
-          envVarName: "OPENAI_COMPAT_API_KEY",
-        }),
+        React.Fragment,
+        null,
+        React.createElement(
+          PersonaProviderApiKeyField,
+          makeProps({
+            label: "Anthropic API Key",
+            envVarName: "ANTHROPIC_API_KEY",
+          }),
+        ),
+        React.createElement(
+          PersonaProviderApiKeyField,
+          makeProps({
+            label: "OpenAI Runtime API Key",
+            envVarName: "OPENAI_COMPAT_API_KEY",
+          }),
+        ),
       ),
     ),
   );

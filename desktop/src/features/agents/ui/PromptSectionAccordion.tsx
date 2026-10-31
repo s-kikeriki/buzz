@@ -1,3 +1,4 @@
+import { Trans, useLingui } from "@lingui/react/macro";
 import React from "react";
 import { ChevronDown } from "lucide-react";
 
@@ -11,6 +12,8 @@ export function PromptSectionList({
   className?: string;
   sections: PromptSection[];
 }) {
+  const { i18n } = useLingui();
+  void i18n;
   return (
     <div
       className={cn("space-y-2", className)}
@@ -31,6 +34,8 @@ export function PromptSectionAccordion({
 }: {
   section: PromptSection;
 }) {
+  const { i18n } = useLingui();
+  void i18n;
   const [open, setOpen] = React.useState(false);
   const body = section.body.trim();
 
@@ -63,7 +68,9 @@ export function PromptSectionAccordion({
               {body.length > 0 ? (
                 body
               ) : (
-                <span className="italic text-foreground/50">No metadata.</span>
+                <span className="italic text-foreground/50">
+                  <Trans>No metadata.</Trans>
+                </span>
               )}
             </div>
           </div>

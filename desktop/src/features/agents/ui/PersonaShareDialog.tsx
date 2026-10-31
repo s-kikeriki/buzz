@@ -1,3 +1,5 @@
+import { Trans, useLingui } from "@lingui/react/macro";
+import { t } from "@lingui/core/macro";
 import * as React from "react";
 import {
   AlertCircle,
@@ -118,21 +120,21 @@ type PendingMemoryShare = {
 
 function buildSnapshotShareLevels(itemLabel: "Agent" | "Team") {
   return [
-    { value: "none" as const, label: `${itemLabel} only` },
+    { value: "none" as const, label: t`${itemLabel} only` },
     {
       value: "core" as const,
-      label: `${itemLabel} + core memory`,
+      label: t`${itemLabel} + core memory`,
     },
     {
       value: "everything" as const,
-      label: `${itemLabel} + all memories`,
+      label: t`${itemLabel} + all memories`,
     },
   ];
 }
 
 function formatRecipientAudience(names: readonly string[]): string {
-  if (names.length === 0) return "The people you selected";
-  if (names.length === 1) return names[0] ?? "The person you selected";
+  if (names.length === 0) return t`The people you selected`;
+  if (names.length === 1) return names[0] ?? t`The person you selected`;
   if (names.length === 2) return `${names[0]} and ${names[1]}`;
   return `${names.slice(0, -1).join(", ")}, and ${names.at(-1)}`;
 }
@@ -150,6 +152,8 @@ function MemoryShareConfirmation({
   onConfirm: (pendingShare: PendingMemoryShare) => void;
   testIdPrefix: string;
 }) {
+  const { i18n } = useLingui();
+  void i18n;
   const isLinkShare = pendingShare?.action === "copy";
   const memoryLabel =
     pendingShare?.memoryLevel === "core" ? "core memory" : "all memories";
@@ -166,19 +170,25 @@ function MemoryShareConfirmation({
     >
       <AlertDialogContent data-testid={`${testIdPrefix}-memory-confirmation`}>
         <AlertDialogHeader>
-          <AlertDialogTitle>Share memories?</AlertDialogTitle>
+          <AlertDialogTitle>
+            <Trans>Share memories?</Trans>
+          </AlertDialogTitle>
           <AlertDialogDescription>
-            This {itemLabel} includes <strong>plaintext {memoryLabel}</strong>.{" "}
+            <Trans>This</Trans> {itemLabel} <Trans>includes</Trans>{" "}
+            <strong>
+              <Trans>plaintext</Trans> {memoryLabel}
+            </strong>
+            .{" "}
             {isLinkShare
-              ? "Anyone with the link can view it."
-              : `${recipientAudience}—and anyone with the file link—can view it.`}{" "}
-            Only share with people you trust.
+              ? t`Anyone with the link can view it.`
+              : t`${recipientAudience}—and anyone with the file link—can view it.`}{" "}
+            <Trans>Only share with people you trust.</Trans>
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel asChild>
             <Button type="button" variant="outline">
-              Cancel
+              <Trans>Cancel</Trans>
             </Button>
           </AlertDialogCancel>
           <AlertDialogAction asChild>
@@ -189,7 +199,7 @@ function MemoryShareConfirmation({
               }}
               type="button"
             >
-              {isLinkShare ? "Copy link" : "Send"}
+              {isLinkShare ? t`Copy link` : "Send"}
             </Button>
           </AlertDialogAction>
         </AlertDialogFooter>
@@ -213,6 +223,8 @@ function ShareLevelControl({
   options: { value: SnapshotMemoryLevel; label: string }[];
   onChange: (level: SnapshotMemoryLevel) => void;
 }) {
+  const { i18n } = useLingui();
+  void i18n;
   return (
     <SnapshotOptionMenu
       ariaLabel={ariaLabel}
@@ -238,6 +250,8 @@ export function SnapshotShareDialog({
   snapshotKind,
   testIdPrefix,
 }: SnapshotShareDialogProps) {
+  const { i18n } = useLingui();
+  void i18n;
   const openDmMutation = useOpenDmMutation();
   const upsertCachedChannel = useUpsertCachedChannel();
   const snapshotSendController = useSnapshotSendController(open);
@@ -263,7 +277,7 @@ export function SnapshotShareDialog({
       ? "Copying…"
       : copyStatus === "copied"
         ? "Copied"
-        : "Copy link";
+        : t`Copy link`;
   const isActionPending = isPending || isCopying || isSending;
   const isInterfacePending = isPending || isSending;
   const hasSelectedRecipients = selectedRecipients.length > 0;
@@ -388,12 +402,12 @@ export function SnapshotShareDialog({
     );
 
     if (sent) {
-      toast.success(`Sent a copy of ${displayName}`);
+      toast.success(t`Sent a copy of ${displayName}`);
       onOpenChange(false);
     } else if (sent === false) {
       toast.error(
         snapshotSendController.getCurrentError() ??
-          `Couldn’t send ${itemLabel}. Try again.`,
+          t`Couldn’t send ${itemLabel}. Try again.`,
       );
     }
   }
@@ -451,13 +465,16 @@ export function SnapshotShareDialog({
         >
           <DialogHeader>
             <DialogTitle className="min-w-0 truncate pr-10">
-              Share {displayName}
+              <Trans>Share</Trans> {displayName}
             </DialogTitle>
             <DialogDescription
               data-testid={`${testIdPrefix}-share-description`}
             >
-              Anyone you share this {itemLabel} with will receive a copy they
-              can add and use. Changes you make later won’t sync.
+              <Trans>Anyone you share this</Trans> {itemLabel}{" "}
+              <Trans>
+                with will receive a copy they can add and use. Changes you make
+                later won’t sync.
+              </Trans>
             </DialogDescription>
           </DialogHeader>
           <DialogClose
@@ -465,7 +482,9 @@ export function SnapshotShareDialog({
             disabled={isActionPending}
           >
             <X className="h-4 w-4" />
-            <span className="sr-only">Close</span>
+            <span className="sr-only">
+              <Trans>Close</Trans>
+            </span>
           </DialogClose>
 
           <div className="space-y-4 pt-4">
@@ -523,17 +542,17 @@ export function SnapshotShareDialog({
                 data-testid={`${testIdPrefix}-link-settings`}
               >
                 <h3 className="text-xs font-medium text-secondary-foreground/75">
-                  Share settings
+                  <Trans>Share settings</Trans>
                 </h3>
                 <div
                   className="flex items-center gap-3"
                   data-testid={`${testIdPrefix}-share-level-row`}
                 >
                   <h4 className="min-w-0 flex-1 text-sm font-medium">
-                    What’s included
+                    <Trans>What’s included</Trans>
                   </h4>
                   <ShareLevelControl
-                    ariaLabel="What to include"
+                    ariaLabel={t`What to include`}
                     disabled={isInterfacePending}
                     onChange={setShareLevel}
                     options={shareLevels}
@@ -643,8 +662,13 @@ export function SnapshotShareDialog({
                   >
                     <AlertCircle className="mt-0.5 h-4 w-4 shrink-0" />
                     <p>
-                      Memory is stored as <strong>plaintext</strong> in the
-                      snapshot. Only share it with people you trust.
+                      <Trans>Memory is stored as</Trans>{" "}
+                      <strong>
+                        <Trans>plaintext</Trans>
+                      </strong>{" "}
+                      <Trans>
+                        in the snapshot. Only share it with people you trust.
+                      </Trans>
                     </p>
                   </div>
                 </motion.div>
@@ -661,7 +685,9 @@ export function SnapshotShareDialog({
           type="button"
         >
           <Download className="h-4 w-4 shrink-0 text-muted-foreground" />
-          <span className="min-w-0 flex-1">Export {itemLabel}</span>
+          <span className="min-w-0 flex-1">
+            <Trans>Export</Trans> {itemLabel}
+          </span>
           <ChevronRight className="h-4 w-4 shrink-0 text-muted-foreground" />
         </button>
       </DialogContent>
@@ -687,6 +713,8 @@ export function PersonaShareDialog({
   open,
   persona,
 }: PersonaShareDialogProps) {
+  const { i18n } = useLingui();
+  void i18n;
   const encodeSnapshotMutation = useEncodeAgentSnapshotForSendMutation();
   const encodeSnapshot = React.useCallback(
     async (memoryLevel: SnapshotMemoryLevel) =>
@@ -715,15 +743,19 @@ export function PersonaShareDialog({
           >
             <BookUser className="h-4 w-4 shrink-0 text-muted-foreground" />
             <div className="min-w-0 flex-1">
-              <h3 className="text-sm font-medium">Share to catalog</h3>
+              <h3 className="text-sm font-medium">
+                <Trans>Share to catalog</Trans>
+              </h3>
               <p className="text-xs text-secondary-foreground/75">
-                Anyone in this community can find and use a copy. Your agent
-                instruction is shared as plaintext. Memories and secrets aren’t
-                included.
+                <Trans>
+                  Anyone in this community can find and use a copy. Your agent
+                  instruction is shared as plaintext. Memories and secrets
+                  aren’t included.
+                </Trans>
               </p>
             </div>
             <Switch
-              aria-label="Share to catalog"
+              aria-label={t`Share to catalog`}
               checked={catalogShareLevel !== "not-shared"}
               data-testid="persona-share-catalog-access"
               disabled={isPending}

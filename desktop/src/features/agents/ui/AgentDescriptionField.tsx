@@ -1,3 +1,5 @@
+import { Trans, useLingui } from "@lingui/react/macro";
+import { t } from "@lingui/core/macro";
 import { cn } from "@/shared/lib/cn";
 import { Input } from "@/shared/ui/input";
 import {
@@ -36,7 +38,9 @@ export function AgentIdentityFields({
   onDescriptionChange,
   disabled,
 }: AgentIdentityFieldsProps) {
-  const placeholder = "What this agent does, in a sentence";
+  const { i18n } = useLingui();
+  void i18n;
+  const placeholder = t`What this agent does, in a sentence`;
   const descriptionLength = agentDescriptionCharacterCount(description);
   const showCounter =
     descriptionLength >= MAX_AGENT_DESCRIPTION_CHARS - COUNTER_VISIBLE_WITHIN;
@@ -48,7 +52,7 @@ export function AgentIdentityFields({
           className="text-sm font-medium text-foreground"
           htmlFor="persona-display-name"
         >
-          Agent name
+          <Trans>Agent name</Trans>
         </label>
         <div
           className={cn(
@@ -65,7 +69,7 @@ export function AgentIdentityFields({
             disabled={disabled}
             id="persona-display-name"
             onChange={(event) => onDisplayNameChange(event.target.value)}
-            placeholder="Fizz"
+            placeholder={t`Fizz`}
             value={displayName}
           />
         </div>
@@ -76,8 +80,10 @@ export function AgentIdentityFields({
           className="text-sm font-medium text-foreground"
           htmlFor="persona-description"
         >
-          Description
-          <span className={PERSONA_LABEL_OPTIONAL_CLASS}>Optional</span>
+          <Trans>Description</Trans>
+          <span className={PERSONA_LABEL_OPTIONAL_CLASS}>
+            <Trans>Optional</Trans>
+          </span>
         </label>
         <div
           className={cn(
@@ -101,7 +107,7 @@ export function AgentIdentityFields({
         </div>
         <div className="flex items-baseline justify-between gap-2">
           <p className="text-xs text-muted-foreground">
-            Shown publicly on the agent&apos;s card and profile.
+            <Trans>Shown publicly on the agent&apos;s card and profile.</Trans>
           </p>
           {showCounter ? (
             <span className="shrink-0 text-2xs tabular-nums text-muted-foreground">
