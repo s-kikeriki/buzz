@@ -80,6 +80,18 @@ const CONVERTED_FILES = [
   // The shared ladder grew a forward-pointing half for the reminder
   // countdown, so it now holds copy of its own ("in less than a minute").
   "src/shared/lib/relativeTime.ts",
+  // Tranche 3 — first run. The very first screen a new install shows and the
+  // two screens its two visible controls lead to: the landing page, the
+  // identity-key explainer behind "What's an identity key?", and the
+  // create-a-key introduction. Everything a person reads before they have an
+  // account, which is also before they can reach the language setting.
+  //
+  // The later steps of the same flow — backup, harness setup, the default
+  // config, and the key-import form itself — are still English and are the
+  // next tranche. They are reachable only after a key exists.
+  "src/features/onboarding/ui/IdentityKeyHelpDialog.tsx",
+  "src/features/onboarding/ui/IdentityKeyIntroduction.tsx",
+  "src/features/onboarding/ui/MachineOnboardingFlow.tsx",
 ];
 
 /**

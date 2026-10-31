@@ -30,6 +30,12 @@ msgstr "{0, plural, one {# member} other {# members}}"
 msgid "{0, plural, one {# unread} other {# unread}}"
 msgstr "{0, plural, one {# unread} other {# unread}}"
 
+#. placeholder {0}: BRAND.productName
+#. placeholder {1}: BRAND.productName
+#: src/features/onboarding/ui/IdentityKeyHelpDialog.tsx
+msgid "{0} will create a Nostr identity with two parts: a private key that signs you in and a public key you can safely share. You can find your public identity anytime in {1} settings."
+msgstr "{0} will create a Nostr identity with two parts: a private key that signs you in and a public key you can safely share. You can find your public identity anytime in {1} settings."
+
 #: src/features/home/ui/InboxFilterMenu.tsx
 msgid "{activeDraftCount, plural, one {# active draft} other {# active drafts}}"
 msgstr "{activeDraftCount, plural, one {# active draft} other {# active drafts}}"
@@ -425,6 +431,11 @@ msgstr "Choose section icon"
 msgid "Choose the colors used throughout {productName}."
 msgstr "Choose the colors used throughout {productName}."
 
+#. placeholder {0}: BRAND.productName
+#: src/features/onboarding/ui/MachineOnboardingFlow.tsx
+msgid "Choose the encrypted backup file you saved from {0}."
+msgstr "Choose the encrypted backup file you saved from {0}."
+
 #: src/features/settings/ui/AppearanceSettingsControls.tsx
 msgid "Choose the highlight color used throughout {productName}."
 msgstr "Choose the highlight color used throughout {productName}."
@@ -486,6 +497,10 @@ msgstr "Complete any prompts opened by the reconnect helper to continue."
 msgid "Compute"
 msgstr "Compute"
 
+#: src/features/onboarding/ui/MachineOnboardingFlow.tsx
+msgid "Confirm the code before sharing your identity."
+msgstr "Confirm the code before sharing your identity."
+
 #: src/features/sidebar/ui/SidebarRelayConnectionCard.tsx
 msgid "Connect to relay"
 msgstr "Connect to relay"
@@ -497,6 +512,10 @@ msgstr "Connected"
 #: src/features/sidebar/ui/SidebarRelayConnectionCard.tsx
 msgid "Connecting"
 msgstr "Connecting"
+
+#: src/features/onboarding/ui/MachineOnboardingFlow.tsx
+msgid "Continue setup"
+msgstr "Continue setup"
 
 #: src/features/settings/ui/AppearanceSettingsControls.tsx
 msgid "Conversation density"
@@ -550,9 +569,21 @@ msgstr "Create a new channel"
 msgid "Create a new forum"
 msgstr "Create a new forum"
 
+#: src/features/onboarding/ui/MachineOnboardingFlow.tsx
+msgid "Create a new identity key"
+msgstr "Create a new identity key"
+
+#: src/features/onboarding/ui/IdentityKeyIntroduction.tsx
+msgid "Create a private identity key"
+msgstr "Create a private identity key"
+
 #: src/features/sidebar/ui/CustomChannelSection.tsx
 msgid "Create channel"
 msgstr "Create channel"
+
+#: src/features/onboarding/ui/IdentityKeyIntroduction.tsx
+msgid "Create my private key"
+msgstr "Create my private key"
 
 #: src/features/sidebar/ui/CreateChannelFormFields.tsx
 msgid "Create new channel template…"
@@ -565,6 +596,10 @@ msgstr "Create section"
 #: src/features/sidebar/ui/ChannelSectionDialogs.tsx
 msgid "Create subsection"
 msgstr "Create subsection"
+
+#: src/features/onboarding/ui/IdentityKeyIntroduction.tsx
+msgid "Creating key…"
+msgstr "Creating key…"
 
 #: src/features/sidebar/ui/AppSidebar.tsx
 msgid "Current identity"
@@ -689,6 +724,14 @@ msgstr "Empty draft"
 msgid "Enter a new name for this section."
 msgstr "Enter a new name for this section."
 
+#: src/features/onboarding/ui/MachineOnboardingFlow.tsx
+msgid "Enter your backup password to restore your identity."
+msgstr "Enter your backup password to restore your identity."
+
+#: src/features/onboarding/ui/MachineOnboardingFlow.tsx
+msgid "Enter your private key"
+msgstr "Enter your private key"
+
 #: src/features/channels/lib/ephemeralChannel.ts
 msgid "Ephemeral channel. Cleans up {when}."
 msgstr "Ephemeral channel. Cleans up {when}."
@@ -720,6 +763,14 @@ msgstr "Experiments"
 #: src/features/sidebar/ui/SidebarProjectsSection.tsx
 msgid "Failed to delete project"
 msgstr "Failed to delete project"
+
+#: src/features/onboarding/ui/MachineOnboardingFlow.tsx
+msgid "Failed to load identity"
+msgstr "Failed to load identity"
+
+#: src/features/onboarding/ui/MachineOnboardingFlow.tsx
+msgid "Failed to save identity"
+msgstr "Failed to save identity"
 
 #: src/features/home/ui/InboxFilterMenu.tsx
 msgid "Filter inbox: {activeLabel}"
@@ -941,6 +992,10 @@ msgstr "Last updated {0}"
 msgid "Last updated {when}"
 msgstr "Last updated {when}"
 
+#: src/features/onboarding/ui/IdentityKeyHelpDialog.tsx
+msgid "Learn how identity keys work"
+msgstr "Learn how identity keys work"
+
 #: src/features/sidebar/ui/ChannelSectionDialogs.tsx
 msgid "Leave"
 msgstr "Leave"
@@ -969,6 +1024,10 @@ msgstr "Live activity will appear here."
 #: src/features/sidebar/ui/ChannelContextMenu.tsx
 msgid "Loading channel actions..."
 msgstr "Loading channel actions..."
+
+#: src/features/onboarding/ui/MachineOnboardingFlow.tsx
+msgid "Loading identity…"
+msgstr "Loading identity…"
 
 #: src/features/home/ui/ProjectInboxDetail.tsx
 msgid "Loading project item…"
@@ -1139,6 +1198,10 @@ msgstr "Needs Action"
 #: src/features/home/lib/inbox.ts
 msgid "Needs action in"
 msgstr "Needs action in"
+
+#: src/features/onboarding/ui/IdentityKeyIntroduction.tsx
+msgid "Never share it—anyone with this key can sign in as you"
+msgstr "Never share it—anyone with this key can sign in as you"
 
 #: src/features/home/ui/InboxListPane.tsx
 msgid "New activity will appear here."
@@ -1450,6 +1513,11 @@ msgstr "Orders every list in the sidebar. Recent also floats the sections themse
 msgid "Owned by me"
 msgstr "Owned by me"
 
+#. placeholder {0}: BRAND.productName
+#: src/features/onboarding/ui/MachineOnboardingFlow.tsx
+msgid "Paste your private key to sign in to {0}. You can also use a <0>backup file</0>, or <1>recover from your phone</1>."
+msgstr "Paste your private key to sign in to {0}. You can also use a <0>backup file</0>, or <1>recover from your phone</1>."
+
 #: src/features/home/ui/InboxListPane.tsx
 msgid "Pending"
 msgstr "Pending"
@@ -1562,6 +1630,10 @@ msgstr "Recent Notes"
 msgid "Reconnecting"
 msgstr "Reconnecting"
 
+#: src/features/onboarding/ui/MachineOnboardingFlow.tsx
+msgid "Recover from your phone"
+msgstr "Recover from your phone"
+
 #: src/features/home/ui/InboxListPane.tsx
 #: src/features/sidebar/ui/ChannelActivityPopover.tsx
 msgid "Remind me later"
@@ -1630,11 +1702,19 @@ msgstr "Reset zoom to default level"
 msgid "Resize inbox list"
 msgstr "Resize inbox list"
 
+#: src/features/onboarding/ui/MachineOnboardingFlow.tsx
+msgid "Restore from a backup file"
+msgstr "Restore from a backup file"
+
 #: src/features/home/ui/InboxDetailPane.tsx
 #: src/features/home/ui/InboxListPane.tsx
 #: src/features/home/ui/ProjectInboxDetail.tsx
 msgid "Retry"
 msgstr "Retry"
+
+#: src/features/onboarding/ui/MachineOnboardingFlow.tsx
+msgid "Return to onboarding"
+msgstr "Return to onboarding"
 
 #: src/features/home/lib/inbox.ts
 msgid "Review"
@@ -1647,6 +1727,15 @@ msgstr "Rich"
 #: src/features/settings/ui/AppearanceSettingsControls.tsx
 msgid "Row height and the spacing around section headers"
 msgstr "Row height and the spacing around section headers"
+
+#. placeholder {0}: BRAND.productName
+#: src/features/onboarding/ui/MachineOnboardingFlow.tsx
+msgid "Scan this code with a device where you’re currently signed in to {0}."
+msgstr "Scan this code with a device where you’re currently signed in to {0}."
+
+#: src/features/onboarding/ui/MachineOnboardingFlow.tsx
+msgid "Scan to sign in"
+msgstr "Scan to sign in"
 
 #: src/features/channels/ui/ChannelBrowserDialog.tsx
 msgid "Search channels by name or description"
@@ -1810,6 +1899,10 @@ msgstr "Spacious"
 msgid "Split"
 msgstr "Split"
 
+#: src/features/onboarding/ui/MachineOnboardingFlow.tsx
+msgid "Start new identity"
+msgstr "Start new identity"
+
 #: src/shared/lib/keyboard-shortcuts.ts
 msgid "Start or join a huddle in the current channel; leave when connected"
 msgstr "Start or join a huddle in the current channel; leave when connected"
@@ -1817,6 +1910,10 @@ msgstr "Start or join a huddle in the current channel; leave when connected"
 #: src/shared/lib/keyboard-shortcuts.ts
 msgid "Start or leave huddle"
 msgstr "Start or leave huddle"
+
+#: src/features/onboarding/ui/IdentityKeyIntroduction.tsx
+msgid "Stored securely on this device"
+msgstr "Stored securely on this device"
 
 #: src/shared/lib/keyboard-shortcuts.ts
 msgid "Strikethrough"
@@ -1879,6 +1976,12 @@ msgstr "Theme style, {selectedThemeLabel}"
 msgid "this community"
 msgstr "this community"
 
+#. placeholder {0}: BRAND.productName
+#. placeholder {1}: BRAND.productName
+#: src/features/onboarding/ui/IdentityKeyHelpDialog.tsx
+msgid "This identity belongs to you, not {0}, and can move with you to another device or compatible Nostr app. Because only you control the private key, {1} can’t reset or recover it. Keep a backup somewhere safe, and never share it."
+msgstr "This identity belongs to you, not {0}, and can move with you to another device or compatible Nostr app. Because only you control the private key, {1} can’t reset or recover it. Keep a backup somewhere safe, and never share it."
+
 #: src/features/home/lib/homeMessageCapabilities.ts
 msgid "This inbox item does not have a reply target."
 msgstr "This inbox item does not have a reply target."
@@ -1887,9 +1990,19 @@ msgstr "This inbox item does not have a reply target."
 msgid "This item does not support inline replies yet."
 msgstr "This item does not support inline replies yet."
 
+#. placeholder {0}: BRAND.productName
+#. placeholder {1}: BRAND.productName
+#: src/features/onboarding/ui/IdentityKeyIntroduction.tsx
+msgid "This key will be how you log into {0}. You can use it across {1} communities and other platforms."
+msgstr "This key will be how you log into {0}. You can use it across {1} communities and other platforms."
+
 #: src/features/home/ui/ProjectInboxDetail.tsx
 msgid "This project item could not be found."
 msgstr "This project item could not be found."
+
+#: src/features/onboarding/ui/MachineOnboardingFlow.tsx
+msgid "This will create a new identity and abandon your previous key. This cannot be undone. Continue?"
+msgstr "This will create a new identity and abandon your previous key. This cannot be undone. Continue?"
 
 #: src/features/home/lib/inbox.ts
 #: src/features/search/ui/TopbarSearch.tsx
@@ -1984,6 +2097,10 @@ msgstr "Unknown channel"
 msgid "Unknown time"
 msgstr "Unknown time"
 
+#: src/features/onboarding/ui/MachineOnboardingFlow.tsx
+msgid "Unlock your account"
+msgstr "Unlock your account"
+
 #: src/features/sidebar/ui/ChannelContextMenu.tsx
 msgid "Unmute channel"
 msgstr "Unmute channel"
@@ -2004,6 +2121,18 @@ msgstr "Updates"
 #: src/features/settings/ui/AppearanceSettingsControls.tsx
 msgid "Use {colorName} accent"
 msgstr "Use {colorName} accent"
+
+#: src/features/onboarding/ui/MachineOnboardingFlow.tsx
+msgid "Use a different key instead"
+msgstr "Use a different key instead"
+
+#: src/features/onboarding/ui/IdentityKeyIntroduction.tsx
+msgid "Use a secure backup to recover your account"
+msgstr "Use a secure backup to recover your account"
+
+#: src/features/onboarding/ui/MachineOnboardingFlow.tsx
+msgid "Use an existing key"
+msgstr "Use an existing key"
 
 #: src/features/settings/ui/SettingsView.tsx
 msgid "v{appVersion}"
@@ -2041,6 +2170,10 @@ msgstr "Waiting to reconnect"
 msgid "What this {kindLabel} is for"
 msgstr "What this {kindLabel} is for"
 
+#: src/features/onboarding/ui/IdentityKeyHelpDialog.tsx
+msgid "What’s an identity key?"
+msgstr "What’s an identity key?"
+
 #: src/features/sidebar/ui/AppSidebarPinnedHeader.tsx
 msgid "Workflows"
 msgstr "Workflows"
@@ -2056,6 +2189,10 @@ msgstr "Yesterday"
 #: src/features/messages/ui/DraftDetailPane.tsx
 msgid "You"
 msgstr "You"
+
+#: src/features/onboarding/ui/MachineOnboardingFlow.tsx
+msgid "Your people, your agents, your projects —<0/>all in one place."
+msgstr "Your people, your agents, your projects —<0/>all in one place."
 
 #: src/shared/lib/keyboard-shortcuts.ts
 msgid "Zoom"

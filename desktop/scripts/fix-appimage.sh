@@ -127,17 +127,42 @@ if ! grep -aq "GST_PLUGIN_SYSTEM_PATH_1_0" "$APPRUN_WRAPPED"; then
   exit 1
 fi
 
-APP_BIN="$WORKDIR/squashfs-root/usr/bin/buzz-desktop"
+# Read the binary's name out of the AppDir rather than assuming `buzz-desktop`.
+# A flavored bundle sets `mainBinaryName`, so its executable is named after the
+# flavor; this script hardcoded the trunk's name and would have failed a
+# correct ki.keriki AppImage with "bundler layout changed". The desktop entry
+# in the AppDir root is generated from the same name the executable has, so the
+# artefact describes itself.
+#
+# `-xtype f`, not `-type f`: linuxdeploy puts the root entry there as a symlink
+# to usr/share/applications/<name>.desktop, so `-type f` matches nothing and the
+# guard below aborts a correct build. `-xtype f` resolves the link, and still
+# rejects a dangling one.
+DESKTOP_ENTRY=$(find "$WORKDIR/squashfs-root" -maxdepth 1 -name '*.desktop' -xtype f | head -1)
+if [[ -z "$DESKTOP_ENTRY" ]]; then
+  echo "Error: no .desktop entry in the AppDir root — bundler layout changed; update fix-appimage.sh" >&2
+  exit 1
+fi
+# `Exec=<name> %u`: take the first field, and drop the quotes the bundler adds
+# when the name contains a space.
+MAIN_BIN=$(sed -n 's/^Exec=//p' "$DESKTOP_ENTRY" | head -1 | awk '{print $1}' | tr -d '"')
+if [[ -z "$MAIN_BIN" ]]; then
+  echo "Error: $DESKTOP_ENTRY has no Exec= line to read the binary name from" >&2
+  exit 1
+fi
+echo "==> App binary is $MAIN_BIN (from $(basename "$DESKTOP_ENTRY"))"
+
+APP_BIN="$WORKDIR/squashfs-root/usr/bin/$MAIN_BIN"
 if [[ ! -f "$APP_BIN" ]]; then
-  echo "Error: app binary usr/bin/buzz-desktop not found — bundler layout changed; update fix-appimage.sh" >&2
+  echo "Error: app binary usr/bin/$MAIN_BIN not found — bundler layout changed; update fix-appimage.sh" >&2
   exit 1
 fi
 if [[ -e "$APP_BIN.bin" ]]; then
-  echo "Error: usr/bin/buzz-desktop.bin already exists — shim already installed?" >&2
+  echo "Error: usr/bin/$MAIN_BIN.bin already exists — shim already installed?" >&2
   exit 1
 fi
 
-# The real binary moves aside; buzz-desktop becomes a shim AppRun.wrapped execs.
+# The real binary moves aside; its name becomes a shim AppRun.wrapped execs.
 mv "$APP_BIN" "$APP_BIN.bin"
 cat > "$APP_BIN" <<'SHIM'
 #!/usr/bin/env bash
@@ -160,7 +185,11 @@ for var in GST_PLUGIN_SYSTEM_PATH_1_0 GST_PLUGIN_SYSTEM_PATH \
     unset "$var"
   fi
 done
-exec -a "buzz-desktop" "$here/buzz-desktop.bin" "$@"
+# Derived from $0, not baked in: the executable is named after the flavor in a
+# flavored bundle, and keeping this heredoc quoted is what keeps the body below
+# identical to what a reader sees here.
+self="$(basename "$(readlink -f "$0")")"
+exec -a "$self" "$here/$self.bin" "$@"
 SHIM
 chmod +x "$APP_BIN"
 

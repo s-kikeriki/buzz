@@ -54,13 +54,25 @@ except ImportError:  # pragma: no cover - a developer's missing dependency
 
 DESKTOP_DIR = Path(__file__).resolve().parent.parent
 
-# The non-macOS entries of `tauri.conf.json`'s `bundle.icon`, mapped to the
-# pixel size each one has to be. `128x128@2x` is 256, which is the one pair
-# where the filename and the dimensions disagree.
+# The non-macOS PNGs a flavor replaces, mapped to the pixel size each one has
+# to be. `128x128@2x` is 256, which is the one pair where the filename and the
+# dimensions disagree — and the reason the extra sizes below exist.
+#
+# Tauri's Linux bundler derives each `hicolor` directory from a PNG's real
+# dimensions plus whether its *filename* says `@2x`, so `128x128@2x.png` lands
+# in `256x256@2/apps/`, which is not a directory in the icon theme
+# specification and is therefore ignored by every icon lookup. The practical
+# effect was a launcher and taskbar with nothing above 128px to scale from.
+# `256x256.png` and `512x512.png` give the same artwork a directory that is
+# actually read; `64x64.png` fills the gap the stock set already had a file for
+# but never bundled.
 PNG_TARGETS = {
     "32x32.png": 32,
+    "64x64.png": 64,
     "128x128.png": 128,
     "128x128@2x.png": 256,
+    "256x256.png": 256,
+    "512x512.png": 512,
 }
 # The size list inside `src-tauri/icons/icon.ico`, matched exactly.
 ICO_SIZES = [16, 24, 32, 48, 64, 256]

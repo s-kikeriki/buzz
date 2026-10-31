@@ -176,6 +176,10 @@ jobs:
           # here would reach nothing below. $GITHUB_ENV is the crossing that
           # survives into the build step.
           node scripts/flavor-github-env.mjs "$FLAVOR"
+          # No `--target`: this job builds for the host, and the script reads
+          # the host triple from `rustc -vV` exactly as
+          # `scripts/bundle-sidecars.sh` does, so the sidecar filenames the
+          # two of them produce and consume cannot disagree.
           node scripts/build-flavor-tauri-config.mjs "$FLAVOR"
           node scripts/stage-flavor-icons.mjs "$FLAVOR"
 
@@ -297,6 +301,204 @@ jobs:
           fi
           echo "ok: launcher entry is Name=$PRODUCT"
 
+          # The launcher entry has to be a *valid* desktop entry as well as a
+          # correctly named one. `desktop-file-validate` is already installed
+          # for this job and it is the only reader of this file that exists
+          # before a human looks at a menu.
+          desktop-file-validate "$DESKTOP_FILE"
+          echo "ok: desktop-file-validate clean"
+
+          # Categories, Exec, Icon and StartupWMClass together. The empty
+          # `Categories=` of the built-in template filed the app under nothing
+          # in every menu that groups by category, and a StartupWMClass that
+          # does not match the window leaves the launcher showing a second
+          # generic icon beside the running app.
+          MAIN_BIN=$(cd desktop && node -e '
+            import("./scripts/flavor-config.mjs").then(({ loadFlavor }) =>
+              console.log(loadFlavor(process.argv[1]).mainBinaryName));
+          ' "$FLAVOR")
+          for expected in \
+            "Categories=Network;InstantMessaging;" \
+            "Exec=$MAIN_BIN %u" \
+            "Icon=$MAIN_BIN" \
+            "StartupWMClass=$MAIN_BIN"; do
+            if ! grep -qxF "$expected" "$DESKTOP_FILE"; then
+              echo "::error::the launcher entry is missing \`$expected\`:"
+              cat "$DESKTOP_FILE"
+              exit 1
+            fi
+            echo "ok: $expected"
+          done
+          # `Comment=` is the tooltip, and it said "Buzz desktop app".
+          if grep -qx 'Comment=Buzz desktop app' "$DESKTOP_FILE"; then
+            echo "::error::the launcher tooltip still reads \"Buzz desktop app\""
+            exit 1
+          fi
+
+          # Package metadata. `Maintainer: you` shipped to users because
+          # tauri-bundler prefers the Cargo manifest's authors over
+          # `bundle.publisher`, so this reads the field back rather than
+          # trusting that the flavor declared a publisher.
+          MAINTAINER=$(dpkg-deb -f "$DEB" Maintainer)
+          DESCRIPTION=$(dpkg-deb -f "$DEB" Description)
+          echo "Maintainer: $MAINTAINER"
+          echo "Description: $DESCRIPTION"
+          for bad in "you" "block"; do
+            if [[ "$MAINTAINER" == "$bad" ]]; then
+              echo "::error::Maintainer is still the \`$bad\` placeholder"
+              exit 1
+            fi
+          done
+          if [[ "$DESCRIPTION" == "Buzz desktop app" ]]; then
+            echo "::error::Description is still the trunk's \"Buzz desktop app\""
+            exit 1
+          fi
+
+          # Icon sizes. `128x128@2x.png` is a 256px image whose *filename*
+          # makes Tauri write it to `hicolor/256x256@2/`, which is not a
+          # directory in the icon theme specification and is read by nothing —
+          # so the launcher had no size above 128px to scale from.
+          mapfile -t HICOLOR < <(cd /tmp/debroot/usr/share/icons/hicolor && ls -1d */ | tr -d /)
+          echo "hicolor sizes: ${HICOLOR[*]}"
+          for size in 256x256 512x512; do
+            if [[ ! -d "/tmp/debroot/usr/share/icons/hicolor/$size/apps" ]]; then
+              echo "::error::no hicolor/$size — the launcher has nothing sharp to scale from"
+              exit 1
+            fi
+          done
+          for dir in "${HICOLOR[@]}"; do
+            if [[ "$dir" == *@* ]]; then
+              echo "::error::hicolor/$dir is not a directory the icon theme spec defines"
+              exit 1
+            fi
+          done
+          echo "ok: hicolor sizes are all real ones, including 256 and 512"
+
+      - name: Check the .deb can be installed next to a real Buzz
+        env:
+          FLAVOR: ${{ inputs.flavor }}
+        run: |
+          # The defect this whole change exists for: dpkg refuses to unpack two
+          # packages that own one path, and the flavored `.deb` used to claim
+          # `/usr/bin/buzz-desktop`, all five sidecars in `/usr/bin`, and the
+          # `buzz-desktop` hicolor icon names — every one of them owned by a
+          # real Buzz's package.
+          #
+          # Rather than build stock Buzz as well (a second full Tauri build in
+          # the same 90 minutes), this stands up a decoy package that claims
+          # exactly the paths a stock build installs, derived from the trunk's
+          # own config so the decoy follows a change to that layout. If dpkg
+          # accepts both, the collision is gone for the real pair too.
+          set -o pipefail
+          DEB=$(find desktop/src-tauri/target/release/bundle/deb -name '*.deb' -type f | head -1)
+          [[ -n "$DEB" ]] || { echo "::error::no .deb produced"; exit 1; }
+
+          rm -rf /tmp/decoy && mkdir -p /tmp/decoy/DEBIAN /tmp/decoy/usr/bin
+          mapfile -t STOCK_PATHS < <(cd desktop && node -e '
+            import("node:fs").then(({ readFileSync }) => {
+              const config = JSON.parse(
+                readFileSync("src-tauri/tauri.conf.json", "utf8"),
+              );
+              // The main binary: the Cargo bin name, which is what the trunk
+              // installs because it sets no `mainBinaryName`.
+              console.log("usr/bin/buzz-desktop");
+              for (const entry of config.bundle.externalBin ?? [])
+                console.log(`usr/bin/${entry.split("/").pop()}`);
+              for (const icon of config.bundle.icon ?? []) {
+                const name = icon.split("/").pop();
+                const match = /^(\d+)x(\d+)(@2x)?\.png$/.exec(name);
+                if (match === null) continue;
+                const scale = match[3] === undefined ? "" : "@2";
+                const size = match[3] === undefined
+                  ? `${match[1]}x${match[2]}`
+                  : `${Number(match[1]) * 2}x${Number(match[2]) * 2}`;
+                console.log(
+                  `usr/share/icons/hicolor/${size}${scale}/apps/buzz-desktop.png`,
+                );
+              }
+            });
+          ')
+          if [[ ${#STOCK_PATHS[@]} -lt 7 ]]; then
+            echo "::error::only ${#STOCK_PATHS[@]} stock paths derived — the decoy would prove nothing"
+            exit 1
+          fi
+          printf 'decoy claims %s path(s):\n' "${#STOCK_PATHS[@]}"
+          for path in "${STOCK_PATHS[@]}"; do
+            echo "  /$path"
+            install -D /dev/null "/tmp/decoy/$path"
+          done
+          cat > /tmp/decoy/DEBIAN/control <<'CONTROL'
+          Package: buzz
+          Version: 0.0.0-decoy
+          Architecture: amd64
+          Maintainer: flavor-build decoy <nobody@example.invalid>
+          Description: Stands in for a stock Buzz install, claiming its paths
+          CONTROL
+          # The heredoc above is indented for readability; dpkg wants column 0.
+          sed -i 's/^          //' /tmp/decoy/DEBIAN/control
+          dpkg-deb -b /tmp/decoy /tmp/stock-buzz-decoy.deb
+
+          # `--unpack`, not `-i`. A path collision is detected while unpacking,
+          # which is the failure being reproduced; `-i` would go on to
+          # configure and exit non-zero on any unsatisfied runtime dependency,
+          # reporting a dependency problem as if it were this one.
+          dpkg --unpack /tmp/stock-buzz-decoy.deb
+          if ! dpkg --unpack "$DEB"; then
+            echo "::error::the flavored .deb still cannot be unpacked beside a stock Buzz"
+            exit 1
+          fi
+          # Both, not just the second: dpkg also "succeeds" by taking a path
+          # away from the first package, and that is the outcome being guarded
+          # against.
+          for package in buzz "$(dpkg-deb -f "$DEB" Package)"; do
+            status=$(dpkg-query -W -f='${Status}' "$package" 2>/dev/null || true)
+            echo "$package: ${status:-absent}"
+            case "$status" in
+              *" installed"|*" unpacked") ;;
+              *)
+                echo "::error::$package did not survive unpacking both packages"
+                exit 1
+                ;;
+            esac
+            echo "ok: $package is still unpacked"
+          done
+          # Every path the decoy claimed must still belong to it.
+          for path in "${STOCK_PATHS[@]}"; do
+            owner=$(dpkg -S "/$path" 2>/dev/null | cut -d: -f1 || true)
+            if [[ "$owner" != "buzz" ]]; then
+              echo "::error::/$path is now owned by \`${owner:-nobody}\`, not the stock package"
+              exit 1
+            fi
+          done
+          echo "ok: all ${#STOCK_PATHS[@]} stock paths still belong to the stock package"
+
+          # And the sidecars have to be where the app looks for them, with the
+          # executable bit intact — `fs::copy` carries the mode across, but a
+          # resource is not an `externalBin` and nothing else asserts it.
+          BUNDLE_NAME=$(cd desktop && node -e '
+            import("./scripts/flavor-config.mjs").then(({ loadFlavor }) =>
+              console.log(loadFlavor(process.argv[1]).displayName));
+          ' "$FLAVOR")
+          SIDECAR_DIR="/usr/lib/$BUNDLE_NAME/sidecars"
+          for sidecar in buzz buzz-acp buzz-agent buzz-dev-mcp git-credential-nostr; do
+            if [[ ! -x "$SIDECAR_DIR/$sidecar" ]]; then
+              echo "::error::$SIDECAR_DIR/$sidecar is missing or not executable"
+              ls -la "$SIDECAR_DIR" || true
+              exit 1
+            fi
+            echo "ok: $SIDECAR_DIR/$sidecar"
+          done
+          # The decoy's `/usr/bin/buzz` is an empty file, so this also proves
+          # the two are distinct installs rather than one overwriting the other.
+          [[ -s "$SIDECAR_DIR/buzz" ]] || {
+            echo "::error::$SIDECAR_DIR/buzz is empty"
+            exit 1
+          }
+
+          # Best effort: the container is discarded either way, and a removal
+          # failure here would fail a job whose real checks have all passed.
+          dpkg --purge --force-all "$(dpkg-deb -f "$DEB" Package)" buzz || true
+
       - name: Checksums
         run: |
           cd desktop/src-tauri/target/release/bundle
@@ -393,7 +595,10 @@ jobs:
         run: |
           cd desktop
           node scripts/flavor-github-env.mjs "$FLAVOR"
-          node scripts/build-flavor-tauri-config.mjs "$FLAVOR"
+          # `--target` here, unlike the Linux job: this one cross-builds, so
+          # the sidecar source filenames carry `$TARGET` and not the host's
+          # triple. `bundle-sidecars.sh "$TARGET"` writes the same names.
+          node scripts/build-flavor-tauri-config.mjs "$FLAVOR" --target "$TARGET"
           node scripts/stage-flavor-icons.mjs "$FLAVOR"
 
       - name: Check the flavor really crossed

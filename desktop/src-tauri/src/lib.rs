@@ -100,6 +100,35 @@ use tauri::{Emitter, Manager, RunEvent, WindowEvent};
 use tauri_plugin_window_state::StateFlags;
 #[cfg(target_os = "macos")]
 use tray_menu::show_main_window;
+/// Replace the window icon `tauri-build` chose with the 256px one.
+///
+/// `tauri-build` picks the default window icon by looking for the `bundle.icon`
+/// entry whose name ends in `32x32.png`, so every window this app opened
+/// carried a 32px icon — which on Linux is what `_NET_WM_ICON` carries, and
+/// what the taskbar and the alt-tab switcher read. It looked like it.
+///
+/// Best-effort: a failure leaves the icon Tauri already set, which is the
+/// current behaviour, so there is nothing to recover from.
+///
+/// Split into a cfg'd pair rather than written as a `#[cfg]` block inline, so
+/// the *call* is type-checked on every platform. This repo can only build and
+/// check macOS, and an inline Linux-only block is code no local gate compiles.
+#[cfg(target_os = "linux")]
+fn set_large_window_icon<R: tauri::Runtime>(window: &tauri::Window<R>) {
+    let Some((rgba, width, height)) = brand::window_icon_rgba() else {
+        return;
+    };
+    if let Err(error) = window.set_icon(tauri::image::Image::new_owned(rgba, width, height)) {
+        eprintln!("buzz-desktop: could not set the window icon: {error}");
+    }
+}
+
+/// No-op off Linux: macOS takes the dock icon from the `.app`'s own `.icns`
+/// and Windows takes the window icon from the `.ico` linked into the
+/// executable, so neither reads what this would set.
+#[cfg(not(target_os = "linux"))]
+fn set_large_window_icon<R: tauri::Runtime>(_window: &tauri::Window<R>) {}
+
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     // mesh-llm async chains overflow tokio's default 2 MiB stacks; run on 8 MiB like upstream.
@@ -158,6 +187,9 @@ pub fn run() {
                     // permission-request handler for getUserMedia; no-op
                     // on macOS/Windows.
                     linux_media::enable_media_capture(&webview);
+
+                    // Upgrade the 32px window icon on Linux; no-op elsewhere.
+                    set_large_window_icon(&webview.window());
 
                     // macOS applies the restored geometry asynchronously. Wait
                     // for several identical outer bounds and for React to

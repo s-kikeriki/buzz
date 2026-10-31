@@ -18,6 +18,9 @@ const expected = (name, slug) => ({
   keyringService: `buzz-desktop-demo.${slug}`,
   nestName: `.buzz-demo-${slug}`,
   cliName: `buzz-demo-${slug}`,
+  // Without the build ID, unlike every other derived name: it is the `Exec=`
+  // line, the WM_CLASS and what `ps` shows.
+  mainBinaryName: `${slug.replace(/-[0-9a-f]{16}$/, "")}-desktop`,
   tauriConfig: {
     productName: `Buzz ${name}`,
     identifier: `xyz.block.buzz.app.demo.${slug}`,
@@ -34,6 +37,7 @@ test("production identity remains unchanged", () => {
     keyringService: "buzz-desktop",
     nestName: ".buzz",
     cliName: "buzz",
+    mainBinaryName: "buzz-desktop",
   });
 });
 
@@ -58,10 +62,38 @@ test("two demo names produce complete, distinct identities", () => {
     "keyringService",
     "nestName",
     "cliName",
+    // On Linux this one is a `/usr/bin` entry, and two packages cannot own it.
+    "mainBinaryName",
   ]) {
     assert.notEqual(board[key], interests[key], key);
     assert.notEqual(board[key], productionBuildIdentity[key], key);
   }
+});
+
+test("a demo named Buzz is refused rather than shadowing the real binary", () => {
+  // Reachable, and the one input whose derived binary name collides with the
+  // trunk's: the resulting `.deb` would claim `/usr/bin/buzz-desktop` and the
+  // `buzz-desktop` launcher icons, which is installing over a real Buzz. Every
+  // other derived name in that config looks correctly scoped.
+  assert.throws(
+    () => demoBuildConfig("Buzz", "1111111111111111"),
+    /derives the production binary name "buzz-desktop"/,
+  );
+  // The guard is on the derived name, not the spelling, so the normalised
+  // forms are refused too.
+  assert.throws(
+    () => demoBuildConfig("buzz", "1111111111111111"),
+    /buzz-desktop/,
+  );
+  assert.throws(
+    () => demoBuildConfig("BUZZ", "1111111111111111"),
+    /buzz-desktop/,
+  );
+  // And a name that merely starts with it is still fine.
+  assert.equal(
+    demoBuildConfig("Buzz Demo", "1111111111111111").mainBinaryName,
+    "buzz-demo-desktop",
+  );
 });
 
 test("normalized spelling aliases retain distinct runtime identities", () => {

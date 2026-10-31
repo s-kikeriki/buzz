@@ -376,11 +376,17 @@ fn command_search_dirs() -> Vec<PathBuf> {
         dirs.extend(profile_target_dirs(&current_dir));
     }
 
-    dirs.extend(
-        std::env::current_exe()
-            .ok()
-            .and_then(|path| path.parent().map(Path::to_path_buf)),
-    );
+    // Both the directory a flavored bundle keeps its sidecars in and the
+    // executable's own, in that order — see `build_identity::sidecar_dirs`.
+    // A flavored `.deb` has no sidecars next to the executable at all, so
+    // without the first of these `buzz-acp` and `buzz-agent` would be reported
+    // missing by a correctly packaged install.
+    if let Some(exe_dir) = std::env::current_exe()
+        .ok()
+        .and_then(|path| path.parent().map(Path::to_path_buf))
+    {
+        dirs.extend(crate::build_identity::sidecar_dirs(&exe_dir));
+    }
     dirs.into_iter().fold(Vec::new(), |mut unique, dir| {
         if !unique.contains(&dir) {
             unique.push(dir);

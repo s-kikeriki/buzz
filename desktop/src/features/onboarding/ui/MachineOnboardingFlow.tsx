@@ -1,3 +1,4 @@
+import { Trans, useLingui } from "@lingui/react/macro";
 import * as React from "react";
 import type { QueryClient } from "@tanstack/react-query";
 import { motion, useReducedMotion } from "motion/react";
@@ -78,6 +79,7 @@ export function MachineOnboardingFlow({
   initialPage?: MachineOnboardingPage;
   queryClient: QueryClient;
 }) {
+  const { t } = useLingui();
   const [page, setPage] = React.useState<MachineOnboardingPage>(
     identityLost ? "key-import" : (initialPage ?? "identity"),
   );
@@ -164,12 +166,12 @@ export function MachineOnboardingFlow({
       setPage("backup");
     } catch (cause) {
       setError(
-        cause instanceof Error ? cause.message : "Failed to load identity",
+        cause instanceof Error ? cause.message : t`Failed to load identity`,
       );
     } finally {
       setIsPending(false);
     }
-  }, [queryClient]);
+  }, [queryClient, t]);
 
   const loadRecoveredIdentity = React.useCallback(async () => {
     setIsPending(true);
@@ -185,16 +187,16 @@ export function MachineOnboardingFlow({
       setPage("setup");
     } catch (cause) {
       setError(
-        cause instanceof Error ? cause.message : "Failed to load identity",
+        cause instanceof Error ? cause.message : t`Failed to load identity`,
       );
     } finally {
       setIsPending(false);
     }
-  }, [continueWithRecoveredIdentity, queryClient]);
+  }, [continueWithRecoveredIdentity, queryClient, t]);
 
   const replaceLostIdentity = React.useCallback(async () => {
     const confirmed = window.confirm(
-      "This will create a new identity and abandon your previous key. This cannot be undone. Continue?",
+      t`This will create a new identity and abandon your previous key. This cannot be undone. Continue?`,
     );
     if (!confirmed) return;
 
@@ -212,12 +214,12 @@ export function MachineOnboardingFlow({
       setPage("backup");
     } catch (cause) {
       setError(
-        cause instanceof Error ? cause.message : "Failed to save identity",
+        cause instanceof Error ? cause.message : t`Failed to save identity`,
       );
     } finally {
       setIsPending(false);
     }
-  }, [queryClient]);
+  }, [queryClient, t]);
 
   const importExistingIdentity = React.useCallback(
     async (nsec: string, password?: string) => {
@@ -311,7 +313,7 @@ export function MachineOnboardingFlow({
           ? { disabled: isKeyImporting, onClick: backFromKeyImport }
           : page === "backup" && backupSubview !== "created"
             ? {
-                label: "Return to onboarding",
+                label: t`Return to onboarding`,
                 onClick: returnToCreatedKey,
                 testId: "backup-return-to-onboarding",
               }
@@ -357,8 +359,13 @@ export function MachineOnboardingFlow({
                 src={BRAND.productLogoUrl ?? "/landing/buzz-wordmark.png"}
               />
               <p className="mt-2 max-w-[560px] text-center text-2xl font-normal leading-none text-foreground">
-                Your people, your agents, your projects —<br />
-                all in one place.
+                {/* The line break is inside the message: German puts it in a
+                    different place, and a translator cannot move a <br/> that
+                    lives outside the string. */}
+                <Trans>
+                  Your people, your agents, your projects —<br />
+                  all in one place.
+                </Trans>
               </p>
               {error ? (
                 <p className="mt-4 text-sm text-destructive">{error}</p>
@@ -378,10 +385,10 @@ export function MachineOnboardingFlow({
                   type="button"
                 >
                   {isPending
-                    ? "Loading identity…"
+                    ? t`Loading identity…`
                     : selectedPubkey
-                      ? "Continue setup"
-                      : "Create a new identity key"}
+                      ? t`Continue setup`
+                      : t`Create a new identity key`}
                 </Button>
                 <Button
                   className={`${ONBOARDING_SECONDARY_CTA_CLASS} px-5`}
@@ -396,8 +403,8 @@ export function MachineOnboardingFlow({
                   variant="ghost"
                 >
                   {selectedPubkey
-                    ? "Use a different key instead"
-                    : "Use an existing key"}
+                    ? t`Use a different key instead`
+                    : t`Use an existing key`}
                 </Button>
               </div>
               <IdentityKeyHelpDialog
@@ -451,11 +458,13 @@ export function MachineOnboardingFlow({
           {keyImportDialog === "backup" ? (
             <div className="w-full" data-testid="backup-recovery-dialog">
               <h1 className="text-title font-normal text-foreground">
-                Restore from a backup file
+                <Trans>Restore from a backup file</Trans>
               </h1>
               <p className="mt-2 w-full text-base leading-6 text-foreground/80">
-                Choose the encrypted backup file you saved from{" "}
-                {BRAND.productName}.
+                <Trans>
+                  Choose the encrypted backup file you saved from{" "}
+                  {BRAND.productName}.
+                </Trans>
               </p>
               <NostrKeyImportForm
                 key={keyImportFormKey}
@@ -475,12 +484,12 @@ export function MachineOnboardingFlow({
               data-testid="phone-recovery-dialog"
             >
               <h1 className="text-title font-normal text-foreground">
-                {identityLost ? "Recover from your phone" : "Scan to sign in"}
+                {identityLost ? t`Recover from your phone` : t`Scan to sign in`}
               </h1>
               <p className="mt-2 w-full text-base leading-6 text-foreground/80">
                 {phoneRecoveryStep === "loading" || phoneRecoveryStep === "qr"
-                  ? `Scan this code with a device where you’re currently signed in to ${BRAND.productName}.`
-                  : "Confirm the code before sharing your identity."}
+                  ? t`Scan this code with a device where you’re currently signed in to ${BRAND.productName}.`
+                  : t`Confirm the code before sharing your identity.`}
               </p>
               <div
                 className="flex min-h-0 flex-1 items-center justify-center"
@@ -506,42 +515,48 @@ export function MachineOnboardingFlow({
               >
                 <h1 className="text-title font-normal text-foreground">
                   {keyImportStage === "backup-password"
-                    ? "Unlock your account"
-                    : "Enter your private key"}
+                    ? t`Unlock your account`
+                    : t`Enter your private key`}
                 </h1>
                 <div className="mt-2 w-full text-base leading-6 text-foreground/80">
                   {keyImportStage === "backup-password" ? (
-                    "Enter your backup password to restore your identity."
+                    t`Enter your backup password to restore your identity.`
                   ) : (
                     <p>
-                      Paste your private key to sign in to {BRAND.productName}.
-                      You can also use a{" "}
-                      <button
-                        className="rounded-sm font-medium underline decoration-foreground/40 underline-offset-4 transition-colors hover:decoration-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-60"
-                        data-testid="nostr-import-file-button"
-                        disabled={isPending || isKeyImporting}
-                        onClick={() => {
-                          setKeyImportStage("key-entry");
-                          setKeyImportDialog("backup");
-                        }}
-                        type="button"
-                      >
-                        backup file
-                      </button>
-                      , or{" "}
-                      <button
-                        className="rounded-sm font-medium underline decoration-foreground/40 underline-offset-4 transition-colors hover:decoration-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-60"
-                        data-testid="nostr-import-phone-link"
-                        disabled={isPending || isKeyImporting}
-                        onClick={() => {
-                          setPhoneRecoveryStep("loading");
-                          setKeyImportDialog("phone");
-                        }}
-                        type="button"
-                      >
-                        recover from your phone
-                      </button>
-                      .
+                      {/* One message, not four fragments: the two links sit
+                          mid-sentence and German reorders the clause around
+                          them. Lingui numbers the nested elements, so a
+                          translator moves them as part of the sentence. */}
+                      <Trans>
+                        Paste your private key to sign in to {BRAND.productName}
+                        . You can also use a{" "}
+                        <button
+                          className="rounded-sm font-medium underline decoration-foreground/40 underline-offset-4 transition-colors hover:decoration-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-60"
+                          data-testid="nostr-import-file-button"
+                          disabled={isPending || isKeyImporting}
+                          onClick={() => {
+                            setKeyImportStage("key-entry");
+                            setKeyImportDialog("backup");
+                          }}
+                          type="button"
+                        >
+                          backup file
+                        </button>
+                        , or{" "}
+                        <button
+                          className="rounded-sm font-medium underline decoration-foreground/40 underline-offset-4 transition-colors hover:decoration-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-60"
+                          data-testid="nostr-import-phone-link"
+                          disabled={isPending || isKeyImporting}
+                          onClick={() => {
+                            setPhoneRecoveryStep("loading");
+                            setKeyImportDialog("phone");
+                          }}
+                          type="button"
+                        >
+                          recover from your phone
+                        </button>
+                        .
+                      </Trans>
                     </p>
                   )}
                 </div>
@@ -566,7 +581,7 @@ export function MachineOnboardingFlow({
                       type="button"
                       variant="ghost"
                     >
-                      Start new identity
+                      <Trans>Start new identity</Trans>
                     </Button>
                   ) : null}
                 </div>
