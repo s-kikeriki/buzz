@@ -21,6 +21,8 @@
  * `set_canvas` command in `desktop/src-tauri/src/commands/canvas.rs`; keep them
  * byte-identical there.
  */
+import type { I18n, MessageDescriptor } from "@lingui/core";
+import { msg } from "@lingui/core/macro";
 
 /**
  * Post-write supersession marker: the save published, but a concurrent write is
@@ -36,11 +38,18 @@ const CANVAS_CONFLICT_MARKERS = [
   "conflict: canvas revision does not exist",
 ] as const;
 
-export const CANVAS_CONFLICT_MESSAGE =
-  "This canvas changed since you loaded it — reload to see the latest, then reapply your edit.";
+/**
+ * The two user-facing conflict messages are catalogue descriptors, not
+ * strings: this module is imported at load time, long before a locale is
+ * active, so resolving them here would freeze them in the boot locale. The
+ * consuming component resolves them per render with `i18n._()`.
+ *
+ * The *markers* above stay plain English strings — they are a wire contract
+ * with `canvas.rs`, matched byte-for-byte, and must never be translated.
+ */
+export const CANVAS_CONFLICT_MESSAGE = msg`This canvas changed since you loaded it — reload to see the latest, then reapply your edit.`;
 
-export const CANVAS_SUPERSEDED_MESSAGE =
-  "A concurrent edit is now current. Your save was preserved in History — reload, then restore it if needed.";
+export const CANVAS_SUPERSEDED_MESSAGE = msg`A concurrent edit is now current. Your save was preserved in History — reload, then restore it if needed.`;
 
 /**
  * Literal `expected-revision` value asserting "I expect no canvas exists yet".
@@ -92,7 +101,9 @@ export function isCanvasSupersededError(error: unknown): boolean {
  * supersession takes precedence so its "preserved in History" guidance is never
  * masked by the generic conflict copy.
  */
-export function canvasConflictMessage(error: unknown): string | null {
+export function canvasConflictMessage(
+  error: unknown,
+): MessageDescriptor | null {
   if (isCanvasSupersededError(error)) {
     return CANVAS_SUPERSEDED_MESSAGE;
   }
@@ -100,4 +111,17 @@ export function canvasConflictMessage(error: unknown): string | null {
     return CANVAS_CONFLICT_MESSAGE;
   }
   return null;
+}
+
+/**
+ * {@link canvasConflictMessage} resolved for display, or `null` when the error
+ * is not a canvas conflict. Exists so the two call sites do not each repeat the
+ * null check around `i18n._()`.
+ */
+export function canvasConflictMessageText(
+  i18n: I18n,
+  error: unknown,
+): string | null {
+  const descriptor = canvasConflictMessage(error);
+  return descriptor === null ? null : i18n._(descriptor);
 }

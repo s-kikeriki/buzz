@@ -138,7 +138,29 @@ export async function setup({ lifecycle = false } = {}) {
     "@/features/channels/useCanAddChannelMembers": {
       useCanAddChannelMembers: () => true,
     },
-    "@/features/channels/lib/channelMemberAdmission": {},
+    "@/features/channels/lib/channelMemberAdmission": {
+      PRIVATE_CHANNEL_ADD_DENIED_MESSAGE: { message: "denied" },
+    },
+    // The lingui macro seam. `useLingui` is stubbed, not bypassed, so the
+    // hook under test keeps calling it exactly as it does in the app: `t`
+    // interpolates its template and `i18n._` reads a descriptor's source
+    // message, which is the English these suites already assert on.
+    "@lingui/react/macro": {
+      useLingui: () => ({
+        i18n: {
+          _: (descriptor) =>
+            typeof descriptor === "string"
+              ? descriptor
+              : (descriptor?.message ?? ""),
+        },
+        t: (strings, ...values) =>
+          strings.reduce(
+            (out, part, index) =>
+              out + part + (index < values.length ? String(values[index]) : ""),
+            "",
+          ),
+      }),
+    },
     "@/features/messages/lib/dmThreadAgentMentionError": {
       dmThreadAgentMentionError: () => null,
     },

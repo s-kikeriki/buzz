@@ -25,6 +25,7 @@ import { after, before, test } from "node:test";
 import { JSDOM } from "jsdom";
 
 import { installRadixDialogGlobals } from "./canvasDialogTestEnv.mjs";
+import { withI18n } from "@/testing/withI18n.mjs";
 
 registerHooks({
   resolve(specifier, context, nextResolve) {
@@ -185,20 +186,22 @@ async function mountCanvas(queryClient) {
   const root = createRoot(container);
   await act(async () => {
     root.render(
-      React.createElement(
-        QueryClientProvider,
-        { client: queryClient },
+      withI18n(
         React.createElement(
-          CommunitiesProvider,
-          null,
+          QueryClientProvider,
+          { client: queryClient },
           React.createElement(
-            ChannelNavigationProvider,
-            { channels: [] },
-            React.createElement(ChannelCanvas, {
-              channelId: "channel-1",
-              canEdit: true,
-              isArchived: false,
-            }),
+            CommunitiesProvider,
+            null,
+            React.createElement(
+              ChannelNavigationProvider,
+              { channels: [] },
+              React.createElement(ChannelCanvas, {
+                channelId: "channel-1",
+                canEdit: true,
+                isArchived: false,
+              }),
+            ),
           ),
         ),
       ),
@@ -433,20 +436,22 @@ test("canvas: initial load failure with no data renders full error state", async
   const root = createRoot(container);
   await act(async () => {
     root.render(
-      React.createElement(
-        QueryClientProvider,
-        { client: queryClient },
+      withI18n(
         React.createElement(
-          CommunitiesProvider,
-          null,
+          QueryClientProvider,
+          { client: queryClient },
           React.createElement(
-            ChannelNavigationProvider,
-            { channels: [] },
-            React.createElement(ChannelCanvas, {
-              channelId: "channel-1",
-              canEdit: true,
-              isArchived: false,
-            }),
+            CommunitiesProvider,
+            null,
+            React.createElement(
+              ChannelNavigationProvider,
+              { channels: [] },
+              React.createElement(ChannelCanvas, {
+                channelId: "channel-1",
+                canEdit: true,
+                isArchived: false,
+              }),
+            ),
           ),
         ),
       ),

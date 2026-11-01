@@ -1,3 +1,4 @@
+import { useLingui } from "@lingui/react/macro";
 import { motion, useReducedMotion } from "motion/react";
 import * as React from "react";
 
@@ -187,11 +188,15 @@ export function FocusThreadDrawer({
   channelName,
   children,
   escapeEnabled = true,
-  label = "Thread",
+  label: labelOverride,
   hasActiveEdit = false,
   onClose,
   restoreFocusTarget,
 }: FocusThreadDrawerProps) {
+  const { t } = useLingui();
+  // Resolved here, not as a default parameter: a default literal has no
+  // catalogue in reach and the coverage detector cannot see it.
+  const label = labelOverride ?? t`Thread`;
   const prefersReducedMotion = useReducedMotion();
   const travelPx = prefersReducedMotion ? 0 : THREAD_FOCUS_DRAWER_TRAVEL_PX;
   const drawerRef = React.useRef<HTMLDivElement>(null);
@@ -256,7 +261,7 @@ export function FocusThreadDrawer({
     >
       <motion.button
         animate={{ opacity: 1 }}
-        aria-label={`Back to #${channelName}`}
+        aria-label={t`Back to #${channelName}`}
         className={cn(
           "absolute inset-0 cursor-pointer transition-colors duration-150",
           FOCUS_SCRIM_CLASS,

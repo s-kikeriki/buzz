@@ -1,3 +1,4 @@
+import { Trans, useLingui } from "@lingui/react/macro";
 import { Trash2, Upload } from "lucide-react";
 import * as React from "react";
 
@@ -32,6 +33,7 @@ export function ChannelLogoEditor({
   channelName: string;
   disabled?: boolean;
 }) {
+  const { t } = useLingui();
   const logoQuery = useChannelLogo(channelId);
   const setLogo = useSetChannelLogoMutation(channelId);
   const [failedPreviewUrl, setFailedPreviewUrl] = React.useState<string | null>(
@@ -71,7 +73,7 @@ export function ChannelLogoEditor({
         className="text-sm font-medium text-foreground"
         id="channel-logo-label"
       >
-        Channel logo
+        <Trans>Channel logo</Trans>
       </p>
       <div className="flex items-center gap-3">
         <div
@@ -106,7 +108,7 @@ export function ChannelLogoEditor({
           ) : (
             <Upload aria-hidden className="size-4" />
           )}
-          {logoUrl === null ? "Upload logo" : "Replace logo"}
+          {logoUrl === null ? t`Upload logo` : t`Replace logo`}
         </Button>
         {logoUrl !== null ? (
           <Button
@@ -121,7 +123,7 @@ export function ChannelLogoEditor({
             variant="ghost"
           >
             <Trash2 aria-hidden className="size-4" />
-            Remove
+            <Trans>Remove</Trans>
           </Button>
         ) : null}
         <input
@@ -134,8 +136,10 @@ export function ChannelLogoEditor({
         />
       </div>
       <p className="text-xs text-muted-foreground">
-        Shown instead of the channel icon, for everyone in the channel. PNG,
-        JPG, GIF, or WebP.
+        <Trans>
+          Shown instead of the channel icon, for everyone in the channel. PNG,
+          JPG, GIF, or WebP.
+        </Trans>
       </p>
       {errorMessage ? (
         <p

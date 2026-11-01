@@ -1,3 +1,4 @@
+import { Trans, useLingui } from "@lingui/react/macro";
 import {
   Archive,
   ArchiveRestore,
@@ -108,6 +109,7 @@ export function ChannelManagementSheet({
   open,
   transparentChrome = false,
 }: ChannelManagementSheetProps) {
+  const { t } = useLingui();
   const { isDark } = useTheme();
   const { goNewWorkflowForChannel, goWorkflow } = useAppNavigation();
   const {
@@ -491,8 +493,17 @@ export function ChannelManagementSheet({
             <div className="flex max-h-[85vh] flex-col">
               <DialogHeader className="shrink-0 border-b border-border/60 px-6 py-5 pr-14">
                 <DialogTitle>
-                  Edit {nextVisibility === "private" ? "private" : "public"}{" "}
-                  channel
+                  {/*
+                   * Two whole titles, not an adjective spliced into a frame:
+                   * German inflects the adjective with the noun ("Privaten
+                   * Kanal bearbeiten"), so "private"/"public" cannot be
+                   * translated on its own.
+                   */}
+                  {nextVisibility === "private" ? (
+                    <Trans>Edit private channel</Trans>
+                  ) : (
+                    <Trans>Edit public channel</Trans>
+                  )}
                 </DialogTitle>
               </DialogHeader>
 
@@ -503,7 +514,7 @@ export function ChannelManagementSheet({
                       className="text-sm font-medium text-foreground"
                       htmlFor="channel-name"
                     >
-                      Name
+                      <Trans>Name</Trans>
                     </label>
                     <div
                       className={cn(
@@ -532,7 +543,7 @@ export function ChannelManagementSheet({
                       className="text-sm font-medium text-foreground"
                       htmlFor="channel-description"
                     >
-                      Description
+                      <Trans>Description</Trans>
                     </label>
                     <div className={CHANNEL_FORM_FIELD_SHELL_CLASS}>
                       <Textarea
@@ -608,7 +619,7 @@ export function ChannelManagementSheet({
                   type="button"
                   variant="outline"
                 >
-                  Cancel
+                  <Trans>Cancel</Trans>
                 </Button>
                 <Button
                   data-testid="channel-management-save-changes"
@@ -617,7 +628,7 @@ export function ChannelManagementSheet({
                   size="sm"
                   type="button"
                 >
-                  {isSavingChannelEdits ? "Saving..." : "Save changes"}
+                  {isSavingChannelEdits ? t`Saving...` : t`Save changes`}
                 </Button>
               </div>
             </div>
@@ -716,6 +727,7 @@ function ChannelManagementPanelContent({
   setActiveView,
   unarchiveChannelMutation,
 }: ChannelManagementPanelContentProps) {
+  const { t } = useLingui();
   const scrollRef = React.useRef<HTMLDivElement>(null);
   useScrollBoundaryLock(scrollRef);
 
@@ -752,15 +764,15 @@ function ChannelManagementPanelContent({
           <DialogPrimitive.Title asChild>
             <AuxiliaryPanelTitle>
               {activeView === "canvas"
-                ? "Canvas"
+                ? t`Canvas`
                 : activeView === "workflows"
-                  ? "Workflows"
-                  : "Channel Settings"}
+                  ? t`Workflows`
+                  : t`Channel Settings`}
             </AuxiliaryPanelTitle>
           </DialogPrimitive.Title>
         </AuxiliaryPanelHeaderGroup>
         <DialogPrimitive.Description className="sr-only">
-          Channel settings
+          <Trans>Channel settings</Trans>
         </DialogPrimitive.Description>
       </AuxiliaryPanelHeader>
 
@@ -789,7 +801,7 @@ function ChannelManagementPanelContent({
               </p>
             ) : null}
 
-            <FieldGroup testId="channel-management-details" title="Details">
+            <FieldGroup testId="channel-management-details" title={t`Details`}>
               {resolvedChannel.channelType !== "dm" ? (
                 <>
                   <ChannelTypeDetailRow
@@ -799,7 +811,7 @@ function ChannelManagementPanelContent({
                   />
                   <EditableInfoFieldRow
                     editTestId="channel-management-edit-visibility"
-                    label="Visibility"
+                    label={t`Visibility`}
                     onEdit={canEditChannel ? onOpenEdit : undefined}
                     testId="channel-management-visibility"
                     value={
@@ -811,7 +823,7 @@ function ChannelManagementPanelContent({
                 </>
               ) : null}
               <InfoFieldRow
-                label="Members"
+                label={t`Members`}
                 onClick={onOpenMembers}
                 testId="channel-management-member-count"
                 trailing={
@@ -823,7 +835,7 @@ function ChannelManagementPanelContent({
                 value={`${memberCount} member${memberCount === 1 ? "" : "s"}`}
               />
               <CopyFieldRow
-                label="Channel ID"
+                label={t`Channel ID`}
                 testId="channel-management-channel-id"
                 value={resolvedChannel.id}
               />
@@ -835,7 +847,7 @@ function ChannelManagementPanelContent({
                   description={canvasPreview}
                   helpText="Use the canvas as a shared space for notes, plans, and other channel information."
                   icon={BookOpenText}
-                  label="Canvas"
+                  label={t`Canvas`}
                   onClick={() => setActiveView("canvas")}
                   testId="channel-canvas-ingress"
                   trailing={canvasQuery.isLoading ? "Loading..." : undefined}
@@ -848,7 +860,7 @@ function ChannelManagementPanelContent({
                         : `${workflowsQuery.data?.length ?? 0} workflow${workflowsQuery.data?.length === 1 ? "" : "s"}`
                     }
                     icon={WorkflowIcon}
-                    label="Workflows"
+                    label={t`Workflows`}
                     onClick={() => setActiveView("workflows")}
                     testId="channel-workflows-ingress"
                     trailing={
@@ -865,7 +877,7 @@ function ChannelManagementPanelContent({
                     : `${workflowsQuery.data?.length ?? 0} workflow${workflowsQuery.data?.length === 1 ? "" : "s"}`
                 }
                 icon={WorkflowIcon}
-                label="Workflows"
+                label={t`Workflows`}
                 onClick={() => setActiveView("workflows")}
                 testId="channel-workflows-ingress"
                 trailing={workflowsQuery.isLoading ? "Loading..." : undefined}
@@ -876,13 +888,13 @@ function ChannelManagementPanelContent({
               <FieldGroup testId="channel-management-actions">
                 {canJoin ? (
                   <ActionFieldRow
-                    description="Add this channel to your sidebar"
+                    description={t`Add this channel to your sidebar`}
                     disabled={joinChannelMutation.isPending}
                     icon={DoorOpen}
                     label={
                       joinChannelMutation.isPending
-                        ? "Joining channel..."
-                        : "Join channel"
+                        ? t`Joining channel...`
+                        : t`Join channel`
                     }
                     onClick={() => {
                       void joinChannelMutation.mutateAsync();
@@ -896,8 +908,8 @@ function ChannelManagementPanelContent({
                     icon={DoorClosed}
                     label={
                       leaveChannelMutation.isPending
-                        ? "Leaving channel..."
-                        : "Leave channel"
+                        ? t`Leaving channel...`
+                        : t`Leave channel`
                     }
                     onClick={() => {
                       void leaveChannelMutation.mutateAsync().then(() => {
@@ -914,8 +926,8 @@ function ChannelManagementPanelContent({
                       icon={ArchiveRestore}
                       label={
                         unarchiveChannelMutation.isPending
-                          ? "Restoring channel..."
-                          : "Unarchive channel"
+                          ? t`Restoring channel...`
+                          : t`Unarchive channel`
                       }
                       onClick={() => {
                         void unarchiveChannelMutation.mutateAsync();
@@ -928,8 +940,8 @@ function ChannelManagementPanelContent({
                       icon={Archive}
                       label={
                         archiveChannelMutation.isPending
-                          ? "Archiving channel..."
-                          : "Archive channel"
+                          ? t`Archiving channel...`
+                          : t`Archive channel`
                       }
                       onClick={() => {
                         void archiveChannelMutation.mutateAsync();
@@ -953,7 +965,7 @@ function ChannelManagementPanelContent({
                         destructive
                         disabled={deleteChannelMutation.isPending}
                         icon={Trash2}
-                        label="Delete channel"
+                        label={t`Delete channel`}
                         testId="channel-management-delete"
                       />
                     }

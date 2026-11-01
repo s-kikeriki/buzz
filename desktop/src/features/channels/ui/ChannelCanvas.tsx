@@ -1,3 +1,4 @@
+import { Trans, useLingui } from "@lingui/react/macro";
 import { History, Pencil, Save, X } from "lucide-react";
 import * as React from "react";
 
@@ -15,7 +16,7 @@ import {
 } from "@/shared/lib/relayError";
 import {
   CANVAS_EXPECTED_REVISION_NONE,
-  canvasConflictMessage,
+  canvasConflictMessageText,
 } from "@/features/channels/canvasConflict";
 import { CanvasHistoryPanel } from "./CanvasHistoryPanel";
 
@@ -30,6 +31,7 @@ export function ChannelCanvas({
   canEdit,
   isArchived,
 }: ChannelCanvasProps) {
+  const { i18n, t } = useLingui();
   const canvasQuery = useCanvasQuery(channelId, channelId !== null);
   const setCanvasMutation = useSetCanvasMutation(channelId);
   const { channels } = useChannelNavigation();
@@ -116,7 +118,7 @@ export function ChannelCanvas({
   if (canvasQuery.isLoading) {
     return (
       <p className="text-sm text-muted-foreground" role="status">
-        Loading canvas...
+        <Trans>Loading canvas...</Trans>
       </p>
     );
   }
@@ -142,12 +144,12 @@ export function ChannelCanvas({
     return (
       <div className="space-y-3">
         <Textarea
-          aria-label="Canvas content"
+          aria-label={t`Canvas content`}
           className="min-h-48 font-mono text-sm"
           data-testid="channel-canvas-editor"
           disabled={setCanvasMutation.isPending}
           onChange={(event) => setDraft(event.target.value)}
-          placeholder="Write your canvas content in Markdown..."
+          placeholder={t`Write your canvas content in Markdown...`}
           value={draft}
         />
         <div className="flex gap-2">
@@ -163,7 +165,7 @@ export function ChannelCanvas({
             type="button"
           >
             <Save className="h-4 w-4" />
-            {setCanvasMutation.isPending ? "Saving..." : "Save canvas"}
+            {setCanvasMutation.isPending ? t`Saving...` : t`Save canvas`}
           </Button>
           <Button
             data-testid="channel-canvas-cancel"
@@ -174,12 +176,12 @@ export function ChannelCanvas({
             variant="outline"
           >
             <X className="h-4 w-4" />
-            Cancel
+            <Trans>Cancel</Trans>
           </Button>
         </div>
         {setCanvasMutation.error instanceof Error ? (
           <p className="text-sm text-destructive" role="alert">
-            {canvasConflictMessage(setCanvasMutation.error) ??
+            {canvasConflictMessageText(i18n, setCanvasMutation.error) ??
               setCanvasMutation.error.message}
           </p>
         ) : null}
@@ -198,7 +200,7 @@ export function ChannelCanvas({
         >
           {isRelayUnreachableError(canvasQuery.error)
             ? RELAY_UNREACHABLE_SHORT
-            : "Couldn't refresh canvas — showing last known content."}
+            : t`Couldn't refresh canvas — showing last known content.`}
         </p>
       ) : null}
       {unverifiedSaveNotice ? (
@@ -210,8 +212,10 @@ export function ChannelCanvas({
           ref={noticeRef}
           tabIndex={-1}
         >
-          Saved. We couldn't verify against the latest revision just now — check
-          History if a concurrent edit appears.
+          <Trans>
+            Saved. We couldn't verify against the latest revision just now —
+            check History if a concurrent edit appears.
+          </Trans>
         </p>
       ) : null}
       {canvasExists ? (
@@ -226,7 +230,7 @@ export function ChannelCanvas({
         </div>
       ) : (
         <p className="text-sm text-muted-foreground">
-          No canvas set for this channel.
+          <Trans>No canvas set for this channel.</Trans>
         </p>
       )}
       {canEdit && !isArchived ? (
@@ -239,7 +243,7 @@ export function ChannelCanvas({
           variant="outline"
         >
           <Pencil className="h-4 w-4" />
-          {canvasExists ? "Edit canvas" : "Create canvas"}
+          {canvasExists ? t`Edit canvas` : t`Create canvas`}
         </Button>
       ) : null}
       {canvasExists ? (
@@ -253,7 +257,7 @@ export function ChannelCanvas({
             variant="ghost"
           >
             <History className="h-4 w-4" />
-            {showHistory ? "Hide history" : "History"}
+            {showHistory ? t`Hide history` : t`History`}
           </Button>
           {showHistory && channelId ? (
             <CanvasHistoryPanel

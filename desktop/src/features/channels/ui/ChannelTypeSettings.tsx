@@ -1,3 +1,6 @@
+import { msg } from "@lingui/core/macro";
+import { Trans, useLingui } from "@lingui/react/macro";
+import * as React from "react";
 import { ChevronDown, ClockFading, Hash } from "lucide-react";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 
@@ -24,21 +27,28 @@ import { SegmentedControl } from "@/shared/ui/segmented-control";
 import { EditableInfoFieldRow } from "./ChannelManagementSheetRows";
 import { ChannelTypePicker } from "./ChannelTypePicker";
 
+// Both tables are built once at module load, before a catalogue is active, so
+// their labels are `msg` descriptors and the component resolves each one with
+// `i18n._()` on render. A plain string here renders the boot locale forever.
+//
+// The durations are whole labels per value, not a count plus a unit: German
+// inflects the unit ("1 Stunde" / "6 Stunden") and these are a fixed set, so
+// nine messages are simpler and safer than a plural rule.
 const CHANNEL_TYPE_OPTIONS = [
-  { value: "temporary", label: "Temporary", Icon: ClockFading },
-  { value: "ongoing", label: "Ongoing", Icon: Hash },
+  { value: "temporary", label: msg`Temporary`, Icon: ClockFading },
+  { value: "ongoing", label: msg`Ongoing`, Icon: Hash },
 ] as const;
 
 const EPHEMERAL_TIMEOUT_OPTIONS = [
-  { label: "30 minutes", seconds: 30 * 60 },
-  { label: "1 hour", seconds: 60 * 60 },
-  { label: "6 hours", seconds: 6 * 60 * 60 },
-  { label: "12 hours", seconds: 12 * 60 * 60 },
-  { label: "1 day", seconds: 24 * 60 * 60 },
-  { label: "3 days", seconds: 3 * 24 * 60 * 60 },
-  { label: "7 days", seconds: DEFAULT_EPHEMERAL_TTL_SECONDS },
-  { label: "14 days", seconds: 14 * 24 * 60 * 60 },
-  { label: "30 days", seconds: 30 * 24 * 60 * 60 },
+  { label: msg`30 minutes`, seconds: 30 * 60 },
+  { label: msg`1 hour`, seconds: 60 * 60 },
+  { label: msg`6 hours`, seconds: 6 * 60 * 60 },
+  { label: msg`12 hours`, seconds: 12 * 60 * 60 },
+  { label: msg`1 day`, seconds: 24 * 60 * 60 },
+  { label: msg`3 days`, seconds: 3 * 24 * 60 * 60 },
+  { label: msg`7 days`, seconds: DEFAULT_EPHEMERAL_TTL_SECONDS },
+  { label: msg`14 days`, seconds: 14 * 24 * 60 * 60 },
+  { label: msg`30 days`, seconds: 30 * 24 * 60 * 60 },
 ] as const;
 
 const CHANNEL_TYPE_RESIZE_TRANSITION = {
@@ -55,6 +65,7 @@ export function ChannelTypeDetailRow({
   channel: Channel;
   onEdit?: () => void;
 }) {
+  const { i18n, t } = useLingui();
   const projectHome = useIsProjectHomeChannel(channel.id);
   const lifecycle = channelLifecycle({
     projectHome,
@@ -64,10 +75,10 @@ export function ChannelTypeDetailRow({
   return (
     <EditableInfoFieldRow
       editTestId="channel-management-edit-channel-type"
-      label="Channel type"
+      label={t`Channel type`}
       onEdit={canEdit ? onEdit : undefined}
       testId="channel-management-type"
-      value={channelLifecycleLabel(lifecycle, channel.ttlSeconds)}
+      value={channelLifecycleLabel(i18n, lifecycle, channel.ttlSeconds)}
     />
   );
 }
@@ -75,7 +86,7 @@ export function ChannelTypeDetailRow({
 export function ChannelTypeSettings({
   channelId,
   disabled,
-  label = "Channel type",
+  label: labelOverride,
   onOpenChange,
   onTemporaryChange,
   onTtlSecondsChange,
@@ -97,6 +108,12 @@ export function ChannelTypeSettings({
   ttlSeconds: number;
   variant?: "dropdown" | "segmented";
 }) {
+  const { i18n, t } = useLingui();
+  // Resolved in the component, not as a default parameter: a default literal
+  // is evaluated with no catalogue in reach, and `check-i18n-coverage` cannot
+  // see a default either — this one shipped "Channel type" in English inside
+  // the otherwise German edit dialog.
+  const label = labelOverride ?? t`Channel type`;
   const projectHome = useIsProjectHomeChannel(channelId);
   const lifecycle = channelLifecycle({ projectHome, temporary });
   const shouldReduceMotion = useReducedMotion();
@@ -106,15 +123,30 @@ export function ChannelTypeSettings({
   const selectedTimeoutOption = EPHEMERAL_TIMEOUT_OPTIONS.find(
     (option) => option.seconds === ttlSeconds,
   );
-  const timeoutOptions = selectedTimeoutOption
-    ? EPHEMERAL_TIMEOUT_OPTIONS
-    : [
-        {
-          label: `Current (${formatTtlDuration(ttlSeconds)})`,
-          seconds: ttlSeconds,
-        },
-        ...EPHEMERAL_TIMEOUT_OPTIONS,
-      ];
+  const currentTtlLabel = t`Current (${formatTtlDuration(ttlSeconds)})`;
+  const timeoutOptions: ReadonlyArray<{ label: string; seconds: number }> =
+    selectedTimeoutOption
+      ? EPHEMERAL_TIMEOUT_OPTIONS.map((option) => ({
+          label: i18n._(option.label),
+          seconds: option.seconds,
+        }))
+      : [
+          { label: currentTtlLabel, seconds: ttlSeconds },
+          ...EPHEMERAL_TIMEOUT_OPTIONS.map((option) => ({
+            label: i18n._(option.label),
+            seconds: option.seconds,
+          })),
+        ];
+  // `SegmentedControl` takes plain strings, so the descriptors are resolved
+  // here and not inside the shared control.
+  const channelTypeOptions = React.useMemo(
+    () =>
+      CHANNEL_TYPE_OPTIONS.map((option) => ({
+        ...option,
+        label: i18n._(option.label),
+      })),
+    [i18n],
+  );
 
   return (
     <div
@@ -136,10 +168,10 @@ export function ChannelTypeSettings({
         {variant === "segmented" ? (
           <SegmentedControl
             disabled={disabled}
-            legend="Channel type"
+            legend={t`Channel type`}
             onValueChange={(value) => onTemporaryChange(value === "temporary")}
             optionTestIdPrefix={`${testIdPrefix}-channel-type-option`}
-            options={CHANNEL_TYPE_OPTIONS}
+            options={channelTypeOptions}
             testId={`${testIdPrefix}-channel-type`}
             value={temporary ? "temporary" : "ongoing"}
           />
@@ -180,12 +212,12 @@ export function ChannelTypeSettings({
                 )}
                 htmlFor={`${testIdPrefix}-ttl`}
               >
-                Expires after
+                <Trans>Expires after</Trans>
               </label>
               <DropdownMenu modal={false}>
                 <DropdownMenuTrigger asChild>
                   <Button
-                    aria-label="Expires after"
+                    aria-label={t`Expires after`}
                     className="-mr-2.5 ml-auto h-9 w-fit justify-end px-2.5 text-right text-sm font-medium text-foreground hover:bg-muted/50"
                     data-testid={`${testIdPrefix}-ttl`}
                     disabled={disabled}
@@ -194,8 +226,9 @@ export function ChannelTypeSettings({
                     variant="ghost"
                   >
                     <span className="text-right">
-                      {selectedTimeoutOption?.label ??
-                        `Current (${formatTtlDuration(ttlSeconds)})`}
+                      {selectedTimeoutOption
+                        ? i18n._(selectedTimeoutOption.label)
+                        : currentTtlLabel}
                     </span>
                     <ChevronDown className="size-4 shrink-0 text-muted-foreground/70" />
                   </Button>

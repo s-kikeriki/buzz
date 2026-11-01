@@ -18,6 +18,7 @@ import { registerHooks } from "node:module";
 import { after, before, test } from "node:test";
 
 import { JSDOM } from "jsdom";
+import { withI18n } from "@/testing/withI18n.mjs";
 
 registerHooks({
   resolve(specifier, context, nextResolve) {
@@ -136,13 +137,15 @@ test("switching channels mid-create resets edit state and submits nothing", asyn
   function render(channelId) {
     return act(async () => {
       root.render(
-        React.createElement(
-          QueryClientProvider,
-          { client: queryClient },
+        withI18n(
           React.createElement(
-            ChannelNavigationProvider,
-            { channels: [] },
-            React.createElement(Harness, { channelId }),
+            QueryClientProvider,
+            { client: queryClient },
+            React.createElement(
+              ChannelNavigationProvider,
+              { channels: [] },
+              React.createElement(Harness, { channelId }),
+            ),
           ),
         ),
       );

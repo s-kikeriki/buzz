@@ -1,3 +1,4 @@
+import { Trans, useLingui } from "@lingui/react/macro";
 import * as React from "react";
 import { localeDateTime } from "@/shared/lib/intlLocale";
 import { t } from "@lingui/core/macro";
@@ -105,6 +106,7 @@ export function AgentSessionThreadPanel({
   widthPx,
   transparentChrome = false,
 }: AgentSessionThreadPanelProps) {
+  const { t } = useLingui();
   const locale = useLocale();
   const isLive = agent.status === "running" || agent.status === "deployed";
   const isOverlay = useIsThreadPanelOverlay();
@@ -242,8 +244,8 @@ export function AgentSessionThreadPanel({
   const scopeLabel = sessionChannelId
     ? scopeChannelName
       ? `#${scopeChannelName}`
-      : "1 channel"
-    : "All channels";
+      : t`1 channel`
+    : t`All channels`;
   const agentProfile = profiles?.[normalizePubkey(agent.pubkey)] ?? null;
   const agentLabel = resolveUserLabel({
     pubkey: agent.pubkey,
@@ -251,7 +253,7 @@ export function AgentSessionThreadPanel({
     profiles,
     preferResolvedSelfLabel: true,
   });
-  const viewLabel = showRawFeed ? "Raw ACP activity" : "Activity";
+  const viewLabel = showRawFeed ? t`Raw ACP activity` : t`Activity`;
   const headerScopeLabel = `${viewLabel} · ${scopeLabel}`;
   const animateActivity = useTranscriptAnimationEnabled();
   const showTimestamps = useTranscriptTimestampsEnabled();
@@ -312,11 +314,11 @@ export function AgentSessionThreadPanel({
         <DropdownMenu modal={false}>
           <DropdownMenuTrigger asChild>
             <Button
-              aria-label="Open activity settings"
+              aria-label={t`Open activity settings`}
               className="relative"
               data-testid="agent-session-settings-menu-trigger"
               size="icon"
-              title="Activity settings"
+              title={t`Activity settings`}
               type="button"
               variant="ghost"
             >
@@ -344,19 +346,19 @@ export function AgentSessionThreadPanel({
               }}
               title={
                 showRawFeed
-                  ? "Hide raw JSON-RPC payloads."
+                  ? t`Hide raw JSON-RPC payloads.`
                   : channel
-                    ? "Show raw JSON-RPC payloads for this channel."
-                    : "Show raw JSON-RPC payloads for this agent."
+                    ? t`Show raw JSON-RPC payloads for this channel.`
+                    : t`Show raw JSON-RPC payloads for this agent.`
               }
             >
               <span className="min-w-0 flex-1">
                 <span className="flex items-center gap-2 text-sm font-medium">
                   <TerminalSquare className="h-4 w-4 text-muted-foreground" />
-                  Raw
+                  <Trans>Raw</Trans>
                 </span>
                 <span className="mt-0.5 block text-xs text-muted-foreground">
-                  Show raw JSON-RPC activity.
+                  <Trans>Show raw JSON-RPC activity.</Trans>
                 </span>
               </span>
               <Switch
@@ -376,16 +378,16 @@ export function AgentSessionThreadPanel({
               }}
               title={
                 showRawFeed
-                  ? "Raw activity rows don't animate in."
+                  ? t`Raw activity rows don't animate in.`
                   : animateActivity
-                    ? "Stop animating new activity rows."
-                    : "Animate new activity rows as they arrive."
+                    ? t`Stop animating new activity rows.`
+                    : t`Animate new activity rows as they arrive.`
               }
             >
               <span className="min-w-0 flex-1">
                 <span className="flex items-center gap-2 text-sm font-medium">
                   <Sparkles className="h-4 w-4 text-muted-foreground" />
-                  Show Animations
+                  <Trans>Show Animations</Trans>
                 </span>
               </span>
               <Switch
@@ -404,14 +406,14 @@ export function AgentSessionThreadPanel({
               }}
               title={
                 showTimestamps
-                  ? "Hide per-row activity timestamps."
-                  : "Show a timestamp under each activity row."
+                  ? t`Hide per-row activity timestamps.`
+                  : t`Show a timestamp under each activity row.`
               }
             >
               <span className="min-w-0 flex-1">
                 <span className="flex items-center gap-2 text-sm font-medium">
                   <Clock3 className="h-4 w-4 text-muted-foreground" />
-                  Show Timestamps
+                  <Trans>Show Timestamps</Trans>
                 </span>
               </span>
               <Switch
@@ -431,26 +433,26 @@ export function AgentSessionThreadPanel({
               }}
               title={
                 canStopCurrentTurn
-                  ? "Interrupt the current ACP turn without stopping the agent process."
+                  ? t`Interrupt the current ACP turn without stopping the agent process.`
                   : !sessionChannelId
-                    ? "Open activity for a channel to stop its current turn."
+                    ? t`Open activity for a channel to stop its current turn.`
                     : isWorking
-                      ? "Only locally managed agents can be interrupted from this community."
-                      : "Available while the agent is working."
+                      ? t`Only locally managed agents can be interrupted from this community.`
+                      : t`Available while the agent is working.`
               }
             >
               <Octagon className="mt-0.5 h-4 w-4 text-muted-foreground" />
               <span className="min-w-0 flex-1">
                 <span className="block text-sm font-medium">
-                  Stop current turn
+                  <Trans>Stop current turn</Trans>
                 </span>
                 {!canStopCurrentTurn ? (
                   <span className="mt-0.5 block text-xs text-muted-foreground">
                     {!sessionChannelId
-                      ? "Open activity for a channel to stop its current turn."
+                      ? t`Open activity for a channel to stop its current turn.`
                       : isWorking
-                        ? "Only available for locally managed agents."
-                        : "Available while the agent is working."}
+                        ? t`Only available for locally managed agents.`
+                        : t`Available while the agent is working.`}
                   </span>
                 ) : null}
               </span>

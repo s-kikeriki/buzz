@@ -1,3 +1,4 @@
+import { Trans } from "@lingui/react/macro";
 import { MessageCircle, SlidersHorizontal } from "lucide-react";
 
 import { Button } from "@/shared/ui/button";
@@ -32,9 +33,13 @@ export function WelcomeAgentCreateDialog({
     <Dialog onOpenChange={onOpenChange} open={open}>
       <DialogContent className="max-w-lg">
         <DialogHeader>
-          <DialogTitle>Create an agent</DialogTitle>
+          <DialogTitle>
+            <Trans>Create an agent</Trans>
+          </DialogTitle>
           <DialogDescription>
-            Start with a conversation, or set everything up yourself.
+            <Trans>
+              Start with a conversation, or set everything up yourself.
+            </Trans>
           </DialogDescription>
         </DialogHeader>
 
@@ -51,11 +56,16 @@ export function WelcomeAgentCreateDialog({
             </span>
             <span className="min-w-0">
               <span className="block text-sm font-medium text-foreground">
-                Create with {guideName}
+                <Trans>Create with {guideName}</Trans>
               </span>
               <span className="mt-0.5 block text-sm text-muted-foreground">
-                Talk through what you need. {guideName} will prepare a draft you
-                can review and edit.
+                {/* Both sentences in one message: German moves the verb to the
+                 * end of the second clause, so the tail after the agent name
+                 * is not a translatable fragment on its own. */}
+                <Trans>
+                  Talk through what you need. {guideName} will prepare a draft
+                  you can review and edit.
+                </Trans>
               </span>
             </span>
           </button>
@@ -71,10 +81,12 @@ export function WelcomeAgentCreateDialog({
             </span>
             <span className="min-w-0">
               <span className="block text-sm font-medium text-foreground">
-                Create manually
+                <Trans>Create manually</Trans>
               </span>
               <span className="mt-0.5 block text-sm text-muted-foreground">
-                Fill in the agent’s name, instructions, and settings yourself.
+                <Trans>
+                  Fill in the agent’s name, instructions, and settings yourself.
+                </Trans>
               </span>
             </span>
           </button>
@@ -93,7 +105,7 @@ export function WelcomeAgentCreateDialog({
             type="button"
             variant="ghost"
           >
-            Cancel
+            <Trans>Cancel</Trans>
           </Button>
         </div>
       </DialogContent>

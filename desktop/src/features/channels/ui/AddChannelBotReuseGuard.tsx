@@ -1,3 +1,4 @@
+import { Trans } from "@lingui/react/macro";
 import type { ManagedAgent } from "@/shared/api/types";
 
 type AddChannelBotReuseGuardProps = {
@@ -21,7 +22,7 @@ export function AddChannelBotReuseGuard({
   return (
     <div className="space-y-2" data-testid="agent-instance-mode">
       <label className="text-sm font-medium" htmlFor="agent-instance-mode">
-        Agent instance
+        <Trans>Agent instance</Trans>
       </label>
       <select
         className="flex h-9 w-full rounded-md border border-input bg-background px-3 py-2 text-sm shadow-xs"
@@ -30,15 +31,27 @@ export function AddChannelBotReuseGuard({
         onChange={(e) => onForceNewChange(e.target.value === "new")}
         value={forceNew ? "new" : "reuse"}
       >
-        <option value="reuse">Reuse existing agent</option>
-        <option value="new">Create new instance</option>
+        <option value="reuse">
+          <Trans>Reuse existing agent</Trans>
+        </option>
+        <option value="new">
+          <Trans>Create new instance</Trans>
+        </option>
       </select>
       <p className="text-xs text-muted-foreground">
-        <span className="font-medium text-foreground">
-          {reusableAgent.name}
-        </span>{" "}
-        is already {statusLabel}. Reusing adds it to this channel without
-        creating a duplicate keypair.
+        {/*
+         * One <Trans> around the whole sentence, including the bolded name:
+         * German moves "schon" and the participle, so handing a translator
+         * "is already" and the tail as separate messages makes the sentence
+         * unbuildable.
+         */}
+        <Trans>
+          <span className="font-medium text-foreground">
+            {reusableAgent.name}
+          </span>{" "}
+          is already {statusLabel}. Reusing adds it to this channel without
+          creating a duplicate keypair.
+        </Trans>
       </p>
     </div>
   );

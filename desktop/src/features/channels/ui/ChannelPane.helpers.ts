@@ -1,3 +1,6 @@
+import type { MessageDescriptor } from "@lingui/core";
+import { msg } from "@lingui/core/macro";
+
 import { getChannelDetail } from "@/features/channels/lib/channelDescription";
 import { isEphemeralChannel } from "@/features/channels/lib/ephemeralChannel";
 import type { TimelineMessage } from "@/features/messages/types";
@@ -35,27 +38,61 @@ export function shouldUseFocusIdleDrawer({
   );
 }
 
+/**
+ * The channel-kind noun phrase shown in the intro block.
+ *
+ * Returns a descriptor, not a string: callers build it inside a `useMemo` and
+ * resolve it on render, so a resolved string here would freeze in whichever
+ * locale was active when the memo last recomputed.
+ *
+ * Every one of these phrases appears in exactly one frame — "This is the
+ * beginning of the …" in `ChannelIntroBlock` — and nowhere else. German puts
+ * that frame in the genitive, so each translation is the **genitive** noun
+ * phrase ("des privaten Kanals"), which is why each descriptor carries a
+ * translator comment saying so. If a second call site ever needs the
+ * nominative, split the messages rather than loosening the translation.
+ */
 export function getChannelIntroKind(
   channel: Channel,
   projectHome = false,
-): string {
+): MessageDescriptor {
   if (projectHome) {
-    return "project channel";
+    return msg({
+      message: "project channel",
+      comment:
+        'Only ever read inside "This is the beginning of the {kind}." — translate as the genitive form that frame needs.',
+    });
   }
 
   const isPrivate = channel.visibility === "private";
   const isEphemeral = isEphemeralChannel(channel);
 
   if (isPrivate && isEphemeral) {
-    return "private ephemeral channel";
+    return msg({
+      message: "private ephemeral channel",
+      comment:
+        'Only ever read inside "This is the beginning of the {kind}." — translate as the genitive form that frame needs.',
+    });
   }
   if (isPrivate) {
-    return "private channel";
+    return msg({
+      message: "private channel",
+      comment:
+        'Only ever read inside "This is the beginning of the {kind}." — translate as the genitive form that frame needs.',
+    });
   }
   if (isEphemeral) {
-    return "ephemeral channel";
+    return msg({
+      message: "ephemeral channel",
+      comment:
+        'Only ever read inside "This is the beginning of the {kind}." — translate as the genitive form that frame needs.',
+    });
   }
-  return "regular channel";
+  return msg({
+    message: "regular channel",
+    comment:
+      'Only ever read inside "This is the beginning of the {kind}." — translate as the genitive form that frame needs.',
+  });
 }
 
 export function getChannelIntroDescription(channel: Channel): string | null {

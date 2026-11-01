@@ -1,3 +1,6 @@
+import type { MessageDescriptor } from "@lingui/core";
+import { msg } from "@lingui/core/macro";
+import { Trans, useLingui } from "@lingui/react/macro";
 import { ChevronDown, ClockFading, Hash } from "lucide-react";
 import * as React from "react";
 
@@ -13,10 +16,14 @@ import {
   DropdownMenuTrigger,
 } from "@/shared/ui/dropdown-menu";
 
-const LIFECYCLE_LABEL: Record<ChannelLifecycle, string> = {
-  ongoing: "Ongoing",
-  project: "Project",
-  temporary: "Temporary",
+// `msg` descriptors, resolved per render below. A plain-string table here is
+// invisible to the coverage detector — the values are single words, not prose
+// — and it shipped three English labels inside an otherwise German dialog
+// until `channels-german.spec.ts` rendered it.
+const LIFECYCLE_LABEL: Record<ChannelLifecycle, MessageDescriptor> = {
+  ongoing: msg`Ongoing`,
+  project: msg`Project`,
+  temporary: msg`Temporary`,
 };
 
 const LIFECYCLE_ICON = {
@@ -34,7 +41,7 @@ export function ChannelTypePicker({
   onLifecycleChange,
   onOpenChange,
   open,
-  temporaryOptionAriaLabel = "Temporary channel",
+  temporaryOptionAriaLabel,
   testId,
 }: {
   align?: React.ComponentProps<typeof DropdownMenuContent>["align"];
@@ -49,10 +56,15 @@ export function ChannelTypePicker({
   temporaryOptionAriaLabel?: string;
   testId?: string;
 }) {
+  const { i18n, t } = useLingui();
   const [internalOpen, setInternalOpen] = React.useState(false);
   const pickerOpen = open ?? internalOpen;
   const setPickerOpen = onOpenChange ?? setInternalOpen;
-  const label = LIFECYCLE_LABEL[lifecycle];
+  const label = i18n._(LIFECYCLE_LABEL[lifecycle]);
+  // Resolved here, not as a default parameter: a default string literal is
+  // evaluated at call time with no catalogue in reach, and the detector
+  // cannot see it either.
+  const temporaryOptionLabel = temporaryOptionAriaLabel ?? t`Temporary channel`;
   const Icon = lifecycle === "project" ? null : LIFECYCLE_ICON[lifecycle];
   const projectLocked = lifecycle === "project";
 
@@ -99,23 +111,26 @@ export function ChannelTypePicker({
       >
         <DropdownMenuRadioGroup onValueChange={selectType} value={lifecycle}>
           {allowProject ? (
-            <DropdownMenuRadioItem aria-label="Project channel" value="project">
-              Project
+            <DropdownMenuRadioItem
+              aria-label={t`Project channel`}
+              value="project"
+            >
+              <Trans>Project</Trans>
             </DropdownMenuRadioItem>
           ) : null}
           <DropdownMenuRadioItem
-            aria-label="Ongoing channel"
+            aria-label={t`Ongoing channel`}
             disabled={projectLocked}
             value="ongoing"
           >
-            Ongoing
+            <Trans>Ongoing</Trans>
           </DropdownMenuRadioItem>
           <DropdownMenuRadioItem
-            aria-label={temporaryOptionAriaLabel}
+            aria-label={temporaryOptionLabel}
             disabled={projectLocked}
             value="temporary"
           >
-            Temporary
+            <Trans>Temporary</Trans>
           </DropdownMenuRadioItem>
         </DropdownMenuRadioGroup>
       </DropdownMenuContent>

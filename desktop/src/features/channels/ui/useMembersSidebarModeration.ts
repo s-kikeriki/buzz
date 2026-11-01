@@ -1,3 +1,4 @@
+import { useLingui } from "@lingui/react/macro";
 import * as React from "react";
 import { toast } from "sonner";
 
@@ -25,6 +26,7 @@ import type { MemberModerationState } from "./MembersSidebarMemberCard";
  * is open and the caller can moderate.
  */
 export function useMembersSidebarModeration(open: boolean) {
+  const { t } = useLingui();
   const relayMembershipQuery = useMyRelayMembershipQuery();
   const relayRole = relayMembershipQuery.data?.role;
   const canModerate = relayRole === "owner" || relayRole === "admin";
@@ -75,29 +77,29 @@ export function useMembersSidebarModeration(open: boolean) {
         toast.success(success);
       } catch (error) {
         toast.error(
-          error instanceof Error ? error.message : "Moderation action failed",
+          error instanceof Error ? error.message : t`Moderation action failed`,
         );
       }
     },
-    [],
+    [t],
   );
 
   const onBan = React.useCallback(
     (member: ChannelMember) =>
       void runModerationAction(
         () => banMutation.mutateAsync({ pubkey: member.pubkey }),
-        "Member banned",
+        t`Member banned`,
       ),
-    [banMutation, runModerationAction],
+    [banMutation, runModerationAction, t],
   );
 
   const onUnban = React.useCallback(
     (member: ChannelMember) =>
       void runModerationAction(
         () => unbanMutation.mutateAsync(member.pubkey),
-        "Ban lifted",
+        t`Ban lifted`,
       ),
-    [unbanMutation, runModerationAction],
+    [unbanMutation, runModerationAction, t],
   );
 
   const onTimeout = React.useCallback(
@@ -108,18 +110,18 @@ export function useMembersSidebarModeration(open: boolean) {
             pubkey: member.pubkey,
             expiresAt: expiresAtSecs,
           }),
-        "Member timed out",
+        t`Member timed out`,
       ),
-    [timeoutMutation, runModerationAction],
+    [timeoutMutation, runModerationAction, t],
   );
 
   const onUntimeout = React.useCallback(
     (member: ChannelMember) =>
       void runModerationAction(
         () => untimeoutMutation.mutateAsync(member.pubkey),
-        "Timeout lifted",
+        t`Timeout lifted`,
       ),
-    [untimeoutMutation, runModerationAction],
+    [untimeoutMutation, runModerationAction, t],
   );
 
   return {

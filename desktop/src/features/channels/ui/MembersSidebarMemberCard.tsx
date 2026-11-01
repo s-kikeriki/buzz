@@ -1,5 +1,6 @@
-import { useLingui } from "@lingui/react/macro";
-import { t } from "@lingui/core/macro";
+import type { I18n, MessageDescriptor } from "@lingui/core";
+import { msg } from "@lingui/core/macro";
+import { Trans, useLingui } from "@lingui/react/macro";
 import { agentPresenceStartBlockReason } from "@/features/agents/lib/useAgentAvailability";
 import {
   Activity,
@@ -87,38 +88,63 @@ export type MemberModerationState = {
   timedOut: boolean;
 };
 
-/** Timeout durations offered in the member menu, in seconds. */
-const TIMEOUT_PRESETS: { label: string; seconds: number }[] = [
-  { label: "1 hour", seconds: 60 * 60 },
-  { label: "24 hours", seconds: 24 * 60 * 60 },
-  { label: "7 days", seconds: 7 * 24 * 60 * 60 },
+/**
+ * Timeout durations offered in the member menu, in seconds.
+ *
+ * `msg` descriptors: the table is built at module load, before a catalogue is
+ * active, and the component resolves each label with `i18n._()` on render.
+ * Whole labels per value rather than a count plus a unit — German inflects the
+ * unit and this is a fixed set of three.
+ */
+const TIMEOUT_PRESETS: { label: MessageDescriptor; seconds: number }[] = [
+  { label: msg`1 hour`, seconds: 60 * 60 },
+  { label: msg`24 hours`, seconds: 24 * 60 * 60 },
+  { label: msg`7 days`, seconds: 7 * 24 * 60 * 60 },
 ];
 
 const MEMBER_ROW_INSET_DIVIDER_CLASS =
   "after:pointer-events-none after:absolute after:bottom-0 after:left-[3.75rem] after:right-0 after:h-px after:bg-border/60 after:content-[''] last:after:hidden";
 
-function formatRoleLabel(member: ChannelMember, memberIsBot: boolean) {
+function formatRoleLabel(
+  i18n: I18n,
+  member: ChannelMember,
+  memberIsBot: boolean,
+) {
   if (memberIsBot) {
-    return "agent";
+    return i18n._(msg`agent`);
   }
 
-  if (member.role === "owner" || member.role === "admin") {
-    return member.role;
+  // `member.role` is a wire value, so it is mapped to copy rather than
+  // printed: German has no inflection-free way to show "owner" raw.
+  if (member.role === "owner") {
+    return i18n._(msg`owner`);
+  }
+  if (member.role === "admin") {
+    return i18n._(msg`admin`);
   }
 
   return null;
 }
 
-function formatRespondToLabel(agent: ManagedAgent) {
+function formatRespondToLabel(i18n: I18n, agent: ManagedAgent) {
   switch (agent.respondTo) {
     case "anyone":
-      return "Anyone";
-    case "allowlist":
-      return `Selected people (${agent.respondToAllowlist.length})`;
+      return i18n._(msg`Anyone`);
+    case "allowlist": {
+      const allowlistCount = agent.respondToAllowlist.length;
+      return i18n._(msg`Selected people (${allowlistCount})`);
+    }
     default:
-      return "Only me";
+      return i18n._(msg`Only me`);
   }
 }
+
+/** The channel roles a member can be moved between, as copy. */
+const PEOPLE_ROLE_LABELS = {
+  admin: msg`Admin`,
+  member: msg`Member`,
+  guest: msg`Guest`,
+} as const;
 
 export function MembersSidebarMemberCard({
   canChangeRole,
@@ -149,9 +175,8 @@ export function MembersSidebarMemberCard({
   profileOwnerPubkey,
   viewerIsOwner,
 }: MembersSidebarMemberCardProps) {
-  const { i18n } = useLingui();
-  void i18n;
-  const roleLabel = formatRoleLabel(member, memberIsBot);
+  const { i18n, t } = useLingui();
+  const roleLabel = formatRoleLabel(i18n, member, memberIsBot);
   const disabled = isActionPending || isArchived;
   const canViewActivity =
     memberIsBot &&
@@ -255,7 +280,7 @@ export function MembersSidebarMemberCard({
                 data-testid={`sidebar-managed-agent-respond-to-${member.pubkey}`}
                 variant="outline"
               >
-                {formatRespondToLabel(managedAgent)}
+                {formatRespondToLabel(i18n, managedAgent)}
               </Badge>
             ) : null}
           </div>
@@ -274,7 +299,7 @@ export function MembersSidebarMemberCard({
     >
       {onOpenProfile ? (
         <button
-          aria-label={`Open profile for ${memberLabel}`}
+          aria-label={t`Open profile for ${memberLabel}`}
           className="absolute inset-0 z-0 cursor-pointer focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-ring"
           data-testid={`sidebar-member-open-profile-${member.pubkey}`}
           onClick={() => onOpenProfile(member.pubkey)}
@@ -357,9 +382,9 @@ function MemberActionsMenu({
   onViewActivity?: (pubkey: string) => void;
   pairAction?: ManagedAgentPairAction;
 }) {
-  const { i18n } = useLingui();
   const showChangeRole =
     canChangeRole && !memberIsBot && member.role !== "owner";
+  const { i18n, t } = useLingui();
   const isBanned = moderationState?.banned ?? false;
   const isTimedOut = moderationState?.timedOut ?? false;
 
@@ -391,7 +416,7 @@ function MemberActionsMenu({
             onClick={() => onViewActivity?.(member.pubkey)}
           >
             <Activity className="h-4 w-4" />
-            View activity
+            <Trans>View activity</Trans>
           </DropdownMenuItem>
         ) : null}
         {memberIsBot && managedAgent ? (
@@ -419,7 +444,7 @@ function MemberActionsMenu({
                 onClick={() => onEditRespondTo(managedAgent)}
               >
                 <Pencil className="h-4 w-4" />
-                Manage agent access...
+                <Trans>Manage agent access...</Trans>
               </DropdownMenuItem>
             ) : null}
             {canRemoveMember || showChangeRole ? (
@@ -434,7 +459,7 @@ function MemberActionsMenu({
               disabled={disabled}
             >
               <Shield className="h-4 w-4" />
-              Change role
+              <Trans>Change role</Trans>
             </DropdownMenuSubTrigger>
             <DropdownMenuSubContent>
               {PEOPLE_ROLES.map((role) => (
@@ -444,9 +469,8 @@ function MemberActionsMenu({
                   key={role}
                   onClick={() => onChangeRole(member, role)}
                 >
-                  {role[0]?.toUpperCase()}
-                  {role.slice(1)}
-                  {member.role === role ? " (current)" : ""}
+                  {i18n._(PEOPLE_ROLE_LABELS[role])}
+                  {member.role === role ? ` ${t`(current)`}` : ""}
                 </DropdownMenuItem>
               ))}
             </DropdownMenuSubContent>
@@ -462,7 +486,7 @@ function MemberActionsMenu({
               onClick={() => onRemoveMember(member)}
             >
               <Trash2 className="h-4 w-4" />
-              Remove from channel
+              <Trans>Remove from channel</Trans>
             </DropdownMenuItem>
           </>
         ) : null}
@@ -478,7 +502,7 @@ function MemberActionsMenu({
                 onClick={() => onUntimeout(member)}
               >
                 <ShieldCheck className="h-4 w-4" />
-                Lift timeout
+                <Trans>Lift timeout</Trans>
               </DropdownMenuItem>
             ) : (
               <DropdownMenuSub>
@@ -487,7 +511,7 @@ function MemberActionsMenu({
                   disabled={disabled}
                 >
                   <Clock className="h-4 w-4" />
-                  Time out
+                  <Trans>Time out</Trans>
                 </DropdownMenuSubTrigger>
                 <DropdownMenuSubContent>
                   {TIMEOUT_PRESETS.map((preset) => (
@@ -502,7 +526,7 @@ function MemberActionsMenu({
                         )
                       }
                     >
-                      {preset.label}
+                      {i18n._(preset.label)}
                     </DropdownMenuItem>
                   ))}
                 </DropdownMenuSubContent>
@@ -515,7 +539,7 @@ function MemberActionsMenu({
                 onClick={() => onUnban(member)}
               >
                 <CircleSlash className="h-4 w-4" />
-                Lift ban
+                <Trans>Lift ban</Trans>
               </DropdownMenuItem>
             ) : (
               <DropdownMenuItem
@@ -525,7 +549,7 @@ function MemberActionsMenu({
                 onClick={() => onBan(member)}
               >
                 <Ban className="h-4 w-4" />
-                Ban from community
+                <Trans>Ban from community</Trans>
               </DropdownMenuItem>
             )}
           </>

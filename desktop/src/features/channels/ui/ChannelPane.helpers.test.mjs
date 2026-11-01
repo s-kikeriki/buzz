@@ -1,3 +1,4 @@
+import { i18n } from "@lingui/core";
 import assert from "node:assert/strict";
 import test from "node:test";
 
@@ -72,20 +73,29 @@ test("channel intro shares description-over-purpose derivation with the header",
   );
 });
 
+/**
+ * The kind is a descriptor now, because `useChannelIntro` builds it inside a
+ * `useMemo`. Resolving through `i18n._` rather than reading
+ * `descriptor.message` is deliberate: reading the field would hand the source
+ * string straight back and never exercise the catalogue lookup at all.
+ * `test-loader.mjs` activates `en`, whose catalogue is the source text, so the
+ * expected values stay the English they always were.
+ */
+function introKind(ch, projectHome) {
+  return i18n._(getChannelIntroKind(ch, projectHome));
+}
+
 test("getChannelIntroKind names project homes ahead of regular streams", () => {
-  assert.equal(getChannelIntroKind(channel(), true), "project channel");
-  assert.equal(getChannelIntroKind(channel(), false), "regular channel");
+  assert.equal(introKind(channel(), true), "project channel");
+  assert.equal(introKind(channel(), false), "regular channel");
 });
 
 test("getChannelIntroKind keeps private and ephemeral labels for other streams", () => {
   assert.equal(
-    getChannelIntroKind(channel({ visibility: "private" })),
+    introKind(channel({ visibility: "private" })),
     "private channel",
   );
-  assert.equal(
-    getChannelIntroKind(channel({ ttlSeconds: 3600 })),
-    "ephemeral channel",
-  );
+  assert.equal(introKind(channel({ ttlSeconds: 3600 })), "ephemeral channel");
 });
 
 test("idle auxiliary priority does not depend on thread layout mode", () => {

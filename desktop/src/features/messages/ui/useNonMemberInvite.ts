@@ -1,4 +1,6 @@
+import { useLingui } from "@lingui/react/macro";
 import * as React from "react";
+
 import { PRIVATE_CHANNEL_ADD_DENIED_MESSAGE } from "@/features/channels/lib/channelMemberAdmission";
 import type { MentionRevalidationOptions } from "@/features/messages/lib/agentMentionRevalidation";
 import type { ManagedAgent } from "@/shared/api/types";
@@ -45,6 +47,7 @@ export function useNonMemberInvite({
   ) => Promise<void>;
   setError: (error: string | null) => void;
 }) {
+  const { i18n, t } = useLingui();
   const active = React.useRef<{
     controller: AbortController;
     draft: PendingNonMemberMentionSend;
@@ -80,7 +83,7 @@ export function useNonMemberInvite({
     if (!draft || draft.sourceOwner !== currentOwner.current || active.current)
       return;
     if (!canInvite) {
-      setError(PRIVATE_CHANNEL_ADD_DENIED_MESSAGE);
+      setError(i18n._(PRIVATE_CHANNEL_ADD_DENIED_MESSAGE));
       return;
     }
     const attempt = new AbortController();
@@ -152,7 +155,7 @@ export function useNonMemberInvite({
           setError(
             error instanceof Error
               ? error.message
-              : "Could not invite members.",
+              : t`Could not invite members.`,
           );
       })
       .finally(() => {
@@ -170,6 +173,8 @@ export function useNonMemberInvite({
     addMembers,
     completeSend,
     setError,
+    i18n,
+    t,
   ]);
   return { invite, cancel, isPending };
 }

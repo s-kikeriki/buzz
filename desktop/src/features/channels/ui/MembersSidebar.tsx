@@ -1,3 +1,4 @@
+import { Trans, useLingui } from "@lingui/react/macro";
 import * as React from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { UserRoundPlus, X } from "lucide-react";
@@ -143,6 +144,7 @@ export function MembersSidebar({
   onViewActivity,
   relayUrl,
 }: MembersSidebarProps) {
+  const { i18n, t } = useLingui();
   const channelId = channel?.id ?? null;
   const queryClient = useQueryClient();
   const searchInputRef = React.useRef<HTMLInputElement>(null);
@@ -159,7 +161,7 @@ export function MembersSidebar({
   const addMembersMutation = useAddChannelMembersMutation(channelId);
   const changeRoleMutation = useMutation({
     mutationFn: async ({ pubkey, role }: { pubkey: string; role: string }) => {
-      if (!channelId) throw new Error("No channel selected.");
+      if (!channelId) throw new Error(t`No channel selected.`);
       await changeChannelMemberRole(channelId, pubkey, role);
     },
     onSettled: async () => {
@@ -584,7 +586,9 @@ export function MembersSidebar({
             {
               pubkey: user.pubkey,
               error:
-                error instanceof Error ? error.message : "Failed to add agent.",
+                error instanceof Error
+                  ? error.message
+                  : t`Failed to add agent.`,
             },
           ]);
         }
@@ -705,10 +709,14 @@ export function MembersSidebar({
         >
           <DialogHeader className="space-y-0 pb-5">
             <div className="flex items-center justify-between gap-4">
-              <DialogTitle>Channel members</DialogTitle>
+              <DialogTitle>
+                <Trans>Channel members</Trans>
+              </DialogTitle>
               <DialogClose className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md text-muted-foreground transition-colors duration-150 ease-out hover:bg-accent hover:text-accent-foreground focus:outline-hidden focus:ring-1 focus:ring-ring">
                 <X className="h-4 w-4" />
-                <span className="sr-only">Close</span>
+                <span className="sr-only">
+                  <Trans>Close</Trans>
+                </span>
               </DialogClose>
             </div>
             <label
@@ -736,8 +744,8 @@ export function MembersSidebar({
                 }}
                 placeholder={
                   canAddMembers
-                    ? "Add people and agents"
-                    : "Search people and agents"
+                    ? t`Add people and agents`
+                    : t`Search people and agents`
                 }
                 ref={searchInputRef}
                 spellCheck={false}
@@ -750,7 +758,7 @@ export function MembersSidebar({
                 className="pt-2 text-sm text-muted-foreground"
                 data-testid="members-sidebar-add-denied"
               >
-                {PRIVATE_CHANNEL_ADD_DENIED_MESSAGE}
+                {i18n._(PRIVATE_CHANNEL_ADD_DENIED_MESSAGE)}
               </p>
             ) : null}
           </DialogHeader>
@@ -764,8 +772,8 @@ export function MembersSidebar({
               >
                 <SearchResultSectionTitle>
                   {normalizedSearchQuery
-                    ? "Members"
-                    : `Members · ${activeMembers.length}`}
+                    ? t`Members`
+                    : `${t`Members`} · ${activeMembers.length}`}
                 </SearchResultSectionTitle>
                 {normalizedSearchQuery ? (
                   <div>
@@ -776,7 +784,7 @@ export function MembersSidebar({
                       <>
                         {addSearchResults.length > 0 || isAddSearchLoading ? (
                           <SearchResultSectionTitle>
-                            Not in this channel
+                            <Trans>Not in this channel</Trans>
                           </SearchResultSectionTitle>
                         ) : null}
                         {addSearchResults.map((user) => (
@@ -798,7 +806,7 @@ export function MembersSidebar({
                         ))}
                         {isAddSearchLoading ? (
                           <p className="px-4 py-3 text-sm text-muted-foreground">
-                            Searching...
+                            <Trans>Searching...</Trans>
                           </p>
                         ) : null}
                       </>
@@ -807,7 +815,7 @@ export function MembersSidebar({
                     addSearchResults.length === 0 &&
                     !isAddSearchLoading ? (
                       <p className="px-4 py-3 text-sm text-muted-foreground">
-                        No matching people or agents.
+                        <Trans>No matching people or agents.</Trans>
                       </p>
                     ) : null}
                   </div>
@@ -824,10 +832,10 @@ export function MembersSidebar({
                 ) : (
                   <p className="px-4 py-3 text-sm text-muted-foreground">
                     {membersQuery.isLoading
-                      ? "Loading members..."
+                      ? t`Loading members...`
                       : normalizedSearchQuery
-                        ? "No members match your search."
-                        : "No members found."}
+                        ? t`No members match your search.`
+                        : t`No members found.`}
                   </p>
                 )}
               </div>
@@ -841,7 +849,7 @@ export function MembersSidebar({
                 >
                   <summary className="flex cursor-pointer items-center gap-2 list-none [&::-webkit-details-marker]:hidden">
                     <h2 className="text-sm font-semibold tracking-tight text-muted-foreground">
-                      Archived
+                      <Trans>Archived</Trans>
                     </h2>
                     <span
                       className="text-muted-foreground"
@@ -862,7 +870,7 @@ export function MembersSidebar({
                     )}
                     {filteredArchivedMembers.length === 0 ? (
                       <p className="text-sm text-muted-foreground">
-                        No archived members match your search.
+                        <Trans>No archived members match your search.</Trans>
                       </p>
                     ) : null}
                   </div>

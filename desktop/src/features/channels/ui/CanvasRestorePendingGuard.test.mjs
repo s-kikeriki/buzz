@@ -29,6 +29,7 @@ import { after, before, test } from "node:test";
 import { JSDOM } from "jsdom";
 
 import { installRadixDialogGlobals } from "./canvasDialogTestEnv.mjs";
+import { withI18n } from "@/testing/withI18n.mjs";
 
 registerHooks({
   resolve(specifier, context, nextResolve) {
@@ -185,18 +186,20 @@ test("pending-guard: row disabled, rejection visible, no second dispatch", async
   const root = createRoot(container);
   await act(async () => {
     root.render(
-      React.createElement(
-        QueryClientProvider,
-        { client },
+      withI18n(
         React.createElement(
-          CommunitiesProvider,
-          null,
-          React.createElement(CanvasHistoryPanel, {
-            channelId: "channel-1",
-            currentContent: "hi",
-            currentRevision: HEAD,
-            canRestore: true,
-          }),
+          QueryClientProvider,
+          { client },
+          React.createElement(
+            CommunitiesProvider,
+            null,
+            React.createElement(CanvasHistoryPanel, {
+              channelId: "channel-1",
+              currentContent: "hi",
+              currentRevision: HEAD,
+              canRestore: true,
+            }),
+          ),
         ),
       ),
     );

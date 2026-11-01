@@ -1,3 +1,4 @@
+import { Trans } from "@lingui/react/macro";
 import { Check, Plus } from "lucide-react";
 
 import type { AgentPersona } from "@/shared/api/types";
@@ -46,7 +47,7 @@ function AgentRow({
       {inChannel ? (
         <span className="inline-flex shrink-0 items-center gap-1 text-xs font-medium text-muted-foreground">
           <Check className="h-4 w-4" />
-          In channel
+          <Trans>In channel</Trans>
         </span>
       ) : (
         <span
@@ -78,10 +79,10 @@ function CreateAgentRow({ onCreateAgent }: { onCreateAgent: () => void }) {
       </span>
       <span className="min-w-0 flex-1">
         <span className="block text-sm font-medium text-foreground">
-          Create a new agent
+          <Trans>Create a new agent</Trans>
         </span>
         <span className="block text-xs text-muted-foreground">
-          Give it a name, purpose, and instructions.
+          <Trans>Give it a name, purpose, and instructions.</Trans>
         </span>
       </span>
     </button>
@@ -127,14 +128,14 @@ export function AddChannelBotPersonasSection({
 
       {isLoading ? (
         <p className="px-3 text-sm text-muted-foreground">
-          Loading your agents…
+          <Trans>Loading your agents…</Trans>
         </p>
       ) : null}
 
       {!isLoading && available.length > 0 ? (
         <div className="space-y-1">
           <div className="px-3 pb-1 text-xs font-medium text-muted-foreground">
-            Your agents
+            <Trans>Your agents</Trans>
           </div>
           {available.map((persona) => (
             <AgentRow
@@ -151,7 +152,7 @@ export function AddChannelBotPersonasSection({
 
       {!isLoading && available.length === 0 && inChannel.length > 0 ? (
         <p className="px-3 text-sm text-muted-foreground">
-          All of your agents are already in this channel.
+          <Trans>All of your agents are already in this channel.</Trans>
         </p>
       ) : null}
 
@@ -162,7 +163,7 @@ export function AddChannelBotPersonasSection({
       {!isLoading && inChannel.length > 0 ? (
         <div className="space-y-1 border-t border-border pt-3">
           <div className="px-3 pb-1 text-xs font-medium text-muted-foreground">
-            In this channel
+            <Trans>In this channel</Trans>
           </div>
           {inChannel.map((persona) => (
             <AgentRow

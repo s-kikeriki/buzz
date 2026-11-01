@@ -1,3 +1,4 @@
+import { useLingui } from "@lingui/react/macro";
 import * as React from "react";
 
 import {
@@ -16,6 +17,7 @@ type QuickBotDropState = {
  * Handles creating a new managed agent from a persona with a given instance name.
  */
 export function useQuickBotDrop(channelId: string | null) {
+  const { t } = useLingui();
   const createMutation = useCreateChannelManagedAgentMutation(channelId);
   const providersQuery = useAvailableAcpRuntimes();
   const [state, setState] = React.useState<QuickBotDropState>({
@@ -42,7 +44,7 @@ export function useQuickBotDrop(channelId: string | null) {
         if (!runtime) {
           setState({
             pending: false,
-            error: "No agent runtime available.",
+            error: t`No agent runtime available.`,
           });
           return;
         }
@@ -60,11 +62,12 @@ export function useQuickBotDrop(channelId: string | null) {
       } catch (err) {
         setState({
           pending: false,
-          error: err instanceof Error ? err.message : "Failed to create agent.",
+          error:
+            err instanceof Error ? err.message : t`Failed to create agent.`,
         });
       }
     },
-    [channelId, createMutation, defaultProvider, providers, state.pending],
+    [channelId, createMutation, defaultProvider, providers, state.pending, t],
   );
 
   return { ...state, addBot };

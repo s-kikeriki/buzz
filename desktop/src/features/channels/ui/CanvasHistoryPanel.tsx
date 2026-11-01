@@ -1,3 +1,4 @@
+import { Trans, useLingui } from "@lingui/react/macro";
 import { diffLines } from "diff";
 import { RotateCcw } from "lucide-react";
 import * as React from "react";
@@ -17,7 +18,7 @@ import {
 } from "@/shared/lib/relayError";
 import {
   CANVAS_EXPECTED_REVISION_NONE,
-  canvasConflictMessage,
+  canvasConflictMessageText,
 } from "@/features/channels/canvasConflict";
 import {
   AlertDialog,
@@ -55,6 +56,7 @@ export function CanvasHistoryPanel({
   currentRevision,
   canRestore,
 }: CanvasHistoryPanelProps) {
+  const { i18n, t } = useLingui();
   const locale = useLocale();
   const historyQuery = useCanvasHistoryQuery(channelId, true);
   const restoreMutation = useSetCanvasMutation(channelId);
@@ -99,6 +101,7 @@ export function CanvasHistoryPanel({
     () => historyQuery.data?.pages.flatMap((page) => page.revisions) ?? [],
     [historyQuery.data],
   );
+
   const authorPubkeys = React.useMemo(
     () => revisions.map((revision) => revision.author),
     [revisions],
@@ -111,6 +114,23 @@ export function CanvasHistoryPanel({
     const summary = profilesQuery.data?.profiles[pubkey.toLowerCase()];
     return summary?.displayName?.trim() || truncatePubkey(pubkey);
   }
+
+  // Named locals so the catalogue carries `{confirmAuthor}` and
+  // `{confirmTimestamp}` rather than the positional `{0}`/`{1}` a call
+  // expression would produce. Declared *after* `authorLabel` because that
+  // helper closes over `profilesQuery`, which is only initialised above.
+  const confirmAuthor = confirmRevision
+    ? authorLabel(confirmRevision.revision.author)
+    : "";
+  const confirmTimestamp = confirmRevision
+    ? formatItemTimestamp(confirmRevision.revision.createdAt, {
+        locale,
+        withTime: true,
+      })
+    : "";
+  const revisionLabel = confirmRevision
+    ? t`${confirmAuthor}'s revision from ${confirmTimestamp}`
+    : t`the selected revision`;
 
   async function handleRestore(
     revision: CanvasRevision,
@@ -139,7 +159,7 @@ export function CanvasHistoryPanel({
   if (historyQuery.isLoading) {
     return (
       <p className="text-sm text-muted-foreground" role="status">
-        Loading history...
+        <Trans>Loading history...</Trans>
       </p>
     );
   }
@@ -164,7 +184,7 @@ export function CanvasHistoryPanel({
   if (revisions.length === 0) {
     return (
       <p className="text-sm text-muted-foreground" role="status">
-        No revisions yet.
+        <Trans>No revisions yet.</Trans>
       </p>
     );
   }
@@ -180,7 +200,7 @@ export function CanvasHistoryPanel({
         >
           {isRelayUnreachableError(historyQuery.error)
             ? RELAY_UNREACHABLE_SHORT
-            : "Couldn't refresh history — showing last known revisions."}
+            : t`Couldn't refresh history — showing last known revisions.`}
         </p>
       ) : null}
       {unverifiedRestoreNotice ? (
@@ -192,8 +212,10 @@ export function CanvasHistoryPanel({
           role="status"
           tabIndex={-1}
         >
-          Restored. We couldn't verify against the latest revision just now —
-          check the canvas if a concurrent edit appears.
+          <Trans>
+            Restored. We couldn't verify against the latest revision just now —
+            check the canvas if a concurrent edit appears.
+          </Trans>
         </p>
       ) : null}
       <ul className="space-y-2">
@@ -225,7 +247,7 @@ export function CanvasHistoryPanel({
                   {authorLabel(revision.author)}
                   {isCurrent ? (
                     <span className="ml-2 text-xs font-normal text-muted-foreground">
-                      Current
+                      <Trans>Current</Trans>
                     </span>
                   ) : null}
                 </span>
@@ -258,13 +280,13 @@ export function CanvasHistoryPanel({
                     >
                       <RotateCcw className="h-4 w-4" />
                       {restoreMutation.isPending
-                        ? "Restoring..."
-                        : "Restore this revision"}
+                        ? t`Restoring...`
+                        : t`Restore this revision`}
                     </Button>
                   ) : null}
                   {restoreMutation.error instanceof Error ? (
                     <p className="text-sm text-destructive" role="alert">
-                      {canvasConflictMessage(restoreMutation.error) ??
+                      {canvasConflictMessageText(i18n, restoreMutation.error) ??
                         restoreMutation.error.message}
                     </p>
                   ) : null}
@@ -283,7 +305,7 @@ export function CanvasHistoryPanel({
           type="button"
           variant="ghost"
         >
-          {historyQuery.isFetchingNextPage ? "Loading..." : "Load older"}
+          {historyQuery.isFetchingNextPage ? t`Loading...` : t`Load older`}
         </Button>
       ) : null}
       <AlertDialog
@@ -294,20 +316,27 @@ export function CanvasHistoryPanel({
       >
         <AlertDialogContent data-testid="channel-canvas-restore-confirm">
           <AlertDialogHeader>
-            <AlertDialogTitle>Restore this revision?</AlertDialogTitle>
+            <AlertDialogTitle>
+              <Trans>Restore this revision?</Trans>
+            </AlertDialogTitle>
             <AlertDialogDescription>
-              This publishes{" "}
-              {confirmRevision
-                ? `${authorLabel(confirmRevision.revision.author)}'s revision from ${formatItemTimestamp(confirmRevision.revision.createdAt, { locale, withTime: true })}`
-                : "the selected revision"}{" "}
-              as the current canvas for everyone in this channel. History is
-              preserved.
+              {/*
+               * One sentence with a placeholder, not three fragments: the
+               * English "<author>'s revision" is a possessive German cannot
+               * mirror word-for-word, and the surrounding clause moves its
+               * verb. Both the identified revision and the fallback are whole
+               * translatable phrases that fit the same frame.
+               */}
+              <Trans>
+                This publishes {revisionLabel} as the current canvas for
+                everyone in this channel. History is preserved.
+              </Trans>
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel asChild>
               <Button type="button" variant="outline">
-                Cancel
+                <Trans>Cancel</Trans>
               </Button>
             </AlertDialogCancel>
             <AlertDialogAction asChild>
@@ -327,7 +356,7 @@ export function CanvasHistoryPanel({
                 }}
                 type="button"
               >
-                Restore
+                <Trans>Restore</Trans>
               </Button>
             </AlertDialogAction>
           </AlertDialogFooter>
@@ -356,7 +385,7 @@ function CanvasRevisionDiff({
   if (parts.length === 1 && !parts[0].added && !parts[0].removed) {
     return (
       <p className="text-xs text-muted-foreground">
-        Identical to the current canvas.
+        <Trans>Identical to the current canvas.</Trans>
       </p>
     );
   }

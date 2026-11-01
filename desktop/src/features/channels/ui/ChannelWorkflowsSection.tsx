@@ -1,3 +1,4 @@
+import { Trans } from "@lingui/react/macro";
 import { Plus, Workflow as WorkflowIcon } from "lucide-react";
 
 import type { Workflow } from "@/shared/api/types";
@@ -23,13 +24,13 @@ export function ChannelWorkflowsSection({
     <div className="space-y-4 pt-3" data-testid="channel-workflows-section">
       {loading ? (
         <p className="py-8 text-center text-sm text-muted-foreground">
-          Loading workflows...
+          <Trans>Loading workflows...</Trans>
         </p>
       ) : error instanceof Error ? (
         <div className="space-y-3 rounded-xl border border-destructive/30 bg-destructive/10 p-4">
           <p className="text-sm text-destructive">{error.message}</p>
           <Button onClick={onRetry} size="sm" variant="outline">
-            Retry
+            <Trans>Retry</Trans>
           </Button>
         </div>
       ) : workflows.length > 0 ? (
@@ -58,7 +59,7 @@ export function ChannelWorkflowsSection({
         </FieldGroup>
       ) : (
         <p className="py-8 text-center text-sm text-muted-foreground">
-          No workflows in this channel yet.
+          <Trans>No workflows in this channel yet.</Trans>
         </p>
       )}
 
@@ -70,7 +71,7 @@ export function ChannelWorkflowsSection({
         variant="outline"
       >
         <Plus />
-        New workflow
+        <Trans>New workflow</Trans>
       </Button>
     </div>
   );
