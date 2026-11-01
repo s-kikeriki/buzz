@@ -783,7 +783,7 @@ export function AgentInstanceEditDialog({
           });
         }
       } catch (e) {
-        setSetterError(e instanceof Error ? e : new Error("Failed to save"));
+        setSetterError(e instanceof Error ? e : new Error(t`Failed to save`));
         return;
       }
 

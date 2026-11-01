@@ -56,7 +56,7 @@ export function resolveStartRuntimeForDefinition(
     resolvePersonaRuntime(persona.runtime, runtimes, defaultRuntime);
 
   if (!runtime) {
-    throw new Error("No available runtime found for this agent.");
+    throw new Error(t`No available runtime found for this agent.`);
   }
   if (isOverridden) {
     throw new Error(

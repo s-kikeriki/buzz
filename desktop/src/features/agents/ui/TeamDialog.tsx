@@ -255,7 +255,7 @@ export function TeamDialog({
                 ) : null}
                 {personas.length === 0 ? (
                   <p className="py-4 text-center text-sm text-muted-foreground">
-                    {personaCatalogCopy.teamEmptyState}
+                    {i18n._(personaCatalogCopy.teamEmptyState)}
                   </p>
                 ) : (
                   <div

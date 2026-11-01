@@ -53,9 +53,9 @@ export function AgentDefinitionDialogFooter({
           type="submit"
         >
           {isPending
-            ? "Saving..."
+            ? t`Saving...`
             : isAvatarUploadPending
-              ? "Uploading..."
+              ? t`Uploading...`
               : publishesCatalogUpdates
                 ? t`Save and publish`
                 : submitLabel}

@@ -66,7 +66,7 @@ export function ManagedAgentSessionPanel({
   autoTail = false,
   channelId = null,
   className,
-  emptyDescription = "Mention this agent in a channel to watch the next turn.",
+  emptyDescription = t`Mention this agent in a channel to watch the next turn.`,
   emptyState = "idle",
   panelPadding = true,
   rawLayout = "responsive",

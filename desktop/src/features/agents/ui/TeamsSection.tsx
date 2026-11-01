@@ -230,7 +230,7 @@ function NewTeamCard({
           disabled={isPending}
           onClick={onDiscover}
         >
-          {teamCatalogCopy.chooseFromCatalog}
+          {i18n._(teamCatalogCopy.chooseFromCatalog)}
         </DropdownMenuItem>
         <DropdownMenuItem disabled={isPending} onClick={onImport}>
           <Trans>Import</Trans>

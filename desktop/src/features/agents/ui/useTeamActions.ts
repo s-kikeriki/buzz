@@ -198,7 +198,7 @@ export function useTeamActions(
     setTeamDialogState({
       title: t`Create team`,
       description: t`Group agents together for quick deployment to channels.`,
-      submitLabel: "Create team",
+      submitLabel: t`Create team`,
       initialValues: {
         name: "",
         description: "",
@@ -213,7 +213,7 @@ export function useTeamActions(
     setTeamDialogState({
       title: t`Duplicate ${team.name}`,
       description: t`Create a new team by copying this one.`,
-      submitLabel: "Create team",
+      submitLabel: t`Create team`,
       initialValues: {
         name: `${team.name} copy`,
         description: team.description ?? "",
@@ -242,7 +242,7 @@ export function useTeamActions(
     setTeamDialogState({
       title: t`Edit team`,
       description: "",
-      submitLabel: "Save changes",
+      submitLabel: t`Save changes`,
       initialValues: {
         id: team.id,
         name: team.name,

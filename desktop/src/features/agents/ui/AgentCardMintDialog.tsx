@@ -268,7 +268,7 @@ export function AgentCardMintDialog({
                     data-testid="agent-card-key-link"
                     onClick={() =>
                       void openUrl(OPENAI_KEYS_URL).catch(() => {
-                        toast.error("Failed to open link");
+                        toast.error(t`Failed to open link`);
                       })
                     }
                     size="sm"

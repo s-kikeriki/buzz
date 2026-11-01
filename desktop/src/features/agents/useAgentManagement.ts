@@ -148,7 +148,7 @@ export function useAgentManagement() {
       )
     ) {
       throw new Error(
-        "An agent can only manage agents from a channel you both belong to.",
+        t`An agent can only manage agents from a channel you both belong to.`,
       );
     }
   }
@@ -170,7 +170,7 @@ export function useAgentManagement() {
         (candidate) => candidate.id === input.runtime,
       );
       if (!runtime) {
-        throw new Error("Choose an available runtime for this agent.");
+        throw new Error(t`Choose an available runtime for this agent.`);
       }
 
       const avatarUrl = await resolveManagedAgentAvatarUrl(

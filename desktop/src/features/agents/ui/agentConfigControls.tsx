@@ -117,11 +117,11 @@ export function AgentDropdownSelect({
   ariaRequired,
   className,
   disabled = false,
-  emptyOptionsLabel = "No options available",
+  emptyOptionsLabel = t`No options available`,
   id,
   onValueChange,
   options,
-  placeholder = "Select",
+  placeholder = t`Select`,
   placeholderClassName,
   placeholderValue,
   searchable = false,
@@ -357,7 +357,7 @@ export function AgentModelField({
   modelDiscoveryStatus,
   onIsCustomModelEditingChange,
   onModelChange,
-  placeholder = "Select model",
+  placeholder = t`Select model`,
   placeholderClassName,
   provider,
   fieldClassName,
@@ -543,7 +543,7 @@ export function AgentModelField({
       ariaRequired={isRequired}
       className={selectClassName}
       disabled={selectDisabled}
-      emptyOptionsLabel="Couldn't load models"
+      emptyOptionsLabel={t`Couldn't load models`}
       id={id}
       onValueChange={handleModelSelectChange}
       options={modelOptions}

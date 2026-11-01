@@ -42,7 +42,7 @@ export function createPersonaDialogState(): PersonaDialogState {
   return {
     title: t`Create agent`,
     description: t`Create an agent and start it immediately.`,
-    submitLabel: "Create agent",
+    submitLabel: t`Create agent`,
     initialValues: {
       displayName: "",
       avatarUrl: "",
@@ -60,7 +60,7 @@ export function duplicatePersonaDialogState(
   return {
     title: t`Duplicate ${persona.displayName}`,
     description: t`Create a new agent by copying this profile and adjusting it as needed.`,
-    submitLabel: "Create agent",
+    submitLabel: t`Create agent`,
     initialValues: {
       displayName: `${persona.displayName} copy`,
       avatarUrl: persona.avatarUrl ?? "",
@@ -124,7 +124,7 @@ export function editPersonaDialogState(
   return {
     title: t`Edit agent`,
     description: "",
-    submitLabel: "Save changes",
+    submitLabel: t`Save changes`,
     initialValues: {
       id: persona.id,
       displayName: persona.displayName,

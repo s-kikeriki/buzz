@@ -1,3 +1,4 @@
+import type { MessageDescriptor } from "@lingui/core";
 import { Trans, useLingui } from "@lingui/react/macro";
 import { msg, t } from "@lingui/core/macro";
 /**
@@ -236,13 +237,20 @@ const NUMERIC_KIND_LABELS = {
   maxRounds: msg`Max rounds`,
 };
 
-const NUMERIC_KIND_DESCRIPTIONS: Record<NumericDescriptor["kind"], string> = {
-  maxOutputTokens:
-    "Maximum tokens the LLM may generate per response. Leave blank to inherit.",
-  contextLimit:
-    "Maximum context window tokens tracked before a handoff. Leave blank to inherit.",
-  maxRounds:
-    "Maximum LLM + tool-call rounds per turn. 0 = unlimited. Leave blank to inherit.",
+/**
+ * `msg`, not `t`, because this table is evaluated at module load.
+ *
+ * A `t` here runs before `i18n.activate()` and throws "Attempted to call a
+ * translation function without setting a locale" during import, which blanks
+ * the app rather than producing an untranslated string.
+ */
+const NUMERIC_KIND_DESCRIPTIONS: Record<
+  NumericDescriptor["kind"],
+  MessageDescriptor
+> = {
+  maxOutputTokens: msg`Maximum tokens the LLM may generate per response. Leave blank to inherit.`,
+  contextLimit: msg`Maximum context window tokens tracked before a handoff. Leave blank to inherit.`,
+  maxRounds: msg`Maximum LLM + tool-call rounds per turn. 0 = unlimited. Leave blank to inherit.`,
 };
 
 const NUMERIC_KIND_TEST_IDS: Record<NumericDescriptor["kind"], string> = {
@@ -294,7 +302,7 @@ export function NumericTuningFields({
       {descriptors.map((d) => {
         const key = d.currentPersistence.key;
         const label = i18n._(NUMERIC_KIND_LABELS[d.kind]);
-        const description = NUMERIC_KIND_DESCRIPTIONS[d.kind];
+        const description = i18n._(NUMERIC_KIND_DESCRIPTIONS[d.kind]);
         const testId = NUMERIC_KIND_TEST_IDS[d.kind];
         const inheritedVal = inheritedEnvVars[key];
         return (

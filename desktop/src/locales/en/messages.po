@@ -237,11 +237,6 @@ msgstr "{0} · unverified match"
 msgid "{0} {1}"
 msgstr "{0} {1}"
 
-#. placeholder {0}: isActive ? "Deselect" : "Select"
-#: src/features/agents/ui/personaLibraryCopy.ts
-msgid "{0} {displayName} in My Agents"
-msgstr "{0} {displayName} in My Agents"
-
 #. placeholder {0}: runtime.label
 #: src/features/agents/ui/runtimeAvailabilityWarning.ts
 msgid "{0} ACP adapter is outdated — reinstall to continue."
@@ -965,7 +960,9 @@ msgstr "Add a README to describe setup, usage, and project context."
 msgid "Add a repository to this project"
 msgstr "Add a repository to this project"
 
+#: src/features/agents/ui/AgentsView.tsx
 #: src/features/agents/ui/CommunityCatalogDialog.tsx
+#: src/features/agents/ui/personaLibraryCopy.ts
 msgid "Add agent"
 msgstr "Add agent"
 
@@ -1034,6 +1031,7 @@ msgid "Add reviewer"
 msgstr "Add reviewer"
 
 #: src/features/agents/ui/CommunityCatalogDialog.tsx
+#: src/features/agents/ui/teamLibraryCopy.ts
 msgid "Add team"
 msgstr "Add team"
 
@@ -1076,10 +1074,12 @@ msgid "Added by"
 msgstr "Added by"
 
 #: src/features/agents/ui/CommunityCatalogDialog.tsx
+#: src/features/agents/ui/personaLibraryCopy.ts
 msgid "Added to My Agents"
 msgstr "Added to My Agents"
 
 #: src/features/agents/ui/CommunityCatalogDialog.tsx
+#: src/features/agents/ui/teamLibraryCopy.ts
 msgid "Added to my teams"
 msgstr "Added to my teams"
 
@@ -1089,6 +1089,7 @@ msgstr "Added to my teams"
 msgid "Adding {0} to #{1}…"
 msgstr "Adding {0} to #{1}…"
 
+#: src/features/agents/ui/teamLibraryCopy.ts
 #: src/features/projects/ui/AddProjectRepositoryDialog.tsx
 msgid "Adding…"
 msgstr "Adding…"
@@ -1156,6 +1157,11 @@ msgstr "Agent command"
 msgid "Agent contributor"
 msgstr "Agent contributor"
 
+#: src/features/agents/ui/useManagedAgentActions.ts
+#: src/features/agents/useCreatedAgentChannelAttachment.ts
+msgid "Agent created"
+msgstr "Agent created"
+
 #: src/features/agents/ui/AgentDefaultsDialog.tsx
 #: src/features/agents/ui/AgentsView.tsx
 msgid "Agent defaults"
@@ -1192,6 +1198,10 @@ msgstr "Agent job"
 #: src/features/agents/ui/AgentInstanceEditDialog.tsx
 msgid "Agent name"
 msgstr "Agent name"
+
+#: src/features/agents/channelAgents.ts
+msgid "Agent name is required."
+msgstr "Agent name is required."
 
 #: src/features/agents/ui/AgentCardMintDialog.tsx
 #: src/features/agents/ui/AgentSnapshotExportDialog.tsx
@@ -1293,6 +1303,10 @@ msgstr "Always address agent"
 msgid "an agent"
 msgstr "an agent"
 
+#: src/features/agents/useAgentManagement.ts
+msgid "An agent can only manage agents from a channel you both belong to."
+msgstr "An agent can only manage agents from a channel you both belong to."
+
 #: src/features/projects/useAddProjectRepository.ts
 msgid "an event that could not be signed"
 msgstr "an event that could not be signed"
@@ -1316,6 +1330,10 @@ msgstr "Anthropic"
 #: src/features/agents/ui/RespondToField.tsx
 msgid "Anyone"
 msgstr "Anyone"
+
+#: src/features/agents/ui/teamLibraryCopy.ts
+msgid "Anyone in this community can find and add a copy of this team. Both the team instructions and every member’s instructions are shared as plaintext. Memories and secrets aren’t included."
+msgstr "Anyone in this community can find and add a copy of this team. Both the team instructions and every member’s instructions are shared as plaintext. Memories and secrets aren’t included."
 
 #: src/features/agents/ui/PersonaShareDialog.tsx
 msgid "Anyone in this community can find and use a copy. Your agent instruction is shared as plaintext. Memories and secrets aren’t included."
@@ -1519,6 +1537,14 @@ msgstr "Automatic"
 msgid "Availability unknown"
 msgstr "Availability unknown"
 
+#: src/features/agents/ui/personaLibraryCopy.ts
+msgid "Available"
+msgstr "Available"
+
+#: src/features/agents/ui/personaLibraryCopy.ts
+msgid "Available in Agent Catalog"
+msgstr "Available in Agent Catalog"
+
 #: src/features/settings/ui/AppearanceSettingsControls.tsx
 msgid "Available in the macOS desktop app."
 msgstr "Available in the macOS desktop app."
@@ -1626,6 +1652,10 @@ msgstr "Browse all projects"
 #: src/shared/lib/keyboard-shortcuts.ts
 msgid "Browse channels"
 msgstr "Browse channels"
+
+#: src/features/agents/ui/teamLibraryCopy.ts
+msgid "Browse teams shared to this relay."
+msgstr "Browse teams shared to this relay."
 
 #: src/features/agents/ui/TeamDialog.tsx
 msgid "Built-in"
@@ -1819,6 +1849,10 @@ msgstr "Checking invite permissions…"
 msgid "Checks"
 msgstr "Checks"
 
+#: src/features/agents/ui/personaLibraryCopy.ts
+msgid "Choose"
+msgstr "Choose"
+
 #: src/features/projects/ui/CreatePullRequestDialog.tsx
 msgid "Choose a base branch."
 msgstr "Choose a base branch."
@@ -1868,6 +1902,10 @@ msgstr "Choose a project for this repository."
 msgid "Choose a provider"
 msgstr "Choose a provider"
 
+#: src/features/agents/ui/personaModelDiscoveryStatus.ts
+msgid "Choose a provider to load models."
+msgstr "Choose a provider to load models."
+
 #: src/features/agents/ui/agentAiConfigurationPolicy.ts
 msgid "Choose a provider to save custom AI configuration."
 msgstr "Choose a provider to save custom AI configuration."
@@ -1893,6 +1931,14 @@ msgstr "Choose a repository."
 msgid "Choose an ACP command"
 msgstr "Choose an ACP command"
 
+#: src/features/agents/ui/usePersonaActions.ts
+msgid "Choose an available provider for this agent."
+msgstr "Choose an available provider for this agent."
+
+#: src/features/agents/useAgentManagement.ts
+msgid "Choose an available runtime for this agent."
+msgstr "Choose an available runtime for this agent."
+
 #: src/features/agents/ui/AgentCreationPreview.tsx
 msgid "Choose an emoji first"
 msgstr "Choose an emoji first"
@@ -1911,6 +1957,7 @@ msgid "Choose file"
 msgstr "Choose file"
 
 #: src/features/agents/ui/personaLibraryCopy.ts
+#: src/features/agents/ui/teamLibraryCopy.ts
 msgid "Choose from catalog"
 msgstr "Choose from catalog"
 
@@ -2254,6 +2301,7 @@ msgstr "Connecting"
 msgid "Context compacted"
 msgstr "Context compacted"
 
+#: src/features/agents/ui/AgentConfigPanel.tsx
 #: src/features/agents/ui/buzzAgentModelTuningFields.tsx
 msgid "Context limit"
 msgstr "Context limit"
@@ -2415,6 +2463,10 @@ msgstr "Could not use that {assetLabel}."
 msgid "Couldn’t clone repository"
 msgstr "Couldn’t clone repository"
 
+#: src/features/agents/ui/PersonaShareDialog.tsx
+msgid "Couldn’t copy link. Try again."
+msgstr "Couldn’t copy link. Try again."
+
 #: src/features/agents/ui/HarnessCatalogRetryNotice.tsx
 msgid "Couldn't detect agent harnesses."
 msgstr "Couldn't detect agent harnesses."
@@ -2426,6 +2478,10 @@ msgstr "Couldn't load agent configuration."
 #: src/features/agents/ui/AgentDefaultsEditor.tsx
 msgid "Couldn't load agent defaults. Restart the app to try again."
 msgstr "Couldn't load agent defaults. Restart the app to try again."
+
+#: src/features/agents/ui/agentConfigControls.tsx
+msgid "Couldn't load models"
+msgstr "Couldn't load models"
 
 #: src/features/agents/ui/AgentCardViewerDialog.tsx
 msgid "Couldn’t load your minted cards:"
@@ -2472,6 +2528,26 @@ msgstr "Couldn’t send {itemLabel}. Try again."
 #: src/features/agents/ui/AgentCardViewerDialog.tsx
 msgid "Couldn’t send the card. Try again."
 msgstr "Couldn’t send the card. Try again."
+
+#: src/features/agents/lib/usePersonaCatalogRelay.ts
+msgid "Couldn’t subscribe to the community agent catalog"
+msgstr "Couldn’t subscribe to the community agent catalog"
+
+#: src/features/agents/lib/useTeamCatalogRelay.ts
+msgid "Couldn’t subscribe to the community team catalog"
+msgstr "Couldn’t subscribe to the community team catalog"
+
+#: src/features/agents/ui/ModelPicker.tsx
+msgid "Couldn't switch all sessions — a channel has multiple agent sessions. Stop and restart the agent with the new model."
+msgstr "Couldn't switch all sessions — a channel has multiple agent sessions. Stop and restart the agent with the new model."
+
+#: src/features/agents/ui/ModelPicker.tsx
+msgid "Couldn't switch models — the agent kept its current model."
+msgstr "Couldn't switch models — the agent kept its current model."
+
+#: src/features/agents/ui/ModelPicker.tsx
+msgid "Couldn't switch models — the agent wasn't running a turn to switch."
+msgstr "Couldn't switch models — the agent wasn't running a turn to switch."
 
 #: src/features/sidebar/ui/ChannelSectionDialogs.tsx
 msgid "Create"
@@ -2741,6 +2817,18 @@ msgstr "Dark"
 msgid "Databricks"
 msgstr "Databricks"
 
+#: src/features/agents/ui/personaModelDiscoveryStatus.ts
+msgid "Databricks sign-in failed"
+msgstr "Databricks sign-in failed"
+
+#: src/features/agents/ui/personaModelDiscoveryStatus.ts
+msgid "Databricks sign-in is required"
+msgstr "Databricks sign-in is required"
+
+#: src/features/agents/ui/personaModelDiscoveryStatus.ts
+msgid "Databricks sign-in timed out"
+msgstr "Databricks sign-in timed out"
+
 #: src/features/agents/ui/agentConfigOptions.tsx
 msgid "Databricks v2"
 msgstr "Databricks v2"
@@ -2890,6 +2978,10 @@ msgstr "Delete this team."
 msgid "Deleted team \"{0}\"."
 msgstr "Deleted team \"{0}\"."
 
+#: src/features/agents/lib/managedAgentControlActions.ts
+msgid "Deleting removes the local management record. Continue?"
+msgstr "Deleting removes the local management record. Continue?"
+
 #: src/features/sidebar/ui/SidebarProjectsSection.tsx
 msgid "Deleting..."
 msgstr "Deleting..."
@@ -2934,6 +3026,14 @@ msgstr "Describe what this agent should do."
 #: src/features/sidebar/ui/CreateChannelFormFields.tsx
 msgid "Description"
 msgstr "Description"
+
+#: src/features/agents/ui/personaLibraryCopy.ts
+msgid "Deselect"
+msgstr "Deselect"
+
+#: src/features/agents/ui/personaLibraryCopy.ts
+msgid "Deselect {displayName} in My Agents"
+msgstr "Deselect {displayName} in My Agents"
 
 #. placeholder {0}: persona.displayName
 #: src/features/agents/ui/usePersonaActions.ts
@@ -3162,6 +3262,10 @@ msgstr "Enter a new name for this section."
 msgid "Enter a valid Git branch name."
 msgstr "Enter a valid Git branch name."
 
+#: src/features/agents/ui/personaModelDiscoveryStatus.ts
+msgid "Enter an Anthropic API key to load Anthropic models."
+msgstr "Enter an Anthropic API key to load Anthropic models."
+
 #: src/features/onboarding/ui/MachineOnboardingFlow.tsx
 msgid "Enter your backup password to restore your identity."
 msgstr "Enter your backup password to restore your identity."
@@ -3175,6 +3279,7 @@ msgid "Entire channel"
 msgstr "Entire channel"
 
 #: src/features/agents/ui/AgentConfigFields.tsx
+#: src/features/agents/ui/EnvVarsEditor.tsx
 msgid "Environment variables"
 msgstr "Environment variables"
 
@@ -3213,6 +3318,10 @@ msgstr "Every card you’ve minted, newest first. Click one to view, save, or sh
 #: src/features/search/ui/SearchPromptPlaceholder.tsx
 msgid "everything"
 msgstr "everything"
+
+#: src/features/agents/ui/personaLibraryCopy.ts
+msgid "Everything in Agent Catalog is already in My Agents."
+msgstr "Everything in Agent Catalog is already in My Agents."
 
 #: src/features/settings/ui/SettingsPanels.tsx
 msgid "Experiments"
@@ -3324,6 +3433,10 @@ msgstr "Failed to load projects"
 msgid "Failed to merge review."
 msgstr "Failed to merge review."
 
+#: src/features/agents/ui/AgentCardMintDialog.tsx
+msgid "Failed to open link"
+msgstr "Failed to open link"
+
 #: src/features/projects/ui/ProjectIssuesPanel.tsx
 #: src/features/projects/ui/ProjectPullRequestsPanel.tsx
 msgid "Failed to post comment."
@@ -3369,6 +3482,10 @@ msgstr "Failed to request review."
 #: src/features/agents/ui/useManagedAgentActions.ts
 msgid "Failed to restart agent."
 msgstr "Failed to restart agent."
+
+#: src/features/agents/ui/AgentInstanceEditDialog.tsx
+msgid "Failed to save"
+msgstr "Failed to save"
 
 #: src/features/agents/ui/usePersonaActions.ts
 msgid "Failed to save agent."
@@ -3744,6 +3861,10 @@ msgstr "Inherit build default ({bakedModelId})"
 #: src/features/agents/ui/EditAgentAdvancedFields.tsx
 msgid "Inherit runtime from template"
 msgstr "Inherit runtime from template"
+
+#: src/features/agents/ui/EnvVarsEditor.tsx
+msgid "inherited"
+msgstr "inherited"
 
 #: src/features/agents/ui/EnvVarsEditor.tsx
 msgid "Inherited from"
@@ -4206,6 +4327,7 @@ msgstr "Mark unread"
 msgid "Marked as ready for review."
 msgstr "Marked as ready for review."
 
+#: src/features/agents/ui/AgentConfigPanel.tsx
 #: src/features/agents/ui/buzzAgentModelTuningFields.tsx
 msgid "Max output tokens"
 msgstr "Max output tokens"
@@ -4213,6 +4335,18 @@ msgstr "Max output tokens"
 #: src/features/agents/ui/buzzAgentModelTuningFields.tsx
 msgid "Max rounds"
 msgstr "Max rounds"
+
+#: src/features/agents/ui/buzzAgentModelTuningFields.tsx
+msgid "Maximum context window tokens tracked before a handoff. Leave blank to inherit."
+msgstr "Maximum context window tokens tracked before a handoff. Leave blank to inherit."
+
+#: src/features/agents/ui/buzzAgentModelTuningFields.tsx
+msgid "Maximum LLM + tool-call rounds per turn. 0 = unlimited. Leave blank to inherit."
+msgstr "Maximum LLM + tool-call rounds per turn. 0 = unlimited. Leave blank to inherit."
+
+#: src/features/agents/ui/buzzAgentModelTuningFields.tsx
+msgid "Maximum tokens the LLM may generate per response. Leave blank to inherit."
+msgstr "Maximum tokens the LLM may generate per response. Leave blank to inherit."
 
 #: src/features/agents/ui/AgentConfigPanel.tsx
 #: src/features/agents/ui/McpServersSection.tsx
@@ -4249,6 +4383,10 @@ msgstr "Memory is stored as"
 #: src/features/home/lib/inbox.ts
 msgid "Mention"
 msgstr "Mention"
+
+#: src/features/agents/ui/ManagedAgentSessionPanel.tsx
+msgid "Mention this agent in a channel to watch the next turn."
+msgstr "Mention this agent in a channel to watch the next turn."
 
 #: src/features/home/lib/inbox.ts
 msgid "Mentioned"
@@ -4370,9 +4508,14 @@ msgstr "Mobile"
 msgid "mobile-app"
 msgstr "mobile-app"
 
+#: src/features/agents/ui/AgentConfigPanel.tsx
+msgid "Mode"
+msgstr "Mode"
+
 #: src/features/agents/ui/AgentAiConfigurationMode.tsx
 #: src/features/agents/ui/AgentAiDefaults.tsx
 #: src/features/agents/ui/agentConfigControls.tsx
+#: src/features/agents/ui/AgentConfigPanel.tsx
 #: src/features/agents/ui/EditAgentProviderModelFields.tsx
 #: src/features/agents/ui/PersonaModelField.tsx
 msgid "Model"
@@ -4381,6 +4524,14 @@ msgstr "Model"
 #: src/features/agents/ui/AgentConfigPanel.tsx
 msgid "Model settings"
 msgstr "Model settings"
+
+#: src/features/agents/ui/ModelPicker.tsx
+msgid "Model switch pending — applies when the current turn finishes."
+msgstr "Model switch pending — applies when the current turn finishes."
+
+#: src/features/agents/ui/ModelPicker.tsx
+msgid "Model switched for this session."
+msgstr "Model switched for this session."
 
 #: src/features/agents/ui/RestartDiffBadge.tsx
 msgid "more"
@@ -4609,6 +4760,10 @@ msgstr "No agent selected"
 msgid "No agent updates found"
 msgstr "No agent updates found"
 
+#: src/features/agents/ui/personaLibraryCopy.ts
+msgid "No agents are being shared"
+msgstr "No agents are being shared"
+
 #: src/features/projects/ui/ProjectAgentChatPanel.tsx
 #: src/features/projects/ui/ProjectsAgentPromptPage.tsx
 msgid "No agents available"
@@ -4617,6 +4772,10 @@ msgstr "No agents available"
 #: src/features/projects/ui/ProjectsAgentPromptPage.tsx
 msgid "No agents available yet — create or start one from the Agents view to ask about your repositories."
 msgstr "No agents available yet — create or start one from the Agents view to ask about your repositories."
+
+#: src/features/agents/ui/personaLibraryCopy.ts
+msgid "No agents in My Agents yet. Create one or choose one from Agent Catalog first."
+msgstr "No agents in My Agents yet. Create one or choose one from Agent Catalog first."
 
 #: src/features/agents/ui/personaLibraryCopy.ts
 msgid "No agents yet"
@@ -4629,6 +4788,10 @@ msgstr "No archived channels"
 #: src/features/channels/ui/ChannelBrowserDialog.tsx
 msgid "No archived forums"
 msgstr "No archived forums"
+
+#: src/features/agents/lib/instanceInputForDefinition.ts
+msgid "No available runtime found for this agent."
+msgstr "No available runtime found for this agent."
 
 #: src/features/agents/ui/AgentCardViewerDialog.tsx
 msgid "No cards yet — mint one from an agent’s profile."
@@ -4702,6 +4865,10 @@ msgstr "No discussion"
 #: src/features/messages/ui/DraftsPanel.tsx
 msgid "No drafts"
 msgstr "No drafts"
+
+#: src/features/agents/ui/agentSessionFileRead.ts
+msgid "No file content returned."
+msgstr "No file content returned."
 
 #: src/features/projects/ui/ProjectReadmePanel.tsx
 msgid "No files have been pushed yet"
@@ -4842,6 +5009,10 @@ msgstr "No models found"
 msgid "No models match"
 msgstr "No models match"
 
+#: src/features/agents/ui/agentConfigControls.tsx
+msgid "No options available"
+msgstr "No options available"
+
 #: src/features/agents/ui/PersonaShareRecipients.tsx
 msgid "No people found."
 msgstr "No people found."
@@ -4911,6 +5082,10 @@ msgstr "No reviews yet."
 msgid "No saved settings — the provider applies its defaults."
 msgstr "No saved settings — the provider applies its defaults."
 
+#: src/features/agents/ui/agentSessionFileRead.ts
+msgid "No skill content returned."
+msgstr "No skill content returned."
+
 #: src/features/agents/ui/AgentSnapshotImportDialog.tsx
 msgid "No system prompt included."
 msgstr "No system prompt included."
@@ -4918,6 +5093,10 @@ msgstr "No system prompt included."
 #: src/features/projects/ui/ProjectIssuesPanel.tsx
 msgid "No tasks yet"
 msgstr "No tasks yet"
+
+#: src/features/agents/ui/teamLibraryCopy.ts
+msgid "No teams are being shared"
+msgstr "No teams are being shared"
 
 #: src/features/projects/ui/ProjectPullRequestFilesChangedPanel.tsx
 msgid "No textual diff is available for this file."
@@ -5414,6 +5593,10 @@ msgstr "Parameters"
 msgid "Paste a URL"
 msgstr "Paste a URL"
 
+#: src/features/agents/ui/PersonaProviderApiKeyField.tsx
+msgid "Paste API key…"
+msgstr "Paste API key…"
+
 #: src/features/agents/ui/RespondToField.tsx
 msgid "Paste pubkeys"
 msgstr "Paste pubkeys"
@@ -5436,6 +5619,10 @@ msgstr "Pending"
 #: src/features/search/ui/TopbarSearch.tsx
 msgid "People"
 msgstr "People"
+
+#: src/features/agents/ui/EditAgentAdvancedFields.tsx
+msgid "Per-agent env vars. Override the template's vars on collision."
+msgstr "Per-agent env vars. Override the template's vars on collision."
 
 #: src/features/agents/ui/agentSessionTranscript.ts
 msgid "Permission requested"
@@ -5652,6 +5839,7 @@ msgstr "Provided by this build"
 
 #: src/features/agents/ui/AgentAiDefaults.tsx
 #: src/features/agents/ui/AgentConfigFields.tsx
+#: src/features/agents/ui/AgentConfigPanel.tsx
 #: src/features/agents/ui/AgentInstanceEditDialog.tsx
 msgid "Provider"
 msgstr "Provider"
@@ -6240,6 +6428,9 @@ msgid "Save card"
 msgstr "Save card"
 
 #: src/features/agents/ui/AgentInstanceEditDialog.tsx
+#: src/features/agents/ui/AgentManagementDialogs.tsx
+#: src/features/agents/ui/personaDialogState.ts
+#: src/features/agents/ui/useTeamActions.ts
 msgid "Save changes"
 msgstr "Save changes"
 
@@ -6265,6 +6456,10 @@ msgstr "Saved. {failedRestartCount} agent{0} couldn't restart — check the Agen
 #: src/features/agents/ui/AgentDefaultsEditor.tsx
 msgid "Saved. Restarted {restartedCount} agent{0}.{1}"
 msgstr "Saved. Restarted {restartedCount} agent{0}.{1}"
+
+#: src/features/agents/ui/AgentDefinitionDialogFooter.tsx
+msgid "Saving..."
+msgstr "Saving..."
 
 #. placeholder {0}: BRAND.productName
 #: src/features/onboarding/ui/MachineOnboardingFlow.tsx
@@ -6389,11 +6584,19 @@ msgstr "Section name"
 msgid "Sections let you group related channels in the sidebar."
 msgstr "Sections let you group related channels in the sidebar."
 
+#: src/features/agents/ui/agentConfigControls.tsx
+msgid "Select"
+msgstr "Select"
+
 #. placeholder {0}: selection.item.title
 #: src/features/projects/ui/ProjectEntityListRow.tsx
 #: src/features/projects/ui/ProjectWorkItemRow.tsx
 msgid "Select {0}"
 msgstr "Select {0}"
+
+#: src/features/agents/ui/personaLibraryCopy.ts
+msgid "Select {displayName} in My Agents"
+msgstr "Select {displayName} in My Agents"
 
 #: src/features/projects/ui/AddProjectRepositoryDialog.tsx
 msgid "Select a channel"
@@ -6423,6 +6626,10 @@ msgstr "Select a model"
 msgid "Select a provider"
 msgstr "Select a provider"
 
+#: src/features/agents/ui/agentConfigOptions.tsx
+msgid "Select a provider…"
+msgstr "Select a provider…"
+
 #: src/features/projects/ui/ProjectSelectableGroup.tsx
 msgid "Select all {label}"
 msgstr "Select all {label}"
@@ -6439,6 +6646,10 @@ msgstr "Select effort level"
 msgid "Select existing repository"
 msgstr "Select existing repository"
 
+#: src/features/agents/ui/agentConfigControls.tsx
+msgid "Select model"
+msgstr "Select model"
+
 #: src/features/agents/ui/AgentConfigFields.tsx
 msgid "Select provider"
 msgstr "Select provider"
@@ -6451,10 +6662,18 @@ msgstr "Select the agents to include in this team."
 msgid "selected"
 msgstr "selected"
 
+#: src/features/agents/ui/personaLibraryCopy.ts
+msgid "Selected"
+msgstr "Selected"
+
 #. placeholder {0}: persona.displayName
 #: src/features/agents/ui/usePersonaActions.ts
 msgid "Selected {0} for My Agents."
 msgstr "Selected {0} for My Agents."
+
+#: src/features/agents/ui/personaLibraryCopy.ts
+msgid "Selected for My Agents"
+msgstr "Selected for My Agents"
 
 #: src/features/agents/lib/agentAccessWarning.ts
 #: src/features/agents/ui/RespondToField.tsx
@@ -6565,6 +6784,7 @@ msgid "Share settings"
 msgstr "Share settings"
 
 #: src/features/agents/ui/PersonaShareDialog.tsx
+#: src/features/agents/ui/teamLibraryCopy.ts
 #: src/features/agents/ui/TeamShareDialog.tsx
 msgid "Share to catalog"
 msgstr "Share to catalog"
@@ -6584,6 +6804,14 @@ msgstr "Shared a link to this."
 #: src/features/agents/ui/CommunityCatalogDialog.tsx
 msgid "Shared agents and teams will appear here."
 msgstr "Shared agents and teams will appear here."
+
+#: src/features/agents/ui/personaLibraryCopy.ts
+msgid "Shared agents will appear here."
+msgstr "Shared agents will appear here."
+
+#: src/features/agents/ui/teamLibraryCopy.ts
+msgid "Shared teams will appear here."
+msgstr "Shared teams will appear here."
 
 #: src/features/agents/ui/PersonaAdvancedFields.tsx
 msgid "Shares one conversation across every thread in a channel."
@@ -6666,6 +6894,10 @@ msgstr "Showing the latest {DISCUSSION_SEARCH_LIMIT} mentions; totals may be hig
 #: src/features/agents/ui/AgentDescriptionField.tsx
 msgid "Shown publicly on the agent's card and profile."
 msgstr "Shown publicly on the agent's card and profile."
+
+#: src/features/agents/lib/managedAgentControlActions.ts
+msgid "Shutdown requested. This does not confirm the agent has stopped."
+msgstr "Shutdown requested. This does not confirm the agent has stopped."
 
 #: src/features/settings/ui/AppearanceSettingsControls.tsx
 msgid "Sidebar density"
@@ -6835,6 +7067,10 @@ msgstr "Switch to the remote source or clone this repository locally."
 msgid "System"
 msgstr "System"
 
+#: src/features/agents/ui/AgentConfigPanel.tsx
+msgid "System prompt"
+msgstr "System prompt"
+
 #: src/features/agents/ui/EditAgentAdvancedFields.tsx
 msgid "System prompt override"
 msgstr "System prompt override"
@@ -6886,6 +7122,10 @@ msgstr "Team + all memories"
 msgid "Team + core memory"
 msgstr "Team + core memory"
 
+#: src/features/agents/ui/teamLibraryCopy.ts
+msgid "Team Catalog"
+msgstr "Team Catalog"
+
 #: src/features/agents/ui/TeamSnapshotImportDialog.tsx
 msgid "Team imported"
 msgstr "Team imported"
@@ -6918,6 +7158,10 @@ msgstr "Teams"
 msgid "Template"
 msgstr "Template"
 
+#: src/features/agents/ui/EditAgentAdvancedFields.tsx
+msgid "template / global defaults"
+msgstr "template / global defaults"
+
 #: src/features/agents/ui/ManagedAgentRow.tsx
 msgid "Template updated since this agent was created. Respawn to apply the new configuration."
 msgstr "Template updated since this agent was created. Respawn to apply the new configuration."
@@ -6936,6 +7180,10 @@ msgstr "Temporary · {0}. Cleans up automatically after that period of inactivit
 #: src/features/projects/ui/ProjectRepositoryActionsPanel.tsx
 msgid "Terminal"
 msgstr "Terminal"
+
+#: src/features/agents/ui/ModelPicker.tsx
+msgid "That model isn't available for this agent."
+msgstr "That model isn't available for this agent."
 
 #: src/features/projects/ui/ProjectCards.tsx
 msgid "The {productName} git service could not be reached."
@@ -7080,6 +7328,7 @@ msgstr "These settings apply to all agents unless you override them. Agent-speci
 msgid "Thinking / Effort"
 msgstr "Thinking / Effort"
 
+#: src/features/agents/ui/AgentConfigPanel.tsx
 #: src/features/agents/ui/EffortPickerField.tsx
 msgid "Thinking effort"
 msgstr "Thinking effort"
@@ -7418,6 +7667,14 @@ msgstr "Turn error"
 msgid "Turn off Show unread only to see read activity."
 msgstr "Turn off Show unread only to see read activity."
 
+#: src/features/agents/ui/personaLibraryCopy.ts
+msgid "Turn this off to remove the agent from teams and agent creation in this app."
+msgstr "Turn this off to remove the agent from teams and agent creation in this app."
+
+#: src/features/agents/ui/personaLibraryCopy.ts
+msgid "Turn this on to make the agent available for teams and agent creation."
+msgstr "Turn this on to make the agent available for teams and agent creation."
+
 #. placeholder {0}: segment.user.id
 #: src/features/agents/ui/AgentSessionTranscriptList.tsx
 msgid "turn:{turnId}:prompt:{0}"
@@ -7594,6 +7851,10 @@ msgstr "Upload failed."
 msgid "Uploading {assetLabel}"
 msgstr "Uploading {assetLabel}"
 
+#: src/features/agents/ui/AgentDefinitionDialogFooter.tsx
+msgid "Uploading..."
+msgstr "Uploading..."
+
 #: src/features/settings/ui/AppearanceSettingsControls.tsx
 msgid "Use {colorName} accent"
 msgstr "Use {colorName} accent"
@@ -7635,6 +7896,10 @@ msgstr "Use app default"
 #: src/features/agents/ui/AgentAiConfigurationMode.tsx
 msgid "Use harness defaults"
 msgstr "Use harness defaults"
+
+#: src/features/agents/ui/agentConfigOptions.tsx
+msgid "Used for minting agent trading cards"
+msgstr "Used for minting agent trading cards"
 
 #: src/features/agents/ui/agentSessionTranscriptPresentation.ts
 msgid "User prompt"
@@ -7738,6 +8003,10 @@ msgstr "View commit {0}"
 #: src/features/projects/ui/ProjectPullRequestsPanel.tsx
 msgid "View commit {short}"
 msgstr "View commit {short}"
+
+#: src/features/agents/ui/personaLibraryCopy.ts
+msgid "View details"
+msgstr "View details"
 
 #: src/features/projects/ui/ProjectsPullRequestsList.tsx
 msgid "View draft"
@@ -7939,6 +8208,10 @@ msgstr "You can always use this agent."
 #: src/features/projects/lib/projectGitError.ts
 msgid "You need access to the repository’s channel before you can clone it."
 msgstr "You need access to the repository’s channel before you can clone it."
+
+#: src/features/agents/ui/personaLibraryCopy.ts
+msgid "You're all set"
+msgstr "You're all set"
 
 #: src/features/projects/ui/ProjectCards.tsx
 msgid "You’re not a member of the channel that grants access to this repository."

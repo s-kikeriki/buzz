@@ -382,7 +382,7 @@ export function SnapshotShareDialog({
       setCopyStatus("copied");
     } catch {
       setCopyStatus("idle");
-      toast.error("Couldn’t copy link. Try again.");
+      toast.error(t`Couldn’t copy link. Try again.`);
     }
   }
 

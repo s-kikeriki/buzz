@@ -6,7 +6,7 @@ import { Input } from "@/shared/ui/input";
 import { Textarea } from "@/shared/ui/textarea";
 import { EnvVarsEditor, type EnvVarsValue } from "./EnvVarsEditor";
 import {
-  CARD_MINT_KEY_ANNOTATIONS,
+  cardMintKeyAnnotations,
   PERSONA_FIELD_CONTROL_CLASS,
   PERSONA_FIELD_SHELL_CLASS,
   PERSONA_LABEL_OPTIONAL_CLASS,
@@ -342,10 +342,10 @@ export function EditAgentAdvancedFields({
         fileSatisfiedKeys={fileSatisfiedEnvKeys}
         hiddenKeys={effectiveHiddenKeys}
         focusKey={focusKey}
-        helperText="Per-agent env vars. Override the template's vars on collision."
+        helperText={t`Per-agent env vars. Override the template's vars on collision.`}
         inheritedFrom={inheritedEnvVars}
-        inheritedLabel="template / global defaults"
-        keyAnnotations={CARD_MINT_KEY_ANNOTATIONS}
+        inheritedLabel={t`template / global defaults`}
+        keyAnnotations={cardMintKeyAnnotations()}
         onChange={onEnvVarsChange}
         requiredKeys={requiredEnvKeys}
         value={envVars}

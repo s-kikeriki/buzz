@@ -36,7 +36,7 @@ import {
 import {
   AUTO_PROVIDER_DROPDOWN_VALUE,
   BLOCK_BUILD_HIDDEN_PROVIDER_IDS,
-  CARD_MINT_KEY_ANNOTATIONS,
+  cardMintKeyAnnotations,
   CUSTOM_PROVIDER_DROPDOWN_VALUE,
   getPersonaProviderOptions,
   getProviderApiKeyEnvVar,
@@ -784,7 +784,7 @@ export function AgentConfigFields({
         ]}
         inheritedRows={bakedGenericRows}
         inheritedRowsLabel="build"
-        keyAnnotations={CARD_MINT_KEY_ANNOTATIONS}
+        keyAnnotations={cardMintKeyAnnotations()}
         label={t`Environment variables`}
         onChange={handleEnvVarsChange}
         requiredKeys={advancedRequiredEnvKeys}

@@ -104,7 +104,7 @@ export function PersonaProviderApiKeyField({
           disabled={disabled}
           id={inputId}
           onChange={(event) => onValueChange(event.target.value)}
-          placeholder={isInherited ? inheritedLabel : "Paste API key…"}
+          placeholder={isInherited ? inheritedLabel : t`Paste API key…`}
           type={showValue ? "text" : "password"}
           value={value}
         />

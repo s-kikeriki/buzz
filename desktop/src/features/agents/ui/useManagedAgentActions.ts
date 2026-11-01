@@ -247,7 +247,7 @@ export function useManagedAgentActions() {
       const input = await buildInstanceInputForDefinition(persona, runtime);
 
       const created = await createAgentMutation.mutateAsync(input);
-      toast.success("Agent created");
+      toast.success(t`Agent created`);
       const notices = [...warnings];
 
       if (created.spawnError && !isRelayRemovedError(created.spawnError)) {

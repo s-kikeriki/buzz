@@ -1,3 +1,5 @@
+import { t } from "@lingui/core/macro";
+
 import type {
   AgentActivityDescriptor,
   TranscriptItem,
@@ -50,7 +52,7 @@ export function buildSkillReadContent(
           kind: "context" as const,
           text: line,
         }))
-      : [{ kind: "meta" as const, text: "No skill content returned." }];
+      : [{ kind: "meta" as const, text: t`No skill content returned.` }];
 
   const footerText = skillRef.includes("/") ? skillRef : `${skillRef}/SKILL.md`;
 
@@ -107,7 +109,7 @@ function parseReadFileOutput(resultText: string, path: string) {
             : ("context" as const),
           text: line,
         }))
-      : [{ kind: "meta" as const, text: "No file content returned." }];
+      : [{ kind: "meta" as const, text: t`No file content returned.` }];
 
   return {
     footerText: hasRangeHeader ? firstLine : path,

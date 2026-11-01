@@ -106,7 +106,7 @@ export function formatModelDiscoveryErrorStatus(
 
   if (message.includes("ANTHROPIC_API_KEY required")) {
     return {
-      message: "Enter an Anthropic API key to load Anthropic models.",
+      message: t`Enter an Anthropic API key to load Anthropic models.`,
       tone: "warning",
     };
   }
@@ -133,7 +133,7 @@ export function formatModelDiscoveryErrorStatus(
   }
 
   if (message.includes("BUZZ_AGENT_PROVIDER is required")) {
-    return { message: "Choose a provider to load models.", tone: "muted" };
+    return { message: t`Choose a provider to load models.`, tone: "muted" };
   }
 
   // Databricks transparent auth (agent_models_databricks.rs). The backend
@@ -164,7 +164,7 @@ export function formatModelDiscoveryErrorStatus(
 function formatDatabricksAuthStatus(
   message: string,
 ): PersonaModelDiscoveryStatus | null {
-  if (message.includes("Databricks sign-in is required")) {
+  if (message.includes(t`Databricks sign-in is required`)) {
     return {
       message:
         "Databricks sign-in is required. Open the model picker to sign in, or run `buzz-agent auth databricks` in a terminal.",
@@ -173,8 +173,8 @@ function formatDatabricksAuthStatus(
   }
 
   if (
-    message.includes("Databricks sign-in failed") ||
-    message.includes("Databricks sign-in timed out")
+    message.includes(t`Databricks sign-in failed`) ||
+    message.includes(t`Databricks sign-in timed out`)
   ) {
     return {
       message:

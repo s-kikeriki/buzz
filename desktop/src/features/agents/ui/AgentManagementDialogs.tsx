@@ -43,7 +43,7 @@ export function AgentManagementDialogs() {
           open
           runtimes={management.runtimes}
           runtimeCatalogStatus={management.runtimeCatalogStatus}
-          submitLabel="Save changes"
+          submitLabel={t`Save changes`}
           title={t`Edit agent`}
         />
       ) : null}

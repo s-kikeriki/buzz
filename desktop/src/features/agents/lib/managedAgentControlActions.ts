@@ -140,8 +140,7 @@ export async function stopManagedAgentWithRules({
       agent.pubkey,
     ]);
     return {
-      noticeMessage:
-        "Shutdown requested. This does not confirm the agent has stopped.",
+      noticeMessage: t`Shutdown requested. This does not confirm the agent has stopped.`,
     };
   }
 
@@ -195,7 +194,7 @@ export async function deleteManagedAgentWithRules({
         if (!skipRemoteDeleteConfirm) {
           const confirmed = window.confirm(
             "This agent is offline but the remote deployment may still exist. " +
-              "Deleting removes the local management record. Continue?",
+              t`Deleting removes the local management record. Continue?`,
           );
           if (!confirmed) {
             return { cancelled: true };

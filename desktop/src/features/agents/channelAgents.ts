@@ -324,7 +324,7 @@ export async function provisionChannelManagedAgent(
   const trimmedName = input.name.trim();
 
   if (trimmedName.length === 0) {
-    throw new Error("Agent name is required.");
+    throw new Error(t`Agent name is required.`);
   }
 
   // Smart reuse: if a managed agent with the same personaId already exists

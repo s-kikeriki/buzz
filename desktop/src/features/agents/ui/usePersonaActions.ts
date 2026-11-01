@@ -213,7 +213,7 @@ export function usePersonaActions() {
         );
         if (!runtime) {
           setPersonaErrorMessage(
-            "Choose an available provider for this agent.",
+            t`Choose an available provider for this agent.`,
           );
           return false;
         }

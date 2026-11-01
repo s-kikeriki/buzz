@@ -1,5 +1,6 @@
 import { Trans, useLingui } from "@lingui/react/macro";
-import { t } from "@lingui/core/macro";
+import type { MessageDescriptor } from "@lingui/core";
+import { msg, t } from "@lingui/core/macro";
 import * as React from "react";
 import type { LucideIcon } from "lucide-react";
 import {
@@ -105,14 +106,14 @@ type RowVariant = "compact" | "profile";
 
 // ── Normalized row ────────────────────────────────────────────────────────────
 
-const NORMALIZED_LABELS: Record<keyof NormalizedConfig, string> = {
-  model: "Model",
-  provider: "Provider",
-  mode: "Mode",
-  thinkingEffort: "Thinking effort",
-  maxOutputTokens: "Max output tokens",
-  contextLimit: "Context limit",
-  systemPrompt: "System prompt",
+const NORMALIZED_LABELS: Record<keyof NormalizedConfig, MessageDescriptor> = {
+  model: msg`Model`,
+  provider: msg`Provider`,
+  mode: msg`Mode`,
+  thinkingEffort: msg`Thinking effort`,
+  maxOutputTokens: msg`Max output tokens`,
+  contextLimit: msg`Context limit`,
+  systemPrompt: msg`System prompt`,
 };
 
 const NORMALIZED_ICONS: Record<keyof NormalizedConfig, LucideIcon> = {
@@ -445,7 +446,7 @@ export function AgentConfigSurfaceRows({
                   field={field}
                   fieldKey={key}
                   key={key}
-                  label={NORMALIZED_LABELS[key]}
+                  label={i18n._(NORMALIZED_LABELS[key])}
                   onEdit={onEdit}
                   variant="profile"
                 />
@@ -496,7 +497,7 @@ export function AgentConfigSurfaceRows({
           normalizedEntries.map(([key, field]) => (
             <NormalizedRow
               fieldKey={key}
-              label={NORMALIZED_LABELS[key]}
+              label={i18n._(NORMALIZED_LABELS[key])}
               field={field}
               key={key}
               variant="compact"

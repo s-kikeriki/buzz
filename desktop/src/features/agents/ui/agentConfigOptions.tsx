@@ -341,7 +341,7 @@ export function getDefaultLlmProviderLabel(
   const trimmedGlobal = (globalProvider ?? "").trim();
   return trimmedGlobal
     ? t`Use agent defaults (${providerDisplayLabel(trimmedGlobal)})`
-    : "Select a provider\u2026";
+    : t`Select a provider\u2026`;
 }
 
 /** Returns the zero-value model option label.
@@ -466,9 +466,9 @@ export function getProviderApiKeyLabel(providerId: string): string | null {
  * (Agent Defaults, agent edit dialog, persona definition dialog).  Exported
  * so the constant is defined once and never duplicated across surfaces.
  */
-export const CARD_MINT_KEY_ANNOTATIONS: Readonly<Record<string, string>> = {
-  OPENAI_API_KEY: "Used for minting agent trading cards",
-};
+export function cardMintKeyAnnotations(): Readonly<Record<string, string>> {
+  return { OPENAI_API_KEY: t`Used for minting agent trading cards` };
+}
 
 export function shouldClearKnownModelForSelectionScope({
   model,
