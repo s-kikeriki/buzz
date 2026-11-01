@@ -1,3 +1,5 @@
+import { plural } from "@lingui/core/macro";
+import { Trans, useLingui } from "@lingui/react/macro";
 import { AgentManagementMarker } from "@/features/agents/ui/OtherSetupAgentMarker";
 import { ArrowUp, AtSign, Square, X } from "lucide-react";
 import {
@@ -79,9 +81,15 @@ function AddressedAgentAvatar({
 }
 
 function RemainingAgentCount({ count }: { count: number }) {
+  const { i18n } = useLingui();
   return count > 0 ? (
     <span
-      aria-label={`${count} more addressed ${count === 1 ? "agent" : "agents"}`}
+      aria-label={i18n._(
+        plural(count, {
+          one: "# more addressed agent",
+          other: "# more addressed agents",
+        }),
+      )}
       className="flex h-5 min-w-5 items-center justify-center rounded-full bg-muted px-1 text-3xs font-semibold text-muted-foreground ring-1 ring-border/70"
       role="img"
     >
@@ -150,6 +158,7 @@ export function ComposerMentionButton({
   onRemove: (pubkey: string) => void;
   showAgents: boolean;
 }) {
+  const { t } = useLingui();
   const visibleAgents = showAgents ? agents.slice(0, VISIBLE_AGENT_LIMIT) : [];
   const hiddenCount = showAgents ? agents.length - visibleAgents.length : 0;
   const hasAgents = visibleAgents.length > 0;
@@ -181,7 +190,7 @@ export function ComposerMentionButton({
           <Tooltip disableHoverableContent>
             <TooltipTrigger asChild>
               <button
-                aria-label={hasAgents ? "Manage mentions" : "Mention someone"}
+                aria-label={hasAgents ? t`Manage mentions` : t`Mention someone`}
                 className={cn(
                   "flex h-8 items-center justify-center rounded-lg focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50",
                   showActiveChrome
@@ -202,7 +211,7 @@ export function ComposerMentionButton({
               </button>
             </TooltipTrigger>
             <TooltipContent>
-              {hasAgents ? "Manage mentions" : "Mention someone"}
+              {hasAgents ? t`Manage mentions` : t`Mention someone`}
             </TooltipContent>
           </Tooltip>
           <AnimatePresence
@@ -229,7 +238,7 @@ export function ComposerMentionButton({
                     <Tooltip disableHoverableContent key={agent.pubkey}>
                       <TooltipTrigger asChild>
                         <motion.button
-                          aria-label={`Don't automatically mention ${agent.displayName} in this thread`}
+                          aria-label={t`Don't automatically mention ${agent.displayName} in this thread`}
                           animate={{ opacity: 1, scale: 1 }}
                           className="group/address relative rounded-full focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-ring"
                           data-testid={`composer-address-lock-remove-${agent.pubkey}`}
@@ -270,8 +279,14 @@ export function ComposerMentionButton({
                         </motion.button>
                       </TooltipTrigger>
                       <TooltipContent>
-                        Don't automatically mention {agent.displayName} in this
-                        thread <AgentManagementMarker pubkey={agent.pubkey} />
+                        {/* One sentence with the marker element inside it:
+                         * German puts "nicht" and the verb elsewhere, so the
+                         * tail after the name is not a translatable piece. */}
+                        <Trans>
+                          Don't automatically mention {agent.displayName} in
+                          this thread{" "}
+                          <AgentManagementMarker pubkey={agent.pubkey} />
+                        </Trans>
                       </TooltipContent>
                     </Tooltip>
                   ))}
@@ -304,7 +319,7 @@ export function ComposerMentionButton({
             onMouseDown={(event) => event.preventDefault()}
             type="button"
           >
-            Turn off
+            <Trans>Turn off</Trans>
           </button>
         </PopoverContent>
       ) : null}
@@ -321,15 +336,16 @@ export function ComposerSendButton({
   onFinishVoiceNote?: () => void;
   sendDisabled: boolean;
 }) {
+  const { t } = useLingui();
   const isFinishingVoiceNote = onFinishVoiceNote != null;
   return (
     <button
       aria-label={
         isFinishingVoiceNote
-          ? "Finish voice note"
+          ? t`Finish voice note`
           : isSending
-            ? "Sending"
-            : "Send message"
+            ? t`Sending`
+            : t`Send message`
       }
       className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-primary-fill text-primary-fill-foreground shadow transition-colors hover:bg-primary-fill/90 focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
       data-testid={isFinishingVoiceNote ? "finish-voice-note" : "send-message"}

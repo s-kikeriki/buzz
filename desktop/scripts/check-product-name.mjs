@@ -90,6 +90,11 @@ const CONVERTED_FILES = [
   // "Buzz Term" in three strings. Found while translating the channel area —
   // the file was not in this ratchet, so nothing was watching it.
   "src/features/channels/ui/ChannelScreenHeader.tsx",
+  // Messages: two more leaks found while translating. The composer link chip
+  // labelled an unparseable deep link "Buzz link", and the voice-note recorder
+  // named the product in both of its microphone errors.
+  "src/features/messages/lib/composerMessageLinkNode.ts",
+  "src/features/messages/lib/useVoiceNoteRecorder.ts",
 ];
 
 /**

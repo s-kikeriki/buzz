@@ -1,3 +1,5 @@
+import { plural } from "@lingui/core/macro";
+import { Trans, useLingui } from "@lingui/react/macro";
 import * as React from "react";
 
 import { useAppNavigation } from "@/app/navigation/useAppNavigation";
@@ -27,6 +29,7 @@ import {
  * lives in an attached popover instead of taking over the message area.
  */
 export function NewMessageScreen() {
+  const { i18n, t } = useLingui();
   const identityQuery = useIdentityQuery();
   const currentPubkey = identityQuery.data?.pubkey;
   const openDmMutation = useOpenDmMutation();
@@ -215,7 +218,7 @@ export function NewMessageScreen() {
         setSubmitErrorMessage(
           error instanceof Error
             ? error.message
-            : "Failed to open direct message.",
+            : t`Failed to open direct message.`,
         );
         return null;
       }
@@ -226,6 +229,7 @@ export function NewMessageScreen() {
       openDmMutation.mutateAsync,
       selectedUsers,
       sendMessageMutation.isPending,
+      t,
     ],
   );
 
@@ -253,7 +257,7 @@ export function NewMessageScreen() {
           : await openDirectMessage();
       if (!directMessage) {
         throw new Error(
-          submitErrorMessage ?? "Choose at least one recipient first.",
+          submitErrorMessage ?? t`Choose at least one recipient first.`,
         );
       }
 
@@ -272,7 +276,7 @@ export function NewMessageScreen() {
       } catch (error) {
         preparedDirectMessageRef.current = null;
         const message =
-          error instanceof Error ? error.message : "Failed to send message.";
+          error instanceof Error ? error.message : t`Failed to send message.`;
         if (isMountedRef.current) setSubmitErrorMessage(message);
         throw error;
       }
@@ -292,16 +296,24 @@ export function NewMessageScreen() {
       openDirectMessage,
       sendMessageMutation,
       submitErrorMessage,
+      t,
       upsertCachedChannel,
     ],
   );
 
+  const singleRecipientName =
+    selectedUsers.length === 1 ? formatRecipientName(selectedUsers[0]) : "";
   const composerPlaceholder =
     selectedUsers.length === 0
-      ? "Choose a recipient to start a message"
+      ? t`Choose a recipient to start a message`
       : selectedUsers.length === 1
-        ? `Message ${formatRecipientName(selectedUsers[0])}`
-        : `Message ${selectedUsers.length} people`;
+        ? t`Message ${singleRecipientName}`
+        : i18n._(
+            plural(selectedUsers.length, {
+              one: "Message # person",
+              other: "Message # people",
+            }),
+          );
 
   return (
     <div
@@ -350,7 +362,7 @@ export function NewMessageScreen() {
                 ref={toFieldRef}
               >
                 <span className="shrink-0 text-base font-semibold tracking-tight">
-                  To:
+                  <Trans>To:</Trans>
                 </span>
                 {selectedUsers.map((user) => (
                   <SelectedRecipientChip
@@ -381,7 +393,7 @@ export function NewMessageScreen() {
                   }
                   aria-controls="new-dm-results"
                   aria-expanded={showRecipientPicker}
-                  aria-label="To"
+                  aria-label={t`To`}
                   autoComplete="off"
                   autoCorrect="off"
                   className="h-7 min-w-32 flex-1 bg-transparent text-base outline-hidden placeholder:text-muted-foreground"
@@ -545,7 +557,7 @@ export function NewMessageScreen() {
                 ) : isDirectoryLoading || isSearchTransitionPending ? (
                   <div
                     aria-busy="true"
-                    aria-label="Loading people and agents"
+                    aria-label={t`Loading people and agents`}
                     className="space-y-3 px-4 py-3"
                     data-testid="new-dm-loading"
                     role="status"
@@ -566,8 +578,8 @@ export function NewMessageScreen() {
                     data-testid="new-dm-empty"
                   >
                     {deferredSearchQuery.length === 0
-                      ? "No people or agents available to message."
-                      : "No matching users."}
+                      ? t`No people or agents available to message.`
+                      : t`No matching users.`}
                   </p>
                 )}
               </div>
@@ -579,7 +591,7 @@ export function NewMessageScreen() {
               className="shrink-0 pl-2 text-sm text-muted-foreground"
               data-testid="new-dm-opening"
             >
-              Opening…
+              <Trans>Opening…</Trans>
             </span>
           ) : null}
         </div>
@@ -595,7 +607,7 @@ export function NewMessageScreen() {
           className="px-5 pb-2 text-sm text-muted-foreground"
           data-testid="new-dm-limit"
         >
-          DMs support up to nine people, including you.
+          <Trans>DMs support up to nine people, including you.</Trans>
         </p>
       ) : null}
       {searchError ? (

@@ -1,3 +1,4 @@
+import { Trans, useLingui } from "@lingui/react/macro";
 import { AgentManagementMarker } from "@/features/agents/ui/OtherSetupAgentMarker";
 import { SmilePlus } from "lucide-react";
 import * as React from "react";
@@ -670,6 +671,7 @@ export const SystemMessageRow = React.memo(function SystemMessageRow({
     remove: boolean,
   ) => Promise<void>;
 }) {
+  const { t } = useLingui();
   const sourceMessages = React.useMemo(
     () => groupedMessages ?? [message],
     [groupedMessages, message],
@@ -827,7 +829,7 @@ export const SystemMessageRow = React.memo(function SystemMessageRow({
             <TooltipTrigger asChild>
               <PopoverTrigger asChild>
                 <Button
-                  aria-label="Open reactions"
+                  aria-label={t`Open reactions`}
                   className={SYSTEM_ACTION_BUTTON_CLASS}
                   size="sm"
                   type="button"
@@ -837,7 +839,9 @@ export const SystemMessageRow = React.memo(function SystemMessageRow({
                 </Button>
               </PopoverTrigger>
             </TooltipTrigger>
-            <TooltipContent>React</TooltipContent>
+            <TooltipContent>
+              <Trans>React</Trans>
+            </TooltipContent>
           </Tooltip>
           <PopoverContent
             align="end"

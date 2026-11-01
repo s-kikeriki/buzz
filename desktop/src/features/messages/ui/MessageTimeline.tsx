@@ -1,3 +1,4 @@
+import { Trans, useLingui } from "@lingui/react/macro";
 import * as React from "react";
 
 import {
@@ -218,6 +219,7 @@ const MessageTimelineBase = React.forwardRef<
   }: MessageTimelineProps,
   ref,
 ) {
+  const { t } = useLingui();
   const internalScrollRef = React.useRef<HTMLDivElement>(null);
   const scrollContainerRef = externalScrollRef ?? internalScrollRef;
   const contentRef = React.useRef<HTMLDivElement>(null);
@@ -650,11 +652,16 @@ const MessageTimelineBase = React.forwardRef<
             {activeDirectMessageIntro.displayName}
           </p>
           <p className="mt-1 max-w-full truncate whitespace-nowrap text-sm leading-5 text-muted-foreground">
-            This is the beginning of your direct message with{" "}
-            <span className="font-medium text-foreground">
-              {activeDirectMessageIntro.displayName}
-            </span>
-            .
+            {/* One sentence, bolded name included: German moves the verb and
+             * the prepositional phrase, so the tail is not translatable on its
+             * own. */}
+            <Trans>
+              This is the beginning of your direct message with{" "}
+              <span className="font-medium text-foreground">
+                {activeDirectMessageIntro.displayName}
+              </span>
+              .
+            </Trans>
           </p>
         </div>
       ) : null,
@@ -841,11 +848,13 @@ const MessageTimelineBase = React.forwardRef<
                       {activeDirectMessageIntro.displayName}
                     </p>
                     <p className="mt-1 max-w-full truncate whitespace-nowrap text-sm leading-5 text-muted-foreground">
-                      This is the beginning of your direct message with{" "}
-                      <span className="font-medium text-foreground">
-                        {activeDirectMessageIntro.displayName}
-                      </span>
-                      .
+                      <Trans>
+                        This is the beginning of your direct message with{" "}
+                        <span className="font-medium text-foreground">
+                          {activeDirectMessageIntro.displayName}
+                        </span>
+                        .
+                      </Trans>
                     </p>
                   </div>
                 ) : null}
@@ -915,7 +924,7 @@ const MessageTimelineBase = React.forwardRef<
                   ? unreadCountLabel(bufferedTimeline.pendingCount)
                   : newMessageCount > 0
                     ? unreadCountLabel(newMessageCount)
-                    : "Jump to latest"
+                    : t`Jump to latest`
               }
               onClick={() => {
                 setIsSemanticallyAtBottom(true);

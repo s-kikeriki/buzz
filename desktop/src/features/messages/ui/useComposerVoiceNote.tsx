@@ -1,3 +1,4 @@
+import { useLingui } from "@lingui/react/macro";
 import * as React from "react";
 import { toast } from "sonner";
 
@@ -23,6 +24,7 @@ export function useComposerVoiceNote({
   setEmojiPickerOpen: (open: boolean) => void;
   setFormattingOpen: (open: boolean) => void;
 }) {
+  const { t } = useLingui();
   const recorder = useVoiceNoteRecorder();
   const limitReachedRef = React.useRef(false);
   const statusRef = React.useRef(recorder.status);
@@ -119,13 +121,13 @@ export function useComposerVoiceNote({
     if (statusRef.current !== "idle" || hasVoiceNoteAttachment) {
       toast.error(
         statusRef.current === "idle"
-          ? "A voice note must be the only attachment."
-          : "Finish or discard the voice note before attaching a file.",
+          ? t`A voice note must be the only attachment.`
+          : t`Finish or discard the voice note before attaching a file.`,
       );
       return false;
     }
     return true;
-  }, []);
+  }, [t]);
 
   const uploadFileWhenIdle = React.useCallback(
     async (file: File) => {

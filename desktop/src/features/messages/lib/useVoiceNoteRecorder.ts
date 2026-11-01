@@ -1,4 +1,7 @@
+import { useLingui } from "@lingui/react/macro";
 import * as React from "react";
+
+import { BRAND } from "@/shared/branding/brand";
 
 import { encodeVoiceNoteWav } from "./voiceNoteWav";
 
@@ -40,6 +43,7 @@ function releaseSessionAudio(session: RecordingSession) {
 }
 
 export function useVoiceNoteRecorder() {
+  const { t } = useLingui();
   const mountedRef = React.useRef(true);
   const sessionRef = React.useRef<RecordingSession | null>(null);
   const [status, setStatus] = React.useState<
@@ -156,7 +160,9 @@ export function useVoiceNoteRecorder() {
                 mountedRef.current &&
                 sessionRef.current === session
               ) {
-                setError("Buzz could not prepare this voice note for upload.");
+                setError(
+                  t`${BRAND.productName} could not prepare this voice note for upload.`,
+                );
               }
             }
           }
@@ -218,11 +224,11 @@ export function useVoiceNoteRecorder() {
         (cause.name === "NotAllowedError" || cause.name === "SecurityError");
       setError(
         denied
-          ? "Allow Buzz to access your microphone to record a voice note."
-          : "Buzz could not start the voice recorder.",
+          ? t`Allow ${BRAND.productName} to access your microphone to record a voice note.`
+          : t`${BRAND.productName} could not start the voice recorder.`,
       );
     }
-  }, [status]);
+  }, [status, t]);
 
   const stop = React.useCallback(
     (discard = false): Promise<VoiceNoteRecording | null> => {

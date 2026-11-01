@@ -1,3 +1,5 @@
+import { plural } from "@lingui/core/macro";
+import { useLingui } from "@lingui/react/macro";
 import * as React from "react";
 import { ArrowDown } from "lucide-react";
 
@@ -212,6 +214,7 @@ export function MessageThreadPanel({
   autoSendDraftKey = null,
   onAutoSubmitComplete,
 }: MessageThreadPanelProps) {
+  const { i18n, t } = useLingui();
   const threadBodyRef = React.useRef<HTMLDivElement>(null);
   const threadContentRef = React.useRef<HTMLDivElement>(null);
   const threadComposerWrapperRef = React.useRef<HTMLDivElement>(null);
@@ -223,6 +226,8 @@ export function MessageThreadPanel({
   >(null);
   const isOverlay = useIsThreadPanelOverlay();
   const threadHeadId = threadHead?.id ?? null;
+  // Named so the catalogue carries `{threadHeadAuthor}` rather than `{0}`.
+  const threadHeadAuthor = threadHead?.author ?? "";
   useEscapeKey(
     onClose,
     !isHuddleTranscript && (isOverlay || isSinglePanelView || isFocusMode),
@@ -427,8 +432,8 @@ export function MessageThreadPanel({
               depth: ancestor.message.depth,
               label:
                 ancestor.message.id === threadHead.id
-                  ? "Collapse thread"
-                  : "Collapse replies",
+                  ? t`Collapse thread`
+                  : t`Collapse replies`,
               message: ancestor.message,
             }))
           : undefined;
@@ -467,6 +472,10 @@ export function MessageThreadPanel({
     firstUnreadReplyId,
     hoveredCollapseBranchId,
     isHuddleTranscript,
+    // `t` belongs here: the collapse labels are resolved inside this memo, so
+    // without it they keep the locale that was active the last time the thread
+    // data changed.
+    t,
     threadHead,
   ]);
 
@@ -807,8 +816,13 @@ export function MessageThreadPanel({
           >
             <ArrowDown aria-hidden />
             {newMessageCount > 0
-              ? `${newMessageCount} new message${newMessageCount === 1 ? "" : "s"}`
-              : "Jump to latest"}
+              ? i18n._(
+                  plural(newMessageCount, {
+                    one: "# new message",
+                    other: "# new messages",
+                  }),
+                )
+              : t`Jump to latest`}
           </Button>
         </div>
       ) : null}
@@ -858,8 +872,8 @@ export function MessageThreadPanel({
               onSend={onSend}
               placeholder={
                 isHuddleTranscript
-                  ? "Message the huddle"
-                  : `Reply in thread to ${threadHead.author}`
+                  ? t`Message the huddle`
+                  : t`Reply in thread to ${threadHeadAuthor}`
               }
               profiles={profiles}
               recentMentionPubkeys={recentMentionPubkeys}

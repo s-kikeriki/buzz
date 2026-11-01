@@ -1,10 +1,22 @@
+import { t } from "@lingui/core/macro";
+
 import { normalizePubkey } from "@/shared/lib/pubkey";
 import type { ChannelType } from "@/shared/api/types";
 
-export const DM_THREAD_AGENT_MENTION_ERROR =
-  "Agents must already be in a DM to be mentioned in its threads. Start a new conversation that includes the agent.";
-export const DM_THREAD_MEMBERS_LOADING_ERROR =
-  "Checking conversation members. Try again in a moment.";
+/**
+ * Both messages are resolved per call with the global `t` macro rather than
+ * held as module constants: this module is imported at load time, so a
+ * resolved constant would freeze in whichever locale booted. The callers are
+ * a `useCallback` body and a toast, neither of which is a render path a hook
+ * could hang off.
+ */
+function dmThreadAgentMentionMessage(): string {
+  return t`Agents must already be in a DM to be mentioned in its threads. Start a new conversation that includes the agent.`;
+}
+
+function dmThreadMembersLoadingMessage(): string {
+  return t`Checking conversation members. Try again in a moment.`;
+}
 
 /**
  * Why a DM thread reply may not mention an agent, or null when it may.
@@ -37,7 +49,7 @@ export function dmThreadAgentMentionError({
   }
 
   if (extractMentionPersonas(trimmed).length > 0) {
-    return DM_THREAD_AGENT_MENTION_ERROR;
+    return dmThreadAgentMentionMessage();
   }
 
   const agentPubkeys = extractMentionPubkeys(trimmed).filter(isAgentPubkey);
@@ -46,12 +58,12 @@ export function dmThreadAgentMentionError({
   }
 
   if (!hasResolvedMembers) {
-    return DM_THREAD_MEMBERS_LOADING_ERROR;
+    return dmThreadMembersLoadingMessage();
   }
 
   return agentPubkeys.some(
     (pubkey) => !memberPubkeys.has(normalizePubkey(pubkey)),
   )
-    ? DM_THREAD_AGENT_MENTION_ERROR
+    ? dmThreadAgentMentionMessage()
     : null;
 }

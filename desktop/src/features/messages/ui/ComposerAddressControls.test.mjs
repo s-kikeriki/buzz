@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import { after, afterEach, before, test } from "node:test";
 
 import { JSDOM } from "jsdom";
+import { withI18n } from "@/testing/withI18n.mjs";
 
 const dom = new JSDOM("<!doctype html><html><body></body></html>", {
   url: "http://localhost",
@@ -65,8 +66,8 @@ test("mention control expands with automatically mentioned agents", async () => 
         showAgents: true,
       }),
     );
-  const view = render(renderButton([agent]));
-  view.rerender(renderButton([agent, secondAgent, thirdAgent]));
+  const view = render(withI18n(renderButton([agent])));
+  view.rerender(withI18n(renderButton([agent, secondAgent, thirdAgent])));
 
   assert.ok(view.getByTestId("composer-address-locks"));
   const avatar = view.getByTestId("composer-address-lock-agent-pubkey");
@@ -129,7 +130,7 @@ test("mention control expands with automatically mentioned agents", async () => 
   );
   fireEvent.click(remove);
   assert.deepEqual(removed, ["agent-pubkey"]);
-  view.rerender(renderButton([]));
+  view.rerender(withI18n(renderButton([])));
   const exitingLocks = view.getByTestId("composer-address-locks");
   assert.match(exitingLocks.className, /(?:^|\s)overflow-hidden(?:\s|$)/);
   assert.match(

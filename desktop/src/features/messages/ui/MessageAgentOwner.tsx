@@ -1,3 +1,4 @@
+import { Trans, useLingui } from "@lingui/react/macro";
 import { Bot } from "lucide-react";
 
 import { UserProfilePopover } from "@/features/profile/ui/UserProfilePopover";
@@ -9,13 +10,14 @@ export function MessageAgentOwner({
   ownerLabel?: string | null;
   ownerPubkey?: string | null;
 }) {
+  const { t } = useLingui();
   return (
     <span
       className="inline-flex min-w-0 max-w-56 items-baseline gap-1 text-xs leading-4 text-muted-foreground/65"
       data-testid="message-agent-owner"
     >
       <span className="sr-only">
-        {ownerLabel ? "Agent managed by" : "Agent; owner unavailable"}
+        {ownerLabel ? t`Agent managed by` : t`Agent; owner unavailable`}
       </span>
       {/*
        * Icon and label sit directly in this baseline row rather than in a nested
@@ -38,7 +40,7 @@ export function MessageAgentOwner({
       {ownerPubkey && ownerLabel ? (
         <>
           <span aria-hidden="true" className="shrink-0">
-            managed by
+            <Trans>managed by</Trans>
           </span>
           <UserProfilePopover
             pubkey={ownerPubkey}
@@ -52,7 +54,7 @@ export function MessageAgentOwner({
         </>
       ) : (
         <span aria-hidden="true" className="min-w-0 truncate">
-          owner unavailable
+          <Trans>owner unavailable</Trans>
         </span>
       )}
     </span>

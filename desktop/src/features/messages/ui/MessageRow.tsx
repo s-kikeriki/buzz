@@ -1,3 +1,4 @@
+import { Trans, useLingui } from "@lingui/react/macro";
 import * as React from "react";
 import { AlertTriangle } from "lucide-react";
 import {
@@ -178,6 +179,7 @@ export const MessageRow = React.memo(
     videoReviewCommentRootId?: string;
     videoReviewContext?: VideoReviewContext;
   }) {
+    const { t } = useLingui();
     // Keep the transient send state with its timestamp rather than collapsing
     // it into a grouped message row with no header.
     const isDisplayedAsContinuation = isContinuation && !message.pending;
@@ -404,7 +406,7 @@ export const MessageRow = React.memo(
             <React.Suspense
               fallback={
                 <div className="p-3 text-sm text-muted-foreground">
-                  Loading diff…
+                  <Trans>Loading diff…</Trans>
                 </div>
               }
             >
@@ -489,6 +491,10 @@ export const MessageRow = React.memo(
 
     const showRespondToIndicator =
       message.respondTo === "anyone" || message.respondTo === "allowlist";
+    const respondToLabel =
+      message.respondTo === "anyone"
+        ? t`Anyone can send instructions to this agent`
+        : t`Selected people can send instructions to this agent`;
 
     const avatarNode = (
       <div className="relative shrink-0">
@@ -508,16 +514,8 @@ export const MessageRow = React.memo(
               "absolute -bottom-0.5 -right-0.5 flex h-3 w-3 items-center justify-center rounded-full bg-background",
             )}
             role="img"
-            aria-label={
-              message.respondTo === "anyone"
-                ? "Anyone can send instructions to this agent"
-                : "Selected people can send instructions to this agent"
-            }
-            title={
-              message.respondTo === "anyone"
-                ? "Anyone can send instructions to this agent"
-                : "Selected people can send instructions to this agent"
-            }
+            aria-label={respondToLabel}
+            title={respondToLabel}
           >
             {message.respondTo === "anyone" ? (
               <AlertTriangle
@@ -633,15 +631,19 @@ export const MessageRow = React.memo(
               className="font-normal text-muted-foreground/70"
               data-testid="message-send-status"
             >
-              Sending…
+              <Trans>Sending…</Trans>
             </p>
           ) : null}
           {message.edited ? (
             <Tooltip>
               <TooltipTrigger asChild>
-                <p className="text-muted-foreground/70">(edited)</p>
+                <p className="text-muted-foreground/70">
+                  <Trans>(edited)</Trans>
+                </p>
               </TooltipTrigger>
-              <TooltipContent>This message has been edited</TooltipContent>
+              <TooltipContent>
+                <Trans>This message has been edited</Trans>
+              </TooltipContent>
             </Tooltip>
           ) : null}
         </>
@@ -739,7 +741,7 @@ export const MessageRow = React.memo(
           <React.Suspense
             fallback={
               <div className="p-3 text-sm text-muted-foreground">
-                Loading diff viewer…
+                <Trans>Loading diff viewer…</Trans>
               </div>
             }
           >
@@ -877,7 +879,8 @@ export const MessageRow = React.memo(
             {onCollapseDescendants ? (
               <button
                 aria-label={
-                  collapseDescendantsLabel ?? "Collapse replies to this message"
+                  collapseDescendantsLabel ??
+                  t`Collapse replies to this message`
                 }
                 className="absolute bottom-0 z-20 w-5 -translate-x-1/2 cursor-pointer rounded-full p-0 focus-visible:outline-hidden"
                 data-thread-head-id={message.id}

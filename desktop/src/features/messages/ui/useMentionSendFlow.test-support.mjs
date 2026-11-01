@@ -145,6 +145,17 @@ export async function setup({ lifecycle = false } = {}) {
     // hook under test keeps calling it exactly as it does in the app: `t`
     // interpolates its template and `i18n._` reads a descriptor's source
     // message, which is the English these suites already assert on.
+    // The global `t` macro seam. `dmThreadAgentMentionError` and the composer
+    // link helpers resolve their copy through it because they run outside any
+    // React tree; stubbing the tag keeps the English these suites assert on.
+    "@lingui/core/macro": {
+      t: (strings, ...values) =>
+        strings.reduce(
+          (out, part, index) =>
+            out + part + (index < values.length ? String(values[index]) : ""),
+          "",
+        ),
+    },
     "@lingui/react/macro": {
       useLingui: () => ({
         i18n: {

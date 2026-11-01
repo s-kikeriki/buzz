@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import { after, afterEach, before, test } from "node:test";
 
 import { JSDOM } from "jsdom";
+import { withI18n } from "@/testing/withI18n.mjs";
 
 const dom = new JSDOM("<!doctype html><html><body></body></html>", {
   url: "http://localhost",
@@ -103,19 +104,21 @@ async function renderSystemMessageRow({
   const queryClient = new QueryClient();
 
   render(
-    createElement(
-      QueryClientProvider,
-      { client: queryClient },
+    withI18n(
       createElement(
-        TooltipProvider,
-        null,
-        createElement(SystemMessageRow, {
-          currentPubkey,
-          groupedMessages,
-          message,
-          onToggleReaction,
-          profiles,
-        }),
+        QueryClientProvider,
+        { client: queryClient },
+        createElement(
+          TooltipProvider,
+          null,
+          createElement(SystemMessageRow, {
+            currentPubkey,
+            groupedMessages,
+            message,
+            onToggleReaction,
+            profiles,
+          }),
+        ),
       ),
     ),
   );

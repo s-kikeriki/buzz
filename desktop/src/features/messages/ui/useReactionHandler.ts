@@ -1,3 +1,4 @@
+import { useLingui } from "@lingui/react/macro";
 import * as React from "react";
 import { useQueryClient } from "@tanstack/react-query";
 
@@ -104,6 +105,7 @@ export function useReactionHandler(
     remove: boolean,
   ) => Promise<void>,
 ): ReactionHandler {
+  const { t } = useLingui();
   const queryClient = useQueryClient();
   const [pending, setPending] = React.useState(false);
   const [errorMessage, setErrorMessage] = React.useState<string | null>(null);
@@ -162,7 +164,7 @@ export function useReactionHandler(
         const nextMessage =
           error instanceof Error
             ? error.message
-            : "Failed to update the reaction.";
+            : t`Failed to update the reaction.`;
         setErrorMessage(nextMessage);
         throw error;
       } finally {
@@ -176,6 +178,7 @@ export function useReactionHandler(
       queryClient,
       reactions,
       sourceReactions,
+      t,
     ],
   );
 

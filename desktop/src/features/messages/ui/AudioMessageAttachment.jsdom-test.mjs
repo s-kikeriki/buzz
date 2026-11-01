@@ -52,6 +52,7 @@ const React = (await import("react")).default;
 const { act } = await import("react");
 const { createRoot } = await import("react-dom/client");
 const { AudioMessageAttachment } = await import("./AudioMessageAttachment.tsx");
+const { withI18n } = await import("../../../testing/withI18n.mjs");
 
 const HREF = `https://relay.example.test/media/${"a".repeat(64)}.mp3`;
 const DOWNLOAD_URL = HREF;
@@ -80,14 +81,19 @@ async function mount(props) {
   container = document.createElement("div");
   document.body.append(container);
   root = createRoot(container);
+  // The row calls `useLingui()` for its title and download label, so it needs
+  // the provider. Without it Lingui throws an error that blames a duplicate
+  // `@lingui/react` install and names neither this component nor the provider.
   await act(async () =>
     root.render(
-      React.createElement(AudioMessageAttachment, {
-        href: HREF,
-        downloadUrl: DOWNLOAD_URL,
-        duration: 12,
-        ...props,
-      }),
+      withI18n(
+        React.createElement(AudioMessageAttachment, {
+          href: HREF,
+          downloadUrl: DOWNLOAD_URL,
+          duration: 12,
+          ...props,
+        }),
+      ),
     ),
   );
 }

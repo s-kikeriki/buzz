@@ -1,3 +1,4 @@
+import { Trans, useLingui } from "@lingui/react/macro";
 import * as React from "react";
 import { AlertCircle, Download, Loader2, X } from "lucide-react";
 import { motion, useReducedMotion } from "motion/react";
@@ -124,6 +125,7 @@ export function AudioMessageAttachment({
   href: string;
   onRemove?: () => void;
 }) {
+  const { t } = useLingui();
   const audioRef = React.useRef<HTMLAudioElement | null>(null);
   const playbackId = React.useId();
   const mediaRef = React.useRef<HTMLDivElement | null>(null);
@@ -430,12 +432,12 @@ export function AudioMessageAttachment({
         <button
           aria-label={
             playbackError
-              ? "Retry voice note"
+              ? t`Retry voice note`
               : pendingPlay
-                ? "Loading voice note"
+                ? t`Loading voice note`
                 : isPlaying
-                  ? "Pause voice note"
-                  : "Play voice note"
+                  ? t`Pause voice note`
+                  : t`Play voice note`
           }
           className="flex h-full w-full items-center justify-center rounded-md focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-ring"
           onClick={playbackError ? retryPlayback : togglePlayback}
@@ -454,7 +456,7 @@ export function AudioMessageAttachment({
         <AttachmentTitle className="sr-only">{writtenName}</AttachmentTitle>
         {playbackError ? (
           <div className="text-xs font-medium text-destructive" role="alert">
-            Audio unavailable. Retry playback.
+            <Trans>Audio unavailable. Retry playback.</Trans>
           </div>
         ) : (
           <div
@@ -467,7 +469,9 @@ export function AudioMessageAttachment({
           >
             {waveformError ? (
               <span className="sr-only" role="status">
-                Waveform preview unavailable. Playback may still work.
+                <Trans>
+                  Waveform preview unavailable. Playback may still work.
+                </Trans>
               </span>
             ) : null}
             <div className="flex h-full items-center gap-0.5">
@@ -483,7 +487,7 @@ export function AudioMessageAttachment({
               {waveformBars(true)}
             </div>
             <input
-              aria-label="Voice note playback position"
+              aria-label={t`Voice note playback position`}
               className="absolute inset-0 h-full w-full cursor-pointer opacity-0"
               max={Math.max(duration, 0.01)}
               min="0"
@@ -516,7 +520,7 @@ export function AudioMessageAttachment({
         {!composer ? (
           <button
             ref={playbackRateRef}
-            aria-label={`Playback speed ${playbackRateLabel(playbackRate)}; next ${playbackRateLabel(nextPlaybackRate)}`}
+            aria-label={t`Playback speed ${playbackRateLabel(playbackRate)}; next ${playbackRateLabel(nextPlaybackRate)}`}
             className="col-start-1 row-start-1 grid rounded-full bg-primary px-2.5 py-0.5 text-2xs font-semibold tabular-nums text-primary-foreground opacity-0 transition-[opacity,transform] duration-150 ease-out active:scale-95 group-hover/attachment:opacity-100 group-focus-within/attachment:opacity-100 focus-visible:opacity-100 motion-reduce:transition-none motion-reduce:active:scale-100"
             data-testid="voice-note-playback-rate"
             onClick={() => {
@@ -547,18 +551,18 @@ export function AudioMessageAttachment({
       {!composer && downloadUrl ? (
         <AttachmentActions>
           <AttachmentAction
-            aria-label={`Download ${writtenName}`}
+            aria-label={t`Download ${writtenName}`}
             onClick={() => {
               invokeTauri("download_file", {
                 filename,
                 url: downloadUrl,
               }).catch((error: unknown) => {
                 toast.error(
-                  error instanceof Error ? error.message : "Download failed",
+                  error instanceof Error ? error.message : t`Download failed`,
                 );
               });
             }}
-            title="Download"
+            title={t`Download`}
             type="button"
           >
             <Download />
@@ -568,9 +572,9 @@ export function AudioMessageAttachment({
       {!composer && onRemove ? (
         <AttachmentActions>
           <AttachmentAction
-            aria-label="Remove voice note"
+            aria-label={t`Remove voice note`}
             onClick={onRemove}
-            title="Remove"
+            title={t`Remove`}
             type="button"
           >
             <X />

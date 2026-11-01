@@ -1,3 +1,4 @@
+import { Trans } from "@lingui/react/macro";
 import type { ReactNode } from "react";
 
 import {
@@ -35,11 +36,12 @@ export function ThreadRepliesErrorCard({ onRetry }: { onRetry?: () => void }) {
       role="alert"
     >
       <p className="text-sm font-medium text-foreground/80">
-        Couldn&apos;t load replies
+        <Trans>Couldn't load replies</Trans>
       </p>
       <p className="mt-1 text-xs text-muted-foreground">
-        The thread history didn&apos;t load. Check your connection and try
-        again.
+        <Trans>
+          The thread history didn't load. Check your connection and try again.
+        </Trans>
       </p>
       {onRetry ? (
         <Button
@@ -50,7 +52,7 @@ export function ThreadRepliesErrorCard({ onRetry }: { onRetry?: () => void }) {
           type="button"
           variant="outline"
         >
-          Retry
+          <Trans>Retry</Trans>
         </Button>
       ) : null}
     </div>
@@ -66,10 +68,10 @@ export function ThreadRepliesEmptyCard() {
   return (
     <div className="rounded-2xl border border-dashed border-border/70 bg-card/40 px-4 py-6 text-center">
       <p className="text-sm font-medium text-foreground/80">
-        No replies in this branch yet
+        <Trans>No replies in this branch yet</Trans>
       </p>
       <p className="mt-1 text-xs text-muted-foreground">
-        Reply in the thread to continue this branch.
+        <Trans>Reply in the thread to continue this branch.</Trans>
       </p>
     </div>
   );

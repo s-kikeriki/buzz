@@ -431,6 +431,58 @@ const CONVERTED_FILES = [
   "src/features/messages/ui/ChannelIntroBlock.tsx",
   "src/features/messages/ui/NonMemberMentionDialog.tsx",
   "src/features/messages/ui/useNonMemberInvite.ts",
+  // Tranche 6 — the messages area: `features/messages`, minus the system-
+  // message row. 261 call sites across 43 files on top of the channel tranche
+  // (269 before it converted four of these files).
+  //
+  // The libraries are listed with the components because they produce copy no
+  // JSX node mentions: the composer link chip labels, the DM-thread mention
+  // refusals, the message-link prefix and snippet fallback, and the wave
+  // fallback. Each resolves per call through the global `t` macro — they run
+  // from a markdown-it rule, a TipTap `renderHTML` and a `.catch`, none of
+  // which is a React render path a hook can hang off.
+  "src/features/messages/lib/composerMessageLinkNode.ts",
+  "src/features/messages/lib/dmThreadAgentMentionError.ts",
+  "src/features/messages/lib/messageLinkLabel.ts",
+  "src/features/messages/lib/messageLinkMetadata.ts",
+  "src/features/messages/lib/useLinkEditor.tsx",
+  "src/features/messages/lib/useVoiceNoteRecorder.ts",
+  "src/features/messages/lib/waveMessage.ts",
+  "src/features/messages/ui/AudioMessageAttachment.tsx",
+  "src/features/messages/ui/ComposerAddressControls.tsx",
+  "src/features/messages/ui/ComposerAttachments.tsx",
+  "src/features/messages/ui/ComposerEmojiPicker.tsx",
+  "src/features/messages/ui/ComposerImageEditor.tsx",
+  "src/features/messages/ui/ComposerReplyEditBanner.tsx",
+  "src/features/messages/ui/DeleteMessageConfirmDialog.tsx",
+  "src/features/messages/ui/DiffMessage.tsx",
+  "src/features/messages/ui/DiffMessageExpanded.tsx",
+  "src/features/messages/ui/DiffViewer.tsx",
+  "src/features/messages/ui/FormattingToolbar.tsx",
+  "src/features/messages/ui/MentionAutocomplete.tsx",
+  "src/features/messages/ui/MessageActionBar.tsx",
+  "src/features/messages/ui/MessageAgentOwner.tsx",
+  "src/features/messages/ui/MessageComposer.tsx",
+  "src/features/messages/ui/MessageComposerToolbar.tsx",
+  "src/features/messages/ui/MessageReactions.tsx",
+  "src/features/messages/ui/MessageRow.tsx",
+  "src/features/messages/ui/MessageThreadPanel.tsx",
+  "src/features/messages/ui/MessageThreadReplyState.tsx",
+  "src/features/messages/ui/MessageTimeline.tsx",
+  "src/features/messages/ui/MessageTimelineErrorCard.tsx",
+  "src/features/messages/ui/NewMessageResultRow.tsx",
+  "src/features/messages/ui/NewMessageScreen.tsx",
+  "src/features/messages/ui/SelectionFormattingTray.tsx",
+  "src/features/messages/ui/SentFromThreadLine.tsx",
+  "src/features/messages/ui/SystemMessageAvatars.tsx",
+  "src/features/messages/ui/UnreadDivider.tsx",
+  "src/features/messages/ui/VoiceNoteRecorder.tsx",
+  "src/features/messages/ui/WaveMessageAttachment.tsx",
+  "src/features/messages/ui/useAutoPinMentionedAgents.ts",
+  "src/features/messages/ui/useComposerLinkPreviews.tsx",
+  "src/features/messages/ui/useComposerVoiceNote.tsx",
+  "src/features/messages/ui/useDetachedAgentStart.ts",
+  "src/features/messages/ui/useReactionHandler.ts",
 ];
 
 /**

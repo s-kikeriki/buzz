@@ -28,6 +28,7 @@ import assert from "node:assert/strict";
 import { after, afterEach, before, test } from "node:test";
 
 import { JSDOM } from "jsdom";
+import { withI18n } from "@/testing/withI18n.mjs";
 
 const dom = new JSDOM("<!doctype html><html><body></body></html>", {
   url: "http://localhost",
@@ -65,15 +66,17 @@ async function renderRegion(props) {
   const { render } = await import("@testing-library/react");
   const { ThreadReplyRegion } = await import("./MessageThreadReplyState.tsx");
   return render(
-    createElement(ThreadReplyRegion, {
-      isPending: false,
-      isError: false,
-      deferredCount: 0,
-      liveCount: 0,
-      renderSkeleton: () => createElement("div", null, SKELETON_MARK),
-      renderList: () => createElement("div", null, LIST_MARK),
-      ...props,
-    }),
+    withI18n(
+      createElement(ThreadReplyRegion, {
+        isPending: false,
+        isError: false,
+        deferredCount: 0,
+        liveCount: 0,
+        renderSkeleton: () => createElement("div", null, SKELETON_MARK),
+        renderList: () => createElement("div", null, LIST_MARK),
+        ...props,
+      }),
+    ),
   );
 }
 

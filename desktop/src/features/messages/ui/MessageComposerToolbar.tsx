@@ -1,3 +1,4 @@
+import { Trans, useLingui } from "@lingui/react/macro";
 import * as React from "react";
 import type { Editor } from "@tiptap/react";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
@@ -97,6 +98,7 @@ export const MessageComposerToolbar = React.memo(
     sendDisabled: boolean;
     shakeVersionByPubkey?: Readonly<Record<string, number>>;
   }) {
+    const { t } = useLingui();
     const shouldReduceMotion = useReducedMotion();
 
     return (
@@ -156,7 +158,7 @@ export const MessageComposerToolbar = React.memo(
                   <Tooltip disableHoverableContent>
                     <TooltipTrigger asChild>
                       <Button
-                        aria-label="Toggle formatting"
+                        aria-label={t`Toggle formatting`}
                         aria-pressed={isFormattingOpen}
                         disabled={composerDisabled}
                         onClick={() => onFormattingToggle(!isFormattingOpen)}
@@ -168,7 +170,9 @@ export const MessageComposerToolbar = React.memo(
                         <ALargeSmall />
                       </Button>
                     </TooltipTrigger>
-                    <TooltipContent>Formatting</TooltipContent>
+                    <TooltipContent>
+                      <Trans>Formatting</Trans>
+                    </TooltipContent>
                   </Tooltip>
                 </motion.div>
                 <motion.div
@@ -181,7 +185,7 @@ export const MessageComposerToolbar = React.memo(
                   <Tooltip disableHoverableContent>
                     <TooltipTrigger asChild>
                       <Button
-                        aria-label="Close formatting"
+                        aria-label={t`Close formatting`}
                         disabled={composerDisabled}
                         onClick={() => onFormattingToggle(false)}
                         onMouseDown={onCaptureSelection}
@@ -193,7 +197,9 @@ export const MessageComposerToolbar = React.memo(
                         <X />
                       </Button>
                     </TooltipTrigger>
-                    <TooltipContent>Close formatting</TooltipContent>
+                    <TooltipContent>
+                      <Trans>Close formatting</Trans>
+                    </TooltipContent>
                   </Tooltip>
                   <div className="mx-1 h-5 w-px shrink-0 bg-border/60" />
                 </motion.div>
@@ -242,7 +248,7 @@ export const MessageComposerToolbar = React.memo(
                 <Tooltip disableHoverableContent>
                   <TooltipTrigger asChild>
                     <Button
-                      aria-label="Attach file"
+                      aria-label={t`Attach file`}
                       disabled={
                         composerDisabled ||
                         isUploading ||
@@ -258,13 +264,15 @@ export const MessageComposerToolbar = React.memo(
                       <Paperclip />
                     </Button>
                   </TooltipTrigger>
-                  <TooltipContent>Attach file</TooltipContent>
+                  <TooltipContent>
+                    <Trans>Attach file</Trans>
+                  </TooltipContent>
                 </Tooltip>
                 {onVoiceNote ? (
                   <Tooltip disableHoverableContent>
                     <TooltipTrigger asChild>
                       <Button
-                        aria-label="Record voice note"
+                        aria-label={t`Record voice note`}
                         disabled={composerDisabled || isUploading}
                         onClick={onVoiceNote}
                         onMouseDown={onCaptureSelection}
@@ -277,7 +285,9 @@ export const MessageComposerToolbar = React.memo(
                         </span>
                       </Button>
                     </TooltipTrigger>
-                    <TooltipContent>Record voice note</TooltipContent>
+                    <TooltipContent>
+                      <Trans>Record voice note</Trans>
+                    </TooltipContent>
                   </Tooltip>
                 ) : null}
                 <ComposerEmojiPicker
@@ -299,7 +309,7 @@ export const MessageComposerToolbar = React.memo(
                   <Tooltip disableHoverableContent>
                     <TooltipTrigger asChild>
                       <Button
-                        aria-label="Toggle formatting"
+                        aria-label={t`Toggle formatting`}
                         aria-pressed={isFormattingOpen}
                         disabled={composerDisabled}
                         onClick={() => onFormattingToggle(!isFormattingOpen)}
@@ -311,7 +321,9 @@ export const MessageComposerToolbar = React.memo(
                         <ALargeSmall />
                       </Button>
                     </TooltipTrigger>
-                    <TooltipContent>Formatting</TooltipContent>
+                    <TooltipContent>
+                      <Trans>Formatting</Trans>
+                    </TooltipContent>
                   </Tooltip>
                 </motion.div>
               </motion.div>
