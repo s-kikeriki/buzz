@@ -1,3 +1,4 @@
+import { Trans } from "@lingui/react/macro";
 import { Diff, Hunk, type ViewType } from "react-diff-view";
 import "react-diff-view/style/index.css";
 import { useMemo } from "react";
@@ -70,7 +71,7 @@ export function DiffViewer({
   if (!files.length) {
     return (
       <div className="p-3 text-xs italic text-muted-foreground">
-        No diff content
+        <Trans>No diff content</Trans>
       </div>
     );
   }
@@ -159,7 +160,7 @@ export function DiffViewer({
                 </Diff>
               ) : (
                 <div className="px-3 py-3 text-xs text-muted-foreground">
-                  No textual hunks in this diff.
+                  <Trans>No textual hunks in this diff.</Trans>
                 </div>
               )}
             </section>

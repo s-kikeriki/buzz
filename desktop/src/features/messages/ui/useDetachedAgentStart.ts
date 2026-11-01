@@ -1,3 +1,4 @@
+import { t } from "@lingui/core/macro";
 import * as React from "react";
 import { toast } from "sonner";
 import { useStartManagedAgentMutation } from "@/features/agents/hooks";
@@ -58,11 +59,19 @@ export function resetDetachedAgentStarts(): void {
  * "not sent". That reads wrong here: publish-first means the message *was*
  * published — only the wake was refused — so say what actually happened.
  */
+/**
+ * Module-level, so the two messages use the global `t` macro and resolve at
+ * call time. A constant here would freeze in the boot locale, and the caller
+ * is a toast inside a `.catch`, not a render path a hook could hang off.
+ *
+ * The two `includes` checks match the *English* error text the Rust side
+ * produces, so they stay untranslated — they are a wire contract, not copy.
+ */
 function detachedStartFailureDetail(error: unknown): string {
-  const message = getErrorMessage(error, "Could not start agent.");
+  const message = getErrorMessage(error, t`Could not start agent.`);
   return message.includes("active community changed") ||
     message.includes("active identity changed")
-    ? "You switched community or identity before it could start."
+    ? t`You switched community or identity before it could start.`
     : message;
 }
 

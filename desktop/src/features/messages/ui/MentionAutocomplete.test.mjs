@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import { after, afterEach, before, test } from "node:test";
 
 import { JSDOM } from "jsdom";
+import { withI18n } from "@/testing/withI18n.mjs";
 import { showMentionAgentProvenanceMarker } from "./MentionAutocomplete.tsx";
 
 const dom = new JSDOM("<!doctype html><html><body></body></html>", {
@@ -60,7 +61,7 @@ test("agent rows offer automatic mention controls", async () => {
       null,
       React.createElement(MentionAutocomplete, autocompleteProps),
     );
-  const view = render(renderAutocomplete(props));
+  const view = render(withI18n(renderAutocomplete(props)));
 
   assert.equal(
     view.queryByText("Hover an agent avatar to keep it addressed"),
@@ -87,10 +88,12 @@ test("agent rows offer automatic mention controls", async () => {
   assert.deepEqual(selected, [suggestion]);
 
   view.rerender(
-    renderAutocomplete({
-      ...props,
-      lockedAgentPubkeys: new Set(["agent-pubkey"]),
-    }),
+    withI18n(
+      renderAutocomplete({
+        ...props,
+        lockedAgentPubkeys: new Set(["agent-pubkey"]),
+      }),
+    ),
   );
   const selectedAction = view.getByRole("button", {
     name: "Don't automatically mention Agent Ada in this thread",
@@ -116,13 +119,15 @@ test("automatic mention setting is visible by default without an options ingress
     isAgent: true,
   };
   const view = render(
-    React.createElement(MentionAutocomplete, {
-      suggestions: [suggestion],
-      selectedIndex: 0,
-      onSelect: () => {},
-      keepMentionedAgentsPinned: true,
-      onKeepMentionedAgentsPinnedChange: (value) => changes.push(value),
-    }),
+    withI18n(
+      React.createElement(MentionAutocomplete, {
+        suggestions: [suggestion],
+        selectedIndex: 0,
+        onSelect: () => {},
+        keepMentionedAgentsPinned: true,
+        onKeepMentionedAgentsPinnedChange: (value) => changes.push(value),
+      }),
+    ),
   );
 
   assert.equal(view.queryByRole("button", { name: "Options" }), null);
@@ -158,7 +163,9 @@ test("automatic selection updates the visible setting in place", async () => {
     keepMentionedAgentsPinned: false,
     onKeepMentionedAgentsPinnedChange: () => {},
   };
-  const view = render(React.createElement(MentionAutocomplete, props));
+  const view = render(
+    withI18n(React.createElement(MentionAutocomplete, props)),
+  );
   const settings = view.getByTestId("mention-options-settings");
   const toggle = view.getByRole("switch", {
     name: "Automatically mention agents",
@@ -166,11 +173,13 @@ test("automatic selection updates the visible setting in place", async () => {
   assert.equal(toggle.getAttribute("data-state"), "unchecked");
 
   view.rerender(
-    React.createElement(MentionAutocomplete, {
-      ...props,
-      keepMentionedAgentsPinned: true,
-      openOptionsRequest: 1,
-    }),
+    withI18n(
+      React.createElement(MentionAutocomplete, {
+        ...props,
+        keepMentionedAgentsPinned: true,
+        openOptionsRequest: 1,
+      }),
+    ),
   );
   assert.equal(view.getByTestId("mention-options-settings"), settings);
   assert.equal(toggle.getAttribute("data-state"), "checked");
@@ -187,34 +196,36 @@ test("clicking outside dismisses the tray without intercepting its trigger", asy
   };
   let dismissCount = 0;
   const view = render(
-    React.createElement(
-      React.Fragment,
-      null,
+    withI18n(
       React.createElement(
-        "form",
+        React.Fragment,
         null,
         React.createElement(
-          "button",
-          { "data-mention-picker-trigger": "", type: "button" },
-          "@",
+          "form",
+          null,
+          React.createElement(
+            "button",
+            { "data-mention-picker-trigger": "", type: "button" },
+            "@",
+          ),
+          React.createElement(MentionAutocomplete, {
+            suggestions: [suggestion],
+            selectedIndex: 0,
+            onDismiss: () => {
+              dismissCount += 1;
+            },
+            onSelect: () => {},
+          }),
         ),
-        React.createElement(MentionAutocomplete, {
-          suggestions: [suggestion],
-          selectedIndex: 0,
-          onDismiss: () => {
-            dismissCount += 1;
-          },
-          onSelect: () => {},
-        }),
-      ),
-      React.createElement("button", { type: "button" }, "Outside"),
-      React.createElement(
-        "form",
-        null,
+        React.createElement("button", { type: "button" }, "Outside"),
         React.createElement(
-          "button",
-          { "data-mention-picker-trigger": "", type: "button" },
-          "Other @",
+          "form",
+          null,
+          React.createElement(
+            "button",
+            { "data-mention-picker-trigger": "", type: "button" },
+            "Other @",
+          ),
         ),
       ),
     ),
@@ -257,11 +268,13 @@ test("collision npubs sit inline with agent metadata", async () => {
     },
   ];
   const view = render(
-    React.createElement(MentionAutocomplete, {
-      suggestions,
-      selectedIndex: 0,
-      onSelect: () => {},
-    }),
+    withI18n(
+      React.createElement(MentionAutocomplete, {
+        suggestions,
+        selectedIndex: 0,
+        onSelect: () => {},
+      }),
+    ),
   );
 
   const agentIcons = view.getAllByTestId("mention-agent-icon");
@@ -295,23 +308,25 @@ test("does not intercept Tab from the editor", async () => {
     },
   ];
   const view = render(
-    React.createElement(
-      TooltipProvider,
-      null,
+    withI18n(
       React.createElement(
-        "form",
+        TooltipProvider,
         null,
         React.createElement(
-          "div",
-          { "data-testid": "message-input-scroll" },
-          React.createElement("input", { "aria-label": "Message" }),
+          "form",
+          null,
+          React.createElement(
+            "div",
+            { "data-testid": "message-input-scroll" },
+            React.createElement("input", { "aria-label": "Message" }),
+          ),
+          React.createElement(MentionAutocomplete, {
+            suggestions,
+            selectedIndex: 1,
+            onSelect: () => {},
+            onToggleAlwaysAddressAgent: () => {},
+          }),
         ),
-        React.createElement(MentionAutocomplete, {
-          suggestions,
-          selectedIndex: 1,
-          onSelect: () => {},
-          onToggleAlwaysAddressAgent: () => {},
-        }),
       ),
     ),
   );
@@ -374,14 +389,16 @@ for (const duplicate of [false, true]) {
       ? [remote, { ...suggestion("managed-here"), pubkey: "2".repeat(64) }]
       : [remote];
     const view = render(
-      React.createElement(
-        TooltipProvider,
-        null,
-        React.createElement(MentionAutocomplete, {
-          suggestions,
-          selectedIndex: 0,
-          onSelect() {},
-        }),
+      withI18n(
+        React.createElement(
+          TooltipProvider,
+          null,
+          React.createElement(MentionAutocomplete, {
+            suggestions,
+            selectedIndex: 0,
+            onSelect() {},
+          }),
+        ),
       ),
     );
     const markers = view.getAllByRole("img", {

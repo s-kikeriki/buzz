@@ -1,3 +1,4 @@
+import { Trans } from "@lingui/react/macro";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -30,20 +31,24 @@ export function DeleteMessageConfirmDialog({
     <AlertDialog onOpenChange={onOpenChange} open={open}>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>Delete message?</AlertDialogTitle>
+          <AlertDialogTitle>
+            <Trans>Delete message?</Trans>
+          </AlertDialogTitle>
           <AlertDialogDescription>
-            This will permanently delete this message and cannot be undone.
+            <Trans>
+              This will permanently delete this message and cannot be undone.
+            </Trans>
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel asChild>
             <Button type="button" variant="outline">
-              Cancel
+              <Trans>Cancel</Trans>
             </Button>
           </AlertDialogCancel>
           <AlertDialogAction asChild>
             <Button onClick={onConfirm} type="button" variant="destructive">
-              Delete
+              <Trans>Delete</Trans>
             </Button>
           </AlertDialogAction>
         </AlertDialogFooter>

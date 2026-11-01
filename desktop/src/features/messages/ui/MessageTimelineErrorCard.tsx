@@ -1,3 +1,4 @@
+import { Trans } from "@lingui/react/macro";
 import { Button } from "@/shared/ui/button";
 
 /** Retryable terminal failure for a channel history load with no cached rows. */
@@ -13,11 +14,12 @@ export function MessageTimelineErrorCard({
       role="alert"
     >
       <p className="text-base font-semibold tracking-tight">
-        Couldn&apos;t load messages
+        <Trans>Couldn't load messages</Trans>
       </p>
       <p className="mt-2 text-sm text-muted-foreground">
-        The channel history didn&apos;t load. Check your connection and try
-        again.
+        <Trans>
+          The channel history didn't load. Check your connection and try again.
+        </Trans>
       </p>
       {onRetry ? (
         <Button
@@ -28,7 +30,7 @@ export function MessageTimelineErrorCard({
           type="button"
           variant="outline"
         >
-          Retry
+          <Trans>Retry</Trans>
         </Button>
       ) : null}
     </div>

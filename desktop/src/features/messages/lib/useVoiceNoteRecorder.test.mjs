@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import { after, before, test } from "node:test";
 
 import { JSDOM } from "jsdom";
+import { withI18n } from "@/testing/withI18n.mjs";
 
 const dom = new JSDOM("<!doctype html><html><body></body></html>", {
   url: "http://localhost",
@@ -98,7 +99,9 @@ after(() => dom.window.close());
 test("permission acquisition is visible, cancellable, and releases a late stream", async () => {
   const { act, cleanup, renderHook } = await import("@testing-library/react");
   const { useVoiceNoteRecorder } = await import("./useVoiceNoteRecorder.ts");
-  const { result, unmount } = renderHook(() => useVoiceNoteRecorder());
+  const { result, unmount } = renderHook(() => useVoiceNoteRecorder(), {
+    wrapper: ({ children }) => withI18n(children),
+  });
   const stream = new FakeStream();
   let resolvePermission;
   getUserMediaImpl = () =>
@@ -134,7 +137,8 @@ test("remains usable after Strict Mode replays the mount effect", async () => {
   const { act, cleanup, renderHook } = await import("@testing-library/react");
   const { useVoiceNoteRecorder } = await import("./useVoiceNoteRecorder.ts");
   const { result, unmount } = renderHook(() => useVoiceNoteRecorder(), {
-    wrapper: ({ children }) => createElement(StrictMode, null, children),
+    wrapper: ({ children }) =>
+      withI18n(createElement(StrictMode, null, children)),
   });
 
   try {
@@ -150,7 +154,9 @@ test("remains usable after Strict Mode replays the mount effect", async () => {
 test("a cancelled decode cannot stop or attach over a newer recording", async () => {
   const { act, cleanup, renderHook } = await import("@testing-library/react");
   const { useVoiceNoteRecorder } = await import("./useVoiceNoteRecorder.ts");
-  const { result, unmount } = renderHook(() => useVoiceNoteRecorder());
+  const { result, unmount } = renderHook(() => useVoiceNoteRecorder(), {
+    wrapper: ({ children }) => withI18n(children),
+  });
 
   try {
     await act(() => result.current.start());

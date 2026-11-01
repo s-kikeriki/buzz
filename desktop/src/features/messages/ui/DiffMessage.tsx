@@ -1,3 +1,4 @@
+import { Trans, useLingui } from "@lingui/react/macro";
 import * as React from "react";
 import { FileDiff, Maximize2 } from "lucide-react";
 
@@ -38,10 +39,13 @@ export default function DiffMessage({
   truncated,
   onExpand,
 }: DiffMessageProps) {
+  const { t } = useLingui();
   const diffCardRef = React.useRef<HTMLDivElement | null>(null);
   useSmoothCorners(diffCardRef);
 
   const safeRepoUrl = isSafeUrl(repoUrl) ? repoUrl : undefined;
+  // Named so the catalogue carries `{diffHostname}` rather than `{0}`.
+  const diffHostname = safeRepoUrl ? getHostname(safeRepoUrl) : "";
 
   const titleBadge = React.useMemo(
     () => getDiffTitleBadge(content, filePath),
@@ -101,7 +105,7 @@ export default function DiffMessage({
             <Tooltip>
               <TooltipTrigger asChild>
                 <Button
-                  aria-label="Expand diff"
+                  aria-label={t`Expand diff`}
                   className="h-6 w-6 p-0 text-muted-foreground hover:text-foreground"
                   onClick={onExpand}
                   size="sm"
@@ -111,7 +115,9 @@ export default function DiffMessage({
                   <Maximize2 className="h-4 w-4" />
                 </Button>
               </TooltipTrigger>
-              <TooltipContent>Expand diff</TooltipContent>
+              <TooltipContent>
+                <Trans>Expand diff</Trans>
+              </TooltipContent>
             </Tooltip>
           )}
         </div>
@@ -137,7 +143,7 @@ export default function DiffMessage({
       {/* Truncation warning */}
       {truncated && (
         <div className="px-3 py-2 border-t border-border/50 bg-amber-500/10 text-xs text-warning">
-          Diff truncated.{" "}
+          <Trans>Diff truncated.</Trans>{" "}
           {safeRepoUrl && commitUrl ? (
             <a
               className="underline hover:no-underline"
@@ -145,10 +151,10 @@ export default function DiffMessage({
               rel="noreferrer noopener"
               target="_blank"
             >
-              View full diff on {getHostname(safeRepoUrl)}
+              <Trans>View full diff on {diffHostname}</Trans>
             </a>
           ) : (
-            "View the full diff at the source repository."
+            t`View the full diff at the source repository.`
           )}
         </div>
       )}

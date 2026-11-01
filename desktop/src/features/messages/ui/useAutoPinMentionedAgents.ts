@@ -1,3 +1,5 @@
+import { plural } from "@lingui/core/macro";
+import { useLingui } from "@lingui/react/macro";
 import * as React from "react";
 
 import {
@@ -40,6 +42,7 @@ export function useAutoPinMentionedAgents({
   onTurnOff,
   onTurnOn,
 }: Options) {
+  const { i18n, t } = useLingui();
   const { pubkeys: currentAudiencePubkeys } =
     usePersistentAgentAudience(audienceScope);
   const [confirmation, setConfirmation] = React.useState<Confirmation | null>(
@@ -166,11 +169,18 @@ export function useAutoPinMentionedAgents({
         promotedPubkeys.length === 1
           ? getDisplayName(promotedPubkeys[0])?.trim()
           : null;
+      // Whole sentences per shape, not a count spliced into a frame: German
+      // inflects the noun and moves the participle to the end.
       const title = displayName
-        ? `${displayName} will be mentioned automatically`
+        ? t`${displayName} will be mentioned automatically`
         : promotedPubkeys.length === 1
-          ? "Agent will be mentioned automatically"
-          : `${promotedPubkeys.length} agents will be mentioned automatically`;
+          ? t`Agent will be mentioned automatically`
+          : i18n._(
+              plural(promotedPubkeys.length, {
+                one: "# agent will be mentioned automatically",
+                other: "# agents will be mentioned automatically",
+              }),
+            );
       setConfirmationHovered(false);
       setConfirmation({
         expectedRevision: revision,
@@ -179,7 +189,7 @@ export function useAutoPinMentionedAgents({
         title,
       });
     },
-    [audienceScope, enabled, getDisplayName, onPulse],
+    [audienceScope, enabled, getDisplayName, i18n, onPulse, t],
   );
   const promoteMentionedAgents = React.useCallback(
     (promotion: {

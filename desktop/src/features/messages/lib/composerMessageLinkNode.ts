@@ -20,6 +20,10 @@ import {
   WRAPPING_INLINE_CHIP_CLASSES,
 } from "@/shared/ui/mentionChip";
 import { buildChannelLink, parseChannelLink } from "./channelLink";
+import { t } from "@lingui/core/macro";
+
+import { BRAND } from "@/shared/branding/brand";
+
 import { getMessageLinkLabel } from "./messageLinkLabel";
 import { buildMessageLink, parseMessageLink } from "./messageLink";
 
@@ -372,7 +376,7 @@ function composerLinkPresentation(
       channelName ||
       channel.value.channelId.slice(0, 8);
     return {
-      ariaLabel: `Open channel ${resolvedChannelName}`,
+      ariaLabel: t`Open channel ${resolvedChannelName}`,
       channelName: resolvedChannelName,
       dataAttributes: { "data-channel-deep-link": "" },
       icon: "channel",
@@ -383,11 +387,11 @@ function composerLinkPresentation(
   const entity = parseEntityLink(href);
   if (!entity.ok) {
     return {
-      ariaLabel: "Buzz link",
+      ariaLabel: t`${BRAND.productName} link`,
       channelName: "",
       dataAttributes: {},
       icon: "message",
-      label: "Buzz link",
+      label: t`${BRAND.productName} link`,
     };
   }
 

@@ -1,3 +1,4 @@
+import { Trans, useLingui } from "@lingui/react/macro";
 import {
   BellOff,
   BellRing,
@@ -119,6 +120,7 @@ function MoreActionsMenu({
   isFollowingThread?: boolean;
   isUnread?: boolean;
 }) {
+  const { t } = useLingui();
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = React.useState(false);
   const [isReportDialogOpen, setIsReportDialogOpen] = React.useState(false);
   // Transfer focus ownership only after the menu has finished closing.
@@ -149,7 +151,7 @@ function MoreActionsMenu({
           <TooltipTrigger asChild>
             <DropdownMenuTrigger asChild>
               <Button
-                aria-label="More actions"
+                aria-label={t`More actions`}
                 className={ACTION_BUTTON_CLASS}
                 data-testid={`more-actions-${message.id}`}
                 size="sm"
@@ -160,7 +162,9 @@ function MoreActionsMenu({
               </Button>
             </DropdownMenuTrigger>
           </TooltipTrigger>
-          <TooltipContent>More actions</TooltipContent>
+          <TooltipContent>
+            <Trans>More actions</Trans>
+          </TooltipContent>
         </Tooltip>
         <DropdownMenuContent
           align="end"
@@ -183,7 +187,7 @@ function MoreActionsMenu({
               }}
             >
               <Pencil className="h-4 w-4" />
-              Edit message
+              <Trans>Edit message</Trans>
             </DropdownMenuItem>
           ) : null}
 
@@ -203,7 +207,7 @@ function MoreActionsMenu({
               ) : (
                 <MailOpen className="h-4 w-4" />
               )}
-              {isUnread ? "Mark read" : "Mark unread"}
+              {isUnread ? t`Mark read` : t`Mark unread`}
             </DropdownMenuItem>
           ) : null}
 
@@ -222,7 +226,7 @@ function MoreActionsMenu({
               ) : (
                 <BellRing className="h-4 w-4" />
               )}
-              {isFollowingThread ? "Unfollow thread" : "Follow thread"}
+              {isFollowingThread ? t`Unfollow thread` : t`Follow thread`}
             </DropdownMenuItem>
           ) : null}
 
@@ -231,7 +235,7 @@ function MoreActionsMenu({
               onClick={() => {
                 copyTextToClipboard(
                   message.body,
-                  "Message copied to clipboard",
+                  t`Message copied to clipboard`,
                   buildMentionClipboardHtml({
                     identities: mentionIdentities,
                     text: message.body,
@@ -240,7 +244,7 @@ function MoreActionsMenu({
               }}
             >
               <Copy className="h-4 w-4" />
-              Copy message
+              <Trans>Copy message</Trans>
             </DropdownMenuItem>
           ) : null}
 
@@ -251,23 +255,23 @@ function MoreActionsMenu({
               }}
             >
               <Clock className="h-4 w-4" />
-              Remind me later
+              <Trans>Remind me later</Trans>
             </DropdownMenuItem>
           ) : null}
 
           {onSendToChannel ? (
             <DropdownMenuItem
-              aria-label="Send to channel"
+              aria-label={t`Send to channel`}
               data-testid={`send-to-channel-${message.id}`}
               onClick={() => {
                 void onSendToChannel(message)
-                  .then(() => toast.success("Sent to channel"))
+                  .then(() => toast.success(t`Sent to channel`))
                   .catch((error) => {
                     console.error(
                       "Failed to send thread message to channel",
                       error,
                     );
-                    toast.error("Couldn't send to channel");
+                    toast.error(t`Couldn't send to channel`);
                   });
               }}
             >
@@ -276,7 +280,7 @@ function MoreActionsMenu({
                 className="h-4 w-4"
                 data-testid="send-to-channel-icon"
               />
-              Send to channel
+              <Trans>Send to channel</Trans>
             </DropdownMenuItem>
           ) : null}
 
@@ -288,7 +292,7 @@ function MoreActionsMenu({
               }}
             >
               <Link2 className="h-4 w-4" />
-              Copy link
+              <Trans>Copy link</Trans>
             </DropdownMenuItem>
           ) : null}
 
@@ -302,7 +306,7 @@ function MoreActionsMenu({
               }}
             >
               <Flag className="h-4 w-4" />
-              Report message
+              <Trans>Report message</Trans>
             </DropdownMenuItem>
           ) : null}
 
@@ -315,7 +319,7 @@ function MoreActionsMenu({
               }}
             >
               <Trash2 className="h-4 w-4" />
-              Delete message
+              <Trans>Delete message</Trans>
             </DropdownMenuItem>
           ) : null}
 
@@ -357,6 +361,7 @@ function QuickReactionButton({
   emoji: string;
   onSelect: (emoji: string) => void;
 }) {
+  const { t } = useLingui();
   const displayName = emojiDisplayName(emoji);
   const mediaUrl = customEmojiUrl ? rewriteRelayUrl(customEmojiUrl) : null;
 
@@ -364,7 +369,7 @@ function QuickReactionButton({
     <Tooltip>
       <TooltipTrigger asChild>
         <button
-          aria-label={`React with ${displayName}`}
+          aria-label={t`React with ${displayName}`}
           className="flex h-8 w-8 items-center justify-center rounded-full text-base leading-none text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-ring"
           onClick={() => onSelect(emoji)}
           title={displayName}
@@ -441,6 +446,7 @@ export const MessageActionBar = React.memo(function MessageActionBar({
   /** Resolves the mention identities carried by "Copy message". */
   profiles?: UserProfileLookup;
 }) {
+  const { t } = useLingui();
   const [isReactionPickerOpen, setIsReactionPickerOpen] = React.useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = React.useState(false);
   const customEmoji = useCustomEmoji();
@@ -544,7 +550,7 @@ export const MessageActionBar = React.memo(function MessageActionBar({
                 <TooltipTrigger asChild>
                   <PopoverTrigger asChild>
                     <Button
-                      aria-label="Open reactions"
+                      aria-label={t`Open reactions`}
                       className={ACTION_BUTTON_CLASS}
                       data-testid={`react-message-${message.id}`}
                       size="sm"
@@ -555,7 +561,9 @@ export const MessageActionBar = React.memo(function MessageActionBar({
                     </Button>
                   </PopoverTrigger>
                 </TooltipTrigger>
-                <TooltipContent>React</TooltipContent>
+                <TooltipContent>
+                  <Trans>React</Trans>
+                </TooltipContent>
               </Tooltip>
               <PopoverContent
                 align="end"
@@ -596,7 +604,7 @@ export const MessageActionBar = React.memo(function MessageActionBar({
             <Tooltip>
               <TooltipTrigger asChild>
                 <Button
-                  aria-label="Reply"
+                  aria-label={t`Reply`}
                   className={ACTION_BUTTON_CLASS}
                   data-testid={`reply-message-${message.id}`}
                   onClick={() => {
@@ -609,7 +617,9 @@ export const MessageActionBar = React.memo(function MessageActionBar({
                   <CornerUpLeft className={ACTION_ICON_CLASS} />
                 </Button>
               </TooltipTrigger>
-              <TooltipContent>Reply</TooltipContent>
+              <TooltipContent>
+                <Trans>Reply</Trans>
+              </TooltipContent>
             </Tooltip>
           ) : null}
 
@@ -617,7 +627,7 @@ export const MessageActionBar = React.memo(function MessageActionBar({
             <Tooltip>
               <TooltipTrigger asChild>
                 <Button
-                  aria-label="Copy link"
+                  aria-label={t`Copy link`}
                   className={ACTION_BUTTON_CLASS}
                   data-testid={`copy-link-message-${message.id}`}
                   onClick={() => {
@@ -630,7 +640,9 @@ export const MessageActionBar = React.memo(function MessageActionBar({
                   <Link2 className={ACTION_ICON_CLASS} />
                 </Button>
               </TooltipTrigger>
-              <TooltipContent>Copy link</TooltipContent>
+              <TooltipContent>
+                <Trans>Copy link</Trans>
+              </TooltipContent>
             </Tooltip>
           ) : null}
 

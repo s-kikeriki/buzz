@@ -84,6 +84,10 @@ msgstr "(auto-derived)"
 msgid "(current)"
 msgstr "(current)"
 
+#: src/features/messages/ui/MessageRow.tsx
+msgid "(edited)"
+msgstr "(edited)"
+
 #: src/features/settings/ui/ChannelTemplatesSettingsCard.tsx
 #: src/features/settings/ui/CustomHarnessForm.tsx
 msgid "(optional)"
@@ -122,6 +126,16 @@ msgstr "{0, plural, one {# {memoryLevelLabel} memory entry} other {# {memoryLeve
 #: src/features/projects/lib/projectsActivityDigest.ts
 msgid "{0, plural, one {# active project} other {# active projects}}"
 msgstr "{0, plural, one {# active project} other {# active projects}}"
+
+#. placeholder {0}: promotedPubkeys.length
+#: src/features/messages/ui/useAutoPinMentionedAgents.ts
+msgid "{0, plural, one {# agent will be mentioned automatically} other {# agents will be mentioned automatically}}"
+msgstr "{0, plural, one {# agent will be mentioned automatically} other {# agents will be mentioned automatically}}"
+
+#. placeholder {0}: visiblePubkeys.length
+#: src/features/messages/ui/SystemMessageAvatars.tsx
+msgid "{0, plural, one {# channel member} other {# channel members}}"
+msgstr "{0, plural, one {# channel member} other {# channel members}}"
 
 #. placeholder {0}: row.commitCount
 #. placeholder {0}: summary.commitCount
@@ -211,6 +225,11 @@ msgstr "{0, plural, one {member} other {members}}"
 msgid "{0, plural, one {Memory partially restored: {1} of # entry written. The agent exists but some memory entries failed to publish.} other {Memory partially restored: {2} of # entries written. The agent exists but some memory entries failed to publish.}}"
 msgstr "{0, plural, one {Memory partially restored: {1} of # entry written. The agent exists but some memory entries failed to publish.} other {Memory partially restored: {2} of # entries written. The agent exists but some memory entries failed to publish.}}"
 
+#. placeholder {0}: selectedUsers.length
+#: src/features/messages/ui/NewMessageScreen.tsx
+msgid "{0, plural, one {Message # person} other {Message # people}}"
+msgstr "{0, plural, one {Message # person} other {Message # people}}"
+
 #. placeholder {0}: channel.messageCount
 #: src/features/projects/ui/DiscussionChannels.tsx
 msgid "{0, plural, one {message} other {messages}}"
@@ -246,6 +265,11 @@ msgstr "{0, plural, one {Show # earlier comment} other {Show # earlier comments}
 #: src/features/projects/ui/ProjectHomeCommitsPanel.tsx
 msgid "{0, plural, one {Showing commits from {1} of {2} repositories. # repository could not be loaded.} other {Showing commits from {3} of {4} repositories. # repositories could not be loaded.}}"
 msgstr "{0, plural, one {Showing commits from {1} of {2} repositories. # repository could not be loaded.} other {Showing commits from {3} of {4} repositories. # repositories could not be loaded.}}"
+
+#. placeholder {0}: suggestion.teamMembers?.length ?? 0
+#: src/features/messages/ui/MentionAutocomplete.tsx
+msgid "{0, plural, one {team · # agent} other {team · # agents}}"
+msgstr "{0, plural, one {team · # agent} other {team · # agents}}"
 
 #. placeholder {0}: issue.comments.length
 #: src/features/projects/ui/ProjectIssuesPanel.tsx
@@ -297,6 +321,16 @@ msgstr "{0} CLI is missing."
 #: src/features/settings/ui/HarnessRow.tsx
 msgid "{0} connecting"
 msgstr "{0} connecting"
+
+#. placeholder {0}: BRAND.productName
+#: src/features/messages/lib/useVoiceNoteRecorder.ts
+msgid "{0} could not prepare this voice note for upload."
+msgstr "{0} could not prepare this voice note for upload."
+
+#. placeholder {0}: BRAND.productName
+#: src/features/messages/lib/useVoiceNoteRecorder.ts
+msgid "{0} could not start the voice recorder."
+msgstr "{0} could not start the voice recorder."
 
 #. placeholder {0}: created.agent.name
 #. placeholder {1}: targetChannel.name
@@ -356,6 +390,11 @@ msgstr "{0} is not installed."
 msgid "{0} is ready"
 msgstr "{0} is ready"
 
+#. placeholder {0}: BRAND.productName
+#: src/features/messages/lib/composerMessageLinkNode.ts
+msgid "{0} link"
+msgstr "{0} link"
+
 #. placeholder {0}: overflowItems.length
 #: src/features/projects/ui/ProjectAgentSelectionComposerBanner.tsx
 msgid "{0} more"
@@ -365,6 +404,11 @@ msgstr "{0} more"
 #: src/features/settings/ui/HostedCommunitiesSettingsCard.tsx
 msgid "{0} of {quotaLimit} used"
 msgstr "{0} of {quotaLimit} used"
+
+#. placeholder {0}: i18n._(color.label)
+#: src/features/messages/ui/ComposerImageEditor.tsx
+msgid "{0} pen"
+msgstr "{0} pen"
 
 #. placeholder {0}: contextOpen ? "Hide" : "Show"
 #: src/features/agents/ui/AgentSessionTranscriptList.tsx
@@ -508,6 +552,10 @@ msgstr "{count, plural, one {{n} review} other {{n} reviews}}"
 msgid "{count, plural, one {{n} task} other {{n} tasks}}"
 msgstr "{count, plural, one {{n} task} other {{n} tasks}}"
 
+#: src/features/messages/ui/ComposerAddressControls.tsx
+msgid "{count, plural, one {# more addressed agent} other {# more addressed agents}}"
+msgstr "{count, plural, one {# more addressed agent} other {# more addressed agents}}"
+
 #: src/features/projects/ui/ProjectCards.tsx
 #: src/features/projects/ui/projectDetailHelpers.ts
 msgid "{count, plural, one {commit} other {commits}}"
@@ -584,6 +632,10 @@ msgstr "{days, plural, one {#d left} other {#d left}}"
 #: src/features/channels/lib/ephemeralChannel.ts
 msgid "{days, plural, one {#d TTL} other {#d TTL}}"
 msgstr "{days, plural, one {#d TTL} other {#d TTL}}"
+
+#: src/features/messages/ui/useAutoPinMentionedAgents.ts
+msgid "{displayName} will be mentioned automatically"
+msgstr "{displayName} will be mentioned automatically"
 
 #: src/features/home/ui/InboxFilterMenu.tsx
 msgid "{dueReminderCount, plural, one {# due reminder} other {# due reminders}}"
@@ -673,6 +725,10 @@ msgstr "{label} has a runtime error. Open runtime details."
 msgid "{label} settings sections"
 msgstr "{label} settings sections"
 
+#: src/features/messages/ui/ComposerAttachments.tsx
+msgid "{mediaLabel} preview"
+msgstr "{mediaLabel} preview"
+
 #: src/features/settings/EncryptedBackupProvider.tsx
 msgid "{message} It will be available to download for 5 minutes."
 msgstr "{message} It will be available to download for 5 minutes."
@@ -700,6 +756,14 @@ msgstr "{missingPersonaCount, plural, one {# agent in this team is no longer in 
 #: src/features/agents/ui/AddTeamToChannelDialog.tsx
 msgid "{missingPersonaCount, plural, one {This team references # agent that is no longer in My Agents. Add them back or edit the team before deploying.} other {This team references # agents that are no longer in My Agents. Add them back or edit the team before deploying.}}"
 msgstr "{missingPersonaCount, plural, one {This team references # agent that is no longer in My Agents. Add them back or edit the team before deploying.} other {This team references # agents that are no longer in My Agents. Add them back or edit the team before deploying.}}"
+
+#: src/features/messages/ui/NewMessageResultRow.tsx
+msgid "{name} already added"
+msgstr "{name} already added"
+
+#: src/features/messages/ui/MessageThreadPanel.tsx
+msgid "{newMessageCount, plural, one {# new message} other {# new messages}}"
+msgstr "{newMessageCount, plural, one {# new message} other {# new messages}}"
 
 #: src/features/channels/ui/ChannelMemberAvatarStack.tsx
 msgid "{overflowCount} more members"
@@ -1072,6 +1136,10 @@ msgstr "A terminal coding agent with integrated development tools."
 msgid "a thread"
 msgstr "a thread"
 
+#: src/features/messages/ui/useComposerVoiceNote.tsx
+msgid "A voice note must be the only attachment."
+msgstr "A voice note must be the only attachment."
+
 #: src/features/home/lib/inbox.ts
 msgid "A workflow is waiting for approval."
 msgstr "A workflow is waiting for approval."
@@ -1195,6 +1263,10 @@ msgstr "Add {assetLabel}"
 msgid "Add {instanceName} ({0})"
 msgstr "Add {instanceName} ({0})"
 
+#: src/features/messages/ui/NewMessageResultRow.tsx
+msgid "Add {name}"
+msgstr "Add {name}"
+
 #: src/features/projects/ui/ProjectIssuesPanel.tsx
 #: src/features/projects/ui/ProjectPullRequestsPanel.tsx
 msgid "Add a comment…"
@@ -1295,6 +1367,10 @@ msgstr "Add files"
 msgid "Add line comment"
 msgstr "Add line comment"
 
+#: src/features/messages/lib/useLinkEditor.tsx
+msgid "Add link"
+msgstr "Add link"
+
 #: src/features/channels/ui/ChannelMemberInviteCard.tsx
 msgid "Add members"
 msgstr "Add members"
@@ -1319,6 +1395,10 @@ msgstr "Add project"
 #: src/features/agents/ui/RespondToField.tsx
 msgid "Add pubkey directly"
 msgstr "Add pubkey directly"
+
+#: src/features/messages/ui/MessageReactions.tsx
+msgid "Add reaction"
+msgstr "Add reaction"
 
 #: src/features/projects/ui/AddProjectRepositoryDialog.tsx
 #: src/features/projects/ui/ProjectRepositoryManagement.tsx
@@ -1416,6 +1496,7 @@ msgstr "Adding..."
 msgid "Adding…"
 msgstr "Adding…"
 
+#: src/features/messages/ui/MentionAutocomplete.tsx
 #: src/features/settings/ui/AgentsSettingsPanel.tsx
 msgid "Address selected agents in thread replies"
 msgstr "Address selected agents in thread replies"
@@ -1449,6 +1530,8 @@ msgstr "Advanced ("
 #: src/features/channels/ui/AddMemberSearchResultRow.tsx
 #: src/features/channels/ui/ChannelMemberInviteCard.tsx
 #: src/features/channels/ui/MembersSidebarMemberCard.tsx
+#: src/features/messages/ui/MentionAutocomplete.tsx
+#: src/features/messages/ui/NewMessageResultRow.tsx
 msgid "agent"
 msgstr "agent"
 
@@ -1532,6 +1615,10 @@ msgstr "Agent Instructions"
 msgid "Agent job"
 msgstr "Agent job"
 
+#: src/features/messages/ui/MessageAgentOwner.tsx
+msgid "Agent managed by"
+msgstr "Agent managed by"
+
 #: src/features/agents/ui/AgentDefinitionDialog.tsx
 #: src/features/agents/ui/AgentDescriptionField.tsx
 #: src/features/agents/ui/AgentInstanceEditDialog.tsx
@@ -1576,6 +1663,14 @@ msgstr "Agent turn in progress"
 msgid "Agent update"
 msgstr "Agent update"
 
+#: src/features/messages/ui/useAutoPinMentionedAgents.ts
+msgid "Agent will be mentioned automatically"
+msgstr "Agent will be mentioned automatically"
+
+#: src/features/messages/ui/MessageAgentOwner.tsx
+msgid "Agent; owner unavailable"
+msgstr "Agent; owner unavailable"
+
 #: src/features/notifications/lib/sound.ts
 msgid "Agent: job accepted"
 msgstr "Agent: job accepted"
@@ -1614,6 +1709,10 @@ msgstr "Agents ("
 #: src/features/agents/useAgentManagement.ts
 msgid "Agents can only update a personal agent profile by its current name."
 msgstr "Agents can only update a personal agent profile by its current name."
+
+#: src/features/messages/lib/dmThreadAgentMentionError.ts
+msgid "Agents must already be in a DM to be mentioned in its threads. Start a new conversation that includes the agent."
+msgstr "Agents must already be in a DM to be mentioned in its threads. Start a new conversation that includes the agent."
 
 #: src/features/channels/ui/BotActivityBar.tsx
 msgid "Agents working"
@@ -1663,6 +1762,11 @@ msgstr "All open channels are available in the sidebar. Create a new channel to 
 #: src/features/channels/ui/ChannelBrowserDialog.tsx
 msgid "All open forums are available in the sidebar. Create a new forum to get started."
 msgstr "All open forums are available in the sidebar. Create a new forum to get started."
+
+#. placeholder {0}: BRAND.productName
+#: src/features/messages/lib/useVoiceNoteRecorder.ts
+msgid "Allow {0} to access your microphone to record a voice note."
+msgstr "Allow {0} to access your microphone to record a voice note."
 
 #: src/features/channels/ui/ChannelBrowserDialog.tsx
 msgid "Alphabetical"
@@ -1744,6 +1848,10 @@ msgstr "Any command that speaks ACP over stdio works."
 #: src/features/channels/ui/MembersSidebarMemberCard.tsx
 msgid "Anyone"
 msgstr "Anyone"
+
+#: src/features/messages/ui/MessageRow.tsx
+msgid "Anyone can send instructions to this agent"
+msgstr "Anyone can send instructions to this agent"
 
 #: src/features/agents/ui/teamLibraryCopy.ts
 msgid "Anyone in this community can find and add a copy of this team. Both the team instructions and every member’s instructions are shared as plaintext. Memories and secrets aren’t included."
@@ -1976,6 +2084,10 @@ msgstr "Attach a repository to browse the file tree beside this channel."
 msgid "Attach diagnostics"
 msgstr "Attach diagnostics"
 
+#: src/features/messages/ui/MessageComposerToolbar.tsx
+msgid "Attach file"
+msgstr "Attach file"
+
 #: src/features/settings/ui/SendFeedbackDialog.tsx
 msgid "Attach image"
 msgstr "Attach image"
@@ -1991,6 +2103,10 @@ msgstr "Attached image"
 #: src/features/settings/ui/SendFeedbackDialog.tsx
 msgid "Attaching…"
 msgstr "Attaching…"
+
+#: src/features/messages/ui/AudioMessageAttachment.tsx
+msgid "Audio unavailable. Retry playback."
+msgstr "Audio unavailable. Retry playback."
 
 #: src/features/settings/ui/HostedCommunitiesSettingsCard.tsx
 msgid "Authentication opens in your browser and returns securely to {productName}. You can use every other part of the app without signing in."
@@ -2025,6 +2141,16 @@ msgstr "Automatic"
 msgid "Automatic updates aren't available on this build. Download the latest release manually."
 msgstr "Automatic updates aren't available on this build. Download the latest release manually."
 
+#: src/features/messages/ui/MentionAutocomplete.tsx
+msgid "Automatically mention"
+msgstr "Automatically mention"
+
+#. placeholder {0}: suggestion.displayName
+#: src/features/messages/ui/MentionAutocomplete.tsx
+msgid "Automatically mention {0}"
+msgstr "Automatically mention {0}"
+
+#: src/features/messages/ui/MentionAutocomplete.tsx
 #: src/features/settings/ui/AgentsSettingsPanel.tsx
 msgid "Automatically mention agents"
 msgstr "Automatically mention agents"
@@ -2136,6 +2262,10 @@ msgstr "bee-garden-game"
 msgid "Birch, Compass, Ridge, Thistle"
 msgstr "Birch, Compass, Ridge, Thistle"
 
+#: src/features/messages/ui/ComposerImageEditor.tsx
+msgid "Black"
+msgstr "Black"
+
 #: src/features/settings/ui/harnessCatalogCopy.ts
 msgid "Block's open-source, extensible AI agent."
 msgstr "Block's open-source, extensible AI agent."
@@ -2144,10 +2274,15 @@ msgstr "Block's open-source, extensible AI agent."
 msgid "Blocked"
 msgstr "Blocked"
 
+#: src/features/messages/ui/ComposerImageEditor.tsx
+msgid "Blue"
+msgstr "Blue"
+
 #: src/features/settings/ui/AppearanceSettingsControls.tsx
 msgid "Blur the desktop behind navigation while keeping content solid."
 msgstr "Blur the desktop behind navigation while keeping content solid."
 
+#: src/features/messages/ui/FormattingToolbar.tsx
 #: src/shared/lib/keyboard-shortcuts.ts
 msgid "Bold"
 msgstr "Bold"
@@ -2220,6 +2355,10 @@ msgstr "Built-in"
 msgid "Built-in agent"
 msgstr "Built-in agent"
 
+#: src/features/messages/ui/FormattingToolbar.tsx
+msgid "Bullet list"
+msgstr "Bullet list"
+
 #: src/features/settings/ui/HarnessCatalogDialog.tsx
 msgid "Bundled preset"
 msgstr "Bundled preset"
@@ -2257,6 +2396,9 @@ msgstr "Can't reach the relay"
 #: src/features/channels/ui/ChannelManagementSheet.tsx
 #: src/features/channels/ui/EditRespondToDialog.tsx
 #: src/features/channels/ui/WelcomeAgentCreateDialog.tsx
+#: src/features/messages/lib/useLinkEditor.tsx
+#: src/features/messages/ui/ComposerImageEditor.tsx
+#: src/features/messages/ui/DeleteMessageConfirmDialog.tsx
 #: src/features/messages/ui/DraftsPanel.tsx
 #: src/features/messages/ui/NonMemberMentionDialog.tsx
 #: src/features/projects/ui/MergePullRequestButton.tsx
@@ -2277,6 +2419,18 @@ msgstr "Can't reach the relay"
 #: src/features/sidebar/ui/SidebarProjectsSection.tsx
 msgid "Cancel"
 msgstr "Cancel"
+
+#: src/features/messages/ui/ComposerReplyEditBanner.tsx
+msgid "Cancel edit"
+msgstr "Cancel edit"
+
+#: src/features/messages/ui/ComposerReplyEditBanner.tsx
+msgid "Cancel reply"
+msgstr "Cancel reply"
+
+#: src/features/messages/ui/ComposerAttachments.tsx
+msgid "Cancel upload"
+msgstr "Cancel upload"
 
 #: src/features/home/ui/InboxListPane.tsx
 msgid "Cannot remind without a channel"
@@ -2512,6 +2666,10 @@ msgstr "Checking API key…"
 msgid "Checking availability…"
 msgstr "Checking availability…"
 
+#: src/features/messages/lib/dmThreadAgentMentionError.ts
+msgid "Checking conversation members. Try again in a moment."
+msgstr "Checking conversation members. Try again in a moment."
+
 #: src/features/settings/UpdateChecker.tsx
 msgid "Checking for updates..."
 msgstr "Checking for updates..."
@@ -2597,6 +2755,10 @@ msgstr "Choose a provider to load models."
 msgid "Choose a provider to save custom AI configuration."
 msgstr "Choose a provider to save custom AI configuration."
 
+#: src/features/messages/ui/NewMessageScreen.tsx
+msgid "Choose a recipient to start a message"
+msgstr "Choose a recipient to start a message"
+
 #: src/features/projects/branchMutations.ts
 msgid "Choose a remote branch."
 msgstr "Choose a remote branch."
@@ -2634,6 +2796,10 @@ msgstr "Choose an emoji first"
 #: src/features/projects/ui/AttachProjectRepositoryDialog.tsx
 msgid "Choose an existing repository to add to {0}."
 msgstr "Choose an existing repository to add to {0}."
+
+#: src/features/messages/ui/NewMessageScreen.tsx
+msgid "Choose at least one recipient first."
+msgstr "Choose at least one recipient first."
 
 #: src/features/agents/ui/AgentCreationPreview.tsx
 msgid "Choose custom color"
@@ -2795,6 +2961,7 @@ msgstr "Cloning…"
 #: src/features/agents/ui/TeamSnapshotImportDialog.tsx
 #: src/features/channels/ui/ChannelBrowserDialog.tsx
 #: src/features/channels/ui/MembersSidebar.tsx
+#: src/features/messages/ui/ComposerAttachments.tsx
 #: src/features/projects/ui/ProjectConversationPanel.tsx
 #: src/features/settings/ui/SendFeedbackDialog.tsx
 msgid "Close"
@@ -2811,6 +2978,14 @@ msgstr "Close dialog"
 #: src/features/sidebar/ui/SidebarSection.tsx
 msgid "Close direct message"
 msgstr "Close direct message"
+
+#: src/features/messages/ui/MessageComposerToolbar.tsx
+msgid "Close formatting"
+msgstr "Close formatting"
+
+#: src/features/messages/ui/ComposerAttachments.tsx
+msgid "Close lightbox"
+msgstr "Close lightbox"
 
 #: src/features/projects/ui/ProjectsSectionSearch.tsx
 msgid "Close project search"
@@ -2835,6 +3010,14 @@ msgstr "Close the current dialog or settings"
 #: src/features/agents/ui/ManagedAgentSessionPanel.tsx
 msgid "Closed"
 msgstr "Closed"
+
+#: src/features/messages/ui/FormattingToolbar.tsx
+msgid "Code"
+msgstr "Code"
+
+#: src/features/messages/ui/FormattingToolbar.tsx
+msgid "Code block"
+msgstr "Code block"
 
 #: src/features/projects/ui/ProjectReadmePanel.tsx
 msgid "Code hosted on {externalHost}"
@@ -2864,9 +3047,21 @@ msgstr "Coding agent: {agentLabel}"
 msgid "Collapse comment history"
 msgstr "Collapse comment history"
 
+#: src/features/messages/ui/MessageThreadPanel.tsx
+msgid "Collapse replies"
+msgstr "Collapse replies"
+
+#: src/features/messages/ui/MessageRow.tsx
+msgid "Collapse replies to this message"
+msgstr "Collapse replies to this message"
+
 #: src/features/projects/ui/ProjectPullRequestsPanel.tsx
 msgid "Collapse review history"
 msgstr "Collapse review history"
+
+#: src/features/messages/ui/MessageThreadPanel.tsx
+msgid "Collapse thread"
+msgstr "Collapse thread"
 
 #: src/features/settings/ui/AppearanceSettingsPanel.tsx
 msgid "Color mode"
@@ -3197,6 +3392,7 @@ msgid "Copy community URL"
 msgstr "Copy community URL"
 
 #: src/features/agents/ui/PersonaShareDialog.tsx
+#: src/features/messages/ui/MessageActionBar.tsx
 #: src/features/sidebar/ui/SidebarProjectsSection.tsx
 msgid "Copy link"
 msgstr "Copy link"
@@ -3204,6 +3400,10 @@ msgstr "Copy link"
 #: src/features/agents/ui/ManagedAgentLogPanel.tsx
 msgid "Copy log"
 msgstr "Copy log"
+
+#: src/features/messages/ui/MessageActionBar.tsx
+msgid "Copy message"
+msgstr "Copy message"
 
 #: src/features/settings/ui/MobilePairingCard.tsx
 msgid "Copy pairing code"
@@ -3314,6 +3514,10 @@ msgstr "Could not release the previously connected {productName} identity."
 msgid "Could not save this agent."
 msgstr "Could not save this agent."
 
+#: src/features/messages/ui/useDetachedAgentStart.ts
+msgid "Could not start agent."
+msgstr "Could not start agent."
+
 #: src/features/channels/useWelcomeAgentCreate.ts
 msgid "Could not start the conversation."
 msgstr "Could not start the conversation."
@@ -3371,9 +3575,17 @@ msgstr "Couldn't load agent configuration."
 msgid "Couldn't load agent defaults. Restart the app to try again."
 msgstr "Couldn't load agent defaults. Restart the app to try again."
 
+#: src/features/messages/ui/MessageTimelineErrorCard.tsx
+msgid "Couldn't load messages"
+msgstr "Couldn't load messages"
+
 #: src/features/agents/ui/agentConfigControls.tsx
 msgid "Couldn't load models"
 msgstr "Couldn't load models"
+
+#: src/features/messages/ui/MessageThreadReplyState.tsx
+msgid "Couldn't load replies"
+msgstr "Couldn't load replies"
 
 #: src/features/settings/ui/HarnessCatalogDialog.tsx
 msgid "Couldn't load runtimes."
@@ -3440,6 +3652,10 @@ msgstr "Couldn’t send {itemLabel}. Try again."
 #: src/features/agents/ui/AgentCardViewerDialog.tsx
 msgid "Couldn’t send the card. Try again."
 msgstr "Couldn’t send the card. Try again."
+
+#: src/features/messages/ui/MessageActionBar.tsx
+msgid "Couldn't send to channel"
+msgstr "Couldn't send to channel"
 
 #: src/features/agents/lib/usePersonaCatalogRelay.ts
 msgid "Couldn’t subscribe to the community agent catalog"
@@ -3880,6 +4096,7 @@ msgstr "Defaults to the selected runtime name."
 #: src/features/agents/ui/PersonaDeleteDialog.tsx
 #: src/features/agents/ui/TeamDeleteDialog.tsx
 #: src/features/agents/ui/TeamsSection.tsx
+#: src/features/messages/ui/DeleteMessageConfirmDialog.tsx
 #: src/features/messages/ui/DraftDetailPane.tsx
 #: src/features/projects/ui/ProjectRepositorySource.tsx
 #: src/features/settings/ui/ChannelTemplatesSettingsCard.tsx
@@ -3946,8 +4163,13 @@ msgid "Delete imported voice?"
 msgstr "Delete imported voice?"
 
 #: src/features/home/ui/InboxDetailPane.tsx
+#: src/features/messages/ui/MessageActionBar.tsx
 msgid "Delete message"
 msgstr "Delete message"
+
+#: src/features/messages/ui/DeleteMessageConfirmDialog.tsx
+msgid "Delete message?"
+msgstr "Delete message?"
 
 #: src/features/settings/ui/SignOutSection.tsx
 msgid "Delete my data"
@@ -4108,6 +4330,14 @@ msgstr "Details"
 msgid "Detected at"
 msgstr "Detected at"
 
+#: src/features/messages/ui/DiffMessage.tsx
+msgid "Diff truncated."
+msgstr "Diff truncated."
+
+#: src/features/messages/ui/DiffMessageExpanded.tsx
+msgid "Diff Viewer"
+msgstr "Diff Viewer"
+
 #: src/features/search/ui/TopbarSearch.tsx
 msgid "Direct message"
 msgstr "Direct message"
@@ -4135,6 +4365,10 @@ msgstr "Discard changes"
 msgid "Discard changes to agent defaults?"
 msgstr "Discard changes to agent defaults?"
 
+#: src/features/messages/ui/VoiceNoteRecorder.tsx
+msgid "Discard voice note"
+msgstr "Discard voice note"
+
 #: src/features/settings/ui/ChannelTemplatesSettingsCard.tsx
 msgid "Discovering runtimes..."
 msgstr "Discovering runtimes..."
@@ -4147,6 +4381,10 @@ msgstr "Discuss in a channel"
 #: src/features/projects/lib/projectLabels.ts
 msgid "Discussion linked"
 msgstr "Discussion linked"
+
+#: src/features/messages/ui/MessageComposer.tsx
+msgid "Dismiss"
+msgstr "Dismiss"
 
 #: src/features/agents/ui/CardMintComposerChip.tsx
 msgid "Dismiss failed mint"
@@ -4168,6 +4406,10 @@ msgstr "Dismiss update notification"
 msgid "Display name"
 msgstr "Display name"
 
+#: src/features/messages/lib/useLinkEditor.tsx
+msgid "Display text"
+msgstr "Display text"
+
 #: src/features/home/lib/inbox.ts
 msgid "DM"
 msgstr "DM"
@@ -4177,6 +4419,10 @@ msgstr "DM"
 msgid "DM from {0}"
 msgstr "DM from {0}"
 
+#: src/features/messages/ui/NewMessageScreen.tsx
+msgid "DMs support up to nine people, including you."
+msgstr "DMs support up to nine people, including you."
+
 #: src/features/messages/ui/NonMemberMentionDialog.tsx
 msgid "Do nothing"
 msgstr "Do nothing"
@@ -4184,6 +4430,22 @@ msgstr "Do nothing"
 #: src/features/settings/ui/CustomHarnessForm.tsx
 msgid "Docs URL"
 msgstr "Docs URL"
+
+#. placeholder {0}: agent.displayName
+#. placeholder {0}: suggestion.displayName
+#: src/features/messages/ui/ComposerAddressControls.tsx
+#: src/features/messages/ui/MentionAutocomplete.tsx
+msgid "Don't automatically mention {0} in this thread"
+msgstr "Don't automatically mention {0} in this thread"
+
+#. placeholder {0}: agent.displayName
+#: src/features/messages/ui/ComposerAddressControls.tsx
+msgid "Don't automatically mention {0} in this thread <0/>"
+msgstr "Don't automatically mention {0} in this thread <0/>"
+
+#: src/features/messages/ui/MentionAutocomplete.tsx
+msgid "Don't automatically mention in this thread"
+msgstr "Don't automatically mention in this thread"
 
 #: src/features/agents/ui/AgentCardMintDialog.tsx
 msgid "Don’t want to spend money? Ordinary export shares the same importable agent — free, just without the card art."
@@ -4198,6 +4460,14 @@ msgstr "Done"
 msgid "Done editing {label}"
 msgstr "Done editing {label}"
 
+#: src/features/messages/ui/AudioMessageAttachment.tsx
+msgid "Download"
+msgstr "Download"
+
+#: src/features/messages/ui/AudioMessageAttachment.tsx
+msgid "Download {writtenName}"
+msgstr "Download {writtenName}"
+
 #: src/features/settings/ui/PrivateKeyBackupRow.tsx
 msgid "Download backup"
 msgstr "Download backup"
@@ -4205,6 +4475,10 @@ msgstr "Download backup"
 #: src/features/agents/ui/AgentCardViewerDialog.tsx
 msgid "Download card"
 msgstr "Download card"
+
+#: src/features/messages/ui/AudioMessageAttachment.tsx
+msgid "Download failed"
+msgstr "Download failed"
 
 #: src/features/settings/ui/harnessCatalogLogic.ts
 #: src/features/settings/ui/HarnessRow.tsx
@@ -4250,6 +4524,14 @@ msgstr "Drag to resize."
 msgid "Drag to resize. Double-click to reset width."
 msgstr "Drag to resize. Double-click to reset width."
 
+#: src/features/messages/ui/ComposerAttachments.tsx
+msgid "Draw on image"
+msgstr "Draw on image"
+
+#: src/features/messages/ui/ComposerImageEditor.tsx
+msgid "Drawing canvas"
+msgstr "Drawing canvas"
+
 #: src/features/agents/ui/CommunityCatalogDialog.tsx
 msgid "Drop .agent.json or .agent.png to import"
 msgstr "Drop .agent.json or .agent.png to import"
@@ -4257,6 +4539,10 @@ msgstr "Drop .agent.json or .agent.png to import"
 #: src/features/agents/ui/CommunityCatalogDialog.tsx
 msgid "Drop an .agent.json or .agent.png file anywhere in this window, or choose a file."
 msgstr "Drop an .agent.json or .agent.png file anywhere in this window, or choose a file."
+
+#: src/features/messages/ui/ComposerAttachments.tsx
+msgid "Drop files to upload"
+msgstr "Drop files to upload"
 
 #: src/features/agents/ui/AgentCreationPreview.tsx
 msgid "Drop or browse"
@@ -4356,6 +4642,14 @@ msgstr "Edit global defaults"
 msgid "Edit harness"
 msgstr "Edit harness"
 
+#: src/features/messages/lib/useLinkEditor.tsx
+msgid "Edit link"
+msgstr "Edit link"
+
+#: src/features/messages/ui/MessageActionBar.tsx
+msgid "Edit message"
+msgstr "Edit message"
+
 #: src/features/channels/ui/ChannelManagementSheet.tsx
 msgid "Edit private channel"
 msgstr "Edit private channel"
@@ -4376,6 +4670,10 @@ msgstr "Edit team"
 msgid "Edit template"
 msgstr "Edit template"
 
+#: src/features/messages/ui/MessageComposer.tsx
+msgid "Edit your message"
+msgstr "Edit your message"
+
 #: src/features/agents/ui/agentSessionToolClassifier.ts
 #: src/features/agents/ui/agentSessionToolSummary.ts
 msgid "Edited file"
@@ -4385,13 +4683,22 @@ msgstr "Edited file"
 msgid "Editing file"
 msgstr "Editing file"
 
+#: src/features/messages/ui/ComposerReplyEditBanner.tsx
+msgid "Editing message"
+msgstr "Editing message"
+
 #: src/features/agents/ui/AgentConfigFields.tsx
 msgid "Effort"
 msgstr "Effort"
 
 #: src/features/agents/ui/AgentCreationPreview.tsx
+#: src/features/messages/ui/ComposerEmojiPicker.tsx
 msgid "Emoji"
 msgstr "Emoji"
+
+#: src/features/messages/ui/ComposerEmojiPicker.tsx
+msgid "Emoji and GIFs"
+msgstr "Emoji and GIFs"
 
 #: src/features/messages/ui/DraftsPanel.tsx
 msgid "Empty draft"
@@ -4507,6 +4814,10 @@ msgstr "everything"
 #: src/features/agents/ui/personaLibraryCopy.ts
 msgid "Everything in Agent Catalog is already in My Agents."
 msgstr "Everything in Agent Catalog is already in My Agents."
+
+#: src/features/messages/ui/DiffMessage.tsx
+msgid "Expand diff"
+msgstr "Expand diff"
 
 #: src/features/channels/ui/ThreadViewModeToggle.tsx
 msgid "Expand thread"
@@ -4660,6 +4971,10 @@ msgstr "Failed to load projects"
 msgid "Failed to merge review."
 msgstr "Failed to merge review."
 
+#: src/features/messages/ui/NewMessageScreen.tsx
+msgid "Failed to open direct message."
+msgstr "Failed to open direct message."
+
 #: src/features/agents/ui/AgentCardMintDialog.tsx
 msgid "Failed to open link"
 msgstr "Failed to open link"
@@ -4755,6 +5070,10 @@ msgstr "Failed to select agent for My Agents."
 msgid "Failed to send feedback."
 msgstr "Failed to send feedback."
 
+#: src/features/messages/ui/NewMessageScreen.tsx
+msgid "Failed to send message."
+msgstr "Failed to send message."
+
 #: src/features/agents/ui/useManagedAgentActions.ts
 msgid "Failed to start agent."
 msgstr "Failed to start agent."
@@ -4791,6 +5110,10 @@ msgstr "Failed to update startup preference."
 #: src/features/projects/ui/PullRequestReviewCard.tsx
 msgid "Failed to update status."
 msgstr "Failed to update status."
+
+#: src/features/messages/ui/useReactionHandler.ts
+msgid "Failed to update the reaction."
+msgstr "Failed to update the reaction."
 
 #: src/features/projects/ui/ProjectBranchDialogs.tsx
 msgid "feature/my-change"
@@ -4852,6 +5175,10 @@ msgstr "Filter inbox: {activeLabel}. {statusLabel}"
 msgid "Find in channel"
 msgstr "Find in channel"
 
+#: src/features/messages/ui/useComposerVoiceNote.tsx
+msgid "Finish or discard the voice note before attaching a file."
+msgstr "Finish or discard the voice note before attaching a file."
+
 #: src/features/settings/ui/MobilePairingCard.tsx
 msgid "Finish setup on your phone to connect your mobile app."
 msgstr "Finish setup on your phone to connect your mobile app."
@@ -4861,6 +5188,10 @@ msgstr "Finish setup on your phone to connect your mobile app."
 msgid "Finish signing in from the Terminal window, then click Check again to re-check {0}."
 msgstr "Finish signing in from the Terminal window, then click Check again to re-check {0}."
 
+#: src/features/messages/ui/ComposerAddressControls.tsx
+msgid "Finish voice note"
+msgstr "Finish voice note"
+
 #: src/features/agents/ui/AgentDescriptionField.tsx
 msgid "Fizz"
 msgstr "Fizz"
@@ -4868,6 +5199,10 @@ msgstr "Fizz"
 #: src/features/settings/ui/AppearanceSettingsControls.tsx
 msgid "Focus"
 msgstr "Focus"
+
+#: src/features/messages/ui/MessageActionBar.tsx
+msgid "Follow thread"
+msgstr "Follow thread"
 
 #: src/features/settings/ui/AppearanceSettingsPanel.tsx
 msgid "Follow your system or choose a light or dark appearance."
@@ -4877,6 +5212,7 @@ msgstr "Follow your system or choose a light or dark appearance."
 msgid "Font size"
 msgstr "Font size"
 
+#: src/features/messages/ui/MessageComposerToolbar.tsx
 #: src/features/projects/ui/ProjectsAgentPromptPage.tsx
 #: src/shared/lib/keyboard-shortcuts.ts
 msgid "Formatting"
@@ -4940,6 +5276,10 @@ msgstr "Full embedded manifest"
 msgid "Full path or shell command"
 msgstr "Full path or shell command"
 
+#: src/features/messages/ui/ComposerAttachments.tsx
+msgid "Full-size attachment preview. Press Escape or click outside to close."
+msgstr "Full-size attachment preview. Press Escape or click outside to close."
+
 #: src/features/settings/ui/EncryptedBackupCreator.tsx
 msgid "Generate a password"
 msgstr "Generate a password"
@@ -4955,6 +5295,10 @@ msgstr "Generic agent"
 #: src/features/agents/ui/AgentCardMintDialog.tsx
 msgid "Get a key at platform.openai.com"
 msgstr "Get a key at platform.openai.com"
+
+#: src/features/messages/ui/ComposerEmojiPicker.tsx
+msgid "GIFs"
+msgstr "GIFs"
 
 #: src/features/projects/ui/ProjectDetailFeedPanels.tsx
 msgid "Git contributor"
@@ -4992,6 +5336,10 @@ msgstr "Go back"
 #: src/shared/lib/keyboard-shortcuts.ts
 msgid "Go forward"
 msgstr "Go forward"
+
+#: src/features/messages/ui/ComposerImageEditor.tsx
+msgid "Green"
+msgstr "Green"
 
 #: src/features/projects/ui/ProjectsToolbar.tsx
 msgid "Grid layout"
@@ -5115,6 +5463,10 @@ msgstr "Hosted communities"
 #: src/features/settings/ui/HostedCommunitiesSettingsCard.tsx
 msgid "Hosted community"
 msgstr "Hosted community"
+
+#: src/features/messages/lib/useLinkEditor.tsx
+msgid "https://example.com"
+msgstr "https://example.com"
 
 #: src/features/projects/ui/AddProjectRepositoryDialog.tsx
 msgid "https://relay.example.com/git/mobile-app.git"
@@ -5288,6 +5640,14 @@ msgstr "Inline code"
 msgid "Insert a line break in the composer"
 msgstr "Insert a line break in the composer"
 
+#: src/features/messages/ui/ComposerEmojiPicker.tsx
+msgid "Insert emoji"
+msgstr "Insert emoji"
+
+#: src/features/messages/ui/ComposerEmojiPicker.tsx
+msgid "Insert emoji or GIF"
+msgstr "Insert emoji or GIF"
+
 #: src/shared/lib/keyboard-shortcuts.ts
 msgid "Insert link"
 msgstr "Insert link"
@@ -5403,6 +5763,7 @@ msgstr "It restores a different identity than the one signed in here."
 msgid "It restores your current {productName} identity."
 msgstr "It restores your current {productName} identity."
 
+#: src/features/messages/ui/FormattingToolbar.tsx
 #: src/shared/lib/keyboard-shortcuts.ts
 msgid "Italic"
 msgstr "Italic"
@@ -5456,6 +5817,11 @@ msgstr "Joining..."
 #: src/features/agents/ui/TeamSnapshotExportDialog.tsx
 msgid "JSON"
 msgstr "JSON"
+
+#: src/features/messages/ui/MessageThreadPanel.tsx
+#: src/features/messages/ui/MessageTimeline.tsx
+msgid "Jump to latest"
+msgstr "Jump to latest"
 
 #: src/shared/lib/relativeTime.ts
 msgid "just now"
@@ -5603,6 +5969,10 @@ msgstr "Light"
 msgid "Line comment posted."
 msgstr "Line comment posted."
 
+#: src/features/messages/ui/FormattingToolbar.tsx
+msgid "Link"
+msgstr "Link"
+
 #: src/features/projects/ui/ProjectsChannelsList.tsx
 msgid "Link a discussion channel to a project or repository and it will appear here."
 msgstr "Link a discussion channel to a project or repository and it will appear here."
@@ -5702,6 +6072,14 @@ msgstr "Loading configuration…"
 msgid "Loading contributors"
 msgstr "Loading contributors"
 
+#: src/features/messages/ui/MessageRow.tsx
+msgid "Loading diff viewer…"
+msgstr "Loading diff viewer…"
+
+#: src/features/messages/ui/MessageRow.tsx
+msgid "Loading diff…"
+msgstr "Loading diff…"
+
 #: src/features/projects/ui/ProjectRepositoryPanel.tsx
 msgid "Loading file"
 msgstr "Loading file"
@@ -5718,6 +6096,14 @@ msgstr "Loading history..."
 msgid "Loading identity…"
 msgstr "Loading identity…"
 
+#: src/features/messages/ui/useComposerLinkPreviews.tsx
+msgid "Loading link preview"
+msgstr "Loading link preview"
+
+#: src/features/messages/ui/useComposerLinkPreviews.tsx
+msgid "Loading link preview details"
+msgstr "Loading link preview details"
+
 #: src/features/channels/ui/MembersSidebar.tsx
 msgid "Loading members..."
 msgstr "Loading members..."
@@ -5731,6 +6117,10 @@ msgstr "Loading models..."
 #: src/features/agents/ui/PersonaShareRecipients.tsx
 msgid "Loading people"
 msgstr "Loading people"
+
+#: src/features/messages/ui/NewMessageScreen.tsx
+msgid "Loading people and agents"
+msgstr "Loading people and agents"
 
 #: src/features/projects/ui/ProjectsActivityFeed.tsx
 msgid "Loading project activity"
@@ -5781,6 +6171,10 @@ msgstr "Loading tasks"
 #: src/features/settings/ui/ChannelTemplatesSettingsCard.tsx
 msgid "Loading templates..."
 msgstr "Loading templates..."
+
+#: src/features/messages/ui/AudioMessageAttachment.tsx
+msgid "Loading voice note"
+msgstr "Loading voice note"
 
 #: src/features/channels/ui/ChannelWorkflowsSection.tsx
 msgid "Loading workflows..."
@@ -5848,11 +6242,20 @@ msgstr "Manage agent access..."
 msgid "Manage channel"
 msgstr "Manage channel"
 
+#: src/features/messages/ui/ComposerAddressControls.tsx
+msgid "Manage mentions"
+msgstr "Manage mentions"
+
 #: src/features/projects/ui/ProjectRepositoryManagement.tsx
 msgid "Manage repository access"
 msgstr "Manage repository access"
 
+#: src/features/messages/ui/MessageAgentOwner.tsx
+msgid "managed by"
+msgstr "managed by"
+
 #: src/features/channels/ui/AddMemberSearchResultRow.tsx
+#: src/features/messages/ui/NewMessageResultRow.tsx
 msgid "managed by {ownerLabel}"
 msgstr "managed by {ownerLabel}"
 
@@ -5886,15 +6289,24 @@ msgstr "Mark all conversations as read"
 msgid "Mark as read"
 msgstr "Mark as read"
 
+#: src/features/messages/ui/ComposerAttachments.tsx
+msgid "Mark as spoiler"
+msgstr "Mark as spoiler"
+
 #: src/features/home/ui/FeedSection.tsx
 msgid "Mark done"
 msgstr "Mark done"
+
+#: src/features/messages/ui/MessageActionBar.tsx
+msgid "Mark read"
+msgstr "Mark read"
 
 #: src/shared/lib/keyboard-shortcuts.ts
 msgid "Mark the current conversation as read"
 msgstr "Mark the current conversation as read"
 
 #: src/features/home/ui/InboxListPane.tsx
+#: src/features/messages/ui/MessageActionBar.tsx
 #: src/features/sidebar/ui/ChannelContextMenu.tsx
 msgid "Mark unread"
 msgstr "Mark unread"
@@ -5978,6 +6390,11 @@ msgstr "Memory is stored as"
 msgid "Mention"
 msgstr "Mention"
 
+#. placeholder {0}: suggestion.displayName
+#: src/features/messages/ui/MentionAutocomplete.tsx
+msgid "Mention {0}"
+msgstr "Mention {0}"
+
 #: src/features/channels/ui/WelcomeComposerBanner.tsx
 msgid "Mention <0/> or another teammate whenever you want their help."
 msgstr "Mention <0/> or another teammate whenever you want their help."
@@ -5985,6 +6402,10 @@ msgstr "Mention <0/> or another teammate whenever you want their help."
 #: src/features/messages/ui/NonMemberMentionDialog.tsx
 msgid "Mention people outside this channel?"
 msgstr "Mention people outside this channel?"
+
+#: src/features/messages/ui/ComposerAddressControls.tsx
+msgid "Mention someone"
+msgstr "Mention someone"
 
 #: src/features/agents/ui/ManagedAgentSessionPanel.tsx
 msgid "Mention this agent in a channel to watch the next turn."
@@ -6037,14 +6458,26 @@ msgstr "Message"
 msgid "Message {0}"
 msgstr "Message {0}"
 
+#: src/features/messages/ui/NewMessageScreen.tsx
+msgid "Message {singleRecipientName}"
+msgstr "Message {singleRecipientName}"
+
 #. placeholder {0}: activeChannel.name
 #: src/features/channels/ui/ChannelPane.tsx
 msgid "Message #{0}"
 msgstr "Message #{0}"
 
+#: src/features/messages/ui/MessageComposer.tsx
+msgid "Message #{channelName}"
+msgstr "Message #{channelName}"
+
 #: src/features/agents/ui/AgentSessionToolItem/CompactMessageSummary.tsx
 msgid "Message content unavailable."
 msgstr "Message content unavailable."
+
+#: src/features/messages/ui/MessageActionBar.tsx
+msgid "Message copied to clipboard"
+msgstr "Message copied to clipboard"
 
 #: src/shared/ui/markdown/MessageLinkPill.tsx
 msgid "Message deleted"
@@ -6057,6 +6490,10 @@ msgstr "Message in"
 #: src/shared/ui/markdown/MessageLinkPill.tsx
 msgid "Message in channel {channelLabel}"
 msgstr "Message in channel {channelLabel}"
+
+#: src/features/messages/ui/MessageThreadPanel.tsx
+msgid "Message the huddle"
+msgstr "Message the huddle"
 
 #: src/shared/ui/markdown/MessageLinkPill.tsx
 msgid "Message unavailable"
@@ -6160,6 +6597,7 @@ msgid "more"
 msgstr "more"
 
 #: src/features/home/ui/InboxDetailPane.tsx
+#: src/features/messages/ui/MessageActionBar.tsx
 msgid "More actions"
 msgstr "More actions"
 
@@ -6288,6 +6726,10 @@ msgstr "Needs work"
 msgid "Never share it—anyone with this key can sign in as you"
 msgstr "Never share it—anyone with this key can sign in as you"
 
+#: src/features/messages/ui/UnreadDivider.tsx
+msgid "New"
+msgstr "New"
+
 #: src/features/home/ui/InboxListPane.tsx
 msgid "New activity will appear here."
 msgstr "New activity will appear here."
@@ -6326,6 +6768,10 @@ msgstr "New message"
 #: src/features/agents/ui/agentSessionTranscriptHelpers.ts
 msgid "New message — arrived while you were working"
 msgstr "New message — arrived while you were working"
+
+#: src/features/messages/ui/UnreadDivider.tsx
+msgid "New messages"
+msgstr "New messages"
 
 #. placeholder {0}: attributes.count
 #: src/features/agents/ui/agentSessionTranscriptHelpers.ts
@@ -6541,6 +6987,10 @@ msgstr "No custom servers configured."
 msgid "No description provided."
 msgstr "No description provided."
 
+#: src/features/messages/ui/DiffViewer.tsx
+msgid "No diff content"
+msgstr "No diff content"
+
 #: src/features/projects/lib/projectLabels.ts
 msgid "No discussion"
 msgstr "No discussion"
@@ -6666,6 +7116,7 @@ msgstr "No matching tasks"
 
 #: src/features/agents/ui/RespondToField.tsx
 #: src/features/channels/ui/ChannelMemberInviteCard.tsx
+#: src/features/messages/ui/NewMessageScreen.tsx
 msgid "No matching users."
 msgstr "No matching users."
 
@@ -6688,6 +7139,10 @@ msgstr "No mentions found"
 #: src/features/search/ui/SearchResultItem.tsx
 msgid "No message body."
 msgstr "No message body."
+
+#: src/features/messages/lib/messageLinkMetadata.ts
+msgid "No message text"
+msgstr "No message text"
 
 #: src/features/search/ui/TopbarSearch.tsx
 msgid "No messages for <0>{trimmedQuery}</0> in <1>{scopeLabel}</1>."
@@ -6718,6 +7173,10 @@ msgstr "No options available"
 #: src/features/agents/ui/PersonaShareRecipients.tsx
 msgid "No people found."
 msgstr "No people found."
+
+#: src/features/messages/ui/NewMessageScreen.tsx
+msgid "No people or agents available to message."
+msgstr "No people or agents available to message."
 
 #: src/features/agents/ui/activityRenderClasses/PlanActivity.tsx
 msgid "No plan details."
@@ -6767,6 +7226,10 @@ msgstr "No recent activity yet."
 #: src/features/home/ui/InboxListPane.tsx
 msgid "No reminders"
 msgstr "No reminders"
+
+#: src/features/messages/ui/MessageThreadReplyState.tsx
+msgid "No replies in this branch yet"
+msgstr "No replies in this branch yet"
 
 #: src/features/projects/ui/PullRequestReviewersRow.tsx
 msgid "No reviewers"
@@ -6819,6 +7282,10 @@ msgstr "No templates yet. Create one to save a reusable channel configuration."
 #: src/features/projects/ui/ProjectPullRequestFilesChangedPanel.tsx
 msgid "No textual diff is available for this file."
 msgstr "No textual diff is available for this file."
+
+#: src/features/messages/ui/DiffViewer.tsx
+msgid "No textual hunks in this diff."
+msgstr "No textual hunks in this diff."
 
 #: src/features/home/ui/InboxListPane.tsx
 msgid "No threads found"
@@ -7054,8 +7521,10 @@ msgstr "Open"
 
 #. placeholder {0}: item.channelName || t`channel`
 #. placeholder {0}: label.toLowerCase()
+#. placeholder {0}: preview.title
 #: src/features/channels/ui/ChannelManagementSheetRows.tsx
 #: src/features/home/ui/FeedSection.tsx
+#: src/features/messages/ui/useComposerLinkPreviews.tsx
 msgid "Open {0}"
 msgstr "Open {0}"
 
@@ -7135,6 +7604,10 @@ msgstr "Open Buzz on your mobile device and scan the code shown here."
 msgid "Open channel {channelLabel}; linked message was deleted"
 msgstr "Open channel {channelLabel}; linked message was deleted"
 
+#: src/features/messages/lib/composerMessageLinkNode.ts
+msgid "Open channel {resolvedChannelName}"
+msgstr "Open channel {resolvedChannelName}"
+
 #: src/features/home/ui/InboxDetailPane.tsx
 msgid "Open conversation"
 msgstr "Open conversation"
@@ -7201,6 +7674,11 @@ msgstr "Open profile menu for {resolvedDisplayName}"
 #: src/features/projects/ui/ProjectRepositoryActionsPanel.tsx
 msgid "Open project chat to ask for repository access"
 msgstr "Open project chat to ask for repository access"
+
+#: src/features/messages/ui/MessageActionBar.tsx
+#: src/features/messages/ui/SystemMessageRow.tsx
+msgid "Open reactions"
+msgstr "Open reactions"
 
 #. placeholder {0}: channel.name
 #: src/features/projects/ui/ProjectRepositoryUnavailableState.tsx
@@ -7309,6 +7787,10 @@ msgstr "OpenAI-compatible"
 msgid "OpenAI's coding agent, connected through the codex-acp adapter."
 msgstr "OpenAI's coding agent, connected through the codex-acp adapter."
 
+#: src/features/messages/ui/NewMessageScreen.tsx
+msgid "Opening…"
+msgstr "Opening…"
+
 #: src/features/agents/ui/agentConfigOptions.tsx
 msgid "OpenRouter"
 msgstr "OpenRouter"
@@ -7343,6 +7825,10 @@ msgstr "Optional style notes for the art and card text"
 #: src/features/agents/ui/personaLibraryCopy.ts
 msgid "Or drop an .agent.json or .agent.png snapshot here to import."
 msgstr "Or drop an .agent.json or .agent.png snapshot here to import."
+
+#: src/features/messages/ui/FormattingToolbar.tsx
+msgid "Ordered list"
+msgstr "Ordered list"
 
 #: src/features/settings/ui/AppearanceSettingsControls.tsx
 msgid "Orders every list in the sidebar. Recent also floats the sections themselves, so dragging them waits for A–Z. A section you have set from its own menu keeps that order."
@@ -7389,6 +7875,10 @@ msgstr "Owned by me"
 #: src/features/channels/ui/MembersSidebarMemberCard.tsx
 msgid "owner"
 msgstr "owner"
+
+#: src/features/messages/ui/MessageAgentOwner.tsx
+msgid "owner unavailable"
+msgstr "owner unavailable"
 
 #: src/features/settings/ui/MobilePairingCard.tsx
 msgid "Pair your mobile app"
@@ -7465,6 +7955,10 @@ msgstr "Path"
 msgid "Pause {value}"
 msgstr "Pause {value}"
 
+#: src/features/messages/ui/AudioMessageAttachment.tsx
+msgid "Pause voice note"
+msgstr "Pause voice note"
+
 #: src/features/agents/ui/agentSessionToolCatalog.ts
 #: src/features/home/ui/InboxListPane.tsx
 msgid "Pending"
@@ -7534,9 +8028,19 @@ msgstr "plan"
 msgid "Plan updated"
 msgstr "Plan updated"
 
+#: src/features/messages/ui/AudioMessageAttachment.tsx
+msgid "Play voice note"
+msgstr "Play voice note"
+
 #: src/features/settings/ui/VoiceSettingsCard.tsx
 msgid "Playback"
 msgstr "Playback"
+
+#. placeholder {0}: playbackRateLabel(playbackRate)
+#. placeholder {1}: playbackRateLabel(nextPlaybackRate)
+#: src/features/messages/ui/AudioMessageAttachment.tsx
+msgid "Playback speed {0}; next {1}"
+msgstr "Playback speed {0}; next {1}"
 
 #: src/features/agents/ui/AgentSnapshotExportDialog.tsx
 #: src/features/agents/ui/TeamSnapshotExportDialog.tsx
@@ -7585,6 +8089,10 @@ msgstr "Preparing backup…"
 #: src/features/settings/UpdateChecker.tsx
 msgid "Preparing update..."
 msgstr "Preparing update..."
+
+#: src/features/messages/ui/VoiceNoteRecorder.tsx
+msgid "Preparing voice note"
+msgstr "Preparing voice note"
 
 #: src/features/projects/ui/MergePullRequestButton.tsx
 msgid "Preparing…"
@@ -7874,6 +8382,10 @@ msgstr "Push local commits"
 msgid "Push to talk"
 msgstr "Push to talk"
 
+#: src/features/messages/ui/ComposerAttachments.tsx
+msgid "Queued attachment"
+msgstr "Queued attachment"
+
 #: src/features/channels/ui/QuickBotBar.tsx
 msgid "Quick add bots"
 msgstr "Quick add bots"
@@ -7881,6 +8393,10 @@ msgstr "Quick add bots"
 #: src/shared/lib/keyboard-shortcuts.ts
 msgid "Quick search"
 msgstr "Quick search"
+
+#: src/features/messages/ui/FormattingToolbar.tsx
+msgid "Quote"
+msgstr "Quote"
 
 #. placeholder {0}: items.length
 #: src/features/agents/ui/agentSessionTranscriptGrouping.ts
@@ -7922,6 +8438,20 @@ msgstr "Re-add to channel"
 #: src/features/projects/ui/PullRequestReviewersRow.tsx
 msgid "Re-review needed"
 msgstr "Re-review needed"
+
+#: src/features/messages/ui/MessageActionBar.tsx
+#: src/features/messages/ui/MessageReactions.tsx
+#: src/features/messages/ui/SystemMessageRow.tsx
+msgid "React"
+msgstr "React"
+
+#: src/features/messages/ui/MessageActionBar.tsx
+msgid "React with {displayName}"
+msgstr "React with {displayName}"
+
+#: src/features/messages/ui/MessageReactions.tsx
+msgid "reacted with"
+msgstr "reacted with"
 
 #: src/features/agents/ui/agentSessionToolClassifier.ts
 msgid "Read file"
@@ -8011,9 +8541,29 @@ msgstr "Recipient npub"
 msgid "Reconnecting"
 msgstr "Reconnecting"
 
+#: src/features/messages/ui/MessageComposerToolbar.tsx
+msgid "Record voice note"
+msgstr "Record voice note"
+
+#: src/features/messages/ui/VoiceNoteRecorder.tsx
+msgid "Recording voice note"
+msgstr "Recording voice note"
+
 #: src/features/onboarding/ui/MachineOnboardingFlow.tsx
 msgid "Recover from your phone"
 msgstr "Recover from your phone"
+
+#: src/features/messages/ui/ComposerImageEditor.tsx
+msgid "Red"
+msgstr "Red"
+
+#: src/features/messages/ui/ComposerImageEditor.tsx
+msgid "Redo (⇧⌘Z)"
+msgstr "Redo (⇧⌘Z)"
+
+#: src/features/messages/ui/ComposerImageEditor.tsx
+msgid "Redo stroke"
+msgstr "Redo stroke"
 
 #: src/features/settings/ui/HostedCommunitiesSettingsCard.tsx
 msgid "Refresh"
@@ -8067,6 +8617,7 @@ msgid "Release check"
 msgstr "Release check"
 
 #: src/features/home/ui/InboxListPane.tsx
+#: src/features/messages/ui/MessageActionBar.tsx
 #: src/features/sidebar/ui/ChannelActivityPopover.tsx
 msgid "Remind me later"
 msgstr "Remind me later"
@@ -8099,6 +8650,9 @@ msgstr "Remote deployment"
 #: src/features/agents/ui/AgentCreationPreview.tsx
 #: src/features/agents/ui/RemoveMembersConfirmDialog.tsx
 #: src/features/channels/ui/ChannelLogoEditor.tsx
+#: src/features/messages/lib/useLinkEditor.tsx
+#: src/features/messages/ui/AudioMessageAttachment.tsx
+#: src/features/messages/ui/ComposerAttachments.tsx
 msgid "Remove"
 msgstr "Remove"
 
@@ -8108,6 +8662,14 @@ msgstr "Remove"
 #: src/features/channels/ui/ChannelMemberInviteCard.tsx
 msgid "Remove {0}"
 msgstr "Remove {0}"
+
+#: src/features/messages/ui/ComposerAttachments.tsx
+msgid "Remove {displayName}"
+msgstr "Remove {displayName}"
+
+#: src/features/messages/ui/ComposerAttachments.tsx
+msgid "Remove {mediaLabel}"
+msgstr "Remove {mediaLabel}"
 
 #: src/features/search/ui/SearchScopeControls.tsx
 msgid "Remove {scopeLabel} search scope"
@@ -8121,6 +8683,7 @@ msgstr "Remove all from channel"
 msgid "Remove argument"
 msgstr "Remove argument"
 
+#: src/features/messages/ui/ComposerAttachments.tsx
 #: src/features/settings/ui/SendFeedbackDialog.tsx
 msgid "Remove attachment"
 msgstr "Remove attachment"
@@ -8141,9 +8704,18 @@ msgstr "Remove from section"
 msgid "Remove from sidebar"
 msgstr "Remove from sidebar"
 
+#: src/features/messages/ui/ComposerAttachments.tsx
+msgid "Remove spoiler"
+msgstr "Remove spoiler"
+
 #: src/features/agents/ui/EnvVarsEditor.tsx
 msgid "Remove variable"
 msgstr "Remove variable"
+
+#: src/features/messages/ui/AudioMessageAttachment.tsx
+#: src/features/messages/ui/ComposerAttachments.tsx
+msgid "Remove voice note"
+msgstr "Remove voice note"
 
 #: src/features/agents/ui/RestartDiffBadge.tsx
 msgid "removed"
@@ -8187,6 +8759,31 @@ msgstr "Replies"
 #: src/features/home/ui/InboxDetailPane.tsx
 msgid "Replies are not available for this item."
 msgstr "Replies are not available for this item."
+
+#: src/features/messages/ui/MessageActionBar.tsx
+msgid "Reply"
+msgstr "Reply"
+
+#: src/features/messages/ui/MessageThreadReplyState.tsx
+msgid "Reply in the thread to continue this branch."
+msgstr "Reply in the thread to continue this branch."
+
+#: src/features/messages/ui/MessageThreadPanel.tsx
+msgid "Reply in thread to {threadHeadAuthor}"
+msgstr "Reply in thread to {threadHeadAuthor}"
+
+#: src/features/messages/ui/MessageComposer.tsx
+msgid "Reply to {replyAuthor} in #{channelName}"
+msgstr "Reply to {replyAuthor} in #{channelName}"
+
+#. placeholder {0}: replyTarget.author
+#: src/features/messages/ui/ComposerReplyEditBanner.tsx
+msgid "Replying to {0}"
+msgstr "Replying to {0}"
+
+#: src/features/messages/ui/MessageActionBar.tsx
+msgid "Report message"
+msgstr "Report message"
 
 #: src/features/projects/ui/projectsOverviewContext.ts
 #: src/features/projects/ui/ProjectsToolbar.tsx
@@ -8408,6 +9005,8 @@ msgstr "Restoring..."
 #: src/features/home/ui/InboxDetailPane.tsx
 #: src/features/home/ui/InboxListPane.tsx
 #: src/features/home/ui/ProjectInboxDetail.tsx
+#: src/features/messages/ui/MessageThreadReplyState.tsx
+#: src/features/messages/ui/MessageTimelineErrorCard.tsx
 #: src/features/projects/ui/ProjectDetailUnavailableState.tsx
 #: src/features/projects/ui/ProjectRepositoryUnavailableState.tsx
 #: src/features/projects/ui/ProjectsIssuesList.tsx
@@ -8418,6 +9017,10 @@ msgstr "Restoring..."
 #: src/features/settings/UpdateChecker.tsx
 msgid "Retry"
 msgstr "Retry"
+
+#: src/features/messages/ui/AudioMessageAttachment.tsx
+msgid "Retry voice note"
+msgstr "Retry voice note"
 
 #: src/features/projects/ui/ProjectRepositoryUnavailableState.tsx
 #: src/features/projects/ui/ProjectsIssuesList.tsx
@@ -8446,6 +9049,14 @@ msgstr "Reveal password"
 #: src/features/settings/ui/PrivateKeyBackupRow.tsx
 msgid "Reveal private key"
 msgstr "Reveal private key"
+
+#: src/features/messages/ui/ComposerAttachments.tsx
+msgid "Revert"
+msgstr "Revert"
+
+#: src/features/messages/ui/ComposerAttachments.tsx
+msgid "Revert to original"
+msgstr "Revert to original"
 
 #: src/features/projects/ui/CreateProjectWorkItemDialog.tsx
 msgid "review"
@@ -8553,6 +9164,8 @@ msgstr "Runtime override: using {0} instead of {1}."
 msgid "Runtimes"
 msgstr "Runtimes"
 
+#: src/features/messages/lib/useLinkEditor.tsx
+#: src/features/messages/ui/ComposerImageEditor.tsx
 #: src/features/settings/ui/ChannelTemplatesSettingsCard.tsx
 #: src/features/settings/ui/CustomHarnessForm.tsx
 msgid "Save"
@@ -8914,6 +9527,14 @@ msgstr "Selected people"
 msgid "Selected people ({allowlistCount})"
 msgstr "Selected people ({allowlistCount})"
 
+#: src/features/messages/ui/MessageRow.tsx
+msgid "Selected people can send instructions to this agent"
+msgstr "Selected people can send instructions to this agent"
+
+#: src/features/messages/ui/SelectionFormattingTray.tsx
+msgid "Selection formatting"
+msgstr "Selection formatting"
+
 #: src/features/agents/ui/AcpCommandField.tsx
 msgid "Selects the ACP transport used when this agent is deployed."
 msgstr "Selects the ACP transport used when this agent is deployed."
@@ -8940,6 +9561,7 @@ msgstr "Send failed."
 msgid "Send feedback"
 msgstr "Send feedback"
 
+#: src/features/messages/ui/ComposerAddressControls.tsx
 #: src/features/messages/ui/DraftsPanel.tsx
 #: src/shared/lib/keyboard-shortcuts.ts
 msgid "Send message"
@@ -8962,6 +9584,19 @@ msgstr "Send reply to channel thread"
 msgid "Send the current message"
 msgstr "Send the current message"
 
+#: src/features/messages/ui/MessageActionBar.tsx
+msgid "Send to channel"
+msgstr "Send to channel"
+
+#: src/features/messages/ui/useComposerLinkPreviews.tsx
+msgid "Send without link previews"
+msgstr "Send without link previews"
+
+#: src/features/messages/ui/ComposerAddressControls.tsx
+msgid "Sending"
+msgstr "Sending"
+
+#: src/features/messages/ui/MessageRow.tsx
 #: src/features/settings/ui/SendFeedbackDialog.tsx
 msgid "Sending…"
 msgstr "Sending…"
@@ -8978,6 +9613,10 @@ msgstr "Sent a copy of {displayName}"
 msgid "Sent context"
 msgstr "Sent context"
 
+#: src/features/messages/ui/SentFromThreadLine.tsx
+msgid "Sent from thread:"
+msgstr "Sent from thread:"
+
 #: src/features/agents/ui/AgentSessionToolItem/SentMessageContextDialog.tsx
 msgid "Sent message context"
 msgstr "Sent message context"
@@ -8985,6 +9624,10 @@ msgstr "Sent message context"
 #: src/features/projects/ui/ProjectAgentSubmittedContextPill.tsx
 msgid "Sent project context"
 msgstr "Sent project context"
+
+#: src/features/messages/ui/MessageActionBar.tsx
+msgid "Sent to channel"
+msgstr "Sent to channel"
 
 #: src/features/settings/ui/EncryptedBackupCreator.tsx
 msgid "Separator"
@@ -9280,6 +9923,10 @@ msgstr "Software Updates"
 msgid "Some message context could not be loaded."
 msgstr "Some message context could not be loaded."
 
+#: src/features/messages/lib/waveMessage.ts
+msgid "Someone waved at you."
+msgstr "Someone waved at you."
+
 #: src/features/sidebar/ui/CustomChannelSection.tsx
 #: src/features/sidebar/ui/SidebarProjectsSection.tsx
 msgid "Sort"
@@ -9330,9 +9977,14 @@ msgstr "Spawn or respawn all"
 msgid "Spawned {0}."
 msgstr "Spawned {0}."
 
+#: src/features/messages/ui/DiffMessageExpanded.tsx
 #: src/features/settings/ui/AppearanceSettingsControls.tsx
 msgid "Split"
 msgstr "Split"
+
+#: src/features/messages/ui/FormattingToolbar.tsx
+msgid "Spoiler"
+msgstr "Spoiler"
 
 #: src/features/settings/ui/ChannelTemplatesSettingsCard.tsx
 msgid "Sprint Planning"
@@ -9342,6 +9994,10 @@ msgstr "Sprint Planning"
 msgid "Start a conversation with the project agent."
 msgstr "Start a conversation with the project agent."
 
+#: src/features/messages/ui/WaveMessageAttachment.tsx
+msgid "Start a huddle to talk to them."
+msgstr "Start a huddle to talk to them."
+
 #: src/features/agents/lib/managedAgentControlActions.ts
 msgid "Start agent"
 msgstr "Start agent"
@@ -9350,6 +10006,10 @@ msgstr "Start agent"
 #: src/features/agents/ui/AgentRuntimeAvatarControl.tsx
 msgid "Start Agent"
 msgstr "Start Agent"
+
+#: src/features/messages/ui/WaveMessageAttachment.tsx
+msgid "Start huddle"
+msgstr "Start huddle"
 
 #: src/features/onboarding/ui/MachineOnboardingFlow.tsx
 msgid "Start new identity"
@@ -9447,9 +10107,14 @@ msgstr "Stopped by you"
 msgid "Stored securely on this device"
 msgstr "Stored securely on this device"
 
+#: src/features/messages/ui/FormattingToolbar.tsx
 #: src/shared/lib/keyboard-shortcuts.ts
 msgid "Strikethrough"
 msgstr "Strikethrough"
+
+#: src/features/messages/ui/ComposerImageEditor.tsx
+msgid "Stroke width"
+msgstr "Stroke width"
 
 #: src/features/agents/ui/runOnSummary.ts
 msgid "Structured value"
@@ -9654,6 +10319,10 @@ msgstr "Test another backup"
 msgid "Test backup"
 msgstr "Test backup"
 
+#: src/features/messages/lib/useLinkEditor.tsx
+msgid "Text to display"
+msgstr "Text to display"
+
 #: src/features/settings/ui/HostedCommunitiesSettingsCard.tsx
 msgid "That address is already taken."
 msgstr "That address is already taken."
@@ -9714,6 +10383,10 @@ msgstr "The card carries the agent — anyone who imports this PNG gets a workin
 #: src/features/agents/ui/AgentCardViewerDialog.tsx
 msgid "The card carries the agent — anyone who imports this PNG gets a working copy (fresh identity) including its {0}, stored as plaintext."
 msgstr "The card carries the agent — anyone who imports this PNG gets a working copy (fresh identity) including its {0}, stored as plaintext."
+
+#: src/features/messages/ui/MessageTimelineErrorCard.tsx
+msgid "The channel history didn't load. Check your connection and try again."
+msgstr "The channel history didn't load. Check your connection and try again."
 
 #: src/features/settings/ui/harnessCatalogCopy.ts
 msgid "The coding agent and development environment that runs anywhere and everywhere."
@@ -9812,6 +10485,10 @@ msgstr "the selected revision"
 #: src/features/agents/lib/agentAccessWarning.ts
 msgid "the server it runs on, including any accounts and tools available there"
 msgstr "the server it runs on, including any accounts and tools available there"
+
+#: src/features/messages/ui/MessageThreadReplyState.tsx
+msgid "The thread history didn't load. Check your connection and try again."
+msgstr "The thread history didn't load. Check your connection and try again."
 
 #: src/features/channels/useWelcomeAgentCreate.ts
 msgid "The welcome guide is unavailable. Create the agent manually instead."
@@ -9992,6 +10669,11 @@ msgstr "This inbox item does not have a reply target."
 msgid "This is the beginning of the <0>{0}</0>."
 msgstr "This is the beginning of the <0>{0}</0>."
 
+#. placeholder {0}: activeDirectMessageIntro.displayName
+#: src/features/messages/ui/MessageTimeline.tsx
+msgid "This is the beginning of your direct message with <0>{0}</0>."
+msgstr "This is the beginning of your direct message with <0>{0}</0>."
+
 #: src/features/agents/ui/AgentSnapshotImportDialog.tsx
 msgid "This is the complete portable payload decoded from the file. Secrets, credentials, and source identity are not part of the snapshot format."
 msgstr "This is the complete portable payload decoded from the file. Secrets, credentials, and source identity are not part of the snapshot format."
@@ -10005,6 +10687,10 @@ msgstr "This item does not support inline replies yet."
 #: src/features/onboarding/ui/IdentityKeyIntroduction.tsx
 msgid "This key will be how you log into {0}. You can use it across {1} communities and other platforms."
 msgstr "This key will be how you log into {0}. You can use it across {1} communities and other platforms."
+
+#: src/features/messages/ui/MessageRow.tsx
+msgid "This message has been edited"
+msgstr "This message has been edited"
 
 #: src/features/agents/ui/EffortPickerField.tsx
 msgid "This model may not support {selectValue}. "
@@ -10094,6 +10780,10 @@ msgstr "This will create a new identity and abandon your previous key. This cann
 msgid "This will delete your identity key, all agent settings, and cached data from this device, then relaunch {productName} into first-run setup. This cannot be undone."
 msgstr "This will delete your identity key, all agent settings, and cached data from this device, then relaunch {productName} into first-run setup. This cannot be undone."
 
+#: src/features/messages/ui/DeleteMessageConfirmDialog.tsx
+msgid "This will permanently delete this message and cannot be undone."
+msgstr "This will permanently delete this message and cannot be undone."
+
 #: src/features/channels/ui/FocusThreadDrawer.tsx
 #: src/features/home/lib/inbox.ts
 #: src/features/search/ui/TopbarSearch.tsx
@@ -10114,6 +10804,7 @@ msgid "Thread deleted"
 msgstr "Thread deleted"
 
 #: src/features/home/lib/inbox.ts
+#: src/features/messages/lib/messageLinkLabel.ts
 #: src/features/search/ui/TopbarSearch.tsx
 msgid "Thread in"
 msgstr "Thread in"
@@ -10154,6 +10845,10 @@ msgstr "Timeout lifted"
 msgid "Title"
 msgstr "Title"
 
+#: src/features/messages/ui/NewMessageScreen.tsx
+msgid "To"
+msgstr "To"
+
 #: src/features/agents/ui/AddAgentToChannelDialog.tsx
 msgid "to a channel so desktop chat can `@mention` it. Running agents pick up new channels automatically via membership notifications."
 msgstr "to a channel so desktop chat can `@mention` it. Running agents pick up new channels automatically via membership notifications."
@@ -10166,14 +10861,24 @@ msgstr "to match your default login."
 msgid "to the selected channel."
 msgstr "to the selected channel."
 
+#: src/features/messages/ui/NewMessageScreen.tsx
+msgid "To:"
+msgstr "To:"
+
 #: src/shared/lib/datetime.ts
 msgid "Today"
 msgstr "Today"
+
+#. placeholder {0}: reaction.emoji
+#: src/features/messages/ui/MessageReactions.tsx
+msgid "Toggle {0} reaction"
+msgstr "Toggle {0} reaction"
 
 #: src/shared/lib/keyboard-shortcuts.ts
 msgid "Toggle bold formatting"
 msgstr "Toggle bold formatting"
 
+#: src/features/messages/ui/MessageComposerToolbar.tsx
 #: src/features/projects/ui/ProjectsAgentPromptPage.tsx
 msgid "Toggle formatting"
 msgstr "Toggle formatting"
@@ -10271,6 +10976,10 @@ msgstr "Try another search or create a new project."
 msgid "Turn error"
 msgstr "Turn error"
 
+#: src/features/messages/ui/ComposerAddressControls.tsx
+msgid "Turn off"
+msgstr "Turn off"
+
 #: src/features/home/ui/InboxListPane.tsx
 msgid "Turn off Show unread only to see read activity."
 msgstr "Turn off Show unread only to see read activity."
@@ -10339,9 +11048,25 @@ msgstr "Unavailable"
 msgid "Underlying CLI"
 msgstr "Underlying CLI"
 
+#: src/features/messages/ui/ComposerImageEditor.tsx
+msgid "Undo (⌘Z)"
+msgstr "Undo (⌘Z)"
+
 #: src/features/home/ui/FeedSection.tsx
 msgid "Undo done"
 msgstr "Undo done"
+
+#: src/features/messages/ui/ComposerImageEditor.tsx
+msgid "Undo last stroke"
+msgstr "Undo last stroke"
+
+#: src/features/messages/ui/MessageActionBar.tsx
+msgid "Unfollow thread"
+msgstr "Unfollow thread"
+
+#: src/features/messages/ui/DiffMessageExpanded.tsx
+msgid "Unified"
+msgstr "Unified"
 
 #: src/features/projects/ui/ProjectCards.tsx
 msgid "Uninitialized"
@@ -10384,6 +11109,10 @@ msgstr "Unknown model discovery error"
 #: src/features/messages/ui/DraftsPanel.tsx
 msgid "Unknown time"
 msgstr "Unknown time"
+
+#: src/features/messages/lib/useLinkEditor.tsx
+msgid "Unlink"
+msgstr "Unlink"
 
 #: src/features/projects/ui/CreateProjectFormSettings.tsx
 msgid "Unlisted"
@@ -10551,7 +11280,9 @@ msgid "Updating"
 msgstr "Updating"
 
 #. placeholder {0}: err.message
+#. placeholder {0}: media.uploadState.message
 #: src/features/agents/ui/useSnapshotSendController.ts
+#: src/features/messages/ui/MessageComposer.tsx
 msgid "Upload failed: {0}"
 msgstr "Upload failed: {0}"
 
@@ -10563,6 +11294,12 @@ msgstr "Upload failed."
 msgid "Upload logo"
 msgstr "Upload logo"
 
+#. placeholder {0}: preview.filename ?? "attachment"
+#. placeholder {0}: preview.filename ?? "video"
+#: src/features/messages/ui/ComposerAttachments.tsx
+msgid "Uploading {0}"
+msgstr "Uploading {0}"
+
 #: src/features/agents/ui/AgentCreationPreview.tsx
 msgid "Uploading {assetLabel}"
 msgstr "Uploading {assetLabel}"
@@ -10570,6 +11307,10 @@ msgstr "Uploading {assetLabel}"
 #: src/features/agents/ui/AgentDefinitionDialogFooter.tsx
 msgid "Uploading..."
 msgstr "Uploading..."
+
+#: src/features/messages/lib/useLinkEditor.tsx
+msgid "URL"
+msgstr "URL"
 
 #: src/features/settings/ui/ChannelTemplatesSettingsCard.tsx
 msgid "Use {channel.name} and {template.name} as placeholders."
@@ -10778,6 +11519,10 @@ msgstr "View draft"
 msgid "View draft in {channelLabel}"
 msgstr "View draft in {channelLabel}"
 
+#: src/features/messages/ui/DiffMessage.tsx
+msgid "View full diff on {diffHostname}"
+msgstr "View full diff on {diffHostname}"
+
 #: src/features/projects/ui/ProjectsPullRequestsList.tsx
 msgid "View merge"
 msgstr "View merge"
@@ -10799,6 +11544,10 @@ msgstr "View task"
 #: src/features/projects/ui/ProjectsIssuesList.tsx
 msgid "View task {0}"
 msgstr "View task {0}"
+
+#: src/features/messages/ui/DiffMessage.tsx
+msgid "View the full diff at the source repository."
+msgstr "View the full diff at the source repository."
 
 #: src/features/messages/ui/MessageThreadSummaryRow.tsx
 msgid "View thread"
@@ -10853,6 +11602,14 @@ msgstr "Voice could not be imported."
 msgid "Voice files stay private on this device."
 msgstr "Voice files stay private on this device."
 
+#: src/features/messages/ui/ComposerAttachments.tsx
+msgid "Voice note"
+msgstr "Voice note"
+
+#: src/features/messages/ui/AudioMessageAttachment.tsx
+msgid "Voice note playback position"
+msgstr "Voice note playback position"
+
 #: src/features/settings/ui/VoiceSettingsCard.tsx
 msgid "Voice preview could not be played."
 msgstr "Voice preview could not be played."
@@ -10872,6 +11629,10 @@ msgstr "Waiting for ACP activity"
 #: src/features/settings/ui/PreventSleepSettingsCard.tsx
 msgid "Waiting for agents to start"
 msgstr "Waiting for agents to start"
+
+#: src/features/messages/ui/VoiceNoteRecorder.tsx
+msgid "Waiting for microphone access"
+msgstr "Waiting for microphone access"
 
 #: src/features/agents/ui/ManagedAgentSessionPanel.tsx
 msgid "Waiting for the next agent turn."
@@ -10897,6 +11658,10 @@ msgstr "was created"
 #: src/features/agents/ui/AgentSnapshotImportDialog.tsx
 msgid "was created successfully."
 msgstr "was created successfully."
+
+#: src/features/messages/ui/AudioMessageAttachment.tsx
+msgid "Waveform preview unavailable. Playback may still work."
+msgstr "Waveform preview unavailable. Playback may still work."
 
 #: src/features/settings/ui/MobilePairingCard.tsx
 msgid "We couldn't send your identity. Try again."
@@ -10990,6 +11755,10 @@ msgstr "While an agent works through a job."
 msgid "while it works."
 msgstr "while it works."
 
+#: src/features/messages/ui/ComposerImageEditor.tsx
+msgid "White"
+msgstr "White"
+
 #: src/features/agents/ui/RespondToField.tsx
 msgid "Who can send instructions"
 msgstr "Who can send instructions"
@@ -11052,6 +11821,10 @@ msgstr "Writes to {productName}."
 msgid "xAI's coding agent, connected to {productName} through its ACP entrypoint."
 msgstr "xAI's coding agent, connected to {productName} through its ACP entrypoint."
 
+#: src/features/messages/ui/ComposerImageEditor.tsx
+msgid "Yellow"
+msgstr "Yellow"
+
 #: src/shared/lib/datetime.ts
 msgid "Yesterday"
 msgstr "Yesterday"
@@ -11091,6 +11864,10 @@ msgstr "You can still send without inviting them."
 #: src/features/projects/lib/projectGitError.ts
 msgid "You need access to the repository’s channel before you can clone it."
 msgstr "You need access to the repository’s channel before you can clone it."
+
+#: src/features/messages/ui/useDetachedAgentStart.ts
+msgid "You switched community or identity before it could start."
+msgstr "You switched community or identity before it could start."
 
 #: src/features/agents/ui/personaLibraryCopy.ts
 msgid "You're all set"

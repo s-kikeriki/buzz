@@ -1,3 +1,4 @@
+import { Trans, useLingui } from "@lingui/react/macro";
 import * as React from "react";
 import { EditorContent } from "@tiptap/react";
 import {
@@ -101,6 +102,7 @@ function MessageComposerImpl({
   typingParentEventId = null,
   typingRootEventId = null,
 }: MessageComposerProps) {
+  const { t } = useLingui();
   const {
     contentRef,
     isContentEmpty,
@@ -272,12 +274,13 @@ function MessageComposerImpl({
       scrollElement.scrollTop = scrollElement.scrollHeight;
     });
   }, []);
+  const replyAuthor = replyTarget?.author ?? "";
   const computedPlaceholder = editTarget
-    ? "Edit your message"
+    ? t`Edit your message`
     : (placeholder ??
       (replyTarget
-        ? `Reply to ${replyTarget.author} in #${channelName}`
-        : `Message #${channelName}`));
+        ? t`Reply to ${replyAuthor} in #${channelName}`
+        : t`Message #${channelName}`));
   const richText = useRichTextEditor({
     placeholder: computedPlaceholder,
     editable: !composerDisabled,
@@ -899,13 +902,13 @@ function MessageComposerImpl({
             />
             {media.uploadState.status === "error" ? (
               <div className="mb-2 rounded-lg bg-destructive/10 px-3 py-2 text-xs text-destructive">
-                Upload failed: {media.uploadState.message}
+                <Trans>Upload failed: {media.uploadState.message}</Trans>
                 <button
                   className="ml-2 underline"
                   onClick={() => media.setUploadState({ status: "idle" })}
                   type="button"
                 >
-                  Dismiss
+                  <Trans>Dismiss</Trans>
                 </button>
               </div>
             ) : null}

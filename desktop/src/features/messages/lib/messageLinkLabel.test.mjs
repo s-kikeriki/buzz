@@ -4,11 +4,14 @@ import test from "node:test";
 import {
   getMessageLinkChannelLabel,
   getMessageLinkLabel,
-  MESSAGE_LINK_PREFIX,
+  messageLinkPrefix,
 } from "./messageLinkLabel.ts";
 
 test("ordinary message links expose an Inbox-style prefix and channel label", () => {
-  assert.equal(MESSAGE_LINK_PREFIX, "Thread in");
+  // A function now, not a constant: the prefix is resolved per call so it
+  // cannot freeze in the boot locale. `test-loader.mjs` activates `en`, whose
+  // catalogue is the source text, so the expected value is unchanged.
+  assert.equal(messageLinkPrefix(), "Thread in");
   assert.equal(getMessageLinkChannelLabel("general"), "#general");
 });
 

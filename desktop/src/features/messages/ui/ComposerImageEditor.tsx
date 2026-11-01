@@ -1,3 +1,5 @@
+import { msg } from "@lingui/core/macro";
+import { Trans, useLingui } from "@lingui/react/macro";
 import * as React from "react";
 import { Loader2, Redo2, Undo2 } from "lucide-react";
 
@@ -16,13 +18,15 @@ type EditorStroke = {
   width: number;
 };
 
+// `msg` descriptors: the table is built at module load, before a catalogue is
+// active. The component resolves each label with `i18n._()` on render.
 const PEN_COLORS = [
-  { label: "Red", value: "#ef4444" },
-  { label: "Yellow", value: "#f59e0b" },
-  { label: "Green", value: "#22c55e" },
-  { label: "Blue", value: "#3b82f6" },
-  { label: "White", value: "#ffffff" },
-  { label: "Black", value: "#111111" },
+  { label: msg`Red`, value: "#ef4444" },
+  { label: msg`Yellow`, value: "#f59e0b" },
+  { label: msg`Green`, value: "#22c55e" },
+  { label: msg`Blue`, value: "#3b82f6" },
+  { label: msg`White`, value: "#ffffff" },
+  { label: msg`Black`, value: "#111111" },
 ] as const;
 
 /** Pen stroke width range, in CSS pixels: five whole-pixel slider stops. */
@@ -140,6 +144,7 @@ export function ComposerImageEditor({
   onSave,
   onSavingChange,
 }: ComposerImageEditorProps) {
+  const { i18n, t } = useLingui();
   const canvasRef = React.useRef<HTMLCanvasElement>(null);
   const activeStrokeRef = React.useRef<EditorStroke | null>(null);
   // Committed strokes plus the undone strokes available for redo. Kept in
@@ -344,7 +349,7 @@ export function ComposerImageEditor({
         {naturalSize ? (
           <>
             <canvas
-              aria-label="Drawing canvas"
+              aria-label={t`Drawing canvas`}
               className="absolute inset-0 h-full w-full cursor-none touch-none rounded-lg"
               data-testid="composer-image-editor-canvas"
               height={naturalSize.height}
@@ -380,7 +385,7 @@ export function ComposerImageEditor({
           data-testid="composer-image-editor-toolbar"
         >
           <input
-            aria-label="Stroke width"
+            aria-label={t`Stroke width`}
             className="h-1 w-12 cursor-pointer appearance-none rounded-full bg-white/25 [&::-webkit-slider-thumb]:h-3 [&::-webkit-slider-thumb]:w-3 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-white"
             max={PEN_WIDTH_MAX_CSS}
             min={PEN_WIDTH_MIN_CSS}
@@ -393,7 +398,7 @@ export function ComposerImageEditor({
           <div className="flex items-center gap-1.5">
             {PEN_COLORS.map((color) => (
               <button
-                aria-label={`${color.label} pen`}
+                aria-label={t`${i18n._(color.label)} pen`}
                 aria-pressed={activeColor === color.value}
                 className={cn(
                   "flex h-5 w-5 items-center justify-center rounded-full transition-transform",
@@ -406,7 +411,9 @@ export function ComposerImageEditor({
                 <span
                   className={cn(
                     "rounded-full transition-[height,width]",
-                    color.label === "Black" && "ring-1 ring-white/30",
+                    // Keyed on the colour value, not the label: the label is
+                    // a catalogue descriptor now and would never match.
+                    color.value === "#111111" && "ring-1 ring-white/30",
                   )}
                   style={{
                     backgroundColor: color.value,
@@ -421,7 +428,7 @@ export function ComposerImageEditor({
           <Tooltip disableHoverableContent>
             <TooltipTrigger asChild>
               <button
-                aria-label="Undo last stroke"
+                aria-label={t`Undo last stroke`}
                 className="flex h-7 w-7 items-center justify-center rounded-full text-white transition-colors hover:bg-white/10 disabled:opacity-40 disabled:hover:bg-transparent"
                 disabled={!hasStrokes}
                 onClick={undo}
@@ -430,12 +437,14 @@ export function ComposerImageEditor({
                 <Undo2 className="h-4 w-4" />
               </button>
             </TooltipTrigger>
-            <TooltipContent>Undo (⌘Z)</TooltipContent>
+            <TooltipContent>
+              <Trans>Undo (⌘Z)</Trans>
+            </TooltipContent>
           </Tooltip>
           <Tooltip disableHoverableContent>
             <TooltipTrigger asChild>
               <button
-                aria-label="Redo stroke"
+                aria-label={t`Redo stroke`}
                 className="flex h-7 w-7 items-center justify-center rounded-full text-white transition-colors hover:bg-white/10 disabled:opacity-40 disabled:hover:bg-transparent"
                 disabled={history.undone.length === 0}
                 onClick={redo}
@@ -444,7 +453,9 @@ export function ComposerImageEditor({
                 <Redo2 className="h-4 w-4" />
               </button>
             </TooltipTrigger>
-            <TooltipContent>Redo (⇧⌘Z)</TooltipContent>
+            <TooltipContent>
+              <Trans>Redo (⇧⌘Z)</Trans>
+            </TooltipContent>
           </Tooltip>
         </div>
 
@@ -456,7 +467,7 @@ export function ComposerImageEditor({
           type="button"
           variant="ghost"
         >
-          Cancel
+          <Trans>Cancel</Trans>
         </Button>
         <Button
           data-testid="composer-image-editor-save"
@@ -466,7 +477,7 @@ export function ComposerImageEditor({
           type="button"
         >
           {saving ? <Loader2 className="animate-spin" /> : null}
-          Save
+          <Trans>Save</Trans>
         </Button>
       </div>
 

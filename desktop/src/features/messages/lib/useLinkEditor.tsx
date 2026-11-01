@@ -1,3 +1,4 @@
+import { Trans, useLingui } from "@lingui/react/macro";
 import * as React from "react";
 import { openUrl } from "@tauri-apps/plugin-opener";
 import { Pencil, Unlink } from "lucide-react";
@@ -68,6 +69,7 @@ type LinkCardState = {
  * - `card`/`dialog` — render once inside the composer tree.
  */
 export function useLinkEditor(richText: UseRichTextEditorResult) {
+  const { t } = useLingui();
   const { getLinkSelectionInfo, applyLink, removeLink } = richText;
   const { goChannel } = useAppNavigation();
   const [draft, setDraft] = React.useState<DraftState | null>(null);
@@ -322,7 +324,7 @@ export function useLinkEditor(richText: UseRichTextEditorResult) {
             </a>
             <div className="flex items-center justify-end gap-0.5">
               <Button
-                aria-label="Edit link"
+                aria-label={t`Edit link`}
                 onClick={editFromCard}
                 size="icon-xs"
                 type="button"
@@ -331,7 +333,7 @@ export function useLinkEditor(richText: UseRichTextEditorResult) {
                 <Pencil />
               </Button>
               <Button
-                aria-label="Unlink"
+                aria-label={t`Unlink`}
                 onClick={removeFromCard}
                 size="icon-xs"
                 type="button"
@@ -356,7 +358,7 @@ export function useLinkEditor(richText: UseRichTextEditorResult) {
       <DialogContent className="max-w-md">
         <DialogHeader>
           <DialogTitle>
-            {draft?.isExistingLink ? "Edit link" : "Add link"}
+            {draft?.isExistingLink ? t`Edit link` : t`Add link`}
           </DialogTitle>
         </DialogHeader>
         <form
@@ -370,11 +372,11 @@ export function useLinkEditor(richText: UseRichTextEditorResult) {
             className="flex flex-col gap-1 text-sm font-medium"
             htmlFor={textId}
           >
-            Display text
+            <Trans>Display text</Trans>
             <Input
               id={textId}
               autoFocus={draft?.initialFocus === "text"}
-              placeholder="Text to display"
+              placeholder={t`Text to display`}
               value={draft?.text ?? ""}
               onChange={(event) =>
                 setDraft((prev) =>
@@ -387,11 +389,11 @@ export function useLinkEditor(richText: UseRichTextEditorResult) {
             className="flex flex-col gap-1 text-sm font-medium"
             htmlFor={urlId}
           >
-            URL
+            <Trans>URL</Trans>
             <Input
               id={urlId}
               autoFocus={draft?.initialFocus === "url"}
-              placeholder="https://example.com"
+              placeholder={t`https://example.com`}
               value={draft?.url ?? ""}
               onChange={(event) =>
                 setDraft((prev) =>
@@ -403,17 +405,17 @@ export function useLinkEditor(richText: UseRichTextEditorResult) {
           <div className="mt-2 flex items-center justify-between gap-2">
             {draft?.isExistingLink ? (
               <Button type="button" variant="destructive" onClick={remove}>
-                Remove
+                <Trans>Remove</Trans>
               </Button>
             ) : (
               <span />
             )}
             <div className="flex items-center gap-2">
               <Button type="button" variant="ghost" onClick={close}>
-                Cancel
+                <Trans>Cancel</Trans>
               </Button>
               <Button type="submit" disabled={!draft?.url.trim()}>
-                Save
+                <Trans>Save</Trans>
               </Button>
             </div>
           </div>

@@ -1,3 +1,4 @@
+import { Trans } from "@lingui/react/macro";
 import * as React from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
@@ -78,7 +79,7 @@ export function WaveMessageAttachment({
           />
         </AttachmentTitle>
         <AttachmentDescription>
-          Start a huddle to talk to them.
+          <Trans>Start a huddle to talk to them.</Trans>
         </AttachmentDescription>
       </AttachmentContent>
       <AttachmentActions>
@@ -88,7 +89,7 @@ export function WaveMessageAttachment({
           size="xs"
           type="button"
         >
-          Start huddle
+          <Trans>Start huddle</Trans>
         </AttachmentAction>
       </AttachmentActions>
     </Attachment>

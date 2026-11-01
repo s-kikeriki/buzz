@@ -40,6 +40,7 @@ export default defineConfig({
         "**/inbox-german-screenshots.spec.ts",
         "**/onboarding-german.spec.ts",
         "**/channels-german.spec.ts",
+        "**/messages-german.spec.ts",
         "**/institutional-chrome.spec.ts",
         "**/kikeriki-theme.spec.ts",
         "**/onboarding-brand.spec.ts",

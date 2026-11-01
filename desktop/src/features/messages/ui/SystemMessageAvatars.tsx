@@ -1,3 +1,5 @@
+import { plural } from "@lingui/core/macro";
+import { useLingui } from "@lingui/react/macro";
 import {
   resolveUserLabel,
   type UserProfileLookup,
@@ -170,11 +172,21 @@ export function MembershipAvatarStack({
   profiles: UserProfileLookup | undefined;
   pubkeys: readonly string[];
 }) {
+  const { i18n } = useLingui();
   const visiblePubkeys = pubkeys.slice(0, MAX_MEMBERSHIP_AVATARS);
   if (visiblePubkeys.length === 0) return null;
   return (
     <div
-      aria-label={`${visiblePubkeys.length} channel member${visiblePubkeys.length === 1 ? "" : "s"}`}
+      aria-label={
+        // `plural`, not a conditional "s": German pluralises Mitglied as
+        // Mitglieder, so appending a letter cannot produce the other form.
+        i18n._(
+          plural(visiblePubkeys.length, {
+            one: "# channel member",
+            other: "# channel members",
+          }),
+        )
+      }
       className="relative z-10 flex shrink-0 items-center justify-center"
       data-testid="system-message-avatar-stack"
       role="img"
