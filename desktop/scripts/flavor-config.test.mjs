@@ -813,6 +813,30 @@ test("only ki.keriki renames the theme; the others keep Buzz", () => {
   assert.equal(labels["KI.keri.KI"], undefined);
 });
 
+test("both active flavors clamp long posts; the frozen one and the trunk do not", () => {
+  // The scope of the clamp, bound to the committed files. Zeniad joined
+  // ki.keriki here on Ian's go; `KI.keri.KI` is frozen, so it keeps the
+  // reading density it shipped with, and a flavorless trunk build gets no
+  // variable at all. Adding a flavor to this set is an edit to this line.
+  const expected = new Set(["zeniad", "ki.keriki"]);
+  for (const id of listFlavorIds()) {
+    const flavor = loadFlavor(id);
+    assert.equal(
+      flavor.collapseLongPosts,
+      expected.has(id),
+      `${id}: declared collapseLongPosts`,
+    );
+    // Asserted through the build env too, not just the resolved flavor: the
+    // frontend reads the variable, and "off" is its absence rather than a
+    // second value.
+    assert.equal(
+      flavorBuildEnv(flavor, () => "<svg/>").VITE_BUZZ_COLLAPSE_LONG_POSTS,
+      expected.has(id) ? "1" : undefined,
+      `${id}: the clamp that reaches the build`,
+    );
+  }
+});
+
 test("shell output exports and quotes every value", () => {
   const flavor = validateFlavor(
     goodFlavor({ displayName: "Acme's App" }),

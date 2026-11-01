@@ -10,5 +10,6 @@
   "icon": "flavors/icons/zeniad.icns",
   "relayUrl": "wss://zeniad.communities.buzz.xyz",
   "autoConnectDefaultRelay": true,
-  "accentColor": "#3b82f6"
+  "accentColor": "#3b82f6",
+  "collapseLongPosts": true
 }
