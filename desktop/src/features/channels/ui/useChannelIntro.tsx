@@ -1,3 +1,5 @@
+import type { MessageDescriptor } from "@lingui/core";
+import { msg } from "@lingui/core/macro";
 import * as React from "react";
 import { Bot, FolderPlus, Plus, Sparkles, UserPlus } from "lucide-react";
 
@@ -14,10 +16,14 @@ import { ProjectChannelIcon } from "@/features/projects/ui/ProjectChannelIcon";
 import type { Channel } from "@/shared/api/types";
 import { HashSearch } from "@/shared/ui/icons";
 
+// Descriptors, not strings: the whole intro is assembled inside a `useMemo`
+// keyed on the channel, so resolving here would hold the locale that was
+// active the last time the channel changed. `ChannelIntroBlock` resolves each
+// one on render.
 type ChannelIntroAction = {
-  description?: string;
+  description?: MessageDescriptor;
   icon: React.ReactNode;
-  label: string;
+  label: MessageDescriptor;
   onClick: () => void;
   testId?: string;
 };
@@ -57,7 +63,7 @@ export function useChannelIntro({
       if (onBrowseChannels) {
         actions.push({
           icon: <HashSearch aria-hidden className="h-6 w-6" />,
-          label: "Browse channels",
+          label: msg`Browse channels`,
           onClick: onBrowseChannels,
           testId: "welcome-intro-action-browse-channels",
         });
@@ -66,7 +72,7 @@ export function useChannelIntro({
       if (onCreateChannel) {
         actions.push({
           icon: <Plus aria-hidden className="h-6 w-6" />,
-          label: "Create a channel",
+          label: msg`Create a channel`,
           onClick: onCreateChannel,
           testId: "welcome-intro-action-create-channel",
         });
@@ -75,7 +81,7 @@ export function useChannelIntro({
       if (onWelcomeAddAgent) {
         actions.push({
           icon: <Bot aria-hidden className="h-6 w-6" />,
-          label: "Create an agent",
+          label: msg`Create an agent`,
           onClick: onWelcomeAddAgent,
           testId: "welcome-intro-action-create-agent",
         });
@@ -84,7 +90,11 @@ export function useChannelIntro({
       return {
         actions,
         channelKindLabel: isWelcomeChannel(activeChannel)
-          ? "private welcome channel"
+          ? msg({
+              message: "private welcome channel",
+              comment:
+                'Only ever read inside "This is the beginning of the {kind}." — translate as the genitive form that frame needs.',
+            })
           : getChannelIntroKind(activeChannel, projectHome),
         channelName: activeChannel.name,
         description: isWelcomeChannel(activeChannel)
@@ -97,9 +107,9 @@ export function useChannelIntro({
     if (!activeChannel.archivedAt && activeChannel.isMember) {
       if (onAddFiles) {
         actions.push({
-          description: "Add a repo.",
+          description: msg`Add a repo.`,
           icon: <FolderPlus aria-hidden className="h-5 w-5" />,
-          label: "Add files",
+          label: msg`Add files`,
           onClick: onAddFiles,
           testId: "channel-intro-action-add-files",
         });
@@ -107,9 +117,9 @@ export function useChannelIntro({
 
       if (onAddAgent) {
         actions.push({
-          description: "Add an agent here.",
+          description: msg`Add an agent here.`,
           icon: <Bot aria-hidden className="h-5 w-5" />,
-          label: "Add agent",
+          label: msg`Add agent`,
           onClick: onAddAgent,
           testId: "channel-intro-action-create-agent",
         });
@@ -117,9 +127,9 @@ export function useChannelIntro({
 
       if (onOpenMembers) {
         actions.push({
-          description: "Invite members.",
+          description: msg`Invite members.`,
           icon: <UserPlus aria-hidden className="h-5 w-5" />,
-          label: "Add people",
+          label: msg`Add people`,
           onClick: onOpenMembers,
           testId: "channel-intro-action-add-people",
         });

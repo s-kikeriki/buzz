@@ -1,3 +1,4 @@
+import { Trans, useLingui } from "@lingui/react/macro";
 import * as React from "react";
 import { LogIn } from "lucide-react";
 import { AnimatePresence } from "motion/react";
@@ -186,6 +187,7 @@ export const ChannelPane = React.memo(function ChannelPane({
   threadFirstUnreadReplyId,
   typingPubkeys,
 }: ChannelPaneProps) {
+  const { t } = useLingui();
   const timelineScrollRef = React.useRef<HTMLDivElement>(null);
   const messageTimelineRef = React.useRef<MessageTimelineHandle>(null);
   const composerWrapperRef = React.useRef<HTMLDivElement>(null);
@@ -594,7 +596,7 @@ export const ChannelPane = React.memo(function ChannelPane({
       ) : null}
       {!isSinglePanelView ? (
         <section
-          aria-label="Channel messages and composer"
+          aria-label={t`Channel messages and composer`}
           className="relative flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden"
           inert={channelIsCovered ? true : undefined}
           data-testid="channel-drop-zone"
@@ -651,15 +653,15 @@ export const ChannelPane = React.memo(function ChannelPane({
               unfollowThreadById={unfollowThreadById}
               emptyDescription={
                 activeChannel?.channelType === "forum"
-                  ? "Select a stream or DM to load real message history in this first integration pass."
-                  : "Messages and sub-replies will appear here once the relay has history for this channel."
+                  ? t`Select a stream or DM to load real message history in this first integration pass.`
+                  : t`Messages and sub-replies will appear here once the relay has history for this channel.`
               }
               emptyTitle={
                 activeChannel
                   ? activeChannel.channelType === "forum"
-                    ? "Forum channels are next"
-                    : "No messages yet"
-                  : "No channel selected"
+                    ? t`Forum channels are next`
+                    : t`No messages yet`
+                  : t`No channel selected`
               }
               isError={isTimelineError}
               isLoading={isHuddleTranscript ? false : isTimelineLoading}
@@ -707,10 +709,15 @@ export const ChannelPane = React.memo(function ChannelPane({
                     />
                   ) : null}
                   <span className="truncate">
-                    Viewing{" "}
-                    <span className="font-medium text-foreground">
-                      #{activeChannel?.name}
-                    </span>
+                    {/* One <Trans>, including the bolded channel name: German
+                     * puts the object before the participle, so "Viewing" is
+                     * not a translatable fragment on its own. */}
+                    <Trans>
+                      Viewing{" "}
+                      <span className="font-medium text-foreground">
+                        #{activeChannel?.name}
+                      </span>
+                    </Trans>
                   </span>
                 </div>
                 <Button
@@ -722,7 +729,7 @@ export const ChannelPane = React.memo(function ChannelPane({
                   variant="default"
                 >
                   <LogIn className="mr-1.5 h-4 w-4" />
-                  {isJoining ? "Joining..." : "Join to participate"}
+                  {isJoining ? t`Joining...` : t`Join to participate`}
                 </Button>
               </div>
             ) : (
@@ -776,19 +783,19 @@ export const ChannelPane = React.memo(function ChannelPane({
                     showBackgroundUploadProgress={false}
                     placeholder={
                       timeoutActive
-                        ? "You're timed out by community moderators."
+                        ? t`You're timed out by community moderators.`
                         : isModerationDmChannel
-                          ? "This channel is read-only."
+                          ? t`This channel is read-only.`
                           : activeChannel?.archivedAt
-                            ? "Archived channels are read-only."
+                            ? t`Archived channels are read-only.`
                             : activeChannel?.channelType === "forum"
-                              ? "Forum posting is not wired in this pass."
+                              ? t`Forum posting is not wired in this pass.`
                               : activeChannel
                                 ? activeChannel.channelType === "dm" &&
                                   directMessageIntro
-                                  ? `Message ${directMessageIntro.displayName}`
-                                  : `Message #${activeChannel.name}`
-                                : "Select a channel"
+                                  ? t`Message ${directMessageIntro.displayName}`
+                                  : t`Message #${activeChannel.name}`
+                                : t`Select a channel`
                     }
                     showTopBorder={false}
                   />

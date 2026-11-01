@@ -1,3 +1,4 @@
+import { Trans, useLingui } from "@lingui/react/macro";
 import { Search, UserPlus, X } from "lucide-react";
 import * as React from "react";
 
@@ -41,6 +42,7 @@ export function ChannelMemberInviteCard({
   open: boolean;
   requestErrorMessage?: string | null;
 }) {
+  const { t } = useLingui();
   const [inviteQuery, setInviteQuery] = React.useState("");
   const [selectedInvitees, setSelectedInvitees] = React.useState<
     UserSearchResult[]
@@ -144,6 +146,8 @@ export function ChannelMemberInviteCard({
   }, [open]);
 
   const inviteTargets = selectedInvitees.map((invitee) => invitee.pubkey);
+  // Named so the catalogue carries `{inviteTargetCount}`, not `{0}`.
+  const inviteTargetCount = inviteTargets.length;
 
   return (
     <form
@@ -170,17 +174,19 @@ export function ChannelMemberInviteCard({
       <div className="flex items-center justify-between gap-2">
         <div className="flex items-center gap-2 text-sm font-medium">
           <UserPlus className="h-4 w-4" />
-          <span>Add members</span>
+          <span>
+            <Trans>Add members</Trans>
+          </span>
         </div>
         {inviteTargets.length > 0 ? (
           <span className="rounded-full bg-background px-2 py-1 text-2xs font-medium leading-none text-muted-foreground">
-            {inviteTargets.length} selected
+            <Trans>{inviteTargetCount} selected</Trans>
           </span>
         ) : null}
       </div>
       <div className="space-y-2">
         <label className="sr-only" htmlFor="channel-management-search-users">
-          Search people
+          <Trans>Search people</Trans>
         </label>
         <div className="rounded-lg border border-border/80 bg-background">
           <div className="flex items-center gap-2 px-2.5 py-2">
@@ -191,7 +197,7 @@ export function ChannelMemberInviteCard({
               disabled={isPending}
               id="channel-management-search-users"
               onChange={(event) => setInviteQuery(event.target.value)}
-              placeholder="Search people, or paste a public key"
+              placeholder={t`Search people, or paste a public key`}
               value={inviteQuery}
             />
           </div>
@@ -213,7 +219,7 @@ export function ChannelMemberInviteCard({
                     {formatSearchUserName(invitee)}
                   </span>
                   <button
-                    aria-label={`Remove ${formatSearchUserName(invitee)}`}
+                    aria-label={t`Remove ${formatSearchUserName(invitee)}`}
                     className="text-muted-foreground transition-colors hover:text-foreground"
                     onClick={() => {
                       setSelectedInvitees((current) =>
@@ -250,7 +256,7 @@ export function ChannelMemberInviteCard({
             <div className="border-t border-border/70 px-2 py-2">
               {userSearchQuery.isLoading && !directInvitee ? (
                 <p className="px-2 py-1 text-sm text-muted-foreground">
-                  Searching…
+                  <Trans>Searching…</Trans>
                 </p>
               ) : inviteSearchResults.length > 0 || directInvitee ? (
                 <div className="max-h-44 space-y-1 overflow-y-auto">
@@ -277,10 +283,12 @@ export function ChannelMemberInviteCard({
                           {truncateNpub(directInvitee.pubkey)}
                         </p>
                         <span className="shrink-0 text-xs text-muted-foreground">
-                          by public key
+                          <Trans>by public key</Trans>
                         </span>
                       </div>
-                      <span className="text-xs text-muted-foreground">Add</span>
+                      <span className="text-xs text-muted-foreground">
+                        <Trans>Add</Trans>
+                      </span>
                     </button>
                   ) : null}
                   {inviteSearchResults.map((result) => (
@@ -306,17 +314,19 @@ export function ChannelMemberInviteCard({
                         </p>
                         {result.isAgent ? (
                           <span className="shrink-0 text-xs text-muted-foreground">
-                            agent
+                            <Trans>agent</Trans>
                           </span>
                         ) : null}
                       </div>
-                      <span className="text-xs text-muted-foreground">Add</span>
+                      <span className="text-xs text-muted-foreground">
+                        <Trans>Add</Trans>
+                      </span>
                     </button>
                   ))}
                 </div>
               ) : (
                 <p className="px-2 py-1 text-sm text-muted-foreground">
-                  No matching users.
+                  <Trans>No matching users.</Trans>
                 </p>
               )}
             </div>
@@ -330,10 +340,12 @@ export function ChannelMemberInviteCard({
       </div>
       <div className="flex flex-wrap items-center justify-between gap-2">
         <label className="sr-only" htmlFor="channel-member-role">
-          Role
+          <Trans>Role</Trans>
         </label>
         <div className="flex items-center gap-2">
-          <span className="text-xs text-muted-foreground">Role</span>
+          <span className="text-xs text-muted-foreground">
+            <Trans>Role</Trans>
+          </span>
           <select
             className="h-8 rounded-md border border-input bg-background px-2.5 text-sm"
             data-testid="channel-management-add-role"
@@ -360,7 +372,7 @@ export function ChannelMemberInviteCard({
           size="sm"
           type="submit"
         >
-          {isPending ? "Adding..." : "Add members"}
+          {isPending ? t`Adding...` : t`Add members`}
         </Button>
       </div>
       {requestErrorMessage ? (

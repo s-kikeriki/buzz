@@ -1,3 +1,4 @@
+import { Trans, useLingui } from "@lingui/react/macro";
 import { Archive, ArchiveRestore, Trash2 } from "lucide-react";
 import { useMemo, type ReactNode } from "react";
 
@@ -103,6 +104,7 @@ export function ChannelDeleteConfirmationDialog({
   open,
   trigger,
 }: ChannelDeleteConfirmationDialogProps) {
+  const { t } = useLingui();
   return (
     <AlertDialog onOpenChange={onOpenChange} open={open}>
       {trigger ? (
@@ -110,10 +112,14 @@ export function ChannelDeleteConfirmationDialog({
       ) : null}
       <AlertDialogContent data-testid="channel-delete-confirmation-dialog">
         <AlertDialogHeader>
-          <AlertDialogTitle>Delete channel?</AlertDialogTitle>
+          <AlertDialogTitle>
+            <Trans>Delete channel?</Trans>
+          </AlertDialogTitle>
           <AlertDialogDescription>
-            Delete {channelName} from the community list. This action cannot be
-            undone.
+            <Trans>
+              Delete {channelName} from the community list. This action cannot
+              be undone.
+            </Trans>
           </AlertDialogDescription>
         </AlertDialogHeader>
         {error instanceof Error ? (
@@ -127,7 +133,7 @@ export function ChannelDeleteConfirmationDialog({
               type="button"
               variant="outline"
             >
-              Cancel
+              <Trans>Cancel</Trans>
             </Button>
           </AlertDialogCancel>
           <AlertDialogAction asChild>
@@ -141,7 +147,7 @@ export function ChannelDeleteConfirmationDialog({
               type="button"
               variant="destructive"
             >
-              {isPending ? "Deleting..." : "Delete channel"}
+              {isPending ? t`Deleting...` : t`Delete channel`}
             </Button>
           </AlertDialogAction>
         </AlertDialogFooter>
@@ -163,6 +169,7 @@ export function ChannelManagementModerationActions({
   resolvedChannelName,
   unarchiveChannelMutation,
 }: ChannelManagementModerationActionsProps) {
+  const { t } = useLingui();
   return (
     <div
       className={cn(
@@ -177,8 +184,8 @@ export function ChannelManagementModerationActions({
         <Button
           aria-label={
             unarchiveChannelMutation.isPending
-              ? "Restoring channel"
-              : "Unarchive channel"
+              ? t`Restoring channel`
+              : t`Unarchive channel`
           }
           data-testid="channel-management-unarchive"
           disabled={!canManageChannel || unarchiveChannelMutation.isPending}
@@ -188,8 +195,8 @@ export function ChannelManagementModerationActions({
           size="icon"
           title={
             unarchiveChannelMutation.isPending
-              ? "Restoring channel"
-              : "Unarchive channel"
+              ? t`Restoring channel`
+              : t`Unarchive channel`
           }
           type="button"
           variant="ghost"
@@ -200,8 +207,8 @@ export function ChannelManagementModerationActions({
         <Button
           aria-label={
             archiveChannelMutation.isPending
-              ? "Archiving channel"
-              : "Archive channel"
+              ? t`Archiving channel`
+              : t`Archive channel`
           }
           data-testid="channel-management-archive"
           disabled={!canManageChannel || archiveChannelMutation.isPending}
@@ -211,8 +218,8 @@ export function ChannelManagementModerationActions({
           size="icon"
           title={
             archiveChannelMutation.isPending
-              ? "Archiving channel"
-              : "Archive channel"
+              ? t`Archiving channel`
+              : t`Archive channel`
           }
           type="button"
           variant="ghost"
@@ -232,11 +239,11 @@ export function ChannelManagementModerationActions({
           open={isDeleteDialogOpen}
           trigger={
             <Button
-              aria-label="Delete channel"
+              aria-label={t`Delete channel`}
               data-testid="channel-management-delete"
               disabled={deleteChannelMutation.isPending}
               size="icon"
-              title="Delete channel"
+              title={t`Delete channel`}
               type="button"
               variant="ghost"
             >

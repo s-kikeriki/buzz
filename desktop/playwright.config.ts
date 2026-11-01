@@ -39,6 +39,7 @@ export default defineConfig({
         "**/search-german-screenshots.spec.ts",
         "**/inbox-german-screenshots.spec.ts",
         "**/onboarding-german.spec.ts",
+        "**/channels-german.spec.ts",
         "**/institutional-chrome.spec.ts",
         "**/kikeriki-theme.spec.ts",
         "**/onboarding-brand.spec.ts",

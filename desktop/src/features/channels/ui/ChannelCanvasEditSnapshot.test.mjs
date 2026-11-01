@@ -14,6 +14,7 @@ import { registerHooks } from "node:module";
 import { after, before, test } from "node:test";
 
 import { JSDOM } from "jsdom";
+import { withI18n } from "@/testing/withI18n.mjs";
 
 // The real Markdown component pulls in the remark/rehype/emoji stack, which
 // never releases its jsdom handles and hangs the node:test process. This test
@@ -138,17 +139,19 @@ test("head moves mid-edit — save still asserts the head snapshotted at edit-st
 
   await act(async () => {
     root.render(
-      React.createElement(
-        QueryClientProvider,
-        { client: queryClient },
+      withI18n(
         React.createElement(
-          ChannelNavigationProvider,
-          { channels: [] },
-          React.createElement(ChannelCanvas, {
-            channelId: "channel-1",
-            canEdit: true,
-            isArchived: false,
-          }),
+          QueryClientProvider,
+          { client: queryClient },
+          React.createElement(
+            ChannelNavigationProvider,
+            { channels: [] },
+            React.createElement(ChannelCanvas, {
+              channelId: "channel-1",
+              canEdit: true,
+              isArchived: false,
+            }),
+          ),
         ),
       ),
     );

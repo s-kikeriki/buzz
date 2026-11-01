@@ -1,3 +1,4 @@
+import { Trans, useLingui } from "@lingui/react/macro";
 import * as React from "react";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { Bot, Check, X } from "lucide-react";
@@ -244,7 +245,12 @@ function WelcomeComposerPersonaMention() {
         ...(mentionWidth === null ? {} : { width: mentionWidth }),
       }}
     >
-      <span className="sr-only">@Fizz</span>
+      <span className="sr-only">
+        {/* An agent's handle, not copy: translating it would announce a name
+         * that does not exist. Overridden by `path:line` in
+         * scripts/check-i18n-coverage.mjs. */}
+        @Fizz
+      </span>
       <span
         aria-hidden
         className="pointer-events-none invisible inline-block whitespace-nowrap leading-[inherit]"
@@ -303,6 +309,7 @@ export function WelcomeComposerBanner({
   settingUp = false,
   state,
 }: WelcomeComposerBannerProps) {
+  const { t } = useLingui();
   if (state === "hidden") {
     return null;
   }
@@ -388,7 +395,7 @@ export function WelcomeComposerBanner({
                 key="complete-copy"
                 variants={welcomeComposerBannerSuccessCopyVariants}
               >
-                Nice work.
+                <Trans>Nice work.</Trans>
               </motion.span>
             ) : settingUp ? (
               <motion.span
@@ -400,7 +407,7 @@ export function WelcomeComposerBanner({
                 key="setting-up-copy"
                 variants={welcomeComposerBannerContentVariants}
               >
-                Setting up your welcome team…
+                <Trans>Setting up your welcome team…</Trans>
               </motion.span>
             ) : (
               <motion.span
@@ -411,14 +418,19 @@ export function WelcomeComposerBanner({
                 key="prompt-copy"
                 variants={welcomeComposerBannerContentVariants}
               >
-                Mention <WelcomeComposerPersonaMention /> or another teammate
-                whenever you want their help.
+                {/* The mention chip sits inside the sentence, so the whole
+                 * sentence is one message with the element as a placeholder —
+                 * German puts "wann immer" and the verb elsewhere. */}
+                <Trans>
+                  Mention <WelcomeComposerPersonaMention /> or another teammate
+                  whenever you want their help.
+                </Trans>
               </motion.span>
             )}
           </AnimatePresence>
           {state === "prompt" && onDismiss && !settingUp ? (
             <button
-              aria-label="Dismiss hint"
+              aria-label={t`Dismiss hint`}
               className="ml-auto flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-muted-foreground/60 transition-colors hover:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
               data-testid="welcome-composer-dismiss-button"
               onClick={onDismiss}

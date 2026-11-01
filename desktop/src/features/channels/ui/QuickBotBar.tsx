@@ -1,3 +1,4 @@
+import { Trans, useLingui } from "@lingui/react/macro";
 import * as React from "react";
 import { Spinner } from "@/shared/ui/spinner";
 
@@ -16,6 +17,7 @@ type QuickBotBarProps = {
 };
 
 export function QuickBotBar({ personas, pending, onAdd }: QuickBotBarProps) {
+  const { t } = useLingui();
   const [pendingId, setPendingId] = React.useState<string | null>(null);
 
   // Clear pending state when the mutation finishes
@@ -31,7 +33,7 @@ export function QuickBotBar({ personas, pending, onAdd }: QuickBotBarProps) {
     <div
       className="flex items-center"
       role="toolbar"
-      aria-label="Quick add bots"
+      aria-label={t`Quick add bots`}
     >
       <div
         className={cn(
@@ -52,7 +54,7 @@ export function QuickBotBar({ personas, pending, onAdd }: QuickBotBarProps) {
             <Tooltip key={persona.id}>
               <TooltipTrigger asChild>
                 <button
-                  aria-label={`Add ${persona.displayName}`}
+                  aria-label={t`Add ${persona.displayName}`}
                   className={cn(
                     "relative flex h-7 w-7 shrink-0 items-center justify-center rounded-lg",
                     "border border-border/50 shadow-xs",
@@ -87,7 +89,9 @@ export function QuickBotBar({ personas, pending, onAdd }: QuickBotBarProps) {
                 </button>
               </TooltipTrigger>
               <TooltipContent side="bottom" className="text-xs">
-                Add {instanceName} ({persona.displayName})
+                <Trans>
+                  Add {instanceName} ({persona.displayName})
+                </Trans>
               </TooltipContent>
             </Tooltip>
           );

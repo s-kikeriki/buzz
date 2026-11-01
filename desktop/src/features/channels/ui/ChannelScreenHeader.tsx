@@ -1,3 +1,4 @@
+import { useLingui } from "@lingui/react/macro";
 import { LogIn, SquareTerminal } from "lucide-react";
 import type * as React from "react";
 
@@ -17,6 +18,7 @@ import {
 import { AgentManagementMarker } from "@/features/agents/ui/OtherSetupAgentMarker";
 import { UserProfilePopover } from "@/features/profile/ui/UserProfilePopover";
 import { UserNameIndicators } from "@/features/user-status/ui/UserNameIndicators";
+import { BRAND } from "@/shared/branding/brand";
 import { Button } from "@/shared/ui/button";
 import type { Channel, PresenceStatus } from "@/shared/api/types";
 import { UserAvatar } from "@/shared/ui/UserAvatar";
@@ -72,6 +74,7 @@ export function ChannelScreenHeader({
   onManageChannel,
   onToggleMembers,
 }: ChannelScreenHeaderProps) {
+  const { i18n, t } = useLingui();
   const isGroupDm =
     activeChannel?.channelType === "dm" &&
     activeDmHeaderParticipants.length > 1;
@@ -87,11 +90,13 @@ export function ChannelScreenHeader({
   const terminalButton = activeChannel ? (
     <Button
       aria-label={
-        terminalPanel.mode === "closed" ? "Open Buzz Term" : "Hide Buzz Term"
+        terminalPanel.mode === "closed"
+          ? t`Open ${BRAND.productName} Term`
+          : t`Hide ${BRAND.productName} Term`
       }
       onClick={toggleTerminalPanel}
       size="icon"
-      title="Buzz Term (⌘J)"
+      title={t`${BRAND.productName} Term (⌘J)`}
       type="button"
       variant={terminalPanel.mode === "closed" ? "outline" : "secondary"}
     >
@@ -145,7 +150,7 @@ export function ChannelScreenHeader({
       chromeWrapperRef={chromeWrapperRef}
       actions={actions}
       channelType={activeChannel?.channelType}
-      description={getChannelDescription(activeChannel)}
+      description={getChannelDescription(activeChannel, i18n)}
       leadingContent={
         activeChannel?.channelType === "dm" ? (
           isGroupDm ? (

@@ -1,3 +1,5 @@
+import { msg } from "@lingui/core/macro";
+import { useLingui } from "@lingui/react/macro";
 import { Columns2, PanelRightOpen } from "lucide-react";
 
 import {
@@ -24,17 +26,20 @@ export function shouldRestoreThreadToggleFocus(clickDetail: number): boolean {
  * The latter preserves the thread's spatial origin without implying browser
  * fullscreen or a separate app window.
  */
+// `msg` descriptors: this table is built at module load, so a plain string
+// would hold whichever locale booted. The component resolves the chosen entry
+// with `i18n._()` on render.
 const THREAD_VIEW_MODE_TOGGLE = {
   focus: {
     // Viewing the drawer → offer the pane.
     icon: Columns2,
-    label: "Show thread beside channel",
+    label: msg`Show thread beside channel`,
     target: "split",
   },
   split: {
     // Viewing the pane → offer the drawer.
     icon: PanelRightOpen,
-    label: "Expand thread",
+    label: msg`Expand thread`,
     target: "focus",
   },
 } as const;
@@ -57,8 +62,14 @@ export function ThreadViewModeToggle({
 }: {
   onChange: (mode: ThreadViewMode, restoreFocus: boolean) => void;
 }) {
+  const { i18n } = useLingui();
   const viewMode = useThreadViewMode();
-  const { icon: Icon, label, target } = THREAD_VIEW_MODE_TOGGLE[viewMode];
+  const {
+    icon: Icon,
+    label: labelDescriptor,
+    target,
+  } = THREAD_VIEW_MODE_TOGGLE[viewMode];
+  const label = i18n._(labelDescriptor);
 
   return (
     <Tooltip disableHoverableContent>

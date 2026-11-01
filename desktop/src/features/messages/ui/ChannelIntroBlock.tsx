@@ -1,19 +1,21 @@
+import type { MessageDescriptor } from "@lingui/core";
+import { Trans, useLingui } from "@lingui/react/macro";
 import type * as React from "react";
 import { Hash } from "lucide-react";
 
 import { cn } from "@/shared/lib/cn";
 
 export type ChannelIntroAction = {
-  description?: string;
+  description?: MessageDescriptor;
   icon: React.ReactNode;
-  label: string;
+  label: MessageDescriptor;
   onClick: () => void;
   testId?: string;
 };
 
 export type ChannelIntro = {
   actions?: ChannelIntroAction[];
-  channelKindLabel: string;
+  channelKindLabel: MessageDescriptor;
   channelName: string;
   description?: string | null;
   hideBeginning?: boolean;
@@ -34,6 +36,7 @@ export function ChannelIntroBlock({
   className?: string;
   intro: ChannelIntro;
 }) {
+  const { i18n } = useLingui();
   return (
     <div
       className={cn(
@@ -53,11 +56,19 @@ export function ChannelIntroBlock({
       </p>
       {intro.hideBeginning ? null : (
         <p className="mt-1 max-w-2xl text-sm leading-5 text-muted-foreground">
-          This is the beginning of the{" "}
-          <span className="font-medium text-foreground">
-            {intro.channelKindLabel}
-          </span>
-          .
+          {/*
+           * One sentence, bold span included. The kind phrase is a catalogue
+           * entry of its own and German needs it in the genitive here — each
+           * kind descriptor carries a translator comment saying so, because
+           * this frame is its only reader.
+           */}
+          <Trans>
+            This is the beginning of the{" "}
+            <span className="font-medium text-foreground">
+              {i18n._(intro.channelKindLabel)}
+            </span>
+            .
+          </Trans>
         </p>
       )}
       {intro.description ? (
@@ -79,7 +90,7 @@ export function ChannelIntroBlock({
                     : "h-24 w-56 flex-col rounded-2xl p-3",
                 )}
                 data-testid={action.testId}
-                key={action.label}
+                key={action.testId ?? action.label.id ?? action.label.message}
                 onClick={action.onClick}
                 type="button"
               >
@@ -103,7 +114,7 @@ export function ChannelIntroBlock({
                       action.testId ? `${action.testId}-title` : undefined
                     }
                   >
-                    {action.label}
+                    {i18n._(action.label)}
                   </span>
                   {action.description ? (
                     <span
@@ -114,7 +125,7 @@ export function ChannelIntroBlock({
                           : undefined
                       }
                     >
-                      {action.description}
+                      {i18n._(action.description)}
                     </span>
                   ) : null}
                 </span>

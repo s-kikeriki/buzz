@@ -1,4 +1,6 @@
+import { useLingui } from "@lingui/react/macro";
 import * as React from "react";
+
 import { useAddChannelMembersMutation } from "@/features/channels/hooks";
 import { PRIVATE_CHANNEL_ADD_DENIED_MESSAGE } from "@/features/channels/lib/channelMemberAdmission";
 import { useCanAddChannelMembers } from "@/features/channels/useCanAddChannelMembers";
@@ -20,6 +22,7 @@ export function useForumMentionPreparation(
   channelType: ChannelType | null | undefined,
   mentions: UseMentionsResult,
 ) {
+  const { i18n, t } = useLingui();
   const addMembers = useAddChannelMembersMutation(channelId);
   const canInvite = useCanAddChannelMembers(channelId);
   const [pending, setPending] = React.useState<PendingInvite | null>(null);
@@ -122,7 +125,7 @@ export function useForumMentionPreparation(
     const draft = pendingRef.current;
     if (!draft || invitingRef.current) return;
     if (!canInvite) {
-      setError(PRIVATE_CHANNEL_ADD_DENIED_MESSAGE);
+      setError(i18n._(PRIVATE_CHANNEL_ADD_DENIED_MESSAGE));
       return;
     }
     const isCurrent = () =>
@@ -158,7 +161,7 @@ export function useForumMentionPreparation(
         setError(
           failure instanceof Error
             ? failure.message
-            : "Could not invite members.",
+            : t`Could not invite members.`,
         );
     } finally {
       if (invitingRef.current === draft) {
@@ -166,7 +169,13 @@ export function useForumMentionPreparation(
         if (mountedRef.current) setIsInviting(false);
       }
     }
-  }, [addMembers.mutateAsync, canInvite, mentions.revalidateMentionPubkeys]);
+  }, [
+    addMembers.mutateAsync,
+    canInvite,
+    i18n,
+    mentions.revalidateMentionPubkeys,
+    t,
+  ]);
 
   return {
     prepareMentionPubkeys,

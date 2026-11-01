@@ -86,6 +86,10 @@ const CONVERTED_FILES = [
   "src/features/settings/ui/harnessCatalogCopy.ts",
   "src/features/settings/ui/harnessFormLogic.ts",
   "src/features/settings/ui/harnessGalleryLogic.ts",
+  // Channels: the terminal toggle in the channel header called the feature
+  // "Buzz Term" in three strings. Found while translating the channel area —
+  // the file was not in this ratchet, so nothing was watching it.
+  "src/features/channels/ui/ChannelScreenHeader.tsx",
 ];
 
 /**

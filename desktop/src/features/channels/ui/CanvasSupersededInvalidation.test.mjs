@@ -22,6 +22,7 @@ import { after, before, test } from "node:test";
 import { JSDOM } from "jsdom";
 
 import { installRadixDialogGlobals } from "./canvasDialogTestEnv.mjs";
+import { withI18n } from "@/testing/withI18n.mjs";
 
 registerHooks({
   resolve(specifier, context, nextResolve) {
@@ -181,17 +182,19 @@ test("save path: supersession rejection invalidates both canvas caches", async (
   const root = createRoot(container);
   await act(async () => {
     root.render(
-      React.createElement(
-        QueryClientProvider,
-        { client },
+      withI18n(
         React.createElement(
-          ChannelNavigationProvider,
-          { channels: [] },
-          React.createElement(ChannelCanvas, {
-            channelId: "channel-1",
-            canEdit: true,
-            isArchived: false,
-          }),
+          QueryClientProvider,
+          { client },
+          React.createElement(
+            ChannelNavigationProvider,
+            { channels: [] },
+            React.createElement(ChannelCanvas, {
+              channelId: "channel-1",
+              canEdit: true,
+              isArchived: false,
+            }),
+          ),
         ),
       ),
     );
@@ -224,18 +227,20 @@ test("restore path: supersession rejection invalidates both canvas caches", asyn
   const root = createRoot(container);
   await act(async () => {
     root.render(
-      React.createElement(
-        QueryClientProvider,
-        { client },
+      withI18n(
         React.createElement(
-          CommunitiesProvider,
-          null,
-          React.createElement(CanvasHistoryPanel, {
-            channelId: "channel-1",
-            currentContent: "hi",
-            currentRevision: HEAD,
-            canRestore: true,
-          }),
+          QueryClientProvider,
+          { client },
+          React.createElement(
+            CommunitiesProvider,
+            null,
+            React.createElement(CanvasHistoryPanel, {
+              channelId: "channel-1",
+              currentContent: "hi",
+              currentRevision: HEAD,
+              canRestore: true,
+            }),
+          ),
         ),
       ),
     );

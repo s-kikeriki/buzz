@@ -1,4 +1,4 @@
-import { useLingui } from "@lingui/react/macro";
+import { Trans, useLingui } from "@lingui/react/macro";
 import * as React from "react";
 
 import { useUpdateManagedAgentMutation } from "@/features/agents/hooks";
@@ -30,7 +30,7 @@ export function EditRespondToDialog({
   onOpenChange: (open: boolean) => void;
   open: boolean;
 }) {
-  const { i18n } = useLingui();
+  const { i18n, t } = useLingui();
   const updateMutation = useUpdateManagedAgentMutation();
   const { data: agentAccessOwnerOnly } = useAgentAccessOwnerOnlyQuery({
     enabled: open,
@@ -63,13 +63,20 @@ export function EditRespondToDialog({
     onOpenChange(false);
   }
 
+  const agentLabel = agent?.name ?? t`this agent`;
+
   return (
     <Dialog onOpenChange={onOpenChange} open={open}>
       <DialogContent className="max-w-md">
         <DialogHeader>
-          <DialogTitle>Manage agent access</DialogTitle>
+          <DialogTitle>
+            <Trans>Manage agent access</Trans>
+          </DialogTitle>
           <DialogDescription>
-            Choose who can send instructions to {agent?.name ?? "this agent"}.
+            {/* One sentence: German puts the verb at the end, so the trailing
+             * agent name cannot be a separate message. The fallback is its own
+             * full message so the frame always has a noun to govern. */}
+            <Trans>Choose who can send instructions to {agentLabel}.</Trans>
           </DialogDescription>
         </DialogHeader>
         <CreateAgentRespondToField
@@ -96,7 +103,7 @@ export function EditRespondToDialog({
             type="button"
             variant="outline"
           >
-            Cancel
+            <Trans>Cancel</Trans>
           </Button>
           <Button
             disabled={
@@ -106,7 +113,7 @@ export function EditRespondToDialog({
             size="sm"
             type="button"
           >
-            {updateMutation.isPending ? "Saving..." : "Save access"}
+            {updateMutation.isPending ? t`Saving...` : t`Save access`}
           </Button>
         </div>
       </DialogContent>

@@ -10,6 +10,8 @@
  * Unknown visibility fails closed — the relay is the authority and a hidden
  * button is cheaper than an opaque rejection.
  */
+import { msg } from "@lingui/core/macro";
+
 export function canAddChannelMembers({
   channelType,
   visibility,
@@ -34,6 +36,11 @@ export function canAddChannelMembers({
   return false;
 }
 
-/** Explains a denied add so the user isn't left guessing at a missing button. */
-export const PRIVATE_CHANNEL_ADD_DENIED_MESSAGE =
-  "Only channel members can add people to a private channel.";
+/**
+ * Explains a denied add so the user isn't left guessing at a missing button.
+ *
+ * A descriptor, not a string: this module is imported at load time and its
+ * four consumers all render or set it from inside a component, so each one
+ * resolves it with `i18n._()` at the point of use.
+ */
+export const PRIVATE_CHANNEL_ADD_DENIED_MESSAGE = msg`Only channel members can add people to a private channel.`;

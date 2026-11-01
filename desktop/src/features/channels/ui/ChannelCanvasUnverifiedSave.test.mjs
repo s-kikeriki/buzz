@@ -15,6 +15,7 @@ import { registerHooks } from "node:module";
 import { after, before, test } from "node:test";
 
 import { JSDOM } from "jsdom";
+import { withI18n } from "@/testing/withI18n.mjs";
 
 registerHooks({
   resolve(specifier, context, nextResolve) {
@@ -118,17 +119,19 @@ async function mount(queryClient) {
   const root = createRoot(container);
   await act(async () => {
     root.render(
-      React.createElement(
-        QueryClientProvider,
-        { client: queryClient },
+      withI18n(
         React.createElement(
-          ChannelNavigationProvider,
-          { channels: [] },
-          React.createElement(ChannelCanvas, {
-            channelId: "channel-1",
-            canEdit: true,
-            isArchived: false,
-          }),
+          QueryClientProvider,
+          { client: queryClient },
+          React.createElement(
+            ChannelNavigationProvider,
+            { channels: [] },
+            React.createElement(ChannelCanvas, {
+              channelId: "channel-1",
+              canEdit: true,
+              isArchived: false,
+            }),
+          ),
         ),
       ),
     );

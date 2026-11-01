@@ -370,6 +370,67 @@ const CONVERTED_FILES = [
   "src/features/settings/ui/harnessCatalogLogic.ts",
   "src/features/settings/ui/harnessFormLogic.ts",
   "src/features/settings/ui/harnessGalleryLogic.ts",
+  // Tranche 5 — the channel area: everything inside `features/channels`.
+  // 281 call sites across 43 files, measured with the coverage detector rather
+  // than estimated. The libraries are listed with the components because they
+  // *produce* copy — the canvas conflict guidance, the channel tooltip, the
+  // lifecycle label and the channel-kind noun phrase all come from there and
+  // appear in no JSX node.
+  "src/features/channels/canvasConflict.ts",
+  "src/features/channels/lib/channelDescription.ts",
+  "src/features/channels/lib/channelLifecycle.ts",
+  "src/features/channels/lib/channelMemberAdmission.ts",
+  "src/features/channels/ui/AddChannelBotDialog.tsx",
+  "src/features/channels/ui/AddChannelBotGenericSection.tsx",
+  "src/features/channels/ui/AddChannelBotPersonasSection.tsx",
+  "src/features/channels/ui/AddChannelBotReuseGuard.tsx",
+  "src/features/channels/ui/AddChannelBotTeamsSection.tsx",
+  "src/features/channels/ui/AddMemberSearchResultRow.tsx",
+  "src/features/channels/ui/AgentSessionThreadPanel.tsx",
+  "src/features/channels/ui/BotActivityBar.tsx",
+  "src/features/channels/ui/CanvasHistoryPanel.tsx",
+  "src/features/channels/ui/ChannelCanvas.tsx",
+  "src/features/channels/ui/ChannelLogoEditor.tsx",
+  "src/features/channels/ui/ChannelManagementModerationActions.tsx",
+  "src/features/channels/ui/ChannelManagementSheet.tsx",
+  "src/features/channels/ui/ChannelManagementSheetRows.tsx",
+  "src/features/channels/ui/ChannelMemberAvatarStack.tsx",
+  "src/features/channels/ui/ChannelMemberInviteCard.tsx",
+  "src/features/channels/ui/ChannelMembersBar.tsx",
+  "src/features/channels/ui/ChannelPane.helpers.ts",
+  "src/features/channels/ui/ChannelPane.tsx",
+  "src/features/channels/ui/ChannelPermissionsSettings.tsx",
+  "src/features/channels/ui/ChannelScreenEmptyState.tsx",
+  "src/features/channels/ui/ChannelScreenHeader.tsx",
+  "src/features/channels/ui/ChannelTypePicker.tsx",
+  "src/features/channels/ui/ChannelTypeSettings.tsx",
+  "src/features/channels/ui/ChannelWorkflowsSection.tsx",
+  "src/features/channels/ui/EditRespondToDialog.tsx",
+  "src/features/channels/ui/FocusThreadDrawer.tsx",
+  "src/features/channels/ui/ForumChannelContent.tsx",
+  "src/features/channels/ui/MembersSidebar.tsx",
+  "src/features/channels/ui/MembersSidebarAgentControls.tsx",
+  "src/features/channels/ui/MembersSidebarMemberCard.tsx",
+  "src/features/channels/ui/QuickBotBar.tsx",
+  "src/features/channels/ui/RightAuxiliaryPane.tsx",
+  "src/features/channels/ui/ThreadViewModeToggle.tsx",
+  "src/features/channels/ui/WelcomeAgentCreateDialog.tsx",
+  "src/features/channels/ui/WelcomeComposerBanner.tsx",
+  "src/features/channels/ui/useChannelIntro.tsx",
+  "src/features/channels/ui/useMembersSidebarActions.ts",
+  "src/features/channels/ui/useMembersSidebarModeration.ts",
+  "src/features/channels/ui/useQuickBotDrop.ts",
+  "src/features/channels/useWelcomeAgentCreate.ts",
+  // Three files outside `features/channels` are converted here because the
+  // copy they render belongs to the channel area and is imported from it:
+  // `PRIVATE_CHANNEL_ADD_DENIED_MESSAGE` (channels/lib) is set or rendered by
+  // all three, and `ChannelIntroBlock` holds the frame the channel-kind
+  // descriptors are translated for. Converting the string without its
+  // readers would have left the German phrase inside an English sentence.
+  "src/features/forum/ui/useForumMentionPreparation.ts",
+  "src/features/messages/ui/ChannelIntroBlock.tsx",
+  "src/features/messages/ui/NonMemberMentionDialog.tsx",
+  "src/features/messages/ui/useNonMemberInvite.ts",
 ];
 
 /**
@@ -425,6 +486,13 @@ const OVERRIDES = new Map([
   [
     "src/features/settings/ui/HarnessesSettingsPanel.tsx:40",
     "Git Bash is a product name, and the row is about that product.",
+  ],
+  [
+    "src/features/channels/ui/WelcomeComposerBanner.tsx:251",
+    "`@Fizz` is the welcome agent's handle, read out by the screen-reader-only " +
+      "twin of the animated mention. A name, not copy — translating it would " +
+      "announce an agent that does not exist. The visible half renders the " +
+      "same handle from `WELCOME_PERSONA_NAMES`.",
   ],
 ]);
 

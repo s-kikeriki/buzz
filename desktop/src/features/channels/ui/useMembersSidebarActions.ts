@@ -1,3 +1,7 @@
+import type { I18n } from "@lingui/core";
+import { msg, plural } from "@lingui/core/macro";
+import { useLingui } from "@lingui/react/macro";
+
 import { isRelayRemovedError } from "@/features/agents/managedAgentRelayCleanup";
 import {
   agentPresenceStartBlockReason,
@@ -63,6 +67,7 @@ export function useMembersSidebarActions({
   relayUrl,
 }: UseMembersSidebarActionsOptions) {
   const queryClient = useQueryClient();
+  const { i18n, t } = useLingui();
   function assertStartNotBlockedByPresence(
     agent: ManagedAgent,
     lifecycleActive: boolean,
@@ -181,10 +186,10 @@ export function useMembersSidebarActions({
         });
         setActionNoticeMessage(
           action === "stop"
-            ? `Stopped ${agent.name} in this community.`
+            ? t`Stopped ${agent.name} in this community.`
             : action === "restart"
-              ? `Restarted ${agent.name} in this community.`
-              : `Started ${agent.name} in this community.`,
+              ? t`Restarted ${agent.name} in this community.`
+              : t`Started ${agent.name} in this community.`,
         );
         return;
       }
@@ -201,8 +206,8 @@ export function useMembersSidebarActions({
         }
         setActionNoticeMessage(
           agent.backend.type === "provider"
-            ? `Shutdown command sent to ${agent.name}.`
-            : `Stopped ${agent.name}.`,
+            ? t`Shutdown command sent to ${agent.name}.`
+            : t`Stopped ${agent.name}.`,
         );
         return;
       }
@@ -212,11 +217,11 @@ export function useMembersSidebarActions({
         agent,
         startManagedAgent: startManagedAgentMutation.mutateAsync,
       });
-      setActionNoticeMessage(getLifecycleSuccessMessage(agent));
+      setActionNoticeMessage(getLifecycleSuccessMessage(i18n, agent));
     } catch (error) {
       if (isRelayRemovedError(error)) return;
       setActionErrorMessage(
-        error instanceof Error ? error.message : "Failed to control agent.",
+        error instanceof Error ? error.message : t`Failed to control agent.`,
       );
     } finally {
       setActiveActionKey(null);
@@ -238,9 +243,17 @@ export function useMembersSidebarActions({
       },
       actionKey: "bulk-respawn",
       agents: controllableManagedBots,
-      failureMessage: "Failed to respawn agent.",
+      failureMessage: t`Failed to respawn agent.`,
+      // Whole sentences per plural form, not a count spliced into a frame:
+      // German inflects the noun and the two forms differ by more than an
+      // "s", so `${count} agent(s)` has no translatable shape.
       successMessage: (count) =>
-        `Spawned or respawned ${formatCountLabel(count, "agent", "agents")}.`,
+        i18n._(
+          plural(count, {
+            one: "Spawned or respawned 1 agent.",
+            other: "Spawned or respawned # agents.",
+          }),
+        ),
     });
   }
 
@@ -260,13 +273,14 @@ export function useMembersSidebarActions({
       },
       actionKey: "bulk-stop",
       agents: stoppableManagedBots,
-      failureMessage: "Failed to stop agent.",
+      failureMessage: t`Failed to stop agent.`,
       successMessage: (count) =>
-        `Stopped or requested shutdown for ${formatCountLabel(
-          count,
-          "agent",
-          "agents",
-        )}.`,
+        i18n._(
+          plural(count, {
+            one: "Stopped or requested shutdown for 1 agent.",
+            other: "Stopped or requested shutdown for # agents.",
+          }),
+        ),
     });
   }
 
@@ -278,10 +292,15 @@ export function useMembersSidebarActions({
       },
       actionKey: "bulk-remove",
       agents: removableManagedBots,
-      failureMessage: "Failed to remove bot from channel.",
+      failureMessage: t`Failed to remove bot from channel.`,
       onSettled: invalidateSidebarQueries,
       successMessage: (count) =>
-        `Removed ${formatCountLabel(count, "managed bot", "managed bots")} from this channel.`,
+        i18n._(
+          plural(count, {
+            one: "Removed 1 managed bot from this channel.",
+            other: "Removed # managed bots from this channel.",
+          }),
+        ),
     });
   }
 
@@ -298,19 +317,21 @@ export function useMembersSidebarActions({
         })
         .catch((error: unknown) => {
           setActionErrorMessage(
-            error instanceof Error ? error.message : "Failed to remove member.",
+            error instanceof Error
+              ? error.message
+              : t`Failed to remove member.`,
           );
         })
         .finally(() => {
           setActiveActionKey(null);
         });
     },
-    [clearActionFeedback, currentPubkey, onOpenChange, removeMemberMutation],
+    [clearActionFeedback, currentPubkey, onOpenChange, removeMemberMutation, t],
   );
 
   async function removeManagedBotMembership(pubkey: string) {
     if (!channelId) {
-      throw new Error("No channel selected.");
+      throw new Error(t`No channel selected.`);
     }
 
     await removeChannelMember(channelId, pubkey);
@@ -342,14 +363,18 @@ export function useMembersSidebarActions({
   };
 }
 
-function getLifecycleSuccessMessage(agent: ManagedAgent) {
+/**
+ * Module-level, so it takes `i18n` rather than calling the hook: a `t` here
+ * would resolve once at import time and freeze in the boot locale.
+ */
+function getLifecycleSuccessMessage(i18n: I18n, agent: ManagedAgent) {
   if (agent.backend.type === "provider") {
-    return `Deployed ${agent.name}.`;
+    return i18n._(msg`Deployed ${agent.name}.`);
   }
 
   return agent.status === "stopped"
-    ? `Respawned ${agent.name}.`
-    : `Spawned ${agent.name}.`;
+    ? i18n._(msg`Respawned ${agent.name}.`)
+    : i18n._(msg`Spawned ${agent.name}.`);
 }
 
 function formatFailureSummary(
@@ -370,8 +395,4 @@ function formatFailureSummary(
   return failures
     .map((failure) => `${failure.name}: ${failure.error}`)
     .join("; ");
-}
-
-function formatCountLabel(count: number, singular: string, plural: string) {
-  return `${count} ${count === 1 ? singular : plural}`;
 }

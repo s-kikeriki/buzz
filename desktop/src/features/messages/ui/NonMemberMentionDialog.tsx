@@ -1,4 +1,7 @@
+import { plural } from "@lingui/core/macro";
+import { Trans, useLingui } from "@lingui/react/macro";
 import * as React from "react";
+
 import {
   AlertDialog,
   AlertDialogContent,
@@ -36,8 +39,27 @@ export function NonMemberMentionDialog({
   open,
   onRestoreFocus,
 }: NonMemberMentionDialogProps) {
+  const { i18n, t } = useLingui();
   const safeActionRef = React.useRef<HTMLButtonElement>(null);
   const restoreFocusRef = React.useRef(onRestoreFocus);
+  // Two whole sentences, each its own message. The first inflects its verb on
+  // the name count, which `plural` owns; the second is the guidance. Splicing
+  // the name list and an "is"/"are" fragment separately leaves a translator
+  // with no sentence to agree, and German agreement is not the same cut.
+  const nameList = names.join(", ");
+  const membershipSentence = i18n._(
+    plural(names.length, {
+      one: `${nameList} is not in this channel.`,
+      other: `${nameList} are not in this channel.`,
+    }),
+  );
+  const guidance = onDoNothing
+    ? canInvite
+      ? t`Invite them to the channel, or send without inviting them.`
+      : `${i18n._(PRIVATE_CHANNEL_ADD_DENIED_MESSAGE)} ${t`You can still send without inviting them.`}`
+    : canInvite
+      ? t`Invite them to the channel, or cancel to keep your draft.`
+      : i18n._(PRIVATE_CHANNEL_ADD_DENIED_MESSAGE);
   return (
     <AlertDialog
       onOpenChange={(nextOpen) => {
@@ -63,18 +85,10 @@ export function NonMemberMentionDialog({
       >
         <AlertDialogHeader>
           <AlertDialogTitle>
-            Mention people outside this channel?
+            <Trans>Mention people outside this channel?</Trans>
           </AlertDialogTitle>
           <AlertDialogDescription>
-            {names.join(", ")} {names.length === 1 ? "is" : "are"} not in this
-            channel.{" "}
-            {onDoNothing
-              ? canInvite
-                ? "Invite them to the channel, or send without inviting them."
-                : `${PRIVATE_CHANNEL_ADD_DENIED_MESSAGE} You can still send without inviting them.`
-              : canInvite
-                ? "Invite them to the channel, or cancel to keep your draft."
-                : PRIVATE_CHANNEL_ADD_DENIED_MESSAGE}
+            {membershipSentence} {guidance}
           </AlertDialogDescription>
         </AlertDialogHeader>
         {error ? (
@@ -96,9 +110,9 @@ export function NonMemberMentionDialog({
           >
             {onDoNothing
               ? canInvite
-                ? "Do nothing"
-                : "Send anyway"
-              : "Cancel"}
+                ? t`Do nothing`
+                : t`Send anyway`
+              : t`Cancel`}
           </Button>
           {canInvite ? (
             <Button
@@ -107,7 +121,7 @@ export function NonMemberMentionDialog({
               size="sm"
               type="button"
             >
-              {isInvitePending ? "Inviting..." : "Invite"}
+              {isInvitePending ? t`Inviting...` : t`Invite`}
             </Button>
           ) : null}
         </AlertDialogFooter>

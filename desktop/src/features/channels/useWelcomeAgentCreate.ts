@@ -1,3 +1,4 @@
+import { useLingui } from "@lingui/react/macro";
 import * as React from "react";
 
 import { requestOpenCreateAgent } from "@/features/agents/openCreateAgentEvent";
@@ -20,6 +21,7 @@ export function useWelcomeAgentCreate({
   currentIdentity: Identity | null | undefined;
   welcomeGuideAgent: WelcomeGuideAgent | null | undefined;
 }) {
+  const { t } = useLingui();
   const sendMessageMutation = useSendMessageMutation(
     activeChannel,
     currentIdentity ?? undefined,
@@ -54,7 +56,7 @@ export function useWelcomeAgentCreate({
   const createInChat = React.useCallback(async () => {
     if (!activeChannel || !welcomeGuideAgent) {
       setError(
-        "The welcome guide is unavailable. Create the agent manually instead.",
+        t`The welcome guide is unavailable. Create the agent manually instead.`,
       );
       return;
     }
@@ -71,10 +73,10 @@ export function useWelcomeAgentCreate({
       setError(
         cause instanceof Error
           ? cause.message
-          : "Could not start the conversation.",
+          : t`Could not start the conversation.`,
       );
     }
-  }, [activeChannel, sendMessageMutation, welcomeGuideAgent]);
+  }, [activeChannel, sendMessageMutation, t, welcomeGuideAgent]);
 
   return {
     createInChat,

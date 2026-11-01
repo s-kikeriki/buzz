@@ -5,6 +5,8 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import React from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 
+import { withI18n } from "@/testing/withI18n.mjs";
+
 import { ChannelHero } from "./ChannelManagementSheetRows.tsx";
 
 function channel(overrides = {}) {
@@ -34,10 +36,12 @@ function renderHero(props) {
     defaultOptions: { queries: { enabled: false } },
   });
   return renderToStaticMarkup(
-    React.createElement(
-      QueryClientProvider,
-      { client: queryClient },
-      React.createElement(ChannelHero, props),
+    withI18n(
+      React.createElement(
+        QueryClientProvider,
+        { client: queryClient },
+        React.createElement(ChannelHero, props),
+      ),
     ),
   );
 }

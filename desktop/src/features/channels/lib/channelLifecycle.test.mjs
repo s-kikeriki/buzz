@@ -1,3 +1,4 @@
+import { i18n } from "@lingui/core";
 import assert from "node:assert/strict";
 import test from "node:test";
 
@@ -25,11 +26,15 @@ test("channelLifecycle maps ongoing and temporary streams", () => {
   );
 });
 
+// The label takes `i18n` so it cannot resolve at module scope. Going through
+// the real instance (activated to `en` in `test-loader.mjs`) keeps the
+// expected strings as they were and still exercises `i18n._`, so a message
+// that is wired up wrong fails here rather than on screen.
 test("channelLifecycleLabel names project, ongoing, and temporary", () => {
-  assert.equal(channelLifecycleLabel("project", null), "Project");
-  assert.equal(channelLifecycleLabel("ongoing", null), "Ongoing");
+  assert.equal(channelLifecycleLabel(i18n, "project", null), "Project");
+  assert.equal(channelLifecycleLabel(i18n, "ongoing", null), "Ongoing");
   assert.equal(
-    channelLifecycleLabel("temporary", 7 * 24 * 60 * 60),
+    channelLifecycleLabel(i18n, "temporary", 7 * 24 * 60 * 60),
     "Temporary · 7d",
   );
 });

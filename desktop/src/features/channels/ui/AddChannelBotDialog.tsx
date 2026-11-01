@@ -1,3 +1,5 @@
+import { plural } from "@lingui/core/macro";
+import { Trans, useLingui } from "@lingui/react/macro";
 import { AlertTriangle } from "lucide-react";
 import * as React from "react";
 
@@ -62,6 +64,7 @@ export function AddChannelBotDialog({
   onCreateAgent,
   onOpenChange,
 }: AddChannelBotDialogProps) {
+  const { i18n, t } = useLingui();
   const personasQuery = usePersonasQuery();
   const teamsQuery = useTeamsQuery();
   const inChannelPersonaIds = useInChannelPersonaIds(
@@ -194,20 +197,29 @@ export function AddChannelBotDialog({
     selectedPersonas.length > 0 &&
     !providersLoading &&
     !createBotsMutation.isPending;
+  // Whole labels per plural form: German inflects "Agent" and the count sits
+  // in a different place in each form, so a `${count} agents` frame does not
+  // translate.
+  const selectedCount = selectedPersonas.length;
   const addButtonLabel = createBotsMutation.isPending
-    ? selectedPersonas.length > 1
-      ? `Adding ${selectedPersonas.length}…`
-      : "Adding…"
-    : selectedPersonas.length > 1
-      ? `Add ${selectedPersonas.length} agents`
-      : "Add agent";
+    ? selectedCount > 1
+      ? t`Adding ${selectedCount}…`
+      : t`Adding…`
+    : selectedCount > 1
+      ? i18n._(
+          plural(selectedCount, {
+            one: "Add 1 agent",
+            other: "Add # agents",
+          }),
+        )
+      : t`Add agent`;
 
   return (
     <Dialog onOpenChange={handleOpenChange} open={open}>
       <ChooserDialogContent
         className="max-w-xl"
         data-testid="add-channel-bot-dialog"
-        description="Choose from your agents, or create a new one."
+        description={t`Choose from your agents, or create a new one.`}
         footer={
           <>
             <Button
@@ -216,7 +228,7 @@ export function AddChannelBotDialog({
               type="button"
               variant="outline"
             >
-              Cancel
+              <Trans>Cancel</Trans>
             </Button>
             <Button
               disabled={!canSubmit}
@@ -233,7 +245,7 @@ export function AddChannelBotDialog({
         headerTestId="add-channel-bot-dialog-header"
         scrollAreaClassName="space-y-5"
         scrollAreaTestId="add-channel-bot-dialog-scroll-area"
-        title="Add agents"
+        title={t`Add agents`}
       >
         <AddChannelBotPersonasSection
           canToggleSelections={!createBotsMutation.isPending}
@@ -265,7 +277,9 @@ export function AddChannelBotDialog({
           <div className="flex gap-3 rounded-lg border border-warning/30 bg-warning-bg px-4 py-3">
             <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-warning" />
             <p className="text-sm text-warning">
-              Install an agent runtime before adding an agent to this channel.
+              <Trans>
+                Install an agent runtime before adding an agent to this channel.
+              </Trans>
             </p>
           </div>
         ) : null}
