@@ -129,7 +129,8 @@ let React,
   useAcpRuntimesQueryForced,
   acpRuntimesQueryKey,
   ThemeProvider,
-  TooltipProvider;
+  TooltipProvider,
+  withI18n;
 
 before(async () => {
   ({ default: React, act } = await import("react"));
@@ -143,6 +144,7 @@ before(async () => {
   ));
   ({ ThemeProvider } = await import("@/shared/theme/ThemeProvider.tsx"));
   ({ TooltipProvider } = await import("@/shared/ui/tooltip.tsx"));
+  ({ withI18n } = await import("@/testing/withI18n.mjs"));
 });
 
 afterEach(() => {
@@ -262,17 +264,25 @@ async function typeSearch(query) {
   });
 }
 
+/**
+ * `withI18n` is load-bearing: the dialog and every row inside it call
+ * `useLingui()`, which throws without an `I18nProvider` — and the error blames
+ * a duplicate `@lingui/react` install rather than the missing provider, so it
+ * reads as a dependency problem instead of a test-setup one.
+ */
 function surfaceTree(open) {
-  return React.createElement(
-    QueryClientProvider,
-    { client: queryClient },
+  return withI18n(
     React.createElement(
-      ThemeProvider,
-      null,
+      QueryClientProvider,
+      { client: queryClient },
       React.createElement(
-        TooltipProvider,
+        ThemeProvider,
         null,
-        React.createElement(HarnessSurface, { open }),
+        React.createElement(
+          TooltipProvider,
+          null,
+          React.createElement(HarnessSurface, { open }),
+        ),
       ),
     ),
   );

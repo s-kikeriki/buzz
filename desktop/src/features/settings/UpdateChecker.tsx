@@ -80,8 +80,8 @@ export function UpdateChecker() {
                 data-settings-subcopy
               >
                 <Trans>
-                  Automatic updates aren't available on this build. Download
-                  the latest release manually.
+                  Automatic updates aren't available on this build. Download the
+                  latest release manually.
                 </Trans>
               </p>
             </div>

@@ -524,8 +524,8 @@ export function HarnessRow({
             data-testid={`doctor-runtime-terminal-guidance-${runtime.id}`}
           >
             <Trans>
-              Finish signing in from the Terminal window, then click Check
-              again to re-check {runtime.label}.
+              Finish signing in from the Terminal window, then click Check again
+              to re-check {runtime.label}.
             </Trans>
           </p>
         ) : null}

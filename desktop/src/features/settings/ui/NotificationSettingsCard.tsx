@@ -71,8 +71,7 @@ export function NotificationSettingsCard({
         title={<Trans>Notifications</Trans>}
         description={
           <Trans>
-            Desktop alerts are on by default. Fine-tune what gets through
-            below.
+            Desktop alerts are on by default. Fine-tune what gets through below.
           </Trans>
         }
       />

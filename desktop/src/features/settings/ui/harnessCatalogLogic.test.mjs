@@ -374,7 +374,9 @@ describe("adapterUpdateWarning", () => {
 describe("catalogPrimaryAction", () => {
   it("no action for ready entries", () => {
     assert.deepEqual(
-      resolvedAction(catalogPrimaryAction(entry({ availability: "available" }))),
+      resolvedAction(
+        catalogPrimaryAction(entry({ availability: "available" })),
+      ),
       { kind: "none" },
     );
   });

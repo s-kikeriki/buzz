@@ -147,9 +147,7 @@ export function PrivateKeyBackupRow() {
               </Button>
             ) : null}
             <Button
-              aria-label={
-                isOpen ? t`Hide private key` : t`Reveal private key`
-              }
+              aria-label={isOpen ? t`Hide private key` : t`Reveal private key`}
               className="rounded-full"
               data-testid="profile-private-key-toggle"
               onClick={() => void handleReveal()}

@@ -532,7 +532,9 @@ function CatalogDetail({ entry }: { entry: AcpRuntimeCatalogEntry }) {
         variant={action.kind === "docs" ? "default" : "outline"}
       >
         <ExternalLink className="mr-1 h-3.5 w-3.5" />
-        {i18n._(action.kind === "docs" ? action.label : installLinkLabel(entry))}
+        {i18n._(
+          action.kind === "docs" ? action.label : installLinkLabel(entry),
+        )}
       </Button>
     ) : null;
 
@@ -657,7 +659,9 @@ function TechnicalDetails({ entry }: { entry: AcpRuntimeCatalogEntry }) {
     ...(entry.underlyingCliPath
       ? [{ label: msg`Underlying CLI`, value: entry.underlyingCliPath }]
       : []),
-    ...(entry.binaryPath ? [{ label: msg`Path`, value: entry.binaryPath }] : []),
+    ...(entry.binaryPath
+      ? [{ label: msg`Path`, value: entry.binaryPath }]
+      : []),
     {
       label: msg`Source`,
       value: i18n._(

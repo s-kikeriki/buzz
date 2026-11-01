@@ -142,8 +142,8 @@ export function SignOutSection() {
             >
               <Trans>
                 Removes your identity key and all local app data from this
-                device. Before signing out, create and test a
-                password-protected key backup above — this cannot be undone.
+                device. Before signing out, create and test a password-protected
+                key backup above — this cannot be undone.
               </Trans>
             </p>
           </div>
@@ -226,8 +226,8 @@ export function SignOutSection() {
               />
               <span>
                 <Trans>
-                  I have tested a key backup or saved this private key
-                  somewhere safe.
+                  I have tested a key backup or saved this private key somewhere
+                  safe.
                 </Trans>
               </span>
             </label>

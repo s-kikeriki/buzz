@@ -510,8 +510,7 @@ export function ProfileSettingsCard({
           title={<Trans>Profile</Trans>}
           description={
             <Trans>
-              Update how your name, avatar, and bio appear across{" "}
-              {productName}.
+              Update how your name, avatar, and bio appear across {productName}.
             </Trans>
           }
         />
@@ -803,8 +802,8 @@ export function ProfileSettingsCard({
                                   data-settings-subcopy
                                 >
                                   <Trans>
-                                    Your keypair and NIP-05 handle are fixed
-                                    for this device.
+                                    Your keypair and NIP-05 handle are fixed for
+                                    this device.
                                   </Trans>
                                 </p>
                               </div>

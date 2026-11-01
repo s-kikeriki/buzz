@@ -182,9 +182,8 @@ export function SendFeedbackDialog({
             data-testid="feedback-privacy-disclosure"
           >
             <Trans>
-              Feedback is sent privately to this {productName} deployment and
-              is not posted to a channel. Attachments are uploaded before you
-              send.
+              Feedback is sent privately to this {productName} deployment and is
+              not posted to a channel. Attachments are uploaded before you send.
             </Trans>
           </p>
         </DialogHeader>
