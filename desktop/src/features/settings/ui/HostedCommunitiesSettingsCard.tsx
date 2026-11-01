@@ -1,5 +1,6 @@
 import * as React from "react";
 import { invoke } from "@tauri-apps/api/core";
+import { Trans, useLingui } from "@lingui/react/macro";
 import {
   AlertCircle,
   Archive,
@@ -59,6 +60,8 @@ import { Input } from "@/shared/ui/input";
 import { SettingsSectionHeader } from "./SettingsSectionHeader";
 import { BRAND } from "@/shared/branding/brand";
 
+const { productName } = BRAND;
+
 function relayHost(url: string | null | undefined) {
   if (!url) return null;
   try {
@@ -69,6 +72,7 @@ function relayHost(url: string | null | undefined) {
 }
 
 export function HostedCommunitiesSettingsCard() {
+  const { t } = useLingui();
   const onboarding = useCommunityOnboarding();
   const { activeCommunity } = useCommunities();
   const localPubkey = useIdentityQuery().data?.pubkey ?? null;
@@ -103,7 +107,7 @@ export function HostedCommunitiesSettingsCard() {
         errorMessage(
           identityResponse.error,
           identityResponse.correlation_id,
-          `Could not load the connected ${BRAND.productName} identity.`,
+          t`Could not load the connected ${productName} identity.`,
         ),
       );
     }
@@ -112,7 +116,7 @@ export function HostedCommunitiesSettingsCard() {
         errorMessage(
           communitiesResponse.error,
           communitiesResponse.correlation_id,
-          "Could not load communities.",
+          t`Could not load communities.`,
         ),
       );
     }
@@ -121,7 +125,7 @@ export function HostedCommunitiesSettingsCard() {
     setQuotaUsed(hostedCommunityQuotaUsed(communitiesResponse.quota_used));
     setQuotaLimit(hostedCommunityQuotaLimit(communitiesResponse.quota_limit));
     setCanCreate(communitiesResponse.can_create !== false);
-  }, []);
+  }, [t]);
 
   React.useEffect(() => {
     let active = true;
@@ -159,14 +163,14 @@ export function HostedCommunitiesSettingsCard() {
   };
 
   const signIn = () =>
-    run("Signing in…", async () => {
+    run(t`Signing in…`, async () => {
       const nextAuth = await invoke<BuilderlabAuth>("start_builderlab_login");
       setAuth(nextAuth);
       await loadAccount();
     });
 
   const signOut = () =>
-    run("Signing out…", async () => {
+    run(t`Signing out…`, async () => {
       await invoke("clear_builderlab_auth");
       setAuth(null);
       setIdentity(null);
@@ -179,7 +183,7 @@ export function HostedCommunitiesSettingsCard() {
     });
 
   const connectIdentity = () =>
-    run(`Connecting ${BRAND.productName} identity…`, async () => {
+    run(t`Connecting ${productName} identity…`, async () => {
       const response = await invoke<IdentityResponse>(
         "bind_builderlab_nostr_identity",
       );
@@ -188,7 +192,7 @@ export function HostedCommunitiesSettingsCard() {
           errorMessage(
             response.error,
             response.correlation_id,
-            `Could not connect the ${BRAND.productName} identity.`,
+            t`Could not connect the ${productName} identity.`,
           ),
         );
       }
@@ -197,7 +201,7 @@ export function HostedCommunitiesSettingsCard() {
     });
 
   const unpairIdentity = () =>
-    run("Unpairing identity…", async () => {
+    run(t`Unpairing identity…`, async () => {
       const response = await invoke<IdentityResponse>(
         "delete_builderlab_nostr_identity",
       );
@@ -206,7 +210,7 @@ export function HostedCommunitiesSettingsCard() {
           errorMessage(
             response.error,
             response.correlation_id,
-            `Could not unpair the ${BRAND.productName} identity.`,
+            t`Could not unpair the ${productName} identity.`,
           ),
         );
       }
@@ -248,7 +252,7 @@ export function HostedCommunitiesSettingsCard() {
   );
 
   const switchToDeviceIdentity = () =>
-    run("Switching identity…", async () => {
+    run(t`Switching identity…`, async () => {
       // The account is bound to a different npub, so re-binding directly returns
       // identity_already_bound. Release the current binding first, then bind
       // this device's key. If the local key is reserved by another Builderlab
@@ -262,7 +266,7 @@ export function HostedCommunitiesSettingsCard() {
           errorMessage(
             released.error,
             released.correlation_id,
-            `Could not release the previously connected ${BRAND.productName} identity.`,
+            t`Could not release the previously connected ${productName} identity.`,
           ),
         );
       }
@@ -275,11 +279,11 @@ export function HostedCommunitiesSettingsCard() {
         await loadAccount();
         throw new Error(
           bound.error.code === "pubkey_already_bound"
-            ? `This device's ${BRAND.productName} identity is already reserved by another Builderlab account, so it can't be connected here. Sign in with that account, or transfer the identity there first.`
+            ? t`This device's ${productName} identity is already reserved by another Builderlab account, so it can't be connected here. Sign in with that account, or transfer the identity there first.`
             : errorMessage(
                 bound.error,
                 bound.correlation_id,
-                `Could not connect this device's ${BRAND.productName} identity.`,
+                t`Could not connect this device's ${productName} identity.`,
               ),
         );
       }
@@ -289,7 +293,7 @@ export function HostedCommunitiesSettingsCard() {
 
   const archiveCommunity = (community: HostedCommunity) => {
     if (!community.id) return Promise.resolve(false);
-    return run("Archiving community…", async () => {
+    return run(t`Archiving community…`, async () => {
       const response = await invoke<CommunityMutationResponse>(
         "archive_builderlab_community",
         { communityId: community.id },
@@ -301,7 +305,7 @@ export function HostedCommunitiesSettingsCard() {
           errorMessage(
             response.error,
             response.correlation_id,
-            "Could not archive the community.",
+            t`Could not archive the community.`,
           ),
         );
       }
@@ -311,7 +315,7 @@ export function HostedCommunitiesSettingsCard() {
 
   const unarchiveCommunity = (community: HostedCommunity) => {
     if (!community.id) return Promise.resolve(false);
-    return run("Unarchiving community…", async () => {
+    return run(t`Unarchiving community…`, async () => {
       const response = await invoke<CommunityMutationResponse>(
         "unarchive_builderlab_community",
         { communityId: community.id },
@@ -321,7 +325,7 @@ export function HostedCommunitiesSettingsCard() {
           errorMessage(
             response.error,
             response.correlation_id,
-            "Could not unarchive the community.",
+            t`Could not unarchive the community.`,
           ),
         );
       }
@@ -330,7 +334,7 @@ export function HostedCommunitiesSettingsCard() {
   };
 
   const transferCommunity = (community: HostedCommunity, npub: string) =>
-    run("Transferring ownership…", async () => {
+    run(t`Transferring ownership…`, async () => {
       const response = await invoke<CommunityMutationResponse>(
         "transfer_builderlab_community",
         { communityId: community.id, transfereeNpub: npub },
@@ -340,7 +344,7 @@ export function HostedCommunitiesSettingsCard() {
           errorMessage(
             response.error,
             response.correlation_id,
-            "Could not transfer ownership.",
+            t`Could not transfer ownership.`,
           ),
         );
       }
@@ -395,7 +399,7 @@ export function HostedCommunitiesSettingsCard() {
     event.preventDefault();
     if (!validName || !usableBoundIdentity || identityMismatch || !canCreate)
       return;
-    void run("Creating community…", async () => {
+    void run(t`Creating community…`, async () => {
       const availabilityResponse = await invoke<AvailabilityResponse>(
         "check_builderlab_community_name",
         { name: normalizedName },
@@ -406,7 +410,7 @@ export function HostedCommunitiesSettingsCard() {
           errorMessage(
             availabilityResponse.error,
             availabilityResponse.correlation_id,
-            "That Buzz address is already taken.",
+            t`That Buzz address is already taken.`,
           ),
         );
       }
@@ -419,13 +423,13 @@ export function HostedCommunitiesSettingsCard() {
           errorMessage(
             response.error,
             response.correlation_id,
-            "Could not create the community.",
+            t`Could not create the community.`,
           ),
         );
       }
       const url = relayUrl(response.community);
       if (!url)
-        throw new Error("The new community did not return a relay address.");
+        throw new Error(t`The new community did not return a relay address.`);
       setName("");
       setAvailability(null);
       await loadAccount();
@@ -437,7 +441,7 @@ export function HostedCommunitiesSettingsCard() {
         })
       ) {
         throw new Error(
-          "Another community is already being connected. Finish it before connecting this one.",
+          t`Another community is already being connected. Finish it before connecting this one.`,
         );
       }
     });
@@ -449,8 +453,15 @@ export function HostedCommunitiesSettingsCard() {
   return (
     <section className="space-y-6" data-testid="hosted-communities-settings">
       <SettingsSectionHeader
-        title="Hosted communities"
-        description={`${BRAND.productName} works with any relay. This page is only for relay hosting provided by Block — sign in with a Builderlab account to create and manage Block-hosted communities. Builderlab sign-in is used on this page alone.`}
+        title={<Trans>Hosted communities</Trans>}
+        description={
+          <Trans>
+            {productName} works with any relay. This page is only for relay
+            hosting provided by Block — sign in with a Builderlab account to
+            create and manage Block-hosted communities. Builderlab sign-in is
+            used on this page alone.
+          </Trans>
+        }
       />
 
       {error ? (
@@ -462,18 +473,23 @@ export function HostedCommunitiesSettingsCard() {
 
       {loading ? (
         <div className="flex items-center gap-2 text-sm text-muted-foreground">
-          <LoaderCircle className="h-4 w-4 animate-spin" /> Checking sign-in…
+          <LoaderCircle className="h-4 w-4 animate-spin" />{" "}
+          <Trans>Checking sign-in…</Trans>
         </div>
       ) : !auth ? (
         <div className="rounded-xl border border-border/70 p-5">
-          <h3 className="font-medium">Sign in to manage hosted communities</h3>
+          <h3 className="font-medium">
+            <Trans>Sign in to manage hosted communities</Trans>
+          </h3>
           <p
             className="mt-2 max-w-2xl text-sm text-muted-foreground/70"
             data-settings-subcopy
           >
-            Authentication opens in your browser and returns securely to{" "}
-            {BRAND.productName}. You can use every other part of the app without
-            signing in.
+            <Trans>
+              Authentication opens in your browser and returns securely to{" "}
+              {productName}. You can use every other part of the app without
+              signing in.
+            </Trans>
           </p>
           <Button
             className="mt-4"
@@ -485,7 +501,7 @@ export function HostedCommunitiesSettingsCard() {
             ) : (
               <ExternalLink className="h-4 w-4" />
             )}
-            {action ?? "Sign in with Builderlab"}
+            {action ?? t`Sign in with Builderlab`}
           </Button>
         </div>
       ) : (
@@ -493,7 +509,7 @@ export function HostedCommunitiesSettingsCard() {
           <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-border/70 p-4">
             <div>
               <p className="text-sm font-medium">
-                {auth.name || auth.email || "Builderlab account"}
+                {auth.name || auth.email || t`Builderlab account`}
               </p>
               {auth.name && auth.email ? (
                 <p className="text-xs text-muted-foreground">{auth.email}</p>
@@ -505,24 +521,25 @@ export function HostedCommunitiesSettingsCard() {
               disabled={busy}
               onClick={() => void signOut()}
             >
-              <LogOut className="h-4 w-4" /> Sign out
+              <LogOut className="h-4 w-4" /> <Trans>Sign out</Trans>
             </Button>
           </div>
 
           {!identity ? (
             <div className="rounded-xl border border-amber-500/40 bg-amber-500/5 p-5">
               <h3 className="font-medium">
-                Link this account to your {BRAND.productName} identity
+                <Trans>Link this account to your {productName} identity</Trans>
               </h3>
               <p
                 className="mt-2 text-sm text-muted-foreground/70"
                 data-settings-subcopy
               >
-                This Builderlab account isn&apos;t linked to a{" "}
-                {BRAND.productName} identity yet. Connect this device&apos;s key
-                to create and own communities under it — {BRAND.productName}{" "}
-                signs a one-time challenge locally, so your private key never
-                leaves Desktop.
+                <Trans>
+                  This Builderlab account isn&apos;t linked to a {productName}{" "}
+                  identity yet. Connect this device&apos;s key to create and own
+                  communities under it — {productName} signs a one-time
+                  challenge locally, so your private key never leaves Desktop.
+                </Trans>
               </p>
               <Button
                 className="mt-4"
@@ -532,7 +549,7 @@ export function HostedCommunitiesSettingsCard() {
                 {action ? (
                   <LoaderCircle className="h-4 w-4 animate-spin" />
                 ) : null}
-                {action ?? `Connect ${BRAND.productName} identity`}
+                {action ?? t`Connect ${productName} identity`}
               </Button>
             </div>
           ) : identityMismatch ? (
@@ -541,27 +558,35 @@ export function HostedCommunitiesSettingsCard() {
                 <AlertCircle className="mt-0.5 h-4 w-4 shrink-0 text-amber-600" />
                 <div>
                   <h3 className="font-medium">
-                    This account is connected to a different {BRAND.productName}{" "}
-                    identity
+                    <Trans>
+                      This account is connected to a different {productName}{" "}
+                      identity
+                    </Trans>
                   </h3>
                   <p
                     className="mt-2 text-sm text-muted-foreground/70"
                     data-settings-subcopy
                   >
-                    Your Builderlab account owns communities under another{" "}
-                    {BRAND.productName} key, so connecting them here would join
-                    a relay this device isn&apos;t a member of. Creating and
-                    connecting are paused until the identities match.
+                    <Trans>
+                      Your Builderlab account owns communities under another{" "}
+                      {productName} key, so connecting them here would join a
+                      relay this device isn&apos;t a member of. Creating and
+                      connecting are paused until the identities match.
+                    </Trans>
                   </p>
                   <dl className="mt-3 space-y-1 text-xs">
                     <div className="flex flex-wrap gap-x-2">
-                      <dt className="text-muted-foreground">Account uses</dt>
+                      <dt className="text-muted-foreground">
+                        <Trans>Account uses</Trans>
+                      </dt>
                       <dd className="font-mono">
                         {boundNpub ?? UNAVAILABLE_KEY_LABEL}
                       </dd>
                     </div>
                     <div className="flex flex-wrap gap-x-2">
-                      <dt className="text-muted-foreground">This device</dt>
+                      <dt className="text-muted-foreground">
+                        <Trans>This device</Trans>
+                      </dt>
                       <dd className="font-mono">
                         {localNpub ?? UNAVAILABLE_KEY_LABEL}
                       </dd>
@@ -577,14 +602,14 @@ export function HostedCommunitiesSettingsCard() {
                 {action ? (
                   <LoaderCircle className="h-4 w-4 animate-spin" />
                 ) : null}
-                {action ?? "Switch to this device's identity"}
+                {action ?? t`Switch to this device's identity`}
               </Button>
             </div>
           ) : (
             <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-border/70 p-4">
               <div className="flex items-center gap-2 text-sm text-muted-foreground">
                 <CheckCircle2 className="h-4 w-4 text-emerald-500" />{" "}
-                {BRAND.productName} identity connected
+                <Trans>{productName} identity connected</Trans>
                 {boundNpub ? (
                   <span className="font-mono text-xs">{boundNpub}</span>
                 ) : null}
@@ -599,24 +624,31 @@ export function HostedCommunitiesSettingsCard() {
           <div className="space-y-3">
             <div className="flex items-center justify-between gap-3">
               <h3 className="font-medium">
-                Your communities
+                <Trans>Your communities</Trans>
+                {/* One whole message per case: "N used" and "N of M used"
+                    cannot share a translatable half. */}
                 <span className="ml-2 text-xs font-normal text-muted-foreground">
-                  {quotaUsed ?? communities.length}
-                  {quotaLimit === null ? " used" : ` of ${quotaLimit} used`}
+                  {quotaLimit === null ? (
+                    <Trans>{quotaUsed ?? communities.length} used</Trans>
+                  ) : (
+                    <Trans>
+                      {quotaUsed ?? communities.length} of {quotaLimit} used
+                    </Trans>
+                  )}
                 </span>
               </h3>
               <Button
                 variant="ghost"
                 size="sm"
                 disabled={busy}
-                onClick={() => void run("Refreshing…", loadAccount)}
+                onClick={() => void run(t`Refreshing…`, loadAccount)}
               >
-                <RefreshCw className="h-4 w-4" /> Refresh
+                <RefreshCw className="h-4 w-4" /> <Trans>Refresh</Trans>
               </Button>
             </div>
             {communities.length === 0 ? (
               <p className="rounded-xl border border-dashed p-5 text-sm text-muted-foreground">
-                No hosted communities yet.
+                <Trans>No hosted communities yet.</Trans>
               </p>
             ) : (
               <ul className="space-y-2">
@@ -667,24 +699,28 @@ export function HostedCommunitiesSettingsCard() {
             onSubmit={createCommunity}
           >
             <div>
-              <h3 className="font-medium">Create a community</h3>
+              <h3 className="font-medium">
+                <Trans>Create a community</Trans>
+              </h3>
               <p
                 className="mt-1 text-sm text-muted-foreground/70"
                 data-settings-subcopy
               >
-                Choose the address your team will use to connect.
+                <Trans>Choose the address your team will use to connect.</Trans>
               </p>
             </div>
             {atCommunityLimit ? (
               <p className="text-sm text-muted-foreground">
-                You&apos;ve reached your hosted community creation limit.
-                Transferring a community may free an active slot; deleted
-                community addresses remain reserved.
+                <Trans>
+                  You&apos;ve reached your hosted community creation limit.
+                  Transferring a community may free an active slot; deleted
+                  community addresses remain reserved.
+                </Trans>
               </p>
             ) : null}
             <div className="flex max-w-xl items-center gap-2">
               <Input
-                aria-label="Community address"
+                aria-label={t`Community address`}
                 autoComplete="off"
                 disabled={
                   !usableBoundIdentity ||
@@ -697,7 +733,7 @@ export function HostedCommunitiesSettingsCard() {
                   setName(event.target.value.toLowerCase());
                   setAvailability(null);
                 }}
-                placeholder="north-star"
+                placeholder={t`north-star`}
                 spellCheck={false}
                 value={name}
               />
@@ -707,19 +743,21 @@ export function HostedCommunitiesSettingsCard() {
             </div>
             {name && !validName ? (
               <p className="text-sm text-destructive">
-                Use lowercase letters, numbers, and single hyphens.
+                <Trans>
+                  Use lowercase letters, numbers, and single hyphens.
+                </Trans>
               </p>
             ) : validName && checkingName ? (
               <p className="text-sm text-muted-foreground">
-                Checking availability…
+                <Trans>Checking availability…</Trans>
               </p>
             ) : availability === false ? (
               <p className="text-sm text-destructive">
-                That address is already taken.
+                <Trans>That address is already taken.</Trans>
               </p>
             ) : availability === true ? (
               <p className="text-sm text-emerald-600">
-                That address is available.
+                <Trans>That address is available.</Trans>
               </p>
             ) : null}
             <Button
@@ -737,7 +775,7 @@ export function HostedCommunitiesSettingsCard() {
               {action ? (
                 <LoaderCircle className="h-4 w-4 animate-spin" />
               ) : null}
-              {action ?? "Create and connect"}
+              {action ?? t`Create and connect`}
             </Button>
           </form>
         </>
@@ -754,6 +792,7 @@ function UnpairIdentityButton({
   onConfirm: () => void;
 }) {
   const [open, setOpen] = React.useState(false);
+
   return (
     <AlertDialog open={open} onOpenChange={setOpen}>
       <Button
@@ -763,26 +802,30 @@ function UnpairIdentityButton({
         disabled={busy}
         onClick={() => setOpen(true)}
       >
-        <Unlink className="h-4 w-4" /> Unpair identity
+        <Unlink className="h-4 w-4" /> <Trans>Unpair identity</Trans>
       </Button>
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>
-            Unpair this {BRAND.productName} identity?
+            <Trans>Unpair this {productName} identity?</Trans>
           </AlertDialogTitle>
           <AlertDialogDescription>
-            Your Builderlab account will no longer be connected to this{" "}
-            {BRAND.productName} key. You can reconnect any key later, but
-            community actions stay unavailable until you do.
+            <Trans>
+              Your Builderlab account will no longer be connected to this{" "}
+              {productName} key. You can reconnect any key later, but community
+              actions stay unavailable until you do.
+            </Trans>
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel>Cancel</AlertDialogCancel>
+          <AlertDialogCancel>
+            <Trans>Cancel</Trans>
+          </AlertDialogCancel>
           <AlertDialogAction
             className={buttonVariants({ variant: "destructive" })}
             onClick={onConfirm}
           >
-            Unpair identity
+            <Trans>Unpair identity</Trans>
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
@@ -809,12 +852,13 @@ function CommunityRow({
   onTransfer: (npub: string) => Promise<boolean>;
   showIconPicker: boolean;
 }) {
+  const { t } = useLingui();
   const [confirmArchive, setConfirmArchive] = React.useState(false);
   const [confirmUnarchive, setConfirmUnarchive] = React.useState(false);
   const [transferOpen, setTransferOpen] = React.useState(false);
   const url = relayUrl(community);
   const archived = Boolean(community.archived_at);
-  const displayName = community.name ?? community.slug ?? "Hosted community";
+  const displayName = community.name ?? community.slug ?? t`Hosted community`;
 
   return (
     <li
@@ -832,7 +876,7 @@ function CommunityRow({
             data-settings-subcopy
           >
             {community.normalized_host}
-            {archived ? " · Archived" : ""}
+            {archived ? <Trans> · Archived</Trans> : ""}
           </p>
         </div>
       </div>
@@ -845,7 +889,7 @@ function CommunityRow({
             disabled={busy || !community.id}
             onClick={() => setConfirmUnarchive(true)}
           >
-            <ArchiveRestore className="h-4 w-4" /> Unarchive
+            <ArchiveRestore className="h-4 w-4" /> <Trans>Unarchive</Trans>
           </Button>
           <AlertDialog
             open={confirmUnarchive}
@@ -853,16 +897,22 @@ function CommunityRow({
           >
             <AlertDialogContent>
               <AlertDialogHeader>
-                <AlertDialogTitle>Unarchive {displayName}?</AlertDialogTitle>
+                <AlertDialogTitle>
+                  <Trans>Unarchive {displayName}?</Trans>
+                </AlertDialogTitle>
                 <AlertDialogDescription>
-                  This address becomes connectable again. Connections that
-                  closed during archival will not reconnect automatically.
+                  <Trans>
+                    This address becomes connectable again. Connections that
+                    closed during archival will not reconnect automatically.
+                  </Trans>
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter>
-                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                <AlertDialogCancel>
+                  <Trans>Cancel</Trans>
+                </AlertDialogCancel>
                 <AlertDialogAction onClick={onUnarchive}>
-                  Unarchive
+                  <Trans>Unarchive</Trans>
                 </AlertDialogAction>
               </AlertDialogFooter>
             </AlertDialogContent>
@@ -877,7 +927,7 @@ function CommunityRow({
               disabled={busy}
               onClick={onConnect}
             >
-              Connect
+              <Trans>Connect</Trans>
             </Button>
           ) : null}
           <Button
@@ -886,7 +936,7 @@ function CommunityRow({
             disabled={busy || !community.id}
             onClick={() => setTransferOpen(true)}
           >
-            <ArrowLeftRight className="h-4 w-4" /> Transfer
+            <ArrowLeftRight className="h-4 w-4" /> <Trans>Transfer</Trans>
           </Button>
           <Button
             variant="ghost"
@@ -895,27 +945,33 @@ function CommunityRow({
             disabled={busy || !community.id}
             onClick={() => setConfirmArchive(true)}
           >
-            <Archive className="h-4 w-4" /> Archive
+            <Archive className="h-4 w-4" /> <Trans>Archive</Trans>
           </Button>
 
           <AlertDialog open={confirmArchive} onOpenChange={setConfirmArchive}>
             <AlertDialogContent>
               <AlertDialogHeader>
-                <AlertDialogTitle>Archive {displayName}?</AlertDialogTitle>
+                <AlertDialogTitle>
+                  <Trans>Archive {displayName}?</Trans>
+                </AlertDialogTitle>
                 <AlertDialogDescription>
-                  New and existing connections stop and the address stays
-                  reserved. Archiving can&apos;t be undone from here without
-                  unarchiving, and the community keeps counting toward your
-                  quota — it isn&apos;t deleted.
+                  <Trans>
+                    New and existing connections stop and the address stays
+                    reserved. Archiving can&apos;t be undone from here without
+                    unarchiving, and the community keeps counting toward your
+                    quota — it isn&apos;t deleted.
+                  </Trans>
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter>
-                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                <AlertDialogCancel>
+                  <Trans>Cancel</Trans>
+                </AlertDialogCancel>
                 <AlertDialogAction
                   className={buttonVariants({ variant: "destructive" })}
                   onClick={onArchive}
                 >
-                  Archive
+                  <Trans>Archive</Trans>
                 </AlertDialogAction>
               </AlertDialogFooter>
             </AlertDialogContent>
@@ -947,6 +1003,7 @@ function TransferOwnershipDialog({
   busy: boolean;
   onTransfer: (npub: string) => Promise<boolean>;
 }) {
+  const { t } = useLingui();
   const [npub, setNpub] = React.useState("");
   const npubIsValid = npub.startsWith("npub1") && npub.length >= 50;
 
@@ -964,16 +1021,20 @@ function TransferOwnershipDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Transfer ownership</DialogTitle>
+          <DialogTitle>
+            <Trans>Transfer ownership</Trans>
+          </DialogTitle>
           <DialogDescription>
-            Transfer {communityName} to another person. You become a regular
-            member. The recipient needs a connected {BRAND.productName} identity
-            first, and this can&apos;t be undone.
+            <Trans>
+              Transfer {communityName} to another person. You become a regular
+              member. The recipient needs a connected {productName} identity
+              first, and this can&apos;t be undone.
+            </Trans>
           </DialogDescription>
         </DialogHeader>
         <div className="space-y-2">
           <Input
-            aria-label="Recipient npub"
+            aria-label={t`Recipient npub`}
             autoComplete="off"
             className="font-mono text-sm"
             placeholder="npub1…"
@@ -983,13 +1044,13 @@ function TransferOwnershipDialog({
           />
           {npub.length > 0 && !npubIsValid ? (
             <p className="text-sm text-destructive">
-              Enter a valid npub that starts with npub1.
+              <Trans>Enter a valid npub that starts with npub1.</Trans>
             </p>
           ) : null}
         </div>
         <DialogFooter>
           <Button variant="outline" onClick={() => onOpenChange(false)}>
-            Cancel
+            <Trans>Cancel</Trans>
           </Button>
           <Button
             variant="destructive"
@@ -997,7 +1058,7 @@ function TransferOwnershipDialog({
             onClick={() => void submit()}
           >
             {busy ? <LoaderCircle className="h-4 w-4 animate-spin" /> : null}
-            Transfer ownership
+            <Trans>Transfer ownership</Trans>
           </Button>
         </DialogFooter>
       </DialogContent>

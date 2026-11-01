@@ -4,6 +4,9 @@
  * Extracted for deterministic unit-testing — no React, no Tauri, no network.
  */
 
+import { msg, plural } from "@lingui/core/macro";
+import type { MessageDescriptor } from "@lingui/core";
+
 import type { AcpRuntimeCatalogEntry } from "@/shared/api/types";
 
 /**
@@ -39,14 +42,21 @@ export function countAgentsReferencingHarness(
 /**
  * Confirmation copy for deleting a custom harness. Names the blast radius
  * when agents still reference the definition; stays quiet when none do.
+ *
+ * A descriptor rather than a string, because this module is pure and has no
+ * `i18n` of its own; the row resolves it at render. The singular/plural split
+ * is an ICU `plural` rather than two hand-picked nouns — German inflects the
+ * verb as well as the noun, so a `${noun}` hole cannot hold both forms.
  */
 export function deleteHarnessConfirmMessage(
   label: string,
   referencingAgents: number,
-): string {
-  if (referencingAgents === 0) return `Delete ${label}?`;
-  const noun = referencingAgents === 1 ? "agent uses" : "agents use";
-  return `${referencingAgents} ${noun} this harness and will stop launching. Delete ${label}?`;
+): MessageDescriptor {
+  if (referencingAgents === 0) return msg`Delete ${label}?`;
+  return msg`${plural(referencingAgents, {
+    one: "# agent uses this harness and will stop launching.",
+    other: "# agents use this harness and will stop launching.",
+  })} Delete ${label}?`;
 }
 
 /** Minimal query-state shape consumed by `deleteConfirmState` — matches the
@@ -62,7 +72,7 @@ export type DeleteConfirmState = {
   /** False while the blast radius is still unknown — the destructive button
    * must be disabled so a quick click can't beat the warning. */
   canConfirm: boolean;
-  message: string;
+  message: MessageDescriptor;
 };
 
 /**
@@ -88,13 +98,13 @@ export function deleteConfirmState(
   if (agents.isPending || personas.isPending) {
     return {
       canConfirm: false,
-      message: "Checking which agents use this harness…",
+      message: msg`Checking which agents use this harness…`,
     };
   }
   if (agents.isError || personas.isError) {
     return {
       canConfirm: true,
-      message: `Couldn't check which agents use this harness — some agents may stop launching. Delete ${label}?`,
+      message: msg`Couldn't check which agents use this harness — some agents may stop launching. Delete ${label}?`,
     };
   }
   const count = countAgentsReferencingHarness(

@@ -1,6 +1,9 @@
 import * as React from "react";
 import { ChevronRight, ExternalLink, Plus, Search } from "lucide-react";
 import { openUrl } from "@tauri-apps/plugin-opener";
+import { msg } from "@lingui/core/macro";
+import type { MessageDescriptor } from "@lingui/core";
+import { Trans, useLingui } from "@lingui/react/macro";
 
 import {
   useAcpRuntimesQueryForced,
@@ -62,6 +65,7 @@ export function HarnessCatalogDialog({
   open: boolean;
 }) {
   const contentRef = React.useRef<HTMLDivElement | null>(null);
+  const { t } = useLingui();
   // The Settings panel owns this surface's force-on-mount (it renders this
   // dialog always-mounted). Passing `forceOnMount: false` here consumes the
   // shared catalog + `forceRefresh` without firing a second 20–65s forced
@@ -138,7 +142,7 @@ export function HarnessCatalogDialog({
         scrollAreaClassName="flex min-h-0 overflow-hidden px-0"
         scrollAreaTestId="harness-catalog-dialog-body"
         tabIndex={-1}
-        title="Add runtimes"
+        title={t`Add runtimes`}
       >
         <div className="flex min-h-0 flex-1 flex-col overflow-hidden bg-sidebar sm:flex-row">
           {/* Left: search + chooser list */}
@@ -147,11 +151,11 @@ export function HarnessCatalogDialog({
               <div className="relative">
                 <Search className="pointer-events-none absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-sidebar-foreground/50" />
                 <Input
-                  aria-label="Search runtimes"
+                  aria-label={t`Search runtimes`}
                   className="h-8 border-sidebar-border bg-sidebar-accent/40 pl-8 text-sm"
                   data-testid="harness-catalog-search"
                   onChange={(e) => setQuery(e.target.value)}
-                  placeholder="Search runtimes…"
+                  placeholder={t`Search runtimes…`}
                   value={query}
                 />
               </div>
@@ -174,21 +178,23 @@ export function HarnessCatalogDialog({
                     data-testid="harness-catalog-refreshing"
                   >
                     <Spinner className="h-2.5 w-2.5" />
-                    Refreshing…
+                    <Trans>Refreshing…</Trans>
                   </div>
                 ) : isWarmError ? (
                   <div
                     className="flex items-center justify-between gap-2 px-4 py-1 text-xs text-destructive"
                     data-testid="harness-catalog-refresh-error"
                   >
-                    <span>Couldn't refresh runtimes.</span>
+                    <span>
+                      <Trans>Couldn't refresh runtimes.</Trans>
+                    </span>
                     <button
                       className="shrink-0 underline underline-offset-2 hover:text-foreground"
                       data-testid="harness-catalog-refresh-retry"
                       onClick={() => void runtimesQuery.forceRefresh()}
                       type="button"
                     >
-                      Retry
+                      <Trans>Retry</Trans>
                     </button>
                   </div>
                 ) : null}
@@ -199,26 +205,32 @@ export function HarnessCatalogDialog({
                     className="flex items-center justify-between gap-2 px-4 py-2 text-sm text-sidebar-foreground/60"
                     data-testid="harness-catalog-load-error"
                   >
-                    <span>Couldn't load runtimes.</span>
+                    <span>
+                      <Trans>Couldn't load runtimes.</Trans>
+                    </span>
                     <button
                       className="shrink-0 text-destructive underline underline-offset-2 hover:text-foreground"
                       data-testid="harness-catalog-load-retry"
                       onClick={() => void runtimesQuery.forceRefresh()}
                       type="button"
                     >
-                      Retry
+                      <Trans>Retry</Trans>
                     </button>
                   </div>
                 ) : filtered.length === 0 ? (
                   <p className="px-4 py-2 text-sm text-sidebar-foreground/60">
-                    {isSearching ? "No runtimes match." : "No runtimes found."}
+                    {isSearching ? (
+                      <Trans>No runtimes match.</Trans>
+                    ) : (
+                      <Trans>No runtimes found.</Trans>
+                    )}
                   </p>
                 ) : (
                   <>
                     {groups.setup.length > 0 ? (
                       <CatalogSection
                         count={groups.setup.length}
-                        label="Setup"
+                        label={<Trans>Setup</Trans>}
                         onToggle={() => setSetupOpen((v) => !v)}
                         open={setupExpanded}
                         testId="harness-catalog-section-setup"
@@ -236,7 +248,7 @@ export function HarnessCatalogDialog({
                     {groups.installed.length > 0 ? (
                       <CatalogSection
                         count={groups.installed.length}
-                        label="Installed"
+                        label={<Trans>Installed</Trans>}
                         onToggle={() => setInstalledOpen((v) => !v)}
                         open={installedExpanded}
                         testId="harness-catalog-section-installed"
@@ -271,7 +283,7 @@ export function HarnessCatalogDialog({
               >
                 <Plus className="h-4 w-4 shrink-0" />
                 <span className="min-w-0 flex-1 truncate text-sm font-medium">
-                  Custom harness
+                  <Trans>Custom harness</Trans>
                 </span>
               </button>
             </div>
@@ -295,7 +307,9 @@ export function HarnessCatalogDialog({
                 <div className="min-h-0 flex-1 overflow-y-auto px-5 py-5">
                   <div className="flex min-h-80 items-center justify-center rounded-lg border border-dashed border-border/70 px-6 text-center">
                     <p className="max-w-sm text-sm text-muted-foreground">
-                      Select a runtime on the left, or add a custom one.
+                      <Trans>
+                        Select a runtime on the left, or add a custom one.
+                      </Trans>
                     </p>
                   </div>
                 </div>
@@ -323,7 +337,7 @@ function CatalogSection({
 }: {
   children: React.ReactNode;
   count: number;
-  label: string;
+  label: React.ReactNode;
   onToggle: () => void;
   open: boolean;
   testId: string;
@@ -359,10 +373,11 @@ function CatalogSection({
 
 /** Pulsing placeholder rows shown while harness discovery is running. */
 function CatalogListSkeleton() {
+  const { t } = useLingui();
   const widths = ["w-24", "w-32", "w-20", "w-28", "w-24", "w-16"];
   return (
     <div
-      aria-label="Loading runtimes"
+      aria-label={t`Loading runtimes`}
       className="space-y-1"
       data-testid="harness-catalog-list-skeleton"
       role="status"
@@ -384,9 +399,10 @@ function CatalogListSkeleton() {
 
 /** Pulsing placeholder mirroring the detail-pane layout while loading. */
 function CatalogDetailSkeleton() {
+  const { t } = useLingui();
   return (
     <div
-      aria-label="Loading runtime details"
+      aria-label={t`Loading runtime details`}
       className="flex min-h-full flex-col gap-6"
       data-testid="harness-catalog-detail-skeleton"
       role="status"
@@ -418,6 +434,7 @@ function CatalogListItem({
   isCurrent: boolean;
   onSelect: () => void;
 }) {
+  const { t } = useLingui();
   const isReady = entry.availability === "available";
 
   return (
@@ -439,7 +456,7 @@ function CatalogListItem({
       </span>
       {isReady ? (
         <span
-          aria-label={`${entry.label} is ready`}
+          aria-label={t`${entry.label} is ready`}
           className="h-1.5 w-1.5 shrink-0 rounded-full bg-emerald-500"
           role="img"
         />
@@ -450,6 +467,7 @@ function CatalogListItem({
 
 function CatalogDetail({ entry }: { entry: AcpRuntimeCatalogEntry }) {
   const install = useInstallAcpRuntimeMutation();
+  const { i18n, t } = useLingui();
   const [installError, setInstallError] = React.useState<string | null>(null);
   const [isUpdateWarningOpen, setIsUpdateWarningOpen] = React.useState(false);
   const action = catalogPrimaryAction(entry);
@@ -469,7 +487,7 @@ function CatalogDetail({ entry }: { entry: AcpRuntimeCatalogEntry }) {
       },
       onError: (error) => {
         setInstallError(
-          error instanceof Error ? error.message : "Install failed.",
+          error instanceof Error ? error.message : t`Install failed.`,
         );
       },
     });
@@ -500,7 +518,7 @@ function CatalogDetail({ entry }: { entry: AcpRuntimeCatalogEntry }) {
         type="button"
       >
         {install.isPending ? <Spinner className="mr-2 h-3.5 w-3.5" /> : null}
-        {action.label}
+        {i18n._(action.label)}
       </Button>
     ) : docsUrl ? (
       <Button
@@ -514,7 +532,9 @@ function CatalogDetail({ entry }: { entry: AcpRuntimeCatalogEntry }) {
         variant={action.kind === "docs" ? "default" : "outline"}
       >
         <ExternalLink className="mr-1 h-3.5 w-3.5" />
-        {action.kind === "docs" ? action.label : installLinkLabel(entry)}
+        {i18n._(
+          action.kind === "docs" ? action.label : installLinkLabel(entry),
+        )}
       </Button>
     ) : null;
 
@@ -536,11 +556,11 @@ function CatalogDetail({ entry }: { entry: AcpRuntimeCatalogEntry }) {
                 className="mt-1 inline-flex items-center rounded-md bg-muted px-2 py-0.5 text-xs font-medium text-muted-foreground"
                 data-testid={`harness-catalog-status-${entry.id}`}
               >
-                {statusLabel}
+                {i18n._(statusLabel)}
               </span>
             ) : isReady ? (
               <span className="mt-1 inline-flex items-center rounded-md bg-emerald-500/15 px-2 py-0.5 text-xs font-medium text-emerald-600 dark:text-emerald-400">
-                Ready
+                <Trans>Ready</Trans>
               </span>
             ) : null}
           </div>
@@ -548,13 +568,15 @@ function CatalogDetail({ entry }: { entry: AcpRuntimeCatalogEntry }) {
 
         {description ? (
           <p className="text-sm leading-6 text-muted-foreground">
-            {description}
+            {i18n._(description)}
           </p>
         ) : null}
 
         {entry.installHint ? (
           <div className="space-y-1">
-            <p className="text-xs font-semibold text-muted-foreground">Setup</p>
+            <p className="text-xs font-semibold text-muted-foreground">
+              <Trans>Setup</Trans>
+            </p>
             <p className="whitespace-pre-line text-sm leading-6 text-foreground">
               {entry.installHint}
             </p>
@@ -587,7 +609,7 @@ function CatalogDetail({ entry }: { entry: AcpRuntimeCatalogEntry }) {
               className="text-xs text-muted-foreground/80"
               data-testid={`harness-catalog-ready-hint-${entry.id}`}
             >
-              Already set up
+              <Trans>Already set up</Trans>
             </p>
           ) : null}
           {primaryCta}
@@ -599,18 +621,22 @@ function CatalogDetail({ entry }: { entry: AcpRuntimeCatalogEntry }) {
       >
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Update {entry.label} adapter?</AlertDialogTitle>
+            <AlertDialogTitle>
+              <Trans>Update {entry.label} adapter?</Trans>
+            </AlertDialogTitle>
             <AlertDialogDescription>
-              {adapterUpdateWarning(entry)}
+              {i18n._(adapterUpdateWarning(entry))}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogCancel>
+              <Trans>Cancel</Trans>
+            </AlertDialogCancel>
             <AlertDialogAction
               data-testid={`harness-catalog-confirm-update-${entry.id}`}
               onClick={handleInstall}
             >
-              Update
+              <Trans>Update</Trans>
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
@@ -620,19 +646,27 @@ function CatalogDetail({ entry }: { entry: AcpRuntimeCatalogEntry }) {
 }
 
 function TechnicalDetails({ entry }: { entry: AcpRuntimeCatalogEntry }) {
-  const rows: Array<{ label: string; value: string }> = [
-    { label: "ID", value: entry.id },
-    ...(entry.command ? [{ label: "Command", value: entry.command }] : []),
+  const { i18n } = useLingui();
+  // `label` is the translated field name; `value` stays machine data except
+  // for the last row, whose value is our own word for where the entry came
+  // from rather than something read off the runtime.
+  const rows: Array<{ label: MessageDescriptor; value: string }> = [
+    { label: msg`ID`, value: entry.id },
+    ...(entry.command ? [{ label: msg`Command`, value: entry.command }] : []),
     ...(entry.defaultArgs.length > 0
-      ? [{ label: "Arguments", value: entry.defaultArgs.join(" ") }]
+      ? [{ label: msg`Arguments`, value: entry.defaultArgs.join(" ") }]
       : []),
     ...(entry.underlyingCliPath
-      ? [{ label: "Underlying CLI", value: entry.underlyingCliPath }]
+      ? [{ label: msg`Underlying CLI`, value: entry.underlyingCliPath }]
       : []),
-    ...(entry.binaryPath ? [{ label: "Path", value: entry.binaryPath }] : []),
+    ...(entry.binaryPath
+      ? [{ label: msg`Path`, value: entry.binaryPath }]
+      : []),
     {
-      label: "Source",
-      value: entry.source === "builtin" ? "Built-in" : "Bundled preset",
+      label: msg`Source`,
+      value: i18n._(
+        entry.source === "builtin" ? msg`Built-in` : msg`Bundled preset`,
+      ),
     },
   ];
 
@@ -642,9 +676,9 @@ function TechnicalDetails({ entry }: { entry: AcpRuntimeCatalogEntry }) {
       data-testid={`harness-catalog-technical-${entry.id}`}
     >
       {rows.map((row) => (
-        <div className="flex gap-3 text-sm" key={row.label}>
+        <div className="flex gap-3 text-sm" key={String(row.label.id)}>
           <dt className="w-28 shrink-0 text-xs font-semibold leading-5 text-muted-foreground">
-            {row.label}
+            {i18n._(row.label)}
           </dt>
           <dd className="min-w-0 break-all font-mono text-xs leading-5">
             {row.value}
@@ -666,10 +700,12 @@ function CustomHarnessDetail({ onDone }: { onDone: () => void }) {
         header={
           <div>
             <h3 className="text-xl font-semibold leading-snug">
-              Custom harness
+              <Trans>Custom harness</Trans>
             </h3>
             <p className="mt-1 text-sm text-muted-foreground">
-              Register any ACP-speaking agent tool as a selectable runtime.
+              <Trans>
+                Register any ACP-speaking agent tool as a selectable runtime.
+              </Trans>
             </p>
           </div>
         }

@@ -329,6 +329,47 @@ const CONVERTED_FILES = [
   "src/features/agents/useAgentManagement.ts",
   "src/features/agents/useCreatedAgentChannelAttachment.ts",
   "src/features/agents/useOpenAgentActivity.ts",
+  // Tranche 4 — the rest of Settings. Appearance, language, the nav rail and
+  // the shortcut table were already here; this is every other panel a person
+  // reaches from it: profile and identity, notifications and sounds, voice,
+  // agents and the harness catalogue, channel templates, hosted communities,
+  // mobile pairing, experiments, updates, and the key-backup flows.
+  "src/features/settings/EncryptedBackupProvider.tsx",
+  "src/features/settings/SidebarUpdateCard.tsx",
+  "src/features/settings/UpdateChecker.tsx",
+  "src/features/settings/UpdateIndicator.tsx",
+  "src/features/settings/ui/AgentDefaultsSettingsCard.tsx",
+  "src/features/settings/ui/AgentsSettingsPanel.tsx",
+  "src/features/settings/ui/BackupTestFlow.tsx",
+  "src/features/settings/ui/ChannelTemplatesSettingsCard.tsx",
+  "src/features/settings/ui/CustomHarnessForm.tsx",
+  "src/features/settings/ui/EncryptedBackupCreator.tsx",
+  "src/features/settings/ui/ExperimentalFeaturesCard.tsx",
+  "src/features/settings/ui/HarnessCatalogDialog.tsx",
+  "src/features/settings/ui/HarnessRow.tsx",
+  "src/features/settings/ui/HarnessesSettingsPanel.tsx",
+  "src/features/settings/ui/HostedCommunitiesSettingsCard.tsx",
+  "src/features/settings/ui/MobilePairingCard.tsx",
+  "src/features/settings/ui/NotificationSettingsCard.tsx",
+  "src/features/settings/ui/PreventSleepSettingsCard.tsx",
+  "src/features/settings/ui/PrivateKeyBackupRow.tsx",
+  "src/features/settings/ui/ProfileSettingsCard.tsx",
+  "src/features/settings/ui/SendFeedbackDialog.tsx",
+  "src/features/settings/ui/SettingsPanels.tsx",
+  "src/features/settings/ui/SignOutSection.tsx",
+  "src/features/settings/ui/SoundPicker.tsx",
+  "src/features/settings/ui/VoiceSettingsCard.tsx",
+  // Libraries that *produce* settings copy. None of these renders anything,
+  // so no JSX node mentions their strings: the harness status chips, the
+  // curated runtime descriptions, the comma-in-argument error, the
+  // delete-blast-radius warning, and the notification slot labels and
+  // descriptions all come from here. `sound.ts` lives under `notifications`
+  // but its only copy consumer is the Notifications panel.
+  "src/features/notifications/lib/sound.ts",
+  "src/features/settings/ui/harnessCatalogCopy.ts",
+  "src/features/settings/ui/harnessCatalogLogic.ts",
+  "src/features/settings/ui/harnessFormLogic.ts",
+  "src/features/settings/ui/harnessGalleryLogic.ts",
 ];
 
 /**
@@ -351,6 +392,39 @@ const OVERRIDES = new Map([
   [
     "src/features/agents/managedAgentRuntimeStatus.ts:13",
     "Status token compared by the sidebar and its tests. The badge translates it at the render site.",
+  ],
+  // Input placeholders that are examples of a *format*, not prose: a German
+  // reader needs the same `my-runtime`, the same shell command and the same
+  // `npub1…` prefix, because what they type has to match the format, not the
+  // sentence. The detector flags any copy-bearing prop containing a letter,
+  // which is the right default — these are the exceptions to it.
+  [
+    "src/features/settings/ui/CustomHarnessForm.tsx:175",
+    "`KEY` is the literal shape of an environment-variable name, not a word.",
+  ],
+  [
+    "src/features/settings/ui/CustomHarnessForm.tsx:371",
+    "Example id showing the required lowercase-hyphenated format.",
+  ],
+  [
+    "src/features/settings/ui/CustomHarnessForm.tsx:394",
+    "Example executable name; a translated binary name would be misleading.",
+  ],
+  [
+    "src/features/settings/ui/CustomHarnessForm.tsx:444",
+    "Example URL. `example.com` is reserved for exactly this and is not prose.",
+  ],
+  [
+    "src/features/settings/ui/CustomHarnessForm.tsx:465",
+    "Example shell command; npm's flags are the same in every language.",
+  ],
+  [
+    "src/features/settings/ui/HostedCommunitiesSettingsCard.tsx:1040",
+    "`npub1…` is the literal prefix of a Nostr public key.",
+  ],
+  [
+    "src/features/settings/ui/HarnessesSettingsPanel.tsx:40",
+    "Git Bash is a product name, and the row is about that product.",
   ],
 ]);
 
@@ -379,6 +453,40 @@ async function main() {
       const key = `${relativePath}:${finding.line}`;
       if (OVERRIDES.has(key)) continue;
       violations.push({ file: relativePath, ...finding });
+    }
+  }
+
+  // An override that no longer matches anything is worse than a missing one:
+  // the line numbers drift every time somebody edits above them, and a drifted
+  // entry silently exempts whatever the next person writes on that line. This
+  // list was empty until the Settings tranche, so nothing had carried the cost
+  // of a stale entry yet; `check-product-name.mjs` already does this and this
+  // is the same check against the same failure.
+  for (const key of OVERRIDES.keys()) {
+    const separator = key.lastIndexOf(":");
+    const relativePath = key.slice(0, separator);
+    const lineText = key.slice(separator + 1);
+    const absolutePath = path.join(projectRoot, relativePath);
+    let source;
+    try {
+      source = await readFile(absolutePath, "utf8");
+    } catch {
+      violations.push({
+        file: relativePath,
+        line: 0,
+        kind: "missing-file",
+        text: "has an override but the file is missing",
+      });
+      continue;
+    }
+    const findings = await checkFileForHardcodedCopy(absolutePath, source);
+    if (!findings.some((finding) => String(finding.line) === lineText)) {
+      violations.push({
+        file: relativePath,
+        line: Number(lineText),
+        kind: "stale-override",
+        text: "nothing on this line is hardcoded copy — remove or move it",
+      });
     }
   }
 

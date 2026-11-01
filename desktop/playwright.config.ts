@@ -45,6 +45,7 @@ export default defineConfig({
         "**/first-run-brand.spec.ts",
         "**/running-app-brand.spec.ts",
         "**/settings-brand.spec.ts",
+        "**/settings-german.spec.ts",
         "**/boot-splash-brand.spec.ts",
         "**/flavor-preview.spec.ts",
         "**/mock-subscription-readiness.spec.ts",

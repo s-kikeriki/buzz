@@ -1,3 +1,4 @@
+import { i18n } from "@lingui/core";
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 
@@ -7,6 +8,17 @@ import {
   deleteHarnessConfirmMessage,
   deleteConfirmState,
 } from "./harnessGalleryLogic.ts";
+
+/**
+ * Both copy helpers hand out descriptors, so each assertion resolves one
+ * through `i18n._` — the call the row makes. `test-loader.mjs` activates `en`
+ * with an empty catalogue, so the resolved text is the English these
+ * assertions were already written against, and the ICU plural is exercised
+ * rather than read back out of the source.
+ */
+function copyOf(descriptor) {
+  return i18n._(descriptor);
+}
 
 // ── Minimal catalog entry factory ────────────────────────────────────────────
 
@@ -102,21 +114,21 @@ describe("countAgentsReferencingHarness", () => {
 describe("deleteHarnessConfirmMessage", () => {
   it("plain confirmation when nothing references the harness", () => {
     assert.equal(
-      deleteHarnessConfirmMessage("My Harness", 0),
+      copyOf(deleteHarnessConfirmMessage("My Harness", 0)),
       "Delete My Harness?",
     );
   });
 
   it("singular copy for one referencing agent", () => {
     assert.equal(
-      deleteHarnessConfirmMessage("My Harness", 1),
+      copyOf(deleteHarnessConfirmMessage("My Harness", 1)),
       "1 agent uses this harness and will stop launching. Delete My Harness?",
     );
   });
 
   it("plural copy for multiple referencing agents", () => {
     assert.equal(
-      deleteHarnessConfirmMessage("My Harness", 3),
+      copyOf(deleteHarnessConfirmMessage("My Harness", 3)),
       "3 agents use this harness and will stop launching. Delete My Harness?",
     );
   });
@@ -132,26 +144,26 @@ describe("deleteConfirmState", () => {
   it("disables confirm while agents query is still loading", () => {
     const state = deleteConfirmState("h1", "My Harness", pending, settled([]));
     assert.equal(state.canConfirm, false);
-    assert.match(state.message, /Checking which agents/);
+    assert.match(copyOf(state.message), /Checking which agents/);
   });
 
   it("disables confirm while personas query is still loading", () => {
     const state = deleteConfirmState("h1", "My Harness", settled([]), pending);
     assert.equal(state.canConfirm, false);
-    assert.match(state.message, /Checking which agents/);
+    assert.match(copyOf(state.message), /Checking which agents/);
   });
 
   it("query failure does not claim zero dependents", () => {
     const state = deleteConfirmState("h1", "My Harness", failed, settled([]));
     assert.equal(state.canConfirm, true);
-    assert.match(state.message, /Couldn't check/);
-    assert.doesNotMatch(state.message, /^Delete My Harness\?$/);
+    assert.match(copyOf(state.message), /Couldn't check/);
+    assert.doesNotMatch(copyOf(state.message), /^Delete My Harness\?$/);
   });
 
   it("persona query failure also reports unknown blast radius", () => {
     const state = deleteConfirmState("h1", "My Harness", settled([]), failed);
     assert.equal(state.canConfirm, true);
-    assert.match(state.message, /Couldn't check/);
+    assert.match(copyOf(state.message), /Couldn't check/);
   });
 
   it("settled queries produce the counted warning and enable confirm", () => {
@@ -163,7 +175,7 @@ describe("deleteConfirmState", () => {
     const state = deleteConfirmState("h1", "My Harness", agents, personas);
     assert.equal(state.canConfirm, true);
     assert.equal(
-      state.message,
+      copyOf(state.message),
       "2 agents use this harness and will stop launching. Delete My Harness?",
     );
   });
@@ -176,6 +188,6 @@ describe("deleteConfirmState", () => {
       settled([]),
     );
     assert.equal(state.canConfirm, true);
-    assert.equal(state.message, "Delete My Harness?");
+    assert.equal(copyOf(state.message), "Delete My Harness?");
   });
 });

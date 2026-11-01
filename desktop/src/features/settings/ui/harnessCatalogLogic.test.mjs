@@ -1,3 +1,4 @@
+import { i18n } from "@lingui/core";
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 
@@ -12,6 +13,25 @@ import {
   stableRowOrder,
   yourHarnessEntries,
 } from "./harnessCatalogLogic.ts";
+
+/**
+ * The copy helpers hand out descriptors, so every assertion below resolves one
+ * through `i18n._` — the same call the panels make. Asserting on
+ * `descriptor.message` instead would read the source string straight back out
+ * and never exercise the resolution, so a label wired to the wrong descriptor
+ * would still pass. `test-loader.mjs` activates `en` with an empty catalogue,
+ * so the resolved text is the English these assertions were already written
+ * against.
+ */
+function copyOf(descriptor) {
+  return descriptor === null ? null : i18n._(descriptor);
+}
+
+function resolvedAction(action) {
+  return action.kind === "none"
+    ? action
+    : { kind: action.kind, label: copyOf(action.label) };
+}
 
 // ── Minimal catalog entry factory ────────────────────────────────────────────
 
@@ -250,11 +270,13 @@ describe("stableRowOrder", () => {
 describe("entryStatusLabel", () => {
   it("config error wins over availability", () => {
     assert.equal(
-      entryStatusLabel(
-        entry({
-          availability: "available",
-          authStatus: { status: "config_invalid", diagnostic: "boom" },
-        }),
+      copyOf(
+        entryStatusLabel(
+          entry({
+            availability: "available",
+            authStatus: { status: "config_invalid", diagnostic: "boom" },
+          }),
+        ),
       ),
       "Config error",
     );
@@ -262,30 +284,32 @@ describe("entryStatusLabel", () => {
 
   it("maps availability states", () => {
     assert.equal(
-      entryStatusLabel(entry({ availability: "adapter_missing" })),
+      copyOf(entryStatusLabel(entry({ availability: "adapter_missing" }))),
       "Adapter needed",
     );
     assert.equal(
-      entryStatusLabel(entry({ availability: "adapter_outdated" })),
+      copyOf(entryStatusLabel(entry({ availability: "adapter_outdated" }))),
       "Update needed",
     );
     assert.equal(
-      entryStatusLabel(entry({ availability: "cli_missing" })),
+      copyOf(entryStatusLabel(entry({ availability: "cli_missing" }))),
       "CLI needed",
     );
     assert.equal(
-      entryStatusLabel(entry({ availability: "not_installed" })),
+      copyOf(entryStatusLabel(entry({ availability: "not_installed" }))),
       "CLI needed",
     );
   });
 
   it("flags sign-in for available-but-logged-out", () => {
     assert.equal(
-      entryStatusLabel(
-        entry({
-          availability: "available",
-          authStatus: { status: "logged_out" },
-        }),
+      copyOf(
+        entryStatusLabel(
+          entry({
+            availability: "available",
+            authStatus: { status: "logged_out" },
+          }),
+        ),
       ),
       "Sign-in needed",
     );
@@ -293,11 +317,13 @@ describe("entryStatusLabel", () => {
 
   it("is silent for ready + logged in", () => {
     assert.equal(
-      entryStatusLabel(
-        entry({
-          availability: "available",
-          authStatus: { status: "logged_in" },
-        }),
+      copyOf(
+        entryStatusLabel(
+          entry({
+            availability: "available",
+            authStatus: { status: "logged_in" },
+          }),
+        ),
       ),
       null,
     );
@@ -308,20 +334,24 @@ describe("entryStatusLabel", () => {
 
 describe("adapterUpdateWarning", () => {
   it("keeps the codex-specific machine-wide caveat for codex", () => {
-    const copy = adapterUpdateWarning(
-      entry({ id: "codex", label: "Codex", command: "codex-acp" }),
+    const copy = copyOf(
+      adapterUpdateWarning(
+        entry({ id: "codex", label: "Codex", command: "codex-acp" }),
+      ),
     );
     assert.match(copy, /codex-acp/);
     assert.match(copy, /@zed-industries\/codex-acp@0\.16\.0/);
   });
 
   it("never leaks codex package copy into other runtimes", () => {
-    const copy = adapterUpdateWarning(
-      entry({
-        id: "claude",
-        label: "Claude Code",
-        command: "claude-agent-acp",
-      }),
+    const copy = copyOf(
+      adapterUpdateWarning(
+        entry({
+          id: "claude",
+          label: "Claude Code",
+          command: "claude-agent-acp",
+        }),
+      ),
     );
     assert.match(copy, /claude-agent-acp/);
     assert.doesNotMatch(copy, /codex/i);
@@ -329,8 +359,10 @@ describe("adapterUpdateWarning", () => {
   });
 
   it("falls back to the label when the command is missing", () => {
-    const copy = adapterUpdateWarning(
-      entry({ id: "mystery", label: "Mystery Harness", command: null }),
+    const copy = copyOf(
+      adapterUpdateWarning(
+        entry({ id: "mystery", label: "Mystery Harness", command: null }),
+      ),
     );
     assert.match(copy, /Mystery Harness/);
     assert.doesNotMatch(copy, /codex/i);
@@ -342,22 +374,26 @@ describe("adapterUpdateWarning", () => {
 describe("catalogPrimaryAction", () => {
   it("no action for ready entries", () => {
     assert.deepEqual(
-      catalogPrimaryAction(entry({ availability: "available" })),
+      resolvedAction(
+        catalogPrimaryAction(entry({ availability: "available" })),
+      ),
       { kind: "none" },
     );
   });
 
   it("install for one-click installable", () => {
-    assert.deepEqual(catalogPrimaryAction(entry({ canAutoInstall: true })), {
-      kind: "install",
-      label: "Install",
-    });
+    assert.deepEqual(
+      resolvedAction(catalogPrimaryAction(entry({ canAutoInstall: true }))),
+      { kind: "install", label: "Install" },
+    );
   });
 
   it("update label for outdated adapters", () => {
     assert.deepEqual(
-      catalogPrimaryAction(
-        entry({ availability: "adapter_outdated", canAutoInstall: true }),
+      resolvedAction(
+        catalogPrimaryAction(
+          entry({ availability: "adapter_outdated", canAutoInstall: true }),
+        ),
       ),
       { kind: "install", label: "Update" },
     );
@@ -365,8 +401,10 @@ describe("catalogPrimaryAction", () => {
 
   it("docs fallback when auto-install is unavailable", () => {
     assert.deepEqual(
-      catalogPrimaryAction(
-        entry({ installInstructionsUrl: "https://example.com" }),
+      resolvedAction(
+        catalogPrimaryAction(
+          entry({ installInstructionsUrl: "https://example.com" }),
+        ),
       ),
       { kind: "docs", label: "Setup guide" },
     );
@@ -374,8 +412,10 @@ describe("catalogPrimaryAction", () => {
 
   it("docs fallback labels download pages honestly", () => {
     assert.deepEqual(
-      catalogPrimaryAction(
-        entry({ installInstructionsUrl: "https://cursor.com/downloads" }),
+      resolvedAction(
+        catalogPrimaryAction(
+          entry({ installInstructionsUrl: "https://cursor.com/downloads" }),
+        ),
       ),
       { kind: "docs", label: "Download page" },
     );
@@ -383,18 +423,22 @@ describe("catalogPrimaryAction", () => {
 
   it("node-gated installs fall back to docs", () => {
     assert.deepEqual(
-      catalogPrimaryAction(
-        entry({
-          canAutoInstall: true,
-          nodeRequired: true,
-          installInstructionsUrl: "https://example.com",
-        }),
+      resolvedAction(
+        catalogPrimaryAction(
+          entry({
+            canAutoInstall: true,
+            nodeRequired: true,
+            installInstructionsUrl: "https://example.com",
+          }),
+        ),
       ),
       { kind: "docs", label: "Setup guide" },
     );
   });
 
   it("none when nothing is actionable", () => {
-    assert.deepEqual(catalogPrimaryAction(entry({})), { kind: "none" });
+    assert.deepEqual(resolvedAction(catalogPrimaryAction(entry({}))), {
+      kind: "none",
+    });
   });
 });

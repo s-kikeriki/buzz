@@ -1,3 +1,4 @@
+import { i18n } from "@lingui/core";
 import assert from "node:assert/strict";
 import test from "node:test";
 
@@ -10,6 +11,16 @@ import {
   definitionFromFormValues,
   commaArgError,
 } from "./harnessFormLogic.ts";
+
+/**
+ * `commaArgError` hands out a descriptor so the form can resolve it in the
+ * active locale; `i18n._` here is the same call the form makes.
+ * `test-loader.mjs` activates `en` with an empty catalogue, so the text is the
+ * English these assertions were written against.
+ */
+function copyOf(descriptor) {
+  return descriptor === null ? null : i18n._(descriptor);
+}
 
 // ── idFromLabel ──────────────────────────────────────────────────────────────
 
@@ -271,21 +282,24 @@ test("definitionFromFormValues_trimsScalarFields", () => {
 // ── commaArgError ─────────────────────────────────────────────────────────────
 
 test("commaArgError_noCommas_returnsNull", () => {
-  assert.equal(commaArgError(["acp", "--verbose", "--name", "x y"]), null);
+  assert.equal(
+    copyOf(commaArgError(["acp", "--verbose", "--name", "x y"])),
+    null,
+  );
 });
 
 test("commaArgError_emptyArgs_returnsNull", () => {
-  assert.equal(commaArgError([]), null);
+  assert.equal(copyOf(commaArgError([])), null);
 });
 
 test("commaArgError_commaInArg_namesOffender", () => {
-  const err = commaArgError(["--models", "a,b"]);
+  const err = copyOf(commaArgError(["--models", "a,b"]));
   assert.ok(err !== null);
   assert.ok(err.includes('"a,b"'), "error must name the offending argument");
   assert.ok(err.includes("comma"), "error must name the transport limit");
 });
 
 test("commaArgError_firstOffenderReported", () => {
-  const err = commaArgError(["x,y", "p,q"]);
+  const err = copyOf(commaArgError(["x,y", "p,q"]));
   assert.ok(err?.includes('"x,y"'));
 });

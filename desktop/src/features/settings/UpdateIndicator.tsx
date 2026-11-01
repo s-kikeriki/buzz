@@ -1,6 +1,9 @@
 import { openUrl } from "@tauri-apps/plugin-opener";
 import type { ComponentType } from "react";
 import { ExternalLink, RefreshCcw, RotateCw } from "lucide-react";
+import { msg } from "@lingui/core/macro";
+import type { MessageDescriptor } from "@lingui/core";
+import { useLingui } from "@lingui/react/macro";
 
 import { Button } from "@/shared/ui/button";
 import { Spinner } from "@/shared/ui/spinner";
@@ -22,36 +25,35 @@ const variants: Record<
   {
     Icon: IndicatorIcon;
     iconClassName?: string;
-    label: string;
+    label: MessageDescriptor;
     badgeColor: string;
   }
 > = {
   available: {
     Icon: RefreshCcw,
-    label: "Update available",
+    label: msg`Update available`,
     badgeColor: "bg-primary",
   },
   downloading: {
     Icon: Spinner,
     iconClassName: "h-4 w-4 border-2",
-    label: "Downloading update\u2026",
+    label: msg`Downloading update\u2026`,
     badgeColor: "bg-primary",
   },
   installing: {
     Icon: Spinner,
     iconClassName: "h-4 w-4 border-2",
-    label: "Installing update\u2026",
+    label: msg`Installing update\u2026`,
     badgeColor: "bg-primary",
   },
   "manual-required": {
     Icon: ExternalLink,
-    label:
-      "Update available — download from GitHub (use AppImage for auto-updates)",
+    label: msg`Update available — download from GitHub (use AppImage for auto-updates)`,
     badgeColor: "bg-primary",
   },
   ready: {
     Icon: RotateCw,
-    label: "Update now",
+    label: msg`Update now`,
     badgeColor: "bg-emerald-500",
   },
 };
@@ -71,13 +73,20 @@ function getVariant(state: UpdateStatus["state"]) {
 
 export function UpdateIndicator({ className }: { className?: string }) {
   const { status, installAndRelaunch } = useUpdaterContext();
+  const { i18n } = useLingui();
   const variant = getVariant(status.state);
 
   if (!variant) {
     return null;
   }
 
-  const { Icon, iconClassName = "h-4 w-4", label, badgeColor } = variant;
+  const {
+    Icon,
+    iconClassName = "h-4 w-4",
+    label: labelDescriptor,
+    badgeColor,
+  } = variant;
+  const label = i18n._(labelDescriptor);
   const isActionable =
     status.state === "ready" || status.state === "manual-required";
   const handleClick =

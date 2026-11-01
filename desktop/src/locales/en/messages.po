@@ -7,6 +7,10 @@ msgstr ""
 "X-Generator: @lingui/cli\n"
 "Language: en\n"
 
+#: src/features/settings/ui/HostedCommunitiesSettingsCard.tsx
+msgid " · Archived"
+msgstr " · Archived"
+
 #: src/features/agents/ui/AgentDefaultsEditor.tsx
 msgid " {failedRestartCount} couldn't restart — check the Agents page."
 msgstr " {failedRestartCount} couldn't restart — check the Agents page."
@@ -71,6 +75,19 @@ msgstr "(all communities)"
 #: src/features/projects/ui/ProjectOriginReference.tsx
 msgid "(author-claimed)"
 msgstr "(author-claimed)"
+
+#: src/features/settings/ui/CustomHarnessForm.tsx
+msgid "(auto-derived)"
+msgstr "(auto-derived)"
+
+#: src/features/settings/ui/ChannelTemplatesSettingsCard.tsx
+#: src/features/settings/ui/CustomHarnessForm.tsx
+msgid "(optional)"
+msgstr "(optional)"
+
+#: src/features/settings/ui/CustomHarnessForm.tsx
+msgid "(override at spawn time; {productName}-managed vars always win)"
+msgstr "(override at spawn time; {productName}-managed vars always win)"
 
 #: src/features/settings/ui/AppearanceSettingsPanel.tsx
 msgid "(per community)"
@@ -242,6 +259,16 @@ msgstr "{0} {1}"
 msgid "{0} ACP adapter is outdated — reinstall to continue."
 msgstr "{0} ACP adapter is outdated — reinstall to continue."
 
+#. placeholder {0}: deleteCandidate.displayName
+#: src/features/settings/ui/VoiceSettingsCard.tsx
+msgid "{0} and its local audio file will be removed."
+msgstr "{0} and its local audio file will be removed."
+
+#. placeholder {0}: deleteCandidate.displayName
+#: src/features/settings/ui/VoiceSettingsCard.tsx
+msgid "{0} and its local audio file will be removed. {DEFAULT_VOICE_NAME} will be selected instead."
+msgstr "{0} and its local audio file will be removed. {DEFAULT_VOICE_NAME} will be selected instead."
+
 #. placeholder {0}: files.length
 #: src/features/projects/ui/ProjectPullRequestFilesChangedPanel.tsx
 msgid "{0} changed files"
@@ -256,6 +283,11 @@ msgstr "{0} CLI is installed but the ACP adapter is missing."
 #: src/features/agents/ui/runtimeAvailabilityWarning.ts
 msgid "{0} CLI is missing."
 msgstr "{0} CLI is missing."
+
+#. placeholder {0}: runtime.label
+#: src/features/settings/ui/HarnessRow.tsx
+msgid "{0} connecting"
+msgstr "{0} connecting"
 
 #. placeholder {0}: created.agent.name
 #. placeholder {1}: targetChannel.name
@@ -273,6 +305,11 @@ msgstr "{0} files changed"
 #: src/features/agents/ui/teamSnapshotImport.lib.ts
 msgid "{0} imported, but {1}."
 msgstr "{0} imported, but {1}."
+
+#. placeholder {0}: runtime.label
+#: src/features/settings/ui/HarnessRow.tsx
+msgid "{0} installing"
+msgstr "{0} installing"
 
 #. placeholder {0}: result.agent.name
 #. placeholder {1}: channel.name
@@ -305,10 +342,20 @@ msgstr "{0} is no longer discoverable in the community catalog."
 msgid "{0} is not installed."
 msgstr "{0} is not installed."
 
+#. placeholder {0}: entry.label
+#: src/features/settings/ui/HarnessCatalogDialog.tsx
+msgid "{0} is ready"
+msgstr "{0} is ready"
+
 #. placeholder {0}: overflowItems.length
 #: src/features/projects/ui/ProjectAgentSelectionComposerBanner.tsx
 msgid "{0} more"
 msgstr "{0} more"
+
+#. placeholder {0}: quotaUsed ?? communities.length
+#: src/features/settings/ui/HostedCommunitiesSettingsCard.tsx
+msgid "{0} of {quotaLimit} used"
+msgstr "{0} of {quotaLimit} used"
 
 #. placeholder {0}: contextOpen ? "Hide" : "Show"
 #: src/features/agents/ui/AgentSessionTranscriptList.tsx
@@ -324,6 +371,11 @@ msgstr "{0} team actions"
 #: src/features/agents/ui/AgentCardViewerDialog.tsx
 msgid "{0} trading card"
 msgstr "{0} trading card"
+
+#. placeholder {0}: quotaUsed ?? communities.length
+#: src/features/settings/ui/HostedCommunitiesSettingsCard.tsx
+msgid "{0} used"
+msgstr "{0} used"
 
 #. placeholder {0}: persona.displayName
 #. placeholder {1}: created.spawnError
@@ -583,6 +635,10 @@ msgstr "{label} has a runtime error. Open runtime details."
 msgid "{label} settings sections"
 msgstr "{label} settings sections"
 
+#: src/features/settings/EncryptedBackupProvider.tsx
+msgid "{message} It will be available to download for 5 minutes."
+msgstr "{message} It will be available to download for 5 minutes."
+
 #: src/features/channels/lib/ephemeralChannel.ts
 msgid "{minutes, plural, one {# minute} other {# minutes}}"
 msgstr "{minutes, plural, one {# minute} other {# minutes}}"
@@ -611,6 +667,10 @@ msgstr "{missingPersonaCount, plural, one {This team references # agent that is 
 #: src/features/agents/ui/RespondToField.tsx
 msgid "{pasteValidCount} valid pubkey{0} ready."
 msgstr "{pasteValidCount} valid pubkey{0} ready."
+
+#: src/features/settings/ui/ChannelTemplatesSettingsCard.tsx
+msgid "{personaCount, plural, one {# agent} other {# agents}}"
+msgstr "{personaCount, plural, one {# agent} other {# agents}}"
 
 #: src/features/agents/ui/acpCommandPicker.ts
 msgid "{productName} ACP (default)"
@@ -671,6 +731,10 @@ msgstr "{productName} event: {0}"
 msgid "{productName} events — {0} events"
 msgstr "{productName} events — {0} events"
 
+#: src/features/settings/ui/HostedCommunitiesSettingsCard.tsx
+msgid "{productName} identity connected"
+msgstr "{productName} identity connected"
+
 #: src/features/agents/ui/personaModelDiscoveryStatus.ts
 msgid "{productName} is waiting for the relay's member roster. Try again shortly; if this persists, check the relay's membership configuration."
 msgstr "{productName} is waiting for the relay's member roster. Try again shortly; if this persists, check the relay's membership configuration."
@@ -687,9 +751,17 @@ msgstr "{productName} shared compute"
 msgid "{productName} Term (⌘J)"
 msgstr "{productName} Term (⌘J)"
 
+#: src/features/settings/ui/HostedCommunitiesSettingsCard.tsx
+msgid "{productName} works with any relay. This page is only for relay hosting provided by Block — sign in with a Builderlab account to create and manage Block-hosted communities. Builderlab sign-in is used on this page alone."
+msgstr "{productName} works with any relay. This page is only for relay hosting provided by Block — sign in with a Builderlab account to create and manage Block-hosted communities. Builderlab sign-in is used on this page alone."
+
 #: src/features/projects/ui/RepositoryCards.tsx
 msgid "{productName}-hosted repository"
 msgstr "{productName}-hosted repository"
+
+#: src/features/settings/ui/harnessCatalogCopy.ts
+msgid "{productName}'s built-in agent runtime, bundled with the app."
+msgstr "{productName}'s built-in agent runtime, bundled with the app."
 
 #. placeholder {0}: profileSyncFailureCount === 1 ? "" : "s"
 #. placeholder {1}: profileSyncFailureCount === 1 ? "" : "s"
@@ -701,6 +773,10 @@ msgstr "{profileSyncFailureCount} member{0} failed to sync profile{1}"
 msgid "{recipientAudience}—and anyone with the file link—can view it."
 msgstr "{recipientAudience}—and anyone with the file link—can view it."
 
+#: src/features/settings/ui/harnessGalleryLogic.ts
+msgid "{referencingAgents, plural, one {# agent uses this harness and will stop launching.} other {# agents use this harness and will stop launching.}} Delete {label}?"
+msgstr "{referencingAgents, plural, one {# agent uses this harness and will stop launching.} other {# agents use this harness and will stop launching.}} Delete {label}?"
+
 #: src/features/messages/ui/MessageThreadSummaryRow.tsx
 msgid "{replyCount, plural, one {# reply} other {# replies}}"
 msgstr "{replyCount, plural, one {# reply} other {# replies}}"
@@ -708,6 +784,10 @@ msgstr "{replyCount, plural, one {# reply} other {# replies}}"
 #: src/features/projects/ui/ProjectCards.tsx
 msgid "{repositoryCount, plural, one {repository} other {repositories}}"
 msgstr "{repositoryCount, plural, one {repository} other {repositories}}"
+
+#: src/features/settings/ui/ProfileSettingsCard.tsx
+msgid "{resolvedName} avatar"
+msgstr "{resolvedName} avatar"
 
 #: src/features/projects/lib/projectsActivityDigest.ts
 msgid "{reviewCount, plural, one {# review opened} other {# reviews opened}}"
@@ -750,6 +830,10 @@ msgstr "{subsectionCount, plural, one {Its subsection moves to the top level.} o
 msgid "{taskCount, plural, one {# task opened} other {# tasks opened}}"
 msgstr "{taskCount, plural, one {# task opened} other {# tasks opened}}"
 
+#: src/features/settings/ui/ChannelTemplatesSettingsCard.tsx
+msgid "{teamCount, plural, one {# team} other {# teams}}"
+msgstr "{teamCount, plural, one {# team} other {# teams}}"
+
 #: src/features/agents/ui/TeamIdentityCard.tsx
 msgid "{teamName} description"
 msgstr "{teamName} description"
@@ -791,6 +875,10 @@ msgstr "{trimmedProvider} (current)"
 msgid "{who} requires sign-in before models can load. Sign in with the {cliName} CLI in a terminal, then try again."
 msgstr "{who} requires sign-in before models can load. Sign in with the {cliName} CLI in a terminal, then try again."
 
+#: src/features/notifications/lib/sound.ts
+msgid "@Mentions"
+msgstr "@Mentions"
+
 #. placeholder {0}: channel?.name ?? row.channelId.slice(0, 8)
 #. placeholder {0}: channelName(channel.id, channel.name)
 #: src/features/projects/ui/buildProjectsViewAgentContext.ts
@@ -811,6 +899,14 @@ msgstr "<0>{0}</0> <1>“{query}”</1>"
 msgid "⚠ Custom"
 msgstr "⚠ Custom"
 
+#: src/features/settings/ui/SignOutSection.tsx
+msgid "1. Confirm you can restore your identity"
+msgstr "1. Confirm you can restore your identity"
+
+#: src/features/settings/ui/SignOutSection.tsx
+msgid "2. Type <0>\"{SIGNOUT_CONFIRM_PHRASE}\"</0> to confirm"
+msgstr "2. Type <0>\"{SIGNOUT_CONFIRM_PHRASE}\"</0> to confirm"
+
 #: src/features/projects/lib/projectBranches.ts
 msgid "A branch with this name already exists."
 msgstr "A branch with this name already exists."
@@ -819,9 +915,17 @@ msgstr "A branch with this name already exists."
 msgid "a channel"
 msgstr "a channel"
 
+#: src/features/settings/ui/harnessCatalogCopy.ts
+msgid "A general-purpose AI agent from Nous Research."
+msgstr "A general-purpose AI agent from Nous Research."
+
 #: src/features/search/ui/SearchPromptPlaceholder.tsx
 msgid "a message"
 msgstr "a message"
+
+#: src/features/settings/ui/harnessCatalogCopy.ts
+msgid "A minimal terminal coding harness, connected through the buzz-pi-acp adapter."
+msgstr "A minimal terminal coding harness, connected through the buzz-pi-acp adapter."
 
 #: src/features/agents/ui/AgentSnapshotImportDialog.tsx
 msgid "A new agent will be created with a fresh keypair. The imported agent is independent of the source — identity never travels."
@@ -830,6 +934,10 @@ msgstr "A new agent will be created with a fresh keypair. The imported agent is 
 #: src/features/agents/ui/TeamSnapshotImportDialog.tsx
 msgid "A new team will be created with fresh keypairs for all members. The imported team is independent of the source — identity never travels."
 msgstr "A new team will be created with fresh keypairs for all members. The imported team is independent of the source — identity never travels."
+
+#: src/features/settings/ui/harnessCatalogCopy.ts
+msgid "A personal AI assistant that runs on your own devices."
+msgstr "A personal AI assistant that runs on your own devices."
 
 #: src/features/projects/ui/ProjectOriginReference.tsx
 msgid "a private channel"
@@ -846,6 +954,14 @@ msgstr "A repository in this project."
 #: src/features/projects/ui/ProjectCards.tsx
 msgid "A shared space for internal git work."
 msgstr "A shared space for internal git work."
+
+#: src/features/settings/ui/harnessCatalogCopy.ts
+msgid "A terminal coding agent for software development and command-line tasks."
+msgstr "A terminal coding agent for software development and command-line tasks."
+
+#: src/features/settings/ui/harnessCatalogCopy.ts
+msgid "A terminal coding agent with integrated development tools."
+msgstr "A terminal coding agent with integrated development tools."
 
 #: src/features/search/ui/SearchPromptPlaceholder.tsx
 msgid "a thread"
@@ -873,6 +989,10 @@ msgstr "Access channel"
 msgid "Access failed"
 msgstr "Access failed"
 
+#: src/features/settings/ui/HostedCommunitiesSettingsCard.tsx
+msgid "Account uses"
+msgstr "Account uses"
+
 #: src/features/agents/ui/AcpCommandField.tsx
 #: src/features/agents/ui/EditAgentAdvancedFields.tsx
 msgid "ACP command"
@@ -881,6 +1001,10 @@ msgstr "ACP command"
 #: src/features/agents/ui/AgentSessionTranscriptList.tsx
 msgid "ACP wire source: {source}"
 msgstr "ACP wire source: {source}"
+
+#: src/features/settings/ui/HarnessesSettingsPanel.tsx
+msgid "Action needed"
+msgstr "Action needed"
 
 #: src/features/projects/ui/ProjectsWorkItemTable.tsx
 #: src/features/search/ui/TopbarSearch.tsx
@@ -918,6 +1042,14 @@ msgstr "Activity"
 #: src/features/agents/ui/EffortPickerField.tsx
 msgid "Adapter default"
 msgstr "Adapter default"
+
+#: src/features/settings/ui/HarnessRow.tsx
+msgid "Adapter install guide"
+msgstr "Adapter install guide"
+
+#: src/features/settings/ui/harnessCatalogLogic.ts
+msgid "Adapter needed"
+msgstr "Adapter needed"
 
 #: src/features/agents/ui/AddAgentToChannelDialog.tsx
 #: src/features/agents/ui/RespondToField.tsx
@@ -978,6 +1110,10 @@ msgstr "Add an optional summary for the author and other reviewers."
 msgid "Add another stream to this project. A template can keep the same canvas and agents."
 msgstr "Add another stream to this project. A template can keep the same canvas and agents."
 
+#: src/features/settings/ui/CustomHarnessForm.tsx
+msgid "Add argument"
+msgstr "Add argument"
+
 #: src/features/projects/ui/ProjectChannelManagement.tsx
 #: src/features/projects/ui/projectsOverviewContext.ts
 msgid "Add channel"
@@ -993,12 +1129,17 @@ msgid "Add community"
 msgstr "Add community"
 
 #: src/features/agents/ui/AddCustomHarnessDialog.tsx
+#: src/features/settings/ui/CustomHarnessForm.tsx
 msgid "Add custom harness"
 msgstr "Add custom harness"
 
 #: src/features/agents/ui/addCustomHarness.ts
 msgid "Add custom harness…"
 msgstr "Add custom harness…"
+
+#: src/features/settings/ui/CustomHarnessForm.tsx
+msgid "Add env var"
+msgstr "Add env var"
 
 #: src/features/projects/ui/AttachProjectRepositoryDialog.tsx
 msgid "Add existing repository"
@@ -1030,6 +1171,11 @@ msgstr "Add repository"
 msgid "Add reviewer"
 msgstr "Add reviewer"
 
+#: src/features/settings/ui/HarnessCatalogDialog.tsx
+#: src/features/settings/ui/HarnessesSettingsPanel.tsx
+msgid "Add runtimes"
+msgstr "Add runtimes"
+
 #: src/features/agents/ui/CommunityCatalogDialog.tsx
 #: src/features/agents/ui/teamLibraryCopy.ts
 msgid "Add team"
@@ -1042,6 +1188,10 @@ msgstr "Add to channel"
 #: src/features/agents/ui/EnvVarsEditor.tsx
 msgid "Add variable"
 msgstr "Add variable"
+
+#: src/features/settings/ui/VoiceSettingsCard.tsx
+msgid "Add voice"
+msgstr "Add voice"
 
 #: src/features/agents/ui/RestartDiffBadge.tsx
 msgid "added"
@@ -1093,6 +1243,10 @@ msgstr "Adding {0} to #{1}…"
 #: src/features/projects/ui/AddProjectRepositoryDialog.tsx
 msgid "Adding…"
 msgstr "Adding…"
+
+#: src/features/settings/ui/AgentsSettingsPanel.tsx
+msgid "Address selected agents in thread replies"
+msgstr "Address selected agents in thread replies"
 
 #: src/shared/lib/keyboard-shortcuts.ts
 msgid "Address the default agent, or toggle the highlighted agent"
@@ -1164,6 +1318,7 @@ msgstr "Agent created"
 
 #: src/features/agents/ui/AgentDefaultsDialog.tsx
 #: src/features/agents/ui/AgentsView.tsx
+#: src/features/settings/ui/AgentDefaultsSettingsCard.tsx
 msgid "Agent defaults"
 msgstr "Agent defaults"
 
@@ -1216,9 +1371,17 @@ msgstr "Agent pubkey"
 msgid "Agent runtime args"
 msgstr "Agent runtime args"
 
+#: src/features/settings/ui/HarnessesSettingsPanel.tsx
+msgid "Agent runtimes"
+msgstr "Agent runtimes"
+
 #: src/features/agents/ui/TeamsSection.tsx
 msgid "Agent teams"
 msgstr "Agent teams"
+
+#: src/features/settings/ui/VoiceSettingsCard.tsx
+msgid "Agent text to speech"
+msgstr "Agent text to speech"
 
 #: src/features/agents/ui/TurnLivenessIndicator.tsx
 msgid "Agent turn in progress"
@@ -1229,6 +1392,22 @@ msgstr "Agent turn in progress"
 msgid "Agent update"
 msgstr "Agent update"
 
+#: src/features/notifications/lib/sound.ts
+msgid "Agent: job accepted"
+msgstr "Agent: job accepted"
+
+#: src/features/notifications/lib/sound.ts
+msgid "Agent: job error"
+msgstr "Agent: job error"
+
+#: src/features/notifications/lib/sound.ts
+msgid "Agent: job result"
+msgstr "Agent: job result"
+
+#: src/features/notifications/lib/sound.ts
+msgid "Agent: progress update"
+msgstr "Agent: progress update"
+
 #: src/features/agents/ui/personaModelDiscoveryStatus.ts
 msgid "agent's"
 msgstr "agent's"
@@ -1238,6 +1417,7 @@ msgstr "agent's"
 #: src/features/agents/ui/TeamDialog.tsx
 #: src/features/home/ui/InboxFilterMenu.tsx
 #: src/features/search/ui/TopbarSearch.tsx
+#: src/features/settings/ui/AgentsSettingsPanel.tsx
 #: src/features/settings/ui/SettingsPanels.tsx
 #: src/features/sidebar/ui/AppSidebarPinnedHeader.tsx
 msgid "Agents"
@@ -1254,6 +1434,14 @@ msgstr "Agents can only update a personal agent profile by its current name."
 #: src/features/agents/ui/AgentAiConfigurationMode.tsx
 msgid "AI configuration"
 msgstr "AI configuration"
+
+#: src/features/settings/ui/NotificationSettingsCard.tsx
+msgid "Alert sounds"
+msgstr "Alert sounds"
+
+#: src/features/settings/ui/NotificationSettingsCard.tsx
+msgid "Alert with a sound for the events below."
+msgstr "Alert with a sound for the events below."
 
 #: src/features/home/ui/InboxFilterMenu.tsx
 msgid "All"
@@ -1287,6 +1475,14 @@ msgstr "Alphabetical"
 msgid "Already a member of this channel"
 msgstr "Already a member of this channel"
 
+#: src/features/settings/ui/HarnessCatalogDialog.tsx
+msgid "Already set up"
+msgstr "Already set up"
+
+#: src/features/settings/ui/NotificationSettingsCard.tsx
+msgid "Also alert for direct messages in the conversation you have open."
+msgstr "Also alert for direct messages in the conversation you have open."
+
 #: src/features/agents/ui/PersonaDeleteDialog.tsx
 msgid "Also deletes {instanceCount} agent instances and archives their identities on the relay, so they no longer appear in member lists or mention suggestions."
 msgstr "Also deletes {instanceCount} agent instances and archives their identities on the relay, so they no longer appear in member lists or mention suggestions."
@@ -1315,6 +1511,10 @@ msgstr "an event that could not be signed"
 msgid "An open review already compares these branches."
 msgstr "An open review already compares these branches."
 
+#: src/features/settings/ui/harnessCatalogCopy.ts
+msgid "An open-source coding agent."
+msgstr "An open-source coding agent."
+
 #: src/features/agents/ui/RestartDiffBadge.tsx
 msgid "and"
 msgstr "and"
@@ -1323,9 +1523,21 @@ msgstr "and"
 msgid "and {others} others"
 msgstr "and {others} others"
 
+#: src/features/settings/ui/HostedCommunitiesSettingsCard.tsx
+msgid "Another community is already being connected. Finish it before connecting this one."
+msgstr "Another community is already being connected. Finish it before connecting this one."
+
 #: src/features/agents/ui/agentConfigOptions.tsx
 msgid "Anthropic"
 msgstr "Anthropic"
+
+#: src/features/settings/ui/harnessCatalogCopy.ts
+msgid "Anthropic's agentic coding tool that runs in the terminal."
+msgstr "Anthropic's agentic coding tool that runs in the terminal."
+
+#: src/features/settings/ui/CustomHarnessForm.tsx
+msgid "Any command that speaks ACP over stdio works."
+msgstr "Any command that speaks ACP over stdio works."
 
 #: src/features/agents/ui/RespondToField.tsx
 msgid "Anyone"
@@ -1421,6 +1633,14 @@ msgstr "approved an earlier commit"
 msgid "approved these changes"
 msgstr "approved these changes"
 
+#: src/features/settings/ui/HostedCommunitiesSettingsCard.tsx
+msgid "Archive"
+msgstr "Archive"
+
+#: src/features/settings/ui/HostedCommunitiesSettingsCard.tsx
+msgid "Archive {displayName}?"
+msgstr "Archive {displayName}?"
+
 #: src/features/sidebar/ui/ChannelContextMenu.tsx
 msgid "Archive channel"
 msgstr "Archive channel"
@@ -1442,6 +1662,10 @@ msgstr "Archived channels you have joined will appear here."
 msgid "Archived forums you have joined will appear here."
 msgstr "Archived forums you have joined will appear here."
 
+#: src/features/settings/ui/HostedCommunitiesSettingsCard.tsx
+msgid "Archiving community…"
+msgstr "Archiving community…"
+
 #: src/features/projects/ui/ProjectsAgentPromptPage.tsx
 msgid "Are we safe to cut a release of {firstRepo} this week?"
 msgstr "Are we safe to cut a release of {firstRepo} this week?"
@@ -1454,9 +1678,28 @@ msgstr "Are we safe to cut a release this week?"
 msgid "Are we safe to release this week?"
 msgstr "Are we safe to release this week?"
 
+#. placeholder {0}: deleteTarget?.name
+#: src/features/settings/ui/ChannelTemplatesSettingsCard.tsx
+msgid "Are you sure you want to delete \"{0}\"? This action cannot be undone."
+msgstr "Are you sure you want to delete \"{0}\"? This action cannot be undone."
+
 #: src/features/messages/ui/DraftsPanel.tsx
 msgid "Are you sure you want to send this message to {destination}?"
 msgstr "Are you sure you want to send this message to {destination}?"
+
+#. placeholder {0}: i + 1
+#: src/features/settings/ui/CustomHarnessForm.tsx
+msgid "arg {0}"
+msgstr "arg {0}"
+
+#: src/features/settings/ui/harnessFormLogic.ts
+msgid "Argument \"{offender}\" contains a comma — arguments are passed via a comma-delimited transport and would be split at spawn time. Use separate argument entries instead."
+msgstr "Argument \"{offender}\" contains a comma — arguments are passed via a comma-delimited transport and would be split at spawn time. Use separate argument entries instead."
+
+#: src/features/settings/ui/CustomHarnessForm.tsx
+#: src/features/settings/ui/HarnessCatalogDialog.tsx
+msgid "Arguments"
+msgstr "Arguments"
 
 #: src/features/projects/ui/ProjectsAgentPromptPage.tsx
 msgid "Ask"
@@ -1508,6 +1751,30 @@ msgstr "Assignees"
 msgid "Attach a repository to browse the file tree beside this channel."
 msgstr "Attach a repository to browse the file tree beside this channel."
 
+#: src/features/settings/ui/SendFeedbackDialog.tsx
+msgid "Attach diagnostics"
+msgstr "Attach diagnostics"
+
+#: src/features/settings/ui/SendFeedbackDialog.tsx
+msgid "Attach image"
+msgstr "Attach image"
+
+#: src/features/settings/ui/SendFeedbackDialog.tsx
+msgid "Attached"
+msgstr "Attached"
+
+#: src/features/settings/ui/SendFeedbackDialog.tsx
+msgid "Attached image"
+msgstr "Attached image"
+
+#: src/features/settings/ui/SendFeedbackDialog.tsx
+msgid "Attaching…"
+msgstr "Attaching…"
+
+#: src/features/settings/ui/HostedCommunitiesSettingsCard.tsx
+msgid "Authentication opens in your browser and returns securely to {productName}. You can use every other part of the app without signing in."
+msgstr "Authentication opens in your browser and returns securely to {productName}. You can use every other part of the app without signing in."
+
 #: src/features/projects/ui/ProjectCommitDetailPanel.tsx
 msgid "Author"
 msgstr "Author"
@@ -1533,11 +1800,20 @@ msgstr "Auto-restart on config change"
 msgid "Automatic"
 msgstr "Automatic"
 
+#: src/features/settings/UpdateChecker.tsx
+msgid "Automatic updates aren't available on this build. Download the latest release manually."
+msgstr "Automatic updates aren't available on this build. Download the latest release manually."
+
+#: src/features/settings/ui/AgentsSettingsPanel.tsx
+msgid "Automatically mention agents"
+msgstr "Automatically mention agents"
+
 #: src/features/agents/ui/AgentRuntimeAvatarControl.tsx
 msgid "Availability unknown"
 msgstr "Availability unknown"
 
 #: src/features/agents/ui/personaLibraryCopy.ts
+#: src/features/settings/ui/HarnessesSettingsPanel.tsx
 msgid "Available"
 msgstr "Available"
 
@@ -1590,6 +1866,26 @@ msgstr "Back to Projects"
 msgid "Back to search"
 msgstr "Back to search"
 
+#: src/features/settings/ui/EncryptedBackupCreator.tsx
+msgid "Backup key"
+msgstr "Backup key"
+
+#: src/features/settings/ui/BackupTestFlow.tsx
+msgid "Backup password"
+msgstr "Backup password"
+
+#: src/features/settings/EncryptedBackupProvider.tsx
+msgid "Backup ready to download"
+msgstr "Backup ready to download"
+
+#: src/features/settings/ui/PrivateKeyBackupRow.tsx
+msgid "Backups use the standard NIP-49 format, so this works for backups from compatible Nostr apps too."
+msgstr "Backups use the standard NIP-49 format, so this works for backups from compatible Nostr apps too."
+
+#: src/features/settings/ui/NotificationSettingsCard.tsx
+msgid "Badges"
+msgstr "Badges"
+
 #: src/features/agents/ui/agentSessionTranscriptHelpers.ts
 #: src/features/projects/ui/CreatePullRequestDialog.tsx
 msgid "Base"
@@ -1602,6 +1898,14 @@ msgstr "bee-garden-game"
 #: src/features/agents/ui/PersonaAdvancedFields.tsx
 msgid "Birch, Compass, Ridge, Thistle"
 msgstr "Birch, Compass, Ridge, Thistle"
+
+#: src/features/settings/ui/harnessCatalogCopy.ts
+msgid "Block's open-source, extensible AI agent."
+msgstr "Block's open-source, extensible AI agent."
+
+#: src/features/settings/ui/NotificationSettingsCard.tsx
+msgid "Blocked"
+msgstr "Blocked"
 
 #: src/features/settings/ui/AppearanceSettingsControls.tsx
 msgid "Blur the desktop behind navigation while keeping content solid."
@@ -1657,13 +1961,30 @@ msgstr "Browse channels"
 msgid "Browse teams shared to this relay."
 msgstr "Browse teams shared to this relay."
 
+#: src/features/settings/ui/SendFeedbackDialog.tsx
+msgid "Bug"
+msgstr "Bug"
+
+#: src/features/settings/ui/HostedCommunitiesSettingsCard.tsx
+msgid "Builderlab account"
+msgstr "Builderlab account"
+
+#: src/features/settings/ui/ChannelTemplatesSettingsCard.tsx
+msgid "built-in"
+msgstr "built-in"
+
 #: src/features/agents/ui/TeamDialog.tsx
+#: src/features/settings/ui/HarnessCatalogDialog.tsx
 msgid "Built-in"
 msgstr "Built-in"
 
 #: src/features/agents/ui/AgentDefinitionMetadata.tsx
 msgid "Built-in agent"
 msgstr "Built-in agent"
+
+#: src/features/settings/ui/HarnessCatalogDialog.tsx
+msgid "Bundled preset"
+msgstr "Bundled preset"
 
 #: src/features/agents/ui/buzzAgentModelTuningFields.tsx
 msgid "buzz-agent model tuning"
@@ -1693,6 +2014,15 @@ msgstr "Can't reach the relay"
 #: src/features/projects/ui/ProjectCards.tsx
 #: src/features/projects/ui/ProjectChannelRequestDialog.tsx
 #: src/features/projects/ui/PullRequestReviewCard.tsx
+#: src/features/settings/ui/ChannelTemplatesSettingsCard.tsx
+#: src/features/settings/ui/CustomHarnessForm.tsx
+#: src/features/settings/ui/HarnessCatalogDialog.tsx
+#: src/features/settings/ui/HarnessRow.tsx
+#: src/features/settings/ui/HostedCommunitiesSettingsCard.tsx
+#: src/features/settings/ui/MobilePairingCard.tsx
+#: src/features/settings/ui/SendFeedbackDialog.tsx
+#: src/features/settings/ui/SignOutSection.tsx
+#: src/features/settings/ui/VoiceSettingsCard.tsx
 #: src/features/sidebar/ui/ChannelSectionDialogs.tsx
 #: src/features/sidebar/ui/SidebarProjectsSection.tsx
 msgid "Cancel"
@@ -1702,9 +2032,21 @@ msgstr "Cancel"
 msgid "Cannot remind without a channel"
 msgstr "Cannot remind without a channel"
 
+#: src/features/settings/ui/ChannelTemplatesSettingsCard.tsx
+msgid "canvas"
+msgstr "canvas"
+
+#: src/features/settings/ui/ChannelTemplatesSettingsCard.tsx
+msgid "Canvas content here..."
+msgstr "Canvas content here..."
+
 #: src/features/sidebar/ui/CreateChannelFormFields.tsx
 msgid "Canvas included"
 msgstr "Canvas included"
+
+#: src/features/settings/ui/ChannelTemplatesSettingsCard.tsx
+msgid "Canvas template"
+msgstr "Canvas template"
 
 #: src/features/agents/cardMintStore.ts
 msgid "Card mint failed."
@@ -1771,6 +2113,7 @@ msgstr "Channel Canvas"
 msgid "Channel details are unavailable"
 msgstr "Channel details are unavailable"
 
+#: src/features/settings/ui/ChannelTemplatesSettingsCard.tsx
 #: src/features/settings/ui/SettingsPanels.tsx
 msgid "Channel templates"
 msgstr "Channel templates"
@@ -1820,14 +2163,34 @@ msgstr "Chat with an agent"
 msgid "Chat with an agent about {sectionTitle}"
 msgstr "Chat with an agent about {sectionTitle}"
 
+#: src/features/settings/ui/HarnessesSettingsPanel.tsx
+msgid "Check again"
+msgstr "Check again"
+
+#: src/features/settings/UpdateChecker.tsx
+msgid "Check Again"
+msgstr "Check Again"
+
 #: src/features/projects/ui/ProjectDetailScreen.tsx
 #: src/features/projects/ui/ProjectRepositorySource.tsx
 msgid "Check for remote changes"
 msgstr "Check for remote changes"
 
+#: src/features/settings/UpdateChecker.tsx
+msgid "Check for Updates"
+msgstr "Check for Updates"
+
+#: src/features/settings/UpdateChecker.tsx
+msgid "Check if a new version is available."
+msgstr "Check if a new version is available."
+
 #: src/features/projects/lib/projectGitError.ts
 msgid "Check that the repository link is correct and that the repository still exists."
 msgstr "Check that the repository link is correct and that the repository still exists."
+
+#: src/features/settings/ui/MobilePairingCard.tsx
+msgid "Check that the six-digit code matches on both devices, then confirm it."
+msgstr "Check that the six-digit code matches on both devices, then confirm it."
 
 #: src/features/projects/lib/projectGitError.ts
 msgid "Check your connection and try cloning again."
@@ -1837,13 +2200,37 @@ msgstr "Check your connection and try cloning again."
 msgid "Checked todos"
 msgstr "Checked todos"
 
+#: src/features/settings/ui/HarnessesSettingsPanel.tsx
+msgid "Checking agent runtimes..."
+msgstr "Checking agent runtimes..."
+
 #: src/features/agents/ui/PersonaProviderApiKeyField.tsx
 msgid "Checking API key…"
 msgstr "Checking API key…"
 
+#: src/features/settings/ui/HostedCommunitiesSettingsCard.tsx
+msgid "Checking availability…"
+msgstr "Checking availability…"
+
+#: src/features/settings/UpdateChecker.tsx
+msgid "Checking for updates..."
+msgstr "Checking for updates..."
+
 #: src/features/settings/ui/SettingsView.tsx
 msgid "Checking invite permissions…"
 msgstr "Checking invite permissions…"
+
+#: src/features/settings/ui/HostedCommunitiesSettingsCard.tsx
+msgid "Checking sign-in…"
+msgstr "Checking sign-in…"
+
+#: src/features/settings/ui/harnessGalleryLogic.ts
+msgid "Checking which agents use this harness…"
+msgstr "Checking which agents use this harness…"
+
+#: src/features/settings/ui/BackupTestFlow.tsx
+msgid "Checking…"
+msgstr "Checking…"
 
 #: src/features/projects/ui/ProjectPullRequestsPanel.tsx
 msgid "Checks"
@@ -1977,6 +2364,10 @@ msgstr "Choose one from Agent Catalog, create your own, or import one to get sta
 msgid "Choose section icon"
 msgstr "Choose section icon"
 
+#: src/features/settings/ui/HostedCommunitiesSettingsCard.tsx
+msgid "Choose the address your team will use to connect."
+msgstr "Choose the address your team will use to connect."
+
 #: src/features/settings/ui/AppearanceSettingsPanel.tsx
 msgid "Choose the colors used throughout {productName}."
 msgstr "Choose the colors used throughout {productName}."
@@ -1993,6 +2384,18 @@ msgstr "Choose the highlight color used throughout {productName}."
 #: src/features/agents/ui/WhereToRunSection.tsx
 msgid "Choose where to run"
 msgstr "Choose where to run"
+
+#: src/features/settings/ui/VoiceSettingsCard.tsx
+msgid "Choose whether {productName} reads new agent responses aloud during an active huddle."
+msgstr "Choose whether {productName} reads new agent responses aloud during an active huddle."
+
+#: src/features/settings/ui/HarnessesSettingsPanel.tsx
+msgid "Choose which agent tools {productName} can use on this device."
+msgstr "Choose which agent tools {productName} can use on this device."
+
+#: src/features/settings/ui/ChannelTemplatesSettingsCard.tsx
+msgid "Choose which runtime to use for each agent."
+msgstr "Choose which runtime to use for each agent."
 
 #: src/features/agents/ui/AgentConfigPanel.tsx
 msgid "CLAUDE_CONFIG_DIR"
@@ -2032,9 +2435,25 @@ msgstr "Clear section icon"
 msgid "Clear selection"
 msgstr "Clear selection"
 
+#: src/features/settings/ui/ProfileSettingsCard.tsx
+msgid "Clearing existing profile fields is not supported yet. Blank display name and avatar values are ignored for now."
+msgstr "Clearing existing profile fields is not supported yet. Blank display name and avatar values are ignored for now."
+
+#: src/features/settings/ui/harnessCatalogLogic.ts
+msgid "CLI needed"
+msgstr "CLI needed"
+
+#: src/features/settings/ui/HarnessRow.tsx
+msgid "CLI setup guide"
+msgstr "CLI setup guide"
+
 #: src/features/sidebar/ui/SidebarRelayConnectionCard.tsx
 msgid "Click to connect"
 msgstr "Click to connect"
+
+#: src/features/settings/SidebarUpdateCard.tsx
+msgid "Click to update"
+msgstr "Click to update"
 
 #: src/features/projects/ui/ProjectRepositoryActionsPanel.tsx
 #: src/features/projects/ui/ProjectRepositorySource.tsx
@@ -2068,6 +2487,7 @@ msgstr "Cloning…"
 #: src/features/agents/ui/TeamSnapshotImportDialog.tsx
 #: src/features/channels/ui/ChannelBrowserDialog.tsx
 #: src/features/projects/ui/ProjectConversationPanel.tsx
+#: src/features/settings/ui/SendFeedbackDialog.tsx
 msgid "Close"
 msgstr "Close"
 
@@ -2115,6 +2535,14 @@ msgstr "Code hosted on {externalHost}"
 msgid "Codebase"
 msgstr "Codebase"
 
+#: src/features/settings/ui/MobilePairingCard.tsx
+msgid "Codes confirmed. Pairing your mobile device."
+msgstr "Codes confirmed. Pairing your mobile device."
+
+#: src/features/settings/ui/MobilePairingCard.tsx
+msgid "Codes match"
+msgstr "Codes match"
+
 #: src/features/projects/ui/CreateProjectFormSettings.tsx
 msgid "Coding agent"
 msgstr "Coding agent"
@@ -2139,14 +2567,27 @@ msgstr "Color mode"
 msgid "Comfy"
 msgstr "Comfy"
 
+#: src/features/settings/ui/NotificationSettingsCard.tsx
+msgid "Coming soon"
+msgstr "Coming soon"
+
 #: src/features/agents/ui/EditAgentAdvancedFields.tsx
 msgid "Comma-separated"
 msgstr "Comma-separated"
+
+#: src/features/settings/ui/CustomHarnessForm.tsx
+#: src/features/settings/ui/HarnessCatalogDialog.tsx
+msgid "Command"
+msgstr "Command"
 
 #. placeholder {0}: cmds.length
 #: src/features/agents/ui/agentSessionTranscript.ts
 msgid "Commands available: {0}"
 msgstr "Commands available: {0}"
+
+#: src/features/settings/ui/EncryptedBackupCreator.tsx
+msgid "Commas"
+msgstr "Commas"
 
 #. placeholder {0}: anchor.path
 #. placeholder {1}: anchor.side
@@ -2214,6 +2655,10 @@ msgstr "Communities"
 msgid "Community access denied this agent — check its community membership."
 msgstr "Community access denied this agent — check its community membership."
 
+#: src/features/settings/ui/HostedCommunitiesSettingsCard.tsx
+msgid "Community address"
+msgstr "Community address"
+
 #: src/features/agents/ui/catalogOwnerLabel.ts
 msgid "Community member"
 msgstr "Community member"
@@ -2251,6 +2696,15 @@ msgstr "Compute"
 msgid "Config changed since last start:"
 msgstr "Config changed since last start:"
 
+#: src/features/settings/ui/harnessCatalogLogic.ts
+msgid "Config error"
+msgstr "Config error"
+
+#. placeholder {0}: runtime.authStatus.diagnostic
+#: src/features/settings/ui/HarnessRow.tsx
+msgid "Config error: {0}"
+msgstr "Config error: {0}"
+
 #: src/features/agents/ui/ManagedAgentRow.tsx
 msgid "Configuration"
 msgstr "Configuration"
@@ -2280,9 +2734,33 @@ msgstr "Configuration missing"
 msgid "Configure its repository and access options"
 msgstr "Configure its repository and access options"
 
+#: src/features/settings/ui/MobilePairingCard.tsx
+msgid "Confirm mobile code"
+msgstr "Confirm mobile code"
+
+#: src/features/settings/ui/PrivateKeyBackupRow.tsx
+msgid "Confirm that a backup file and its password can unlock an identity."
+msgstr "Confirm that a backup file and its password can unlock an identity."
+
 #: src/features/onboarding/ui/MachineOnboardingFlow.tsx
 msgid "Confirm the code before sharing your identity."
 msgstr "Confirm the code before sharing your identity."
+
+#: src/features/settings/ui/MobilePairingCard.tsx
+msgid "Confirmation code {formattedCode}"
+msgstr "Confirmation code {formattedCode}"
+
+#: src/features/settings/ui/HostedCommunitiesSettingsCard.tsx
+msgid "Connect"
+msgstr "Connect"
+
+#: src/features/settings/ui/HostedCommunitiesSettingsCard.tsx
+msgid "Connect {productName} identity"
+msgstr "Connect {productName} identity"
+
+#: src/features/settings/ui/MobilePairingCard.tsx
+msgid "Connect the Buzz mobile app to this relay by scanning a QR code. The connection is secured with end-to-end encryption and a verification code."
+msgstr "Connect the Buzz mobile app to this relay by scanning a QR code. The connection is secured with end-to-end encryption and a verification code."
 
 #: src/features/sidebar/ui/SidebarRelayConnectionCard.tsx
 msgid "Connect to relay"
@@ -2296,6 +2774,14 @@ msgstr "Connected"
 #: src/features/sidebar/ui/SidebarRelayConnectionCard.tsx
 msgid "Connecting"
 msgstr "Connecting"
+
+#: src/features/settings/ui/HostedCommunitiesSettingsCard.tsx
+msgid "Connecting {productName} identity…"
+msgstr "Connecting {productName} identity…"
+
+#: src/features/settings/ui/HarnessRow.tsx
+msgid "Connection failed."
+msgstr "Connection failed."
 
 #: src/features/agents/ui/agentSessionToolClassifier.ts
 msgid "Context compacted"
@@ -2321,6 +2807,10 @@ msgstr "Contributors"
 msgid "Contributors appear after signed project or repository activity."
 msgstr "Contributors appear after signed project or repository activity."
 
+#: src/features/settings/ui/AgentsSettingsPanel.tsx
+msgid "Control how agents behave in conversations and run on this machine."
+msgstr "Control how agents behave in conversations and run on this machine."
+
 #: src/features/agents/ui/buzzAgentModelTuningFields.tsx
 msgid "Controls how much reasoning effort the LLM applies per turn. Leave blank to inherit from the global or persona default."
 msgstr "Controls how much reasoning effort the LLM applies per turn. Leave blank to inherit from the global or persona default."
@@ -2337,6 +2827,10 @@ msgstr "Conversation Context"
 msgid "Conversation density"
 msgstr "Conversation density"
 
+#: src/features/settings/ui/AgentsSettingsPanel.tsx
+msgid "Conversations"
+msgstr "Conversations"
+
 #: src/features/projects/ui/PullRequestReviewCard.tsx
 msgid "Convert to draft"
 msgstr "Convert to draft"
@@ -2345,6 +2839,12 @@ msgstr "Convert to draft"
 msgid "Converted to draft."
 msgstr "Converted to draft."
 
+#: src/features/settings/ui/MobilePairingCard.tsx
+#: src/features/settings/ui/ProfileSettingsCard.tsx
+msgid "Copied to clipboard"
+msgstr "Copied to clipboard"
+
+#: src/features/settings/ui/ProfileSettingsCard.tsx
 #: src/features/sidebar/ui/ChannelContextMenu.tsx
 msgid "Copy"
 msgstr "Copy"
@@ -2353,6 +2853,10 @@ msgstr "Copy"
 #: src/features/agents/ui/AgentConfigPanel.tsx
 msgid "Copy {0}"
 msgstr "Copy {0}"
+
+#: src/features/settings/ui/ProfileSettingsCard.tsx
+msgid "Copy {label}"
+msgstr "Copy {label}"
 
 #: src/features/sidebar/ui/ChannelContextMenu.tsx
 msgid "Copy channel ID"
@@ -2387,6 +2891,10 @@ msgstr "Copy link"
 msgid "Copy log"
 msgstr "Copy log"
 
+#: src/features/settings/ui/MobilePairingCard.tsx
+msgid "Copy pairing code"
+msgstr "Copy pairing code"
+
 #: src/features/agents/ui/AddAgentToChannelDialog.tsx
 msgid "Copy pubkey"
 msgstr "Copy pubkey"
@@ -2405,13 +2913,29 @@ msgstr "Copy task link"
 msgid "Core Memory"
 msgstr "Core Memory"
 
+#: src/features/settings/ui/HostedCommunitiesSettingsCard.tsx
+msgid "Could not archive the community."
+msgstr "Could not archive the community."
+
 #: src/features/agents/managedAgentRuntimeStatus.ts
 msgid "Could not connect"
 msgstr "Could not connect"
 
+#: src/features/settings/ui/HostedCommunitiesSettingsCard.tsx
+msgid "Could not connect the {productName} identity."
+msgstr "Could not connect the {productName} identity."
+
+#: src/features/settings/ui/HostedCommunitiesSettingsCard.tsx
+msgid "Could not connect this device's {productName} identity."
+msgstr "Could not connect this device's {productName} identity."
+
 #: src/features/agents/hooks.ts
 msgid "Could not create agent."
 msgstr "Could not create agent."
+
+#: src/features/settings/ui/HostedCommunitiesSettingsCard.tsx
+msgid "Could not create the community."
+msgstr "Could not create the community."
 
 #: src/features/projects/ui/ProjectPullRequestFilesChangedPanel.tsx
 msgid "Could not load changed files for this {subjectLabel}."
@@ -2420,6 +2944,10 @@ msgstr "Could not load changed files for this {subjectLabel}."
 #: src/features/projects/ui/ProjectDetailFeedPanels.tsx
 msgid "Could not load commits"
 msgstr "Could not load commits"
+
+#: src/features/settings/ui/HostedCommunitiesSettingsCard.tsx
+msgid "Could not load communities."
+msgstr "Could not load communities."
 
 #: src/features/projects/ui/ProjectsPullRequestsList.tsx
 #: src/features/projects/ui/PullRequestsPanelSurface.tsx
@@ -2430,6 +2958,10 @@ msgstr "Could not load reviews"
 #: src/features/projects/ui/ProjectsIssuesList.tsx
 msgid "Could not load tasks"
 msgstr "Could not load tasks"
+
+#: src/features/settings/ui/HostedCommunitiesSettingsCard.tsx
+msgid "Could not load the connected {productName} identity."
+msgstr "Could not load the connected {productName} identity."
 
 #: src/features/projects/ui/ProjectReadmePanel.tsx
 msgid "Could not load the README"
@@ -2451,21 +2983,58 @@ msgstr "Could not load this project item."
 msgid "Could not probe provider:"
 msgstr "Could not probe provider:"
 
+#: src/features/settings/ui/BackupTestFlow.tsx
+msgid "Could not read that file."
+msgstr "Could not read that file."
+
+#: src/features/settings/ui/HostedCommunitiesSettingsCard.tsx
+msgid "Could not release the previously connected {productName} identity."
+msgstr "Could not release the previously connected {productName} identity."
+
 #: src/features/agents/useAgentManagement.ts
 msgid "Could not save this agent."
 msgstr "Could not save this agent."
+
+#: src/features/settings/ui/HostedCommunitiesSettingsCard.tsx
+msgid "Could not transfer ownership."
+msgstr "Could not transfer ownership."
+
+#: src/features/settings/ui/HostedCommunitiesSettingsCard.tsx
+msgid "Could not unarchive the community."
+msgstr "Could not unarchive the community."
+
+#: src/features/settings/ui/HostedCommunitiesSettingsCard.tsx
+msgid "Could not unpair the {productName} identity."
+msgstr "Could not unpair the {productName} identity."
 
 #: src/features/agents/ui/AgentCreationPreview.tsx
 msgid "Could not use that {assetLabel}."
 msgstr "Could not use that {assetLabel}."
 
+#: src/features/settings/ui/BackupTestFlow.tsx
+msgid "Could not verify this backup."
+msgstr "Could not verify this backup."
+
+#: src/features/settings/ui/harnessGalleryLogic.ts
+msgid "Couldn't check which agents use this harness — some agents may stop launching. Delete {label}?"
+msgstr "Couldn't check which agents use this harness — some agents may stop launching. Delete {label}?"
+
 #: src/features/projects/lib/projectGitError.ts
 msgid "Couldn’t clone repository"
 msgstr "Couldn’t clone repository"
 
+#. placeholder {0}: runtime.label
+#: src/features/settings/ui/HarnessRow.tsx
+msgid "Couldn't connect {0}: {reason}"
+msgstr "Couldn't connect {0}: {reason}"
+
 #: src/features/agents/ui/PersonaShareDialog.tsx
 msgid "Couldn’t copy link. Try again."
 msgstr "Couldn’t copy link. Try again."
+
+#: src/features/settings/EncryptedBackupProvider.tsx
+msgid "Couldn’t create backup"
+msgstr "Couldn’t create backup"
 
 #: src/features/agents/ui/HarnessCatalogRetryNotice.tsx
 msgid "Couldn't detect agent harnesses."
@@ -2482,6 +3051,14 @@ msgstr "Couldn't load agent defaults. Restart the app to try again."
 #: src/features/agents/ui/agentConfigControls.tsx
 msgid "Couldn't load models"
 msgstr "Couldn't load models"
+
+#: src/features/settings/ui/HarnessCatalogDialog.tsx
+msgid "Couldn't load runtimes."
+msgstr "Couldn't load runtimes."
+
+#: src/features/settings/ui/HarnessRow.tsx
+msgid "Couldn't load sign-in options: {reason}"
+msgstr "Couldn't load sign-in options: {reason}"
 
 #: src/features/agents/ui/AgentCardViewerDialog.tsx
 msgid "Couldn’t load your minted cards:"
@@ -2507,6 +3084,10 @@ msgstr "Couldn’t reach repository"
 #: src/features/projects/lib/projectGitError.ts
 msgid "Couldn’t reach the repository"
 msgstr "Couldn’t reach the repository"
+
+#: src/features/settings/ui/HarnessCatalogDialog.tsx
+msgid "Couldn't refresh runtimes."
+msgstr "Couldn't refresh runtimes."
 
 #: src/features/home/ui/InboxDetailPane.tsx
 #: src/features/home/ui/InboxListPane.tsx
@@ -2549,6 +3130,7 @@ msgstr "Couldn't switch models — the agent kept its current model."
 msgid "Couldn't switch models — the agent wasn't running a turn to switch."
 msgstr "Couldn't switch models — the agent wasn't running a turn to switch."
 
+#: src/features/settings/ui/ChannelTemplatesSettingsCard.tsx
 #: src/features/sidebar/ui/ChannelSectionDialogs.tsx
 msgid "Create"
 msgstr "Create"
@@ -2560,6 +3142,14 @@ msgstr "Create {agentName}'s card"
 #: src/features/projects/ui/CreateProjectWorkItemDialog.tsx
 msgid "Create {itemLabel}"
 msgstr "Create {itemLabel}"
+
+#: src/features/settings/ui/HostedCommunitiesSettingsCard.tsx
+msgid "Create a community"
+msgstr "Create a community"
+
+#: src/features/settings/ui/EncryptedBackupCreator.tsx
+msgid "Create a key backup"
+msgstr "Create a key backup"
 
 #: src/features/search/ui/TopbarSearch.tsx
 msgid "Create a new agent"
@@ -2632,6 +3222,14 @@ msgstr "Create an agent and start it immediately."
 msgid "Create and attach one agent per member of"
 msgstr "Create and attach one agent per member of"
 
+#: src/features/settings/ui/HostedCommunitiesSettingsCard.tsx
+msgid "Create and connect"
+msgstr "Create and connect"
+
+#: src/features/settings/ui/PrivateKeyBackupRow.tsx
+msgid "Create backup"
+msgstr "Create backup"
+
 #: src/features/projects/ui/ProjectBranchDialogs.tsx
 msgid "Create branch"
 msgstr "Create branch"
@@ -2701,6 +3299,10 @@ msgstr "Create task"
 msgid "Create team"
 msgstr "Create team"
 
+#: src/features/settings/ui/ChannelTemplatesSettingsCard.tsx
+msgid "Create template"
+msgstr "Create template"
+
 #: src/features/projects/lib/projectBranches.ts
 msgid "Create the repository's first commit before creating another branch."
 msgstr "Create the repository's first commit before creating another branch."
@@ -2708,6 +3310,10 @@ msgstr "Create the repository's first commit before creating another branch."
 #: src/features/agents/ui/CommunityCatalogDialog.tsx
 msgid "Create, discover, and import agents and teams."
 msgstr "Create, discover, and import agents and teams."
+
+#: src/features/settings/ui/ChannelTemplatesSettingsCard.tsx
+msgid "Created \"{trimmedName}\""
+msgstr "Created \"{trimmedName}\""
 
 #: src/features/projects/ui/ProjectIssuesPanel.tsx
 msgid "Created by {authorLabel}"
@@ -2726,6 +3332,10 @@ msgstr "Created team \"{0}\"."
 msgid "Creating agent…"
 msgstr "Creating agent…"
 
+#: src/features/settings/ui/HostedCommunitiesSettingsCard.tsx
+msgid "Creating community…"
+msgstr "Creating community…"
+
 #: src/features/onboarding/ui/IdentityKeyIntroduction.tsx
 msgid "Creating key…"
 msgstr "Creating key…"
@@ -2733,6 +3343,10 @@ msgstr "Creating key…"
 #: src/features/agents/ui/TeamSnapshotImportDialog.tsx
 msgid "Creating team…"
 msgstr "Creating team…"
+
+#: src/features/settings/ui/ChannelTemplatesSettingsCard.tsx
+msgid "Creating..."
+msgstr "Creating..."
 
 #: src/features/projects/ui/CreateProjectFormContent.tsx
 #: src/features/projects/ui/CreateProjectWorkItemDialog.tsx
@@ -2757,6 +3371,10 @@ msgstr "Current value for this agent. Custom values may be 1–32."
 msgid "Currently tracking"
 msgstr "Currently tracking"
 
+#: src/features/settings/ui/harnessCatalogCopy.ts
+msgid "Cursor's coding agent, connected to {productName} through its ACP server."
+msgstr "Cursor's coding agent, connected to {productName} through its ACP server."
+
 #: src/features/agents/ui/AgentDefinitionMetadata.tsx
 msgid "Custom agent"
 msgstr "Custom agent"
@@ -2776,6 +3394,10 @@ msgstr "Custom emoji"
 #: src/features/agents/ui/AgentConfigFields.tsx
 msgid "Custom global provider ID"
 msgstr "Custom global provider ID"
+
+#: src/features/settings/ui/HarnessCatalogDialog.tsx
+msgid "Custom harness"
+msgstr "Custom harness"
 
 #: src/features/agents/ui/agentConfigControls.tsx
 #: src/features/agents/ui/EditAgentProviderModelFields.tsx
@@ -2846,6 +3468,7 @@ msgid "default"
 msgstr "default"
 
 #: src/features/settings/ui/AppearanceSettingsControls.tsx
+#: src/features/settings/ui/ChannelTemplatesSettingsCard.tsx
 msgid "Default"
 msgstr "Default"
 
@@ -2889,6 +3512,8 @@ msgstr "Default model ({0})"
 #: src/features/agents/ui/TeamsSection.tsx
 #: src/features/messages/ui/DraftDetailPane.tsx
 #: src/features/projects/ui/ProjectRepositorySource.tsx
+#: src/features/settings/ui/ChannelTemplatesSettingsCard.tsx
+#: src/features/settings/ui/HarnessRow.tsx
 #: src/features/sidebar/ui/ChannelSectionDialogs.tsx
 msgid "Delete"
 msgstr "Delete"
@@ -2899,6 +3524,8 @@ msgid "Delete \"{0}\". Already-deployed agents are not affected, but this team t
 msgstr "Delete \"{0}\". Already-deployed agents are not affected, but this team template will no longer be available."
 
 #. placeholder {0}: project.name
+#. placeholder {0}: selectedVoice.displayName
+#: src/features/settings/ui/VoiceSettingsCard.tsx
 #: src/features/sidebar/ui/SidebarProjectsSection.tsx
 msgid "Delete {0}"
 msgstr "Delete {0}"
@@ -2909,6 +3536,10 @@ msgstr "Delete {0}"
 #: src/features/sidebar/ui/SidebarProjectsSection.tsx
 msgid "Delete {0} from Projects for everyone. This can only be done for projects you own and cannot be undone."
 msgstr "Delete {0} from Projects for everyone. This can only be done for projects you own and cannot be undone."
+
+#: src/features/settings/ui/harnessGalleryLogic.ts
+msgid "Delete {label}?"
+msgstr "Delete {label}?"
 
 #: src/features/agents/ui/PersonaDeleteDialog.tsx
 msgid "Delete agent?"
@@ -2930,9 +3561,17 @@ msgstr "Delete channel"
 msgid "Delete draft"
 msgstr "Delete draft"
 
+#: src/features/settings/ui/VoiceSettingsCard.tsx
+msgid "Delete imported voice?"
+msgstr "Delete imported voice?"
+
 #: src/features/home/ui/InboxDetailPane.tsx
 msgid "Delete message"
 msgstr "Delete message"
+
+#: src/features/settings/ui/SignOutSection.tsx
+msgid "Delete my data"
+msgstr "Delete my data"
 
 #: src/features/projects/ui/ProjectCards.tsx
 #: src/features/sidebar/ui/SidebarProjectsSection.tsx
@@ -2957,6 +3596,10 @@ msgstr "Delete section \"{sectionName}\"? It has no channels."
 msgid "Delete team?"
 msgstr "Delete team?"
 
+#: src/features/settings/ui/ChannelTemplatesSettingsCard.tsx
+msgid "Delete template"
+msgstr "Delete template"
+
 #: src/features/projects/ui/ProjectBranchDialogs.tsx
 msgid "Delete the remote branch"
 msgstr "Delete the remote branch"
@@ -2972,6 +3615,14 @@ msgstr "Delete this remote branch"
 #: src/features/agents/ui/TeamDeleteDialog.tsx
 msgid "Delete this team."
 msgstr "Delete this team."
+
+#: src/features/settings/ui/VoiceSettingsCard.tsx
+msgid "Delete voice"
+msgstr "Delete voice"
+
+#: src/features/settings/ui/ChannelTemplatesSettingsCard.tsx
+msgid "Deleted \"{name}\""
+msgstr "Deleted \"{name}\""
 
 #. placeholder {0}: team.name
 #: src/features/agents/ui/useTeamActions.ts
@@ -3023,6 +3674,7 @@ msgstr "Describe what this agent should do."
 #: src/features/projects/ui/ProjectCommitDetailPanel.tsx
 #: src/features/projects/ui/ProjectIssuesPanel.tsx
 #: src/features/projects/ui/ProjectPullRequestsPanel.tsx
+#: src/features/settings/ui/ChannelTemplatesSettingsCard.tsx
 #: src/features/sidebar/ui/CreateChannelFormFields.tsx
 msgid "Description"
 msgstr "Description"
@@ -3040,6 +3692,26 @@ msgstr "Deselect {displayName} in My Agents"
 msgid "Deselected {0} from My Agents."
 msgstr "Deselected {0} from My Agents."
 
+#: src/features/settings/ui/NotificationSettingsCard.tsx
+msgid "Desktop"
+msgstr "Desktop"
+
+#: src/features/settings/ui/NotificationSettingsCard.tsx
+msgid "Desktop alerts"
+msgstr "Desktop alerts"
+
+#: src/features/settings/ui/NotificationSettingsCard.tsx
+msgid "Desktop alerts are on by default. Fine-tune what gets through below."
+msgstr "Desktop alerts are on by default. Fine-tune what gets through below."
+
+#: src/features/settings/ui/NotificationSettingsCard.tsx
+msgid "Desktop notifications are blocked. Enable them in your system settings."
+msgstr "Desktop notifications are blocked. Enable them in your system settings."
+
+#: src/features/settings/ui/NotificationSettingsCard.tsx
+msgid "Desktop notifications are not supported in this environment."
+msgstr "Desktop notifications are not supported in this environment."
+
 #: src/features/projects/ui/ProjectRepositoryActionsPanel.tsx
 msgid "Details"
 msgstr "Details"
@@ -3056,6 +3728,7 @@ msgstr "Direct message"
 msgid "Direct message with {destination}"
 msgstr "Direct message with {destination}"
 
+#: src/features/notifications/lib/sound.ts
 #: src/features/search/ui/TopbarSearch.tsx
 #: src/features/sidebar/ui/AppSidebar.tsx
 msgid "Direct messages"
@@ -3074,6 +3747,10 @@ msgstr "Discard changes"
 msgid "Discard changes to agent defaults?"
 msgstr "Discard changes to agent defaults?"
 
+#: src/features/settings/ui/ChannelTemplatesSettingsCard.tsx
+msgid "Discovering runtimes..."
+msgstr "Discovering runtimes..."
+
 #: src/features/projects/lib/projectSelection.ts
 #: src/features/projects/ui/ProjectSelectionDiscussAction.tsx
 msgid "Discuss in a channel"
@@ -3091,6 +3768,14 @@ msgstr "Dismiss failed mint"
 msgid "Dismiss relay notification"
 msgstr "Dismiss relay notification"
 
+#: src/features/settings/SidebarUpdateCard.tsx
+msgid "Dismiss update notification"
+msgstr "Dismiss update notification"
+
+#: src/features/settings/ui/ProfileSettingsCard.tsx
+msgid "Display name"
+msgstr "Display name"
+
 #: src/features/home/lib/inbox.ts
 msgid "DM"
 msgstr "DM"
@@ -3100,17 +3785,51 @@ msgstr "DM"
 msgid "DM from {0}"
 msgstr "DM from {0}"
 
+#: src/features/settings/ui/CustomHarnessForm.tsx
+msgid "Docs URL"
+msgstr "Docs URL"
+
 #: src/features/agents/ui/AgentCardMintDialog.tsx
 msgid "Don’t want to spend money? Ordinary export shares the same importable agent — free, just without the card art."
 msgstr "Don’t want to spend money? Ordinary export shares the same importable agent — free, just without the card art."
 
 #: src/features/agents/ui/agentSessionToolCatalog.ts
+#: src/features/settings/ui/ProfileSettingsCard.tsx
 msgid "Done"
 msgstr "Done"
+
+#: src/features/settings/ui/ProfileSettingsCard.tsx
+msgid "Done editing {label}"
+msgstr "Done editing {label}"
+
+#: src/features/settings/ui/PrivateKeyBackupRow.tsx
+msgid "Download backup"
+msgstr "Download backup"
 
 #: src/features/agents/ui/AgentCardViewerDialog.tsx
 msgid "Download card"
 msgstr "Download card"
+
+#: src/features/settings/ui/harnessCatalogLogic.ts
+#: src/features/settings/ui/HarnessRow.tsx
+msgid "Download page"
+msgstr "Download page"
+
+#: src/features/settings/UpdateChecker.tsx
+msgid "Download Update"
+msgstr "Download Update"
+
+#: src/features/settings/SidebarUpdateCard.tsx
+msgid "Download update from GitHub"
+msgstr "Download update from GitHub"
+
+#: src/features/settings/UpdateChecker.tsx
+msgid "Downloading update..."
+msgstr "Downloading update..."
+
+#: src/features/settings/UpdateIndicator.tsx
+msgid "Downloading update…"
+msgstr "Downloading update…"
 
 #: src/features/messages/ui/DraftDetailPane.tsx
 msgid "Draft"
@@ -3145,8 +3864,13 @@ msgstr "Drop an .agent.json or .agent.png file anywhere in this window, or choos
 msgid "Drop or browse"
 msgstr "Drop or browse"
 
+#: src/features/settings/ui/BackupTestFlow.tsx
+msgid "Drop your backup file here"
+msgstr "Drop your backup file here"
+
 #: src/features/agents/ui/PersonaActionsMenu.tsx
 #: src/features/agents/ui/TeamsSection.tsx
+#: src/features/settings/ui/ChannelTemplatesSettingsCard.tsx
 msgid "Duplicate"
 msgstr "Duplicate"
 
@@ -3156,6 +3880,10 @@ msgstr "Duplicate"
 #: src/features/agents/ui/useTeamActions.ts
 msgid "Duplicate {0}"
 msgstr "Duplicate {0}"
+
+#: src/features/settings/ui/ChannelTemplatesSettingsCard.tsx
+msgid "Duplicated as \"{name}\""
+msgstr "Duplicated as \"{name}\""
 
 #: src/features/agents/ui/AgentCardMintDialog.tsx
 msgid "E.g. art “stormy night, lightning motif” or ability “Verify — scry 2”. Your directions take priority; anything you leave open is designed for you."
@@ -3179,6 +3907,9 @@ msgstr "Earlier observed session"
 
 #: src/features/agents/ui/PersonaActionsMenu.tsx
 #: src/features/agents/ui/TeamsSection.tsx
+#: src/features/settings/ui/ChannelTemplatesSettingsCard.tsx
+#: src/features/settings/ui/HarnessRow.tsx
+#: src/features/settings/ui/ProfileSettingsCard.tsx
 msgid "Edit"
 msgstr "Edit"
 
@@ -3192,6 +3923,7 @@ msgid "Edit {assetLabel}"
 msgstr "Edit {assetLabel}"
 
 #: src/features/agents/ui/AgentConfigPanel.tsx
+#: src/features/settings/ui/ProfileSettingsCard.tsx
 msgid "Edit {label}"
 msgstr "Edit {label}"
 
@@ -3212,9 +3944,21 @@ msgstr "Edit failed"
 msgid "Edit global defaults"
 msgstr "Edit global defaults"
 
+#: src/features/settings/ui/CustomHarnessForm.tsx
+msgid "Edit harness"
+msgstr "Edit harness"
+
+#: src/features/settings/ui/ProfileSettingsCard.tsx
+msgid "Edit profile photo"
+msgstr "Edit profile photo"
+
 #: src/features/agents/ui/useTeamActions.ts
 msgid "Edit team"
 msgstr "Edit team"
+
+#: src/features/settings/ui/ChannelTemplatesSettingsCard.tsx
+msgid "Edit template"
+msgstr "Edit template"
 
 #: src/features/agents/ui/agentSessionToolClassifier.ts
 #: src/features/agents/ui/agentSessionToolSummary.ts
@@ -3250,6 +3994,14 @@ msgstr "Encode failed."
 msgid "Encrypt the embedded agent so only you and this agent can import it. Anyone else sees just the image."
 msgstr "Encrypt the embedded agent so only you and this agent can import it. Anyone else sees just the image."
 
+#: src/features/settings/ui/EncryptedBackupCreator.tsx
+msgid "Encrypting your key"
+msgstr "Encrypting your key"
+
+#: src/features/settings/ui/EncryptedBackupCreator.tsx
+msgid "Encryption password"
+msgstr "Encryption password"
+
 #: src/features/agents/ui/TeamDialog.tsx
 msgid "Engineering Squad"
 msgstr "Engineering Squad"
@@ -3262,9 +4014,17 @@ msgstr "Enter a new name for this section."
 msgid "Enter a valid Git branch name."
 msgstr "Enter a valid Git branch name."
 
+#: src/features/settings/ui/HostedCommunitiesSettingsCard.tsx
+msgid "Enter a valid npub that starts with npub1."
+msgstr "Enter a valid npub that starts with npub1."
+
 #: src/features/agents/ui/personaModelDiscoveryStatus.ts
 msgid "Enter an Anthropic API key to load Anthropic models."
 msgstr "Enter an Anthropic API key to load Anthropic models."
+
+#: src/features/settings/ui/MobilePairingCard.tsx
+msgid "Enter code on your phone"
+msgstr "Enter code on your phone"
 
 #: src/features/onboarding/ui/MachineOnboardingFlow.tsx
 msgid "Enter your backup password to restore your identity."
@@ -3277,6 +4037,10 @@ msgstr "Enter your private key"
 #: src/features/agents/ui/PersonaAdvancedFields.tsx
 msgid "Entire channel"
 msgstr "Entire channel"
+
+#: src/features/settings/ui/CustomHarnessForm.tsx
+msgid "Env vars"
+msgstr "Env vars"
 
 #: src/features/agents/ui/AgentConfigFields.tsx
 #: src/features/agents/ui/EnvVarsEditor.tsx
@@ -3323,6 +4087,7 @@ msgstr "everything"
 msgid "Everything in Agent Catalog is already in My Agents."
 msgstr "Everything in Agent Catalog is already in My Agents."
 
+#: src/features/settings/ui/ExperimentalFeaturesCard.tsx
 #: src/features/settings/ui/SettingsPanels.tsx
 msgid "Experiments"
 msgstr "Experiments"
@@ -3359,9 +4124,17 @@ msgstr "Failed to add team."
 msgid "Failed to assign task."
 msgstr "Failed to assign task."
 
+#: src/features/settings/ui/SendFeedbackDialog.tsx
+msgid "Failed to attach image."
+msgstr "Failed to attach image."
+
 #: src/features/projects/ui/AttachProjectRepositoryDialog.tsx
 msgid "Failed to attach repository."
 msgstr "Failed to attach repository."
+
+#: src/features/settings/ui/ChannelTemplatesSettingsCard.tsx
+msgid "Failed to create"
+msgstr "Failed to create"
 
 #: src/features/projects/ui/CreateProjectWorkItemDialog.tsx
 msgid "Failed to create {itemLabel}."
@@ -3378,6 +4151,10 @@ msgstr "Failed to create the project channel."
 #: src/features/projects/useAddProjectRepository.ts
 msgid "Failed to create the repository."
 msgstr "Failed to create the repository."
+
+#: src/features/settings/ui/ChannelTemplatesSettingsCard.tsx
+msgid "Failed to delete"
+msgstr "Failed to delete"
 
 #: src/features/agents/ui/useManagedAgentActions.ts
 #: src/features/agents/ui/usePersonaActions.ts
@@ -3397,6 +4174,14 @@ msgstr "Failed to delete team."
 msgid "Failed to deselect agent from My Agents."
 msgstr "Failed to deselect agent from My Agents."
 
+#: src/features/settings/ui/ChannelTemplatesSettingsCard.tsx
+msgid "Failed to duplicate"
+msgstr "Failed to duplicate"
+
+#: src/features/settings/EncryptedBackupProvider.tsx
+msgid "Failed to encrypt your key."
+msgstr "Failed to encrypt your key."
+
 #: src/features/agents/ui/usePersonaActions.ts
 msgid "Failed to export agent snapshot."
 msgstr "Failed to export agent snapshot."
@@ -3404,6 +4189,10 @@ msgstr "Failed to export agent snapshot."
 #: src/features/agents/ui/useTeamActions.ts
 msgid "Failed to export team snapshot."
 msgstr "Failed to export team snapshot."
+
+#: src/features/settings/ui/EncryptedBackupCreator.tsx
+msgid "Failed to generate a password."
+msgstr "Failed to generate a password."
 
 #: src/features/agents/ui/usePersonaActions.ts
 msgid "Failed to import agent snapshot."
@@ -3483,6 +4272,11 @@ msgstr "Failed to request review."
 msgid "Failed to restart agent."
 msgstr "Failed to restart agent."
 
+#: src/features/settings/ui/PrivateKeyBackupRow.tsx
+#: src/features/settings/ui/SignOutSection.tsx
+msgid "Failed to retrieve private key."
+msgstr "Failed to retrieve private key."
+
 #: src/features/agents/ui/AgentInstanceEditDialog.tsx
 msgid "Failed to save"
 msgstr "Failed to save"
@@ -3499,9 +4293,17 @@ msgstr "Failed to save identity"
 msgid "Failed to save team."
 msgstr "Failed to save team."
 
+#: src/features/settings/EncryptedBackupProvider.tsx
+msgid "Failed to save your key."
+msgstr "Failed to save your key."
+
 #: src/features/agents/ui/usePersonaActions.ts
 msgid "Failed to select agent for My Agents."
 msgstr "Failed to select agent for My Agents."
+
+#: src/features/settings/ui/SendFeedbackDialog.tsx
+msgid "Failed to send feedback."
+msgstr "Failed to send feedback."
 
 #: src/features/agents/ui/useManagedAgentActions.ts
 msgid "Failed to start agent."
@@ -3514,6 +4316,10 @@ msgstr "Failed to stop agent."
 #: src/features/projects/ui/IssueAssigneesRow.tsx
 msgid "Failed to unassign task."
 msgstr "Failed to unassign task."
+
+#: src/features/settings/ui/ChannelTemplatesSettingsCard.tsx
+msgid "Failed to update"
+msgstr "Failed to update"
 
 #: src/features/agents/ui/usePersonaActions.ts
 msgid "Failed to update catalog sharing."
@@ -3538,6 +4344,14 @@ msgstr "Failed to update status."
 #: src/features/projects/ui/ProjectBranchDialogs.tsx
 msgid "feature/my-change"
 msgstr "feature/my-change"
+
+#: src/features/settings/ui/ExperimentalFeaturesCard.tsx
+msgid "Features"
+msgstr "Features"
+
+#: src/features/settings/ui/SendFeedbackDialog.tsx
+msgid "Feedback is sent privately to this {productName} deployment and is not posted to a channel. Attachments are uploaded before you send."
+msgstr "Feedback is sent privately to this {productName} deployment and is not posted to a channel. Attachments are uploaded before you send."
 
 #: src/features/projects/ui/ProjectRepositoryActionsPanel.tsx
 #: src/features/projects/ui/ProjectRepositorySource.tsx
@@ -3582,6 +4396,15 @@ msgstr "Filter inbox: {activeLabel}. {statusLabel}"
 #: src/shared/lib/keyboard-shortcuts.ts
 msgid "Find in channel"
 msgstr "Find in channel"
+
+#: src/features/settings/ui/MobilePairingCard.tsx
+msgid "Finish setup on your phone to connect your mobile app."
+msgstr "Finish setup on your phone to connect your mobile app."
+
+#. placeholder {0}: runtime.label
+#: src/features/settings/ui/HarnessRow.tsx
+msgid "Finish signing in from the Terminal window, then click Check again to re-check {0}."
+msgstr "Finish signing in from the Terminal window, then click Check again to re-check {0}."
 
 #: src/features/agents/ui/AgentDescriptionField.tsx
 msgid "Fizz"
@@ -3634,6 +4457,10 @@ msgstr "Forums organize threaded discussions around a topic."
 msgid "Forums you join will appear here."
 msgstr "Forums you join will appear here."
 
+#: src/features/settings/ui/CustomHarnessForm.tsx
+msgid "Found on PATH"
+msgstr "Found on PATH"
+
 #: src/features/agents/ui/McpServersSection.tsx
 msgid "From config file ({mcpConfigFilePath})"
 msgstr "From config file ({mcpConfigFilePath})"
@@ -3645,6 +4472,14 @@ msgstr "Full embedded manifest"
 #: src/features/agents/ui/AgentInstanceEditDialog.tsx
 msgid "Full path or shell command"
 msgstr "Full path or shell command"
+
+#: src/features/settings/ui/EncryptedBackupCreator.tsx
+msgid "Generate a password"
+msgstr "Generate a password"
+
+#: src/features/settings/ui/MobilePairingCard.tsx
+msgid "Generate new pairing code"
+msgstr "Generate new pairing code"
 
 #: src/features/agents/ui/AgentCardMintDialog.tsx
 msgid "Get a key at platform.openai.com"
@@ -3717,6 +4552,10 @@ msgstr "Harness Log"
 msgid "Here"
 msgstr "Here"
 
+#: src/features/settings/ui/PrivateKeyBackupRow.tsx
+msgid "Hide"
+msgstr "Hide"
+
 #: src/features/projects/ui/ProjectRightPanelControls.tsx
 msgid "Hide {productName} Term"
 msgstr "Hide {productName} Term"
@@ -3724,6 +4563,15 @@ msgstr "Hide {productName} Term"
 #: src/features/agents/ui/PersonaProviderApiKeyField.tsx
 msgid "Hide API key"
 msgstr "Hide API key"
+
+#: src/features/settings/ui/BackupTestFlow.tsx
+#: src/features/settings/ui/EncryptedBackupCreator.tsx
+msgid "Hide password"
+msgstr "Hide password"
+
+#: src/features/settings/ui/PrivateKeyBackupRow.tsx
+msgid "Hide private key"
+msgstr "Hide private key"
 
 #: src/features/projects/ui/ProjectRightPanelControls.tsx
 msgid "Hide project chat"
@@ -3751,21 +4599,51 @@ msgstr "Hold to unmute in a huddle"
 msgid "Home"
 msgstr "Home"
 
+#: src/features/settings/ui/NotificationSettingsCard.tsx
+msgid "Home badge"
+msgstr "Home badge"
+
 #: src/features/home/ui/HomeView.tsx
 msgid "Home feed unavailable"
 msgstr "Home feed unavailable"
 
+#: src/features/settings/ui/HostedCommunitiesSettingsCard.tsx
 #: src/features/settings/ui/SettingsPanels.tsx
 msgid "Hosted communities"
 msgstr "Hosted communities"
+
+#: src/features/settings/ui/HostedCommunitiesSettingsCard.tsx
+msgid "Hosted community"
+msgstr "Hosted community"
 
 #: src/features/projects/ui/AddProjectRepositoryDialog.tsx
 msgid "https://relay.example.com/git/mobile-app.git"
 msgstr "https://relay.example.com/git/mobile-app.git"
 
+#: src/features/settings/ui/EncryptedBackupCreator.tsx
+msgid "Hyphens"
+msgstr "Hyphens"
+
 #: src/features/settings/ui/AppearanceSettingsControls.tsx
 msgid "I added a longer message so you can compare line height and text spacing."
 msgstr "I added a longer message so you can compare line height and text spacing."
+
+#: src/features/settings/ui/SignOutSection.tsx
+msgid "I have tested a key backup or saved this private key somewhere safe."
+msgstr "I have tested a key backup or saved this private key somewhere safe."
+
+#: src/features/settings/ui/CustomHarnessForm.tsx
+#: src/features/settings/ui/HarnessCatalogDialog.tsx
+msgid "ID"
+msgstr "ID"
+
+#: src/features/settings/ui/ProfileSettingsCard.tsx
+msgid "Identity"
+msgstr "Identity"
+
+#: src/features/settings/ui/ProfileSettingsCard.tsx
+msgid "Identity details"
+msgstr "Identity details"
 
 #: src/features/agents/ui/ManagedAgentSessionPanel.tsx
 msgid "Idle"
@@ -3826,6 +4704,10 @@ msgstr "in the snapshot. Only share it with people you trust."
 msgid "in your agent defaults env — that's the row to update in Settings if you ever need to change it there."
 msgstr "in your agent defaults env — that's the row to update in Settings if you ever need to change it there."
 
+#: src/features/settings/UpdateChecker.tsx
+msgid "In-app updates aren't supported on this Linux package. Download the new version from GitHub. Switch to the AppImage build for automatic updates."
+msgstr "In-app updates aren't supported on this Linux package. Download the new version from GitHub. Switch to the AppImage build for automatic updates."
+
 #: src/features/sidebar/ui/AppSidebarPinnedHeader.tsx
 msgid "Inbox"
 msgstr "Inbox"
@@ -3837,6 +4719,10 @@ msgstr "Inbox options"
 #: src/features/agents/ui/PersonaShareDialog.tsx
 msgid "includes"
 msgstr "includes"
+
+#: src/features/settings/ui/SendFeedbackDialog.tsx
+msgid "Includes capture time, app version, platform, user agent, and language. No application log lines are collected."
+msgstr "Includes capture time, app version, platform, user agent, and language. No application log lines are collected."
 
 #: src/features/agents/ui/AgentCardMintDialog.tsx
 msgid "Including memory needs a linked agent instance — start this agent once to enable it."
@@ -3894,9 +4780,48 @@ msgstr "Insert a line break in the composer"
 msgid "Insert link"
 msgstr "Insert link"
 
+#: src/features/settings/ui/harnessCatalogLogic.ts
+#: src/features/settings/ui/HarnessRow.tsx
+msgid "Install"
+msgstr "Install"
+
+#. placeholder {0}: runtime.label
+#: src/features/settings/ui/HarnessRow.tsx
+msgid "Install {0}"
+msgstr "Install {0}"
+
+#: src/features/settings/ui/HarnessCatalogDialog.tsx
+#: src/features/settings/ui/HarnessRow.tsx
+msgid "Install failed."
+msgstr "Install failed."
+
+#: src/features/settings/ui/HarnessesSettingsPanel.tsx
+msgid "Install Git for Windows"
+msgstr "Install Git for Windows"
+
+#: src/features/settings/ui/CustomHarnessForm.tsx
+msgid "Install hint"
+msgstr "Install hint"
+
+#: src/features/settings/ui/HarnessRow.tsx
+msgid "Install Node.js"
+msgstr "Install Node.js"
+
+#: src/features/settings/ui/HarnessCatalogDialog.tsx
+msgid "Installed"
+msgstr "Installed"
+
 #: src/features/agents/ui/agentUi.ts
 msgid "installed on PATH"
 msgstr "installed on PATH"
+
+#: src/features/settings/UpdateChecker.tsx
+msgid "Installing update..."
+msgstr "Installing update..."
+
+#: src/features/settings/UpdateIndicator.tsx
+msgid "Installing update…"
+msgstr "Installing update…"
 
 #: src/features/agents/ui/PersonaAdvancedFields.tsx
 msgid "Instance name pool"
@@ -3929,6 +4854,14 @@ msgstr "is working…"
 #: src/features/projects/projectTaskCategories.ts
 msgid "Issue"
 msgstr "Issue"
+
+#: src/features/settings/ui/BackupTestFlow.tsx
+msgid "It restores a different identity than the one signed in here."
+msgstr "It restores a different identity than the one signed in here."
+
+#: src/features/settings/ui/BackupTestFlow.tsx
+msgid "It restores your current {productName} identity."
+msgstr "It restores your current {productName} identity."
 
 #: src/shared/lib/keyboard-shortcuts.ts
 msgid "Italic"
@@ -3978,10 +4911,22 @@ msgstr "just now"
 msgid "Keep"
 msgstr "Keep"
 
+#: src/features/settings/UpdateChecker.tsx
+msgid "Keep {productName} up to date with the latest features and fixes."
+msgstr "Keep {productName} up to date with the latest features and fixes."
+
+#: src/features/settings/ui/PreventSleepSettingsCard.tsx
+msgid "Keep awake while agents are active"
+msgstr "Keep awake while agents are active"
+
 #: src/features/agents/ui/AgentDefaultsDialog.tsx
 #: src/features/agents/ui/CommunityCatalogDialog.tsx
 msgid "Keep editing"
 msgstr "Keep editing"
+
+#: src/features/settings/ui/EncryptedBackupCreator.tsx
+msgid "Keep the file private and save its password somewhere safe — {productName} cannot reset it. Once ready, the backup remains available to download for 5 minutes."
+msgstr "Keep the file private and save its password somewhere safe — {productName} cannot reset it. Once ready, the backup remains available to download for 5 minutes."
 
 #: src/features/agents/ui/PersonaAdvancedFields.tsx
 msgid "Keeps a separate conversation for each channel thread. Direct messages remain shared."
@@ -4105,6 +5050,10 @@ msgstr "Link previews"
 msgid "Link the selected composer text, or edit the link under the caret"
 msgstr "Link the selected composer text, or edit the link under the caret"
 
+#: src/features/settings/ui/HostedCommunitiesSettingsCard.tsx
+msgid "Link this account to your {productName} identity"
+msgstr "Link this account to your {productName} identity"
+
 #: src/features/agents/ui/TeamIdentityCard.tsx
 msgid "Linked from"
 msgstr "Linked from"
@@ -4227,6 +5176,14 @@ msgstr "Loading repository files"
 msgid "Loading reviews"
 msgstr "Loading reviews"
 
+#: src/features/settings/ui/HarnessCatalogDialog.tsx
+msgid "Loading runtime details"
+msgstr "Loading runtime details"
+
+#: src/features/settings/ui/HarnessCatalogDialog.tsx
+msgid "Loading runtimes"
+msgstr "Loading runtimes"
+
 #: src/features/home/ui/InboxDetailPane.tsx
 msgid "Loading surrounding context..."
 msgstr "Loading surrounding context..."
@@ -4236,7 +5193,13 @@ msgstr "Loading surrounding context..."
 msgid "Loading tasks"
 msgstr "Loading tasks"
 
+#: src/features/settings/ui/ChannelTemplatesSettingsCard.tsx
+msgid "Loading templates..."
+msgstr "Loading templates..."
+
 #: src/features/agents/ui/AgentDefaultsEditor.tsx
+#: src/features/settings/ui/PrivateKeyBackupRow.tsx
+#: src/features/settings/ui/SignOutSection.tsx
 msgid "Loading…"
 msgstr "Loading…"
 
@@ -4500,9 +5463,14 @@ msgstr "Minting calls the OpenAI API with your key and costs money — typically
 msgid "Mixed models"
 msgstr "Mixed models"
 
+#: src/features/settings/ui/MobilePairingCard.tsx
 #: src/features/settings/ui/SettingsPanels.tsx
 msgid "Mobile"
 msgstr "Mobile"
+
+#: src/features/settings/ui/MobilePairingCard.tsx
+msgid "Mobile pairing QR code"
+msgstr "Mobile pairing QR code"
 
 #: src/features/projects/ui/AddProjectRepositoryDialog.tsx
 msgid "mobile-app"
@@ -4603,14 +5571,24 @@ msgstr "Mute channel"
 msgid "My agents"
 msgstr "My agents"
 
+#: src/features/settings/ui/CustomHarnessForm.tsx
+msgid "My Runtime"
+msgstr "My Runtime"
+
 #: src/features/agents/ui/TeamDialog.tsx
 #: src/features/projects/ui/AddProjectRepositoryDialog.tsx
 #: src/features/projects/ui/CreateProjectFormContent.tsx
 #: src/features/projects/ui/ProjectChannelRequestDialog.tsx
 #: src/features/projects/ui/ProjectsListHeaderBar.tsx
+#: src/features/settings/ui/ChannelTemplatesSettingsCard.tsx
+#: src/features/settings/ui/CustomHarnessForm.tsx
 #: src/features/sidebar/ui/CreateChannelFormFields.tsx
 msgid "Name"
 msgstr "Name"
+
+#: src/features/settings/ui/NotificationSettingsCard.tsx
+msgid "Native desktop alerts are enabled for the categories you have armed below."
+msgstr "Native desktop alerts are enabled for the categories you have armed below."
 
 #: src/shared/lib/keyboard-shortcuts.ts
 msgid "Navigate to the home feed"
@@ -4630,6 +5608,7 @@ msgstr "Navigation"
 
 #: src/features/home/lib/inbox.ts
 #: src/features/home/ui/InboxFilterMenu.tsx
+#: src/features/notifications/lib/sound.ts
 msgid "Needs action"
 msgstr "Needs action"
 
@@ -4645,6 +5624,10 @@ msgstr "Needs action in"
 msgid "Needs setup on this device"
 msgstr "Needs setup on this device"
 
+#: src/features/settings/ui/SendFeedbackDialog.tsx
+msgid "Needs work"
+msgstr "Needs work"
+
 #: src/features/onboarding/ui/IdentityKeyIntroduction.tsx
 msgid "Never share it—anyone with this key can sign in as you"
 msgstr "Never share it—anyone with this key can sign in as you"
@@ -4657,6 +5640,10 @@ msgstr "New activity will appear here."
 #: src/features/agents/ui/UnifiedAgentsSection.tsx
 msgid "New agent"
 msgstr "New agent"
+
+#: src/features/settings/ui/HostedCommunitiesSettingsCard.tsx
+msgid "New and existing connections stop and the address stays reserved. Archiving can't be undone from here without unarchiving, and the community keeps counting toward your quota — it isn't deleted."
+msgstr "New and existing connections stop and the address stays reserved. Archiving can't be undone from here without unarchiving, and the community keeps counting toward your quota — it isn't deleted."
 
 #: src/features/channels/ui/ChannelBrowserDialog.tsx
 #: src/shared/lib/keyboard-shortcuts.ts
@@ -4718,6 +5705,10 @@ msgstr "New team"
 msgid "Newest"
 msgstr "Newest"
 
+#: src/features/settings/ui/ProfileSettingsCard.tsx
+msgid "NIP-05 handle"
+msgstr "NIP-05 handle"
+
 #: src/features/projects/ui/ProjectCards.tsx
 msgid "No access"
 msgstr "No access"
@@ -4733,6 +5724,10 @@ msgstr "No access channel bound"
 #: src/features/agents/ui/AgentSessionTranscriptList.tsx
 msgid "No ACP activity yet"
 msgstr "No ACP activity yet"
+
+#: src/features/settings/ui/ChannelTemplatesSettingsCard.tsx
+msgid "No ACP runtimes detected. Install one to assign runtimes."
+msgstr "No ACP runtimes detected. Install one to assign runtimes."
 
 #: src/features/agents/ui/AddTeamToChannelDialog.tsx
 msgid "No ACP runtimes found. Make sure an agent runtime (e.g. Goose) is installed."
@@ -4751,6 +5746,10 @@ msgstr "No additional details were attached to this event."
 #: src/features/projects/ui/useCreateProjectFormSettings.ts
 msgid "No agent runtimes are available. Install a runtime to add agents."
 msgstr "No agent runtimes are available. Install a runtime to add agents."
+
+#: src/features/settings/ui/HarnessesSettingsPanel.tsx
+msgid "No agent runtimes ready yet — add one below."
+msgstr "No agent runtimes ready yet — add one below."
 
 #: src/features/agents/ui/AddAgentToChannelDialog.tsx
 msgid "No agent selected"
@@ -4901,6 +5900,10 @@ msgstr "No git commits"
 #: src/features/projects/ui/ProjectCards.tsx
 msgid "No git repository was found on the {productName} relay."
 msgstr "No git repository was found on the {productName} relay."
+
+#: src/features/settings/ui/HostedCommunitiesSettingsCard.tsx
+msgid "No hosted communities yet."
+msgstr "No hosted communities yet."
 
 #: src/features/agents/ui/CommunityCatalogDialog.tsx
 msgid "No instructions"
@@ -5078,6 +6081,14 @@ msgstr "No reviews yet"
 msgid "No reviews yet."
 msgstr "No reviews yet."
 
+#: src/features/settings/ui/HarnessCatalogDialog.tsx
+msgid "No runtimes found."
+msgstr "No runtimes found."
+
+#: src/features/settings/ui/HarnessCatalogDialog.tsx
+msgid "No runtimes match."
+msgstr "No runtimes match."
+
 #: src/features/agents/ui/RunOnSummarySection.tsx
 msgid "No saved settings — the provider applies its defaults."
 msgstr "No saved settings — the provider applies its defaults."
@@ -5097,6 +6108,10 @@ msgstr "No tasks yet"
 #: src/features/agents/ui/teamLibraryCopy.ts
 msgid "No teams are being shared"
 msgstr "No teams are being shared"
+
+#: src/features/settings/ui/ChannelTemplatesSettingsCard.tsx
+msgid "No templates yet. Create one to save a reusable channel configuration."
+msgstr "No templates yet. Create one to save a reusable channel configuration."
 
 #: src/features/projects/ui/ProjectPullRequestFilesChangedPanel.tsx
 msgid "No textual diff is available for this file."
@@ -5163,11 +6178,19 @@ msgstr "None"
 msgid "None yet"
 msgstr "None yet"
 
+#: src/features/settings/ui/HostedCommunitiesSettingsCard.tsx
+msgid "north-star"
+msgstr "north-star"
+
 #: src/features/agents/ui/AgentAiConfigurationMode.tsx
 #: src/features/agents/ui/AgentAiDefaults.tsx
 #: src/features/agents/ui/AgentDefinitionDialog.tsx
 msgid "Not configured"
 msgstr "Not configured"
+
+#: src/features/settings/ui/CustomHarnessForm.tsx
+msgid "Not found on PATH"
+msgstr "Not found on PATH"
 
 #: src/features/agents/ui/OtherSetupAgentMarker.tsx
 msgid "Not managed on this device"
@@ -5178,6 +6201,7 @@ msgid "Not mirrored on {productName}. Repository files are hosted on {externalHo
 msgstr "Not mirrored on {productName}. Repository files are hosted on {externalHost}."
 
 #: src/features/agents/ui/runOnSummary.ts
+#: src/features/settings/ui/ProfileSettingsCard.tsx
 msgid "Not set"
 msgstr "Not set"
 
@@ -5193,9 +6217,14 @@ msgstr "Nothing needs action"
 msgid "Nothing shared yet"
 msgstr "Nothing shared yet"
 
+#: src/features/settings/ui/NotificationSettingsCard.tsx
 #: src/features/settings/ui/SettingsPanels.tsx
 msgid "Notifications"
 msgstr "Notifications"
+
+#: src/features/settings/ui/NotificationSettingsCard.tsx
+msgid "Notify while viewing"
+msgstr "Notify while viewing"
 
 #: src/features/channels/lib/ephemeralChannel.ts
 msgid "now"
@@ -5230,6 +6259,14 @@ msgstr "Observer not attached"
 #: src/features/agents/observerRelayStore.ts
 msgid "Observer relay subscription failed."
 msgstr "Observer relay subscription failed."
+
+#: src/features/settings/ui/NotificationSettingsCard.tsx
+msgid "Off"
+msgstr "Off"
+
+#: src/features/settings/ui/NotificationSettingsCard.tsx
+msgid "On"
+msgstr "On"
 
 #: src/features/messages/lib/dateFormatters.ts
 msgid "on {date}"
@@ -5323,7 +6360,9 @@ msgid "Open a review"
 msgstr "Open a review"
 
 #. placeholder {0}: persona.displayName
+#. placeholder {0}: runtime.label
 #: src/features/agents/ui/PersonaActionsMenu.tsx
+#: src/features/settings/ui/HarnessRow.tsx
 msgid "Open actions for {0}"
 msgstr "Open actions for {0}"
 
@@ -5335,6 +6374,10 @@ msgstr "Open activity feed. Last live {lastLiveLabel}."
 #: src/features/projects/ui/ProjectOriginReference.tsx
 msgid "Open author-claimed origin channel #{0}"
 msgstr "Open author-claimed origin channel #{0}"
+
+#: src/features/settings/ui/MobilePairingCard.tsx
+msgid "Open Buzz on your mobile device and scan the code shown here."
+msgstr "Open Buzz on your mobile device and scan the code shown here."
 
 #: src/shared/ui/markdown/MessageLinkPill.tsx
 msgid "Open channel {channelLabel}; linked message was deleted"
@@ -5423,6 +6466,10 @@ msgstr "Open review"
 msgid "Open reviews"
 msgstr "Open reviews"
 
+#: src/features/settings/EncryptedBackupProvider.tsx
+msgid "Open settings"
+msgstr "Open settings"
+
 #: src/features/home/ui/ProjectInboxDetailPane.tsx
 #: src/features/projects/ui/ProjectsIssuesList.tsx
 msgid "Open task"
@@ -5502,6 +6549,10 @@ msgstr "OPENAI_API_KEY"
 msgid "OpenAI-compatible"
 msgstr "OpenAI-compatible"
 
+#: src/features/settings/ui/harnessCatalogCopy.ts
+msgid "OpenAI's coding agent, connected through the codex-acp adapter."
+msgstr "OpenAI's coding agent, connected through the codex-acp adapter."
+
 #: src/features/agents/ui/agentConfigOptions.tsx
 msgid "OpenRouter"
 msgstr "OpenRouter"
@@ -5579,6 +6630,38 @@ msgstr "Overview"
 msgid "Owned by me"
 msgstr "Owned by me"
 
+#: src/features/settings/ui/MobilePairingCard.tsx
+msgid "Pair your mobile app"
+msgstr "Pair your mobile app"
+
+#: src/features/settings/ui/MobilePairingCard.tsx
+msgid "Paired"
+msgstr "Paired"
+
+#: src/features/settings/ui/MobilePairingCard.tsx
+msgid "Pairing code expired."
+msgstr "Pairing code expired."
+
+#: src/features/settings/ui/MobilePairingCard.tsx
+msgid "Pairing mobile device..."
+msgstr "Pairing mobile device..."
+
+#: src/features/settings/ui/MobilePairingCard.tsx
+msgid "Pairing session ended."
+msgstr "Pairing session ended."
+
+#: src/features/settings/ui/MobilePairingCard.tsx
+msgid "Pairing stopped: {reason}"
+msgstr "Pairing stopped: {reason}"
+
+#: src/features/settings/ui/MobilePairingCard.tsx
+msgid "Pairing took too long. Try again."
+msgstr "Pairing took too long. Try again."
+
+#: src/features/settings/ui/MobilePairingCard.tsx
+msgid "Pairing was canceled."
+msgstr "Pairing was canceled."
+
 #: src/features/agents/ui/EditAgentAdvancedFields.tsx
 #: src/features/agents/ui/PersonaAdvancedFields.tsx
 msgid "Parallelism"
@@ -5588,6 +6671,10 @@ msgstr "Parallelism"
 #: src/features/agents/ui/AgentSessionToolItem/ToolDetailBlocks.tsx
 msgid "Parameters"
 msgstr "Parameters"
+
+#: src/features/settings/ui/EncryptedBackupCreator.tsx
+msgid "Password (min {MIN_PASSPHRASE_LEN} characters)"
+msgstr "Password (min {MIN_PASSPHRASE_LEN} characters)"
 
 #: src/features/agents/ui/AgentCreationPreview.tsx
 msgid "Paste a URL"
@@ -5610,6 +6697,14 @@ msgstr "Paste this repository, review, or task link in a channel and it will app
 msgid "Paste your private key to sign in to {0}. You can also use a <0>backup file</0>, or <1>recover from your phone</1>."
 msgstr "Paste your private key to sign in to {0}. You can also use a <0>backup file</0>, or <1>recover from your phone</1>."
 
+#: src/features/settings/ui/HarnessCatalogDialog.tsx
+msgid "Path"
+msgstr "Path"
+
+#: src/features/settings/ui/SoundPicker.tsx
+msgid "Pause {value}"
+msgstr "Pause {value}"
+
 #: src/features/agents/ui/agentSessionToolCatalog.ts
 #: src/features/home/ui/InboxListPane.tsx
 msgid "Pending"
@@ -5623,6 +6718,10 @@ msgstr "People"
 #: src/features/agents/ui/EditAgentAdvancedFields.tsx
 msgid "Per-agent env vars. Override the template's vars on collision."
 msgstr "Per-agent env vars. Override the template's vars on collision."
+
+#: src/features/settings/ui/EncryptedBackupCreator.tsx
+msgid "Periods"
+msgstr "Periods"
 
 #: src/features/agents/ui/agentSessionTranscript.ts
 msgid "Permission requested"
@@ -5675,12 +6774,30 @@ msgstr "plan"
 msgid "Plan updated"
 msgstr "Plan updated"
 
+#: src/features/settings/ui/VoiceSettingsCard.tsx
+msgid "Playback"
+msgstr "Playback"
+
 #: src/features/agents/ui/AgentSnapshotExportDialog.tsx
 #: src/features/agents/ui/TeamSnapshotExportDialog.tsx
 msgid "PNG"
 msgstr "PNG"
 
+#: src/features/settings/ui/VoiceSettingsCard.tsx
+msgid "Pocket TTS voice"
+msgstr "Pocket TTS voice"
+
+#. placeholder {0}: selectedVoice?.displayName ?? DEFAULT_VOICE_NAME
+#: src/features/settings/ui/VoiceSettingsCard.tsx
+msgid "Pocket TTS voice: {0}"
+msgstr "Pocket TTS voice: {0}"
+
+#: src/features/settings/ui/SendFeedbackDialog.tsx
+msgid "Praise"
+msgstr "Praise"
+
 #: src/features/settings/ui/AppearanceSettingsPanel.tsx
+#: src/features/settings/ui/PreventSleepSettingsCard.tsx
 msgid "Preferences"
 msgstr "Preferences"
 
@@ -5701,13 +6818,35 @@ msgstr "Preferred runtime"
 msgid "Prepare the local checkout, then switch to {0} with the commands shown. After resolving and committing, push the target branch and retry the merge."
 msgstr "Prepare the local checkout, then switch to {0} with the commands shown. After resolving and committing, push the target branch and retry the merge."
 
+#: src/features/settings/EncryptedBackupProvider.tsx
+msgid "Preparing backup…"
+msgstr "Preparing backup…"
+
+#: src/features/settings/UpdateChecker.tsx
+msgid "Preparing update..."
+msgstr "Preparing update..."
+
 #: src/features/projects/ui/MergePullRequestButton.tsx
 msgid "Preparing…"
 msgstr "Preparing…"
 
+#: src/features/settings/ui/PreventSleepSettingsCard.tsx
+msgid "Prevents your computer from sleeping while local agents are running. Automatically releases when all agents stop or after 1 hour without agent activity."
+msgstr "Prevents your computer from sleeping while local agents are running. Automatically releases when all agents stop or after 1 hour without agent activity."
+
 #: src/features/settings/ui/AppearanceSettingsControls.tsx
+#: src/features/settings/ui/VoiceSettingsCard.tsx
 msgid "Preview"
 msgstr "Preview"
+
+#. placeholder {0}: selectedVoice?.displayName ?? DEFAULT_VOICE_NAME
+#: src/features/settings/ui/VoiceSettingsCard.tsx
+msgid "Preview {0}"
+msgstr "Preview {0}"
+
+#: src/features/settings/ui/SoundPicker.tsx
+msgid "Preview {value}"
+msgstr "Preview {value}"
 
 #: src/features/projects/ui/AgentContextPayloadPreview.tsx
 msgid "Preview the exact context appended to your message"
@@ -5729,13 +6868,34 @@ msgstr "Private"
 msgid "Private channel"
 msgstr "Private channel"
 
+#: src/features/settings/ui/PrivateKeyBackupRow.tsx
+msgid "Private key"
+msgstr "Private key"
+
 #: src/features/settings/ui/AppearanceSettingsControls.tsx
 msgid "Product updates — a fresh look at conversations"
 msgstr "Product updates — a fresh look at conversations"
 
+#: src/features/settings/ui/ProfileSettingsCard.tsx
 #: src/features/settings/ui/SettingsPanels.tsx
 msgid "Profile"
 msgstr "Profile"
+
+#: src/features/settings/ui/ProfileSettingsCard.tsx
+msgid "Profile description"
+msgstr "Profile description"
+
+#: src/features/settings/ui/ProfileSettingsCard.tsx
+msgid "profile info"
+msgstr "profile info"
+
+#: src/features/settings/ui/ProfileSettingsCard.tsx
+msgid "Profile info"
+msgstr "Profile info"
+
+#: src/features/settings/ui/ProfileSettingsCard.tsx
+msgid "Profile saved"
+msgstr "Profile saved"
 
 #: src/features/agents/ui/TeamSnapshotImportDialog.tsx
 msgid "Profile sync failed for:"
@@ -5844,9 +7004,17 @@ msgstr "Provided by this build"
 msgid "Provider"
 msgstr "Provider"
 
+#: src/features/settings/ui/AgentDefaultsSettingsCard.tsx
+msgid "Provider, model, effort, and environment settings inherited by local agents. Agent-specific settings always take priority."
+msgstr "Provider, model, effort, and environment settings inherited by local agents. Agent-specific settings always take priority."
+
 #: src/shared/ui/markdown/ChannelDeepLink.tsx
 msgid "Public channel"
 msgstr "Public channel"
+
+#: src/features/settings/ui/ProfileSettingsCard.tsx
+msgid "Public key"
+msgstr "Public key"
 
 #: src/shared/lib/keyboard-shortcuts.ts
 msgid "Publish a Pulse note"
@@ -5954,6 +7122,10 @@ msgstr "Re-review needed"
 msgid "Read file"
 msgstr "Read file"
 
+#: src/features/settings/ui/VoiceSettingsCard.tsx
+msgid "Read new agent messages aloud in the order they arrive."
+msgstr "Read new agent messages aloud in the order they arrive."
+
 #: src/features/agents/ui/agentSessionToolClassifier.ts
 msgid "Read skill"
 msgstr "Read skill"
@@ -5978,6 +7150,11 @@ msgstr "Reads from {productName}."
 msgid "Reads workflow state from {productName}."
 msgstr "Reads workflow state from {productName}."
 
+#: src/features/settings/ui/HarnessCatalogDialog.tsx
+#: src/features/settings/ui/HarnessRow.tsx
+msgid "Ready"
+msgstr "Ready"
+
 #: src/features/projects/ui/PullRequestReviewCard.tsx
 msgid "Ready for review"
 msgstr "Ready for review"
@@ -5985,6 +7162,18 @@ msgstr "Ready for review"
 #: src/features/agents/ui/ManagedAgentRow.tsx
 msgid "Ready to launch"
 msgstr "Ready to launch"
+
+#: src/features/settings/SidebarUpdateCard.tsx
+msgid "Ready to update!"
+msgstr "Ready to update!"
+
+#: src/features/settings/ui/HarnessesSettingsPanel.tsx
+msgid "Ready to use, or one click from installed."
+msgstr "Ready to use, or one click from installed."
+
+#: src/features/settings/ui/SoundPicker.tsx
+msgid "rec."
+msgstr "rec."
 
 #: src/features/channels/ui/ChannelBrowserDialog.tsx
 #: src/features/settings/ui/AppearanceSettingsControls.tsx
@@ -6005,6 +7194,10 @@ msgstr "Recent Notes"
 msgid "Recipient limit reached"
 msgstr "Recipient limit reached"
 
+#: src/features/settings/ui/HostedCommunitiesSettingsCard.tsx
+msgid "Recipient npub"
+msgstr "Recipient npub"
+
 #: src/features/sidebar/ui/SidebarRelayConnectionCard.tsx
 msgid "Reconnecting"
 msgstr "Reconnecting"
@@ -6012,6 +7205,10 @@ msgstr "Reconnecting"
 #: src/features/onboarding/ui/MachineOnboardingFlow.tsx
 msgid "Recover from your phone"
 msgstr "Recover from your phone"
+
+#: src/features/settings/ui/HostedCommunitiesSettingsCard.tsx
+msgid "Refresh"
+msgstr "Refresh"
 
 #: src/features/projects/ui/ProjectIssuesPanel.tsx
 msgid "Refresh the project and try again."
@@ -6034,9 +7231,18 @@ msgstr "Refresh the repository or ask an agent to investigate."
 msgid "Refresh the repository or check its access settings."
 msgstr "Refresh the repository or check its access settings."
 
+#: src/features/settings/ui/HarnessCatalogDialog.tsx
+#: src/features/settings/ui/HostedCommunitiesSettingsCard.tsx
+msgid "Refreshing…"
+msgstr "Refreshing…"
+
 #: src/features/agents/ui/AddCustomHarnessDialog.tsx
 msgid "Register any ACP-speaking agent tool as a selectable harness."
 msgstr "Register any ACP-speaking agent tool as a selectable harness."
+
+#: src/features/settings/ui/HarnessCatalogDialog.tsx
+msgid "Register any ACP-speaking agent tool as a selectable runtime."
+msgstr "Register any ACP-speaking agent tool as a selectable runtime."
 
 #: src/features/projects/ui/DiscussionChannels.tsx
 msgid "Related Conversations"
@@ -6090,6 +7296,18 @@ msgstr "Remove {0}"
 msgid "Remove {scopeLabel} search scope"
 msgstr "Remove {scopeLabel} search scope"
 
+#: src/features/settings/ui/CustomHarnessForm.tsx
+msgid "Remove argument"
+msgstr "Remove argument"
+
+#: src/features/settings/ui/SendFeedbackDialog.tsx
+msgid "Remove attachment"
+msgstr "Remove attachment"
+
+#: src/features/settings/ui/CustomHarnessForm.tsx
+msgid "Remove env var"
+msgstr "Remove env var"
+
 #: src/features/sidebar/ui/ChannelContextMenu.tsx
 msgid "Remove from section"
 msgstr "Remove from section"
@@ -6105,6 +7323,10 @@ msgstr "Remove variable"
 #: src/features/agents/ui/RestartDiffBadge.tsx
 msgid "removed"
 msgstr "removed"
+
+#: src/features/settings/ui/SignOutSection.tsx
+msgid "Removes your identity key and all local app data from this device. Before signing out, create and test a password-protected key backup above — this cannot be undone."
+msgstr "Removes your identity key and all local app data from this device. Before signing out, create and test a password-protected key backup above — this cannot be undone."
 
 #. placeholder {0}: persona.displayName
 #: src/features/agents/ui/usePersonaActions.ts
@@ -6203,6 +7425,14 @@ msgstr "Repository not initialized"
 msgid "Repository unavailable"
 msgstr "Repository unavailable"
 
+#: src/features/settings/ui/HarnessRow.tsx
+msgid "Request failed."
+msgstr "Request failed."
+
+#: src/features/settings/ui/NotificationSettingsCard.tsx
+msgid "Request OS permission and surface new mentions or needs-action items outside the app."
+msgstr "Request OS permission and surface new mentions or needs-action items outside the app."
+
 #: src/features/projects/ui/ProjectPullRequestsPanel.tsx
 msgid "requested a review"
 msgstr "requested a review"
@@ -6223,11 +7453,19 @@ msgstr "requested changes to a review in"
 msgid "requested review in"
 msgstr "requested review in"
 
+#: src/features/settings/ui/NotificationSettingsCard.tsx
+msgid "Requesting..."
+msgstr "Requesting..."
+
 #: src/features/agents/ui/AdvancedRequiredBadge.tsx
 #: src/features/agents/ui/AgentDefinitionDialog.tsx
 #: src/features/agents/ui/EnvVarsEditor.tsx
 msgid "Required"
 msgstr "Required"
+
+#: src/features/settings/ui/HarnessesSettingsPanel.tsx
+msgid "Required for buzz-agent shell tools on Windows."
+msgstr "Required for buzz-agent shell tools on Windows."
 
 #: src/features/agents/ui/AgentCardViewerDialog.tsx
 msgid "Reroll"
@@ -6304,6 +7542,8 @@ msgstr "Restore from a backup file"
 #: src/features/projects/ui/ProjectsPullRequestsList.tsx
 #: src/features/projects/ui/ProjectsView.tsx
 #: src/features/projects/ui/ProjectsWorkItemsLoadNotice.tsx
+#: src/features/settings/ui/HarnessCatalogDialog.tsx
+#: src/features/settings/UpdateChecker.tsx
 msgid "Retry"
 msgstr "Retry"
 
@@ -6317,6 +7557,19 @@ msgstr "Retrying…"
 #: src/features/onboarding/ui/MachineOnboardingFlow.tsx
 msgid "Return to onboarding"
 msgstr "Return to onboarding"
+
+#: src/features/settings/ui/PrivateKeyBackupRow.tsx
+msgid "Reveal"
+msgstr "Reveal"
+
+#: src/features/settings/ui/BackupTestFlow.tsx
+#: src/features/settings/ui/EncryptedBackupCreator.tsx
+msgid "Reveal password"
+msgstr "Reveal password"
+
+#: src/features/settings/ui/PrivateKeyBackupRow.tsx
+msgid "Reveal private key"
+msgstr "Reveal private key"
 
 #: src/features/projects/ui/CreateProjectWorkItemDialog.tsx
 msgid "review"
@@ -6419,6 +7672,19 @@ msgstr "Runtime not available: {selectedRuntimeAvailability}"
 msgid "Runtime override: using {0} instead of {1}."
 msgstr "Runtime override: using {0} instead of {1}."
 
+#: src/features/settings/ui/ChannelTemplatesSettingsCard.tsx
+msgid "Runtimes"
+msgstr "Runtimes"
+
+#: src/features/settings/ui/ChannelTemplatesSettingsCard.tsx
+#: src/features/settings/ui/CustomHarnessForm.tsx
+msgid "Save"
+msgstr "Save"
+
+#: src/features/settings/ui/ChannelTemplatesSettingsCard.tsx
+msgid "Save a reusable channel configuration."
+msgstr "Save a reusable channel configuration."
+
 #: src/features/agents/ui/AgentDefinitionDialogFooter.tsx
 msgid "Save and publish"
 msgstr "Save and publish"
@@ -6437,6 +7703,10 @@ msgstr "Save changes"
 #: src/features/agents/ui/AgentDefaultsEditor.tsx
 msgid "Save defaults"
 msgstr "Save defaults"
+
+#: src/features/settings/ui/ChannelTemplatesSettingsCard.tsx
+msgid "Save reusable channel configurations and apply them when creating new channels."
+msgstr "Save reusable channel configurations and apply them when creating new channels."
 
 #: src/features/agents/ui/AgentCardViewerDialog.tsx
 msgid "Saved {agentName}'s card. Share it — the card IS the agent."
@@ -6457,9 +7727,26 @@ msgstr "Saved. {failedRestartCount} agent{0} couldn't restart — check the Agen
 msgid "Saved. Restarted {restartedCount} agent{0}.{1}"
 msgstr "Saved. Restarted {restartedCount} agent{0}.{1}"
 
+#: src/features/settings/ui/ProfileSettingsCard.tsx
+msgid "Saving avatar"
+msgstr "Saving avatar"
+
+#: src/features/settings/EncryptedBackupProvider.tsx
+msgid "Saving backup…"
+msgstr "Saving backup…"
+
+#: src/features/settings/ui/ProfileSettingsCard.tsx
+msgid "Saving profile photo"
+msgstr "Saving profile photo"
+
 #: src/features/agents/ui/AgentDefinitionDialogFooter.tsx
+#: src/features/settings/ui/ChannelTemplatesSettingsCard.tsx
 msgid "Saving..."
 msgstr "Saving..."
+
+#: src/features/settings/ui/MobilePairingCard.tsx
+msgid "Scan QR code"
+msgstr "Scan QR code"
 
 #. placeholder {0}: BRAND.productName
 #: src/features/onboarding/ui/MachineOnboardingFlow.tsx
@@ -6566,6 +7853,14 @@ msgstr "Search people and agents"
 msgid "Search projects"
 msgstr "Search projects"
 
+#: src/features/settings/ui/HarnessCatalogDialog.tsx
+msgid "Search runtimes"
+msgstr "Search runtimes"
+
+#: src/features/settings/ui/HarnessCatalogDialog.tsx
+msgid "Search runtimes…"
+msgstr "Search runtimes…"
+
 #: src/features/agents/ui/agentSessionToolCatalog.ts
 msgid "Searches relay-visible {productName} history."
 msgstr "Searches relay-visible {productName} history."
@@ -6630,6 +7925,10 @@ msgstr "Select a provider"
 msgid "Select a provider…"
 msgstr "Select a provider…"
 
+#: src/features/settings/ui/HarnessCatalogDialog.tsx
+msgid "Select a runtime on the left, or add a custom one."
+msgstr "Select a runtime on the left, or add a custom one."
+
 #: src/features/projects/ui/ProjectSelectableGroup.tsx
 msgid "Select all {label}"
 msgstr "Select all {label}"
@@ -6654,9 +7953,17 @@ msgstr "Select model"
 msgid "Select provider"
 msgstr "Select provider"
 
+#: src/features/settings/ui/ChannelTemplatesSettingsCard.tsx
+msgid "Select teams to include in this template."
+msgstr "Select teams to include in this template."
+
 #: src/features/agents/ui/TeamDialog.tsx
 msgid "Select the agents to include in this team."
 msgstr "Select the agents to include in this team."
+
+#: src/features/settings/ui/BackupTestFlow.tsx
+msgid "Select your backup file"
+msgstr "Select your backup file"
 
 #: src/features/agents/ui/RespondToField.tsx
 msgid "selected"
@@ -6698,6 +8005,10 @@ msgstr "Send failed: {0}"
 msgid "Send failed."
 msgstr "Send failed."
 
+#: src/features/settings/ui/SendFeedbackDialog.tsx
+msgid "Send feedback"
+msgstr "Send feedback"
+
 #: src/features/messages/ui/DraftsPanel.tsx
 #: src/shared/lib/keyboard-shortcuts.ts
 msgid "Send message"
@@ -6720,6 +8031,10 @@ msgstr "Send reply to channel thread"
 msgid "Send the current message"
 msgstr "Send the current message"
 
+#: src/features/settings/ui/SendFeedbackDialog.tsx
+msgid "Sending…"
+msgstr "Sending…"
+
 #: src/features/agents/ui/AgentCardViewerDialog.tsx
 msgid "Sent {agentName}'s card."
 msgstr "Sent {agentName}'s card."
@@ -6739,6 +8054,10 @@ msgstr "Sent message context"
 #: src/features/projects/ui/ProjectAgentSubmittedContextPill.tsx
 msgid "Sent project context"
 msgstr "Sent project context"
+
+#: src/features/settings/ui/EncryptedBackupCreator.tsx
+msgid "Separator"
+msgstr "Separator"
 
 #: src/features/agents/ui/AgentAiDefaults.tsx
 msgid "Set"
@@ -6768,6 +8087,14 @@ msgstr "Set up this agent on this device to start it."
 #: src/shared/lib/keyboard-shortcuts.ts
 msgid "Settings"
 msgstr "Settings"
+
+#: src/features/settings/ui/HarnessCatalogDialog.tsx
+msgid "Setup"
+msgstr "Setup"
+
+#: src/features/settings/ui/harnessCatalogLogic.ts
+msgid "Setup guide"
+msgstr "Setup guide"
 
 #: src/features/agents/ui/PersonaActionsMenu.tsx
 #: src/features/agents/ui/PersonaShareDialog.tsx
@@ -6834,9 +8161,17 @@ msgstr "Shortcuts"
 msgid "Show"
 msgstr "Show"
 
+#: src/features/settings/ui/NotificationSettingsCard.tsx
+msgid "Show a Home badge for mentions and needs-action items in the sidebar."
+msgstr "Show a Home badge for mentions and needs-action items in the sidebar."
+
 #: src/features/agents/ui/PersonaProviderApiKeyField.tsx
 msgid "Show API key"
 msgstr "Show API key"
+
+#: src/features/settings/ui/NotificationSettingsCard.tsx
+msgid "Show less"
+msgstr "Show less"
 
 #: src/features/projects/ui/ProjectRepositoryPanel.tsx
 msgid "Show next {nextEntryCount}"
@@ -6907,9 +8242,55 @@ msgstr "Sidebar density"
 msgid "Sidebar order"
 msgstr "Sidebar order"
 
+#: src/features/settings/ui/MobilePairingCard.tsx
+msgid "Sign in to generate a mobile pairing code."
+msgstr "Sign in to generate a mobile pairing code."
+
+#: src/features/settings/ui/HostedCommunitiesSettingsCard.tsx
+msgid "Sign in to manage hosted communities"
+msgstr "Sign in to manage hosted communities"
+
+#: src/features/settings/ui/HostedCommunitiesSettingsCard.tsx
+msgid "Sign in with Builderlab"
+msgstr "Sign in with Builderlab"
+
+#: src/features/settings/ui/HostedCommunitiesSettingsCard.tsx
+#: src/features/settings/ui/SignOutSection.tsx
+msgid "Sign out"
+msgstr "Sign out"
+
+#: src/features/settings/ui/SignOutSection.tsx
+msgid "Sign out and wipe all data?"
+msgstr "Sign out and wipe all data?"
+
+#: src/features/settings/ui/SignOutSection.tsx
+msgid "Sign out failed."
+msgstr "Sign out failed."
+
+#: src/features/settings/ui/harnessCatalogLogic.ts
+msgid "Sign-in needed"
+msgstr "Sign-in needed"
+
+#: src/features/settings/ui/HostedCommunitiesSettingsCard.tsx
+msgid "Signing in…"
+msgstr "Signing in…"
+
+#: src/features/settings/ui/SignOutSection.tsx
+msgid "Signing out"
+msgstr "Signing out"
+
+#: src/features/settings/ui/HostedCommunitiesSettingsCard.tsx
+#: src/features/settings/ui/SignOutSection.tsx
+msgid "Signing out…"
+msgstr "Signing out…"
+
 #: src/features/agents/ui/AgentCardMintDialog.tsx
 msgid "sk-…"
 msgstr "sk-…"
+
+#: src/features/settings/ui/PreventSleepSettingsCard.tsx
+msgid "Sleep prevention expired after 1 hour without agent activity. It will resume on the next agent activity, or toggle off and on to re-enable now."
+msgstr "Sleep prevention expired after 1 hour without agent activity. It will resume on the next agent activity, or toggle off and on to re-enable now."
 
 #: src/features/settings/ui/AppearanceSettingsControls.tsx
 msgid "Small cards with a thumbnail"
@@ -6918,6 +8299,10 @@ msgstr "Small cards with a thumbnail"
 #: src/features/settings/ui/AppearanceSettingsControls.tsx
 msgid "Smaller"
 msgstr "Smaller"
+
+#: src/features/settings/UpdateChecker.tsx
+msgid "Software Updates"
+msgstr "Software Updates"
 
 #: src/features/home/ui/InboxDetailPane.tsx
 msgid "Some message context could not be loaded."
@@ -6944,6 +8329,18 @@ msgstr "Sort forums: {selected}"
 msgid "Sort projects"
 msgstr "Sort projects"
 
+#: src/features/settings/ui/NotificationSettingsCard.tsx
+msgid "Sound"
+msgstr "Sound"
+
+#: src/features/settings/ui/HarnessCatalogDialog.tsx
+msgid "Source"
+msgstr "Source"
+
+#: src/features/settings/ui/EncryptedBackupCreator.tsx
+msgid "Spaces"
+msgstr "Spaces"
+
 #: src/features/settings/ui/AppearanceSettingsControls.tsx
 msgid "Spacing in conversations and Markdown content across {productName}"
 msgstr "Spacing in conversations and Markdown content across {productName}"
@@ -6955,6 +8352,10 @@ msgstr "Spacious"
 #: src/features/settings/ui/AppearanceSettingsControls.tsx
 msgid "Split"
 msgstr "Split"
+
+#: src/features/settings/ui/ChannelTemplatesSettingsCard.tsx
+msgid "Sprint Planning"
+msgstr "Sprint Planning"
 
 #: src/features/projects/ui/ProjectAgentChatPanel.tsx
 msgid "Start a conversation with the project agent."
@@ -6985,6 +8386,10 @@ msgstr "Start or join a huddle in the current channel; leave when connected"
 msgid "Start or leave huddle"
 msgstr "Start or leave huddle"
 
+#: src/features/settings/ui/MobilePairingCard.tsx
+msgid "Start pairing"
+msgstr "Start pairing"
+
 #: src/features/projects/ui/ProjectOriginReference.tsx
 msgid "started from"
 msgstr "started from"
@@ -6996,6 +8401,10 @@ msgstr "started privately with"
 #: src/features/agents/ui/AgentRuntimeAvatarControl.tsx
 msgid "Starting Agent"
 msgstr "Starting Agent"
+
+#: src/features/settings/ui/MobilePairingCard.tsx
+msgid "Starting pairing..."
+msgstr "Starting pairing..."
 
 #: src/features/agents/ui/AgentSessionToolItem/SentMessageContextDialog.tsx
 #: src/features/agents/ui/ManagedAgentRow.tsx
@@ -7062,10 +8471,22 @@ msgstr "Switch back to All to see other activity."
 msgid "Switch to the remote source or clone this repository locally."
 msgstr "Switch to the remote source or clone this repository locally."
 
+#: src/features/settings/ui/HostedCommunitiesSettingsCard.tsx
+msgid "Switch to this device's identity"
+msgstr "Switch to this device's identity"
+
+#: src/features/settings/ui/HostedCommunitiesSettingsCard.tsx
+msgid "Switching identity…"
+msgstr "Switching identity…"
+
 #: src/features/agents/ui/agentSessionTranscriptHelpers.ts
 #: src/features/settings/ui/AppearanceSettingsPanel.tsx
 msgid "System"
 msgstr "System"
+
+#: src/features/settings/ui/HarnessesSettingsPanel.tsx
+msgid "System prerequisites"
+msgstr "System prerequisites"
 
 #: src/features/agents/ui/AgentConfigPanel.tsx
 msgid "System prompt"
@@ -7149,8 +8570,13 @@ msgid "Team: {0}"
 msgstr "Team: {0}"
 
 #: src/features/agents/ui/CommunityCatalogDialog.tsx
+#: src/features/settings/ui/ChannelTemplatesSettingsCard.tsx
 msgid "Teams"
 msgstr "Teams"
+
+#: src/features/settings/ui/SendFeedbackDialog.tsx
+msgid "Tell us what went wrong, or share general feedback."
+msgstr "Tell us what went wrong, or share general feedback."
 
 #: src/features/projects/ui/CreateProjectFormSettings.tsx
 #: src/features/projects/ui/ProjectChannelRequestDialog.tsx
@@ -7172,6 +8598,10 @@ msgstr "Template updated since this agent was created. Respawn to apply the new 
 msgid "Template: {0}"
 msgstr "Template: {0}"
 
+#: src/features/settings/ui/ChannelTemplatesSettingsCard.tsx
+msgid "Templates"
+msgstr "Templates"
+
 #. placeholder {0}: formatTtlDuration(request.ttlSeconds)
 #: src/features/projects/ui/ProjectChannelRequestDialog.tsx
 msgid "Temporary · {0}. Cleans up automatically after that period of inactivity."
@@ -7181,9 +8611,41 @@ msgstr "Temporary · {0}. Cleans up automatically after that period of inactivit
 msgid "Terminal"
 msgstr "Terminal"
 
+#: src/features/settings/ui/PrivateKeyBackupRow.tsx
+msgid "Test a key backup"
+msgstr "Test a key backup"
+
+#: src/features/settings/ui/BackupTestFlow.tsx
+msgid "Test another backup"
+msgstr "Test another backup"
+
+#: src/features/settings/ui/PrivateKeyBackupRow.tsx
+msgid "Test backup"
+msgstr "Test backup"
+
+#: src/features/settings/ui/HostedCommunitiesSettingsCard.tsx
+msgid "That address is already taken."
+msgstr "That address is already taken."
+
+#: src/features/settings/ui/HostedCommunitiesSettingsCard.tsx
+msgid "That address is available."
+msgstr "That address is available."
+
+#: src/features/settings/ui/HostedCommunitiesSettingsCard.tsx
+msgid "That Buzz address is already taken."
+msgstr "That Buzz address is already taken."
+
+#: src/features/settings/ui/BackupTestFlow.tsx
+msgid "That doesn't look like a key backup file."
+msgstr "That doesn't look like a key backup file."
+
 #: src/features/agents/ui/ModelPicker.tsx
 msgid "That model isn't available for this agent."
 msgstr "That model isn't available for this agent."
+
+#: src/features/settings/ui/BackupTestFlow.tsx
+msgid "That's the one. Now enter your password to prove you can unlock it."
+msgstr "That's the one. Now enter your password to prove you can unlock it."
 
 #: src/features/projects/ui/ProjectCards.tsx
 msgid "The {productName} git service could not be reached."
@@ -7222,6 +8684,10 @@ msgstr "The card carries the agent — anyone who imports this PNG gets a workin
 msgid "The card carries the agent — anyone who imports this PNG gets a working copy (fresh identity) including its {0}, stored as plaintext."
 msgstr "The card carries the agent — anyone who imports this PNG gets a working copy (fresh identity) including its {0}, stored as plaintext."
 
+#: src/features/settings/ui/harnessCatalogCopy.ts
+msgid "The coding agent and development environment that runs anywhere and everywhere."
+msgstr "The coding agent and development environment that runs anywhere and everywhere."
+
 #: src/features/projects/ui/CreatePullRequestDialog.tsx
 msgid "The compare branch must be pushed before opening a review."
 msgstr "The compare branch must be pushed before opening a review."
@@ -7230,9 +8696,17 @@ msgstr "The compare branch must be pushed before opening a review."
 msgid "The configured model is not available — open agent settings and select a different one from the dropdown."
 msgstr "The configured model is not available — open agent settings and select a different one from the dropdown."
 
+#: src/features/settings/EncryptedBackupProvider.tsx
+msgid "The download window will open when it’s ready."
+msgstr "The download window will open when it’s ready."
+
 #: src/features/agents/ui/ManagedAgentSessionPanel.tsx
 msgid "The live feed is available for local agents started after this update."
 msgstr "The live feed is available for local agents started after this update."
+
+#: src/features/settings/ui/HostedCommunitiesSettingsCard.tsx
+msgid "The new community did not return a relay address."
+msgstr "The new community did not return a relay address."
 
 #: src/features/messages/ui/DraftDetailPane.tsx
 msgid "The original thread was deleted. This draft can no longer be opened or sent."
@@ -7320,6 +8794,10 @@ msgstr "Theme style, {selectedThemeLabel}"
 msgid "These are the settings saved when the agent was created. Where an agent runs can't be changed afterwards — create a new agent to run somewhere else."
 msgstr "These are the settings saved when the agent was created. Where an agent runs can't be changed afterwards — create a new agent to run somewhere else."
 
+#: src/features/settings/ui/ExperimentalFeaturesCard.tsx
+msgid "These features are functional but still being refined. Enable them to try new capabilities early."
+msgstr "These features are functional but still being refined. Enable them to try new capabilities early."
+
 #: src/features/agents/ui/AgentDefaultsDialog.tsx
 msgid "These settings apply to all agents unless you override them. Agent-specific settings always take priority. Changes may restart running agents."
 msgstr "These settings apply to all agents unless you override them. Agent-specific settings always take priority. Changes may restart running agents."
@@ -7336,6 +8814,14 @@ msgstr "Thinking effort"
 #: src/features/agents/ui/PersonaShareDialog.tsx
 msgid "This"
 msgstr "This"
+
+#: src/features/settings/ui/HostedCommunitiesSettingsCard.tsx
+msgid "This account is connected to a different {productName} identity"
+msgstr "This account is connected to a different {productName} identity"
+
+#: src/features/settings/ui/HostedCommunitiesSettingsCard.tsx
+msgid "This address becomes connectable again. Connections that closed during archival will not reconnect automatically."
+msgstr "This address becomes connectable again. Connections that closed during archival will not reconnect automatically."
 
 #: src/features/agents/ui/personaModelDiscoveryStatus.ts
 #: src/features/agents/ui/usePersonaModelDiscovery.ts
@@ -7391,9 +8877,17 @@ msgstr "This agent's OpenAI key is set in its own agent settings — update it t
 msgid "This agent's OpenAI key is set in the process environment — update it in your shell or launch config."
 msgstr "This agent's OpenAI key is set in the process environment — update it in your shell or launch config."
 
+#: src/features/settings/ui/BackupTestFlow.tsx
+msgid "This backup works"
+msgstr "This backup works"
+
 #: src/features/agents/ui/RespondToField.tsx
 msgid "This build disallows changing this setting."
 msgstr "This build disallows changing this setting."
+
+#: src/features/settings/ui/HostedCommunitiesSettingsCard.tsx
+msgid "This Builderlab account isn't linked to a {productName} identity yet. Connect this device's key to create and own communities under it — {productName} signs a one-time challenge locally, so your private key never leaves Desktop."
+msgstr "This Builderlab account isn't linked to a {productName} identity yet. Connect this device's key to create and own communities under it — {productName} signs a one-time challenge locally, so your private key never leaves Desktop."
 
 #: src/features/agents/ui/AgentSnapshotImportDialog.tsx
 msgid "This card is"
@@ -7416,6 +8910,14 @@ msgstr "This computer"
 msgid "This conversation could not be loaded."
 msgstr "This conversation could not be loaded."
 
+#: src/features/settings/ui/HostedCommunitiesSettingsCard.tsx
+msgid "This device"
+msgstr "This device"
+
+#: src/features/settings/ui/HostedCommunitiesSettingsCard.tsx
+msgid "This device's {productName} identity is already reserved by another Builderlab account, so it can't be connected here. Sign in with that account, or transfer the identity there first."
+msgstr "This device's {productName} identity is already reserved by another Builderlab account, so it can't be connected here. Sign in with that account, or transfer the identity there first."
+
 #: src/features/projects/ui/AgentContextPayloadPreview.tsx
 msgid "This exact text is appended to your message before it is signed and sent. Quoted values are untrusted workspace metadata —{productName} does not verify or rewrite them."
 msgstr "This exact text is appended to your message before it is signed and sent. Quoted values are untrusted workspace metadata —{productName} does not verify or rewrite them."
@@ -7425,6 +8927,10 @@ msgstr "This exact text is appended to your message before it is signed and sent
 #: src/features/onboarding/ui/IdentityKeyHelpDialog.tsx
 msgid "This identity belongs to you, not {0}, and can move with you to another device or compatible Nostr app. Because only you control the private key, {1} can’t reset or recover it. Keep a backup somewhere safe, and never share it."
 msgstr "This identity belongs to you, not {0}, and can move with you to another device or compatible Nostr app. Because only you control the private key, {1} can’t reset or recover it. Keep a backup somewhere safe, and never share it."
+
+#: src/features/settings/ui/VoiceSettingsCard.tsx
+msgid "This imported voice and its local audio file will be removed."
+msgstr "This imported voice and its local audio file will be removed."
 
 #: src/features/home/lib/homeMessageCapabilities.ts
 msgid "This inbox item does not have a reply target."
@@ -7472,6 +8978,14 @@ msgstr "This project's channel could not be found."
 msgid "This provider at"
 msgstr "This provider at"
 
+#: src/features/settings/ui/harnessCatalogLogic.ts
+msgid "This replaces the machine-wide {adapter} adapter. Other tools using the currently installed adapter will switch to the updated version."
+msgstr "This replaces the machine-wide {adapter} adapter. Other tools using the currently installed adapter will switch to the updated version."
+
+#: src/features/settings/ui/harnessCatalogLogic.ts
+msgid "This replaces the machine-wide codex-acp adapter. Older {productName} releases using the legacy adapter may lose community access until @zed-industries/codex-acp@0.16.0 is restored."
+msgstr "This replaces the machine-wide codex-acp adapter. Older {productName} releases using the legacy adapter may lose community access until @zed-industries/codex-acp@0.16.0 is restored."
+
 #: src/features/projects/lib/projectRepoAvailability.ts
 msgid "This repository has no access channel binding, so the relay cannot authorize anyone to read it. The repository owner can bind a channel from the Access menu."
 msgstr "This repository has no access channel binding, so the relay cannot authorize anyone to read it. The repository owner can bind a channel from the Access menu."
@@ -7516,6 +9030,10 @@ msgstr "This week:"
 msgid "This will create a new identity and abandon your previous key. This cannot be undone. Continue?"
 msgstr "This will create a new identity and abandon your previous key. This cannot be undone. Continue?"
 
+#: src/features/settings/ui/SignOutSection.tsx
+msgid "This will delete your identity key, all agent settings, and cached data from this device, then relaunch {productName} into first-run setup. This cannot be undone."
+msgstr "This will delete your identity key, all agent settings, and cached data from this device, then relaunch {productName} into first-run setup. This cannot be undone."
+
 #: src/features/home/lib/inbox.ts
 #: src/features/search/ui/TopbarSearch.tsx
 #: src/features/sidebar/ui/ChannelActivityPopover.tsx
@@ -7546,6 +9064,10 @@ msgstr "Thread in {destination}"
 #: src/features/settings/ui/AppearanceSettingsControls.tsx
 msgid "Thread layout"
 msgstr "Thread layout"
+
+#: src/features/notifications/lib/sound.ts
+msgid "Thread replies"
+msgstr "Thread replies"
 
 #: src/features/home/ui/InboxFilterMenu.tsx
 msgid "Threads"
@@ -7611,6 +9133,22 @@ msgstr "Tool"
 msgid "Tool call"
 msgstr "Tool call"
 
+#: src/features/settings/ui/HostedCommunitiesSettingsCard.tsx
+msgid "Transfer"
+msgstr "Transfer"
+
+#: src/features/settings/ui/HostedCommunitiesSettingsCard.tsx
+msgid "Transfer {communityName} to another person. You become a regular member. The recipient needs a connected {productName} identity first, and this can't be undone."
+msgstr "Transfer {communityName} to another person. You become a regular member. The recipient needs a connected {productName} identity first, and this can't be undone."
+
+#: src/features/settings/ui/HostedCommunitiesSettingsCard.tsx
+msgid "Transfer ownership"
+msgstr "Transfer ownership"
+
+#: src/features/settings/ui/HostedCommunitiesSettingsCard.tsx
+msgid "Transferring ownership…"
+msgstr "Transferring ownership…"
+
 #. placeholder {0}: activeTab === "emoji" ? 100 : 0
 #. placeholder {0}: mode === "custom" ? 100 : 0
 #: src/features/agents/ui/AgentAiConfigurationMode.tsx
@@ -7639,6 +9177,7 @@ msgstr "Try a different search."
 #: src/features/agents/ui/HarnessCatalogRetryNotice.tsx
 #: src/features/agents/useCreatedAgentChannelAttachment.ts
 #: src/features/home/ui/HomeView.tsx
+#: src/features/settings/ui/MobilePairingCard.tsx
 #: src/features/settings/ui/SettingsView.tsx
 msgid "Try again"
 msgstr "Try again"
@@ -7689,6 +9228,22 @@ msgstr "turn:{turnId}:setup"
 msgid "Type"
 msgstr "Type"
 
+#: src/features/settings/ui/MobilePairingCard.tsx
+msgid "Type the six-digit code shown here into the Buzz mobile app."
+msgstr "Type the six-digit code shown here into the Buzz mobile app."
+
+#: src/features/settings/ui/HostedCommunitiesSettingsCard.tsx
+msgid "Unarchive"
+msgstr "Unarchive"
+
+#: src/features/settings/ui/HostedCommunitiesSettingsCard.tsx
+msgid "Unarchive {displayName}?"
+msgstr "Unarchive {displayName}?"
+
+#: src/features/settings/ui/HostedCommunitiesSettingsCard.tsx
+msgid "Unarchiving community…"
+msgstr "Unarchiving community…"
+
 #: src/features/projects/ui/IssueAssigneesRow.tsx
 msgid "Unassign {label}"
 msgstr "Unassign {label}"
@@ -7702,8 +9257,13 @@ msgstr "Unassigned"
 #: src/features/projects/ui/ProjectCards.tsx
 #: src/features/projects/ui/ProjectHomeContextPanel.tsx
 #: src/features/projects/ui/UnavailableProjectRepositories.tsx
+#: src/features/settings/ui/NotificationSettingsCard.tsx
 msgid "Unavailable"
 msgstr "Unavailable"
+
+#: src/features/settings/ui/HarnessCatalogDialog.tsx
+msgid "Underlying CLI"
+msgstr "Underlying CLI"
 
 #: src/features/home/ui/FeedSection.tsx
 msgid "Undo done"
@@ -7763,6 +9323,18 @@ msgstr "Unlock your account"
 msgid "Unmute channel"
 msgstr "Unmute channel"
 
+#: src/features/settings/ui/HostedCommunitiesSettingsCard.tsx
+msgid "Unpair identity"
+msgstr "Unpair identity"
+
+#: src/features/settings/ui/HostedCommunitiesSettingsCard.tsx
+msgid "Unpair this {productName} identity?"
+msgstr "Unpair this {productName} identity?"
+
+#: src/features/settings/ui/HostedCommunitiesSettingsCard.tsx
+msgid "Unpairing identity…"
+msgstr "Unpairing identity…"
+
 #: src/features/sidebar/ui/ChannelContextMenu.tsx
 msgid "Unpin channel"
 msgstr "Unpin channel"
@@ -7789,8 +9361,58 @@ msgid "Untitled task"
 msgstr "Untitled task"
 
 #: src/features/agents/ui/AgentCardMintDialog.tsx
+#: src/features/settings/ui/HarnessCatalogDialog.tsx
+#: src/features/settings/ui/harnessCatalogLogic.ts
+#: src/features/settings/ui/HarnessRow.tsx
 msgid "Update"
 msgstr "Update"
+
+#. placeholder {0}: entry.label
+#. placeholder {0}: runtime.label
+#: src/features/settings/ui/HarnessCatalogDialog.tsx
+#: src/features/settings/ui/HarnessRow.tsx
+msgid "Update {0} adapter?"
+msgstr "Update {0} adapter?"
+
+#: src/features/settings/SidebarUpdateCard.tsx
+#: src/features/settings/UpdateIndicator.tsx
+msgid "Update available"
+msgstr "Update available"
+
+#: src/features/settings/UpdateIndicator.tsx
+msgid "Update available — download from GitHub (use AppImage for auto-updates)"
+msgstr "Update available — download from GitHub (use AppImage for auto-updates)"
+
+#. placeholder {0}: status.version
+#: src/features/settings/UpdateChecker.tsx
+msgid "Update available — v{0}"
+msgstr "Update available — v{0}"
+
+#: src/features/settings/UpdateChecker.tsx
+msgid "Update downloaded. Click to apply."
+msgstr "Update downloaded. Click to apply."
+
+#. placeholder {0}: status.message
+#: src/features/settings/UpdateChecker.tsx
+msgid "Update failed: {0}"
+msgstr "Update failed: {0}"
+
+#: src/features/settings/ui/ProfileSettingsCard.tsx
+msgid "Update how your name, avatar, and bio appear across {productName}."
+msgstr "Update how your name, avatar, and bio appear across {productName}."
+
+#: src/features/settings/ui/harnessCatalogLogic.ts
+msgid "Update needed"
+msgstr "Update needed"
+
+#: src/features/settings/SidebarUpdateCard.tsx
+#: src/features/settings/UpdateIndicator.tsx
+msgid "Update now"
+msgstr "Update now"
+
+#: src/features/settings/UpdateChecker.tsx
+msgid "Update Now"
+msgstr "Update Now"
 
 #: src/features/agents/ui/cardMintKeyUtils.ts
 msgid "Update OpenAI API key"
@@ -7800,9 +9422,21 @@ msgstr "Update OpenAI API key"
 msgid "Update review"
 msgstr "Update review"
 
+#: src/features/settings/UpdateChecker.tsx
+msgid "Update status"
+msgstr "Update status"
+
+#: src/features/settings/ui/ChannelTemplatesSettingsCard.tsx
+msgid "Update this channel template configuration."
+msgstr "Update this channel template configuration."
+
 #: src/features/projects/ui/ProjectsWorkItemTable.tsx
 msgid "Updated"
 msgstr "Updated"
+
+#: src/features/settings/ui/ChannelTemplatesSettingsCard.tsx
+msgid "Updated \"{trimmedName}\""
+msgstr "Updated \"{trimmedName}\""
 
 #: src/features/agents/lib/personaSaveNotice.ts
 msgid "Updated {displayName} and published it to the community catalog."
@@ -7838,6 +9472,10 @@ msgstr "Updates {productName} identity or membership data."
 msgid "Updates workflow state in {productName}."
 msgstr "Updates workflow state in {productName}."
 
+#: src/features/settings/SidebarUpdateCard.tsx
+msgid "Updating"
+msgstr "Updating"
+
 #. placeholder {0}: err.message
 #: src/features/agents/ui/useSnapshotSendController.ts
 msgid "Upload failed: {0}"
@@ -7855,6 +9493,10 @@ msgstr "Uploading {assetLabel}"
 msgid "Uploading..."
 msgstr "Uploading..."
 
+#: src/features/settings/ui/ChannelTemplatesSettingsCard.tsx
+msgid "Use {channel.name} and {template.name} as placeholders."
+msgstr "Use {channel.name} and {template.name} as placeholders."
+
 #: src/features/settings/ui/AppearanceSettingsControls.tsx
 msgid "Use {colorName} accent"
 msgstr "Use {colorName} accent"
@@ -7862,6 +9504,10 @@ msgstr "Use {colorName} accent"
 #: src/features/agents/ui/AgentCreationPreview.tsx
 msgid "Use {swatch} background"
 msgstr "Use {swatch} background"
+
+#: src/features/settings/ui/BackupTestFlow.tsx
+msgid "Use a different file"
+msgstr "Use a different file"
 
 #: src/features/onboarding/ui/MachineOnboardingFlow.tsx
 msgid "Use a different key instead"
@@ -7896,6 +9542,10 @@ msgstr "Use app default"
 #: src/features/agents/ui/AgentAiConfigurationMode.tsx
 msgid "Use harness defaults"
 msgstr "Use harness defaults"
+
+#: src/features/settings/ui/HostedCommunitiesSettingsCard.tsx
+msgid "Use lowercase letters, numbers, and single hyphens."
+msgstr "Use lowercase letters, numbers, and single hyphens."
 
 #: src/features/agents/ui/agentConfigOptions.tsx
 msgid "Used for minting agent trading cards"
@@ -7943,7 +9593,12 @@ msgstr "v"
 msgid "v{appVersion}"
 msgstr "v{appVersion}"
 
+#: src/features/settings/SidebarUpdateCard.tsx
+msgid "v{version} available — download from GitHub. Switch to AppImage for automatic updates."
+msgstr "v{version} available — download from GitHub. Switch to AppImage for automatic updates."
+
 #: src/features/agents/ui/EnvVarsEditor.tsx
+#: src/features/settings/ui/CustomHarnessForm.tsx
 msgid "value"
 msgstr "value"
 
@@ -7963,6 +9618,18 @@ msgstr "Variable value"
 msgid "VARIABLE_NAME"
 msgstr "VARIABLE_NAME"
 
+#: src/features/settings/ui/MobilePairingCard.tsx
+msgid "Verification code {code} ready. Check that it matches on your mobile device, then confirm the codes match."
+msgstr "Verification code {code} ready. Check that it matches on your mobile device, then confirm the codes match."
+
+#: src/features/settings/ui/MobilePairingCard.tsx
+msgid "Verification code {code} ready. Enter this code in the Buzz app on your phone."
+msgstr "Verification code {code} ready. Enter this code in the Buzz app on your phone."
+
+#: src/features/settings/ui/BackupTestFlow.tsx
+msgid "Verify backup"
+msgstr "Verify backup"
+
 #. placeholder {0}: project.name
 #. placeholder {0}: repository.name
 #: src/features/projects/ui/ProjectCards.tsx
@@ -7978,9 +9645,17 @@ msgstr "View {actorLabel}'s profile"
 msgid "View {label}'s profile"
 msgstr "View {label}'s profile"
 
+#: src/features/settings/ui/NotificationSettingsCard.tsx
+msgid "View all"
+msgstr "View all"
+
 #: src/features/home/ui/RecentNotesSection.tsx
 msgid "View all in Pulse"
 msgstr "View all in Pulse"
+
+#: src/features/settings/ui/SendFeedbackDialog.tsx
+msgid "View attached image"
+msgstr "View attached image"
 
 #: src/features/agents/cardMintStore.ts
 msgid "View card"
@@ -8064,12 +9739,41 @@ msgid "Visit Settings > Agents to set it up."
 msgstr "Visit Settings > Agents to set it up."
 
 #: src/features/settings/ui/SettingsPanels.tsx
+#: src/features/settings/ui/VoiceSettingsCard.tsx
 msgid "Voice"
 msgstr "Voice"
+
+#: src/features/settings/ui/VoiceSettingsCard.tsx
+msgid "Voice could not be deleted."
+msgstr "Voice could not be deleted."
+
+#: src/features/settings/ui/VoiceSettingsCard.tsx
+msgid "Voice could not be imported."
+msgstr "Voice could not be imported."
+
+#: src/features/settings/ui/VoiceSettingsCard.tsx
+msgid "Voice files stay private on this device."
+msgstr "Voice files stay private on this device."
+
+#: src/features/settings/ui/VoiceSettingsCard.tsx
+msgid "Voice preview could not be played."
+msgstr "Voice preview could not be played."
+
+#: src/features/settings/ui/VoiceSettingsCard.tsx
+msgid "Voice settings could not be loaded."
+msgstr "Voice settings could not be loaded."
+
+#: src/features/settings/ui/VoiceSettingsCard.tsx
+msgid "Voice settings could not be saved."
+msgstr "Voice settings could not be saved."
 
 #: src/features/agents/ui/AgentSessionTranscriptList.tsx
 msgid "Waiting for ACP activity"
 msgstr "Waiting for ACP activity"
+
+#: src/features/settings/ui/PreventSleepSettingsCard.tsx
+msgid "Waiting for agents to start"
+msgstr "Waiting for agents to start"
 
 #: src/features/agents/ui/ManagedAgentSessionPanel.tsx
 msgid "Waiting for the next agent turn."
@@ -8096,6 +9800,14 @@ msgstr "was created"
 msgid "was created successfully."
 msgstr "was created successfully."
 
+#: src/features/settings/ui/MobilePairingCard.tsx
+msgid "We couldn't send your identity. Try again."
+msgstr "We couldn't send your identity. Try again."
+
+#: src/features/settings/ui/MobilePairingCard.tsx
+msgid "We couldn't start pairing. Try again."
+msgstr "We couldn't start pairing. Try again."
+
 #: src/features/agents/ui/AgentConfigFields.tsx
 msgid "We couldn’t validate this API key. Check the key or your connection and try again."
 msgstr "We couldn’t validate this API key. Check the key or your connection and try again."
@@ -8116,6 +9828,10 @@ msgstr "What this agent does, in a sentence"
 msgid "What this project should become"
 msgstr "What this project should become"
 
+#: src/features/settings/ui/ChannelTemplatesSettingsCard.tsx
+msgid "What this template is for"
+msgstr "What this template is for"
+
 #: src/features/agents/ui/PersonaShareDialog.tsx
 msgid "What to include"
 msgstr "What to include"
@@ -8132,9 +9848,41 @@ msgstr "What’s an identity key?"
 msgid "What’s included"
 msgstr "What’s included"
 
+#: src/features/notifications/lib/sound.ts
+msgid "When an agent finishes a job."
+msgstr "When an agent finishes a job."
+
+#: src/features/notifications/lib/sound.ts
+msgid "When an agent job fails."
+msgstr "When an agent job fails."
+
+#: src/features/notifications/lib/sound.ts
+msgid "When an agent picks up a job."
+msgstr "When an agent picks up a job."
+
+#: src/features/notifications/lib/sound.ts
+msgid "When an approval or reminder is waiting on you."
+msgstr "When an approval or reminder is waiting on you."
+
+#: src/features/notifications/lib/sound.ts
+msgid "When someone messages you directly."
+msgstr "When someone messages you directly."
+
+#: src/features/notifications/lib/sound.ts
+msgid "When someone replies in a thread you follow or posted in."
+msgstr "When someone replies in a thread you follow or posted in."
+
+#: src/features/notifications/lib/sound.ts
+msgid "When someone tags you in a channel."
+msgstr "When someone tags you in a channel."
+
 #: src/features/projects/ui/ProjectsAgentPromptPage.tsx
 msgid "Which reviews need attention today?"
 msgstr "Which reviews need attention today?"
+
+#: src/features/notifications/lib/sound.ts
+msgid "While an agent works through a job."
+msgstr "While an agent works through a job."
 
 #: src/features/agents/ui/AgentCardMintDialog.tsx
 msgid "while it works."
@@ -8161,9 +9909,17 @@ msgstr "will receive your agent's private key. Only use providers from trusted s
 msgid "Will start {0} automatically when the desktop app opens."
 msgstr "Will start {0} automatically when the desktop app opens."
 
+#: src/features/settings/ui/HarnessesSettingsPanel.tsx
+msgid "Windows tools required by supported agents."
+msgstr "Windows tools required by supported agents."
+
 #: src/features/agents/ui/PersonaShareDialog.tsx
 msgid "with will receive a copy they can add and use. Changes you make later won’t sync."
 msgstr "with will receive a copy they can add and use. Changes you make later won’t sync."
+
+#: src/features/settings/ui/EncryptedBackupCreator.tsx
+msgid "Words"
+msgstr "Words"
 
 #: src/features/sidebar/ui/AppSidebarPinnedHeader.tsx
 msgid "Workflows"
@@ -8185,6 +9941,10 @@ msgstr "Workspace"
 msgid "Writes to {productName}."
 msgstr "Writes to {productName}."
 
+#: src/features/settings/ui/harnessCatalogCopy.ts
+msgid "xAI's coding agent, connected to {productName} through its ACP entrypoint."
+msgstr "xAI's coding agent, connected to {productName} through its ACP entrypoint."
+
 #: src/shared/lib/datetime.ts
 msgid "Yesterday"
 msgstr "Yesterday"
@@ -8205,6 +9965,18 @@ msgstr "You are currently timed out and cannot send messages."
 msgid "You can always use this agent."
 msgstr "You can always use this agent."
 
+#: src/features/settings/ui/EncryptedBackupCreator.tsx
+msgid "You can close this window while {productName} finishes the backup in the background."
+msgstr "You can close this window while {productName} finishes the backup in the background."
+
+#: src/features/settings/EncryptedBackupProvider.tsx
+msgid "You can close this window while {productName} finishes."
+msgstr "You can close this window while {productName} finishes."
+
+#: src/features/settings/EncryptedBackupProvider.tsx
+msgid "You can download another copy for 5 minutes."
+msgstr "You can download another copy for 5 minutes."
+
 #: src/features/projects/lib/projectGitError.ts
 msgid "You need access to the repository’s channel before you can clone it."
 msgstr "You need access to the repository’s channel before you can clone it."
@@ -8217,21 +9989,69 @@ msgstr "You're all set"
 msgid "You’re not a member of the channel that grants access to this repository."
 msgstr "You’re not a member of the channel that grants access to this repository."
 
+#: src/features/settings/UpdateChecker.tsx
+msgid "You're on the latest version."
+msgstr "You're on the latest version."
+
+#: src/features/settings/ui/HostedCommunitiesSettingsCard.tsx
+msgid "You've reached your hosted community creation limit. Transferring a community may free an active slot; deleted community addresses remain reserved."
+msgstr "You've reached your hosted community creation limit. Transferring a community may free an active slot; deleted community addresses remain reserved."
+
 #: src/features/projects/ui/ProjectChannelRequestDialog.tsx
 msgid "Your agent requested a new channel in {projectName}. Review the details before creating it."
 msgstr "Your agent requested a new channel in {projectName}. Review the details before creating it."
+
+#: src/features/settings/ui/BackupTestFlow.tsx
+msgid "Your backup password"
+msgstr "Your backup password"
+
+#: src/features/settings/EncryptedBackupProvider.tsx
+msgid "Your backup will be available to download for 5 minutes."
+msgstr "Your backup will be available to download for 5 minutes."
+
+#: src/features/settings/ui/HostedCommunitiesSettingsCard.tsx
+msgid "Your Builderlab account owns communities under another {productName} key, so connecting them here would join a relay this device isn't a member of. Creating and connecting are paused until the identities match."
+msgstr "Your Builderlab account owns communities under another {productName} key, so connecting them here would join a relay this device isn't a member of. Creating and connecting are paused until the identities match."
+
+#: src/features/settings/ui/HostedCommunitiesSettingsCard.tsx
+msgid "Your Builderlab account will no longer be connected to this {productName} key. You can reconnect any key later, but community actions stay unavailable until you do."
+msgstr "Your Builderlab account will no longer be connected to this {productName} key. You can reconnect any key later, but community actions stay unavailable until you do."
 
 #: src/features/agents/ui/CommunityCatalogDialog.tsx
 msgid "Your changes to this agent will be lost."
 msgstr "Your changes to this agent will be lost."
 
+#: src/features/settings/ui/HostedCommunitiesSettingsCard.tsx
+msgid "Your communities"
+msgstr "Your communities"
+
 #: src/features/agents/lib/agentAccessWarning.ts
 msgid "your computer, including files, accounts, and connected tools"
 msgstr "your computer, including files, accounts, and connected tools"
 
+#: src/features/settings/ui/ProfileSettingsCard.tsx
+msgid "Your keypair and NIP-05 handle are fixed for this device."
+msgstr "Your keypair and NIP-05 handle are fixed for this device."
+
+#: src/features/settings/ui/MobilePairingCard.tsx
+msgid "Your mobile app is now connected to this relay."
+msgstr "Your mobile app is now connected to this relay."
+
+#: src/features/settings/ui/MobilePairingCard.tsx
+msgid "Your mobile app is now paired."
+msgstr "Your mobile app is now paired."
+
 #: src/features/onboarding/ui/MachineOnboardingFlow.tsx
 msgid "Your people, your agents, your projects —<0/>all in one place."
 msgstr "Your people, your agents, your projects —<0/>all in one place."
+
+#: src/features/settings/ui/ProfileSettingsCard.tsx
+msgid "Your profile"
+msgstr "Your profile"
+
+#: src/features/settings/ui/HarnessesSettingsPanel.tsx
+msgid "Your runtimes"
+msgstr "Your runtimes"
 
 #: src/shared/lib/keyboard-shortcuts.ts
 msgid "Zoom"

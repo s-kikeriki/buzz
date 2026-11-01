@@ -63,18 +63,61 @@ const CONVERTED_FILES = [
   // Onboarding: the other half of the duplicated backup-test flow. Listed
   // alongside its Settings twin on purpose — the two drifted once.
   "src/features/onboarding/ui/BackupTestFlow.tsx",
+  // Settings, German tranche: the rest of the panels, joining in the change
+  // that marked their copy for translation. Two of them already *named* the
+  // product in copy that nothing was watching — `harnessCatalogCopy.ts` said
+  // two runtimes connect "to Buzz", and that is our half of the sentence, not
+  // the vendor's.
+  "src/features/notifications/lib/sound.ts",
+  "src/features/settings/SidebarUpdateCard.tsx",
+  "src/features/settings/UpdateIndicator.tsx",
+  "src/features/settings/ui/AgentDefaultsSettingsCard.tsx",
+  "src/features/settings/ui/AgentsSettingsPanel.tsx",
+  "src/features/settings/ui/ChannelTemplatesSettingsCard.tsx",
+  "src/features/settings/ui/ExperimentalFeaturesCard.tsx",
+  "src/features/settings/ui/HarnessCatalogDialog.tsx",
+  "src/features/settings/ui/HarnessRow.tsx",
+  "src/features/settings/ui/MobilePairingCard.tsx",
+  "src/features/settings/ui/NotificationSettingsCard.tsx",
+  "src/features/settings/ui/PreventSleepSettingsCard.tsx",
+  "src/features/settings/ui/PrivateKeyBackupRow.tsx",
+  "src/features/settings/ui/SettingsPanels.tsx",
+  "src/features/settings/ui/SoundPicker.tsx",
+  "src/features/settings/ui/harnessCatalogCopy.ts",
+  "src/features/settings/ui/harnessFormLogic.ts",
+  "src/features/settings/ui/harnessGalleryLogic.ts",
 ];
 
 /**
  * `path:line` exceptions. Every entry carries the reason, because the reason
  * is the only way a reviewer can check the claim.
  */
+const MOBILE_APP_NAME_REASON =
+  "The mobile app this pairs with is published as Buzz and is not part of " +
+  "this fork's de-branding: a flavored desktop build still pairs with the " +
+  "Buzz mobile app, so renaming it here would send people looking for an " +
+  "app that does not exist. Open question for Ian — if the mobile app is " +
+  "ever flavored too, these four strings follow it.";
+
 const OVERRIDES = new Map([
   [
-    "src/features/settings/ui/HostedCommunitiesSettingsCard.tsx:409",
+    "src/features/settings/ui/HostedCommunitiesSettingsCard.tsx:413",
     "A hosted-community address really is a Buzz address — this page is only " +
       "for relay hosting provided by Block, and names Block two lines above. " +
       "Renaming it would claim the flavor hosts a namespace it does not.",
+  ],
+  ["src/features/settings/ui/MobilePairingCard.tsx:69", MOBILE_APP_NAME_REASON],
+  [
+    "src/features/settings/ui/MobilePairingCard.tsx:160",
+    MOBILE_APP_NAME_REASON,
+  ],
+  [
+    "src/features/settings/ui/MobilePairingCard.tsx:186",
+    MOBILE_APP_NAME_REASON,
+  ],
+  [
+    "src/features/settings/ui/MobilePairingCard.tsx:480",
+    MOBILE_APP_NAME_REASON,
   ],
 ]);
 

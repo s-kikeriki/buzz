@@ -1,3 +1,5 @@
+import { Trans, useLingui } from "@lingui/react/macro";
+
 import { AgentDefaultsSettingsCard } from "./AgentDefaultsSettingsCard";
 import {
   setKeepMentionedAgentsPinned,
@@ -15,33 +17,38 @@ import { SettingsSectionHeader } from "./SettingsSectionHeader";
 
 export function AgentsSettingsPanel() {
   const automaticallyMentionAgents = useKeepMentionedAgentsPinned();
+  const { t } = useLingui();
 
   return (
     <section className="min-w-0" data-testid="settings-agents">
       <SettingsSectionHeader
-        title="Agents"
-        description="Control how agents behave in conversations and run on this machine."
+        title={<Trans>Agents</Trans>}
+        description={
+          <Trans>
+            Control how agents behave in conversations and run on this machine.
+          </Trans>
+        }
       />
 
       <SettingsOptionGroupList>
-        <SettingsOptionGroup title="Conversations">
+        <SettingsOptionGroup title={<Trans>Conversations</Trans>}>
           <SettingsOptionRow data-testid="settings-automatic-agent-mentions">
             <div className="min-w-0">
               <label
                 className="font-medium text-foreground"
                 htmlFor="settings-automatic-agent-mentions-switch"
               >
-                Automatically mention agents
+                <Trans>Automatically mention agents</Trans>
               </label>
               <p
                 className="mt-0.5 text-sm text-muted-foreground/70"
                 data-settings-subcopy
               >
-                Address selected agents in thread replies
+                <Trans>Address selected agents in thread replies</Trans>
               </p>
             </div>
             <Switch
-              aria-label="Automatically mention agents"
+              aria-label={t`Automatically mention agents`}
               checked={automaticallyMentionAgents}
               id="settings-automatic-agent-mentions-switch"
               onCheckedChange={setKeepMentionedAgentsPinned}

@@ -1,3 +1,6 @@
+import { msg } from "@lingui/core/macro";
+import type { MessageDescriptor } from "@lingui/core";
+
 import {
   KIND_JOB_ACCEPTED,
   KIND_JOB_ERROR,
@@ -34,15 +37,22 @@ export const SOUND_SLOTS = [
 ] as const;
 export type SoundSlot = (typeof SOUND_SLOTS)[number];
 
-export const SLOT_LABELS: Record<SoundSlot, string> = {
-  dm: "Direct messages",
-  mention: "@Mentions",
-  thread_reply: "Thread replies",
-  needs_action: "Needs action",
-  job_accepted: "Agent: job accepted",
-  job_progress: "Agent: progress update",
-  job_result: "Agent: job result",
-  job_error: "Agent: job error",
+/**
+ * Row labels for the Notifications settings panel.
+ *
+ * Descriptors, not strings: these are module-level tables, so a resolved
+ * string would be captured in whichever locale booted and never follow a
+ * later language change. The panel resolves them per render with `i18n._`.
+ */
+export const SLOT_LABELS: Record<SoundSlot, MessageDescriptor> = {
+  dm: msg`Direct messages`,
+  mention: msg`@Mentions`,
+  thread_reply: msg`Thread replies`,
+  needs_action: msg`Needs action`,
+  job_accepted: msg`Agent: job accepted`,
+  job_progress: msg`Agent: progress update`,
+  job_result: msg`Agent: job result`,
+  job_error: msg`Agent: job error`,
 };
 
 // The agent job protocol (kinds 43001-43006) is defined and queryable but
@@ -56,15 +66,15 @@ export const COMING_SOON_SLOTS: ReadonlySet<SoundSlot> = new Set([
   "job_error",
 ]);
 
-export const SLOT_DESCRIPTIONS: Record<SoundSlot, string> = {
-  dm: "When someone messages you directly.",
-  mention: "When someone tags you in a channel.",
-  thread_reply: "When someone replies in a thread you follow or posted in.",
-  needs_action: "When an approval or reminder is waiting on you.",
-  job_accepted: "When an agent picks up a job.",
-  job_progress: "While an agent works through a job.",
-  job_result: "When an agent finishes a job.",
-  job_error: "When an agent job fails.",
+export const SLOT_DESCRIPTIONS: Record<SoundSlot, MessageDescriptor> = {
+  dm: msg`When someone messages you directly.`,
+  mention: msg`When someone tags you in a channel.`,
+  thread_reply: msg`When someone replies in a thread you follow or posted in.`,
+  needs_action: msg`When an approval or reminder is waiting on you.`,
+  job_accepted: msg`When an agent picks up a job.`,
+  job_progress: msg`While an agent works through a job.`,
+  job_result: msg`When an agent finishes a job.`,
+  job_error: msg`When an agent job fails.`,
 };
 
 export const RECOMMENDED_SOUND_BY_SLOT: Record<SoundSlot, SoundName> = {
