@@ -1,5 +1,6 @@
 import * as React from "react";
 import { Plus, X } from "lucide-react";
+import { Trans, useLingui } from "@lingui/react/macro";
 
 import {
   useManagedAgentPrereqsQuery,
@@ -22,6 +23,8 @@ import {
   idFromLabel,
 } from "./harnessFormLogic";
 import { BRAND } from "@/shared/branding/brand";
+
+const { productName } = BRAND;
 
 // ── Shared empty state ────────────────────────────────────────────────────────
 
@@ -57,7 +60,11 @@ function CommandAvailabilityBadge({ command }: { command: string }) {
           : "bg-amber-500/15 text-amber-600 dark:text-amber-400",
       )}
     >
-      {available ? "Found on PATH" : "Not found on PATH"}
+      {available ? (
+        <Trans>Found on PATH</Trans>
+      ) : (
+        <Trans>Not found on PATH</Trans>
+      )}
     </span>
   );
 }
@@ -98,6 +105,8 @@ function ArgsEditor({
   args: string[];
   onChange: (next: string[]) => void;
 }) {
+  const { t } = useLingui();
+
   function set(index: number, value: string) {
     const next = [...args];
     next[index] = value;
@@ -113,12 +122,12 @@ function ArgsEditor({
             <Input
               className={cn(FIELD_INPUT_CLASS, "font-mono")}
               onChange={(e) => set(i, e.target.value)}
-              placeholder={`arg ${i + 1}`}
+              placeholder={t`arg ${i + 1}`}
               value={arg}
             />
           </FieldShell>
           <Button
-            aria-label="Remove argument"
+            aria-label={t`Remove argument`}
             onClick={() => onChange(args.filter((_, idx) => idx !== i))}
             size="icon"
             type="button"
@@ -135,7 +144,7 @@ function ArgsEditor({
         variant="outline"
       >
         <Plus className="mr-1 h-4 w-4" />
-        Add argument
+        <Trans>Add argument</Trans>
       </Button>
     </div>
   );
@@ -148,6 +157,8 @@ function EnvEditor({
   env: Array<{ key: string; value: string }>;
   onChange: (next: Array<{ key: string; value: string }>) => void;
 }) {
+  const { t } = useLingui();
+
   function set(index: number, field: "key" | "value", value: string) {
     onChange(env.map((e, i) => (i === index ? { ...e, [field]: value } : e)));
   }
@@ -169,12 +180,12 @@ function EnvEditor({
             <Input
               className={cn(FIELD_INPUT_CLASS, "font-mono")}
               onChange={(e) => set(i, "value", e.target.value)}
-              placeholder="value"
+              placeholder={t`value`}
               value={pair.value}
             />
           </FieldShell>
           <Button
-            aria-label="Remove env var"
+            aria-label={t`Remove env var`}
             onClick={() => onChange(env.filter((_, idx) => idx !== i))}
             size="icon"
             type="button"
@@ -191,7 +202,7 @@ function EnvEditor({
         variant="outline"
       >
         <Plus className="mr-1 h-4 w-4" />
-        Add env var
+        <Trans>Add env var</Trans>
       </Button>
     </div>
   );
@@ -226,6 +237,7 @@ export function CustomHarnessForm({
    * (chromeless mode) so it scrolls with the fields. */
   header?: React.ReactNode;
 }) {
+  const { i18n, t } = useLingui();
   const [form, setForm] = React.useState<CustomFormValues>({
     ...EMPTY_CUSTOM_FORM,
     ...initial,
@@ -271,7 +283,7 @@ export function CustomHarnessForm({
     // error naming the offending argument before the round-trip.
     const commaError = commaArgError(form.args);
     if (commaError) {
-      setError(commaError);
+      setError(i18n._(commaError));
       return;
     }
     try {
@@ -296,10 +308,14 @@ export function CustomHarnessForm({
       {chromeless ? null : (
         <div className="flex items-center justify-between">
           <p className="text-sm font-medium">
-            {originalId ? "Edit harness" : "Add custom harness"}
+            {originalId ? (
+              <Trans>Edit harness</Trans>
+            ) : (
+              <Trans>Add custom harness</Trans>
+            )}
           </p>
           <button
-            aria-label="Cancel"
+            aria-label={t`Cancel`}
             className="rounded-md p-1 text-muted-foreground hover:bg-muted hover:text-foreground"
             onClick={onCancel}
             type="button"
@@ -323,14 +339,14 @@ export function CustomHarnessForm({
               className="text-sm font-medium text-foreground"
               htmlFor="ch-label"
             >
-              Name
+              <Trans>Name</Trans>
             </label>
             <FieldShell>
               <Input
                 className={FIELD_INPUT_CLASS}
                 id="ch-label"
                 onChange={field("label")}
-                placeholder="My Runtime"
+                placeholder={t`My Runtime`}
                 required
                 value={form.label}
               />
@@ -342,9 +358,9 @@ export function CustomHarnessForm({
               className="text-sm font-medium text-foreground"
               htmlFor="ch-id"
             >
-              ID
+              <Trans>ID</Trans>
               <span className={PERSONA_LABEL_OPTIONAL_CLASS}>
-                (auto-derived)
+                <Trans>(auto-derived)</Trans>
               </span>
             </label>
             <FieldShell>
@@ -366,7 +382,7 @@ export function CustomHarnessForm({
               className="text-sm font-medium text-foreground"
               htmlFor="ch-command"
             >
-              Command
+              <Trans>Command</Trans>
             </label>
             <CommandAvailabilityBadge command={form.command} />
           </div>
@@ -381,12 +397,14 @@ export function CustomHarnessForm({
             />
           </FieldShell>
           <p className="text-xs text-muted-foreground">
-            Any command that speaks ACP over stdio works.
+            <Trans>Any command that speaks ACP over stdio works.</Trans>
           </p>
         </div>
 
         <div className="space-y-1.5">
-          <p className="text-sm font-medium text-foreground">Arguments</p>
+          <p className="text-sm font-medium text-foreground">
+            <Trans>Arguments</Trans>
+          </p>
           <ArgsEditor
             args={form.args}
             onChange={(args) => setForm((p) => ({ ...p, args }))}
@@ -395,10 +413,11 @@ export function CustomHarnessForm({
 
         <div className="space-y-1.5">
           <p className="text-sm font-medium text-foreground">
-            Env vars
+            <Trans>Env vars</Trans>
             <span className={PERSONA_LABEL_OPTIONAL_CLASS}>
-              (override at spawn time; {BRAND.productName}-managed vars always
-              win)
+              <Trans>
+                (override at spawn time; {productName}-managed vars always win)
+              </Trans>
             </span>
           </p>
           <EnvEditor
@@ -412,8 +431,10 @@ export function CustomHarnessForm({
             className="text-sm font-medium text-foreground"
             htmlFor="ch-docs-url"
           >
-            Docs URL
-            <span className={PERSONA_LABEL_OPTIONAL_CLASS}>(optional)</span>
+            <Trans>Docs URL</Trans>
+            <span className={PERSONA_LABEL_OPTIONAL_CLASS}>
+              <Trans>(optional)</Trans>
+            </span>
           </label>
           <FieldShell>
             <Input
@@ -431,8 +452,10 @@ export function CustomHarnessForm({
             className="text-sm font-medium text-foreground"
             htmlFor="ch-install-hint"
           >
-            Install hint
-            <span className={PERSONA_LABEL_OPTIONAL_CLASS}>(optional)</span>
+            <Trans>Install hint</Trans>
+            <span className={PERSONA_LABEL_OPTIONAL_CLASS}>
+              <Trans>(optional)</Trans>
+            </span>
           </label>
           <FieldShell>
             <Input
@@ -465,7 +488,7 @@ export function CustomHarnessForm({
           type="submit"
         >
           {save.isPending ? <Spinner className="mr-2 h-3.5 w-3.5" /> : null}
-          Save
+          <Trans>Save</Trans>
         </Button>
       </div>
     </form>

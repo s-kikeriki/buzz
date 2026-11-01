@@ -5,8 +5,13 @@
  * Extracted for deterministic unit-testing — no React, no Tauri, no network.
  */
 
+import { msg } from "@lingui/core/macro";
+import type { MessageDescriptor } from "@lingui/core";
+
 import type { AcpRuntimeCatalogEntry } from "@/shared/api/types";
 import { BRAND } from "@/shared/branding/brand";
+
+const { productName } = BRAND;
 
 // Builtins that anchor the top of "Your runtimes" — mirrors the old
 // DoctorSettingsPanel RUNTIME_SORT_PRIORITY so the Buzz + Goose rows stay
@@ -136,19 +141,29 @@ export function stableRowOrder(
   return [...kept, ...appended];
 }
 
-/** Human status label for a catalog entry; null when nothing needs saying. */
-export function entryStatusLabel(entry: AcpRuntimeCatalogEntry): string | null {
-  if (entry.authStatus.status === "config_invalid") return "Config error";
+/**
+ * Human status label for a catalog entry; null when nothing needs saying.
+ *
+ * A descriptor rather than a string: this module is imported at module scope
+ * and the labels are chosen from data, so resolving them here would freeze
+ * them in whichever locale booted. Callers render them with `i18n._()`.
+ */
+export function entryStatusLabel(
+  entry: AcpRuntimeCatalogEntry,
+): MessageDescriptor | null {
+  if (entry.authStatus.status === "config_invalid") return msg`Config error`;
   switch (entry.availability) {
     case "adapter_missing":
-      return "Adapter needed";
+      return msg`Adapter needed`;
     case "adapter_outdated":
-      return "Update needed";
+      return msg`Update needed`;
     case "cli_missing":
     case "not_installed":
-      return "CLI needed";
+      return msg`CLI needed`;
     case "available":
-      return entry.authStatus.status === "logged_out" ? "Sign-in needed" : null;
+      return entry.authStatus.status === "logged_out"
+        ? msg`Sign-in needed`
+        : null;
     default:
       return null;
   }
@@ -162,24 +177,19 @@ export function entryStatusLabel(entry: AcpRuntimeCatalogEntry): string | null {
  * contract; every other runtime gets generic, runtime-derived copy — Codex
  * package names must never appear for another runtime.
  */
-export function adapterUpdateWarning(entry: AcpRuntimeCatalogEntry): string {
+export function adapterUpdateWarning(
+  entry: AcpRuntimeCatalogEntry,
+): MessageDescriptor {
   if (entry.id === "codex") {
-    return (
-      `This replaces the machine-wide codex-acp adapter. Older ${BRAND.productName} ` +
-      "releases using the legacy adapter may lose community access until " +
-      "@zed-industries/codex-acp@0.16.0 is restored."
-    );
+    return msg`This replaces the machine-wide codex-acp adapter. Older ${productName} releases using the legacy adapter may lose community access until @zed-industries/codex-acp@0.16.0 is restored.`;
   }
   const adapter = entry.command?.trim() || entry.label;
-  return (
-    `This replaces the machine-wide ${adapter} adapter. Other tools using ` +
-    "the currently installed adapter will switch to the updated version."
-  );
+  return msg`This replaces the machine-wide ${adapter} adapter. Other tools using the currently installed adapter will switch to the updated version.`;
 }
 
 export type CatalogPrimaryAction =
-  | { kind: "install"; label: string }
-  | { kind: "docs"; label: string }
+  | { kind: "install"; label: MessageDescriptor }
+  | { kind: "docs"; label: MessageDescriptor }
   | { kind: "none" };
 
 /**
@@ -196,10 +206,12 @@ export function isDownloadPageUrl(url: string): boolean {
 }
 
 /** Label for a link that opens `installInstructionsUrl`. */
-export function installLinkLabel(entry: AcpRuntimeCatalogEntry): string {
+export function installLinkLabel(
+  entry: AcpRuntimeCatalogEntry,
+): MessageDescriptor {
   return isDownloadPageUrl(entry.installInstructionsUrl)
-    ? "Download page"
-    : "Setup guide";
+    ? msg`Download page`
+    : msg`Setup guide`;
 }
 
 /**
@@ -217,7 +229,8 @@ export function catalogPrimaryAction(
   if (entry.canAutoInstall && !entry.nodeRequired) {
     return {
       kind: "install",
-      label: entry.availability === "adapter_outdated" ? "Update" : "Install",
+      label:
+        entry.availability === "adapter_outdated" ? msg`Update` : msg`Install`,
     };
   }
   if (entry.installInstructionsUrl.trim().length > 0) {

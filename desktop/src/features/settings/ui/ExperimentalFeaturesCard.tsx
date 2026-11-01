@@ -1,3 +1,5 @@
+import { Trans } from "@lingui/react/macro";
+
 import { setAgentManagedProfiles } from "@/shared/api/tauriWorkspace";
 import { desktopFeatures, useFeatureToggle } from "@/shared/features";
 import type { FeatureDefinition } from "@/shared/features";
@@ -5,6 +7,12 @@ import { Switch } from "@/shared/ui/switch";
 import { SettingsOptionGroup, SettingsOptionRow } from "./SettingsOptionGroup";
 import { SettingsSectionHeader } from "./SettingsSectionHeader";
 
+/**
+ * The row's own copy — `feature.name` and `feature.description` — comes from
+ * the bundled `preview-features.json` manifest, not from source, so no macro
+ * can reach it and it stays English until that manifest grows a translation
+ * mechanism of its own. Only the chrome around it is translated here.
+ */
 function FeatureRow({ feature }: { feature: FeatureDefinition }) {
   const [enabled, toggle] = useFeatureToggle(feature.id);
   const switchId = `feature-toggle-${feature.id}`;
@@ -47,16 +55,16 @@ export function ExperimentalFeaturesCard() {
   return (
     <section className="min-w-0" data-testid="settings-experimental">
       <SettingsSectionHeader
-        title="Experiments"
+        title={<Trans>Experiments</Trans>}
         description={
-          <>
+          <Trans>
             These features are functional but still being refined. Enable them
             to try new capabilities early.
-          </>
+          </Trans>
         }
       />
 
-      <SettingsOptionGroup title="Features">
+      <SettingsOptionGroup title={<Trans>Features</Trans>}>
         {previewFeatures.map((f) => (
           <FeatureRow feature={f} key={f.id} />
         ))}

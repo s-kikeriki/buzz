@@ -4,6 +4,9 @@
  * Extracted so they can be tested independently from the React layer.
  */
 
+import { msg } from "@lingui/core/macro";
+import type { MessageDescriptor } from "@lingui/core";
+
 /**
  * Derive a valid harness ID from a human-readable display name.
  *
@@ -151,8 +154,10 @@ export function definitionFromFormValues(
  *
  * Returns the error message, or `null` when all args are comma-free.
  */
-export function commaArgError(args: ReadonlyArray<string>): string | null {
+export function commaArgError(
+  args: ReadonlyArray<string>,
+): MessageDescriptor | null {
   const offender = args.find((a) => a.includes(","));
   if (offender === undefined) return null;
-  return `Argument "${offender}" contains a comma — arguments are passed via a comma-delimited transport and would be split at spawn time. Use separate argument entries instead.`;
+  return msg`Argument "${offender}" contains a comma — arguments are passed via a comma-delimited transport and would be split at spawn time. Use separate argument entries instead.`;
 }
