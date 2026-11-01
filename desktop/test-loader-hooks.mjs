@@ -3,6 +3,11 @@ import fs from "node:fs";
 import path from "node:path";
 import ts from "typescript";
 
+import {
+  hasLinguiMacroImport,
+  isLinguiMacroSource,
+} from "./scripts/lingui-macro-source.mjs";
+
 const srcRoot = path.resolve(
   path.dirname(fileURLToPath(import.meta.url)),
   "src",
@@ -140,18 +145,15 @@ export function resolve(specifier, context, nextResolve) {
   return nextResolve(specifier, context);
 }
 
-const LINGUI_MACRO_SPECIFIERS = ["@lingui/core/macro", "@lingui/react/macro"];
-
-function hasLinguiMacroImport(source) {
-  return LINGUI_MACRO_SPECIFIERS.some((specifier) =>
-    source.includes(specifier),
-  );
-}
-
-/** A `.ts` module (no JSX) can still use `msg` / `t`; it needs the pass too. */
+/**
+ * A `.ts` module (no JSX) can still use `msg` / `t`; it needs the pass too.
+ *
+ * Which files count is `isLinguiMacroSource`'s call, shared with the Vite
+ * plugin. When the two kept their own extension lists they drifted, and a
+ * `.mjs` this loader transformed shipped unexpanded in the bundle.
+ */
 function usesLinguiMacro(url) {
-  if (url.includes("/node_modules/") || url.endsWith(".d.ts")) return false;
-  if (!/\.(?:ts|tsx|mjs|js)$/.test(url)) return false;
+  if (!isLinguiMacroSource(url)) return false;
   try {
     return hasLinguiMacroImport(fs.readFileSync(fileURLToPath(url), "utf8"));
   } catch {

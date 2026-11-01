@@ -1,5 +1,10 @@
 import { transformAsync } from "@babel/core";
 
+import {
+  hasLinguiMacroImport,
+  isLinguiMacroSource,
+} from "./lingui-macro-source.mjs";
+
 /**
  * Runs the Lingui macro transform over app source.
  *
@@ -16,15 +21,6 @@ import { transformAsync } from "@babel/core";
  * parsing happens.
  */
 
-const MACRO_IMPORT = "@lingui/";
-const MACRO_SPECIFIERS = ["@lingui/core/macro", "@lingui/react/macro"];
-const SOURCE_FILE = /\.[jt]sx?(?:\?.*)?$/;
-
-function usesLinguiMacro(code) {
-  if (!code.includes(MACRO_IMPORT)) return false;
-  return MACRO_SPECIFIERS.some((specifier) => code.includes(specifier));
-}
-
 export function linguiMacro() {
   return {
     name: "buzz:lingui-macro",
@@ -32,8 +28,8 @@ export function linguiMacro() {
     // TypeScript and JSX this transform needs to see.
     enforce: "pre",
     async transform(code, id) {
-      if (!SOURCE_FILE.test(id) || id.includes("/node_modules/")) return null;
-      if (!usesLinguiMacro(code)) return null;
+      if (!isLinguiMacroSource(id)) return null;
+      if (!hasLinguiMacroImport(code)) return null;
 
       const result = await transformAsync(code, {
         filename: id,

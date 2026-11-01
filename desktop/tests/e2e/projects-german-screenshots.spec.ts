@@ -28,6 +28,29 @@ async function seedLocale(page: Page, locale: "en" | "de") {
   );
 }
 
+/**
+ * Assert a section tab reads `wanted` and not `other`.
+ *
+ * Each tab prints its label twice: an `invisible` bold copy in the same grid
+ * cell reserves the selected width so nothing shifts, and the visible copy
+ * sits on top. So `textContent` is "AktivitätAktivität" and an equality
+ * assertion on the label can never pass. Check the accessible name, which is
+ * the single `aria-label` a screen reader announces, and pair it with a
+ * substring negative on the other language — equality would pass against the
+ * doubled string whatever it said.
+ */
+async function expectTabReads(
+  page: Page,
+  id: string,
+  wanted: string,
+  other: string,
+) {
+  const tab = page.getByTestId(`projects-section-${id}`);
+  await expect(tab).toHaveAccessibleName(wanted);
+  await expect(tab).toContainText(wanted);
+  await expect(tab).not.toContainText(other);
+}
+
 async function openProjectsActivity(page: Page) {
   await page.goto("/", { waitUntil: "domcontentloaded" });
   await page.getByTestId("open-projects-view").click();
@@ -44,7 +67,7 @@ test("projects activity reads English before the catalogue is applied", async ({
   await expect(page.getByTestId("projects-activity-intro")).toContainText(
     "Projects Activity",
   );
-  await expect(page.getByTestId("projects-section-all")).toHaveText("Activity");
+  await expectTabReads(page, "all", "Activity", "Aktivität");
   await waitForAnimations(page);
   await page.screenshot({ path: `${SHOTS}/activity-en.png`, fullPage: true });
 });
@@ -68,9 +91,7 @@ test("projects activity and workspace tabs read German", async ({ page }) => {
     ["channels", "Kanäle", "Channels"],
   ];
   for (const [id, german, english] of tabs) {
-    const tab = page.getByTestId(`projects-section-${id}`);
-    await expect(tab).toHaveText(german);
-    await expect(tab).not.toHaveText(english);
+    await expectTabReads(page, id, german, english);
   }
 
   await waitForAnimations(page);
@@ -85,18 +106,22 @@ test("projects activity and workspace tabs read German", async ({ page }) => {
   await expect(projectEntry).toBeVisible({ timeout: 10_000 });
   await projectEntry.click();
 
-  for (const [german, english] of [
-    ["Übersicht", "Overview"],
-    ["Dateien", "Files"],
-    ["Aufgaben", "Tasks"],
-    ["Kanäle", "Channels"],
-    ["Mitwirkende", "Contributors"],
+  // Project home is the context rail, not a tab strip — the `role="tab"`
+  // row this used to look for does not exist on this surface, so the check
+  // never reached a real element. Assert the rail a person actually reads.
+  const rail = page.getByTestId("project-home-context-panel");
+  await expect(rail).toBeVisible({ timeout: 10_000 });
+
+  for (const [testId, german, english] of [
+    ["project-home-context-tasks", "Aufgaben", "Tasks"],
+    ["project-home-context-files", "Dateien", "Files"],
+    ["project-home-context-people", "Personen", "People"],
+    ["project-home-context-channel", "Kanäle", "Channels"],
+    ["project-home-context-codebase", "Codebasis", "Codebase"],
   ] as const) {
-    const tab = page.getByRole("tab", { name: german, exact: true });
-    await expect(tab).toBeVisible();
-    await expect(
-      page.getByRole("tab", { name: english, exact: true }),
-    ).toHaveCount(0);
+    const entry = rail.getByTestId(testId);
+    await expect(entry).toContainText(german);
+    await expect(entry).not.toContainText(english);
   }
 
   await waitForAnimations(page);
