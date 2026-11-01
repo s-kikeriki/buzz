@@ -429,16 +429,18 @@ async function mountWithRouter(client, Component) {
   const root = createRoot(container);
   await act(async () => {
     root.render(
-      React.createElement(
-        QueryClientProvider,
-        { client },
+      withI18n(
         React.createElement(
-          CommunitiesProvider,
-          null,
+          QueryClientProvider,
+          { client },
           React.createElement(
-            HuddleProvider,
+            CommunitiesProvider,
             null,
-            React.createElement(RouterProvider, { router }),
+            React.createElement(
+              HuddleProvider,
+              null,
+              React.createElement(RouterProvider, { router }),
+            ),
           ),
         ),
       ),
