@@ -1,3 +1,5 @@
+import { i18n } from "@lingui/core";
+import { msg } from "@lingui/core/macro";
 import * as React from "react";
 import { toast } from "sonner";
 
@@ -9,8 +11,7 @@ import { normalizePubkey } from "@/shared/lib/pubkey";
 import { getAgentWorkingState } from "./agentWorkingSignal";
 import { useRelayAgentsQuery } from "./hooks";
 
-const INACCESSIBLE_ACTIVITY_MESSAGE =
-  "This agent is active in a channel you haven't joined, so its activity can't be opened from here.";
+const INACCESSIBLE_ACTIVITY_MESSAGE = msg`This agent is active in a channel you haven't joined, so its activity can't be opened from here.`;
 
 /**
  * Can the viewer actually open this channel? Joined channels always;
@@ -159,7 +160,7 @@ export function useOpenAgentActivity() {
       if (options?.channelId) {
         if (!onOpenAgentSession) {
           if (!findOpenableChannel(options.channelId)) {
-            toast.warning(INACCESSIBLE_ACTIVITY_MESSAGE);
+            toast.warning(i18n._(INACCESSIBLE_ACTIVITY_MESSAGE));
             return false;
           }
           void goChannel(options.channelId, { agentSession: pubkey });
@@ -184,7 +185,7 @@ export function useOpenAgentActivity() {
       // Say so plainly rather than failing silently — without leaking which
       // room, or navigating into it.
       if (getAgentWorkingState(pubkey).channels.length > 0) {
-        toast.warning(INACCESSIBLE_ACTIVITY_MESSAGE);
+        toast.warning(i18n._(INACCESSIBLE_ACTIVITY_MESSAGE));
       }
       return false;
     },

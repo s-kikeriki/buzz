@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
+import { withI18n } from "@/testing/withI18n.mjs";
 
 import React from "react";
 import { renderToStaticMarkup } from "react-dom/server";
@@ -20,19 +21,21 @@ const baseIdentity = {
 
 test("RawRailActivity render: raw_json_rpc keeps <pre> safety net", () => {
   const html = renderToStaticMarkup(
-    React.createElement(RawRailActivity, {
-      ...baseProps,
-      item: {
-        ...baseIdentity,
-        id: "meta:raw",
-        type: "metadata",
-        renderClass: "raw-rail",
-        title: "Raw ACP payload",
-        sections: [{ title: "body", body: "{}" }],
-        timestamp: baseTimestamp,
-        acpSource: "raw_json_rpc",
-      },
-    }),
+    withI18n(
+      React.createElement(RawRailActivity, {
+        ...baseProps,
+        item: {
+          ...baseIdentity,
+          id: "meta:raw",
+          type: "metadata",
+          renderClass: "raw-rail",
+          title: "Raw ACP payload",
+          sections: [{ title: "body", body: "{}" }],
+          timestamp: baseTimestamp,
+          acpSource: "raw_json_rpc",
+        },
+      }),
+    ),
   );
   assert.ok(html.includes("<pre"), "raw_json_rpc should render <pre>");
   assert.ok(
@@ -43,18 +46,20 @@ test("RawRailActivity render: raw_json_rpc keeps <pre> safety net", () => {
 
 test("RawRailActivity render: system prompt (no acpSource) uses polished accordion", () => {
   const html = renderToStaticMarkup(
-    React.createElement(RawRailActivity, {
-      ...baseProps,
-      item: {
-        ...baseIdentity,
-        id: "meta:sys",
-        type: "metadata",
-        renderClass: "raw-rail",
-        title: "System prompt",
-        sections: [{ title: "Instructions", body: "You are an agent." }],
-        timestamp: baseTimestamp,
-      },
-    }),
+    withI18n(
+      React.createElement(RawRailActivity, {
+        ...baseProps,
+        item: {
+          ...baseIdentity,
+          id: "meta:sys",
+          type: "metadata",
+          renderClass: "raw-rail",
+          title: "System prompt",
+          sections: [{ title: "Instructions", body: "You are an agent." }],
+          timestamp: baseTimestamp,
+        },
+      }),
+    ),
   );
   assert.ok(
     html.includes("transcript-prompt-context-sections"),
@@ -65,19 +70,21 @@ test("RawRailActivity render: system prompt (no acpSource) uses polished accordi
 
 test("RawRailActivity render: steer-turn prompt context uses polished accordion", () => {
   const html = renderToStaticMarkup(
-    React.createElement(RawRailActivity, {
-      ...baseProps,
-      item: {
-        ...baseIdentity,
-        id: "meta:ctx",
-        type: "metadata",
-        renderClass: "raw-rail",
-        title: "Prompt context",
-        sections: [{ title: "Thread history", body: "..." }],
-        timestamp: baseTimestamp,
-        acpSource: "session/prompt:context",
-      },
-    }),
+    withI18n(
+      React.createElement(RawRailActivity, {
+        ...baseProps,
+        item: {
+          ...baseIdentity,
+          id: "meta:ctx",
+          type: "metadata",
+          renderClass: "raw-rail",
+          title: "Prompt context",
+          sections: [{ title: "Thread history", body: "..." }],
+          timestamp: baseTimestamp,
+          acpSource: "session/prompt:context",
+        },
+      }),
+    ),
   );
   assert.ok(
     html.includes("transcript-prompt-context-sections"),

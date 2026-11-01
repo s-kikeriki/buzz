@@ -1,3 +1,5 @@
+import { Trans, useLingui } from "@lingui/react/macro";
+import { t } from "@lingui/core/macro";
 import * as React from "react";
 import { AlertTriangle, ChevronDown, ChevronRight } from "lucide-react";
 
@@ -72,6 +74,8 @@ export const AGENT_CARD_GRID_COLUMNS_CLASS =
 export const IDENTITY_CARD_GRID_CLASS = `${AGENT_CARD_COLUMN_CLASS} ${AGENT_CARD_GRID_COLUMNS_CLASS} grid gap-3`;
 
 export function UnifiedAgentsSection(props: UnifiedAgentsSectionProps) {
+  const { i18n } = useLingui();
+  void i18n;
   const {
     actionErrorMessage,
     actionNoticeMessage,
@@ -134,7 +138,7 @@ export function UnifiedAgentsSection(props: UnifiedAgentsSectionProps) {
         <div className="space-y-3" data-testid="unified-agents-groups">
           <div className={IDENTITY_CARD_GRID_CLASS}>
             <CreateIdentityCard
-              ariaLabel="New agent"
+              ariaLabel={t`New agent`}
               dataTestId="new-agent-card"
               disabled={isPersonasPending}
               onClick={onOpenCatalog}
@@ -187,7 +191,7 @@ export function UnifiedAgentsSection(props: UnifiedAgentsSectionProps) {
               defaultModel={defaultModel}
               groupKey="__unknown__"
               bestiePubkey={bestiePubkey}
-              label="Unknown agents"
+              label={t`Unknown agents`}
               restartingAgentPubkey={restartingAgentPubkey}
               startingAgentPubkey={startingAgentPubkey}
               onToggle={toggle}
@@ -204,7 +208,7 @@ export function UnifiedAgentsSection(props: UnifiedAgentsSectionProps) {
               defaultModel={defaultModel}
               groupKey="__ungrouped__"
               bestiePubkey={bestiePubkey}
-              label="Custom agents"
+              label={t`Custom agents`}
               restartingAgentPubkey={restartingAgentPubkey}
               startingAgentPubkey={startingAgentPubkey}
               onToggle={toggle}
@@ -271,6 +275,8 @@ function AgentPersonaCard({
   onStartAgent: (pubkey: string) => void;
   onStartPersona: (persona: AgentPersona) => void;
 }) {
+  const { i18n } = useLingui();
+  void i18n;
   const availability = getAvailability(agent?.pubkey);
   const title = persona.displayName;
   // Card face second line: the authored description when one exists;
@@ -298,7 +304,7 @@ function AgentPersonaCard({
         avatarUrl,
         isAgentCardAvatarLoading(Boolean(agent), profileQuery.isPending),
       )}
-      ariaLabel={`${title} agent profile`}
+      ariaLabel={t`${title} agent profile`}
       avatar={
         agent ? (
           <AgentRuntimeAvatarControl
@@ -359,7 +365,7 @@ function AgentPersonaCard({
         agent?.personaOrphaned ? (
           <Badge className="gap-1" variant="warning">
             <AlertTriangle className="h-3 w-3" />
-            Configuration missing
+            <Trans>Configuration missing</Trans>
           </Badge>
         ) : null
       }
@@ -391,6 +397,8 @@ function StandaloneAgentCard({
   onRestartAgent: (pubkey: string) => void;
   onStartAgent: (pubkey: string) => void;
 }) {
+  const { i18n } = useLingui();
+  void i18n;
   const availability = getAvailability(agent.pubkey);
   const title = agent.name;
   const profileQuery = useUserProfileQuery(agent.pubkey);
@@ -403,7 +411,7 @@ function StandaloneAgentCard({
 
   return (
     <AgentIdentityCard
-      ariaLabel={`${title} agent profile`}
+      ariaLabel={t`${title} agent profile`}
       avatar={
         <AgentRuntimeAvatarControl
           activeTestId={`agent-runtime-active-${agent.pubkey}`}
@@ -453,7 +461,7 @@ function StandaloneAgentCard({
         agent.personaOrphaned ? (
           <Badge className="gap-1" variant="warning">
             <AlertTriangle className="h-3 w-3" />
-            Configuration missing
+            <Trans>Configuration missing</Trans>
           </Badge>
         ) : null
       }
@@ -462,6 +470,8 @@ function StandaloneAgentCard({
 }
 
 function LoadingSkeleton() {
+  const { i18n } = useLingui();
+  void i18n;
   return (
     <div className={IDENTITY_CARD_GRID_CLASS}>
       <IdentityCardSkeleton
@@ -512,6 +522,8 @@ function CollapsibleAgentGroup({
   onRestartAgent: (pubkey: string) => void;
   onStartAgent: (pubkey: string) => void;
 }) {
+  const { i18n } = useLingui();
+  void i18n;
   const isCollapsed = collapsed.has(groupKey);
   return (
     <div className={`${AGENT_CARD_COLUMN_CLASS} space-y-2`}>

@@ -1,3 +1,5 @@
+import { Trans, useLingui } from "@lingui/react/macro";
+import { t } from "@lingui/core/macro";
 import type { ManagedAgentBackend } from "@/shared/api/types";
 import { PERSONA_LABEL_OPTIONAL_CLASS } from "./agentConfigOptions";
 import {
@@ -42,6 +44,8 @@ export function EffortPickerField({
   storedEffort?: string | null;
   onChange: (level: string | null) => void;
 }) {
+  const { i18n } = useLingui();
+  void i18n;
   const { visible, options, selectValue, note } = effortPickerState({
     backend,
     effortOptions: choices,
@@ -59,8 +63,10 @@ export function EffortPickerField({
         className="text-sm font-medium text-foreground"
         htmlFor="edit-agent-effort"
       >
-        Thinking effort
-        <span className={PERSONA_LABEL_OPTIONAL_CLASS}>Optional</span>
+        <Trans>Thinking effort</Trans>
+        <span className={PERSONA_LABEL_OPTIONAL_CLASS}>
+          <Trans>Optional</Trans>
+        </span>
       </label>
       <PersonaDropdownField
         disabled={disabled}
@@ -69,16 +75,16 @@ export function EffortPickerField({
           onChange(effortSelectionToPersistedValue(next))
         }
         options={options}
-        placeholder="Adapter default"
+        placeholder={t`Adapter default`}
         value={selectValue}
       />
       <p className="text-xs text-muted-foreground">
         {note === "unknownModel"
-          ? `Support for ${selectValue} isn't known yet. `
+          ? t`Support for ${selectValue} isn't known yet. `
           : note === "unlisted"
-            ? `This model may not support ${selectValue}. `
+            ? t`This model may not support ${selectValue}. `
             : null}
-        Applied at the next session start.
+        <Trans>Applied at the next session start.</Trans>
       </p>
     </div>
   );

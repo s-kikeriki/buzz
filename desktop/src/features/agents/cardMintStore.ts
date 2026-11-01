@@ -1,3 +1,4 @@
+import { t } from "@lingui/core/macro";
 import * as React from "react";
 import { toast } from "sonner";
 
@@ -109,15 +110,15 @@ export async function runCardMintJob(
       input.memoryLevel,
     );
     updateJob(jobId, { phase: "done", card });
-    toast.success(`${input.agentName}'s card is ready`, {
+    toast.success(t`${input.agentName}'s card is ready`, {
       action: {
-        label: "View card",
+        label: t`View card`,
         onClick: () => viewMintedCardJob(jobId),
       },
       duration: 10_000,
     });
   } catch (error) {
-    let message = error instanceof Error ? error.message : "Card mint failed.";
+    let message = error instanceof Error ? error.message : t`Card mint failed.`;
     if (message.startsWith(NO_OPENAI_KEY_PREFIX)) {
       // The dialog pre-checks the key, so this only happens when the key was
       // removed between dialog-open and mint. The dialog's key-setup panel is
@@ -134,7 +135,7 @@ export async function runCardMintJob(
         'The OpenAI API key is invalid or expired. Open the mint dialog and use "Update API key" to replace it.';
     }
     updateJob(jobId, { phase: "error", error: message });
-    toast.error(`Minting ${input.agentName}'s card failed`, {
+    toast.error(t`Minting ${input.agentName}'s card failed`, {
       description: message,
     });
   }

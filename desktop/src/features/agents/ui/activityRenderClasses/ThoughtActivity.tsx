@@ -1,3 +1,4 @@
+import { Trans, useLingui } from "@lingui/react/macro";
 import { Markdown } from "@/shared/ui/markdown";
 import { useLocale } from "@/shared/lib/localePreference";
 import {
@@ -10,6 +11,8 @@ import { formatTranscriptTimestampTitle } from "../agentSessionUtils";
 import type { ActivityRenderClassItemProps } from "./types";
 
 export function ThoughtActivity(props: ActivityRenderClassItemProps) {
+  const { i18n } = useLingui();
+  void i18n;
   const locale = useLocale();
   if (props.item.type === "tool") {
     return <ToolActivity {...props} />;
@@ -31,7 +34,7 @@ export function ThoughtActivity(props: ActivityRenderClassItemProps) {
       <ActivityRow testId="transcript-thought-item" title={title}>
         {label}
         <span className="text-xs text-muted-foreground/70">
-          No readable reasoning tokens
+          <Trans>No readable reasoning tokens</Trans>
         </span>
       </ActivityRow>
     );

@@ -18,6 +18,7 @@
 
 import { test } from "node:test";
 import assert from "node:assert/strict";
+import { withI18n } from "@/testing/withI18n.mjs";
 
 import {
   toRows,
@@ -584,15 +585,20 @@ test("keyAnnotations_annotation_present_only_on_matching_row", () => {
     OPENAI_API_KEY: "Used for minting agent trading cards",
   };
   const html = renderToStaticMarkup(
-    React.createElement(EnvVarsEditor, {
-      disabled: false,
-      fileSatisfiedKeys: [],
-      hiddenKeys: [],
-      keyAnnotations: annotations,
-      onChange: () => {},
-      requiredKeys: [],
-      value: { OPENAI_API_KEY: "sk-placeholder", ANTHROPIC_API_KEY: "sk-ant" },
-    }),
+    withI18n(
+      React.createElement(EnvVarsEditor, {
+        disabled: false,
+        fileSatisfiedKeys: [],
+        hiddenKeys: [],
+        keyAnnotations: annotations,
+        onChange: () => {},
+        requiredKeys: [],
+        value: {
+          OPENAI_API_KEY: "sk-placeholder",
+          ANTHROPIC_API_KEY: "sk-ant",
+        },
+      }),
+    ),
   );
   assert.ok(
     html.includes("Used for minting agent trading cards"),
@@ -609,15 +615,17 @@ test("keyAnnotations_annotation_absent_for_non_matching_rows", () => {
     OPENAI_API_KEY: "Used for minting agent trading cards",
   };
   const html = renderToStaticMarkup(
-    React.createElement(EnvVarsEditor, {
-      disabled: false,
-      fileSatisfiedKeys: [],
-      hiddenKeys: [],
-      keyAnnotations: annotations,
-      onChange: () => {},
-      requiredKeys: [],
-      value: { ANTHROPIC_API_KEY: "sk-ant", MY_VAR: "foo" },
-    }),
+    withI18n(
+      React.createElement(EnvVarsEditor, {
+        disabled: false,
+        fileSatisfiedKeys: [],
+        hiddenKeys: [],
+        keyAnnotations: annotations,
+        onChange: () => {},
+        requiredKeys: [],
+        value: { ANTHROPIC_API_KEY: "sk-ant", MY_VAR: "foo" },
+      }),
+    ),
   );
   assert.ok(
     !html.includes("Used for minting agent trading cards"),

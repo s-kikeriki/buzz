@@ -170,6 +170,8 @@ before(async () => {
   ({ act, render, screen, cleanup, fireEvent } = await import(
     "@testing-library/react"
   ));
+  const { wrapTestingRender } = await import("@/testing/withI18n.mjs");
+  render = wrapTestingRender(render);
   ({ createElement } = await import("react"));
   ({ AgentDefaultsEditor } = await import("./AgentDefaultsEditor.tsx"));
   ({ DefaultConfigStep } = await import(

@@ -1,3 +1,4 @@
+import { Trans, useLingui } from "@lingui/react/macro";
 import { ArrowUpRight } from "lucide-react";
 
 import { cn } from "@/shared/lib/cn";
@@ -8,6 +9,8 @@ import { cn } from "@/shared/lib/cn";
  * in on hover or keyboard focus of the bubble.
  */
 export function MessageLinkHoverCue({ className }: { className?: string }) {
+  const { i18n } = useLingui();
+  void i18n;
   return (
     <span
       aria-hidden="true"
@@ -17,7 +20,7 @@ export function MessageLinkHoverCue({ className }: { className?: string }) {
         className,
       )}
     >
-      Open in chat
+      <Trans>Open in chat</Trans>
       <ArrowUpRight className="h-3 w-3" />
     </span>
   );

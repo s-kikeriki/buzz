@@ -1,3 +1,5 @@
+import { Trans, useLingui } from "@lingui/react/macro";
+import { t } from "@lingui/core/macro";
 import * as React from "react";
 import { Download, Lock, RefreshCw, Send, Sparkles } from "lucide-react";
 import { useMutation, useQuery } from "@tanstack/react-query";
@@ -53,6 +55,8 @@ function cardBytesFromBase64(b64: string): number[] {
  * previous-mints gallery.
  */
 export function AgentCardDialogs() {
+  const { i18n } = useLingui();
+  void i18n;
   return (
     <>
       <AgentCardViewerDialog />
@@ -73,6 +77,8 @@ export function AgentCardDialogs() {
  * only as local base64.
  */
 export function AgentCardViewerDialog() {
+  const { i18n } = useLingui();
+  void i18n;
   const state = useCardViewerState();
 
   // Keyed remount resets recipients/menu state when a different card opens.
@@ -96,6 +102,8 @@ function AgentCardViewerContent({
   card: MintedAgentCard;
   remint: CardMintInput | null;
 }) {
+  const { i18n } = useLingui();
+  void i18n;
   const [recipients, setRecipients] = React.useState<UserSearchResult[]>([]);
   const [menu, setMenu] = React.useState<MediaContextMenuPosition | null>(null);
   const closeMenu = React.useCallback(() => setMenu(null), []);
@@ -110,7 +118,7 @@ function AgentCardViewerContent({
     onSuccess: (saved) => {
       if (saved) {
         toast.success(
-          `Saved ${agentName}'s card. Share it — the card IS the agent.`,
+          t`Saved ${agentName}'s card. Share it — the card IS the agent.`,
         );
       }
     },
@@ -140,12 +148,12 @@ function AgentCardViewerContent({
       agentName,
     );
     if (sent) {
-      toast.success(`Sent ${agentName}'s card.`);
+      toast.success(t`Sent ${agentName}'s card.`);
       closeCardViewer();
     } else if (sent === false) {
       toast.error(
         sendController.getCurrentError() ??
-          "Couldn’t send the card. Try again.",
+          t`Couldn’t send the card. Try again.`,
       );
     }
   }
@@ -163,15 +171,15 @@ function AgentCardViewerContent({
           </DialogTitle>
           <DialogDescription>
             {card.locked
-              ? "This card is locked: only you and the agent can import it. Anyone else sees just the image."
+              ? t`This card is locked: only you and the agent can import it. Anyone else sees just the image.`
               : card.memoryLevel === "none"
-                ? "The card carries the agent — anyone who imports this PNG gets a working copy (config only, fresh identity, no memories)."
-                : `The card carries the agent — anyone who imports this PNG gets a working copy (fresh identity) including its ${card.memoryLevel === "core" ? "core memory" : "memories"}, stored as plaintext.`}
+                ? t`The card carries the agent — anyone who imports this PNG gets a working copy (config only, fresh identity, no memories).`
+                : t`The card carries the agent — anyone who imports this PNG gets a working copy (fresh identity) including its ${card.memoryLevel === "core" ? "core memory" : "memories"}, stored as plaintext.`}
           </DialogDescription>
         </DialogHeader>
         <div className="flex flex-col gap-4">
           <img
-            alt={`${agentName} trading card`}
+            alt={t`${agentName} trading card`}
             className="mx-auto max-h-[28rem] rounded-lg border shadow-lg"
             data-testid="agent-card-preview"
             onContextMenu={(event) => {
@@ -185,7 +193,7 @@ function AgentCardViewerContent({
               dataAttributes={["data-agent-card-context-menu"]}
               items={[
                 {
-                  label: "Download card",
+                  label: t`Download card`,
                   onSelect: () => {
                     closeMenu();
                     saveMutation.mutate();
@@ -221,7 +229,7 @@ function AgentCardViewerContent({
                 variant="outline"
               >
                 <RefreshCw className="mr-2 h-4 w-4" />
-                Reroll
+                <Trans>Reroll</Trans>
               </Button>
             ) : null}
             <Button
@@ -231,7 +239,7 @@ function AgentCardViewerContent({
               variant={recipients.length > 0 ? "outline" : "default"}
             >
               <Download className="mr-2 h-4 w-4" />
-              Save card
+              <Trans>Save card</Trans>
             </Button>
             {recipients.length > 0 ? (
               <Button
@@ -257,12 +265,16 @@ function AgentCardViewerContent({
  * notes are not retained).
  */
 export function AgentCardGalleryDialog() {
+  const { i18n } = useLingui();
+  void i18n;
   const open = useCardGalleryOpen();
   if (!open) return null;
   return <AgentCardGalleryContent />;
 }
 
 function AgentCardGalleryContent() {
+  const { i18n } = useLingui();
+  void i18n;
   const cardsQuery = useQuery({
     queryKey: ["agentCardArchive"],
     queryFn: listAgentCards,
@@ -302,16 +314,18 @@ function AgentCardGalleryContent() {
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <Sparkles className="h-4 w-4" />
-            Minted cards
+            <Trans>Minted cards</Trans>
           </DialogTitle>
           <DialogDescription>
-            Every card you’ve minted, newest first. Click one to view, save, or
-            share it.
+            <Trans>
+              Every card you’ve minted, newest first. Click one to view, save,
+              or share it.
+            </Trans>
           </DialogDescription>
         </DialogHeader>
         {viewState.kind === "loading" ? (
           <p className="py-8 text-center text-sm text-muted-foreground">
-            Loading cards…
+            <Trans>Loading cards…</Trans>
           </p>
         ) : viewState.kind === "error" ? (
           <div
@@ -320,7 +334,8 @@ function AgentCardGalleryContent() {
             role="alert"
           >
             <p className="text-center text-sm text-destructive">
-              Couldn’t load your minted cards: {viewState.message}
+              <Trans>Couldn’t load your minted cards:</Trans>{" "}
+              {viewState.message}
             </p>
             <Button
               disabled={cardsQuery.isFetching}
@@ -334,7 +349,7 @@ function AgentCardGalleryContent() {
           </div>
         ) : viewState.kind === "empty" ? (
           <p className="py-8 text-center text-sm text-muted-foreground">
-            No cards yet — mint one from an agent’s profile.
+            <Trans>No cards yet — mint one from an agent’s profile.</Trans>
           </p>
         ) : (
           <div className="grid max-h-[60vh] grid-cols-3 gap-3 overflow-y-auto pr-1">
@@ -349,7 +364,7 @@ function AgentCardGalleryContent() {
               >
                 {entry.thumbJpegBase64 ? (
                   <img
-                    alt={`${entry.agentName} trading card`}
+                    alt={t`${entry.agentName} trading card`}
                     className="aspect-2/3 w-full rounded-lg border object-cover shadow-sm transition-transform group-hover:scale-[1.02]"
                     src={`data:image/jpeg;base64,${entry.thumbJpegBase64}`}
                   />

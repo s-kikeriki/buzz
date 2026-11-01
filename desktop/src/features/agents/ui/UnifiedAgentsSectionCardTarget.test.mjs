@@ -163,6 +163,8 @@ before(async () => {
   ({ act, cleanup, fireEvent, render, screen } = await import(
     "@testing-library/react"
   ));
+  const { wrapTestingRender } = await import("@/testing/withI18n.mjs");
+  render = wrapTestingRender(render);
   ({ createElement } = await import("react"));
   ({ QueryClient, QueryClientProvider } = await import(
     "@tanstack/react-query"

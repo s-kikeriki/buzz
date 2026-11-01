@@ -1,3 +1,5 @@
+import { Trans, useLingui } from "@lingui/react/macro";
+import { plural, t } from "@lingui/core/macro";
 import * as React from "react";
 
 import { ProfileAvatar } from "@/features/profile/ui/ProfileAvatar";
@@ -54,6 +56,8 @@ export function TeamDialog({
   onSubmit,
   onDeleteRemovedPersonas,
 }: TeamDialogProps) {
+  const { i18n } = useLingui();
+  void i18n;
   const [name, setName] = React.useState("");
   const [teamDescription, setTeamDescription] = React.useState("");
   const [instructions, setInstructions] = React.useState("");
@@ -187,14 +191,14 @@ export function TeamDialog({
             <div className="min-h-0 flex-1 space-y-5 overflow-y-auto px-6 py-5">
               <div className="space-y-1.5">
                 <label className="text-sm font-medium" htmlFor="team-name">
-                  Name
+                  <Trans>Name</Trans>
                 </label>
                 <Input
                   autoCorrect="off"
                   disabled={isPending}
                   id="team-name"
                   onChange={(event) => setName(event.target.value)}
-                  placeholder="Engineering Squad"
+                  placeholder={t`Engineering Squad`}
                   value={name}
                 />
               </div>
@@ -204,14 +208,14 @@ export function TeamDialog({
                   className="text-sm font-medium"
                   htmlFor="team-description"
                 >
-                  Description
+                  <Trans>Description</Trans>
                 </label>
                 <Textarea
                   className="min-h-20"
                   disabled={isPending}
                   id="team-description"
                   onChange={(event) => setTeamDescription(event.target.value)}
-                  placeholder="Optional description for this team."
+                  placeholder={t`Optional description for this team.`}
                   value={teamDescription}
                 />
               </div>
@@ -221,41 +225,43 @@ export function TeamDialog({
                   className="text-sm font-medium"
                   htmlFor="team-instructions"
                 >
-                  Team Instructions
+                  <Trans>Team Instructions</Trans>
                 </label>
                 <Textarea
                   className="min-h-24"
                   disabled={isPending}
                   id="team-instructions"
                   onChange={(event) => setInstructions(event.target.value)}
-                  placeholder="Optional instructions applied to every deployed team member."
+                  placeholder={t`Optional instructions applied to every deployed team member.`}
                   value={instructions}
                 />
               </div>
 
               <div className="space-y-2">
-                <span className="text-sm font-medium">Agents</span>
+                <span className="text-sm font-medium">
+                  <Trans>Agents</Trans>
+                </span>
                 <p className="text-xs text-muted-foreground">
-                  Select the agents to include in this team.
+                  <Trans>Select the agents to include in this team.</Trans>
                 </p>
                 {missingInitialPersonaCount > 0 ? (
                   <p className="rounded-2xl border border-destructive/30 bg-destructive/10 px-4 py-3 text-sm text-destructive">
-                    This team references {missingInitialPersonaCount} agent
-                    {missingInitialPersonaCount === 1 ? "" : "s"} that{" "}
-                    {missingInitialPersonaCount === 1 ? "is" : "are"} no longer
-                    in My Agents. Save to remove them, or add them back to My
-                    Agents first.
+                    {plural(missingInitialPersonaCount, {
+                      one: "This team references # agent that is no longer in My Agents. Save to remove them, or add them back to My Agents first.",
+                      other:
+                        "This team references # agents that are no longer in My Agents. Save to remove them, or add them back to My Agents first.",
+                    })}
                   </p>
                 ) : null}
                 {personas.length === 0 ? (
                   <p className="py-4 text-center text-sm text-muted-foreground">
-                    {personaCatalogCopy.teamEmptyState}
+                    {i18n._(personaCatalogCopy.teamEmptyState)}
                   </p>
                 ) : (
                   <div
                     className="max-h-60 space-y-1 overflow-y-auto rounded-lg border border-border/70 p-2"
                     role="listbox"
-                    aria-label="Agents"
+                    aria-label={t`Agents`}
                     aria-multiselectable="true"
                   >
                     {orderedPersonas.map((persona) => {
@@ -299,7 +305,9 @@ export function TeamDialog({
                           />
                           <span className="text-sm">{persona.displayName}</span>
                           {persona.isBuiltIn ? (
-                            <Badge variant="secondary">Built-in</Badge>
+                            <Badge variant="secondary">
+                              <Trans>Built-in</Trans>
+                            </Badge>
                           ) : null}
                         </div>
                       );
@@ -323,7 +331,7 @@ export function TeamDialog({
                   type="button"
                   variant="outline"
                 >
-                  Cancel
+                  <Trans>Cancel</Trans>
                 </Button>
                 <Button
                   disabled={

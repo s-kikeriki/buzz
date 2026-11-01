@@ -1,3 +1,4 @@
+import { Trans, useLingui } from "@lingui/react/macro";
 import { AlertCircle } from "lucide-react";
 
 import { useRetryBootWarm } from "@/features/agents/hooks";
@@ -11,13 +12,17 @@ import { Button } from "@/shared/ui/button";
  * picker and Agent defaults surfaces both render this instead of a dead end.
  */
 export function HarnessCatalogRetryNotice() {
+  const { i18n } = useLingui();
+  void i18n;
   const retryBootWarm = useRetryBootWarm();
   return (
     <div className="flex flex-wrap items-center gap-2 text-sm text-destructive">
       <AlertCircle className="size-4 shrink-0" />
-      <span>Couldn't detect agent harnesses.</span>
+      <span>
+        <Trans>Couldn't detect agent harnesses.</Trans>
+      </span>
       <Button onClick={retryBootWarm} size="sm" variant="outline">
-        Try again
+        <Trans>Try again</Trans>
       </Button>
     </div>
   );

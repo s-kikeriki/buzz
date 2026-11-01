@@ -1,3 +1,5 @@
+import { Trans, useLingui } from "@lingui/react/macro";
+import { t } from "@lingui/core/macro";
 import { Search } from "lucide-react";
 import * as React from "react";
 
@@ -44,6 +46,8 @@ export function PersonaShareRecipients({
   selectedUsers: UserSearchResult[];
   testIdPrefix?: string;
 }) {
+  const { i18n } = useLingui();
+  void i18n;
   const [searchQuery, setSearchQuery] = React.useState("");
   const [isPickerOpen, setIsPickerOpen] = React.useState(false);
   const recipientFieldRef = React.useRef<HTMLDivElement>(null);
@@ -172,7 +176,7 @@ export function PersonaShareRecipients({
                 aria-autocomplete="list"
                 aria-controls={`${testIdPrefix}-recipient-results`}
                 aria-expanded={isPickerOpen && !disabled}
-                aria-label="Share with"
+                aria-label={t`Share with`}
                 autoCapitalize="none"
                 autoComplete="off"
                 autoCorrect="off"
@@ -214,9 +218,9 @@ export function PersonaShareRecipients({
                 }}
                 placeholder={
                   selectedUsers.length >= RECIPIENT_LIMIT
-                    ? "Recipient limit reached"
+                    ? t`Recipient limit reached`
                     : selectedUsers.length === 0
-                      ? "Search people"
+                      ? t`Search people`
                       : ""
                 }
                 ref={searchInputRef}
@@ -256,7 +260,7 @@ export function PersonaShareRecipients({
           >
             {isSearchSettling ? (
               <div
-                aria-label="Loading people"
+                aria-label={t`Loading people`}
                 className="space-y-3 px-3 py-3"
                 role="status"
               >
@@ -270,7 +274,7 @@ export function PersonaShareRecipients({
             ) : visibleSearchResults.length > 0 ? (
               visibleSearchResults.map((user) => (
                 <button
-                  aria-label={`Add ${formatShareRecipientName(user)}`}
+                  aria-label={t`Add ${formatShareRecipientName(user)}`}
                   className="flex min-h-11 w-full items-center gap-3 px-3 py-2 text-left transition-colors hover:bg-muted/50 focus-visible:bg-muted/50 focus-visible:outline-hidden"
                   data-testid={`${testIdPrefix}-recipient-option-${user.pubkey}`}
                   key={user.pubkey}
@@ -291,7 +295,7 @@ export function PersonaShareRecipients({
               ))
             ) : (
               <p className="px-3 py-3 text-sm text-muted-foreground">
-                No people found.
+                <Trans>No people found.</Trans>
               </p>
             )}
           </div>

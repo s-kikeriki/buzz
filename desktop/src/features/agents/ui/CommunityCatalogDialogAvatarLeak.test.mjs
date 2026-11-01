@@ -237,41 +237,44 @@ async function mountDialog() {
   dom.window.document.body.appendChild(container);
   const root = createRoot(container);
 
+  const { withI18n } = await import("@/testing/withI18n.mjs");
   const tree = () =>
-    React.createElement(
-      QueryClientProvider,
-      { client },
+    withI18n(
       React.createElement(
-        ThemeProvider,
-        null,
+        QueryClientProvider,
+        { client },
         React.createElement(
-          CommunitiesProvider,
+          ThemeProvider,
           null,
           React.createElement(
-            TooltipProvider,
+            CommunitiesProvider,
             null,
-            React.createElement(CommunityCatalogDialog, {
-              createContent: () => React.createElement("div", null, "create"),
-              onImportFile: () => {},
-              personas: [catalogPersona()],
-              personasError: null,
-              personasLoading: false,
-              personasPending: false,
-              feedbackErrorMessage: null,
-              feedbackNoticeMessage: null,
-              onClearFeedback: () => {},
-              onSelectPersona: () => {},
-              teams: [catalogTeam()],
-              teamsError: null,
-              teamsLoading: false,
-              teamsAdding: false,
-              onAddTeam: () => {},
-              open: true,
-              // "agents" so the dialog does not auto-select the first team; the
-              // test drives each selection explicitly.
-              preferSection: "agents",
-              onOpenChange: () => {},
-            }),
+            React.createElement(
+              TooltipProvider,
+              null,
+              React.createElement(CommunityCatalogDialog, {
+                createContent: () => React.createElement("div", null, "create"),
+                onImportFile: () => {},
+                personas: [catalogPersona()],
+                personasError: null,
+                personasLoading: false,
+                personasPending: false,
+                feedbackErrorMessage: null,
+                feedbackNoticeMessage: null,
+                onClearFeedback: () => {},
+                onSelectPersona: () => {},
+                teams: [catalogTeam()],
+                teamsError: null,
+                teamsLoading: false,
+                teamsAdding: false,
+                onAddTeam: () => {},
+                open: true,
+                // "agents" so the dialog does not auto-select the first team; the
+                // test drives each selection explicitly.
+                preferSection: "agents",
+                onOpenChange: () => {},
+              }),
+            ),
           ),
         ),
       ),

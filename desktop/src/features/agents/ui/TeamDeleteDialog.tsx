@@ -1,3 +1,5 @@
+import { Trans, useLingui } from "@lingui/react/macro";
+import { t } from "@lingui/core/macro";
 import type { AgentTeam } from "@/shared/api/types";
 import {
   AlertDialog,
@@ -24,21 +26,25 @@ export function TeamDeleteDialog({
   onConfirm,
   onOpenChange,
 }: TeamDeleteDialogProps) {
+  const { i18n } = useLingui();
+  void i18n;
   return (
     <AlertDialog onOpenChange={onOpenChange} open={open}>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>Delete team?</AlertDialogTitle>
+          <AlertDialogTitle>
+            <Trans>Delete team?</Trans>
+          </AlertDialogTitle>
           <AlertDialogDescription>
             {team
-              ? `Delete "${team.name}". Already-deployed agents are not affected, but this team template will no longer be available.`
-              : "Delete this team."}
+              ? t`Delete "${team.name}". Already-deployed agents are not affected, but this team template will no longer be available.`
+              : t`Delete this team.`}
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel asChild>
             <Button type="button" variant="outline">
-              Cancel
+              <Trans>Cancel</Trans>
             </Button>
           </AlertDialogCancel>
           <AlertDialogAction asChild>
@@ -51,7 +57,7 @@ export function TeamDeleteDialog({
               type="button"
               variant="destructive"
             >
-              Delete
+              <Trans>Delete</Trans>
             </Button>
           </AlertDialogAction>
         </AlertDialogFooter>

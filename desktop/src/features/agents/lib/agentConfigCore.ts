@@ -1,3 +1,4 @@
+import { t } from "@lingui/core/macro";
 import type {
   AcpRuntimeCatalogEntry,
   GlobalAgentConfig,
@@ -358,5 +359,5 @@ export function numericTuningPlaceholder(
 ): string {
   return inheritedValue
     ? `Inherit (${inheritedValue})`
-    : "Inherit (agent default)";
+    : t`Inherit (agent default)`;
 }

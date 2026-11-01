@@ -1,3 +1,4 @@
+import { t } from "@lingui/core/macro";
 /**
  * Pure helper functions for displaying baked build env values in the global
  * agent config card. Extracted into their own module so unit tests can import
@@ -18,7 +19,7 @@ export function getBakedProviderInheritLabel(
 ): string {
   const match = options.find((o) => o.id === bakedProviderId);
   const friendlyName = match ? match.label : bakedProviderId;
-  return `${friendlyName} (inherited from build)`;
+  return t`${friendlyName} (inherited from build)`;
 }
 
 export type InheritedDefaultSource = "build" | "global" | null;
@@ -55,7 +56,7 @@ export function resolveInheritedDefault(
 }
 
 export function getBakedModelInheritLabel(bakedModelId: string): string {
-  return `Inherit build default (${bakedModelId})`;
+  return t`Inherit build default (${bakedModelId})`;
 }
 
 function providerModelEnvKey(provider: string): string | null {
@@ -120,20 +121,20 @@ export function getAdvancedInheritedSummary(
 
   const globalEnvLabel =
     globalEnvCount > 0
-      ? `${globalEnvCount} global env var${globalEnvCount > 1 ? "s" : ""}`
+      ? t`${globalEnvCount} global env var${globalEnvCount > 1 ? "s" : ""}`
       : "";
   if (effort.source === "build" && globalEnvCount === 0) {
-    return `Using build defaults: effort ${effort.value}`;
+    return t`Using build defaults: effort ${effort.value}`;
   }
   if (effort.source === "build") {
-    return `Using inherited defaults: build effort ${effort.value} · ${globalEnvLabel}`;
+    return t`Using inherited defaults: build effort ${effort.value} · ${globalEnvLabel}`;
   }
 
   const parts = [
     ...(effort.value ? [`effort ${effort.value}`] : []),
     ...(globalEnvLabel ? [globalEnvLabel] : []),
   ];
-  return `Using agent defaults: ${parts.join(" · ")}`;
+  return t`Using agent defaults: ${parts.join(" · ")}`;
 }
 
 export function getInheritedAgentDefaults(

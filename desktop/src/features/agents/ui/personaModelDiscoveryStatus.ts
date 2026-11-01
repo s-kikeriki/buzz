@@ -1,4 +1,7 @@
+import { t } from "@lingui/core/macro";
 import { BRAND } from "@/shared/branding/brand";
+
+const { productName } = BRAND;
 
 export type PersonaModelDiscoveryStatus = {
   message: string;
@@ -15,7 +18,7 @@ function errorMessage(error: unknown): string {
   try {
     return JSON.stringify(error);
   } catch {
-    return "Unknown model discovery error";
+    return t`Unknown model discovery error`;
   }
 }
 
@@ -53,7 +56,7 @@ export function formatModelDiscoveryErrorStatus(
   if (provider.trim() === "relay-mesh") {
     if (message.includes("waiting for the current member roster")) {
       return {
-        message: `${BRAND.productName} is waiting for the relay's member roster. Try again shortly; if this persists, check the relay's membership configuration.`,
+        message: t`${productName} is waiting for the relay's member roster. Try again shortly; if this persists, check the relay's membership configuration.`,
         tone: "warning",
       };
     }
@@ -68,20 +71,20 @@ export function formatModelDiscoveryErrorStatus(
 
     if (message.includes("shared compute is not available in this build")) {
       return {
-        message: `This version of ${BRAND.productName} cannot use shared compute. Update ${BRAND.productName} or choose another provider.`,
+        message: t`This version of ${productName} cannot use shared compute. Update ${productName} or choose another provider.`,
         tone: "warning",
       };
     }
 
     if (message.includes("shared compute status is malformed")) {
       return {
-        message: `${BRAND.productName} received an invalid shared compute status. Check the member machine, then try again.`,
+        message: t`${productName} received an invalid shared compute status. Check the member machine, then try again.`,
         tone: "warning",
       };
     }
 
     return {
-      message: `${BRAND.productName} couldn't check shared compute through the relay. Check your relay connection and try again.`,
+      message: t`${productName} couldn't check shared compute through the relay. Check your relay connection and try again.`,
       tone: "warning",
     };
   }
@@ -93,15 +96,17 @@ export function formatModelDiscoveryErrorStatus(
   // errors, so matching it would swallow unrelated failures into "sign in".
   if (message.toLowerCase().includes("authentication required")) {
     const label = agentLabel?.trim();
+    const who = label || t`This agent`;
+    const cliName = label || t`agent's`;
     return {
-      message: `${label || "This agent"} requires sign-in before models can load. Sign in with the ${label || "agent's"} CLI in a terminal, then try again.`,
+      message: t`${who} requires sign-in before models can load. Sign in with the ${cliName} CLI in a terminal, then try again.`,
       tone: "warning",
     };
   }
 
   if (message.includes("ANTHROPIC_API_KEY required")) {
     return {
-      message: "Enter an Anthropic API key to load Anthropic models.",
+      message: t`Enter an Anthropic API key to load Anthropic models.`,
       tone: "warning",
     };
   }
@@ -128,7 +133,7 @@ export function formatModelDiscoveryErrorStatus(
   }
 
   if (message.includes("BUZZ_AGENT_PROVIDER is required")) {
-    return { message: "Choose a provider to load models.", tone: "muted" };
+    return { message: t`Choose a provider to load models.`, tone: "muted" };
   }
 
   // Databricks transparent auth (agent_models_databricks.rs). The backend
@@ -142,7 +147,7 @@ export function formatModelDiscoveryErrorStatus(
   }
 
   return {
-    message: `Using built-in model options. Could not load live models for ${providerObjectLabel(
+    message: t`Using built-in model options. Could not load live models for ${providerObjectLabel(
       provider,
     )}.`,
     tone: "warning",
@@ -159,7 +164,7 @@ export function formatModelDiscoveryErrorStatus(
 function formatDatabricksAuthStatus(
   message: string,
 ): PersonaModelDiscoveryStatus | null {
-  if (message.includes("Databricks sign-in is required")) {
+  if (message.includes(t`Databricks sign-in is required`)) {
     return {
       message:
         "Databricks sign-in is required. Open the model picker to sign in, or run `buzz-agent auth databricks` in a terminal.",
@@ -168,8 +173,8 @@ function formatDatabricksAuthStatus(
   }
 
   if (
-    message.includes("Databricks sign-in failed") ||
-    message.includes("Databricks sign-in timed out")
+    message.includes(t`Databricks sign-in failed`) ||
+    message.includes(t`Databricks sign-in timed out`)
   ) {
     return {
       message:

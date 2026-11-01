@@ -1,3 +1,5 @@
+import { Trans, useLingui } from "@lingui/react/macro";
+import { t } from "@lingui/core/macro";
 import type { ReactNode } from "react";
 import { Info, Link, Users } from "lucide-react";
 
@@ -37,6 +39,8 @@ export function TeamIdentityCard({
   teamName,
   version,
 }: TeamIdentityCardProps) {
+  const { i18n } = useLingui();
+  void i18n;
   const footerModelLabel = getTeamFooterModelLabel(personas);
   const trimmedDescription = description?.trim();
 
@@ -55,20 +59,23 @@ export function TeamIdentityCard({
                 </span>
               </TooltipTrigger>
               <TooltipContent side="bottom" className="max-w-xs">
-                <p>Linked from {symlinkTarget ?? sourceDir}</p>
+                <p>
+                  <Trans>Linked from</Trans> {symlinkTarget ?? sourceDir}
+                </p>
               </TooltipContent>
             </Tooltip>
           ) : null}
           {version ? (
             <span className="rounded-full border border-border/65 bg-background/90 px-2 py-1 text-2xs font-medium leading-none text-muted-foreground shadow-xs">
-              v{version}
+              <Trans>v</Trans>
+              {version}
             </span>
           ) : null}
           {trimmedDescription ? (
             <Tooltip>
               <TooltipTrigger asChild>
                 <button
-                  aria-label={`${teamName} description`}
+                  aria-label={t`${teamName} description`}
                   className="flex h-6 w-6 items-center justify-center rounded-full border border-border/65 bg-background/90 text-muted-foreground shadow-xs"
                   type="button"
                 >
@@ -113,6 +120,8 @@ function TeamAvatarRow({
   personas: AgentPersona[];
   teamName: string;
 }) {
+  const { i18n } = useLingui();
+  void i18n;
   const visiblePersonas = personas.slice(0, MAX_VISIBLE_MEMBER_AVATARS);
   const overflowCount = Math.max(0, memberCount - visiblePersonas.length);
   const stackItemCount = visiblePersonas.length + (overflowCount > 0 ? 1 : 0);
@@ -135,7 +144,7 @@ function TeamAvatarRow({
   return (
     <div className="absolute inset-x-0 top-0 bottom-12 flex items-center justify-center">
       <div
-        aria-label={`${teamName} member avatars`}
+        aria-label={t`${teamName} member avatars`}
         className="flex max-w-full items-center justify-center px-4"
         role="img"
       >
@@ -164,6 +173,8 @@ function TeamAvatarItem({
   index: number;
   persona: AgentPersona;
 }) {
+  const { i18n } = useLingui();
+  void i18n;
   const avatarUrl = persona.avatarUrl?.trim() ?? null;
 
   return (
@@ -210,5 +221,5 @@ function getTeamFooterModelLabel(personas: AgentPersona[]) {
 
   return uniqueModels.size === 1
     ? (uniqueModels.values().next().value ?? "Auto")
-    : "Mixed models";
+    : t`Mixed models`;
 }

@@ -754,6 +754,7 @@ export function ProfileRuntimeTabContent({
   onToggleStartOnLaunch?: () => void;
   showDiagnosticsIngress: boolean;
 }) {
+  const { i18n } = useLingui();
   const startOnLaunchFieldIndex = configurationFields.findIndex(
     (field) => field.label === "Start on launch",
   );
@@ -803,9 +804,11 @@ export function ProfileRuntimeTabContent({
               Restart required
             </p>
             <p className="mt-0.5 text-xs text-muted-foreground">
-              {autoRestartEnabled
-                ? AUTO_RESTART_ON_BLURB
-                : AUTO_RESTART_OFF_BLURB}
+              {i18n._(
+                autoRestartEnabled
+                  ? AUTO_RESTART_ON_BLURB
+                  : AUTO_RESTART_OFF_BLURB,
+              )}
             </p>
             {/* Full uncapped diff list — Runtime banner is the only surface
                 where all entries show without truncation. */}

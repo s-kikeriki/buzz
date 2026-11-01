@@ -4,6 +4,8 @@ import test from "node:test";
 import React, { act } from "react";
 import { createRoot } from "react-dom/client";
 
+import { withI18n } from "@/testing/withI18n.mjs";
+
 import { TurnLivenessIndicator } from "@/features/agents/ui/TurnLivenessIndicator.tsx";
 import { BuzzLoadingState } from "./BuzzLoadingState.tsx";
 
@@ -31,7 +33,9 @@ async function mount(element) {
   const container = document.createElement("div");
   document.body.append(container);
   const root = createRoot(container);
-  await act(async () => root.render(element));
+  // `TurnLivenessIndicator` calls `useLingui()` for its label, so the mount
+  // needs the provider even though this test only looks at the bee.
+  await act(async () => root.render(withI18n(element)));
   return { container, unmount: () => act(async () => root.unmount()) };
 }
 

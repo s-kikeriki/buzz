@@ -1,3 +1,5 @@
+import { t } from "@lingui/core/macro";
+import { Trans, useLingui } from "@lingui/react/macro";
 import type * as React from "react";
 import type { ExtensionEntry } from "@/shared/api/types";
 import { cn } from "@/shared/lib/cn";
@@ -26,7 +28,7 @@ export function shouldRenderMcpServers(
 export function mcpConfigFileCaption(
   mcpConfigFilePath: string | null | undefined,
 ): string | null {
-  return mcpConfigFilePath ? `From config file (${mcpConfigFilePath})` : null;
+  return mcpConfigFilePath ? t`From config file (${mcpConfigFilePath})` : null;
 }
 
 export function McpServersSection({
@@ -36,6 +38,8 @@ export function McpServersSection({
   runtimeId,
   variant = "compact",
 }: McpServersSectionProps) {
+  const { i18n } = useLingui();
+  void i18n;
   const isBuzzAgent = runtimeId === "buzz-agent";
 
   if (!shouldRenderMcpServers(runtimeId, extensions)) {
@@ -53,7 +57,9 @@ export function McpServersSection({
       )}
     >
       {variant === "compact" ? (
-        <p className="py-2 text-xs font-medium text-foreground">MCP servers</p>
+        <p className="py-2 text-xs font-medium text-foreground">
+          <Trans>MCP servers</Trans>
+        </p>
       ) : null}
 
       {isBuzzAgent && buzzAgentSlot ? buzzAgentSlot : null}
@@ -77,7 +83,7 @@ export function McpServersSection({
               : "flex min-h-16 items-center px-4 py-3",
           )}
         >
-          No custom servers configured.
+          <Trans>No custom servers configured.</Trans>
         </p>
       )}
 
@@ -102,6 +108,8 @@ function McpServerRow({
   extension: ExtensionEntry;
   variant: "compact" | "profile";
 }) {
+  const { i18n } = useLingui();
+  void i18n;
   return (
     <div
       className={cn(

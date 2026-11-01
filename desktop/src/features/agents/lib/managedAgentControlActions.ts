@@ -1,3 +1,4 @@
+import { t } from "@lingui/core/macro";
 import { captureRelayRemovals } from "@/features/agents/managedAgentRelayCleanup";
 import { sendChannelMessage } from "@/shared/api/tauri";
 import type { Channel, ManagedAgent, RelayAgent } from "@/shared/api/types";
@@ -42,7 +43,7 @@ export function getManagedAgentPrimaryActionLabel(agent: ManagedAgent) {
     return "Stop";
   }
 
-  return "Start agent";
+  return t`Start agent`;
 }
 
 export function resolveManagedAgentChannelId(
@@ -139,8 +140,7 @@ export async function stopManagedAgentWithRules({
       agent.pubkey,
     ]);
     return {
-      noticeMessage:
-        "Shutdown requested. This does not confirm the agent has stopped.",
+      noticeMessage: t`Shutdown requested. This does not confirm the agent has stopped.`,
     };
   }
 
@@ -180,7 +180,7 @@ export async function deleteManagedAgentWithRules({
         if (!skipRemoteDeleteConfirm) {
           const confirmed = window.confirm(
             (availability === undefined
-              ? "This agent’s availability is unknown. "
+              ? t`This agent’s availability is unknown. `
               : "") +
               "Shutdown requested, but the agent may still be running. " +
               "Deleting now removes the local record — the remote deployment " +
@@ -194,7 +194,7 @@ export async function deleteManagedAgentWithRules({
         if (!skipRemoteDeleteConfirm) {
           const confirmed = window.confirm(
             "This agent is offline but the remote deployment may still exist. " +
-              "Deleting removes the local management record. Continue?",
+              t`Deleting removes the local management record. Continue?`,
           );
           if (!confirmed) {
             return { cancelled: true };

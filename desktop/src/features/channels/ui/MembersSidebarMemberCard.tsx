@@ -1,3 +1,5 @@
+import { useLingui } from "@lingui/react/macro";
+import { t } from "@lingui/core/macro";
 import { agentPresenceStartBlockReason } from "@/features/agents/lib/useAgentAvailability";
 import {
   Activity,
@@ -147,6 +149,8 @@ export function MembersSidebarMemberCard({
   profileOwnerPubkey,
   viewerIsOwner,
 }: MembersSidebarMemberCardProps) {
+  const { i18n } = useLingui();
+  void i18n;
   const roleLabel = formatRoleLabel(member, memberIsBot);
   const disabled = isActionPending || isArchived;
   const canViewActivity =
@@ -233,10 +237,17 @@ export function MembersSidebarMemberCard({
               }
             >
               {managedAgentRuntime
-                ? agentCommunityAvailability(managedAgentRuntime)
+                ? agentCommunityAvailability(managedAgentRuntime) === "Here"
+                  ? t`Here`
+                  : agentCommunityAvailability(managedAgentRuntime) === "Waking"
+                    ? t`Waking`
+                    : agentCommunityAvailability(managedAgentRuntime) ===
+                        "Needs setup on this device"
+                      ? t`Needs setup on this device`
+                      : t`Unavailable`
                 : managedAgent && isManagedAgentActive(managedAgent)
-                  ? "Running"
-                  : "Stopped"}
+                  ? t`Running`
+                  : t`Stopped`}
             </Badge>
             {managedAgent ? (
               <Badge
@@ -346,6 +357,7 @@ function MemberActionsMenu({
   onViewActivity?: (pubkey: string) => void;
   pairAction?: ManagedAgentPairAction;
 }) {
+  const { i18n } = useLingui();
   const showChangeRole =
     canChangeRole && !memberIsBot && member.role !== "owner";
   const isBanned = moderationState?.banned ?? false;
@@ -397,7 +409,7 @@ function MemberActionsMenu({
                 ? getPairActionIcon(pairAction)
                 : getManagedAgentActionIcon(managedAgent)}
               {pairAction
-                ? MANAGED_AGENT_PAIR_ACTION_LABELS[pairAction]
+                ? i18n._(MANAGED_AGENT_PAIR_ACTION_LABELS[pairAction])
                 : getManagedAgentPrimaryActionLabel(managedAgent)}
             </DropdownMenuItem>
             {onEditRespondTo ? (

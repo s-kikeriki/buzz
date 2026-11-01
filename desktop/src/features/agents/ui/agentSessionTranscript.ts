@@ -1,3 +1,4 @@
+import { t } from "@lingui/core/macro";
 import type {
   AgentActivityDescriptor,
   AgentActivityRenderClass,
@@ -177,7 +178,7 @@ function describePermissionRequest(payload: Record<string, unknown>) {
     asString(params.title) ??
     asString(params.message) ??
     asString(params.reason) ??
-    "Permission requested";
+    t`Permission requested`;
   const toolCallId =
     asString(params.toolCallId) ?? asString(params.tool_call_id);
   const options = Array.isArray(params.options)
@@ -216,7 +217,7 @@ function describePermissionRequest(payload: Record<string, unknown>) {
     optionNames,
     descriptor: {
       renderClass: "permission" as const,
-      label: "Permission requested",
+      label: t`Permission requested`,
       preview: title,
       action: { verb: "Requested", object: title },
       tone: "admin" as const,
@@ -513,7 +514,7 @@ function upsertPlan(
         id: updateMarkerId ?? `${id}:update:${timestamp}`,
         type: "plan",
         renderClass: "plan",
-        title: "Plan updated",
+        title: t`Plan updated`,
         text: summarizePlanUpdate(text),
         timestamp,
         isUpdate: true,
@@ -772,10 +773,10 @@ export function processTranscriptEvent(
   } else if (event.kind === "turn_error" || event.kind === "agent_panic") {
     const payload = asRecord(event.payload);
     const outcome = asString(payload.outcome) ?? "error";
-    const error = asString(payload.error) ?? "Unknown error";
+    const error = asString(payload.error) ?? t`Unknown error`;
     const displayError = friendlyTurnErrorCopy(error, payload.code);
     const title =
-      event.kind === "agent_panic" ? "Agent error (crash)" : "Turn error";
+      event.kind === "agent_panic" ? t`Agent error (crash)` : t`Turn error`;
     upsertTextItem(
       d,
       `${event.kind}:${ch}:${event.turnId ?? event.seq}`,
@@ -1074,7 +1075,7 @@ export function processTranscriptEvent(
           `commands:${ch}:${turnKey}`,
           "status",
           "Commands",
-          `Commands available: ${cmds.length}`,
+          t`Commands available: ${cmds.length}`,
           event.timestamp,
           ctx,
           updateType,

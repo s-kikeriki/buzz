@@ -1,3 +1,5 @@
+import { useLingui } from "@lingui/react/macro";
+import { t } from "@lingui/core/macro";
 import * as React from "react";
 import { BookUser } from "lucide-react";
 
@@ -28,6 +30,8 @@ export function TeamShareDialog({
   open,
   team,
 }: TeamShareDialogProps) {
+  const { i18n } = useLingui();
+  void i18n;
   const encodeSnapshot = React.useCallback(
     (memoryLevel: "none" | "core" | "everything") =>
       encodeTeamSnapshotForSend(team.id, memoryLevel, "png"),
@@ -48,14 +52,14 @@ export function TeamShareDialog({
             <BookUser className="h-4 w-4 shrink-0 text-muted-foreground" />
             <div className="min-w-0 flex-1">
               <h3 className="text-sm font-medium">
-                {teamCatalogCopy.shareTitle}
+                {i18n._(teamCatalogCopy.shareTitle)}
               </h3>
               <p className="text-xs text-secondary-foreground/75">
-                {teamCatalogCopy.shareDescription}
+                {i18n._(teamCatalogCopy.shareDescription)}
               </p>
             </div>
             <Switch
-              aria-label="Share to catalog"
+              aria-label={t`Share to catalog`}
               checked={catalogShareLevel !== "not-shared"}
               data-testid="team-share-catalog-access"
               disabled={isPending}

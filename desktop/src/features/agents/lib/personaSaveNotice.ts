@@ -1,3 +1,4 @@
+import { t } from "@lingui/core/macro";
 import type { PersonaSharePublicationResult } from "@/shared/api/tauriPersonas";
 
 /**
@@ -15,9 +16,9 @@ export function personaSaveNotice(
 ): string {
   switch (publicationStatus) {
     case "published":
-      return `Updated ${displayName} and published it to the community catalog.`;
+      return t`Updated ${displayName} and published it to the community catalog.`;
     case "queued":
-      return `Updated ${displayName}. Publishing to the community catalog is queued and will appear after the relay accepts the update.`;
+      return t`Updated ${displayName}. Publishing to the community catalog is queued and will appear after the relay accepts the update.`;
     default:
       return `Updated ${displayName}.`;
   }

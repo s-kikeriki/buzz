@@ -1,3 +1,5 @@
+import { useLingui } from "@lingui/react/macro";
+import { t } from "@lingui/core/macro";
 import { useAgentManagement } from "@/features/agents/useAgentManagement";
 import { ProjectChannelRequestDialog } from "@/features/projects/ui/ProjectChannelRequestDialog";
 import { AgentCardDialogs } from "./AgentCardViewerDialog";
@@ -5,6 +7,8 @@ import { AgentDialog } from "./AgentDialog";
 
 /** Global review surfaces opened by owned agents through the Buzz harness. */
 export function AgentManagementDialogs() {
+  const { i18n } = useLingui();
+  void i18n;
   const management = useAgentManagement();
 
   return (
@@ -39,8 +43,8 @@ export function AgentManagementDialogs() {
           open
           runtimes={management.runtimes}
           runtimeCatalogStatus={management.runtimeCatalogStatus}
-          submitLabel="Save changes"
-          title="Edit agent"
+          submitLabel={t`Save changes`}
+          title={t`Edit agent`}
         />
       ) : null}
       <ProjectChannelRequestDialog />

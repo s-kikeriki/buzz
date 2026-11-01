@@ -9,6 +9,7 @@ import { afterEach, test } from "node:test";
 import React, { act } from "react";
 import { createRoot } from "react-dom/client";
 
+import { withI18n } from "@/testing/withI18n.mjs";
 import { PersonaDropdownField } from "./PersonaDropdownField.tsx";
 import { PersonaModelCombobox } from "./PersonaModelCombobox.tsx";
 import { modelDropdownOptions } from "./relayMeshModelPicker.ts";
@@ -38,7 +39,7 @@ function mount(element) {
   container = document.createElement("div");
   document.body.appendChild(container);
   root = createRoot(container);
-  act(() => root.render(element));
+  act(() => root.render(withI18n(element)));
 }
 
 function openMenu() {

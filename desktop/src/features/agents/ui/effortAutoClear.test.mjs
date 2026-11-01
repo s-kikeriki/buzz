@@ -122,6 +122,8 @@ let setGlobalAgentConfig;
 
 before(async () => {
   ({ act, render, screen, cleanup } = await import("@testing-library/react"));
+  const { wrapTestingRender } = await import("@/testing/withI18n.mjs");
+  render = wrapTestingRender(render);
   ({ AgentConfigFields } = await import("./AgentConfigFields.tsx"));
   ({ EffortSelectField } = await import("./buzzAgentModelTuningFields.tsx"));
   ({ getProviderEffortConfig } = await import("./buzzAgentConfig.ts"));

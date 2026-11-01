@@ -1,3 +1,4 @@
+import { t } from "@lingui/core/macro";
 function commandLooksLikePath(command: string) {
   const trimmed = command.trim();
   return (
@@ -22,7 +23,7 @@ export function describeResolvedCommand(command: string, resolvedPath: string) {
     return "custom command";
   }
 
-  return "installed on PATH";
+  return t`installed on PATH`;
 }
 
 export function describeLogFile(path: string) {

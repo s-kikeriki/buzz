@@ -1,3 +1,4 @@
+import { msg, t } from "@lingui/core/macro";
 /**
  * Desktop-managed agents materialize this value when neither the create input
  * nor the linked definition sets parallelism. Keep in sync with
@@ -5,10 +6,13 @@
  */
 export const DEFAULT_AGENT_PARALLELISM = 10;
 
-export const AGENT_PARALLELISM_PLACEHOLDER = `App default (${DEFAULT_AGENT_PARALLELISM})`;
-export const AGENT_PARALLELISM_HELP = `Leave blank to use the app default (currently ${DEFAULT_AGENT_PARALLELISM}). Custom values may be 1–32.`;
-export const EDIT_AGENT_PARALLELISM_HELP =
-  "Current value for this agent. Custom values may be 1–32.";
+export function agentParallelismPlaceholder() {
+  return t`App default (${DEFAULT_AGENT_PARALLELISM})`;
+}
+export function agentParallelismHelp() {
+  return t`Leave blank to use the app default (currently ${DEFAULT_AGENT_PARALLELISM}). Custom values may be 1–32.`;
+}
+export const EDIT_AGENT_PARALLELISM_HELP = msg`Current value for this agent. Custom values may be 1–32.`;
 
 export function resolveAgentParallelism(
   input: number | undefined,
@@ -35,5 +39,5 @@ export function parallelismCapHint(
   requested: number,
 ): string | null {
   if (requested <= cap) return null;
-  return `${harnessLabel} runs at most ${cap} parallel conversation${cap === 1 ? "" : "s"} — this agent will run ${cap}.`;
+  return t`${harnessLabel} runs at most ${cap} parallel conversation${cap === 1 ? "" : "s"} — this agent will run ${cap}.`;
 }

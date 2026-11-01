@@ -1,3 +1,5 @@
+import { useLingui } from "@lingui/react/macro";
+import { t } from "@lingui/core/macro";
 import { cn } from "@/shared/lib/cn";
 
 export function AgentDefinitionMetadata({
@@ -13,21 +15,28 @@ export function AgentDefinitionMetadata({
   provider?: string | null;
   runtime: string | null;
 }) {
+  const { i18n } = useLingui();
+  void i18n;
   const items = [
     {
-      label: "Type",
-      value: isBuiltIn ? "Built-in agent" : "Custom agent",
+      label: t`Type`,
+      value: isBuiltIn ? t`Built-in agent` : t`Custom agent`,
     },
     {
-      label: "Preferred model",
-      value: model ?? "Use app default",
+      label: t`Preferred model`,
+      value: model ?? t`Use app default`,
     },
     {
-      label: "Preferred runtime",
-      value: runtime ?? "Use app default",
+      label: t`Preferred runtime`,
+      value: runtime ?? t`Use app default`,
     },
     ...(provider !== undefined
-      ? [{ label: "Preferred provider", value: provider ?? "Use app default" }]
+      ? [
+          {
+            label: t`Preferred provider`,
+            value: provider ?? t`Use app default`,
+          },
+        ]
       : []),
   ];
 

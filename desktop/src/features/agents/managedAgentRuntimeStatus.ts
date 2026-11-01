@@ -1,3 +1,4 @@
+import { msg, t } from "@lingui/core/macro";
 import type { ManagedAgentRuntimeStatus } from "@/shared/api/types";
 
 export type AgentCommunityAvailability =
@@ -28,10 +29,10 @@ export function agentCommunityStatusDetail(
   runtime: ManagedAgentRuntimeStatus,
 ): string | null {
   if (!runtime.localSetup)
-    return "Set up this agent on this device to start it.";
-  if (runtime.lifecycle === "stopped") return "Stopped by you";
+    return t`Set up this agent on this device to start it.`;
+  if (runtime.lifecycle === "stopped") return t`Stopped by you`;
   if (runtime.lifecycle === "failed")
-    return runtime.error ?? "Could not connect";
+    return runtime.error ?? t`Could not connect`;
   return null;
 }
 
@@ -53,13 +54,10 @@ export function managedAgentPairAction(
   return "stop";
 }
 
-export const MANAGED_AGENT_PAIR_ACTION_LABELS: Record<
-  ManagedAgentPairAction,
-  string
-> = {
-  start: "Start Agent",
-  stop: "Stop Agent",
-  restart: "Restart Agent",
+export const MANAGED_AGENT_PAIR_ACTION_LABELS = {
+  start: msg`Start Agent`,
+  stop: msg`Stop Agent`,
+  restart: msg`Restart Agent`,
 };
 
 /**

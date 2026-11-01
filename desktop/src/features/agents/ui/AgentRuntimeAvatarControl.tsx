@@ -1,3 +1,5 @@
+import { useLingui } from "@lingui/react/macro";
+import { t } from "@lingui/core/macro";
 import { CircleAlert } from "lucide-react";
 import { useReducedMotion } from "motion/react";
 
@@ -148,21 +150,23 @@ export function AgentRuntimeAvatarControl({
   onOpenError,
   onStart,
 }: AgentRuntimeAvatarControlProps) {
+  const { i18n } = useLingui();
+  void i18n;
   const shouldReduceMotion = useReducedMotion();
   const trimmedAvatarUrl = avatarUrl?.trim() || null;
   const isRestartAction = requiresRestart || isRestarting;
   const actionLabel = isRestarting
-    ? "Restarting Agent"
+    ? t`Restarting Agent`
     : isStarting
-      ? "Starting Agent"
+      ? t`Starting Agent`
       : isRestartAction
-        ? "Restart Agent"
-        : "Start Agent";
+        ? t`Restart Agent`
+        : t`Start Agent`;
   const actionText = isRestartAction ? "Restart" : "Start";
   const isPending = isStarting || isRestarting;
   const availabilityLabel = availability
     ? getPresenceLabel(availability)
-    : "Availability unknown";
+    : t`Availability unknown`;
   const startBlockReason = agentPresenceStartBlockReason(
     isActive,
     availability,
@@ -172,7 +176,7 @@ export function AgentRuntimeAvatarControl({
   const showStatusDot =
     Boolean(startBlockReason) || (isActive && !isRestartAction);
   const hasError = !isActive && !isPending && Boolean(errorLabel);
-  const errorActionLabel = `${label} has a runtime error. Open runtime details.`;
+  const errorActionLabel = t`${label} has a runtime error. Open runtime details.`;
   const transition = shouldReduceMotion ? { duration: 0 } : MASK_TRANSITION;
   const actionBadge = isRestartAction
     ? RESTART_ACTION_BADGE

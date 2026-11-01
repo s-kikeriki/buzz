@@ -1,3 +1,5 @@
+import { useLingui } from "@lingui/react/macro";
+import { t } from "@lingui/core/macro";
 import { motion, useReducedMotion } from "motion/react";
 
 import { cn } from "@/shared/lib/cn";
@@ -36,6 +38,8 @@ export function TurnLivenessIndicator({
   /** Defaults to false — the indicator stays mounted for whole turns. */
   fuzz?: boolean;
 }) {
+  const { i18n } = useLingui();
+  void i18n;
   const animationsEnabled = useTranscriptAnimationEnabled();
   const shouldReduceMotion = useReducedMotion();
   const showStaggeredRow = animationsEnabled && !shouldReduceMotion;
@@ -43,7 +47,7 @@ export function TurnLivenessIndicator({
   if (!showStaggeredRow) {
     return (
       <div
-        aria-label="Agent turn in progress"
+        aria-label={t`Agent turn in progress`}
         className={cn("opacity-25", className)}
         data-testid="turn-liveness-indicator"
         role="status"
@@ -52,7 +56,7 @@ export function TurnLivenessIndicator({
           className="w-6"
           fallback={
             <FuzzyLogo
-              ariaLabel="Agent turn in progress"
+              ariaLabel={t`Agent turn in progress`}
               className="text-foreground"
               fuzz={fuzz}
               loop
@@ -67,7 +71,7 @@ export function TurnLivenessIndicator({
 
   return (
     <div
-      aria-label="Agent turn in progress"
+      aria-label={t`Agent turn in progress`}
       className={cn("flex items-center gap-1.5 opacity-25", className)}
       data-testid="turn-liveness-indicator"
       role="status"

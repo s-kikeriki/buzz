@@ -1,3 +1,5 @@
+import { Trans, useLingui } from "@lingui/react/macro";
+import { t } from "@lingui/core/macro";
 import * as React from "react";
 
 import {
@@ -38,6 +40,8 @@ export function AddAgentToChannelDialog({
   ) => void;
   onOpenChange: (open: boolean) => void;
 }) {
+  const { i18n } = useLingui();
+  void i18n;
   const channelsQuery = useChannelsQuery();
   const [channelId, setChannelId] = React.useState("");
   const [role, setRole] = React.useState<Exclude<ChannelRole, "owner">>("bot");
@@ -121,18 +125,22 @@ export function AddAgentToChannelDialog({
       <DialogContent className="max-w-xl overflow-hidden p-0">
         <div className="flex max-h-[85vh] flex-col">
           <DialogHeader className="shrink-0 border-b border-border/60 px-6 py-5 pr-14">
-            <DialogTitle>Add agent to channel</DialogTitle>
+            <DialogTitle>
+              <Trans>Add agent to channel</Trans>
+            </DialogTitle>
             <DialogDescription>
-              Add {agent?.name ?? "this agent"} to a channel so desktop chat can
-              `@mention` it. Running agents pick up new channels automatically
-              via membership notifications.
+              <Trans>Add</Trans> {agent?.name ?? "this agent"}{" "}
+              <Trans>
+                to a channel so desktop chat can `@mention` it. Running agents
+                pick up new channels automatically via membership notifications.
+              </Trans>
             </DialogDescription>
           </DialogHeader>
 
           <div className="min-h-0 flex-1 space-y-5 overflow-y-auto px-6 py-5">
             <div className="space-y-1.5">
               <label className="text-sm font-medium" htmlFor="agent-channel-id">
-                Channel
+                <Trans>Channel</Trans>
               </label>
               <select
                 className="flex h-9 w-full rounded-md border border-input bg-background px-3 py-2 text-sm shadow-xs"
@@ -144,7 +152,9 @@ export function AddAgentToChannelDialog({
                 value={channelId}
               >
                 {channels.length === 0 ? (
-                  <option value="">No channels available</option>
+                  <option value="">
+                    <Trans>No channels available</Trans>
+                  </option>
                 ) : null}
                 {channels.map((channel) => (
                   <option key={channel.id} value={channel.id}>
@@ -153,15 +163,19 @@ export function AddAgentToChannelDialog({
                 ))}
               </select>
               <p className="text-xs text-muted-foreground">
-                Only channels accessible to the current desktop user are shown
-                here.
+                <Trans>
+                  Only channels accessible to the current desktop user are shown
+                  here.
+                </Trans>
               </p>
             </div>
 
             {isAlreadyMember ? (
               <div className="flex items-center gap-2 rounded-lg border border-border/50 bg-muted/30 px-3 py-2 text-sm text-muted-foreground">
                 <span>✓</span>
-                <span>Already a member of this channel</span>
+                <span>
+                  <Trans>Already a member of this channel</Trans>
+                </span>
               </div>
             ) : null}
 
@@ -170,7 +184,7 @@ export function AddAgentToChannelDialog({
                 className="text-sm font-medium"
                 htmlFor="agent-channel-role"
               >
-                Role
+                <Trans>Role</Trans>
               </label>
               <select
                 className="flex h-9 w-full rounded-md border border-input bg-background px-3 py-2 text-sm shadow-xs"
@@ -181,25 +195,33 @@ export function AddAgentToChannelDialog({
                 }
                 value={role}
               >
-                <option value="bot">bot</option>
-                <option value="member">member</option>
-                <option value="guest">guest</option>
-                <option value="admin">admin</option>
+                <option value="bot">
+                  <Trans>bot</Trans>
+                </option>
+                <option value="member">
+                  <Trans>member</Trans>
+                </option>
+                <option value="guest">
+                  <Trans>guest</Trans>
+                </option>
+                <option value="admin">
+                  <Trans>admin</Trans>
+                </option>
               </select>
             </div>
 
             <div className="rounded-2xl border border-border/70 bg-muted/20 p-4">
               <p className="text-sm font-semibold tracking-tight">
-                Agent pubkey
+                <Trans>Agent pubkey</Trans>
               </p>
               <div className="mt-3 flex items-center justify-between gap-3">
                 <code className="min-w-0 flex-1 break-all rounded-xl border border-border/70 bg-background/80 px-3 py-2 text-xs">
                   {agent
                     ? (agentNpub ?? UNAVAILABLE_KEY_LABEL)
-                    : "No agent selected"}
+                    : t`No agent selected`}
                 </code>
                 {agent && agentNpub ? (
-                  <CopyButton label="Copy pubkey" value={agentNpub} />
+                  <CopyButton label={t`Copy pubkey`} value={agentNpub} />
                 ) : null}
               </div>
             </div>
@@ -224,7 +246,7 @@ export function AddAgentToChannelDialog({
               type="button"
               variant="outline"
             >
-              Cancel
+              <Trans>Cancel</Trans>
             </Button>
             <Button
               disabled={
@@ -240,8 +262,8 @@ export function AddAgentToChannelDialog({
               {attachAgentMutation.isPending
                 ? "Adding..."
                 : isAlreadyMember
-                  ? "Re-add to channel"
-                  : "Add to channel"}
+                  ? t`Re-add to channel`
+                  : t`Add to channel`}
             </Button>
           </div>
         </div>

@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
+import { withI18n } from "@/testing/withI18n.mjs";
 
 import React from "react";
 import { renderToStaticMarkup } from "react-dom/server";
@@ -49,7 +50,7 @@ test("describeRawEvent falls back to the event kind when no method is present", 
 test("RawEventRail render: each row exposes data-message-id keyed on (seq, timestamp) for scroll anchoring", () => {
   const events = [rawEvent({ seq: 1 }), rawEvent({ seq: 2 })];
   const html = renderToStaticMarkup(
-    React.createElement(RawEventRail, { events }),
+    withI18n(React.createElement(RawEventRail, { events })),
   );
   assert.ok(
     html.includes('data-message-id="1:2026-07-13T00:00:00.000Z"'),
@@ -71,7 +72,7 @@ test("RawEventRail render: rows sharing seq across an agent restart get distinct
     rawEvent({ seq: 1, timestamp: "2026-07-13T01:00:00.000Z" }),
   ];
   const html = renderToStaticMarkup(
-    React.createElement(RawEventRail, { events }),
+    withI18n(React.createElement(RawEventRail, { events })),
   );
   assert.ok(
     html.includes('data-message-id="1:2026-07-13T00:00:00.000Z"'),

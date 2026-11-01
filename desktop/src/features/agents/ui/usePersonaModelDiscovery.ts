@@ -1,3 +1,4 @@
+import { t } from "@lingui/core/macro";
 import * as React from "react";
 
 import { discoverAgentModels } from "@/shared/api/agentModels";
@@ -47,7 +48,7 @@ export function claudeCodeModelLabel(id: string): string | null {
   if (/[^\p{ASCII}]/u.test(id)) return null;
   const match = /^([^[]+)(\[1m\])?$/i.exec(id.trim());
   const label = match ? generateBareModelLabel(match[1]) : null;
-  return label && match?.[2] ? `${label} (1M context)` : label;
+  return label && match?.[2] ? t`${label} (1M context)` : label;
 }
 
 export function getDiscoveredPersonaModelOptions(
@@ -85,16 +86,16 @@ export function getDiscoveredPersonaModelOptions(
             id: "",
             label:
               provider === "relay-mesh"
-                ? "Default (auto)"
+                ? t`Default (auto)`
                 : agentDefaultModel && !defaultIsHarnessEntry
-                  ? `Default model (${labelFor(
+                  ? t`Default model (${labelFor(
                       agentDefaultModel,
                       response.models.find(
                         (model) => model.id === agentDefaultModel,
                       )?.name ?? null,
                       response.agentDefaultModel ?? "",
                     )})`
-                  : "Default model",
+                  : t`Default model`,
             ...(defaultIsHarnessEntry && harnessDefaultEntry?.description
               ? { description: harnessDefaultEntry.description }
               : {}),
@@ -131,9 +132,9 @@ export function synthesizeEmptyDiscoveryStatus(
   if (getDiscoveredPersonaModelOptions(response, provider) !== null) {
     return null;
   }
-  const agentLabel = response.agentName.trim() || "This agent";
+  const agentLabel = response.agentName.trim() || t`This agent`;
   return {
-    message: `${agentLabel} reported no models. Check that the CLI is installed and signed in, then reopen this screen.`,
+    message: t`${agentLabel} reported no models. Check that the CLI is installed and signed in, then reopen this screen.`,
     tone: "warning",
   };
 }
@@ -287,7 +288,7 @@ export function usePersonaModelDiscovery({
       ) {
         setModelDiscoveryStatus(
           formatModelDiscoveryErrorStatus(
-            new Error(`Runtime not available: ${selectedRuntimeAvailability}`),
+            new Error(t`Runtime not available: ${selectedRuntimeAvailability}`),
             trimmedProvider,
             selectedRuntimeLabel,
           ),

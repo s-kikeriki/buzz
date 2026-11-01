@@ -1,3 +1,5 @@
+import { Trans, useLingui } from "@lingui/react/macro";
+import { msg } from "@lingui/core/macro";
 import { RefreshCw } from "lucide-react";
 
 import { Badge } from "@/shared/ui/badge";
@@ -12,10 +14,11 @@ import { BRAND } from "@/shared/branding/brand";
  * Shared blurb strings for the auto-restart state. Exported so the Runtime-tab
  * banner can import the same constants — the two surfaces must never drift.
  */
-export const AUTO_RESTART_ON_BLURB = `Configuration changed since this agent started. ${BRAND.productName} can restart it automatically after ~3 minutes idle, or stop and respawn it to apply now.`;
+const { productName } = BRAND;
 
-export const AUTO_RESTART_OFF_BLURB =
-  "Configuration changed since this agent started. Automatic restart is off for this agent — stop and respawn it to apply the changes.";
+export const AUTO_RESTART_ON_BLURB = msg`Configuration changed since this agent started. ${productName} can restart it automatically after ~3 minutes idle, or stop and respawn it to apply now.`;
+
+export const AUTO_RESTART_OFF_BLURB = msg`Configuration changed since this agent started. Automatic restart is off for this agent — stop and respawn it to apply the changes.`;
 
 // ── Label helpers ─────────────────────────────────────────────────────────────
 
@@ -43,6 +46,8 @@ function formatJsonValue(v: unknown): string {
 }
 
 function ChangeDescription({ change }: { change: RestartChange }) {
+  const { i18n } = useLingui();
+  void i18n;
   switch (change.kind) {
     case "value":
       return (
@@ -59,7 +64,7 @@ function ChangeDescription({ change }: { change: RestartChange }) {
       const after = change.after_chars ?? 0;
       return (
         <span>
-          {before} chars → {after} chars
+          {before} <Trans>chars →</Trans> {after} <Trans>chars</Trans>
         </span>
       );
     }
@@ -74,9 +79,17 @@ function ChangeDescription({ change }: { change: RestartChange }) {
         </span>
       );
     case "added":
-      return <span>added</span>;
+      return (
+        <span>
+          <Trans>added</Trans>
+        </span>
+      );
     case "removed":
-      return <span>removed</span>;
+      return (
+        <span>
+          <Trans>removed</Trans>
+        </span>
+      );
     default:
       // Unknown kind — render nothing, remain type-safe at runtime
       return null;
@@ -102,6 +115,8 @@ function DiffList({
   cap?: number;
   variant?: "tooltip" | "inline";
 }) {
+  const { i18n } = useLingui();
+  void i18n;
   const visible = cap !== undefined ? entries.slice(0, cap) : entries;
   const overflow =
     cap !== undefined && entries.length > cap ? entries.length - cap : 0;
@@ -126,7 +141,9 @@ function DiffList({
         </li>
       ))}
       {overflow > 0 ? (
-        <li className={overflowClass}>and {overflow} more</li>
+        <li className={overflowClass}>
+          <Trans>and</Trans> {overflow} <Trans>more</Trans>
+        </li>
       ) : null}
     </ul>
   );
@@ -150,10 +167,12 @@ export function RestartDiffBadge({
   restartDiff: RestartDiffEntry[];
   className?: string;
 }) {
+  const { i18n } = useLingui();
+  void i18n;
   const badge = (
     <Badge className={cn("cursor-default gap-1", className)} variant="warning">
       <RefreshCw className="h-3 w-3" />
-      Restart required
+      <Trans>Restart required</Trans>
     </Badge>
   );
 
@@ -174,14 +193,18 @@ export function RestartDiffBadge({
           data-testid="restart-diff-badge"
         >
           <RefreshCw className="h-3 w-3" />
-          Restart required
+          <Trans>Restart required</Trans>
         </Badge>
       </TooltipTrigger>
       <TooltipContent className="max-w-72 text-xs" side="bottom">
-        <p className="mb-1.5 font-semibold">Config changed since last start:</p>
+        <p className="mb-1.5 font-semibold">
+          <Trans>Config changed since last start:</Trans>
+        </p>
         <DiffList cap={TOOLTIP_CAP} entries={restartDiff} />
         <p className="mt-1.5 text-secondary-foreground/70">
-          {autoRestartEnabled ? AUTO_RESTART_ON_BLURB : AUTO_RESTART_OFF_BLURB}
+          {i18n._(
+            autoRestartEnabled ? AUTO_RESTART_ON_BLURB : AUTO_RESTART_OFF_BLURB,
+          )}
         </p>
       </TooltipContent>
     </Tooltip>
@@ -197,6 +220,8 @@ export function RestartDiffList({
 }: {
   restartDiff: RestartDiffEntry[];
 }) {
+  const { i18n } = useLingui();
+  void i18n;
   if (restartDiff.length === 0) return null;
   return (
     <div

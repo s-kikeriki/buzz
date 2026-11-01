@@ -1,3 +1,4 @@
+import { plural, t } from "@lingui/core/macro";
 import * as React from "react";
 import { isRelayRemovedError } from "@/features/agents/managedAgentRelayCleanup";
 import { useQueryClient } from "@tanstack/react-query";
@@ -212,7 +213,7 @@ export function usePersonaActions() {
         );
         if (!runtime) {
           setPersonaErrorMessage(
-            "Choose an available provider for this agent.",
+            t`Choose an available provider for this agent.`,
           );
           return false;
         }
@@ -254,19 +255,19 @@ export function usePersonaActions() {
           );
           if (created.spawnError && !isRelayRemovedError(created.spawnError)) {
             setPersonaErrorMessage(
-              `${persona.displayName} was created, but it did not start: ${created.spawnError}`,
+              t`${persona.displayName} was created, but it did not start: ${created.spawnError}`,
             );
           }
           if (created.profileSyncError) {
             setPersonaErrorMessage(
-              `${created.agent.name} was created, but profile sync failed: ${created.profileSyncError}`,
+              t`${created.agent.name} was created, but profile sync failed: ${created.profileSyncError}`,
             );
           }
         } catch (error) {
           setPersonaErrorMessage(
             error instanceof Error
-              ? `${persona.displayName} was created, but the agent instance could not be created: ${error.message}`
-              : `${persona.displayName} was created, but the agent instance could not be created.`,
+              ? t`${persona.displayName} was created, but the agent instance could not be created: ${error.message}`
+              : t`${persona.displayName} was created, but the agent instance could not be created.`,
           );
         }
       }
@@ -274,7 +275,7 @@ export function usePersonaActions() {
       return true;
     } catch (error) {
       setPersonaErrorMessage(
-        error instanceof Error ? error.message : "Failed to save agent.",
+        error instanceof Error ? error.message : t`Failed to save agent.`,
       );
       return false;
     } finally {
@@ -290,7 +291,7 @@ export function usePersonaActions() {
       setPersonaToDelete(null);
     } catch (error) {
       setPersonaErrorMessage(
-        error instanceof Error ? error.message : "Failed to delete agent.",
+        error instanceof Error ? error.message : t`Failed to delete agent.`,
       );
     }
   }
@@ -353,8 +354,8 @@ export function usePersonaActions() {
       }
       setPersonaNoticeMessage(
         active
-          ? `Selected ${persona.displayName} for My Agents.`
-          : `Deselected ${persona.displayName} from My Agents.`,
+          ? t`Selected ${persona.displayName} for My Agents.`
+          : t`Deselected ${persona.displayName} from My Agents.`,
       );
       return updatedPersona;
     } catch (error) {
@@ -362,8 +363,8 @@ export function usePersonaActions() {
         error instanceof Error
           ? error.message
           : active
-            ? "Failed to select agent for My Agents."
-            : "Failed to deselect agent from My Agents.",
+            ? t`Failed to select agent for My Agents.`
+            : t`Failed to deselect agent from My Agents.`,
       );
       return null;
     }
@@ -386,7 +387,7 @@ export function usePersonaActions() {
       setPersonaErrorMessage(
         err instanceof Error
           ? err.message
-          : "Failed to read agent snapshot file.",
+          : t`Failed to read agent snapshot file.`,
       );
     }
   }
@@ -409,14 +410,19 @@ export function usePersonaActions() {
       });
       if (result.memoryErrors.length > 0) {
         setPersonaErrorMessage(
-          `${result.displayName} imported, but ${result.memoryErrors.length} memory entr${result.memoryErrors.length === 1 ? "y" : "ies"} failed to restore.`,
+          plural(result.memoryErrors.length, {
+            one: `${result.displayName} imported, but # memory entry failed to restore.`,
+            other: `${result.displayName} imported, but # memory entries failed to restore.`,
+          }),
         );
       } else {
         setPersonaNoticeMessage(`Imported ${result.displayName}.`);
       }
     } catch (err) {
       setSnapshotImportConfirmError(
-        err instanceof Error ? err.message : "Failed to import agent snapshot.",
+        err instanceof Error
+          ? err.message
+          : t`Failed to import agent snapshot.`,
       );
     }
   }
@@ -489,7 +495,7 @@ export function usePersonaActions() {
           setPersonaErrorMessage(
             error instanceof Error
               ? error.message
-              : "Failed to export agent snapshot.",
+              : t`Failed to export agent snapshot.`,
           );
         },
       },
@@ -523,11 +529,11 @@ export function usePersonaActions() {
       if (result.publicationStatus === "queued") {
         if (shared) {
           setPersonaNoticeMessage(
-            `Sharing ${persona.displayName} is queued. It will appear after the relay accepts the update.`,
+            t`Sharing ${persona.displayName} is queued. It will appear after the relay accepts the update.`,
           );
         } else {
           setPersonaNoticeMessage(
-            `Removing ${persona.displayName} is queued. It may remain discoverable until the relay accepts the update.`,
+            t`Removing ${persona.displayName} is queued. It may remain discoverable until the relay accepts the update.`,
           );
         }
         if (result.relayMessage) {
@@ -537,18 +543,18 @@ export function usePersonaActions() {
         }
       } else if (!shared) {
         setPersonaNoticeMessage(
-          `${persona.displayName} is no longer discoverable in the community catalog.`,
+          t`${persona.displayName} is no longer discoverable in the community catalog.`,
         );
       } else {
         setPersonaNoticeMessage(
-          `Published ${persona.displayName} to the community catalog.`,
+          t`Published ${persona.displayName} to the community catalog.`,
         );
       }
     } catch (error) {
       setPersonaErrorMessage(
         error instanceof Error
           ? error.message
-          : "Failed to update catalog sharing.",
+          : t`Failed to update catalog sharing.`,
       );
     }
   }

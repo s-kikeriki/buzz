@@ -1,10 +1,12 @@
+import { msg } from "@lingui/core/macro";
+import { useLingui } from "@lingui/react/macro";
 import { Cloud } from "lucide-react";
 
 import { useIsOtherSetupAgent } from "../useKnownAgentPubkeys";
 
 import { cn } from "@/shared/lib/cn";
 
-const OTHER_SETUP_LABEL = "Not managed on this device";
+const OTHER_SETUP_LABEL = msg`Not managed on this device`;
 
 export function OtherSetupAgentMarker({
   className,
@@ -13,13 +15,15 @@ export function OtherSetupAgentMarker({
   className?: string;
   testId?: string;
 }) {
+  const { i18n } = useLingui();
+  const label = i18n._(OTHER_SETUP_LABEL);
   return (
     <span
-      aria-label={OTHER_SETUP_LABEL}
+      aria-label={label}
       className={cn("inline-flex shrink-0", className)}
       data-testid={testId}
       role="img"
-      title={OTHER_SETUP_LABEL}
+      title={label}
     >
       <Cloud aria-hidden="true" className="h-3 w-3" />
     </span>

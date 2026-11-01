@@ -1,3 +1,4 @@
+import { t } from "@lingui/core/macro";
 import type { AcpRuntimeCatalogEntry } from "@/shared/api/types";
 
 /**
@@ -20,13 +21,13 @@ export function runtimeAvailabilityWarning(
   switch (runtime.availability) {
     case "adapter_missing":
       return withHint(
-        `${runtime.label} CLI is installed but the ACP adapter is missing.`,
+        t`${runtime.label} CLI is installed but the ACP adapter is missing.`,
       );
     case "adapter_outdated":
-      return `${runtime.label} ACP adapter is outdated — reinstall to continue.`;
+      return t`${runtime.label} ACP adapter is outdated — reinstall to continue.`;
     default:
       return runtime.requiresExternalCli
-        ? withHint(`${runtime.label} CLI is missing.`)
-        : withHint(`${runtime.label} is not installed.`);
+        ? withHint(t`${runtime.label} CLI is missing.`)
+        : withHint(t`${runtime.label} is not installed.`);
   }
 }

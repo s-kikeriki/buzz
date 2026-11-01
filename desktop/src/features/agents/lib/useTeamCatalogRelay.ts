@@ -1,3 +1,4 @@
+import { t } from "@lingui/core/macro";
 import * as React from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
@@ -61,7 +62,7 @@ export function useTeamCatalogLiveUpdates(communityId: string | null): void {
       })
       .catch((error) => {
         console.error(
-          "Couldn’t subscribe to the community team catalog",
+          t`Couldn’t subscribe to the community team catalog`,
           error,
         );
       });

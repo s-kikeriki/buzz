@@ -1,3 +1,4 @@
+import { Trans, useLingui } from "@lingui/react/macro";
 import { hasMissingRequiredEnvKey } from "./personaRuntimeModel";
 
 export function AdvancedRequiredBadge({
@@ -11,6 +12,8 @@ export function AdvancedRequiredBadge({
   show?: boolean;
   testId: string;
 }) {
+  const { i18n } = useLingui();
+  void i18n;
   const visible =
     show ?? hasMissingRequiredEnvKey(requiredEnvKeys ?? [], envVars ?? {});
   if (!visible) return null;
@@ -20,7 +23,7 @@ export function AdvancedRequiredBadge({
       className="rounded-full bg-destructive/10 px-2 py-0.5 text-xs text-destructive"
       data-testid={testId}
     >
-      Required
+      <Trans>Required</Trans>
     </span>
   );
 }

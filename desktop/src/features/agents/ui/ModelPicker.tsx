@@ -1,3 +1,5 @@
+import { Trans, useLingui } from "@lingui/react/macro";
+import { t } from "@lingui/core/macro";
 import { ChevronDown } from "lucide-react";
 import { toast } from "sonner";
 
@@ -38,6 +40,8 @@ export function ModelPicker({
   agent: ManagedAgent;
   onModelChanged?: () => void;
 }) {
+  const { i18n } = useLingui();
+  void i18n;
   const [modelsData, setModelsData] =
     React.useState<AgentModelsResponse | null>(null);
   const [loading, setLoading] = React.useState(false);
@@ -180,17 +184,17 @@ export function ModelPicker({
         const outcome = await sendLiveSwitch(modelId);
         if (outcome === "ambiguous") {
           toast.error(
-            "Couldn't switch all sessions — a channel has multiple agent sessions. Stop and restart the agent with the new model.",
+            t`Couldn't switch all sessions — a channel has multiple agent sessions. Stop and restart the agent with the new model.`,
           );
           return;
         }
         if (outcome === "unsupported") {
-          toast.error("That model isn't available for this agent.");
+          toast.error(t`That model isn't available for this agent.`);
           return;
         }
         if (outcome === "failed") {
           toast.error(
-            "Couldn't switch models — the agent kept its current model.",
+            t`Couldn't switch models — the agent kept its current model.`,
           );
           return;
         }
@@ -199,7 +203,7 @@ export function ModelPicker({
           // no active turn remained by the time the harness received it. Nothing
           // was applied and nothing rides a later session — tell the truth.
           toast.error(
-            "Couldn't switch models — the agent wasn't running a turn to switch.",
+            t`Couldn't switch models — the agent wasn't running a turn to switch.`,
           );
           return;
         }
@@ -208,12 +212,12 @@ export function ModelPicker({
           // session (the agent is mid-turn) and didn't confirm before the
           // fallback timeout. Tell the truth instead of claiming success.
           toast.info(
-            "Model switch pending — applies when the current turn finishes.",
+            t`Model switch pending — applies when the current turn finishes.`,
           );
           onModelChanged?.();
           return;
         }
-        toast.success("Model switched for this session.");
+        toast.success(t`Model switched for this session.`);
         onModelChanged?.();
         return;
       }
@@ -263,11 +267,13 @@ export function ModelPicker({
           {loading ? (
             <div className="flex items-center gap-2 px-3 py-2 text-sm text-muted-foreground">
               <Spinner className="h-4 w-4 border-2" />
-              Loading models...
+              <Trans>Loading models...</Trans>
             </div>
           ) : error ? (
             <div className="space-y-2 px-3 py-2 text-sm">
-              <p className="text-destructive">Failed to load models.</p>
+              <p className="text-destructive">
+                <Trans>Failed to load models.</Trans>
+              </p>
               <button
                 className="text-xs text-muted-foreground underline underline-offset-2 hover:text-foreground"
                 onClick={() => {
@@ -276,12 +282,12 @@ export function ModelPicker({
                 }}
                 type="button"
               >
-                Retry
+                <Trans>Retry</Trans>
               </button>
             </div>
           ) : !modelsData ? (
             <div className="px-3 py-2 text-sm text-muted-foreground">
-              Open to load available models.
+              <Trans>Open to load available models.</Trans>
             </div>
           ) : !modelsData.supportsSwitching ? (
             <div className="px-3 py-2 text-sm text-muted-foreground">
@@ -291,11 +297,13 @@ export function ModelPicker({
                     {resolveModelLabel(agent.model, null, agent.provider)}
                   </p>
                   <p className="mt-0.5 text-xs">
-                    This runtime does not support switching models.
+                    <Trans>
+                      This runtime does not support switching models.
+                    </Trans>
                   </p>
                 </>
               ) : (
-                "This agent uses the runtime's default model."
+                t`This agent uses the runtime's default model.`
               )}
             </div>
           ) : (
@@ -313,7 +321,9 @@ export function ModelPicker({
         </DropdownMenuContent>
       </DropdownMenu>
       {needsRestart ? (
-        <span className="text-2xs text-warning">restart to apply</span>
+        <span className="text-2xs text-warning">
+          <Trans>restart to apply</Trans>
+        </span>
       ) : null}
     </span>
   );

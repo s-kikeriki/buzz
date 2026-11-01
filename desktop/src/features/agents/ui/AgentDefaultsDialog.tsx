@@ -1,3 +1,4 @@
+import { Trans, useLingui } from "@lingui/react/macro";
 import * as React from "react";
 
 import {
@@ -32,6 +33,8 @@ export function AgentDefaultsDialog({
   onOpenChange: (open: boolean) => void;
   returnFocusRef: React.RefObject<HTMLButtonElement | null>;
 }) {
+  const { i18n } = useLingui();
+  void i18n;
   const [dirty, setDirty] = React.useState(false);
   const [saving, setSaving] = React.useState(false);
   const [confirmDiscard, setConfirmDiscard] = React.useState(false);
@@ -86,11 +89,15 @@ export function AgentDefaultsDialog({
           }}
         >
           <DialogHeader>
-            <DialogTitle>Agent defaults</DialogTitle>
+            <DialogTitle>
+              <Trans>Agent defaults</Trans>
+            </DialogTitle>
             <DialogDescription>
-              These settings apply to all agents unless you override them.
-              Agent-specific settings always take priority. Changes may restart
-              running agents.
+              <Trans>
+                These settings apply to all agents unless you override them.
+                Agent-specific settings always take priority. Changes may
+                restart running agents.
+              </Trans>
             </DialogDescription>
           </DialogHeader>
           <AgentDefaultsEditor
@@ -128,10 +135,12 @@ export function AgentDefaultsDialog({
         >
           <AlertDialogHeader>
             <AlertDialogTitle>
-              Discard changes to agent defaults?
+              <Trans>Discard changes to agent defaults?</Trans>
             </AlertDialogTitle>
             <AlertDialogDescription>
-              Unsaved changes made to agent defaults will be lost.
+              <Trans>
+                Unsaved changes made to agent defaults will be lost.
+              </Trans>
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
@@ -140,7 +149,7 @@ export function AgentDefaultsDialog({
                 restoreDefaultsFocusRef.current = true;
               }}
             >
-              Keep editing
+              <Trans>Keep editing</Trans>
             </AlertDialogCancel>
             <AlertDialogAction asChild>
               <Button
@@ -150,7 +159,7 @@ export function AgentDefaultsDialog({
                 }}
                 variant="destructive"
               >
-                Discard changes
+                <Trans>Discard changes</Trans>
               </Button>
             </AlertDialogAction>
           </AlertDialogFooter>

@@ -1,3 +1,4 @@
+import { t } from "@lingui/core/macro";
 import {
   AUTO_MODEL_DROPDOWN_VALUE,
   buildTemplateModelDropdownOptions,
@@ -13,7 +14,7 @@ function withSharedComputeAutoOption(
 ): readonly PersonaModelOption[] {
   const modelOptions = options.filter((option) => option.id.trim() !== "");
   return [
-    { id: "", label: "Auto (collective when available)" },
+    { id: "", label: t`Auto (collective when available)` },
     ...modelOptions,
   ];
 }
@@ -91,10 +92,10 @@ export function modelDropdownOptions({
   return [
     ...modelOptions,
     ...(loading
-      ? [{ disabled: true, label: "Loading models...", value: loadingValue }]
+      ? [{ disabled: true, label: t`Loading models...`, value: loadingValue }]
       : []),
     ...(allowCustom
-      ? [{ label: "Custom model...", value: CUSTOM_MODEL_DROPDOWN_VALUE }]
+      ? [{ label: t`Custom model...`, value: CUSTOM_MODEL_DROPDOWN_VALUE }]
       : []),
   ];
 }

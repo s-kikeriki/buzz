@@ -1,3 +1,5 @@
+import { Trans, useLingui } from "@lingui/react/macro";
+import { t } from "@lingui/core/macro";
 import { cn } from "@/shared/lib/cn";
 import type { FileEditDiff } from "../agentSessionFileEditDiff";
 import type { FileReadContent } from "../agentSessionFileRead";
@@ -30,6 +32,8 @@ export function ToolDetailBlocks({
   result: string;
   shellCommand: string | null;
 }) {
+  const { i18n } = useLingui();
+  void i18n;
   const showFileEditDiff =
     fileEditDiff && hasFileEditLineDiff(fileEditDiff) && !isError;
   const showFileReadContent = fileReadContent != null && !isError;
@@ -54,7 +58,7 @@ export function ToolDetailBlocks({
         <ShellCommandBlock command={shellCommand} result={result} />
       ) : showParameters ? (
         <ToolCodeBlock
-          label="Parameters"
+          label={t`Parameters`}
           tone="muted"
           value={JSON.stringify(args, null, 2)}
         />
@@ -79,7 +83,7 @@ export function ToolDetailBlocks({
       ) : null}
       {!showShellCommand && !showParameters && !hasResult ? (
         <p className="text-sm text-muted-foreground/80">
-          Waiting for tool details.
+          <Trans>Waiting for tool details.</Trans>
         </p>
       ) : null}
     </div>
@@ -95,6 +99,8 @@ function ToolCodeBlock({
   tone: "muted" | "error";
   value: string;
 }) {
+  const { i18n } = useLingui();
+  void i18n;
   return (
     <div className="space-y-2 overflow-hidden">
       <h4 className="text-2xs font-semibold uppercase tracking-wide text-muted-foreground">

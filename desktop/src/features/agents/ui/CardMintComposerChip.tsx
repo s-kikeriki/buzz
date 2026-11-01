@@ -1,3 +1,5 @@
+import { useLingui } from "@lingui/react/macro";
+import { t } from "@lingui/core/macro";
 import { Loader2, Sparkles, X } from "lucide-react";
 
 import {
@@ -14,6 +16,8 @@ import { Shimmer } from "@/shared/ui/Shimmer";
  * composer dock's bottom activity rail next to agent-working/typing rows.
  */
 export function CardMintComposerChip() {
+  const { i18n } = useLingui();
+  void i18n;
   const jobs = useCardMintJobs();
   if (jobs.length === 0) return null;
 
@@ -32,7 +36,7 @@ export function CardMintComposerChip() {
             >
               <Loader2 className="h-3.5 w-3.5 shrink-0 animate-spin opacity-70" />
               <Shimmer className="-my-px truncate py-px">
-                {`Minting ${job.input.agentName}’s card… (takes a few minutes)`}
+                {t`Minting ${job.input.agentName}’s card… (takes a few minutes)`}
               </Shimmer>
             </span>
           );
@@ -48,7 +52,7 @@ export function CardMintComposerChip() {
             >
               <Sparkles className="h-3.5 w-3.5 shrink-0" />
               <span className="truncate">
-                {`${job.input.agentName}’s card is ready — view it`}
+                {t`${job.input.agentName}’s card is ready — view it`}
               </span>
             </button>
           );
@@ -60,10 +64,10 @@ export function CardMintComposerChip() {
             key={job.jobId}
           >
             <span className="truncate">
-              {`Minting ${job.input.agentName}’s card failed`}
+              {t`Minting ${job.input.agentName}’s card failed`}
             </span>
             <button
-              aria-label="Dismiss failed mint"
+              aria-label={t`Dismiss failed mint`}
               className="shrink-0 opacity-70 hover:opacity-100"
               onClick={() => dismissCardMintJob(job.jobId)}
               type="button"

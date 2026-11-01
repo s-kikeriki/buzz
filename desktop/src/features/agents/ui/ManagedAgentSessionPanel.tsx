@@ -1,3 +1,5 @@
+import { Trans, useLingui } from "@lingui/react/macro";
+import { plural, t } from "@lingui/core/macro";
 import * as React from "react";
 import {
   CircleAlert,
@@ -64,7 +66,7 @@ export function ManagedAgentSessionPanel({
   autoTail = false,
   channelId = null,
   className,
-  emptyDescription = "Mention this agent in a channel to watch the next turn.",
+  emptyDescription = t`Mention this agent in a channel to watch the next turn.`,
   emptyState = "idle",
   panelPadding = true,
   rawLayout = "responsive",
@@ -76,6 +78,8 @@ export function ManagedAgentSessionPanel({
   rawEventsOverride,
   transcriptOverride,
 }: ManagedAgentSessionPanelProps) {
+  const { i18n } = useLingui();
+  void i18n;
   const hasObserver = agent.status === "running" || agent.status === "deployed";
   // Always read from the store — archived frames are ingested regardless of
   // live status and must be renderable for idle agents with channel history.
@@ -181,12 +185,14 @@ function SessionHeader({
   hasObserver: boolean;
   latestSessionId: string | null | undefined;
 }) {
+  const { i18n } = useLingui();
+  void i18n;
   return (
     <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
       <div className="min-w-0">
         <div className="flex items-center gap-2">
           <h3 className="text-sm font-semibold tracking-tight">
-            Live ACP session
+            <Trans>Live ACP session</Trans>
           </h3>
           <ObserverStatusBadge state={connectionState} />
         </div>
@@ -194,12 +200,12 @@ function SessionHeader({
           {hasObserver
             ? latestSessionId
               ? `Session ${shorten(latestSessionId)}`
-              : "Waiting for the next agent turn."
-            : "Restart this local agent to attach the observer feed."}
+              : t`Waiting for the next agent turn.`
+            : t`Restart this local agent to attach the observer feed.`}
         </p>
       </div>
       <Badge className="w-fit font-mono" variant="outline">
-        {eventCount} event{eventCount === 1 ? "" : "s"}
+        {plural(eventCount, { one: "# event", other: "# events" })}
       </Badge>
     </div>
   );
@@ -244,6 +250,8 @@ function SessionBody({
   transcriptContentClassName?: string;
   transcriptVariant: AgentSessionTranscriptVariant;
 }) {
+  const { i18n } = useLingui();
+  void i18n;
   const rawRail = resolveRawRailLayout(showRaw, rawLayout);
 
   if (rawRail.mode === "exclusive") {
@@ -310,6 +318,8 @@ function SessionBody({
 }
 
 function SessionLoadingSkeleton() {
+  const { i18n } = useLingui();
+  void i18n;
   return (
     <div className="mx-auto w-full max-w-3xl space-y-6 py-4">
       <div className="flex justify-end">
@@ -337,20 +347,22 @@ function SessionLoadingSkeleton() {
 }
 
 function ObserverStatusBadge({ state }: { state: ConnectionState }) {
+  const { i18n } = useLingui();
+  void i18n;
   const display =
     state === "open"
-      ? { label: "Live", Icon: CircleDot, variant: "default" as const }
+      ? { label: t`Live`, Icon: CircleDot, variant: "default" as const }
       : state === "connecting"
-        ? { label: "Connecting", variant: "secondary" as const }
+        ? { label: t`Connecting`, variant: "secondary" as const }
         : state === "error"
           ? {
-              label: "Unavailable",
+              label: t`Unavailable`,
               Icon: XCircle,
               variant: "destructive" as const,
             }
           : state === "closed"
-            ? { label: "Closed", Icon: Clock3, variant: "secondary" as const }
-            : { label: "Idle", Icon: Clock3, variant: "secondary" as const };
+            ? { label: t`Closed`, Icon: Clock3, variant: "secondary" as const }
+            : { label: t`Idle`, Icon: Clock3, variant: "secondary" as const };
   const StatusIcon = display.Icon;
 
   return (
@@ -366,12 +378,18 @@ function ObserverStatusBadge({ state }: { state: ConnectionState }) {
 }
 
 function EmptyObserverState() {
+  const { i18n } = useLingui();
+  void i18n;
   return (
     <div className="mt-4 flex min-h-48 flex-col items-center justify-center px-6 py-8 text-center">
       <TerminalSquare className="mx-auto h-4 w-4 text-muted-foreground" />
-      <p className="mt-3 text-sm font-medium">Observer not attached</p>
+      <p className="mt-3 text-sm font-medium">
+        <Trans>Observer not attached</Trans>
+      </p>
       <p className="mt-1 text-sm text-muted-foreground">
-        The live feed is available for local agents started after this update.
+        <Trans>
+          The live feed is available for local agents started after this update.
+        </Trans>
       </p>
     </div>
   );

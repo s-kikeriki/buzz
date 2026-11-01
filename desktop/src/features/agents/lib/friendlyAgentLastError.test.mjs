@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
+import { i18n } from "@lingui/core";
 
 import {
   friendlyAgentLastError,
@@ -24,7 +25,7 @@ test("buzz-acp wrapped auth failure → denied copy", () => {
   );
   assert.deepEqual(result, {
     severity: "denied",
-    copy: RELAY_MESH_DENIED_COPY,
+    copy: i18n._(RELAY_MESH_DENIED_COPY),
   });
 });
 
@@ -35,7 +36,7 @@ test("unwrapped buzz-agent prefix → denied copy", () => {
   const result = friendlyAgentLastError("llm auth: 403 forbidden");
   assert.deepEqual(result, {
     severity: "denied",
-    copy: RELAY_MESH_DENIED_COPY,
+    copy: i18n._(RELAY_MESH_DENIED_COPY),
   });
 });
 
@@ -52,7 +53,7 @@ test("trims whitespace before matching", () => {
     "  Agent reported error: llm auth: nope\n",
   );
   assert.equal(result?.severity, "denied");
-  assert.equal(result?.copy, RELAY_MESH_DENIED_COPY);
+  assert.equal(result?.copy, i18n._(RELAY_MESH_DENIED_COPY));
 });
 
 test("substring 'llm auth:' that isn't at start is NOT treated as denial", () => {
@@ -85,7 +86,7 @@ test("code -32002 → model-not-found copy (severity: denied)", () => {
   );
   assert.deepEqual(result, {
     severity: "denied",
-    copy: MODEL_NOT_FOUND_COPY,
+    copy: i18n._(MODEL_NOT_FOUND_COPY),
   });
 });
 
@@ -93,7 +94,7 @@ test("code -32001 → Buzz shared compute denied copy (structured path)", () => 
   const result = friendlyAgentLastError("any error text", -32001);
   assert.deepEqual(result, {
     severity: "denied",
-    copy: RELAY_MESH_DENIED_COPY,
+    copy: i18n._(RELAY_MESH_DENIED_COPY),
   });
 });
 
@@ -104,7 +105,7 @@ test("code null falls through to legacy string matching", () => {
   );
   assert.deepEqual(result, {
     severity: "denied",
-    copy: RELAY_MESH_DENIED_COPY,
+    copy: i18n._(RELAY_MESH_DENIED_COPY),
   });
 });
 
@@ -115,7 +116,7 @@ test("code undefined falls through to legacy string matching", () => {
   );
   assert.deepEqual(result, {
     severity: "denied",
-    copy: RELAY_MESH_DENIED_COPY,
+    copy: i18n._(RELAY_MESH_DENIED_COPY),
   });
 });
 
@@ -130,14 +131,14 @@ test("unknown code falls through to generic", () => {
 test("friendlyTurnErrorCopy: numeric code -32002 → model-not-found copy", () => {
   assert.equal(
     friendlyTurnErrorCopy("raw error", -32002),
-    MODEL_NOT_FOUND_COPY,
+    i18n._(MODEL_NOT_FOUND_COPY),
   );
 });
 
 test("friendlyTurnErrorCopy: string-encoded code coerces to number", () => {
   assert.equal(
     friendlyTurnErrorCopy("raw error", "-32001"),
-    RELAY_MESH_DENIED_COPY,
+    i18n._(RELAY_MESH_DENIED_COPY),
   );
 });
 
@@ -170,7 +171,7 @@ test("NaN code param treated as absent — string path applies", () => {
   const result = friendlyAgentLastError("llm auth: denied", NaN);
   assert.deepEqual(result, {
     severity: "denied",
-    copy: RELAY_MESH_DENIED_COPY,
+    copy: i18n._(RELAY_MESH_DENIED_COPY),
   });
 });
 
@@ -181,7 +182,7 @@ test("embedded code -32001 recovered from message when code param is null", () =
   );
   assert.deepEqual(result, {
     severity: "denied",
-    copy: RELAY_MESH_DENIED_COPY,
+    copy: i18n._(RELAY_MESH_DENIED_COPY),
   });
 });
 
@@ -192,7 +193,7 @@ test("embedded code -32002 recovered from message when code param is undefined",
   );
   assert.deepEqual(result, {
     severity: "denied",
-    copy: MODEL_NOT_FOUND_COPY,
+    copy: i18n._(MODEL_NOT_FOUND_COPY),
   });
 });
 
@@ -211,7 +212,7 @@ test("friendlyTurnErrorCopy: garbage string code coerces to NaN → string path"
   // "garbage" → NaN → not finite → null → string prefix matches "llm auth:".
   assert.equal(
     friendlyTurnErrorCopy("llm auth: denied", "garbage"),
-    RELAY_MESH_DENIED_COPY,
+    i18n._(RELAY_MESH_DENIED_COPY),
   );
 });
 
@@ -221,7 +222,7 @@ test("code -32603 bare 'Internal error' → cli-acp internal error hint (severit
   const result = friendlyAgentLastError("Internal error", -32603);
   assert.deepEqual(result, {
     severity: "generic",
-    copy: CLI_ACP_INTERNAL_ERROR_COPY,
+    copy: i18n._(CLI_ACP_INTERNAL_ERROR_COPY),
   });
 });
 
@@ -235,7 +236,7 @@ test("code -32603 bare Internal error (wrapped) → cli-acp internal error hint"
   );
   assert.deepEqual(result, {
     severity: "generic",
-    copy: CLI_ACP_INTERNAL_ERROR_COPY,
+    copy: i18n._(CLI_ACP_INTERNAL_ERROR_COPY),
   });
 });
 
@@ -259,7 +260,7 @@ test("embedded code -32603 recovered from message when code param is null", () =
   );
   assert.deepEqual(result, {
     severity: "generic",
-    copy: CLI_ACP_INTERNAL_ERROR_COPY,
+    copy: i18n._(CLI_ACP_INTERNAL_ERROR_COPY),
   });
 });
 
@@ -302,17 +303,17 @@ test("friendlyTurnErrorCopy: -32603 structured param + wrapped specific detail �
 test("friendlyTurnErrorCopy: code -32603 bare Internal error → cli-acp internal error hint", () => {
   assert.equal(
     friendlyTurnErrorCopy("Internal error", -32603),
-    CLI_ACP_INTERNAL_ERROR_COPY,
+    i18n._(CLI_ACP_INTERNAL_ERROR_COPY),
   );
 });
 
 test("-32603 does not affect -32001/-32002 classification (regression)", () => {
   assert.deepEqual(friendlyAgentLastError("any", -32001), {
     severity: "denied",
-    copy: RELAY_MESH_DENIED_COPY,
+    copy: i18n._(RELAY_MESH_DENIED_COPY),
   });
   assert.deepEqual(friendlyAgentLastError("any", -32002), {
     severity: "denied",
-    copy: MODEL_NOT_FOUND_COPY,
+    copy: i18n._(MODEL_NOT_FOUND_COPY),
   });
 });

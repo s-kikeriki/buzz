@@ -1,3 +1,4 @@
+import { t } from "@lingui/core/macro";
 import * as React from "react";
 import { useQueryClient } from "@tanstack/react-query";
 
@@ -147,7 +148,7 @@ export function useAgentManagement() {
       )
     ) {
       throw new Error(
-        "An agent can only manage agents from a channel you both belong to.",
+        t`An agent can only manage agents from a channel you both belong to.`,
       );
     }
   }
@@ -169,7 +170,7 @@ export function useAgentManagement() {
         (candidate) => candidate.id === input.runtime,
       );
       if (!runtime) {
-        throw new Error("Choose an available runtime for this agent.");
+        throw new Error(t`Choose an available runtime for this agent.`);
       }
 
       const avatarUrl = await resolveManagedAgentAvatarUrl(
@@ -210,7 +211,7 @@ export function useAgentManagement() {
       return true;
     } catch (cause) {
       setError(
-        cause instanceof Error ? cause.message : "Could not save this agent.",
+        cause instanceof Error ? cause.message : t`Could not save this agent.`,
       );
       return false;
     }
@@ -232,7 +233,7 @@ export function useAgentManagement() {
       return true;
     } catch (cause) {
       setError(
-        cause instanceof Error ? cause.message : "Could not save this agent.",
+        cause instanceof Error ? cause.message : t`Could not save this agent.`,
       );
       return false;
     }
@@ -263,10 +264,10 @@ export function useAgentManagement() {
     if (request?.action !== "update") return error;
     if (error) return error;
     if (matchingPersonas.length > 1) {
-      return "More than one personal agent has that name. Rename it in Agents, then ask the agent again.";
+      return t`More than one personal agent has that name. Rename it in Agents, then ask the agent again.`;
     }
     if (!currentPersona) {
-      return "Agents can only update a personal agent profile by its current name.";
+      return t`Agents can only update a personal agent profile by its current name.`;
     }
     return null;
   }, [currentPersona, error, matchingPersonas.length, request]);

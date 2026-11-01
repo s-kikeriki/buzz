@@ -361,7 +361,12 @@ test("agents without trustworthy provenance omit management provenance", () => {
 for (const duplicate of [false, true]) {
   test(`rendered provenance is truthful (${duplicate ? "duplicate" : "unique"} names)`, async () => {
     const React = await import("react");
-    const { render } = await import("@testing-library/react");
+    const { render: rawRender } = await import("@testing-library/react");
+    // `MentionAutocomplete` renders `OtherSetupAgentMarker`, which calls
+    // `useLingui()`; without the provider it throws about a duplicate
+    // `@lingui/react` install and names neither component.
+    const { wrapTestingRender } = await import("@/testing/withI18n.mjs");
+    const render = wrapTestingRender(rawRender);
     const { MentionAutocomplete } = await import("./MentionAutocomplete.tsx");
     const { TooltipProvider } = await import("@/shared/ui/tooltip");
     const remote = suggestion("managed-elsewhere");
