@@ -1,3 +1,5 @@
+import { t } from "@lingui/core/macro";
+import { Trans, useLingui } from "@lingui/react/macro";
 import { LayoutGrid, List } from "lucide-react";
 import { motion } from "motion/react";
 import * as React from "react";
@@ -37,11 +39,15 @@ export function ProjectsViewModeToggle({
   viewMode: ProjectsViewMode;
   onViewModeChange: (viewMode: ProjectsViewMode) => void;
 }) {
+  const { i18n } = useLingui();
+  void i18n;
   return (
     <fieldset className="flex items-center rounded-lg bg-muted/30 p-0.5">
-      <legend className="sr-only">Project layout</legend>
+      <legend className="sr-only">
+        <Trans>Project layout</Trans>
+      </legend>
       <Button
-        aria-label="Grid layout"
+        aria-label={t`Grid layout`}
         aria-pressed={viewMode === "grid"}
         className="h-7 w-7 px-0"
         onClick={() => onViewModeChange("grid")}
@@ -52,7 +58,7 @@ export function ProjectsViewModeToggle({
         <LayoutGrid className="h-3.5 w-3.5" />
       </Button>
       <Button
-        aria-label="List layout"
+        aria-label={t`List layout`}
         aria-pressed={viewMode === "list"}
         className="h-7 w-7 px-0"
         onClick={() => onViewModeChange("list")}
@@ -108,6 +114,8 @@ export function ProjectsToolbar({
   onFilterChange,
   reduceMotion = false,
 }: ProjectsToolbarProps) {
+  const { i18n } = useLingui();
+  void i18n;
   const scrollRef = React.useRef<HTMLFieldSetElement>(null);
   const overflow = useHorizontalOverflow(scrollRef);
 
@@ -123,12 +131,12 @@ export function ProjectsToolbar({
     label: string;
     value: ProjectsFilter;
   }> = [
-    { label: "Activity", value: "all" },
-    { label: "Projects", value: "projects" },
-    { label: "Repositories", value: "repositories" },
-    { label: "Tasks", value: "issues" },
-    { label: "Reviews", value: "prs" },
-    { label: "Channels", value: "channels" },
+    { label: t`Activity`, value: "all" },
+    { label: t`Projects`, value: "projects" },
+    { label: t`Repositories`, value: "repositories" },
+    { label: t`Tasks`, value: "issues" },
+    { label: t`Reviews`, value: "prs" },
+    { label: t`Channels`, value: "channels" },
   ];
 
   return (
@@ -150,7 +158,9 @@ export function ProjectsToolbar({
           )}
           ref={scrollRef}
         >
-          <legend className="sr-only">Project owner filter</legend>
+          <legend className="sr-only">
+            <Trans>Project owner filter</Trans>
+          </legend>
           {filterOptions.map((option) => (
             <motion.span
               className="shrink-0"

@@ -1,3 +1,4 @@
+import { t } from "@lingui/core/macro";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import {
@@ -278,13 +279,13 @@ export async function addProjectRepository(
         const message =
           retryError instanceof Error
             ? retryError.message
-            : "Failed to create the repository.";
+            : t`Failed to create the repository.`;
         // The project already lists the coordinate. Surface a partial-write
         // error with the event id so the user (or a future repair pass) can
         // query the relay directly and re-submit the signed event if needed.
         const eventLabel = repositoryEvent
           ? `event ${repositoryEvent.id.slice(0, 8)}…`
-          : "an event that could not be signed";
+          : t`an event that could not be signed`;
         throw new Error(
           `The project was updated but the repository could not be created (${eventLabel}): ${message} ` +
             `The add-repository operation is idempotent — re-run Add repository with the same name to resume: the recovery query will find the stored event or retry the publish.`,

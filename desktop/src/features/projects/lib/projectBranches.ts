@@ -1,3 +1,4 @@
+import { t } from "@lingui/core/macro";
 const BRANCH_CHARACTERS = /^[A-Za-z0-9/_.-]+$/;
 
 /** Normalize a branch name using the native command's conservative rules. */
@@ -29,9 +30,9 @@ export function projectBranchNameError(
   existingBranches: string[],
 ): string | null {
   const branch = normalizeProjectBranchName(value);
-  if (!branch) return "Enter a valid Git branch name.";
+  if (!branch) return t`Enter a valid Git branch name.`;
   if (existingBranches.includes(branch)) {
-    return "A branch with this name already exists.";
+    return t`A branch with this name already exists.`;
   }
   return null;
 }
@@ -64,11 +65,11 @@ export function projectBranchCreationReason(input: {
   activeBranchCommit: string | null;
   localHead?: string | null;
 }): string | null {
-  if (!input.activeBranch) return "Choose a branch first.";
+  if (!input.activeBranch) return t`Choose a branch first.`;
   if (input.activeBranchCommit) return null;
   return input.localHead
     ? `Push the first local commit to ${input.activeBranch} before creating another branch.`
-    : "Create the repository's first commit before creating another branch.";
+    : t`Create the repository's first commit before creating another branch.`;
 }
 
 /** Resolve a usable default branch when a repository advertises a stale HEAD. */
@@ -107,13 +108,13 @@ export function projectBranchManagementState(input: {
     input.snapshotCommit ??
     null;
   const deleteBranchReason = !input.activeBranch
-    ? "Choose a branch first."
+    ? t`Choose a branch first.`
     : input.activeBranch === input.defaultBranch
-      ? "The repository's default branch cannot be deleted."
+      ? t`The repository's default branch cannot be deleted.`
       : !activeRemoteBranch
-        ? "Only a published remote branch can be deleted."
+        ? t`Only a published remote branch can be deleted.`
         : input.hasOpenPullRequest
-          ? "Close the branch's review before deleting it."
+          ? t`Close the branch's review before deleting it.`
           : null;
   return { activeBranchCommit, activeRemoteBranch, deleteBranchReason };
 }

@@ -1,3 +1,5 @@
+import { t } from "@lingui/core/macro";
+import { Trans, useLingui } from "@lingui/react/macro";
 import { Loader2 } from "lucide-react";
 import * as React from "react";
 
@@ -43,6 +45,8 @@ export function CreateProjectBranchDialog({
   sourceBranch: string;
   sourceCommit: string | null;
 }) {
+  const { i18n } = useLingui();
+  void i18n;
   const [branchName, setBranchName] = React.useState("");
   const [submitError, setSubmitError] = React.useState<string | null>(null);
   const validationError = projectBranchNameError(branchName, existingBranches);
@@ -78,9 +82,11 @@ export function CreateProjectBranchDialog({
       <DialogContent data-testid="project-create-branch-dialog">
         <form className="space-y-5" onSubmit={handleSubmit}>
           <DialogHeader>
-            <DialogTitle>Create branch</DialogTitle>
+            <DialogTitle>
+              <Trans>Create branch</Trans>
+            </DialogTitle>
             <DialogDescription>
-              Create a remote branch from{" "}
+              <Trans>Create a remote branch from</Trans>{" "}
               <span className="font-mono text-foreground">{sourceBranch}</span>
               {sourceCommit ? ` at ${sourceCommit.slice(0, 7)}` : ""}.
             </DialogDescription>
@@ -89,14 +95,16 @@ export function CreateProjectBranchDialog({
             className="block space-y-2 text-sm font-medium"
             htmlFor="project-create-branch-name"
           >
-            <span>Branch name</span>
+            <span>
+              <Trans>Branch name</Trans>
+            </span>
             <Input
               autoFocus
               data-testid="project-create-branch-name"
               disabled={pending}
               id="project-create-branch-name"
               onChange={(event) => setBranchName(event.target.value)}
-              placeholder="feature/my-change"
+              placeholder={t`feature/my-change`}
               value={branchName}
             />
           </label>
@@ -105,7 +113,7 @@ export function CreateProjectBranchDialog({
           ) : null}
           {!sourceCommit ? (
             <p className="text-sm text-destructive">
-              Refresh the repository before creating a branch.
+              <Trans>Refresh the repository before creating a branch.</Trans>
             </p>
           ) : null}
           {submitError ? (
@@ -118,7 +126,7 @@ export function CreateProjectBranchDialog({
               type="button"
               variant="outline"
             >
-              Cancel
+              <Trans>Cancel</Trans>
             </Button>
             <Button
               data-testid="project-create-branch-submit"
@@ -126,7 +134,7 @@ export function CreateProjectBranchDialog({
               type="submit"
             >
               {pending ? <Loader2 className="h-4 w-4 animate-spin" /> : null}
-              {pending ? "Creating…" : "Create branch"}
+              {pending ? t`Creating…` : t`Create branch`}
             </Button>
           </DialogFooter>
         </form>
@@ -148,6 +156,8 @@ export function DeleteProjectBranchDialog({
   open: boolean;
   pending: boolean;
 }) {
+  const { i18n } = useLingui();
+  void i18n;
   const [submitError, setSubmitError] = React.useState<string | null>(null);
 
   React.useEffect(() => {
@@ -175,11 +185,16 @@ export function DeleteProjectBranchDialog({
     >
       <AlertDialogContent data-testid="project-delete-branch-dialog">
         <AlertDialogHeader>
-          <AlertDialogTitle>Delete branch?</AlertDialogTitle>
+          <AlertDialogTitle>
+            <Trans>Delete branch?</Trans>
+          </AlertDialogTitle>
           <AlertDialogDescription>
-            Delete the remote branch{" "}
-            <span className="font-mono text-foreground">{branch}</span>. This
-            cannot be undone and may be rejected by repository protection rules.
+            <Trans>Delete the remote branch</Trans>{" "}
+            <span className="font-mono text-foreground">{branch}</span>
+            <Trans>
+              . This cannot be undone and may be rejected by repository
+              protection rules.
+            </Trans>
           </AlertDialogDescription>
         </AlertDialogHeader>
         {submitError ? (
@@ -188,7 +203,7 @@ export function DeleteProjectBranchDialog({
         <AlertDialogFooter>
           <AlertDialogCancel asChild>
             <Button disabled={pending} type="button" variant="outline">
-              Cancel
+              <Trans>Cancel</Trans>
             </Button>
           </AlertDialogCancel>
           <Button
@@ -199,7 +214,7 @@ export function DeleteProjectBranchDialog({
             variant="destructive"
           >
             {pending ? <Loader2 className="h-4 w-4 animate-spin" /> : null}
-            {pending ? "Deleting…" : "Delete branch"}
+            {pending ? t`Deleting…` : t`Delete branch`}
           </Button>
         </AlertDialogFooter>
       </AlertDialogContent>

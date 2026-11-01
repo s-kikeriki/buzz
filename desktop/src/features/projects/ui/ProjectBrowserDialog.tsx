@@ -1,3 +1,5 @@
+import { plural, t } from "@lingui/core/macro";
+import { Trans, useLingui } from "@lingui/react/macro";
 import { Check, Folders, Plus, Search } from "lucide-react";
 import * as React from "react";
 
@@ -43,6 +45,8 @@ export function ProjectBrowserDialog({
   projects: readonly Project[];
   selectedProjectAddresses: ReadonlySet<string>;
 }) {
+  const { i18n } = useLingui();
+  void i18n;
   const [mode, setMode] = React.useState<"browse" | "create">("browse");
   const [query, setQuery] = React.useState("");
   const inputRef = React.useRef<HTMLInputElement>(null);
@@ -97,15 +101,15 @@ export function ProjectBrowserDialog({
           data-testid="project-browser-dialog"
           headerClassName="pb-2"
           scrollAreaClassName="px-3"
-          title="Add a project"
+          title={t`Add a project`}
         >
           <div className={MODAL_SEARCH_SHELL_CLASS}>
             <Search className="h-4 w-4 shrink-0 text-muted-foreground" />
             <input
-              aria-label="Search projects"
+              aria-label={t`Search projects`}
               className={MODAL_SEARCH_INPUT_CLASS}
               onChange={(event) => setQuery(event.target.value)}
-              placeholder="Search or create a project"
+              placeholder={t`Search or create a project`}
               ref={inputRef}
               type="search"
               value={query}
@@ -127,10 +131,10 @@ export function ProjectBrowserDialog({
                 <span className="block text-sm font-medium text-foreground">
                   {query.trim()
                     ? `Create “${query.trim()}”`
-                    : "Create a new project"}
+                    : t`Create a new project`}
                 </span>
                 <span className="block text-xs font-normal text-muted-foreground">
-                  Configure its repository and access options
+                  <Trans>Configure its repository and access options</Trans>
                 </span>
               </span>
             </Button>
@@ -158,17 +162,15 @@ export function ProjectBrowserDialog({
                       </span>
                       <span className="block truncate text-xs font-normal text-muted-foreground">
                         {project.description ||
-                          `${project.repositories.length} ${
-                            project.repositories.length === 1
-                              ? "repository"
-                              : "repositories"
-                          }`}
+                          `${project.repositories.length} ${plural(
+                            project.repositories.length,
+                            { one: `repository`, other: `repositories` },
+                          )}`}
                       </span>
                     </span>
                     {selectedProjectAddresses.has(project.projectAddress) ? (
                       <span className="flex shrink-0 items-center gap-1 text-xs text-muted-foreground">
-                        <Check className="h-3.5 w-3.5" />
-                        Added
+                        <Check className="h-3.5 w-3.5" /> <Trans>Added</Trans>
                       </span>
                     ) : null}
                   </Button>
@@ -177,10 +179,10 @@ export function ProjectBrowserDialog({
             ) : (
               <div className="px-4 py-10 text-center">
                 <p className="text-sm font-medium text-foreground">
-                  No projects found
+                  <Trans>No projects found</Trans>
                 </p>
                 <p className="mt-1 text-xs text-muted-foreground">
-                  Try another search or create a new project.
+                  <Trans>Try another search or create a new project.</Trans>
                 </p>
               </div>
             )}

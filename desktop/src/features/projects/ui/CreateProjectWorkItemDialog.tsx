@@ -1,3 +1,5 @@
+import { t } from "@lingui/core/macro";
+import { Trans, useLingui } from "@lingui/react/macro";
 import * as React from "react";
 
 import {
@@ -47,6 +49,8 @@ export function CreateProjectWorkItemDialog({
   title: string;
   titlePlaceholder: string;
 }) {
+  const { i18n } = useLingui();
+  void i18n;
   const [workItemTitle, setWorkItemTitle] = React.useState("");
   const [body, setBody] = React.useState("");
   const [category, setCategory] = React.useState<ProjectTaskCategory>("issue");
@@ -54,7 +58,7 @@ export function CreateProjectWorkItemDialog({
   const titleInputRef = React.useRef<HTMLInputElement>(null);
   const submitInFlightRef = React.useRef(false);
   const testIdPrefix = `create-${itemName}`;
-  const itemLabel = itemName === "issue" ? "task" : "review";
+  const itemLabel = itemName === "issue" ? t`task` : t`review`;
 
   React.useEffect(() => {
     if (!open) return;
@@ -87,7 +91,7 @@ export function CreateProjectWorkItemDialog({
       setErrorMessage(
         error instanceof Error
           ? error.message
-          : `Failed to create ${itemLabel}.`,
+          : t`Failed to create ${itemLabel}.`,
       );
     } finally {
       submitInFlightRef.current = false;
@@ -119,7 +123,7 @@ export function CreateProjectWorkItemDialog({
               form={`${testIdPrefix}-form`}
               type="submit"
             >
-              {isCreating ? "Creating…" : `Create ${itemLabel}`}
+              {isCreating ? t`Creating…` : t`Create ${itemLabel}`}
             </Button>
           </div>
         }
@@ -139,7 +143,7 @@ export function CreateProjectWorkItemDialog({
                 className="text-sm font-medium text-foreground"
                 htmlFor={`${testIdPrefix}-category`}
               >
-                Category
+                <Trans>Category</Trans>
               </label>
               <div className={FIELD_SHELL_CLASS}>
                 <select
@@ -157,7 +161,7 @@ export function CreateProjectWorkItemDialog({
                 >
                   {PROJECT_TASK_CATEGORIES.map((option) => (
                     <option key={option.value} value={option.value}>
-                      {option.label}
+                      {i18n._(option.label)}
                     </option>
                   ))}
                 </select>
@@ -169,7 +173,7 @@ export function CreateProjectWorkItemDialog({
               className="text-sm font-medium text-foreground"
               htmlFor={`${testIdPrefix}-title`}
             >
-              Title
+              <Trans>Title</Trans>
             </label>
             <div
               className={cn(
@@ -198,9 +202,9 @@ export function CreateProjectWorkItemDialog({
               className="text-sm font-medium text-foreground"
               htmlFor={`${testIdPrefix}-body`}
             >
-              Description
+              <Trans>Description</Trans>{" "}
               <span className="ml-1 text-xs font-normal text-muted-foreground/50">
-                Optional
+                <Trans>Optional</Trans>
               </span>
             </label>
             <div className={FIELD_SHELL_CLASS}>

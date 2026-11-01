@@ -1,3 +1,4 @@
+import { Trans, useLingui } from "@lingui/react/macro";
 import { Bot } from "lucide-react";
 import * as React from "react";
 
@@ -14,6 +15,8 @@ export function ProjectWorkItemCommunicationActions({
   item: ProjectSelectionItem;
   onChatWithAgent: (items: ProjectSelectionItem[]) => void;
 }) {
+  const { i18n } = useLingui();
+  void i18n;
   const items = React.useMemo(() => [item], [item]);
   const discussInChannel = useProjectDiscussInChannel(items);
 
@@ -30,8 +33,7 @@ export function ProjectWorkItemCommunicationActions({
         type="button"
         variant="ghost"
       >
-        <Bot className="h-3.5 w-3.5" />
-        Chat with an agent
+        <Bot className="h-3.5 w-3.5" /> <Trans>Chat with an agent</Trans>
       </Button>
       <ProjectSelectionDiscussAction
         items={items}

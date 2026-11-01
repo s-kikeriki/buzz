@@ -1,3 +1,5 @@
+import { plural, t } from "@lingui/core/macro";
+import { useLingui } from "@lingui/react/macro";
 import { FolderKanban, Hash, LockKeyhole } from "lucide-react";
 import * as React from "react";
 
@@ -31,6 +33,8 @@ export function ProjectsChannelsList({
   projects: Project[];
   searchQuery?: string;
 }) {
+  const { i18n } = useLingui();
+  void i18n;
   const { goChannel } = useAppNavigation();
   const channelsQuery = useChannelsQuery({ enabled: projects.length > 0 });
   const channelsById = React.useMemo(() => {
@@ -55,8 +59,8 @@ export function ProjectsChannelsList({
       .sort((left, right) => {
         const leftChannel = channelsById.get(left.channelId);
         const rightChannel = channelsById.get(right.channelId);
-        const leftName = leftChannel?.name ?? "Channel unavailable";
-        const rightName = rightChannel?.name ?? "Channel unavailable";
+        const leftName = leftChannel?.name ?? t`Channel unavailable`;
+        const rightName = rightChannel?.name ?? t`Channel unavailable`;
         const leftActivity =
           lastMessageAtSeconds(leftChannel?.lastMessageAt) ?? 0;
         const rightActivity =
@@ -94,7 +98,7 @@ export function ProjectsChannelsList({
     >();
     for (const row of rows) {
       const channel = channelsById.get(row.channelId);
-      const name = channel?.name ?? "Channel unavailable";
+      const name = channel?.name ?? t`Channel unavailable`;
       const rowKey = projectRelatedChannelDisplayRowKey(row);
       const item = selectionItemFromChannel({
         channelId: row.channelId,
@@ -130,7 +134,7 @@ export function ProjectsChannelsList({
   }, [rows]);
 
   if (channelsQuery.isLoading && rows.length === 0) {
-    return <BuzzLoadingState label="Loading project channels" />;
+    return <BuzzLoadingState label={t`Loading project channels`} />;
   }
   if (rows.length === 0) {
     const searching = Boolean(searchQuery.trim());
@@ -138,11 +142,11 @@ export function ProjectsChannelsList({
       <ProjectPanelState
         description={
           searching
-            ? "Try a different search."
-            : "Link a discussion channel to a project or repository and it will appear here."
+            ? t`Try a different search.`
+            : t`Link a discussion channel to a project or repository and it will appear here.`
         }
         panel={false}
-        title={searching ? "No matching channels" : "No project channels yet"}
+        title={searching ? t`No matching channels` : t`No project channels yet`}
       />
     );
   }
@@ -171,13 +175,13 @@ export function ProjectsChannelsList({
             {group.rows.map((row) => {
               const rowKey = projectRelatedChannelDisplayRowKey(row);
               const channel = channelsById.get(row.channelId);
-              const name = channel?.name ?? "Channel unavailable";
+              const name = channel?.name ?? t`Channel unavailable`;
               const lastActivityAt = lastMessageAtSeconds(
                 channel?.lastMessageAt,
               );
               const repositoryLabel =
                 row.repositoryNames.length === 0
-                  ? "Project channel"
+                  ? t`Project channel`
                   : row.repositoryNames.length === 1
                     ? row.repositoryNames[0]
                     : `${row.repositoryNames.length} repositories`;
@@ -197,9 +201,10 @@ export function ProjectsChannelsList({
                     countTestId="project-channel-message-count"
                     countTitle={
                       channel
-                        ? `${channel.memberCount} ${
-                            channel.memberCount === 1 ? "member" : "members"
-                          }`
+                        ? `${channel.memberCount} ${plural(
+                            channel.memberCount,
+                            { one: `member`, other: `members` },
+                          )}`
                         : undefined
                     }
                     dateSeconds={lastActivityAt}
@@ -207,7 +212,7 @@ export function ProjectsChannelsList({
                     description={
                       channel
                         ? listRowDescription(channel.description, name)
-                        : "Channel details are unavailable"
+                        : t`Channel details are unavailable`
                     }
                     icon={
                       channel ? (
@@ -228,7 +233,7 @@ export function ProjectsChannelsList({
                     testId="project-channel-row"
                     title={channel ? `#${name}` : name}
                     titleAttr={
-                      channel ? `Open #${name}` : "Open unavailable channel"
+                      channel ? `Open #${name}` : t`Open unavailable channel`
                     }
                   />
                 </li>

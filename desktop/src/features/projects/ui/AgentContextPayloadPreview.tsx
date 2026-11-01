@@ -1,9 +1,13 @@
+import { t } from "@lingui/core/macro";
+import { Trans, useLingui } from "@lingui/react/macro";
 import { Info } from "lucide-react";
 import * as React from "react";
 
 import { cn } from "@/shared/lib/cn";
 import { Button } from "@/shared/ui/button";
 import { BRAND } from "@/shared/branding/brand";
+
+const { productName } = BRAND;
 
 /**
  * Pre-send disclosure of the exact context payload appended to an outgoing
@@ -23,6 +27,8 @@ export function AgentContextPayloadPreview({
   payload: string;
   triggerLabel: string;
 }) {
+  const { i18n } = useLingui();
+  void i18n;
   const [open, setOpen] = React.useState(false);
   const trimmed = payload.trim();
   if (!trimmed) return null;
@@ -40,7 +46,7 @@ export function AgentContextPayloadPreview({
         data-testid="agent-context-preview-trigger"
         onClick={() => setOpen((value) => !value)}
         size="sm"
-        title="Preview the exact context appended to your message"
+        title={t`Preview the exact context appended to your message`}
         type="button"
         variant="ghost"
       >
@@ -53,9 +59,11 @@ export function AgentContextPayloadPreview({
           data-testid="agent-context-preview"
         >
           <p className="mb-2 text-xs text-muted-foreground">
-            This exact text is appended to your message before it is signed and
-            sent. Quoted values are untrusted workspace metadata —{" "}
-            {BRAND.productName} does not verify or rewrite them.
+            <Trans>
+              This exact text is appended to your message before it is signed
+              and sent. Quoted values are untrusted workspace metadata —
+              {productName} does not verify or rewrite them.
+            </Trans>
           </p>
           <pre
             className="max-h-48 overflow-auto whitespace-pre-wrap break-words font-mono text-xs text-foreground"

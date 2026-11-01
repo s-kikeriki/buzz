@@ -1,3 +1,4 @@
+import { plural, t } from "@lingui/core/macro";
 import type {
   Project,
   ProjectActivitySummary,
@@ -208,14 +209,6 @@ export function writeStoredSort(sort: ProjectsSort) {
   }
 }
 
-export function pluralize(
-  count: number,
-  singular: string,
-  plural = `${singular}s`,
-) {
-  return `${count} ${count === 1 ? singular : plural}`;
-}
-
 /**
  * Flatten Markdown source into a clean single-line-friendly plain-text string
  * for compact previews (activity feed, list excerpts). This is intentionally
@@ -339,7 +332,7 @@ export function normalizeRepositoryUrl(url: string) {
 
 export function getClonePathLabel(project: Project) {
   const cloneUrl = selectProjectRepository(project, null)?.cloneUrls[0];
-  if (!cloneUrl) return "Clone path pending";
+  if (!cloneUrl) return t`Clone path pending`;
 
   try {
     const parsed = new URL(cloneUrl);
@@ -365,13 +358,13 @@ export function uniqueRepositories(projects: Project[]) {
 
 export function getActivityLabel(summary: ProjectActivitySummary | undefined) {
   if (!summary || summary.activityCount === 0) {
-    return "No activity yet";
+    return t`No activity yet`;
   }
 
   return [
-    pluralize(summary.commitCount, "commit"),
-    pluralize(summary.prCount, "review"),
-    pluralize(summary.issueCount, "task"),
+    plural(summary.commitCount, { one: "# commit", other: "# commits" }),
+    plural(summary.prCount, { one: "# review", other: "# reviews" }),
+    plural(summary.issueCount, { one: "# task", other: "# tasks" }),
   ].join(" · ");
 }
 

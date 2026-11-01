@@ -1,3 +1,5 @@
+import { t } from "@lingui/core/macro";
+import { Trans, useLingui } from "@lingui/react/macro";
 import { EditorContent } from "@tiptap/react";
 import {
   ALargeSmall,
@@ -134,24 +136,24 @@ function buildSuggestions(projects: readonly Project[]) {
   const firstRepo = projects[0]?.name;
   return [
     {
-      label: "Reviews",
-      prompt: "Which reviews need attention today?",
+      label: t`Reviews`,
+      prompt: t`Which reviews need attention today?`,
     },
     {
-      label: "Release check",
+      label: t`Release check`,
       prompt: firstRepo
-        ? `Are we safe to cut a release of ${firstRepo} this week?`
-        : "Are we safe to cut a release this week?",
+        ? t`Are we safe to cut a release of ${firstRepo} this week?`
+        : t`Are we safe to cut a release this week?`,
     },
     {
-      label: "Tasks",
-      prompt: "Summarize the open tasks and flag anything urgent.",
+      label: t`Tasks`,
+      prompt: t`Summarize the open tasks and flag anything urgent.`,
     },
     {
-      label: "Activity",
+      label: t`Activity`,
       prompt: firstRepo
-        ? `Summarize recent activity in ${firstRepo}.`
-        : "Summarize recent repository activity.",
+        ? t`Summarize recent activity in ${firstRepo}.`
+        : t`Summarize recent repository activity.`,
     },
   ];
 }
@@ -233,6 +235,8 @@ export function ConversationThread({
   selfAvatarUrl: string | null;
   opener: ProjectsConversationOpener;
 }) {
+  const { i18n } = useLingui();
+  void i18n;
   useChannelSubscription(channel);
   const messagesQuery = useChannelMessagesQuery(channel);
   const threadRootIds = React.useMemo(
@@ -379,7 +383,7 @@ export function ConversationThread({
       {agentWorking.working ? (
         <div className="flex items-center gap-2 pl-11 text-sm text-muted-foreground">
           <Loader2 className="h-3.5 w-3.5 animate-spin" />
-          {agent.name} is working…
+          {agent.name} <Trans>is working…</Trans>
         </div>
       ) : null}
       <div ref={bottomRef} />
@@ -399,6 +403,8 @@ export function ProjectsAgentPromptPage({
   onClose: () => void;
   workspaceId: string | null;
 }) {
+  const { i18n } = useLingui();
+  void i18n;
   const [prompt, setPrompt] = React.useState("");
   const [storedConversation, setStoredConversation] =
     React.useState<StoredProjectsAgentConversation | null>(null);
@@ -491,7 +497,7 @@ export function ProjectsAgentPromptPage({
     onUpdate: ({ text }) => setPrompt(text),
     placeholder: conversation
       ? `Reply to ${conversation.agent.name}…`
-      : "Are we safe to release this week?",
+      : t`Are we safe to release this week?`,
   });
   const linkEditor = useLinkEditor(richText);
   onEditLinkRef.current = linkEditor.openFromClick;
@@ -591,7 +597,7 @@ export function ProjectsAgentPromptPage({
       richText.clearContent();
     } catch (error) {
       toast.error(
-        error instanceof Error ? error.message : "Failed to reach the agent",
+        error instanceof Error ? error.message : t`Failed to reach the agent`,
       );
     } finally {
       setIsSending(false);
@@ -640,13 +646,13 @@ export function ProjectsAgentPromptPage({
         <div className="flex items-center justify-between gap-2 pt-2">
           <div className="flex min-w-0 items-center gap-1">
             <Button
-              aria-label="Toggle formatting"
+              aria-label={t`Toggle formatting`}
               aria-pressed={isFormattingOpen}
               className="h-7 w-7 shrink-0 px-0"
               disabled={isSending}
               onClick={() => setIsFormattingOpen((open) => !open)}
               size="icon"
-              title="Formatting"
+              title={t`Formatting`}
               type="button"
               variant={isFormattingOpen ? "default" : "ghost"}
             >
@@ -682,7 +688,7 @@ export function ProjectsAgentPromptPage({
                       />
                     ) : null}
                     <span className="min-w-0 truncate">
-                      {selectedAgent?.name ?? "No agents available"}
+                      {selectedAgent?.name ?? t`No agents available`}
                     </span>
                     {candidates.length > 0 && conversation === null ? (
                       <ChevronDown className="h-3 w-3 shrink-0 text-muted-foreground" />
@@ -740,7 +746,7 @@ export function ProjectsAgentPromptPage({
             ) : (
               <SendHorizontal className="h-3.5 w-3.5" />
             )}
-            Ask
+            <Trans>Ask</Trans>
           </Button>
         </div>
         {conversation ? null : (
@@ -770,8 +776,8 @@ export function ProjectsAgentPromptPage({
                 type="button"
                 variant="ghost"
               >
-                <Trash2 className="h-3.5 w-3.5" />
-                Clear conversation
+                <Trash2 className="h-3.5 w-3.5" />{" "}
+                <Trans>Clear conversation</Trans>
               </Button>
             </div>
             <ConversationThread
@@ -795,15 +801,17 @@ export function ProjectsAgentPromptPage({
     <div className="flex flex-1 items-center justify-center overflow-y-auto px-4">
       <div className="w-full max-w-xl space-y-6 py-10">
         <h2 className="text-center text-lg font-semibold text-foreground">
-          Ask an agent about your projects
+          <Trans>Ask an agent about your projects</Trans>
         </h2>
 
         {promptBox}
 
         {candidates.length === 0 ? (
           <p className="text-center text-sm text-muted-foreground">
-            No agents available yet — create or start one from the Agents view
-            to ask about your repositories.
+            <Trans>
+              No agents available yet — create or start one from the Agents view
+              to ask about your repositories.
+            </Trans>
           </p>
         ) : (
           <div className="space-y-1.5">

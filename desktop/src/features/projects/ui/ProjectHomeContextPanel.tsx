@@ -1,3 +1,5 @@
+import { t } from "@lingui/core/macro";
+import { Trans, useLingui } from "@lingui/react/macro";
 import {
   ChevronDown,
   CircleDot,
@@ -45,6 +47,8 @@ function ContextSection({
   testId?: string;
   title?: string;
 }) {
+  const { i18n } = useLingui();
+  void i18n;
   const [expanded, setExpanded] = React.useState(true);
   return (
     <section className="group/sidebar-section space-y-1" data-testid={testId}>
@@ -94,6 +98,8 @@ function ContextRowContent({
   count?: number;
   icon: React.ReactNode;
 }) {
+  const { i18n } = useLingui();
+  void i18n;
   return (
     <>
       <span className="flex size-4 shrink-0 items-center justify-center text-current">
@@ -126,6 +132,8 @@ function ContextNavButton({
   testId?: string;
   title?: string;
 }) {
+  const { i18n } = useLingui();
+  void i18n;
   return (
     <Button
       aria-pressed={pressed}
@@ -160,6 +168,8 @@ function ChannelContextRow({
   projectHome?: boolean;
   testId: string;
 }) {
+  const { i18n } = useLingui();
+  void i18n;
   const Icon = projectHome ? ProjectChannelIcon : Hash;
   if (onClick) {
     return (
@@ -203,10 +213,12 @@ export function ProjectHomeContextPanel({
   project: Project;
   projects: Project[];
 }) {
+  const { i18n } = useLingui();
+  void i18n;
   const firstRepository = project.repositories[0] ?? null;
   const addRepositoryTitle = firstRepository
     ? undefined
-    : "Add a repository to this project";
+    : t`Add a repository to this project`;
   const openWorkspace = (tab: EntityLinkTab) => {
     if (firstRepository) {
       onOpenWorkspace(firstRepository.id, tab);
@@ -271,7 +283,7 @@ export function ProjectHomeContextPanel({
           testId="project-home-context-tasks"
           title={addRepositoryTitle}
         >
-          Tasks
+          <Trans>Tasks</Trans>
         </ContextNavButton>
         <ContextNavButton
           count={presentContextCount(activity?.prCount)}
@@ -282,7 +294,7 @@ export function ProjectHomeContextPanel({
           testId="project-home-context-reviews"
           title={addRepositoryTitle}
         >
-          Reviews
+          <Trans>Reviews</Trans>
         </ContextNavButton>
         <ContextNavButton
           count={presentContextCount(activity?.commitCount)}
@@ -293,7 +305,7 @@ export function ProjectHomeContextPanel({
           testId="project-home-context-commits"
           title={addRepositoryTitle}
         >
-          Commits
+          <Trans>Commits</Trans>
         </ContextNavButton>
         <ContextNavButton
           count={presentContextCount(snapshotQuery.data?.files.length)}
@@ -304,7 +316,7 @@ export function ProjectHomeContextPanel({
           testId="project-home-context-files"
           title={addRepositoryTitle}
         >
-          Files
+          <Trans>Files</Trans>
         </ContextNavButton>
         <ContextNavButton
           count={presentContextCount(peopleCount)}
@@ -318,7 +330,7 @@ export function ProjectHomeContextPanel({
           testId="project-home-context-people"
           title={addRepositoryTitle}
         >
-          People
+          <Trans>People</Trans>
         </ContextNavButton>
       </ContextSection>
       <ContextSection
@@ -330,7 +342,7 @@ export function ProjectHomeContextPanel({
           />
         }
         testId="project-home-context-channel"
-        title="Channels"
+        title={t`Channels`}
       >
         {listedChannels.length > 0 ? (
           listedChannels.map((binding) => {
@@ -357,7 +369,9 @@ export function ProjectHomeContextPanel({
           <p
             className={`${PROJECT_HOME_SIDEBAR_ROW_CLASS} pointer-events-none flex items-center`}
           >
-            <ContextRowContent icon={<Hash />}>Unavailable</ContextRowContent>
+            <ContextRowContent icon={<Hash />}>
+              <Trans>Unavailable</Trans>
+            </ContextRowContent>
           </p>
         )}
       </ContextSection>
@@ -373,7 +387,7 @@ export function ProjectHomeContextPanel({
           />
         }
         testId="project-home-context-codebase"
-        title="Codebase"
+        title={t`Codebase`}
       >
         {project.repositories.length > 0 ? (
           project.repositories.map((repository) => (
@@ -388,7 +402,7 @@ export function ProjectHomeContextPanel({
           ))
         ) : (
           <p className="px-2 py-1 text-sm text-sidebar-foreground/60">
-            None yet
+            <Trans>None yet</Trans>
           </p>
         )}
       </ContextSection>

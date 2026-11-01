@@ -1,5 +1,8 @@
+import { t } from "@lingui/core/macro";
 import type { ProjectRepoUnavailableReason } from "./projectRepoAvailability";
 import { BRAND } from "@/shared/branding/brand";
+
+const { productName } = BRAND;
 
 export type ProjectGitErrorPresentation = {
   title: string;
@@ -29,9 +32,8 @@ export function projectCloneErrorPresentation(
 
   if (unavailableReason === "access") {
     return {
-      title: "Repository access restricted",
-      description:
-        "You need access to the repository’s channel before you can clone it.",
+      title: t`Repository access restricted`,
+      description: t`You need access to the repository’s channel before you can clone it.`,
     };
   }
   if (
@@ -40,17 +42,16 @@ export function projectCloneErrorPresentation(
     )
   ) {
     return {
-      title: "Repository access required",
+      title: t`Repository access required`,
       description: github
-        ? `This repository requires GitHub authentication. ${BRAND.productName} currently clones public GitHub repositories without credentials.`
-        : `${BRAND.productName} could not authenticate with this repository. Check your access and try again.`,
+        ? t`This repository requires GitHub authentication. ${productName} currently clones public GitHub repositories without credentials.`
+        : t`${productName} could not authenticate with this repository. Check your access and try again.`,
     };
   }
   if (/\b404\b|repository not found|repository does not exist/.test(message)) {
     return {
-      title: "Repository not found",
-      description:
-        "Check that the repository link is correct and that the repository still exists.",
+      title: t`Repository not found`,
+      description: t`Check that the repository link is correct and that the repository still exists.`,
     };
   }
   if (
@@ -59,8 +60,8 @@ export function projectCloneErrorPresentation(
     )
   ) {
     return {
-      title: "Couldn’t reach the repository",
-      description: "Check your connection and try cloning again.",
+      title: t`Couldn’t reach the repository`,
+      description: t`Check your connection and try cloning again.`,
     };
   }
   if (
@@ -69,15 +70,14 @@ export function projectCloneErrorPresentation(
     )
   ) {
     return {
-      title: "Local folder already exists",
-      description:
-        "Choose a different repositories directory or remove the existing checkout.",
+      title: t`Local folder already exists`,
+      description: t`Choose a different repositories directory or remove the existing checkout.`,
     };
   }
   return {
-    title: "Couldn’t clone repository",
+    title: t`Couldn’t clone repository`,
     description: github
-      ? "Try again, or open the repository on GitHub for more information."
-      : "Try again. If the problem continues, contact the repository owner.",
+      ? t`Try again, or open the repository on GitHub for more information.`
+      : t`Try again. If the problem continues, contact the repository owner.`,
   };
 }

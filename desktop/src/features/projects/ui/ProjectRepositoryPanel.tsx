@@ -1,3 +1,5 @@
+import { plural, t } from "@lingui/core/macro";
+import { Trans, useLingui } from "@lingui/react/macro";
 import {
   Braces,
   ChevronRight,
@@ -30,7 +32,6 @@ import {
   formatFileSize,
   formatLastChangedAt,
   nextRepositoryEntryLimit,
-  pluralize,
   relativeTime,
   REPOSITORY_ENTRY_PAGE_SIZE,
 } from "@/features/projects/lib/projectsViewHelpers";
@@ -142,6 +143,8 @@ function RepositoryCommitCell({
   commit: ProjectRepoFile["latestCommit"];
   profiles?: UserProfileLookup;
 }) {
+  const { i18n } = useLingui();
+  void i18n;
   if (!commit) return <span className="text-muted-foreground">—</span>;
 
   return (
@@ -412,6 +415,8 @@ function fileIconVisual(entry: RepositoryFileEntry): FileIconVisual {
 }
 
 function RepositoryEntryIcon({ entry }: { entry: RepositoryFileEntry }) {
+  const { i18n } = useLingui();
+  void i18n;
   const visual = fileIconVisual(entry);
   const Icon = visual.Icon;
 
@@ -526,6 +531,8 @@ function BreadcrumbButton({
   children: React.ReactNode;
   onClick: () => void;
 }) {
+  const { i18n } = useLingui();
+  void i18n;
   return (
     <button
       className="truncate rounded-md px-1.5 py-1 text-xs font-medium text-muted-foreground transition-colors hover:bg-muted/50 hover:text-foreground"
@@ -546,6 +553,8 @@ function FileContentPanel({
   fileContentSource?: RepositoryFileContentSource;
   onOpenPath: (path: string) => void;
 }) {
+  const { i18n } = useLingui();
+  void i18n;
   const locale = useLocale();
   const fileContent = useRepositoryFileContent(file, fileContentSource);
   const language = languageForPath(file.path);
@@ -557,7 +566,7 @@ function FileContentPanel({
     <div className={PROJECT_DETAIL_PANEL_CLASS} data-project-detail-panel>
       <div className="flex min-h-14 items-center gap-1 border-border/50 border-b bg-muted/20 px-4 py-3">
         <BreadcrumbButton onClick={() => onOpenPath("")}>
-          Files
+          <Trans>Files</Trans>
         </BreadcrumbButton>
         {directorySegments.map((segment, index) => {
           const nextPath = directorySegments.slice(0, index + 1).join("/");
@@ -577,7 +586,9 @@ function FileContentPanel({
         </span>
         <div className="hidden shrink-0 items-center gap-3 text-2xs text-muted-foreground sm:flex">
           <span>
-            Last changed {formatLastChangedAt(file.lastChangedAt, locale)}
+            <Trans>
+              Last changed {formatLastChangedAt(file.lastChangedAt, locale)}
+            </Trans>
           </span>
           <span>{formatFileSize(file.size)}</span>
         </div>
@@ -586,10 +597,12 @@ function FileContentPanel({
         </span>
       </div>
       <div className="border-border/50 border-b bg-muted/10 px-4 py-2 text-2xs text-muted-foreground sm:hidden">
-        Last changed {formatLastChangedAt(file.lastChangedAt, locale)}
+        <Trans>
+          Last changed {formatLastChangedAt(file.lastChangedAt, locale)}
+        </Trans>
       </div>
       {fileContent.isLoading ? (
-        <BuzzLoadingState label="Loading file" />
+        <BuzzLoadingState label={t`Loading file`} />
       ) : fileContent.content ? (
         <pre className="overflow-x-auto bg-background/60 p-4">
           {language ? (
@@ -607,8 +620,8 @@ function FileContentPanel({
       ) : (
         <div className="p-6 text-sm text-muted-foreground">
           {fileContent.error
-            ? "Could not load this file. Try again after refreshing the repository."
-            : "Preview unavailable for this file. Large and binary files only show metadata."}
+            ? t`Could not load this file. Try again after refreshing the repository.`
+            : t`Preview unavailable for this file. Large and binary files only show metadata.`}
         </div>
       )}
     </div>
@@ -643,6 +656,8 @@ export function RepositoryFilesPanel({
   sourceControls?: RepoSourceHeaderControls;
   unavailableMessage?: string;
 }) {
+  const { i18n } = useLingui();
+  void i18n;
   const locale = useLocale();
   const {
     currentPath,
@@ -703,7 +718,7 @@ export function RepositoryFilesPanel({
   // remote/local toggle must stay reachable when one source fails to load.
   if (isLoading) {
     if (!sourceControls) {
-      return <BuzzLoadingState label="Loading repository files" />;
+      return <BuzzLoadingState label={t`Loading repository files`} />;
     }
     return (
       <div className={PROJECT_DETAIL_PANEL_CLASS} data-project-detail-panel>
@@ -727,24 +742,24 @@ export function RepositoryFilesPanel({
             <RepoSyncActionButton controls={sourceControls} />
           </div>
         </div>
-        <BuzzLoadingState label="Loading repository files" />
+        <BuzzLoadingState label={t`Loading repository files`} />
       </div>
     );
   }
   const stateMessage = unavailableMessage
     ? unavailableMessage
     : error
-      ? "Could not load the repository file tree."
+      ? t`Could not load the repository file tree.`
       : files.length === 0
-        ? "No files have been pushed yet."
+        ? t`No files have been pushed yet.`
         : null;
   if (stateMessage) {
     const state = (
       <ProjectPanelState
         description={
           error || unavailableMessage
-            ? "Refresh the repository or check its access settings."
-            : "Files pushed to this repository will appear here."
+            ? t`Refresh the repository or check its access settings.`
+            : t`Files pushed to this repository will appear here.`
         }
         error={Boolean(error || unavailableMessage)}
         panel={!sourceControls}
@@ -815,14 +830,14 @@ export function RepositoryFilesPanel({
             </>
           ) : (
             <BreadcrumbButton onClick={() => openPath("")}>
-              Files
+              <Trans>Files</Trans>
             </BreadcrumbButton>
           )}
           {sourceControls && pathSegments.length > 0 ? (
             <>
               <ChevronRight className="h-3.5 w-3.5 shrink-0 text-muted-foreground/60" />
               <BreadcrumbButton onClick={() => openPath("")}>
-                Files
+                <Trans>Files</Trans>
               </BreadcrumbButton>
             </>
           ) : null}
@@ -877,8 +892,7 @@ export function RepositoryFilesPanel({
                           {latestCommitAuthorLabel}
                         </span>
                         <span className="text-muted-foreground">
-                          {" "}
-                          committed
+                          <Trans>committed</Trans>
                         </span>
                         <span className="font-medium">
                           {" "}
@@ -891,7 +905,11 @@ export function RepositoryFilesPanel({
                           {latestCommit.shortHash}
                         </code>
                         <span className="text-muted-foreground">
-                          · {pluralize(files.length, "file")}
+                          ·{" "}
+                          {plural(files.length, {
+                            one: "# file",
+                            other: "# files",
+                          })}
                         </span>
                       </p>
                     </div>
@@ -906,7 +924,9 @@ export function RepositoryFilesPanel({
                   </div>
                 ) : (
                   <p className="truncate text-sm font-medium text-foreground">
-                    Repository files · {files.length} tracked files
+                    <Trans>
+                      Repository files · {files.length} tracked files
+                    </Trans>
                   </p>
                 )}
               </th>
@@ -920,7 +940,7 @@ export function RepositoryFilesPanel({
 
               return (
                 <tr
-                  aria-label={`Open ${entry.type} ${entry.name}`}
+                  aria-label={t`Open ${entry.type} ${entry.name}`}
                   className="group/repository-entry cursor-pointer text-xs focus-visible:outline-hidden"
                   data-testid="project-repository-entry-row"
                   key={`${entry.type}:${entry.path}`}
@@ -966,10 +986,12 @@ export function RepositoryFilesPanel({
       {entries.length > visibleEntries.length ? (
         <div className="flex items-center justify-between gap-3 border-border/50 border-t px-4 py-3 text-2xs text-muted-foreground">
           <span aria-live="polite">
-            Showing {visibleEntries.length} of {entries.length} entries.
+            <Trans>
+              Showing {visibleEntries.length} of {entries.length} entries.
+            </Trans>
           </span>
           <button
-            aria-label={`Show next ${nextEntryCount} entries, ${nextVisibleEntryCount} of ${entries.length} total`}
+            aria-label={t`Show next ${nextEntryCount} entries, ${nextVisibleEntryCount} of ${entries.length} total`}
             className="shrink-0 font-medium text-foreground hover:underline"
             onClick={() =>
               setVisibleEntryCount((current) =>
@@ -978,7 +1000,7 @@ export function RepositoryFilesPanel({
             }
             type="button"
           >
-            Show next {nextEntryCount}
+            <Trans>Show next {nextEntryCount}</Trans>
           </button>
         </div>
       ) : null}

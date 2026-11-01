@@ -1,3 +1,5 @@
+import { t } from "@lingui/core/macro";
+import { useLingui } from "@lingui/react/macro";
 import * as React from "react";
 import { toast } from "sonner";
 
@@ -85,6 +87,8 @@ import {
 } from "./projectDetailHelpers";
 
 export function ProjectDetailScreen(props: ProjectDetailScreenProps) {
+  const { i18n } = useLingui();
+  void i18n;
   const {
     commitHash,
     entityNavigationId,
@@ -363,11 +367,11 @@ export function ProjectDetailScreen(props: ProjectDetailScreenProps) {
     onTagChange: handleTagChange,
     onCreateBranch: () => branchActions.setCreateOpen(true),
     createBranchDisabled: branchActions.createPending || !activeBranchCommit,
-    createBranchTitle: createBranchReason ?? "Create a remote branch",
+    createBranchTitle: createBranchReason ?? t`Create a remote branch`,
     onDeleteBranch: () => branchActions.setDeleteOpen(true),
     deleteBranchDisabled:
       branchActions.deletePending || Boolean(deleteBranchReason),
-    deleteBranchTitle: deleteBranchReason ?? "Delete this remote branch",
+    deleteBranchTitle: deleteBranchReason ?? t`Delete this remote branch`,
     source: selectedTag ? "remote" : repoSource,
     onSourceChange: setRepoSource,
     localDisabled:
@@ -376,10 +380,10 @@ export function ProjectDetailScreen(props: ProjectDetailScreenProps) {
         !localRepoSnapshotQuery.data &&
         !localRepoSnapshotQuery.isLoading),
     localLabel: localRepoSnapshotQuery.isLoading
-      ? "Local checking"
+      ? t`Local checking`
       : repoSyncStatusQuery.data?.localPath || localRepoSnapshotQuery.data
         ? "Local"
-        : "Local missing",
+        : t`Local missing`,
     localPath:
       repoSyncStatusQuery.data?.localPath ?? localRepoSnapshotQuery.data?.path,
     ...repoRemote.controls,
@@ -432,7 +436,7 @@ export function ProjectDetailScreen(props: ProjectDetailScreenProps) {
       repoStateQuery.isFetching ||
       repoSyncStatusQuery.isFetching,
     fetchTitle:
-      repoSyncStatusQuery.data?.pullBlockReason ?? "Check for remote changes",
+      repoSyncStatusQuery.data?.pullBlockReason ?? t`Check for remote changes`,
   };
   const fileContentSource = useRepositoryFileContentSource({
     activeBranch,
@@ -522,7 +526,7 @@ export function ProjectDetailScreen(props: ProjectDetailScreenProps) {
       ]);
     } catch (error) {
       toast.error(
-        error instanceof Error ? error.message : "Failed to push repository",
+        error instanceof Error ? error.message : t`Failed to push repository`,
       );
     }
   }, [
@@ -600,11 +604,13 @@ export function ProjectDetailScreen(props: ProjectDetailScreenProps) {
         commit,
         mergeBase: repoSyncStatusQuery.data?.mergeBase ?? null,
       });
-      toast.success(updated ? "Review updated." : "Review is already current.");
+      toast.success(
+        updated ? t`Review updated.` : t`Review is already current.`,
+      );
       await pullRequestsQuery.refetch();
     } catch (error) {
       toast.error(
-        error instanceof Error ? error.message : "Failed to update review",
+        error instanceof Error ? error.message : t`Failed to update review`,
       );
     }
   }, [
@@ -625,7 +631,7 @@ export function ProjectDetailScreen(props: ProjectDetailScreenProps) {
       ]);
     } catch (error) {
       toast.error(
-        error instanceof Error ? error.message : "Failed to pull repository",
+        error instanceof Error ? error.message : t`Failed to pull repository`,
       );
     }
   }, [

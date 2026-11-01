@@ -1,3 +1,5 @@
+import { plural } from "@lingui/core/macro";
+import { Trans, useLingui } from "@lingui/react/macro";
 import { ChevronDown } from "lucide-react";
 import * as React from "react";
 
@@ -24,6 +26,8 @@ function SelectionItemRow({
   item: SelectionItem;
   overflow?: boolean;
 }) {
+  const { i18n } = useLingui();
+  void i18n;
   return (
     <div
       className="flex min-w-0 items-baseline gap-2 text-xs"
@@ -48,12 +52,15 @@ export function ProjectAgentSelectionComposerBanner({
 }: {
   items: NonNullable<ProjectDetailAgentContext["selection"]>;
 }) {
+  const { i18n } = useLingui();
+  void i18n;
   const [expanded, setExpanded] = React.useState(true);
   const visibleItems = items.slice(0, MAX_VISIBLE_ITEMS);
   const overflowItems = items.slice(MAX_VISIBLE_ITEMS);
-  const summary = `${items.length} ${
-    items.length === 1 ? "element" : "elements"
-  } selected`;
+  const summary = `${items.length} ${plural(items.length, {
+    one: `element`,
+    other: `elements`,
+  })} selected`;
 
   return (
     <div className="px-3" data-testid="projects-agent-selection-context">
@@ -88,7 +95,7 @@ export function ProjectAgentSelectionComposerBanner({
                     type="button"
                     variant="ghost"
                   >
-                    {overflowItems.length} more
+                    <Trans>{overflowItems.length} more</Trans>
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent

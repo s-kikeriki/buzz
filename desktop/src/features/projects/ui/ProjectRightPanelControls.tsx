@@ -1,3 +1,5 @@
+import { t } from "@lingui/core/macro";
+import { useLingui } from "@lingui/react/macro";
 import { MessageCircle } from "lucide-react";
 
 import {
@@ -9,6 +11,8 @@ import { Button } from "@/shared/ui/button";
 import { DrawerPanelIcon } from "@/shared/ui/DrawerPanelIcon";
 import { TerminalPanelIcon } from "@/shared/ui/TerminalPanelIcon";
 import { BRAND } from "@/shared/branding/brand";
+
+const { productName } = BRAND;
 
 export type ProjectRightPanelMode = "chat" | "repository";
 
@@ -25,10 +29,12 @@ export function ProjectChatPanelControl({
   onExpand: () => void;
   onModeChange: (mode: ProjectRightPanelMode) => void;
 }) {
+  const { i18n } = useLingui();
+  void i18n;
   const chatOpen = !collapsed && mode === "chat";
   return (
     <Button
-      aria-label={chatOpen ? "Hide project chat" : "Show project chat"}
+      aria-label={chatOpen ? t`Hide project chat` : t`Show project chat`}
       aria-pressed={chatOpen}
       className="h-7 w-7 text-sidebar-foreground hover:bg-sidebar-accent"
       data-testid="project-right-panel-chat-tab"
@@ -41,7 +47,7 @@ export function ProjectChatPanelControl({
         onExpand();
       }}
       size="icon"
-      title="Project chat"
+      title={t`Project chat`}
       type="button"
       variant="ghost"
     >
@@ -70,6 +76,8 @@ export function ProjectRightPanelControls({
   onModeChange: (mode: ProjectRightPanelMode) => void;
   terminalAvailable: boolean;
 }) {
+  const { i18n } = useLingui();
+  void i18n;
   const terminalPanel = useTerminalPanel();
   const terminalOpen = terminalPanel.mode !== "closed";
   const repositoryOpen = !collapsed && mode === "repository";
@@ -79,8 +87,8 @@ export function ProjectRightPanelControls({
       <Button
         aria-label={
           terminalOpen
-            ? `Hide ${BRAND.productName} Term`
-            : `Open ${BRAND.productName} Term`
+            ? t`Hide ${productName} Term`
+            : t`Open ${productName} Term`
         }
         aria-pressed={terminalOpen}
         className={cn(
@@ -91,7 +99,7 @@ export function ProjectRightPanelControls({
         disabled={!terminalAvailable}
         onClick={toggleTerminalPanel}
         size="icon"
-        title={`${BRAND.productName} Term (⌘J)`}
+        title={t`${productName} Term (⌘J)`}
         type="button"
         variant="ghost"
       >
@@ -110,7 +118,7 @@ export function ProjectRightPanelControls({
       />
       <Button
         aria-label={
-          repositoryOpen ? "Hide project context" : "Show project context"
+          repositoryOpen ? t`Hide project context` : t`Show project context`
         }
         aria-pressed={repositoryOpen}
         className="h-7 w-7 text-sidebar-foreground hover:bg-sidebar-accent"
@@ -124,7 +132,7 @@ export function ProjectRightPanelControls({
           onExpand();
         }}
         size="icon"
-        title="Project context"
+        title={t`Project context`}
         type="button"
         variant="ghost"
       >

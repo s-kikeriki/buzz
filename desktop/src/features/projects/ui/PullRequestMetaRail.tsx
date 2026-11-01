@@ -1,3 +1,5 @@
+import { t } from "@lingui/core/macro";
+import { useLingui } from "@lingui/react/macro";
 import { GitBranch, GitMerge, GitPullRequest, Tag } from "lucide-react";
 import * as React from "react";
 
@@ -36,10 +38,12 @@ export function PullRequestMetaHeader({
   project: Project;
   pullRequest: ProjectPullRequest;
 }) {
+  const { i18n } = useLingui();
+  void i18n;
   const identityQuery = useIdentityQuery();
   const targetBranch =
-    pullRequest.targetBranch || project.defaultBranch || "default branch";
-  const sourceBranch = pullRequest.branchName || "unknown branch";
+    pullRequest.targetBranch || project.defaultBranch || t`default branch`;
+  const sourceBranch = pullRequest.branchName || t`unknown branch`;
   const labels = pullRequest.labels.filter(
     (label) => label.toLowerCase() !== "draft",
   );
@@ -71,7 +75,7 @@ export function PullRequestMetaHeader({
 
   return (
     <ProjectDetailMetaList>
-      <ProjectDetailMetaRow icon={GitBranch} label="Branch">
+      <ProjectDetailMetaRow icon={GitBranch} label={t`Branch`}>
         <div className="flex min-w-0 flex-1 items-center gap-3">
           <p className="flex min-w-0 items-center gap-1.5 overflow-hidden">
             <span className="truncate text-foreground">{sourceBranch}</span>
@@ -121,13 +125,13 @@ export function PullRequestMetaHeader({
         pullRequest={pullRequest}
         signAsManagedOwner={isManagedAgentOwner && !isOwner}
       />
-      <ProjectDetailMetaRow icon={StatusIcon} label="Status">
+      <ProjectDetailMetaRow icon={StatusIcon} label={t`Status`}>
         <span className={`font-medium ${statusClassName(pullRequest.status)}`}>
           {pullRequest.status}
         </span>
       </ProjectDetailMetaRow>
       {labels.length > 0 ? (
-        <ProjectDetailMetaRow icon={Tag} label="Labels">
+        <ProjectDetailMetaRow icon={Tag} label={t`Labels`}>
           <ProjectDetailMetaPills labels={labels} />
         </ProjectDetailMetaRow>
       ) : null}

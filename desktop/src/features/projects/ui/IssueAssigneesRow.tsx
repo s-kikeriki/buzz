@@ -1,3 +1,5 @@
+import { t } from "@lingui/core/macro";
+import { Trans, useLingui } from "@lingui/react/macro";
 import { Check, Search, UserPlus, Users, X } from "lucide-react";
 import * as React from "react";
 import { toast } from "sonner";
@@ -57,6 +59,8 @@ export function IssueAssigneeFacepile({
   assignees: string[];
   profiles?: UserProfileLookup;
 }) {
+  const { i18n } = useLingui();
+  void i18n;
   if (assignees.length === 0) return null;
   return (
     <span
@@ -73,7 +77,7 @@ export function IssueAssigneeFacepile({
               profile?.isAgent ? "rounded-squircle" : "rounded-full",
             )}
             key={pubkey}
-            title={`Assigned to ${label}`}
+            title={t`Assigned to ${label}`}
           >
             <UserAvatar
               accent={profile?.isAgent === true}
@@ -119,6 +123,8 @@ export function IssueAssigneesRow({
   testIdPrefix?: string;
   viewerPubkey: string | null;
 }) {
+  const { i18n } = useLingui();
+  void i18n;
   const [pickerOpen, setPickerOpen] = React.useState(false);
   const [assigneeQuery, setAssigneeQuery] = React.useState("");
   const assignmentOperationInFlightRef = React.useRef(false);
@@ -170,7 +176,7 @@ export function IssueAssigneesRow({
         toast.success("Task assigned.");
       } catch (error) {
         toast.error(
-          error instanceof Error ? error.message : "Failed to assign task.",
+          error instanceof Error ? error.message : t`Failed to assign task.`,
         );
       } finally {
         assignmentOperationInFlightRef.current = false;
@@ -195,7 +201,7 @@ export function IssueAssigneesRow({
         toast.success("Task unassigned.");
       } catch (error) {
         toast.error(
-          error instanceof Error ? error.message : "Failed to unassign task.",
+          error instanceof Error ? error.message : t`Failed to unassign task.`,
         );
       } finally {
         assignmentOperationInFlightRef.current = false;
@@ -245,7 +251,7 @@ export function IssueAssigneesRow({
             <TooltipTrigger asChild>
               {canUnassign ? (
                 <button
-                  aria-label={`Unassign ${label}`}
+                  aria-label={t`Unassign ${label}`}
                   className={cn(
                     "group relative inline-flex rounded-full focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-ring",
                   )}
@@ -294,7 +300,7 @@ export function IssueAssigneesRow({
           variant="ghost"
         >
           {contextActions ? <UserPlus /> : null}
-          Assign to me
+          <Trans>Assign to me</Trans>
         </Button>
       ) : null}
       {showSelfAssignmentState && isSelfAssigned ? (
@@ -308,8 +314,7 @@ export function IssueAssigneesRow({
           type="button"
           variant="ghost"
         >
-          <Check className="h-3 w-3" />
-          Assigned to me
+          <Check className="h-3 w-3" /> <Trans>Assigned to me</Trans>
         </Button>
       ) : null}
       {canAssignOthers ? (
@@ -327,14 +332,16 @@ export function IssueAssigneesRow({
               variant="ghost"
             >
               {contextActions ? <Users /> : null}
-              Assign
+              <Trans>Assign</Trans>
             </Button>
           </DialogTrigger>
           <DialogContent className="max-w-md gap-0 overflow-hidden p-0">
             <DialogHeader className="border-b border-border/60 px-6 py-5 pr-14">
-              <DialogTitle>Assign task</DialogTitle>
+              <DialogTitle>
+                <Trans>Assign task</Trans>
+              </DialogTitle>
               <DialogDescription>
-                Choose a person or agent to work on this task.
+                <Trans>Choose a person or agent to work on this task.</Trans>
               </DialogDescription>
             </DialogHeader>
             <div className="flex items-center gap-2 border-b border-border/60 px-6 py-3">
@@ -344,14 +351,14 @@ export function IssueAssigneesRow({
                 className="h-8 border-0 px-0 text-sm shadow-none focus-visible:ring-0"
                 data-testid="project-assignee-search"
                 onChange={(event) => setAssigneeQuery(event.target.value)}
-                placeholder="Search people and agents"
+                placeholder={t`Search people and agents`}
                 value={assigneeQuery}
               />
             </div>
             <div className="max-h-72 min-h-28 overflow-y-auto p-2">
               {userSearchQuery.isLoading ? (
                 <p className="px-3 py-4 text-sm text-muted-foreground">
-                  Searching…
+                  <Trans>Searching…</Trans>
                 </p>
               ) : candidates.length > 0 ? (
                 candidates.map((candidate) => {
@@ -381,7 +388,7 @@ export function IssueAssigneesRow({
                           {label}
                         </span>
                         <span className="block truncate text-xs text-muted-foreground">
-                          {candidate.isAgent ? "Agent · " : ""}
+                          {candidate.isAgent ? t`Agent · ` : ""}
                           {truncateNpub(candidate.pubkey)}
                         </span>
                       </span>
@@ -390,7 +397,7 @@ export function IssueAssigneesRow({
                 })
               ) : (
                 <p className="px-3 py-4 text-sm text-muted-foreground">
-                  No matching people or agents.
+                  <Trans>No matching people or agents.</Trans>
                 </p>
               )}
             </div>

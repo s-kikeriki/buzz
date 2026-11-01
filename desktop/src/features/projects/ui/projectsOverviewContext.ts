@@ -1,3 +1,4 @@
+import { t } from "@lingui/core/macro";
 import type {
   Project,
   ProjectActivitySummary,
@@ -112,7 +113,7 @@ function resolvedReviewActivity(
 function createProjectAction(): OverviewContextAction {
   return {
     kind: "project",
-    label: "Create project",
+    label: t`Create project`,
     testId: "projects-overview-create-project",
   };
 }
@@ -240,7 +241,7 @@ export function projectsOverviewContext(
     return {
       action: {
         kind: "repository",
-        label: "Add repository",
+        label: t`Add repository`,
         testId: "projects-overview-add-repository",
       },
       detailsTitle: "Repository activity",
@@ -249,23 +250,23 @@ export function projectsOverviewContext(
         {
           count: repositories,
           icon: "repositories",
-          label: "Repositories",
+          label: t`Repositories`,
           section: "repositories",
         },
         {
           count: tasks.active,
           icon: "tasks",
-          label: "Active tasks",
+          label: t`Active tasks`,
           section: "issues",
         },
         {
           count: reviews.open,
           icon: "reviews",
-          label: "Open reviews",
+          label: t`Open reviews`,
           section: "prs",
         },
       ],
-      title: "Repositories",
+      title: t`Repositories`,
     };
   }
 
@@ -273,7 +274,7 @@ export function projectsOverviewContext(
     return {
       action: {
         kind: "channel",
-        label: "Add channel",
+        label: t`Add channel`,
         testId: "projects-overview-add-channel",
       },
       detailsTitle: "Details",
@@ -282,23 +283,23 @@ export function projectsOverviewContext(
         {
           count: channelCount,
           icon: "channels",
-          label: "Channels",
+          label: t`Channels`,
           section: "channels",
         },
         {
           count: projects.length,
           icon: "projects",
-          label: "Projects",
+          label: t`Projects`,
           section: "projects",
         },
         {
           count: repositories,
           icon: "repositories",
-          label: "Repositories",
+          label: t`Repositories`,
           section: "repositories",
         },
       ],
-      title: "Channels",
+      title: t`Channels`,
     };
   }
 
@@ -306,7 +307,7 @@ export function projectsOverviewContext(
     return {
       action: {
         kind: "issue",
-        label: "Create task",
+        label: t`Create task`,
         testId: "projects-overview-create-issue",
       },
       detailsTitle: "Details",
@@ -315,23 +316,23 @@ export function projectsOverviewContext(
         {
           count: tasks.total,
           icon: "tasks",
-          label: "Tasks",
+          label: t`Tasks`,
           section: "issues",
         },
         {
           count: tasks.active,
           icon: "tasks",
-          label: "Active",
+          label: t`Active`,
           section: "issues",
         },
         {
           count: tasks.completed,
           icon: "completed",
-          label: "Completed",
+          label: t`Completed`,
           section: "issues",
         },
       ],
-      title: "Tasks",
+      title: t`Tasks`,
     };
   }
 
@@ -339,7 +340,7 @@ export function projectsOverviewContext(
     return {
       action: {
         kind: "pullRequest",
-        label: "Create review",
+        label: t`Create review`,
         testId: "projects-overview-create-pull-request",
       },
       detailsTitle: "Review activity",
@@ -348,23 +349,23 @@ export function projectsOverviewContext(
         {
           count: reviews.total,
           icon: "reviews",
-          label: "Reviews",
+          label: t`Reviews`,
           section: "prs",
         },
         {
           count: reviews.open,
           icon: "reviews",
-          label: "Open",
+          label: t`Open`,
           section: "prs",
         },
         {
           count: reviews.merged,
           icon: "merged",
-          label: "Merged",
+          label: t`Merged`,
           section: "prs",
         },
       ],
-      title: "Reviews",
+      title: t`Reviews`,
     };
   }
 
@@ -377,35 +378,35 @@ export function projectsOverviewContext(
         {
           count: projects.length,
           icon: "projects",
-          label: "Projects",
+          label: t`Projects`,
           section: "projects",
         },
         {
           count: repositories,
           icon: "repositories",
-          label: "Repositories",
+          label: t`Repositories`,
           section: "repositories",
         },
         {
           count: channelCount,
           icon: "channels",
-          label: "Channels",
+          label: t`Channels`,
           section: "channels",
         },
         {
           count: tasks.total,
           icon: "tasks",
-          label: "Tasks",
+          label: t`Tasks`,
           section: "issues",
         },
         {
           count: reviews.total,
           icon: "reviews",
-          label: "Reviews",
+          label: t`Reviews`,
           section: "prs",
         },
       ],
-      title: "Activity",
+      title: t`Activity`,
     };
   }
 
@@ -417,19 +418,19 @@ export function projectsOverviewContext(
       {
         count: projects.length,
         icon: "projects",
-        label: "Projects",
+        label: t`Projects`,
         section: "projects",
       },
       {
         count: repositories,
         icon: "repositories",
-        label: "Repositories",
+        label: t`Repositories`,
         section: "repositories",
       },
       {
         count: channelCount,
         icon: "channels",
-        label: "Channels",
+        label: t`Channels`,
         section: "channels",
       },
     ],

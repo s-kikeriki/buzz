@@ -1,3 +1,4 @@
+import { plural } from "@lingui/core/macro";
 import type {
   ProjectRepoSnapshot,
   Repository as Project,
@@ -41,7 +42,7 @@ export function pushPullTitle(
   side: "local" | "remote",
 ) {
   if (!count) return `${verb} ${side} commits`;
-  return `${verb} ${count} ${side} ${count === 1 ? "commit" : "commits"}`;
+  return `${verb} ${count} ${side} ${plural(count, { one: `commit`, other: `commits` })}`;
 }
 
 /** Returns the normalized owner and contributor pubkeys for a project. */

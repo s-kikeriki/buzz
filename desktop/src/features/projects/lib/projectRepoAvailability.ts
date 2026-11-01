@@ -1,4 +1,9 @@
+import { i18n } from "@lingui/core";
+import { msg } from "@lingui/core/macro";
+
 import { BRAND } from "@/shared/branding/brand";
+
+const { productName } = BRAND;
 
 export type ProjectRepoUnavailableReason =
   | "missing"
@@ -15,48 +20,43 @@ export type ProjectRepoUnavailablePresentation = {
   title: string;
 };
 
-const PROJECT_REPO_UNAVAILABLE_PRESENTATIONS: Record<
-  ProjectRepoUnavailableReason,
-  ProjectRepoUnavailablePresentation
-> = {
+const PROJECT_REPO_UNAVAILABLE_PRESENTATIONS = {
   authentication: {
-    description: `${BRAND.productName} could not authenticate with this repository. Check your access and try again.`,
-    title: "Repository access failed",
+    description: msg`${productName} could not authenticate with this repository. Check your access and try again.`,
+    title: msg`Repository access failed`,
   },
   missing: {
-    description: `The project announcement exists, but its git repository was not found on the ${BRAND.productName} relay.`,
-    title: "Repository not initialized",
+    description: msg`The project announcement exists, but its git repository was not found on the ${productName} relay.`,
+    title: msg`Repository not initialized`,
   },
   access: {
-    description:
-      "Repository access is granted through its channel, and you’re not a member. Ask the repository owner for an invite.",
-    title: "Repository access restricted",
+    description: msg`Repository access is granted through its channel, and you’re not a member. Ask the repository owner for an invite.`,
+    title: msg`Repository access restricted`,
   },
   unbound: {
-    description:
-      "This repository has no access channel binding, so the relay cannot authorize anyone to read it. The repository owner can bind a channel from the Access menu.",
-    title: "No access channel bound",
+    description: msg`This repository has no access channel binding, so the relay cannot authorize anyone to read it. The repository owner can bind a channel from the Access menu.`,
+    title: msg`No access channel bound`,
   },
   network: {
-    description: `The ${BRAND.productName} git service could not be reached. Check your connection and try again.`,
-    title: "Couldn’t reach repository",
+    description: msg`The ${productName} git service could not be reached. Check your connection and try again.`,
+    title: msg`Couldn’t reach repository`,
   },
   ref: {
-    description:
-      "The selected branch is advertised by the project but is missing from its git remote.",
-    title: "Branch unavailable",
+    description: msg`The selected branch is advertised by the project but is missing from its git remote.`,
+    title: msg`Branch unavailable`,
   },
   unknown: {
-    description: `${BRAND.productName} could not load this repository. Try again or contact the project owner.`,
-    title: "Repository unavailable",
+    description: msg`${productName} could not load this repository. Try again or contact the project owner.`,
+    title: msg`Repository unavailable`,
   },
-};
+} as const;
 
 /** Returns consistent, sanitized copy for repository availability UI. */
 export function projectRepoUnavailablePresentation(
   reason: ProjectRepoUnavailableReason,
 ): ProjectRepoUnavailablePresentation {
-  return PROJECT_REPO_UNAVAILABLE_PRESENTATIONS[reason];
+  const entry = PROJECT_REPO_UNAVAILABLE_PRESENTATIONS[reason];
+  return { description: i18n._(entry.description), title: i18n._(entry.title) };
 }
 
 export function projectRepoUnavailableReason(

@@ -1,3 +1,5 @@
+import { t } from "@lingui/core/macro";
+import { Trans, useLingui } from "@lingui/react/macro";
 import * as React from "react";
 
 import { FolderGit2, Globe, SquareTerminal } from "lucide-react";
@@ -24,6 +26,8 @@ import { cn } from "@/shared/lib/cn";
 import { normalizePubkey } from "@/shared/lib/pubkey";
 import { useRelayOrigin } from "@/shared/lib/useRelayOrigin";
 import { BRAND } from "@/shared/branding/brand";
+
+const { productName } = BRAND;
 import { BrandMark } from "@/shared/ui/BrandMark";
 import { BuzzMark } from "@/shared/ui/buzz-logo/BuzzMark";
 import { Card } from "@/shared/ui/card";
@@ -66,13 +70,15 @@ function RepositoryHostIcon({
   compact?: boolean;
   repository: Repository;
 }) {
+  const { i18n } = useLingui();
+  void i18n;
   const host = projectRepoHostForRepository(repository, useRelayOrigin());
   const label =
     host.kind === "buzz"
-      ? `${BRAND.productName}-hosted repository`
+      ? t`${productName}-hosted repository`
       : host.kind === "external"
-        ? `Git data hosted on ${host.host}`
-        : "Repository host";
+        ? t`Git data hosted on ${host.host}`
+        : t`Repository host`;
   const mark =
     host.kind === "buzz" ? (
       // Decorative: the `role="img"` wrapper below already carries `label`,
@@ -115,13 +121,17 @@ function RepositoryOpenButton({
   project,
   repository,
 }: Pick<RepositoryItemProps, "onOpen" | "project" | "repository">) {
+  const { i18n } = useLingui();
+  void i18n;
   return (
     <button
       className="absolute inset-0 z-0 cursor-pointer"
       onClick={() => onOpen(project, repository)}
       type="button"
     >
-      <span className="sr-only">View {repository.name}</span>
+      <span className="sr-only">
+        <Trans>View {repository.name}</Trans>
+      </span>
     </button>
   );
 }
@@ -134,6 +144,8 @@ function RepositoryIdentity({
 }: Pick<RepositoryItemProps, "profiles" | "project" | "repository"> & {
   inlineBranch?: boolean;
 }) {
+  const { i18n } = useLingui();
+  void i18n;
   // Where the git data lives beats repeating the (often identical) project
   // name — "github.com/block/buzz" for external repos, "owner/repo" for
   // Buzz-hosted ones.
@@ -180,8 +192,10 @@ function RepositoryActionsMenu({
   onOpenTerminal,
   repository,
 }: Pick<RepositoryItemProps, "hasLocal" | "onOpenTerminal" | "repository">) {
+  const { i18n } = useLingui();
+  void i18n;
   return (
-    <ProjectListRowMenu label={`More options for ${repository.name}`}>
+    <ProjectListRowMenu label={t`More options for ${repository.name}`}>
       <CopyShareLinkMenuItem
         link={repositoryShareLink(repository)}
         testId={`repository-copy-link-${repository.dtag}`}
@@ -205,6 +219,8 @@ function RepositoryActionsMenu({
 export const RepositoryGridCard = React.memo(function RepositoryGridCard(
   props: RepositoryItemProps,
 ) {
+  const { i18n } = useLingui();
+  void i18n;
   const {
     hasLocal,
     onOpen,
@@ -247,7 +263,7 @@ export const RepositoryGridCard = React.memo(function RepositoryGridCard(
           )}
           data-testid="projects-grid-card-body"
         >
-          {repository.description || "A repository in this project."}
+          {repository.description || t`A repository in this project.`}
         </p>
         <div className="pointer-events-auto mt-auto">
           <ProjectPeopleStack
@@ -270,6 +286,8 @@ export const RepositoryGridCard = React.memo(function RepositoryGridCard(
 export const RepositoryListRow = React.memo(function RepositoryListRow(
   props: RepositoryItemProps,
 ) {
+  const { i18n } = useLingui();
+  void i18n;
   const {
     hasLocal,
     onOpen,

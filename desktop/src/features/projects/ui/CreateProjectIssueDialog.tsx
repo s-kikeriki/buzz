@@ -1,3 +1,5 @@
+import { t } from "@lingui/core/macro";
+import { Trans, useLingui } from "@lingui/react/macro";
 import * as React from "react";
 import { toast } from "sonner";
 
@@ -26,6 +28,8 @@ export function CreateProjectIssueDialog({
   open: boolean;
   projects: Project[];
 }) {
+  const { i18n } = useLingui();
+  void i18n;
   const repositoryOptions = React.useMemo(
     () =>
       projects.flatMap((project) =>
@@ -67,7 +71,7 @@ export function CreateProjectIssueDialog({
       description={
         repository
           ? `Create a task in ${repository.name}`
-          : "Choose a repository for this task."
+          : t`Choose a repository for this task.`
       }
       isCreating={createMutation.isPending}
       itemName="issue"
@@ -75,11 +79,13 @@ export function CreateProjectIssueDialog({
       onOpenChange={onOpenChange}
       open={open}
       submitDisabled={!repository}
-      title="Create a task"
+      title={t`Create a task`}
       titlePlaceholder="Describe the task"
     >
       <label className="block space-y-1.5 text-sm font-medium">
-        <span>Repository</span>
+        <span>
+          <Trans>Repository</Trans>
+        </span>
         <select
           className="h-10 w-full rounded-lg border border-input bg-background px-3 text-sm font-normal outline-hidden focus:ring-1 focus:ring-ring"
           data-testid="create-issue-repository"

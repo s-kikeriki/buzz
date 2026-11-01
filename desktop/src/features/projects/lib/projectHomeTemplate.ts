@@ -1,6 +1,9 @@
 import { setCanvas } from "@/shared/api/tauri";
 import type { ChannelTemplate } from "@/shared/api/types";
 import type { Project } from "@/features/projects/hooks";
+import { BRAND } from "@/shared/branding/brand";
+
+const { productName } = BRAND;
 
 export const PROJECT_HOME_TEMPLATE_ID = "builtin:project-home";
 
@@ -41,7 +44,7 @@ Everything about this project—decisions, tasks, code review, and releases—ha
 1. **Pick up:** Find or create an issue, self-assign it, and post a one-line “picked up” message in the channel.
 2. **Build:** Clone or reuse a checkout under \`REPOS/\`. Work on a branch, never the default branch. Follow the repository's configured commit and sign-off policy.
 3. **Verify:** Run the fullest relevant test suite before calling anything done.
-4. **Ship:** Open a review and post the returned Buzz link verbatim so it renders as a card. Mark the issue resolved when merged.
+4. **Ship:** Open a review and post the returned {{PRODUCT_NAME}} link verbatim so it renders as a card. Mark the issue resolved when merged.
 5. **Report:** @mention whoever delegated the work in the message that delivers the result or blocker—not in acknowledgements.
 
 ## Norms
@@ -74,6 +77,7 @@ export function renderProjectHomeCanvas(input: {
   const repository = input.project.repositories[0];
   const values: Record<string, string> = {
     CHANNEL_UUID: input.channelId,
+    PRODUCT_NAME: productName,
     PROJECT_NAME: input.project.name,
     REPO_CLONE_URL: repository?.cloneUrls[0] ?? "Unavailable",
     REPO_OWNER_HEX: repository?.owner ?? input.project.owner,

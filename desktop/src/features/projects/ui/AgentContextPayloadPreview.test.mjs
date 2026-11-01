@@ -3,6 +3,7 @@ import { after, afterEach, before, test } from "node:test";
 
 import { JSDOM } from "jsdom";
 
+import { withI18n } from "../../../testing/withI18n.mjs";
 import {
   buildProjectDetailAgentContext,
   projectDetailAgentContextBlock,
@@ -40,11 +41,13 @@ async function renderPreview(payload, options = {}) {
     "./AgentContextPayloadPreview.tsx"
   );
   return render(
-    createElement(AgentContextPayloadPreview, {
-      iconOnly: options.iconOnly,
-      payload,
-      triggerLabel: options.triggerLabel ?? "Context",
-    }),
+    withI18n(
+      createElement(AgentContextPayloadPreview, {
+        iconOnly: options.iconOnly,
+        payload,
+        triggerLabel: options.triggerLabel ?? "Context",
+      }),
+    ),
   );
 }
 

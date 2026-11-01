@@ -1,3 +1,4 @@
+import { t } from "@lingui/core/macro";
 import * as React from "react";
 import { toast } from "sonner";
 
@@ -52,7 +53,7 @@ export function useDeleteProjectHandler(
         toast.success("Project deleted");
       } catch (error) {
         toast.error(
-          error instanceof Error ? error.message : "Failed to delete project",
+          error instanceof Error ? error.message : t`Failed to delete project`,
         );
       }
     },

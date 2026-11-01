@@ -1,3 +1,5 @@
+import { t } from "@lingui/core/macro";
+import { Trans, useLingui } from "@lingui/react/macro";
 import * as React from "react";
 
 import { Button } from "@/shared/ui/button";
@@ -9,14 +11,14 @@ export const ProjectsOverviewNarrowContextToggle = React.forwardRef<
   { onToggle: () => void; open: boolean }
 >(({ onToggle, open }, ref) => (
   <Button
-    aria-label={open ? "Hide project context" : "Show project context"}
+    aria-label={open ? t`Hide project context` : t`Show project context`}
     aria-pressed={open}
     className="h-7 w-7 text-sidebar-foreground/65 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
     data-testid="projects-overview-context-toggle"
     onClick={onToggle}
     ref={ref}
     size="icon"
-    title={open ? "Hide project context" : "Show project context"}
+    title={open ? t`Hide project context` : t`Show project context`}
     type="button"
     variant="ghost"
   >
@@ -47,6 +49,8 @@ export function ProjectsOverviewContextSheet({
   onOpenChange: (open: boolean) => void;
   open: boolean;
 }) {
+  const { i18n } = useLingui();
+  void i18n;
   return (
     <Sheet onOpenChange={onOpenChange} open={open}>
       <SheetContent
@@ -56,7 +60,9 @@ export function ProjectsOverviewContextSheet({
         onCloseAutoFocus={onCloseAutoFocus}
         side="right"
       >
-        <SheetTitle className="sr-only">Project context</SheetTitle>
+        <SheetTitle className="sr-only">
+          <Trans>Project context</Trans>
+        </SheetTitle>
         {children}
       </SheetContent>
     </Sheet>

@@ -1,3 +1,4 @@
+import { useLingui } from "@lingui/react/macro";
 import type * as React from "react";
 
 import { UserProfilePopover } from "@/features/profile/ui/UserProfilePopover";
@@ -29,6 +30,8 @@ export function ProfileIdentityButton({
   showLabel = true,
   textSize = "xs",
 }: ProfileIdentityButtonProps) {
+  const { i18n } = useLingui();
+  void i18n;
   const labelClassName = textSize === "sm" ? "text-sm leading-5" : "text-xs";
   const roleClassName = textSize === "sm" ? "text-sm leading-5" : "text-xs";
   const className = cn(
@@ -98,6 +101,8 @@ export function ProfileAuthorName({
   children: React.ReactNode;
   pubkey: string | null;
 }) {
+  const { i18n } = useLingui();
+  void i18n;
   if (!pubkey) {
     return <span className="font-semibold text-foreground">{children}</span>;
   }

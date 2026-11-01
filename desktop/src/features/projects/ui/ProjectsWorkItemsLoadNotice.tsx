@@ -1,3 +1,5 @@
+import { t } from "@lingui/core/macro";
+import { useLingui } from "@lingui/react/macro";
 import { AlertCircle } from "lucide-react";
 
 import type { ProjectWorkItemSection } from "@/features/projects/projectWorkItems";
@@ -26,6 +28,8 @@ export function ProjectsWorkItemsLoadNotice({
   onRetry,
   subject,
 }: ProjectsWorkItemsLoadNoticeProps) {
+  const { i18n } = useLingui();
+  void i18n;
   if (!error && failedSections.length === 0) return null;
 
   const displaySubject =
@@ -46,7 +50,7 @@ export function ProjectsWorkItemsLoadNotice({
   const description = error
     ? error instanceof Error
       ? error.message
-      : "The relay request failed."
+      : t`The relay request failed.`
     : `Missing ${failedSections
         .map((section) => SECTION_LABELS[section])
         .join(", ")}. The available results are shown below.`;
@@ -67,7 +71,7 @@ export function ProjectsWorkItemsLoadNotice({
         size="sm"
         variant="outline"
       >
-        {isRetrying ? "Retrying..." : "Retry"}
+        {isRetrying ? t`Retrying…` : t`Retry`}
       </Button>
     </div>
   );

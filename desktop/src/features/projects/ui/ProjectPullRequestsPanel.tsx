@@ -1,3 +1,5 @@
+import { plural, t } from "@lingui/core/macro";
+import { Trans, useLingui } from "@lingui/react/macro";
 import {
   Check,
   ChevronDown,
@@ -136,6 +138,8 @@ function AuthorIdentity({
   role?: React.ReactNode;
   showLabel?: boolean;
 }) {
+  const { i18n } = useLingui();
+  void i18n;
   const profile = profileForPubkey(pubkey, profiles);
   return (
     <ProfileIdentityButton
@@ -159,6 +163,8 @@ function CommitHashChip({
   hash: string;
   onOpenCommit?: (commitHash: string) => void;
 }) {
+  const { i18n } = useLingui();
+  void i18n;
   const short = hash.slice(0, 7);
   if (!onOpenCommit) {
     return (
@@ -169,7 +175,7 @@ function CommitHashChip({
   }
   return (
     <button
-      aria-label={`View commit ${short}`}
+      aria-label={t`View commit ${short}`}
       className="shrink-0 rounded-md bg-background/55 px-2 py-1 font-mono text-xs text-muted-foreground transition-colors hover:bg-muted/60 hover:text-foreground hover:underline focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-ring"
       onClick={() => onOpenCommit(hash)}
       type="button"
@@ -196,6 +202,8 @@ function PullRequestCommitRow({
   onOpenCommit?: (commitHash: string) => void;
   profiles?: UserProfileLookup;
 }) {
+  const { i18n } = useLingui();
+  void i18n;
   const locale = useLocale();
   const authorProfile = profileForPubkey(author, profiles);
   const authorLabel = labelForPubkey(author, profiles);
@@ -217,7 +225,7 @@ function PullRequestCommitRow({
           />
           <span className="truncate">
             <ProfileAuthorName pubkey={author}>{authorLabel}</ProfileAuthorName>{" "}
-            authored
+            <Trans>authored</Trans>
           </span>
           {branch ? (
             <span className="inline-flex min-w-0 items-center gap-1 rounded-full border border-border/60 px-1.5 py-0.5 font-mono text-2xs">
@@ -237,7 +245,7 @@ function PullRequestCommitRow({
               <ProjectFeedRowMonoCell
                 label={hash.slice(0, 7)}
                 onClick={openCommit}
-                title={`View commit ${hash.slice(0, 7)}`}
+                title={t`View commit ${hash.slice(0, 7)}`}
               />
               <CopyCommitHashButton hash={hash} />
             </ProjectFeedRowCluster>
@@ -281,6 +289,8 @@ function PullRequestRow({
   pullRequest: ProjectPullRequest;
   rangeItems: ReturnType<typeof reviewSelectionItem>[];
 }) {
+  const { i18n } = useLingui();
+  void i18n;
   const locale = useLocale();
   const authorProfile = profileForPubkey(pullRequest.author, profiles);
   const authorLabel = labelForPubkey(pullRequest.author, profiles);
@@ -320,7 +330,7 @@ function PullRequestRow({
               aria-label={
                 pullRequest.comments.length > 0
                   ? `View ${pullRequest.comments.length} comments`
-                  : "View comments"
+                  : t`View comments`
               }
               className={`flex items-center gap-1 rounded-md text-xs hover:text-foreground focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-ring ${
                 pullRequest.comments.length > 0
@@ -364,6 +374,8 @@ export function PullRequestDetailHeader({
 }: {
   pullRequest: ProjectPullRequest;
 }) {
+  const { i18n } = useLingui();
+  void i18n;
   const locale = useLocale();
   return (
     <header className="min-w-0 space-y-2 px-6 pb-3 pt-5">
@@ -374,7 +386,7 @@ export function PullRequestDetailHeader({
         </span>
         <ShareLinkButton
           className="ml-1 inline-flex h-7 w-7 align-text-bottom"
-          label="Copy review link"
+          label={t`Copy review link`}
           link={pullRequestShareLink(pullRequest)}
           testId="project-pull-request-copy-link"
         />
@@ -383,7 +395,9 @@ export function PullRequestDetailHeader({
         className="flex flex-wrap items-center gap-x-1 gap-y-1 text-xs text-muted-foreground"
         data-testid="project-pull-request-detail-metadata"
       >
-        <span data-project-metadata-phrase>Review opened</span>
+        <span data-project-metadata-phrase>
+          <Trans>Review opened</Trans>
+        </span>
         <span
           className="shrink-0 whitespace-nowrap"
           data-project-metadata-phrase
@@ -424,6 +438,8 @@ export function ProjectPullRequestDetail({
   project: Project;
   pullRequest: ProjectPullRequest;
 }) {
+  const { i18n } = useLingui();
+  void i18n;
   const locale = useLocale();
   const identityQuery = useIdentityQuery();
   const commentMutation = useCreateProjectPullRequestCommentMutation(project);
@@ -465,12 +481,12 @@ export function ProjectPullRequestDetail({
         });
         toast.success(
           decision === "request-changes"
-            ? "Changes requested."
-            : "Comment posted.",
+            ? t`Changes requested.`
+            : t`Comment posted.`,
         );
       } catch (error) {
         toast.error(
-          error instanceof Error ? error.message : "Failed to post comment.",
+          error instanceof Error ? error.message : t`Failed to post comment.`,
         );
         throw error;
       }
@@ -533,7 +549,7 @@ export function ProjectPullRequestDetail({
         pullRequest={pullRequest}
       />
       {pullRequest.content || pullRequest.updates.length > 0 ? (
-        <ProjectDetailSection defaultOpen title="Description">
+        <ProjectDetailSection defaultOpen title={t`Description`}>
           {pullRequest.content ? (
             <ProjectRichContent
               content={pullRequest.content}
@@ -544,7 +560,9 @@ export function ProjectPullRequestDetail({
             <div
               className={pullRequest.content ? "mt-4 space-y-4" : "space-y-4"}
             >
-              <h4 className="text-sm font-semibold text-foreground">Updates</h4>
+              <h4 className="text-sm font-semibold text-foreground">
+                <Trans>Updates</Trans>
+              </h4>
               {pullRequest.updates.map((update) => (
                 <article className="space-y-1" key={update.id}>
                   <div className="flex min-w-0 items-center justify-between gap-3">
@@ -587,7 +605,7 @@ export function ProjectPullRequestDetail({
           onOpenChange={setFilesOpen}
           open={filesOpen}
           testId="project-detail-section-files"
-          title="Files changed"
+          title={t`Files changed`}
         >
           <div className="-mx-6">{filesChanged}</div>
         </ProjectDetailSection>
@@ -595,7 +613,7 @@ export function ProjectPullRequestDetail({
       <ProjectDetailSection
         count={commitCount}
         defaultOpen={false}
-        title="Commits"
+        title={t`Commits`}
       >
         <div className="-mx-6">
           <PullRequestCommitRow
@@ -614,19 +632,19 @@ export function ProjectPullRequestDetail({
               createdAt={update.createdAt}
               hash={update.commit}
               key={update.id}
-              message={update.content.trim() || "Updated review branch"}
+              message={update.content.trim() || t`Updated review branch`}
               onOpenCommit={onOpenCommit}
               profiles={profiles}
             />
           ))}
         </div>
       </ProjectDetailSection>
-      <ProjectDetailSection defaultOpen={false} title="Checks">
+      <ProjectDetailSection defaultOpen={false} title={t`Checks`}>
         <p className="text-sm text-muted-foreground">
-          No checks have been reported for this review yet.
+          <Trans>No checks have been reported for this review yet.</Trans>
         </p>
       </ProjectDetailSection>
-      <ProjectDetailSection defaultOpen title="Activity">
+      <ProjectDetailSection defaultOpen title={t`Activity`}>
         <div className="space-y-3">
           <DiscussedInChannels
             entityLabel="this review"
@@ -667,10 +685,11 @@ export function ProjectPullRequestDetail({
                 </span>
                 <span className="flex min-h-5 min-w-0 flex-1 items-center text-left">
                   {reviewHistoryCollapsed
-                    ? `Show ${reviewHistory.length} earlier ${
-                        reviewHistory.length === 1 ? "activity" : "activities"
-                      }`
-                    : "Collapse review history"}
+                    ? plural(reviewHistory.length, {
+                        one: "Show # earlier activity",
+                        other: "Show # earlier activities",
+                      })
+                    : t`Collapse review history`}
                 </span>
                 {reviewHistoryCollapsed ? (
                   <ChevronDown className="mt-0.5 h-3.5 w-3.5" />
@@ -701,8 +720,10 @@ export function ProjectPullRequestDetail({
                   </span>
                 </span>
                 <span className="min-w-0 flex-1 text-left">
-                  Show {earlierReviewHistoryCount} earlier{" "}
-                  {earlierReviewHistoryCount === 1 ? "activity" : "activities"}
+                  {plural(earlierReviewHistoryCount, {
+                    one: "Show # earlier activity",
+                    other: "Show # earlier activities",
+                  })}
                 </span>
               </button>
             ) : null}
@@ -767,13 +788,13 @@ export function ProjectPullRequestDetail({
                             {" "}
                             {timelineKind === "approved"
                               ? isHistoricalDecision
-                                ? "approved an earlier commit"
-                                : "approved these changes"
+                                ? t`approved an earlier commit`
+                                : t`approved these changes`
                               : timelineKind === "changes-requested"
                                 ? isHistoricalDecision
-                                  ? "requested changes on an earlier commit"
-                                  : "requested changes"
-                                : trimmedContent || "requested a review"}
+                                  ? t`requested changes on an earlier commit`
+                                  : t`requested changes`
+                                : trimmedContent || t`requested a review`}
                           </>
                         ) : null}
                       </span>
@@ -793,7 +814,7 @@ export function ProjectPullRequestDetail({
                     ) : null}
                     {item.anchor ? (
                       <button
-                        aria-label={`Open ${item.anchor.path} ${item.anchor.side} line ${item.anchor.line} in Files changed`}
+                        aria-label={t`Open ${item.anchor.path} ${item.anchor.side} line ${item.anchor.line} in Files changed`}
                         className="mt-1 inline-flex min-w-0 items-center gap-1 rounded-md bg-muted/65 px-1.5 py-0.5 font-mono text-2xs text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
                         onClick={() => {
                           if (item.anchor) onOpenInlineComment?.(item.anchor);
@@ -808,7 +829,7 @@ export function ProjectPullRequestDetail({
                         </span>
                         {item.inlineCommentStatus === "outdated" ? (
                           <span className="shrink-0 text-destructive">
-                            Outdated
+                            <Trans>Outdated</Trans>
                           </span>
                         ) : null}
                       </button>
@@ -840,7 +861,7 @@ export function ProjectPullRequestDetail({
             canRequestChanges ? handleChangeRequestSubmit : undefined
           }
           onSubmit={handleCommentSubmit}
-          placeholder="Add a comment…"
+          placeholder={t`Add a comment…`}
           profiles={profiles}
           secondarySubmitLabel="Request changes"
         />
@@ -880,6 +901,8 @@ export function PullRequestsPanel({
   pullRequests: ProjectPullRequest[];
   selectedPullRequest: ProjectPullRequest | null;
 }) {
+  const { i18n } = useLingui();
+  void i18n;
   const groups = PULL_REQUEST_STATUS_ORDER.map((status) => ({
     items: pullRequests.filter((pullRequest) => pullRequest.status === status),
     status,

@@ -1,3 +1,5 @@
+import { t } from "@lingui/core/macro";
+import { useLingui } from "@lingui/react/macro";
 import {
   CreateProjectWorkItemDialog,
   type CreateProjectWorkItemDialogInput,
@@ -18,16 +20,18 @@ export function CreateIssueDialog({
   open: boolean;
   projectName: string;
 }) {
+  const { i18n } = useLingui();
+  void i18n;
   return (
     <CreateProjectWorkItemDialog
       bodyPlaceholder="Add context, expected behavior, or reproduction steps"
-      description={`Create a task in ${projectName}`}
+      description={t`Create a task in ${projectName}`}
       isCreating={isCreating}
       itemName="issue"
       onCreate={onCreate}
       onOpenChange={onOpenChange}
       open={open}
-      title="Create a task"
+      title={t`Create a task`}
       titlePlaceholder="Describe the task"
     />
   );

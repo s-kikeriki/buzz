@@ -1,3 +1,5 @@
+import { plural, t } from "@lingui/core/macro";
+import { useLingui } from "@lingui/react/macro";
 import {
   commitAuthorPubkeysFromPullRequests,
   contributorKey,
@@ -39,9 +41,7 @@ import { ProjectWorkItemRow } from "./ProjectWorkItemRow";
 import { ProjectPanelState } from "./ProjectPanelState";
 import { BRAND } from "@/shared/branding/brand";
 
-function pluralize(count: number, singular: string, plural = `${singular}s`) {
-  return `${count} ${count === 1 ? singular : plural}`;
-}
+const { productName } = BRAND;
 
 function commitSelectionItem(
   commit: ProjectRepoCommit,
@@ -72,6 +72,8 @@ export function ContributorsPanel({
   profiles?: UserProfileLookup;
   repoContributors: ProjectRepoContributor[];
 }) {
+  const { i18n } = useLingui();
+  void i18n;
   const gitRows = repoContributors.map((contributor) => {
     const signedPubkey = contributorPubkeysByGitIdentity.get(
       contributorKey(contributor),
@@ -84,7 +86,7 @@ export function ContributorsPanel({
     const matchedProfile = signedProfile ?? heuristicProfile?.profile;
     const label = matchedProfile
       ? resolveUserLabel({ pubkey: matchedPubkey ?? "", profiles })
-      : contributor.name || contributor.email || "Unknown contributor";
+      : contributor.name || contributor.email || t`Unknown contributor`;
     const signedCounts = matchedPubkey
       ? activityCounts[matchedPubkey]
       : undefined;
@@ -101,14 +103,10 @@ export function ContributorsPanel({
       role: signedPubkey
         ? matchedProfile?.nip05Handle ||
           contributor.email ||
-          `${BRAND.productName} contributor`
+          t`${productName} contributor`
         : heuristicProfile
-          ? `${
-              heuristicProfile.profile.nip05Handle ||
-              contributor.email ||
-              "Git contributor"
-            } · unverified match`
-          : contributor.email || "Git contributor",
+          ? t`${heuristicProfile.profile.nip05Handle || contributor.email || t`Git contributor`} · unverified match`
+          : contributor.email || t`Git contributor`,
       taskCount: signedCounts?.tasks ?? null,
     };
   });
@@ -140,7 +138,7 @@ export function ContributorsPanel({
         reviewCount: signedCounts.reviews,
         role:
           profile?.nip05Handle ||
-          (isAgent ? "Agent contributor" : `${BRAND.productName} contributor`),
+          (isAgent ? t`Agent contributor` : t`${productName} contributor`),
         taskCount: signedCounts.tasks,
       };
     });
@@ -157,8 +155,8 @@ export function ContributorsPanel({
   if (rows.length === 0) {
     return (
       <ProjectPanelState
-        description="Contributors appear after signed project or repository activity."
-        title="No contributors yet"
+        description={t`Contributors appear after signed project or repository activity.`}
+        title={t`No contributors yet`}
       />
     );
   }
@@ -203,8 +201,11 @@ export function ContributorsPanel({
             data-testid="project-contributor-commit-count"
             title={
               row.commitCount === null
-                ? "No git commits"
-                : pluralize(row.commitCount, "commit")
+                ? t`No git commits`
+                : plural(row.commitCount, {
+                    one: "# commit",
+                    other: "# commits",
+                  })
             }
           >
             <GitCommitHorizontal className="h-3.5 w-3.5" />
@@ -215,8 +216,11 @@ export function ContributorsPanel({
             data-testid="project-contributor-review-count"
             title={
               row.reviewCount === null
-                ? "No linked reviews"
-                : pluralize(row.reviewCount, "review")
+                ? t`No linked reviews`
+                : plural(row.reviewCount, {
+                    one: "# review",
+                    other: "# reviews",
+                  })
             }
           >
             <GitPullRequest className="h-3.5 w-3.5" />
@@ -227,8 +231,11 @@ export function ContributorsPanel({
             data-testid="project-contributor-task-count"
             title={
               row.taskCount === null
-                ? "No linked tasks"
-                : pluralize(row.taskCount, "task")
+                ? t`No linked tasks`
+                : plural(row.taskCount, {
+                    one: "# task",
+                    other: "# tasks",
+                  })
             }
           >
             <CircleDot className="h-3.5 w-3.5" />
@@ -274,6 +281,8 @@ export function ActivityPanel({
   repoContributors: ProjectRepoContributor[];
   viewerGitIdentity?: ViewerGitIdentity | null;
 }) {
+  const { i18n } = useLingui();
+  void i18n;
   const locale = useLocale();
   const items =
     commitItems ??
@@ -307,7 +316,7 @@ export function ActivityPanel({
   });
 
   if (isLoading) {
-    return <BuzzLoadingState label="Loading activity" />;
+    return <BuzzLoadingState label={t`Loading activity`} />;
   }
 
   if (items.length === 0) {
@@ -315,13 +324,13 @@ export function ActivityPanel({
       <ProjectPanelState
         description={
           error
-            ? "Refresh the repository and try again."
+            ? t`Refresh the repository and try again.`
             : commitItems
-              ? "Commits pushed to this project's repositories will appear here."
-              : "Commits pushed to this repository will appear here."
+              ? t`Commits pushed to this project's repositories will appear here.`
+              : t`Commits pushed to this repository will appear here.`
         }
         error={Boolean(error)}
-        title={error ? "Could not load commits" : "No commits yet"}
+        title={error ? t`Could not load commits` : t`No commits yet`}
       />
     );
   }
@@ -346,7 +355,7 @@ export function ActivityPanel({
               })
             : item.commit.authorName ||
               item.commit.authorEmail ||
-              "Unknown author";
+              t`Unknown author`;
           const matchingContributor = (item.repoContributors ?? []).find(
             (contributor) =>
               contributor.name.trim().toLowerCase() ===
@@ -403,14 +412,11 @@ export function ActivityPanel({
                   <span
                     className="flex h-5 w-5 shrink-0 items-center justify-center"
                     data-testid="project-commit-author"
-                    title={`Committed by ${authorLabel}${
+                    title={
                       matchingContributor?.commitCount
-                        ? ` · ${pluralize(
-                            matchingContributor.commitCount,
-                            "commit",
-                          )}`
-                        : ""
-                    }`}
+                        ? t`Committed by ${authorLabel} · ${plural(matchingContributor.commitCount, { one: "# commit", other: "# commits" })}`
+                        : t`Committed by ${authorLabel}`
+                    }
                   >
                     <ProfileIdentityButton
                       avatarClassName="shrink-0"

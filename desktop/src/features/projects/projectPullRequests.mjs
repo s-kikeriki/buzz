@@ -1,3 +1,4 @@
+import { t } from "@lingui/core/macro";
 import {
   allowedActorsForRoot,
   getAllTags,
@@ -100,20 +101,20 @@ export function projectPullRequestReviewSummary(pullRequest) {
   const changeRequestCount = pullRequest.changeRequests.length;
   const isDraft = pullRequest.status === "Draft";
   const state = isDraft
-    ? "This review is still a work in progress."
+    ? t`This review is still a work in progress.`
     : changeRequestCount > 0
       ? `${changeRequestCount} reviewer${changeRequestCount === 1 ? "" : "s"} requested changes.`
       : pullRequest.reviewers.length > 0
-        ? "Review requested — no approvals yet."
-        : "No reviews yet.";
+        ? t`Review requested — no approvals yet.`
+        : t`No reviews yet.`;
 
   return {
     approvalCount,
     changeRequestCount,
     detail: isDraft
-      ? "Draft reviews cannot be merged."
+      ? t`Draft reviews cannot be merged.`
       : approvalCount === 0 && changeRequestCount === 0
-        ? "Approvals from reviewers will show up here."
+        ? t`Approvals from reviewers will show up here.`
         : null,
     showState: approvalCount === 0 || changeRequestCount > 0,
     state,
@@ -347,7 +348,7 @@ export function eventToProjectPullRequest(
   const title =
     getTag(pullRequest, "subject") ||
     pullRequest.content.split("\n")[0] ||
-    "Untitled review";
+    t`Untitled review`;
   const reviewDecisions = reviewDecisionsForPullRequest(
     comments,
     trustedActors,

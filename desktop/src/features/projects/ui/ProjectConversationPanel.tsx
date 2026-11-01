@@ -1,3 +1,4 @@
+import { Trans, useLingui } from "@lingui/react/macro";
 import { useQuery } from "@tanstack/react-query";
 import * as React from "react";
 
@@ -51,6 +52,8 @@ export function ProjectConversationPanel({
   sharedHeaderBackdrop?: boolean;
   widthPx: number;
 }) {
+  const { i18n } = useLingui();
+  void i18n;
   const { goChannel } = useAppNavigation();
   const channelsQuery = useChannelsQuery();
   const activeChannel =
@@ -317,10 +320,10 @@ export function ProjectConversationPanel({
   return wrapProjectConversationPane(
     <div className="flex h-full flex-col items-center justify-center gap-3 bg-background p-6 text-center">
       <p className="text-sm text-muted-foreground">
-        This conversation could not be loaded.
+        <Trans>This conversation could not be loaded.</Trans>
       </p>
       <Button onClick={onClose} size="sm" variant="outline">
-        Close
+        <Trans>Close</Trans>
       </Button>
     </div>,
     {

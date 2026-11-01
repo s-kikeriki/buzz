@@ -34,12 +34,14 @@ const CONVERTED_FILES = [
   // Projects: repository errors, contributor roles, the terminal panel and the
   // agent-context disclosure.
   "src/features/projects/lib/projectGitError.ts",
+  "src/features/projects/lib/projectHomeTemplate.ts",
   "src/features/projects/lib/projectRepoAvailability.ts",
   "src/features/projects/ui/AgentContextPayloadPreview.tsx",
   "src/features/projects/ui/ProjectCards.tsx",
   "src/features/projects/ui/ProjectDetailFeedPanels.tsx",
   "src/features/projects/ui/ProjectReadmePanel.tsx",
   "src/features/projects/ui/ProjectRightPanelControls.tsx",
+  "src/features/projects/ui/RepositoryCards.tsx",
   "src/features/projects/ui/ProjectWorkspaceTabs.tsx",
   "src/features/projects/ui/useOpenProjectTerminal.ts",
   "src/features/projects/ui/useProjectRepositoryOpenActions.ts",

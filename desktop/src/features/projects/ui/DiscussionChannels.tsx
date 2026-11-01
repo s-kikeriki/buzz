@@ -1,3 +1,5 @@
+import { plural, t } from "@lingui/core/macro";
+import { Trans, useLingui } from "@lingui/react/macro";
 import { Hash } from "lucide-react";
 import * as React from "react";
 
@@ -154,6 +156,8 @@ export function DiscussedInChannels({
   query: string;
   testId?: string;
 }) {
+  const { i18n } = useLingui();
+  void i18n;
   const locale = useLocale();
   const {
     channels: discussed,
@@ -208,7 +212,7 @@ export function DiscussedInChannels({
       data-testid={testId}
     >
       <h4 className="border-b border-border/40 px-3 py-1.5 text-2xs font-semibold uppercase tracking-wide text-muted-foreground">
-        Related Conversations
+        <Trans>Related Conversations</Trans>
       </h4>
       <div className="divide-y divide-border/40">
         {visible.map((channel) => {
@@ -265,7 +269,7 @@ export function DiscussedInChannels({
                   <button
                     className="pointer-events-auto font-medium text-foreground hover:underline"
                     onClick={() => void goChannel(channel.id)}
-                    title={`Open #${name}`}
+                    title={t`Open #${name}`}
                     type="button"
                   >
                     #{name}
@@ -291,13 +295,17 @@ export function DiscussedInChannels({
           onClick={() => setExpanded(true)}
           type="button"
         >
-          Show {hiddenCount} more{" "}
-          {hiddenCount === 1 ? "conversation" : "conversations"}
+          {plural(hiddenCount, {
+            one: "Show # more conversation",
+            other: "Show # more conversations",
+          })}
         </button>
       ) : null}
       {isTruncated ? (
         <p className="border-t border-border/40 px-3 py-1.5 text-xs text-muted-foreground">
-          Showing mentions from the 500 most recent search results.
+          <Trans>
+            Showing mentions from the 500 most recent search results.
+          </Trans>
         </p>
       ) : null}
     </div>
@@ -309,6 +317,8 @@ const NAME_LIST_MAX = 3;
 /** Compact markdown preview matching inbox list rows: first block only,
  * clamped, non-interactive so the overlay click still opens the thread. */
 function DiscussionMessagePreview({ content }: { content: string }) {
+  const { i18n } = useLingui();
+  void i18n;
   return (
     <Markdown
       className="inbox-preview-markdown mt-0.5 text-inherit leading-6"
@@ -330,6 +340,8 @@ function DiscussionNameList({
   participants: string[];
   profiles: UserProfileLookup | undefined;
 }) {
+  const { i18n } = useLingui();
+  void i18n;
   const showAll = participants.length <= NAME_LIST_MAX;
   const shown = showAll
     ? participants
@@ -359,8 +371,7 @@ function DiscussionNameList({
       })}
       {others > 0 ? (
         <span className="font-medium text-foreground">
-          {" "}
-          and {others} others
+          <Trans>and {others} others</Trans>
         </span>
       ) : null}
     </>
@@ -381,6 +392,8 @@ export function DiscussionChannelsPanel({
   query: string;
   repositoryName: string;
 }) {
+  const { i18n } = useLingui();
+  void i18n;
   const { channels, hits, isLoading, isTruncated } =
     useDiscussionChannels(query);
   const { goChannel, openSearchHit } = useAppNavigation();
@@ -399,15 +412,15 @@ export function DiscussionChannelsPanel({
   const profiles = profilesQuery.data?.profiles;
 
   if (isLoading) {
-    return <BuzzLoadingState label="Loading channel discussions" />;
+    return <BuzzLoadingState label={t`Loading channel discussions`} />;
   }
   if (channels.length === 0) {
     return (
       <ProjectPanelState
         className="px-4"
-        description="Paste this repository, review, or task link in a channel and it will appear here."
+        description={t`Paste this repository, review, or task link in a channel and it will appear here.`}
         testId="project-discussion-channels-panel"
-        title="No linked channels yet"
+        title={t`No linked channels yet`}
       />
     );
   }
@@ -416,7 +429,7 @@ export function DiscussionChannelsPanel({
     selectionItemFromChannel({
       channelId: channel.id,
       people: channel.participants,
-      title: `#${channelName(channel.id, channel.name)}`,
+      title: t`#${channelName(channel.id, channel.name)}`,
     }),
   );
 
@@ -434,9 +447,10 @@ export function DiscussionChannelsPanel({
                 count={channel.messageCount}
                 countSuffix={isTruncated ? "+" : undefined}
                 countTestId="project-channel-message-count"
-                countTitle={`${channel.messageCount}${isTruncated ? "+" : ""} ${
-                  channel.messageCount === 1 ? "message" : "messages"
-                }`}
+                countTitle={`${channel.messageCount}${isTruncated ? "+" : ""} ${plural(
+                  channel.messageCount,
+                  { one: `message`, other: `messages` },
+                )}`}
                 dateSeconds={channel.lastActivityAt}
                 dateTestId="project-channel-row-date"
                 icon={<Hash className="h-3.5 w-3.5 text-muted-foreground/70" />}
@@ -456,12 +470,12 @@ export function DiscussionChannelsPanel({
                   item: selectionItemFromChannel({
                     channelId: channel.id,
                     people: channel.participants,
-                    title: `#${name}`,
+                    title: t`#${name}`,
                   }),
                   rangeItems,
                 }}
                 testId="project-channel-row"
-                title={`#${name}`}
+                title={t`#${name}`}
                 titleAttr={
                   latestHit
                     ? `Open the latest conversation in #${name}`
@@ -474,8 +488,10 @@ export function DiscussionChannelsPanel({
       </ul>
       {isTruncated ? (
         <p className="border-t border-border/50 px-4 py-2 text-xs text-muted-foreground">
-          Showing the latest {DISCUSSION_SEARCH_LIMIT} mentions; totals may be
-          higher.
+          <Trans>
+            Showing the latest {DISCUSSION_SEARCH_LIMIT} mentions; totals may be
+            higher.
+          </Trans>
         </p>
       ) : null}
     </div>

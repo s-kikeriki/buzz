@@ -1,3 +1,4 @@
+import { useLingui } from "@lingui/react/macro";
 import * as React from "react";
 
 import type { SearchHit } from "@/shared/api/searchTypes";
@@ -22,6 +23,8 @@ export function ProjectConversationPanelProvider({
   children: React.ReactNode;
   onOpenConversation: (hit: SearchHit) => void;
 }) {
+  const { i18n } = useLingui();
+  void i18n;
   const value = React.useMemo(
     () => ({ openConversation: onOpenConversation }),
     [onOpenConversation],
@@ -65,6 +68,8 @@ export function ProjectConversationPanelController({
   sharedHeaderBackdrop?: boolean;
   widthPx: number;
 }) {
+  const { i18n } = useLingui();
+  void i18n;
   const sidebar = useOptionalSidebar();
   const [hit, setHit] = React.useState<SearchHit | null>(null);
   const previousResetKeyRef = React.useRef(resetKey);

@@ -1,3 +1,5 @@
+import { t } from "@lingui/core/macro";
+import { useLingui } from "@lingui/react/macro";
 import { FileCode2, MessageSquareText } from "lucide-react";
 
 import { ForumComposer } from "@/features/forum/ui/ForumComposer";
@@ -45,6 +47,8 @@ export function ProjectPullRequestInlineCommentThread({
   ) => Promise<unknown>;
   profiles?: UserProfileLookup;
 }) {
+  const { i18n } = useLingui();
+  void i18n;
   const locale = useLocale();
   if (comments.length === 0 && !activeAnchor) return null;
 
@@ -106,7 +110,7 @@ export function ProjectPullRequestInlineCommentThread({
               : undefined
           }
           onSubmit={onSubmit}
-          placeholder="Leave a comment on this line…"
+          placeholder={t`Leave a comment on this line…`}
           profiles={profiles}
           secondarySubmitLabel="Request changes"
         />

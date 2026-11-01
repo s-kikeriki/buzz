@@ -1,3 +1,5 @@
+import { t } from "@lingui/core/macro";
+import { useLingui } from "@lingui/react/macro";
 import { Check, Link2 } from "lucide-react";
 import * as React from "react";
 
@@ -21,6 +23,8 @@ export function ShareLinkButton({
   link: string | null;
   testId?: string;
 }) {
+  const { i18n } = useLingui();
+  void i18n;
   const [copied, setCopied] = React.useState(false);
   const timeoutRef = React.useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -62,7 +66,7 @@ export function ShareLinkButton({
           )}
         </button>
       </TooltipTrigger>
-      <TooltipContent>{copied ? "Link copied" : label}</TooltipContent>
+      <TooltipContent>{copied ? t`Link copied` : label}</TooltipContent>
     </Tooltip>
   );
 }

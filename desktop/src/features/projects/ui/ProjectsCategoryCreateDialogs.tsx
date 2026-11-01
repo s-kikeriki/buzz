@@ -1,3 +1,5 @@
+import { t } from "@lingui/core/macro";
+import { Trans, useLingui } from "@lingui/react/macro";
 import * as React from "react";
 import { toast } from "sonner";
 
@@ -24,6 +26,8 @@ export function ProjectsCategoryCreateDialogs({
   ownerControlAgentPubkeyFor: (project: Project) => string | undefined;
   repositoryOpen: boolean;
 }) {
+  const { i18n } = useLingui();
+  void i18n;
   const { goChannel, goProject } = useAppNavigation();
   const [channelProjectId, setChannelProjectId] = React.useState("");
   const channelProject =
@@ -50,7 +54,7 @@ export function ProjectsCategoryCreateDialogs({
         description={
           channelProject
             ? `Add another stream to ${channelProject.name}.`
-            : "Choose a project for this channel."
+            : t`Choose a project for this channel.`
         }
         isCreating={createChannelMutation.isPending}
         onCreate={async (input) => {
@@ -65,10 +69,12 @@ export function ProjectsCategoryCreateDialogs({
         }}
         onOpenChange={onChannelOpenChange}
         testId="create-project-channel-dialog"
-        title="Create a project channel"
+        title={t`Create a project channel`}
       >
         <label className="block space-y-1.5 text-sm font-medium">
-          <span>Project</span>
+          <span>
+            <Trans>Project</Trans>
+          </span>
           <select
             className="h-10 w-full rounded-lg border border-input bg-background px-3 text-sm font-normal outline-hidden focus:ring-1 focus:ring-ring"
             data-testid="create-project-channel-project"

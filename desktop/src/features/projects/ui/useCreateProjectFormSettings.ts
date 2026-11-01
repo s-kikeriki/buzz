@@ -1,3 +1,4 @@
+import { t } from "@lingui/core/macro";
 import * as React from "react";
 
 import type { CreateChannelManagedAgentInput } from "@/features/agents/channelAgents";
@@ -48,7 +49,7 @@ export function buildCreateProjectAgents(input: {
     if (!resolved.runtime) {
       throw new Error(
         resolved.warnings[0] ??
-          "No agent runtimes are available. Install a runtime to add agents.",
+          t`No agent runtimes are available. Install a runtime to add agents.`,
       );
     }
     seenPersonaIds.add(persona.id);

@@ -1,3 +1,5 @@
+import { t } from "@lingui/core/macro";
+import { Trans, useLingui } from "@lingui/react/macro";
 import {
   Check,
   History,
@@ -80,6 +82,8 @@ export function PullRequestReviewersRow({
   showSummary?: boolean;
   summaryTestId?: string;
 }) {
+  const { i18n } = useLingui();
+  void i18n;
   const [pickerOpen, setPickerOpen] = React.useState(false);
   const [reviewerQuery, setReviewerQuery] = React.useState("");
   const requestInFlightRef = React.useRef(false);
@@ -156,9 +160,9 @@ export function PullRequestReviewersRow({
   );
   const hasHistoricalDecision = staleDecisionActors.size > 0;
   const reviewSummary = !pullRequest.commit
-    ? "No commit reported"
+    ? t`No commit reported`
     : changesRequestedBy.size > 0
-      ? "Changes requested"
+      ? t`Changes requested`
       : pullRequest.reviewers.length > 0 &&
           requestedApprovalCount === pullRequest.reviewers.length
         ? "Approved"
@@ -167,12 +171,12 @@ export function PullRequestReviewersRow({
           : hasHistoricalDecision &&
               approvedBy.size === 0 &&
               changesRequestedBy.size === 0
-            ? "Re-review needed"
+            ? t`Re-review needed`
             : requestedApprovalCount > 0
               ? `${requestedApprovalCount} of ${pullRequest.reviewers.length} approved`
               : pullRequest.reviewers.length > 0
-                ? "Awaiting review"
-                : "No reviewers";
+                ? t`Awaiting review`
+                : t`No reviewers`;
 
   const handleRequest = React.useCallback(
     async (pubkey: string, reviewerLabel: string) => {
@@ -190,7 +194,7 @@ export function PullRequestReviewersRow({
         toast.success("Review requested.");
       } catch (error) {
         toast.error(
-          error instanceof Error ? error.message : "Failed to request review.",
+          error instanceof Error ? error.message : t`Failed to request review.`,
         );
       } finally {
         requestInFlightRef.current = false;
@@ -222,9 +226,11 @@ export function PullRequestReviewersRow({
       </DialogTrigger>
       <DialogContent className="max-w-md gap-0 overflow-hidden p-0">
         <DialogHeader className="border-b border-border/60 px-6 py-5 pr-14">
-          <DialogTitle>Add reviewer</DialogTitle>
+          <DialogTitle>
+            <Trans>Add reviewer</Trans>
+          </DialogTitle>
           <DialogDescription>
-            Choose a person or agent to review these changes.
+            <Trans>Choose a person or agent to review these changes.</Trans>
           </DialogDescription>
         </DialogHeader>
         <div className="flex items-center gap-2 border-b border-border/60 px-6 py-3">
@@ -234,14 +240,14 @@ export function PullRequestReviewersRow({
             className="h-8 border-0 px-0 text-sm shadow-none focus-visible:ring-0"
             data-testid="project-reviewer-search"
             onChange={(event) => setReviewerQuery(event.target.value)}
-            placeholder="Search people and agents"
+            placeholder={t`Search people and agents`}
             value={reviewerQuery}
           />
         </div>
         <div className="max-h-72 min-h-28 overflow-y-auto p-2">
           {userSearchQuery.isLoading ? (
             <p className="px-3 py-4 text-sm text-muted-foreground">
-              Searching…
+              <Trans>Searching…</Trans>
             </p>
           ) : candidates.length > 0 ? (
             candidates.map((candidate) => {
@@ -269,7 +275,7 @@ export function PullRequestReviewersRow({
                       {label}
                     </span>
                     <span className="block truncate text-xs text-muted-foreground">
-                      {candidate.isAgent ? "Agent · " : ""}
+                      {candidate.isAgent ? t`Agent · ` : ""}
                       {truncateNpub(candidate.pubkey)}
                     </span>
                   </span>
@@ -278,7 +284,7 @@ export function PullRequestReviewersRow({
             })
           ) : (
             <p className="px-3 py-4 text-sm text-muted-foreground">
-              No matching people or agents.
+              <Trans>No matching people or agents.</Trans>
             </p>
           )}
         </div>
@@ -289,7 +295,7 @@ export function PullRequestReviewersRow({
   if (contextActions) return requestAction;
 
   return (
-    <ProjectDetailMetaRow icon={Users} label="Reviewers">
+    <ProjectDetailMetaRow icon={Users} label={t`Reviewers`}>
       <div
         className="flex min-w-0 items-center gap-2"
         data-testid="project-reviewers-content"
@@ -361,8 +367,8 @@ export function PullRequestReviewersRow({
           })}
           {hasHistoricalDecision ? (
             <span className="flex min-w-0 items-center gap-1 truncate text-xs text-amber-600 dark:text-amber-400">
-              <History className="h-3.5 w-3.5 shrink-0" />
-              Earlier decision applies to another commit
+              <History className="h-3.5 w-3.5 shrink-0" />{" "}
+              <Trans>Earlier decision applies to another commit</Trans>
             </span>
           ) : null}
         </div>
