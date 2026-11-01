@@ -1,4 +1,6 @@
 import { openUrl } from "@tauri-apps/plugin-opener";
+import { Trans } from "@lingui/react/macro";
+
 import { useUpdaterContext } from "./hooks/UpdaterProvider";
 import { Button } from "@/shared/ui/button";
 import {
@@ -7,17 +9,24 @@ import {
 } from "./ui/SettingsOptionGroup";
 import { SettingsSectionHeader } from "./ui/SettingsSectionHeader";
 import { BRAND } from "@/shared/branding/brand";
+
+const { productName } = BRAND;
+
 export function UpdateChecker() {
   const { status, checkForUpdate, installAndRelaunch } = useUpdaterContext();
 
   return (
     <section className="min-w-0" data-testid="settings-updates">
       <SettingsSectionHeader
-        title="Software Updates"
-        description={`Keep ${BRAND.productName} up to date with the latest features and fixes.`}
+        title={<Trans>Software Updates</Trans>}
+        description={
+          <Trans>
+            Keep {productName} up to date with the latest features and fixes.
+          </Trans>
+        }
       />
 
-      <SettingsOptionGroup title="Update status">
+      <SettingsOptionGroup title={<Trans>Update status</Trans>}>
         {status.state === "idle" && (
           <SettingsOptionRow>
             <div className="min-w-0">
@@ -25,11 +34,11 @@ export function UpdateChecker() {
                 className="text-sm font-normal text-muted-foreground/70"
                 data-settings-subcopy
               >
-                Check if a new version is available.
+                <Trans>Check if a new version is available.</Trans>
               </p>
             </div>
             <Button size="sm" onClick={checkForUpdate}>
-              Check for Updates
+              <Trans>Check for Updates</Trans>
             </Button>
           </SettingsOptionRow>
         )}
@@ -41,7 +50,7 @@ export function UpdateChecker() {
                 className="text-sm font-normal text-muted-foreground/70"
                 data-settings-subcopy
               >
-                Checking for updates...
+                <Trans>Checking for updates...</Trans>
               </p>
             </div>
           </SettingsOptionRow>
@@ -54,11 +63,11 @@ export function UpdateChecker() {
                 className="text-sm font-normal text-muted-foreground/70"
                 data-settings-subcopy
               >
-                You're on the latest version.
+                <Trans>You're on the latest version.</Trans>
               </p>
             </div>
             <Button variant="outline" size="sm" onClick={checkForUpdate}>
-              Check Again
+              <Trans>Check Again</Trans>
             </Button>
           </SettingsOptionRow>
         )}
@@ -70,12 +79,14 @@ export function UpdateChecker() {
                 className="text-sm font-normal text-muted-foreground/70"
                 data-settings-subcopy
               >
-                Automatic updates aren't available on this build. Download the
-                latest release manually.
+                <Trans>
+                  Automatic updates aren't available on this build. Download
+                  the latest release manually.
+                </Trans>
               </p>
             </div>
             <Button variant="outline" size="sm" onClick={checkForUpdate}>
-              Check Again
+              <Trans>Check Again</Trans>
             </Button>
           </SettingsOptionRow>
         )}
@@ -84,19 +95,21 @@ export function UpdateChecker() {
           <SettingsOptionRow>
             <div className="min-w-0">
               <p className="text-sm font-medium">
-                Update available — v{status.version}
+                <Trans>Update available — v{status.version}</Trans>
               </p>
               <p
                 className="text-sm font-normal text-muted-foreground/70"
                 data-settings-subcopy
               >
-                In-app updates aren't supported on this Linux package. Download
-                the new version from GitHub.{" "}
-                <span>Switch to the AppImage build for automatic updates.</span>
+                <Trans>
+                  In-app updates aren't supported on this Linux package.
+                  Download the new version from GitHub. Switch to the AppImage
+                  build for automatic updates.
+                </Trans>
               </p>
             </div>
             <Button size="sm" onClick={() => void openUrl(status.releaseUrl)}>
-              Download Update
+              <Trans>Download Update</Trans>
             </Button>
           </SettingsOptionRow>
         )}
@@ -108,7 +121,7 @@ export function UpdateChecker() {
                 className="text-sm font-normal text-muted-foreground/70"
                 data-settings-subcopy
               >
-                Preparing update...
+                <Trans>Preparing update...</Trans>
               </p>
             </div>
           </SettingsOptionRow>
@@ -121,7 +134,7 @@ export function UpdateChecker() {
                 className="text-sm font-normal text-muted-foreground/70"
                 data-settings-subcopy
               >
-                Downloading update...
+                <Trans>Downloading update...</Trans>
               </p>
             </div>
           </SettingsOptionRow>
@@ -134,7 +147,7 @@ export function UpdateChecker() {
                 className="text-sm font-normal text-muted-foreground/70"
                 data-settings-subcopy
               >
-                Installing update...
+                <Trans>Installing update...</Trans>
               </p>
             </div>
           </SettingsOptionRow>
@@ -147,11 +160,11 @@ export function UpdateChecker() {
                 className="text-sm font-normal text-muted-foreground/70"
                 data-settings-subcopy
               >
-                Update downloaded. Click to apply.
+                <Trans>Update downloaded. Click to apply.</Trans>
               </p>
             </div>
             <Button size="sm" onClick={installAndRelaunch}>
-              Update Now
+              <Trans>Update Now</Trans>
             </Button>
           </SettingsOptionRow>
         )}
@@ -160,11 +173,11 @@ export function UpdateChecker() {
           <SettingsOptionRow>
             <div className="min-w-0">
               <p className="text-sm font-normal text-destructive">
-                Update failed: {status.message}
+                <Trans>Update failed: {status.message}</Trans>
               </p>
             </div>
             <Button variant="outline" size="sm" onClick={checkForUpdate}>
-              Retry
+              <Trans>Retry</Trans>
             </Button>
           </SettingsOptionRow>
         )}

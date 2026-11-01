@@ -11,6 +11,11 @@ import { pickAndUploadImage } from "@/shared/api/tauriMedia";
 import { KIND_PRODUCT_FEEDBACK } from "@/shared/constants/kinds";
 import { BRAND } from "@/shared/branding/brand";
 
+/**
+ * The diagnostics attachment is a machine-readable payload uploaded with the
+ * report, not interface copy: whoever reads it is debugging the app, so it
+ * stays English in every locale deliberately.
+ */
 async function collectDiagnostics(): Promise<string> {
   let appVersion = "unknown";
   try {
@@ -121,6 +126,12 @@ export function useSendFeedback() {
         content: payload.content,
         tags: payload.tags,
       });
+      // These two strings are still English. They are the shared
+      // `publishEvent(event, timeoutMessage, errorMessage)` convention used by
+      // every feature that writes to the relay, so translating them belongs
+      // with that layer rather than with this one call site — doing it here
+      // would make the feedback dialog the only surface whose relay errors are
+      // German.
       await relayClient.publishEvent(
         event,
         "Timed out while sending feedback.",

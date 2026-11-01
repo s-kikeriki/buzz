@@ -1,5 +1,6 @@
 import * as React from "react";
 import { toast } from "sonner";
+import { Trans, useLingui } from "@lingui/react/macro";
 
 import { NsecMaskedDisplay } from "@/features/onboarding/ui/NsecMaskedDisplay";
 import { getNsec, signOut } from "@/shared/api/tauriIdentity";
@@ -19,11 +20,19 @@ import { Spinner } from "@/shared/ui/spinner";
 import { SettingsOptionGroup, SettingsOptionRow } from "./SettingsOptionGroup";
 import { BRAND } from "@/shared/branding/brand";
 
+const { productName } = BRAND;
+
 /**
  * The exact phrase the user must type before the destructive sign-out button
  * unlocks. Kept lowercase; the comparison trims and lowercases input so a
  * stray capital or trailing space does not trip people up — the friction is
  * deliberate typing, not case sensitivity.
+ *
+ * Deliberately **not** translated. It is one half of a gate: the label the
+ * user reads and the string the comparison expects have to be the same bytes,
+ * and it is exported and asserted by specs. Translating it would move a
+ * destructive-action gate for a copy change, so the German dialog asks for
+ * this English phrase and the instruction around it explains what to type.
  */
 export const SIGNOUT_CONFIRM_PHRASE = "wipe all my data";
 
@@ -42,6 +51,7 @@ export const SIGNOUT_CONFIRM_PHRASE = "wipe all my data";
  * Only when both gates pass does "Delete my data" become clickable.
  */
 export function SignOutSection() {
+  const { t } = useLingui();
   const [isOpen, setIsOpen] = React.useState(false);
   const [isPending, setIsPending] = React.useState(false);
 
@@ -90,7 +100,7 @@ export function SignOutSection() {
         setNsecError(
           err instanceof Error
             ? err.message
-            : "Failed to retrieve private key.",
+            : t`Failed to retrieve private key.`,
         );
     } finally {
       if (!fetchCancelledRef.current) setIsNsecLoading(false);
@@ -117,22 +127,24 @@ export function SignOutSection() {
         setIsPending(false);
         setIsOpen(false);
         resetDialogState();
-        toast.error(err instanceof Error ? err.message : "Sign out failed.");
+        toast.error(err instanceof Error ? err.message : t`Sign out failed.`);
       });
   }
 
   return (
     <div className="mt-12 pb-6" data-testid="settings-signout">
-      <SettingsOptionGroup title="Sign out">
+      <SettingsOptionGroup title={<Trans>Sign out</Trans>}>
         <SettingsOptionRow>
           <div className="min-w-0">
             <p
               className="text-sm font-normal text-muted-foreground/70"
               data-settings-subcopy
             >
-              Removes your identity key and all local app data from this device.
-              Before signing out, create and test a password-protected key
-              backup above — this cannot be undone.
+              <Trans>
+                Removes your identity key and all local app data from this
+                device. Before signing out, create and test a
+                password-protected key backup above — this cannot be undone.
+              </Trans>
             </p>
           </div>
           <Button
@@ -143,9 +155,16 @@ export function SignOutSection() {
             variant="destructive"
           >
             {isPending ? (
-              <Spinner aria-label="Signing out" className="h-4 w-4 border-2" />
+              <Spinner
+                aria-label={t`Signing out`}
+                className="h-4 w-4 border-2"
+              />
             ) : null}
-            {isPending ? "Signing out…" : "Delete my data"}
+            {isPending ? (
+              <Trans>Signing out…</Trans>
+            ) : (
+              <Trans>Delete my data</Trans>
+            )}
           </Button>
         </SettingsOptionRow>
       </SettingsOptionGroup>
@@ -160,20 +179,26 @@ export function SignOutSection() {
       >
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Sign out and wipe all data?</AlertDialogTitle>
+            <AlertDialogTitle>
+              <Trans>Sign out and wipe all data?</Trans>
+            </AlertDialogTitle>
             <AlertDialogDescription>
-              This will delete your identity key, all agent settings, and cached
-              data from this device, then relaunch {BRAND.productName} into
-              first-run setup. This cannot be undone.
+              <Trans>
+                This will delete your identity key, all agent settings, and
+                cached data from this device, then relaunch {productName} into
+                first-run setup. This cannot be undone.
+              </Trans>
             </AlertDialogDescription>
           </AlertDialogHeader>
 
           <div className="space-y-3">
             <p className="text-sm font-medium">
-              1. Confirm you can restore your identity
+              <Trans>1. Confirm you can restore your identity</Trans>
             </p>
             {isNsecLoading ? (
-              <p className="text-sm text-muted-foreground">Loading…</p>
+              <p className="text-sm text-muted-foreground">
+                <Trans>Loading…</Trans>
+              </p>
             ) : nsecError ? (
               <p
                 className="text-sm text-destructive"
@@ -200,8 +225,10 @@ export function SignOutSection() {
                 }
               />
               <span>
-                I have tested a key backup or saved this private key somewhere
-                safe.
+                <Trans>
+                  I have tested a key backup or saved this private key
+                  somewhere safe.
+                </Trans>
               </span>
             </label>
           </div>
@@ -211,9 +238,13 @@ export function SignOutSection() {
               className="text-sm font-medium"
               htmlFor="signout-confirm-phrase"
             >
-              2. Type{" "}
-              <span className="font-semibold">"{SIGNOUT_CONFIRM_PHRASE}"</span>{" "}
-              to confirm
+              <Trans>
+                2. Type{" "}
+                <span className="font-semibold">
+                  "{SIGNOUT_CONFIRM_PHRASE}"
+                </span>{" "}
+                to confirm
+              </Trans>
             </label>
             <Input
               autoComplete="off"
@@ -228,7 +259,9 @@ export function SignOutSection() {
           </div>
 
           <AlertDialogFooter>
-            <AlertDialogCancel disabled={isPending}>Cancel</AlertDialogCancel>
+            <AlertDialogCancel disabled={isPending}>
+              <Trans>Cancel</Trans>
+            </AlertDialogCancel>
             {/* A plain Button, not AlertDialogAction: Radix's Action closes
                 the dialog on click, which would drop the pending state while
                 the wipe + restart is still in flight. */}
@@ -241,11 +274,15 @@ export function SignOutSection() {
             >
               {isPending ? (
                 <Spinner
-                  aria-label="Signing out"
+                  aria-label={t`Signing out`}
                   className="h-4 w-4 border-2"
                 />
               ) : null}
-              {isPending ? "Signing out…" : "Delete my data"}
+              {isPending ? (
+                <Trans>Signing out…</Trans>
+              ) : (
+                <Trans>Delete my data</Trans>
+              )}
             </Button>
           </AlertDialogFooter>
         </AlertDialogContent>
