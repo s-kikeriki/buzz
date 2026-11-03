@@ -1,3 +1,4 @@
+import { Trans, useLingui } from "@lingui/react/macro";
 import * as React from "react";
 import { Activity, Headphones, MessageSquare } from "lucide-react";
 
@@ -275,6 +276,7 @@ function UserProfilePopoverBody({
   role?: string;
   setOpen: (open: boolean) => void;
 }) {
+  const { t } = useLingui();
   const profileQuery = useUserProfileQuery(pubkey);
   const usersBatchQuery = useUsersBatchQuery([pubkey]);
   const relayAgentsQuery = useRelayAgentsQuery();
@@ -427,7 +429,7 @@ function UserProfilePopoverBody({
             className="mt-0.5 truncate text-xs leading-4 text-muted-foreground"
             data-testid={`user-profile-popover-owner-${pubkey}`}
           >
-            managed by {ownerLabel}
+            <Trans>managed by {ownerLabel}</Trans>
           </p>
         ) : null}
         {profileSubheader ? (
@@ -489,7 +491,9 @@ function UserProfilePopoverBody({
               </InfoBadge>
             ) : null}
             {managedAgent?.acpCommand ? (
-              <InfoBadge>ACP: {managedAgent.acpCommand}</InfoBadge>
+              <InfoBadge>
+                <Trans>ACP:</Trans> {managedAgent.acpCommand}
+              </InfoBadge>
             ) : null}
           </div>
         ) : null}
@@ -517,7 +521,7 @@ function UserProfilePopoverBody({
             type="button"
           >
             <Activity className="h-4 w-4 text-muted-foreground" />
-            View activity log
+            <Trans>View activity log</Trans>
           </button>
         ) : null}
 
@@ -544,7 +548,7 @@ function UserProfilePopoverBody({
               <div className="flex gap-2">
                 {showHumanProfileActions ? (
                   <Button
-                    aria-label="Wave"
+                    aria-label={t`Wave`}
                     className="buzz-wave-hover-trigger shrink-0 px-3 transition-transform duration-100 ease-out motion-reduce:transition-none motion-safe:active:scale-[0.97]"
                     data-testid={`user-profile-popover-wave-${pubkey}`}
                     disabled={pendingAction !== null || isOpeningDm}
@@ -590,7 +594,7 @@ function UserProfilePopoverBody({
                     ) : (
                       <MessageSquare />
                     )}
-                    Message
+                    <Trans>Message</Trans>
                   </Button>
                 ) : null}
                 {showHuddleAction ? (
@@ -615,7 +619,7 @@ function UserProfilePopoverBody({
                     ) : (
                       <Headphones />
                     )}
-                    Huddle
+                    <Trans>Huddle</Trans>
                   </Button>
                 ) : null}
               </div>
@@ -635,10 +639,13 @@ function PopoverWorkingBadge({
   anchorAt: number;
 }) {
   const now = useNow(1000);
+  const elapsed = formatElapsed(now - anchorAt);
 
   return (
     <span className="inline-flex items-center rounded-full bg-primary/10 px-2 py-0.5 text-xs font-medium text-primary motion-safe:animate-pulse">
-      Working in #{name} · {formatElapsed(now - anchorAt)}
+      <Trans>
+        Working in #{name} · {elapsed}
+      </Trans>
     </span>
   );
 }

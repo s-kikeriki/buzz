@@ -1,7 +1,7 @@
 import * as React from "react";
 import { i18n } from "@lingui/core";
 import { msg } from "@lingui/core/macro";
-import { useLingui } from "@lingui/react/macro";
+import { Trans, useLingui } from "@lingui/react/macro";
 import type { LucideIcon } from "lucide-react";
 import {
   Archive,
@@ -149,6 +149,7 @@ export function ProfileTabBar({
     trailing?: React.ReactNode;
   }>;
 }) {
+  const { t } = useLingui();
   if (tabs.length === 0) {
     return null;
   }
@@ -165,7 +166,7 @@ export function ProfileTabBar({
       value={activeTab}
     >
       <TabsList
-        aria-label="Profile sections"
+        aria-label={t`Profile sections`}
         className="relative isolate grid h-9 w-full overflow-hidden rounded-lg bg-muted p-0.5"
         data-testid="user-profile-tab-list"
         style={{
@@ -245,13 +246,15 @@ export function ProfileInfoTabContent({
   showActivityIngress: boolean;
   showInstructionBlock: boolean;
 }) {
+  const { i18n, t } = useLingui();
   const infoFields: ProfileField[] = isArchived
     ? [
         ...agentInfoFields,
         {
-          displayValue: "Archived",
+          displayValue: i18n._(msg`Archived`),
           icon: Archive,
-          label: "Visibility",
+          key: "visibility",
+          label: msg`Visibility`,
           testId: "user-profile-archived-flair",
           trailingNode: <ArchiveStatusTooltip />,
         },
@@ -291,7 +294,7 @@ export function ProfileInfoTabContent({
         ) : (
           <ProfileIngressRow
             icon={Wrench}
-            label="Activity log"
+            label={t`Activity log`}
             onClick={() => onOpenActivity(null)}
             testId={`user-profile-view-activity-${pubkey}`}
             trailing="View"
@@ -299,12 +302,12 @@ export function ProfileInfoTabContent({
         )
       ) : null}
       {hasInfoFields || showInstructionBlock ? (
-        <ProfileSectionGroup testId="user-profile-info-section" title="Info">
+        <ProfileSectionGroup testId="user-profile-info-section" title={t`Info`}>
           {showInstructionBlock ? (
             <ProfileIngressRow
               grouped
               icon={MessageSquare}
-              label="Agent instructions"
+              label={t`Agent instructions`}
               onClick={onEditAgent}
               testId="user-profile-agent-instruction-row"
             />
@@ -486,7 +489,7 @@ function ProfileLiveActivityEmbed({
           <div className="absolute inset-x-0 bottom-0 flex flex-col items-start bg-linear-to-t from-background via-background/90 to-transparent px-3 pb-3 pt-24">
             <div className="min-w-0">
               <span className="block text-sm font-semibold text-muted-foreground">
-                Latest Activity
+                <Trans>Latest Activity</Trans>
               </span>
             </div>
           </div>
@@ -561,7 +564,7 @@ function ProfileLiveActivityEmbed({
           <div className="absolute inset-x-0 bottom-0 flex flex-col items-start bg-linear-to-t from-background via-background/80 to-transparent px-3 pb-3 pt-16">
             <div className="min-w-0">
               <span className="block text-xs font-semibold text-muted-foreground">
-                Latest Activity
+                <Trans>Latest Activity</Trans>
               </span>
               {activeChannelName ? (
                 <span
@@ -597,13 +600,14 @@ function ActivityCarouselDots({
   selectedIndex: number;
   slides: string[];
 }) {
+  const { t } = useLingui();
   if (slides.length <= 1) {
     return null;
   }
 
   return (
     <div
-      aria-label="Choose active channel feed"
+      aria-label={t`Choose active channel feed`}
       className="mt-2 flex items-center justify-center gap-1.5"
       role="tablist"
     >
@@ -613,7 +617,7 @@ function ActivityCarouselDots({
 
         return (
           <button
-            aria-label={`Show #${channelName} activity`}
+            aria-label={t`Show #${channelName} activity`}
             aria-selected={isSelected}
             className="group relative flex items-center justify-center before:absolute before:-inset-2 before:content-['']"
             data-testid={`user-profile-activity-dot-${channelId}`}
@@ -694,11 +698,12 @@ function formatLastLiveLabel(
 }
 
 function ArchiveStatusTooltip() {
+  const { t } = useLingui();
   return (
     <Tooltip>
       <TooltipTrigger asChild>
         <button
-          aria-label="What archived means"
+          aria-label={t`What archived means`}
           className="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-muted/60 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
           data-testid="user-profile-archived-info"
           type="button"
@@ -708,8 +713,10 @@ function ArchiveStatusTooltip() {
       </TooltipTrigger>
       <TooltipContent align="end" className="max-w-72 text-left" side="top">
         <p className="text-sm">
-          Archived agents do not appear in search, autocomplete, or member-add
-          flows in this space. You can unarchive them at any time.
+          <Trans>
+            Archived agents do not appear in search, autocomplete, or member-add
+            flows in this space. You can unarchive them at any time.
+          </Trans>
         </p>
       </TooltipContent>
     </Tooltip>
@@ -754,9 +761,9 @@ export function ProfileRuntimeTabContent({
   onToggleStartOnLaunch?: () => void;
   showDiagnosticsIngress: boolean;
 }) {
-  const { i18n } = useLingui();
+  const { i18n, t } = useLingui();
   const startOnLaunchFieldIndex = configurationFields.findIndex(
-    (field) => field.label === "Start on launch",
+    (field) => field.key === "start-on-launch",
   );
   const startOnLaunchField = configurationFields[startOnLaunchFieldIndex];
   const StartOnLaunchIcon = startOnLaunchField?.icon;
@@ -764,14 +771,14 @@ export function ProfileRuntimeTabContent({
     (_, index) => index !== startOnLaunchFieldIndex,
   );
   const resolvedStartOnLaunchEnabled =
-    startOnLaunchEnabled ?? startOnLaunchField?.displayValue === "Yes";
+    startOnLaunchEnabled ?? startOnLaunchField?.booleanValue === true;
   const canToggleStartOnLaunch = onToggleStartOnLaunch !== undefined;
   const handleStartOnLaunchToggle = React.useCallback(() => {
     if (startOnLaunchPending) return;
     onToggleStartOnLaunch?.();
   }, [onToggleStartOnLaunch, startOnLaunchPending]);
   const statusDiagnosticsFields = diagnosticsFields.filter(
-    (field) => field.label === "Status",
+    (field) => field.key === "status",
   );
   const hasActivityRows =
     statusDiagnosticsFields.length > 0 ||
@@ -801,7 +808,7 @@ export function ProfileRuntimeTabContent({
           <RefreshCw className="mt-0.5 h-4 w-4 shrink-0 text-amber-600 dark:text-amber-400" />
           <div className="min-w-0 text-sm">
             <p className="font-medium text-amber-600 dark:text-amber-400">
-              Restart required
+              <Trans>Restart required</Trans>
             </p>
             <p className="mt-0.5 text-xs text-muted-foreground">
               {i18n._(
@@ -819,7 +826,7 @@ export function ProfileRuntimeTabContent({
       {hasActivityRows ? (
         <ProfileSectionGroup
           testId="user-profile-runtime-activity-section"
-          title="Activity"
+          title={t`Activity`}
         >
           {statusDiagnosticsFields.length > 0 ? (
             <ProfileFieldRows
@@ -831,7 +838,7 @@ export function ProfileRuntimeTabContent({
             <div
               aria-checked={resolvedStartOnLaunchEnabled}
               aria-disabled={!canToggleStartOnLaunch || startOnLaunchPending}
-              aria-label={startOnLaunchField.label}
+              aria-label={i18n._(startOnLaunchField.label)}
               className={cn(
                 "flex min-h-16 items-center gap-3 px-4 py-3",
                 canToggleStartOnLaunch &&
@@ -856,7 +863,7 @@ export function ProfileRuntimeTabContent({
                 />
               ) : null}
               <span className="min-w-0 flex-1 text-sm font-medium text-foreground">
-                {startOnLaunchField.label}
+                {i18n._(startOnLaunchField.label)}
               </span>
               <Switch
                 aria-hidden="true"
@@ -871,7 +878,7 @@ export function ProfileRuntimeTabContent({
             <ProfileIngressRow
               grouped
               icon={ScrollText}
-              label="Harness log"
+              label={t`Harness log`}
               onClick={onOpenDiagnostics}
               testId="user-profile-diagnostics-ingress"
               trailing={diagnosticsSummary}
@@ -882,7 +889,7 @@ export function ProfileRuntimeTabContent({
       {hasConfigurationRows ? (
         <ProfileSectionGroup
           testId="user-profile-agent-configuration-section"
-          title="Agent configuration"
+          title={t`Agent configuration`}
         >
           <ProfileFieldRows
             fields={remainingConfigurationFields}

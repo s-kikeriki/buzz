@@ -1,3 +1,5 @@
+import { Trans, useLingui } from "@lingui/react/macro";
+
 import {
   AlertDialog,
   AlertDialogAction,
@@ -30,16 +32,24 @@ export function ArchiveConfirmDialog({
   isBot: boolean;
   isPending: boolean;
 }) {
-  const title = isBot ? "Archive this agent?" : "Archive this identity?";
-  const subject = isBot ? "this agent" : "this person";
+  const { t } = useLingui();
+  const title = isBot ? t`Archive this agent?` : t`Archive this identity?`;
 
   return (
     <AlertDialog onOpenChange={onOpenChange} open={open}>
       <AlertDialogContent data-testid="archive-confirm-dialog">
         <AlertDialogHeader>
           <AlertDialogTitle>{title}</AlertDialogTitle>
+          {/* Two whole sentences rather than one with a "this agent" /
+              "this person" fragment: German inflects the article with the
+              noun ("diesen Agenten" vs "diese Person"), so substituting the
+              subject into a shared sentence cannot be made grammatical. */}
           <AlertDialogDescription>
-            Archiving hides {subject} from the space.
+            {isBot ? (
+              <Trans>Archiving hides this agent from the space.</Trans>
+            ) : (
+              <Trans>Archiving hides this person from the space.</Trans>
+            )}
           </AlertDialogDescription>
         </AlertDialogHeader>
         {/* The list + closing paragraph sit outside AlertDialogDescription on
@@ -47,25 +57,33 @@ export function ArchiveConfirmDialog({
             a <ul> or another block <p>. */}
         <ul className="list-disc space-y-1.5 pl-5 text-sm text-muted-foreground">
           <li>
-            They won't appear in search, autocomplete, or when adding members
+            <Trans>
+              They won't appear in search, autocomplete, or when adding members
+            </Trans>
           </li>
           <li>
-            This only affects{" "}
-            <span className="font-medium text-foreground">this space</span> —
-            not their account anywhere else
+            <Trans>
+              This only affects{" "}
+              <span className="font-medium text-foreground">this space</span> —
+              not their account anywhere else
+            </Trans>
           </li>
-          <li>You can unarchive them at any time to restore them</li>
+          <li>
+            <Trans>You can unarchive them at any time to restore them</Trans>
+          </li>
         </ul>
         {isBot ? (
           <p className="text-sm text-muted-foreground">
-            You can also delete this agent from the profile settings menu if you
-            want to remove the agent instead of hiding it.
+            <Trans>
+              You can also delete this agent from the profile settings menu if
+              you want to remove the agent instead of hiding it.
+            </Trans>
           </p>
         ) : null}
         <AlertDialogFooter>
           <AlertDialogCancel asChild>
             <Button type="button" variant="outline">
-              Cancel
+              <Trans>Cancel</Trans>
             </Button>
           </AlertDialogCancel>
           <AlertDialogAction
@@ -74,7 +92,7 @@ export function ArchiveConfirmDialog({
             disabled={isPending}
             onClick={onConfirm}
           >
-            {isPending ? "Archiving…" : "Archive"}
+            {isPending ? t`Archiving…` : t`Archive`}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

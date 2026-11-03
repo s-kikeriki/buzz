@@ -528,13 +528,29 @@ msgstr "{activeDraftCount, plural, one {# aktiver Entwurf} other {# aktive Entw�
 msgid "{agentLabel} reported no models. Check that the CLI is installed and signed in, then reopen this screen."
 msgstr "{agentLabel} hat keine Modelle gemeldet. Prüf, ob die CLI installiert ist und du angemeldet bist, und öffne dann diesen Bildschirm erneut."
 
+#: src/features/profile/ui/UserProfilePanel.tsx
+msgid "{agentName} is already in {channelName}."
+msgstr "{agentName} ist bereits in {channelName}."
+
 #: src/features/agents/ui/AgentCardViewerDialog.tsx
 msgid "{agentName} trading card"
 msgstr "Sammelkarte von {agentName}"
 
+#: src/features/profile/ui/UserProfilePanelPersonaSubmit.ts
+msgid "{agentName} was created, but the agent instance could not be created: {reason}"
+msgstr "{agentName} wurde angelegt, aber die Agent-Instanz konnte nicht erstellt werden: {reason}"
+
+#: src/features/profile/ui/UserProfilePanelPersonaSubmit.ts
+msgid "{agentName} was created, but the agent instance could not be created."
+msgstr "{agentName} wurde angelegt, aber die Agent-Instanz konnte nicht erstellt werden."
+
 #: src/features/agents/ui/agentProfileSyncWarning.ts
 msgid "{agentName} was saved locally, but relay sync failed: {profileSyncError}. Remote users may still see the previous name or access policy until {productName} retries the sync."
 msgstr "{agentName} wurde lokal gespeichert, aber die Relay-Synchronisierung ist fehlgeschlagen: {profileSyncError}. Andere sehen vielleicht noch den vorherigen Namen oder die vorherige Zugriffsregel, bis {productName} die Synchronisierung erneut versucht."
+
+#: src/features/profile/ui/UserProfilePanel.tsx
+msgid "{agentName} will stay manual-start only."
+msgstr "{agentName} wird nur noch manuell gestartet."
 
 #: src/features/agents/ui/AgentCreationPreview.tsx
 msgid "{assetLabelTitle} picker"
@@ -758,6 +774,10 @@ msgstr "{label} ({0} von {1} Nachrichten{truncated})"
 msgid "{label} (1M context)"
 msgstr "{label} (1M Kontext)"
 
+#: src/features/profile/ui/ProfileAvatar.tsx
+msgid "{label} avatar"
+msgstr "Avatar von {label}"
+
 #: src/features/agents/ui/AgentRuntimeAvatarControl.tsx
 msgid "{label} has a runtime error. Open runtime details."
 msgstr "{label} hat einen Laufzeitfehler. Laufzeitdetails öffnen."
@@ -864,6 +884,10 @@ msgstr "{productName} konnte diesen Checkout nicht in deinem Dateibrowser öffne
 msgid "{productName} could not verify the project after creating the channel, and could not remove the unlinked channel. Delete it manually, then refresh and try again."
 msgstr "{productName} konnte das Projekt nach dem Anlegen des Kanals nicht prüfen und den unverbundenen Kanal nicht entfernen. Lösch ihn manuell, aktualisiere dann und versuch es erneut."
 
+#: src/features/profile/ui/NostrBindConsentDialog.tsx
+msgid "{productName} couldn't access the clipboard. Try again."
+msgstr "{productName} konnte nicht auf die Zwischenablage zugreifen. Versuch es nochmal."
+
 #: src/features/agents/ui/personaModelDiscoveryStatus.ts
 msgid "{productName} couldn't check shared compute through the relay. Check your relay connection and try again."
 msgstr "{productName} konnte die geteilte Rechenleistung nicht über das Relay prüfen. Prüf deine Relay-Verbindung und versuch es erneut."
@@ -889,6 +913,10 @@ msgstr "{productName}-Identität verbunden"
 #: src/features/agents/ui/personaModelDiscoveryStatus.ts
 msgid "{productName} is waiting for the relay's member roster. Try again shortly; if this persists, check the relay's membership configuration."
 msgstr "{productName} wartet auf die Mitgliederliste des Relays. Versuch es in Kürze erneut; wenn das so bleibt, prüf die Mitgliedschaftskonfiguration des Relays."
+
+#: src/features/profile/ui/NostrBindConsentDialog.tsx
+msgid "{productName} opened your browser to finish verification."
+msgstr "{productName} hat deinen Browser geöffnet, um die Verifizierung abzuschließen."
 
 #: src/features/agents/ui/personaModelDiscoveryStatus.ts
 msgid "{productName} received an invalid shared compute status. Check the member machine, then try again."
@@ -943,6 +971,10 @@ msgstr "Avatar von {resolvedName}"
 #: src/features/projects/lib/projectsActivityDigest.ts
 msgid "{reviewCount, plural, one {# review opened} other {# reviews opened}}"
 msgstr "{reviewCount, plural, one {# Review eröffnet} other {# Reviews eröffnet}}"
+
+#: src/features/profile/ui/UserProfilePanelPersonaSubmit.ts
+msgid "{runtimeLabel} is not available. Install it before saving this linked agent."
+msgstr "{runtimeLabel} ist nicht verfügbar. Installier es, bevor du diesen verknüpften Agenten speicherst."
 
 #: src/features/channels/lib/ephemeralChannel.ts
 msgid "{seconds, plural, one {# second} other {# seconds}}"
@@ -1009,6 +1041,10 @@ msgstr "{text} in"
 #: src/features/agents/ui/UnifiedAgentsSection.tsx
 msgid "{title} agent profile"
 msgstr "Agentenprofil von {title}"
+
+#: src/features/profile/ui/ProfileInstancesSection.tsx
+msgid "{totalCount, plural, one {# instance} other {# instances}}"
+msgstr "{totalCount, plural, one {# Instanz} other {# Instanzen}}"
 
 #: src/features/agents/ui/teamSnapshotImport.lib.ts
 msgid "{totalMemoryErrors, plural, one {# memory entry failed to restore} other {# memory entries failed to restore}}"
@@ -1238,12 +1274,17 @@ msgstr "ACP-Adapter erkannt, aber veraltet — Neuinstallation erforderlich."
 
 #: src/features/agents/ui/AcpCommandField.tsx
 #: src/features/agents/ui/EditAgentAdvancedFields.tsx
+#: src/features/profile/ui/UserProfilePanelFields.tsx
 msgid "ACP command"
 msgstr "ACP-Befehl"
 
 #: src/features/agents/ui/AgentSessionTranscriptList.tsx
 msgid "ACP wire source: {source}"
 msgstr "ACP-Wire-Quelle: {source}"
+
+#: src/features/profile/ui/UserProfilePopover.tsx
+msgid "ACP:"
+msgstr "ACP:"
 
 #: src/features/settings/ui/HarnessesSettingsPanel.tsx
 msgid "Action needed"
@@ -1274,6 +1315,7 @@ msgstr "Aktive Aufgaben"
 
 #: src/features/channels/ui/AgentSessionThreadPanel.tsx
 #: src/features/home/lib/inbox.ts
+#: src/features/profile/ui/UserProfilePanelTabs.tsx
 #: src/features/projects/ui/ProjectIssuesPanel.tsx
 #: src/features/projects/ui/ProjectPullRequestsPanel.tsx
 #: src/features/projects/ui/ProjectsAgentPromptPage.tsx
@@ -1281,6 +1323,10 @@ msgstr "Aktive Aufgaben"
 #: src/features/projects/ui/ProjectsToolbar.tsx
 msgid "Activity"
 msgstr "Aktivität"
+
+#: src/features/profile/ui/UserProfilePanelTabs.tsx
+msgid "Activity log"
+msgstr "Aktivitätsprotokoll"
 
 #: src/features/channels/ui/AgentSessionThreadPanel.tsx
 msgid "Activity settings"
@@ -1352,6 +1398,10 @@ msgstr "Forum hinzufügen"
 #: src/features/onboarding/ui/CommunityOnboardingFlow.tsx
 msgid "Add a name and avatar. They’ll show up on your messages, reactions, and agent handoffs."
 msgstr "Füge einen Namen und einen Avatar hinzu. Beide erscheinen bei deinen Nachrichten, Reaktionen und Agenten-Übergaben."
+
+#: src/features/profile/ui/AvatarUpload.tsx
+msgid "Add a profile photo"
+msgstr "Profilfoto hinzufügen"
 
 #: src/features/projects/ui/ProjectBrowserDialog.tsx
 msgid "Add a project"
@@ -1497,11 +1547,16 @@ msgstr "Runtimes hinzufügen"
 msgid "Add team"
 msgstr "Team hinzufügen"
 
+#: src/features/profile/ui/UserProfilePanelFocusedViews.tsx
+msgid "Add this agent to a channel"
+msgstr "Diesen Agenten zu einem Kanal hinzufügen"
+
 #: src/features/channels/ui/ChannelManagementSheet.tsx
 msgid "Add this channel to your sidebar"
 msgstr "Diesen Kanal zu deiner Seitenleiste hinzufügen"
 
 #: src/features/agents/ui/AddAgentToChannelDialog.tsx
+#: src/features/profile/ui/UserProfilePanelFocusedViews.tsx
 msgid "Add to channel"
 msgstr "Zum Kanal hinzufügen"
 
@@ -1538,6 +1593,10 @@ msgstr "{0} zu #{1} hinzugefügt"
 #: src/features/agents/ui/useTeamActions.ts
 msgid "Added {0} to your teams."
 msgstr "{0} zu deinen Teams hinzugefügt."
+
+#: src/features/profile/ui/UserProfilePanel.tsx
+msgid "Added {agentName} to {channelName}."
+msgstr "{agentName} zu {channelName} hinzugefügt."
 
 #: src/features/agents/ui/PersonaAddedBy.tsx
 msgid "Added by"
@@ -1582,6 +1641,10 @@ msgstr "Ausgewählte Agenten in Thread-Antworten ansprechen"
 msgid "Address the default agent, or toggle the highlighted agent"
 msgstr "Den Standard-Agenten ansprechen oder den markierten Agenten umschalten"
 
+#: src/features/profile/ui/AnimatedAvatarReviewNav.tsx
+msgid "Adjust the circle"
+msgstr "Kreis anpassen"
+
 #: src/features/agents/ui/AddAgentToChannelDialog.tsx
 #: src/features/agents/ui/AddTeamToChannelDialog.tsx
 #: src/features/channels/ui/MembersSidebarMemberCard.tsx
@@ -1609,6 +1672,7 @@ msgstr "Erweitert ("
 #: src/features/channels/ui/MembersSidebarMemberCard.tsx
 #: src/features/messages/ui/MentionAutocomplete.tsx
 #: src/features/messages/ui/NewMessageResultRow.tsx
+#: src/features/profile/ui/SelectedRecipientChip.tsx
 msgid "agent"
 msgstr "Agent"
 
@@ -1631,6 +1695,10 @@ msgstr "Agent + alles Gedächtnis"
 msgid "Agent + core memory"
 msgstr "Agent + Kern-Gedächtnis"
 
+#: src/features/profile/ui/useAgentLifecycleActions.ts
+msgid "Agent action failed."
+msgstr "Agent-Aktion fehlgeschlagen."
+
 #: src/features/agents/ui/AgentsView.tsx
 msgid "Agent actions"
 msgstr "Agent-Aktionen"
@@ -1646,6 +1714,10 @@ msgstr "Agent-Chat"
 #: src/features/agents/ui/AgentInstanceEditDialog.tsx
 msgid "Agent command"
 msgstr "Agent-Befehl"
+
+#: src/features/profile/ui/UserProfilePanelTabs.tsx
+msgid "Agent configuration"
+msgstr "Agent-Konfiguration"
 
 #: src/features/projects/ui/ProjectDetailFeedPanels.tsx
 msgid "Agent contributor"
@@ -1674,6 +1746,10 @@ msgstr "Agent-Harness"
 msgid "Agent imported"
 msgstr "Agent importiert"
 
+#: src/features/profile/ui/UserProfilePanelUtils.ts
+msgid "Agent info"
+msgstr "Agent-Infos"
+
 #: src/features/channels/ui/AddChannelBotReuseGuard.tsx
 msgid "Agent instance"
 msgstr "Agenteninstanz"
@@ -1681,6 +1757,9 @@ msgstr "Agenteninstanz"
 #: src/features/agents/ui/AgentDefinitionDialog.tsx
 #: src/features/agents/ui/AgentSnapshotImportDialog.tsx
 #: src/features/agents/ui/CommunityCatalogDialog.tsx
+#: src/features/profile/ui/UserProfilePanelAgentDetails.tsx
+#: src/features/profile/ui/UserProfilePanelTabs.tsx
+#: src/features/profile/ui/UserProfilePanelUtils.ts
 msgid "Agent instructions"
 msgstr "Agent-Anweisungen"
 
@@ -1711,9 +1790,17 @@ msgstr "Der Agentenname ist erforderlich."
 msgid "Agent only"
 msgstr "Nur Agent"
 
+#: src/features/profile/ui/UserProfilePanelFields.tsx
+msgid "Agent profile"
+msgstr "Agent-Profil"
+
 #: src/features/agents/ui/AddAgentToChannelDialog.tsx
 msgid "Agent pubkey"
 msgstr "Agent-Pubkey"
+
+#: src/features/profile/ui/useAgentLifecycleActions.ts
+msgid "Agent restart failed."
+msgstr "Neustart des Agenten fehlgeschlagen."
 
 #: src/features/agents/ui/EditAgentAdvancedFields.tsx
 msgid "Agent runtime args"
@@ -1734,6 +1821,10 @@ msgstr "Agenten-Sprachausgabe"
 #: src/features/agents/ui/TurnLivenessIndicator.tsx
 msgid "Agent turn in progress"
 msgstr "Agent-Zug läuft"
+
+#: src/features/profile/ui/UserProfilePanelFields.tsx
+msgid "Agent type"
+msgstr "Agent-Typ"
 
 #: src/features/home/lib/inbox.ts
 #: src/features/search/ui/SearchResultItem.tsx
@@ -1909,6 +2000,10 @@ msgstr "und {others} weitere"
 msgid "Animate new activity rows as they arrive."
 msgstr "Neue Aktivitätszeilen beim Eintreffen animieren."
 
+#: src/features/profile/ui/ProfileAvatarModeTabs.tsx
+msgid "Animated"
+msgstr "Animiert"
+
 #: src/features/settings/ui/HostedCommunitiesSettingsCard.tsx
 msgid "Another community is already being connected. Finish it before connecting this one."
 msgstr "Es wird bereits eine andere Community verbunden. Schließe das ab, bevor du diese verbindest."
@@ -1927,6 +2022,7 @@ msgstr "Jeder Befehl, der ACP über stdio spricht, funktioniert."
 
 #: src/features/agents/ui/RespondToField.tsx
 #: src/features/channels/ui/MembersSidebarMemberCard.tsx
+#: src/features/profile/ui/UserProfilePanelFields.tsx
 msgid "Anyone"
 msgstr "Jeder"
 
@@ -2024,6 +2120,7 @@ msgstr "hat einen früheren Commit genehmigt"
 msgid "approved these changes"
 msgstr "hat diese Änderungen genehmigt"
 
+#: src/features/profile/ui/ArchiveConfirmDialog.tsx
 #: src/features/settings/ui/HostedCommunitiesSettingsCard.tsx
 msgid "Archive"
 msgstr "Archivieren"
@@ -2032,11 +2129,32 @@ msgstr "Archivieren"
 msgid "Archive {displayName}?"
 msgstr "{displayName} archivieren?"
 
+#: src/features/profile/ui/UserProfileAgentActions.tsx
+#: src/features/profile/ui/UserProfileAgentManagementRows.tsx
+msgid "Archive agent"
+msgstr "Agent archivieren"
+
 #: src/features/channels/ui/ChannelManagementModerationActions.tsx
 #: src/features/channels/ui/ChannelManagementSheet.tsx
 #: src/features/sidebar/ui/ChannelContextMenu.tsx
 msgid "Archive channel"
 msgstr "Kanal archivieren"
+
+#: src/features/profile/ui/UserProfileAgentActions.tsx
+msgid "Archive identity"
+msgstr "Identität archivieren"
+
+#: src/features/profile/ui/UserProfileAgentManagementRows.tsx
+msgid "Archive this agent if you want to hide it instead of removing it."
+msgstr "Archivier den Agenten, wenn du ihn ausblenden statt entfernen willst."
+
+#: src/features/profile/ui/ArchiveConfirmDialog.tsx
+msgid "Archive this agent?"
+msgstr "Diesen Agenten archivieren?"
+
+#: src/features/profile/ui/ArchiveConfirmDialog.tsx
+msgid "Archive this identity?"
+msgstr "Diese Identität archivieren?"
 
 #: src/features/channels/ui/ChannelBrowserDialog.tsx
 msgid "archived"
@@ -2044,9 +2162,15 @@ msgstr "archiviert"
 
 #: src/features/channels/ui/ChannelBrowserDialog.tsx
 #: src/features/channels/ui/MembersSidebar.tsx
+#: src/features/profile/ui/ProfileInstancesSection.tsx
+#: src/features/profile/ui/UserProfilePanelTabs.tsx
 #: src/shared/ui/markdown/ChannelDeepLink.tsx
 msgid "Archived"
 msgstr "Archiviert"
+
+#: src/features/profile/ui/UserProfilePanelTabs.tsx
+msgid "Archived agents do not appear in search, autocomplete, or member-add flows in this space. You can unarchive them at any time."
+msgstr "Archivierte Agenten erscheinen in dieser Community nicht in der Suche, in der Autovervollständigung oder beim Hinzufügen von Mitgliedern. Du kannst sie jederzeit wieder aus dem Archiv holen."
 
 #: src/features/channels/ui/ChannelPane.tsx
 msgid "Archived channels are read-only."
@@ -2064,6 +2188,10 @@ msgstr "Archivierte Foren, denen du beigetreten bist, erscheinen hier."
 msgid "Archived."
 msgstr "Archiviert."
 
+#: src/features/profile/ui/UserProfileAgentManagementRows.tsx
+msgid "Archives the agent's identity on the relay so it no longer appears in member lists or mention suggestions"
+msgstr "Archiviert die Identität des Agenten auf dem Relay, sodass er nicht mehr in Mitgliederlisten oder Mention-Vorschlägen auftaucht"
+
 #: src/features/channels/ui/ChannelManagementModerationActions.tsx
 msgid "Archiving channel"
 msgstr "Kanal wird archiviert"
@@ -2075,6 +2203,20 @@ msgstr "Kanal wird archiviert …"
 #: src/features/settings/ui/HostedCommunitiesSettingsCard.tsx
 msgid "Archiving community…"
 msgstr "Community wird archiviert …"
+
+#: src/features/profile/ui/ArchiveConfirmDialog.tsx
+msgid "Archiving hides this agent from the space."
+msgstr "Durch das Archivieren wird dieser Agent in der Community ausgeblendet."
+
+#: src/features/profile/ui/ArchiveConfirmDialog.tsx
+msgid "Archiving hides this person from the space."
+msgstr "Durch das Archivieren wird diese Person in der Community ausgeblendet."
+
+#: src/features/profile/ui/ArchiveConfirmDialog.tsx
+#: src/features/profile/ui/UserProfileAgentActions.tsx
+#: src/features/profile/ui/UserProfileAgentManagementRows.tsx
+msgid "Archiving…"
+msgstr "Wird archiviert…"
 
 #: src/features/projects/ui/ProjectsAgentPromptPage.tsx
 msgid "Are we safe to cut a release of {firstRepo} this week?"
@@ -2214,6 +2356,10 @@ msgstr "Auto nutzt die kollektive Intelligenz von Mesh, wenn mindestens zwei Mod
 msgid "Auto-restart on config change"
 msgstr "Automatischer Neustart bei Konfigurationsänderung"
 
+#: src/features/profile/ui/UserProfileAgentActions.tsx
+msgid "Auto-start"
+msgstr "Autostart"
+
 #: src/features/agents/ui/AgentDefinitionDialog.tsx
 msgid "Automatic"
 msgstr "Automatisch"
@@ -2257,9 +2403,33 @@ msgstr "Verfügbar in der macOS-Desktop-App."
 msgid "Available while the agent is working."
 msgstr "Verfügbar, solange der Agent arbeitet."
 
+#: src/features/profile/avatarPresentationStore.ts
+msgid "Avatar couldn’t finish uploading"
+msgstr "Avatar konnte nicht vollständig hochgeladen werden"
+
+#: src/features/profile/ui/ProfileAvatarEditor.tsx
+msgid "Avatar image picker"
+msgstr "Avatar-Bildauswahl"
+
 #: src/features/agents/ui/AgentInstanceEditDialog.tsx
 msgid "Avatar is shared identity"
 msgstr "Der Avatar gehört zur geteilten Identität."
+
+#: src/features/profile/ui/AnimatedAvatarCapture.tsx
+msgid "Avatar preview — drag or use arrow keys to position"
+msgstr "Avatar-Vorschau — zum Positionieren ziehen oder die Pfeiltasten nutzen"
+
+#: src/features/profile/ui/ProfileAvatarModeTabs.tsx
+msgid "Avatar type"
+msgstr "Avatar-Typ"
+
+#: src/features/profile/ui/ProfileAvatar.tsx
+msgid "Avatar upload pending"
+msgstr "Avatar wird noch hochgeladen"
+
+#: src/features/profile/ui/AvatarUpload.tsx
+msgid "Avatar URL"
+msgstr "Avatar-URL"
 
 #: src/features/projects/ui/PullRequestReviewersRow.tsx
 msgid "Awaiting review"
@@ -2295,6 +2465,10 @@ msgstr "Zurück zum Posteingang"
 msgid "Back to inbox list"
 msgstr "Zurück zur Posteingangsliste"
 
+#: src/features/profile/ui/UserProfilePanelHeaderContent.tsx
+msgid "Back to profile"
+msgstr "Zurück zum Profil"
+
 #: src/features/projects/ui/CreateProjectFormContent.tsx
 msgid "Back to projects"
 msgstr "Zurück zu den Projekten"
@@ -2306,6 +2480,18 @@ msgstr "Zurück zu den Projekten"
 #: src/features/channels/ui/ChannelBrowserDialog.tsx
 msgid "Back to search"
 msgstr "Zurück zur Suche"
+
+#: src/features/profile/ui/UserProfilePanelFields.tsx
+msgid "Backend"
+msgstr "Backend"
+
+#: src/features/profile/ui/AnimatedAvatarReviewNav.tsx
+msgid "Background"
+msgstr "Hintergrund"
+
+#: src/features/profile/ui/AnimatedAvatarCapture.tsx
+msgid "Background removal model couldn't be loaded, so the background was kept. Retake while online to remove it."
+msgstr "Das Modell zum Entfernen des Hintergrunds konnte nicht geladen werden, der Hintergrund bleibt also erhalten. Nimm online neu auf, um ihn zu entfernen."
 
 #: src/features/settings/ui/EncryptedBackupCreator.tsx
 msgid "Backup key"
@@ -2513,6 +2699,9 @@ msgstr "Dieses Relay ist nicht erreichbar"
 #: src/features/onboarding/ui/InviteRedeemForm.tsx
 #: src/features/onboarding/ui/KeyringLockedScreen.tsx
 #: src/features/onboarding/ui/PendingInviteGate.tsx
+#: src/features/profile/ui/ArchiveConfirmDialog.tsx
+#: src/features/profile/ui/NostrBindConsentDialog.tsx
+#: src/features/profile/ui/UserProfileAgentManagementRows.tsx
 #: src/features/projects/ui/MergePullRequestButton.tsx
 #: src/features/projects/ui/ProjectBranchDialogs.tsx
 #: src/features/projects/ui/ProjectCards.tsx
@@ -2571,6 +2760,14 @@ msgstr "Canvas enthalten"
 #: src/features/settings/ui/ChannelTemplatesSettingsCard.tsx
 msgid "Canvas template"
 msgstr "Canvas-Vorlage"
+
+#: src/features/profile/ui/UserProfilePanelFields.tsx
+msgid "Capabilities"
+msgstr "Fähigkeiten"
+
+#: src/features/profile/ui/AnimatedAvatarCameraControls.tsx
+msgid "Capture {RECORD_SECONDS} sec video"
+msgstr "{RECORD_SECONDS}-Sekunden-Video aufnehmen"
 
 #: src/features/agents/cardMintStore.ts
 msgid "Card mint failed."
@@ -2705,6 +2902,8 @@ msgstr "Kanal nicht verfügbar"
 msgid "Channel update"
 msgstr "Kanal-Update"
 
+#: src/features/profile/ui/UserProfilePanelSections.tsx
+#: src/features/profile/ui/UserProfilePanelUtils.ts
 #: src/features/projects/lib/projectDetailAgentContext.ts
 #: src/features/projects/ui/ProjectHomeContextPanel.tsx
 #: src/features/projects/ui/projectsOverviewContext.ts
@@ -2715,6 +2914,10 @@ msgstr "Kanal-Update"
 #: src/features/sidebar/ui/AppSidebar.tsx
 msgid "Channels"
 msgstr "Kanäle"
+
+#: src/features/profile/ui/UserProfilePanelFocusedViews.tsx
+msgid "Channels appear here"
+msgstr "Kanäle erscheinen hier"
 
 #: src/features/sidebar/ui/CreateChannelDialog.tsx
 msgid "Channels are real-time streams for team conversation."
@@ -2851,6 +3054,10 @@ msgstr "Wähl einen Basis-Branch."
 msgid "Choose a branch first."
 msgstr "Wähl zuerst einen Branch."
 
+#: src/features/profile/ui/UserProfilePanelFocusedViews.tsx
+msgid "Choose a channel above so it can join the conversation."
+msgstr "Wähl oben einen Kanal, damit der Agent an der Unterhaltung teilnehmen kann."
+
 #: src/features/projects/ui/CreatePullRequestDialog.tsx
 msgid "Choose a compare branch."
 msgstr "Wähl einen Vergleichs-Branch."
@@ -2921,6 +3128,10 @@ msgstr "Wähl ein Repository für diese Aufgabe."
 msgid "Choose a repository."
 msgstr "Wähl ein Repository."
 
+#: src/features/profile/ui/UserProfilePanelTabs.tsx
+msgid "Choose active channel feed"
+msgstr "Aktiven Kanal-Feed wählen"
+
 #: src/features/agents/ui/AcpCommandField.tsx
 #: src/features/agents/ui/EditAgentAdvancedFields.tsx
 msgid "Choose an ACP command"
@@ -2933,6 +3144,10 @@ msgstr "Wähle einen verfügbaren Anbieter für diesen Agenten."
 #: src/features/agents/useAgentManagement.ts
 msgid "Choose an available runtime for this agent."
 msgstr "Wähle eine verfügbare Runtime für diesen Agenten."
+
+#: src/features/profile/ui/ProfileAvatarEditor.tsx
+msgid "Choose an emoji before custom avatar color"
+msgstr "Wähl ein Emoji, bevor du eine eigene Avatar-Farbe setzt"
 
 #: src/features/agents/ui/AgentCreationPreview.tsx
 msgid "Choose an emoji first"
@@ -2950,6 +3165,18 @@ msgstr "Wähle ein Bild oder Emoji als Avatar"
 #: src/features/messages/ui/NewMessageScreen.tsx
 msgid "Choose at least one recipient first."
 msgstr "Wähle zuerst mindestens einen Empfänger."
+
+#: src/features/profile/ui/ProfileAvatarEditor.tsx
+msgid "Choose custom avatar color"
+msgstr "Eigene Avatar-Farbe wählen"
+
+#: src/features/profile/ui/AvatarCustomColorPanel.tsx
+msgid "Choose custom avatar color hue"
+msgstr "Farbton der eigenen Avatar-Farbe wählen"
+
+#: src/features/profile/ui/AnimatedAvatarBackdropPanel.tsx
+msgid "Choose custom backdrop color"
+msgstr "Eigene Hintergrundfarbe wählen"
 
 #: src/features/agents/ui/AgentCreationPreview.tsx
 msgid "Choose custom color"
@@ -2991,6 +3218,10 @@ msgstr "Wähl einen aus dem Agenten-Katalog, leg einen eigenen an oder importier
 #: src/features/sidebar/ui/ChannelSectionDialogs.tsx
 msgid "Choose section icon"
 msgstr "Bereichssymbol wählen"
+
+#: src/features/profile/ui/AnimatedAvatarControls.tsx
+msgid "Choose still frame"
+msgstr "Standbild wählen"
 
 #: src/features/settings/ui/HostedCommunitiesSettingsCard.tsx
 msgid "Choose the address your team will use to connect."
@@ -3037,6 +3268,10 @@ msgstr "Wähle deine Modelleinstellungen"
 #: src/features/onboarding/ui/DefaultConfigStep.tsx
 msgid "Choose your provider and enter an API key to connect to the {0} harness."
 msgstr "Wähle deinen Anbieter und gib einen API-Schlüssel ein, um dich mit dem {0}-Harness zu verbinden."
+
+#: src/features/profile/ui/AnimatedAvatarReviewNav.tsx
+msgid "Circle"
+msgstr "Kreis"
 
 #: src/features/onboarding/ui/SetupStep.tsx
 msgid "Claude subscription"
@@ -3512,8 +3747,13 @@ msgstr "Kontextlimit"
 #: src/features/onboarding/ui/BackupStep.tsx
 #: src/features/onboarding/ui/DownloadKeyStep.tsx
 #: src/features/onboarding/ui/ProfileStep.tsx
+#: src/features/profile/ui/NostrBindConsentDialog.tsx
 msgid "Continue"
 msgstr "Weiter"
+
+#: src/features/profile/ui/NostrBindConsentDialog.tsx
+msgid "Continue in your browser"
+msgstr "Im Browser fortfahren"
 
 #: src/features/onboarding/ui/MachineOnboardingFlow.tsx
 #: src/features/onboarding/ui/PendingInviteGate.tsx
@@ -3573,6 +3813,7 @@ msgid "Converted to draft."
 msgstr "In Entwurf umgewandelt."
 
 #: src/features/onboarding/ui/IdentityRecoveryPairing.tsx
+#: src/features/profile/ui/NostrBindConsentDialog.tsx
 msgid "Copied"
 msgstr "Kopiert"
 
@@ -3594,6 +3835,7 @@ msgid "Copy {0}"
 msgstr "{0} kopieren"
 
 #: src/features/channels/ui/ChannelManagementSheetRows.tsx
+#: src/features/profile/ui/UserProfilePanelFields.tsx
 #: src/features/settings/ui/ProfileSettingsCard.tsx
 msgid "Copy {label}"
 msgstr "{label} kopieren"
@@ -3629,6 +3871,7 @@ msgid "Copy link"
 msgstr "Link kopieren"
 
 #: src/features/agents/ui/ManagedAgentLogPanel.tsx
+#: src/features/profile/ui/UserProfilePanelHeaderContent.tsx
 msgid "Copy log"
 msgstr "Log kopieren"
 
@@ -3653,6 +3896,10 @@ msgstr "Privaten Schlüssel kopieren"
 msgid "Copy pubkey"
 msgstr "Pubkey kopieren"
 
+#: src/features/profile/ui/NostrBindConsentDialog.tsx
+msgid "Copy response"
+msgstr "Antwort kopieren"
+
 #: src/features/projects/ui/ProjectPullRequestsPanel.tsx
 #: src/features/projects/ui/ProjectsPullRequestsList.tsx
 msgid "Copy review link"
@@ -3662,6 +3909,14 @@ msgstr "Review-Link kopieren"
 #: src/features/projects/ui/ProjectsIssuesList.tsx
 msgid "Copy task link"
 msgstr "Aufgaben-Link kopieren"
+
+#: src/features/profile/ui/NostrBindConsentDialog.tsx
+msgid "Copy the response below, then paste it into the {productName} website to finish verification."
+msgstr "Kopier die Antwort unten und füg sie auf der {productName}-Website ein, um die Verifizierung abzuschließen."
+
+#: src/features/profile/ui/NostrBindConsentDialog.tsx
+msgid "Copy this response and paste it into the pairing page."
+msgstr "Kopier diese Antwort und füg sie auf der Kopplungsseite ein."
 
 #: src/features/onboarding/ui/BackupStep.tsx
 msgid "Copy to clipboard"
@@ -3742,6 +3997,10 @@ msgstr "Aufgaben konnten nicht geladen werden"
 msgid "Could not load the connected {productName} identity."
 msgstr "Die verbundene {productName}-Identität konnte nicht geladen werden."
 
+#: src/features/profile/ui/NostrBindConsentDialog.tsx
+msgid "Could not load the current {productName} identity."
+msgstr "Die aktuelle {productName}-Identität konnte nicht geladen werden."
+
 #: src/features/projects/ui/ProjectReadmePanel.tsx
 msgid "Could not load the README"
 msgstr "README konnte nicht geladen werden"
@@ -3757,6 +4016,10 @@ msgstr "Diese Datei konnte nicht geladen werden. Aktualisiere das Repository und
 #: src/features/home/ui/ProjectInboxDetail.tsx
 msgid "Could not load this project item."
 msgstr "Dieser Projekteintrag konnte nicht geladen werden."
+
+#: src/features/profile/ui/NostrBindConsentDialog.tsx
+msgid "Could not open the browser. Copy the response below to finish manually."
+msgstr "Der Browser konnte nicht geöffnet werden. Kopier die Antwort unten, um manuell abzuschließen."
 
 #: src/features/agents/ui/WhereToRunSection.tsx
 msgid "Could not probe provider:"
@@ -3806,6 +4069,10 @@ msgstr "Die Community konnte nicht aus dem Archiv geholt werden."
 #: src/features/settings/ui/HostedCommunitiesSettingsCard.tsx
 msgid "Could not unpair the {productName} identity."
 msgstr "Die {productName}-Identität konnte nicht getrennt werden."
+
+#: src/features/profile/ui/AnimatedAvatarCapture.tsx
+msgid "Could not upload the animated avatar."
+msgstr "Der animierte Avatar konnte nicht hochgeladen werden."
 
 #: src/features/agents/ui/AgentCreationPreview.tsx
 msgid "Could not use that {assetLabel}."
@@ -3894,6 +4161,10 @@ msgstr "Unterhaltung konnte nicht geöffnet werden: {0}"
 msgid "Couldn’t open the conversation."
 msgstr "Unterhaltung konnte nicht geöffnet werden."
 
+#: src/features/profile/ui/useProfileInteractionActions.ts
+msgid "Couldn't open the direct message."
+msgstr "Die Direktnachricht konnte nicht geöffnet werden."
+
 #: src/features/projects/lib/projectRepoAvailability.ts
 msgid "Couldn’t reach repository"
 msgstr "Repository nicht erreichbar"
@@ -3942,6 +4213,10 @@ msgstr "{itemLabel} konnte nicht gesendet werden. Versuch es erneut."
 #: src/features/agents/ui/AgentCardViewerDialog.tsx
 msgid "Couldn’t send the card. Try again."
 msgstr "Die Karte konnte nicht gesendet werden. Versuch es erneut."
+
+#: src/features/profile/ui/useProfileInteractionActions.ts
+msgid "Couldn't send the wave."
+msgstr "Das Winken konnte nicht gesendet werden."
 
 #: src/features/messages/ui/MessageActionBar.tsx
 msgid "Couldn't send to channel"
@@ -4198,6 +4473,10 @@ msgstr "Vorlage anlegen"
 msgid "Create the repository's first commit before creating another branch."
 msgstr "Leg den ersten Commit des Repositorys an, bevor du einen weiteren Branch anlegst."
 
+#: src/features/profile/ui/UserProfileAgentManagementRows.tsx
+msgid "Create trading card"
+msgstr "Sammelkarte erstellen"
+
 #: src/features/channels/ui/WelcomeAgentCreateDialog.tsx
 msgid "Create with {guideName}"
 msgstr "Mit {guideName} erstellen"
@@ -4343,6 +4622,10 @@ msgstr "Eigener Anbieter…"
 msgid "Customize for this agent"
 msgstr "Für diesen Agenten anpassen"
 
+#: src/features/profile/ui/AnimatedAvatarCapture.tsx
+msgid "Cutting you out of the background..."
+msgstr "Du wirst vom Hintergrund freigestellt…"
+
 #: src/features/settings/ui/AppearanceSettingsPanel.tsx
 msgid "Dark"
 msgstr "Dunkel"
@@ -4370,6 +4653,10 @@ msgstr "Databricks v2"
 #: src/features/projects/ui/ProjectCommitDetailPanel.tsx
 msgid "Date"
 msgstr "Datum"
+
+#: src/features/profile/ui/UserProfilePanelFields.tsx
+msgid "Declared owner verified"
+msgstr "Angegebener Besitzer verifiziert"
 
 #: src/shared/lib/keyboard-shortcuts.ts
 msgid "Decrease the zoom level"
@@ -4463,6 +4750,10 @@ msgstr "{channelName} aus der Community-Liste löschen. Das lässt sich nicht r�
 msgid "Delete {label}?"
 msgstr "{label} löschen?"
 
+#: src/features/profile/ui/UserProfileAgentManagementRows.tsx
+msgid "Delete agent"
+msgstr "Agent löschen"
+
 #: src/features/agents/ui/PersonaDeleteDialog.tsx
 msgid "Delete agent?"
 msgstr "Agent löschen?"
@@ -4537,6 +4828,10 @@ msgstr "Vorlage löschen"
 msgid "Delete the remote branch"
 msgstr "Remote-Branch löschen"
 
+#: src/features/profile/ui/UserProfileAgentManagementRows.tsx
+msgid "Delete this agent?"
+msgstr "Diesen Agenten löschen?"
+
 #: src/features/agents/ui/PersonaDeleteDialog.tsx
 msgid "Delete this agent."
 msgstr "Diesen Agenten löschen."
@@ -4557,6 +4852,10 @@ msgstr "Stimme löschen"
 msgid "Deleted \"{name}\""
 msgstr "„{name}“ gelöscht"
 
+#: src/features/profile/ui/UserProfilePanel.tsx
+msgid "Deleted {agentName}."
+msgstr "{agentName} gelöscht."
+
 #. placeholder {0}: team.name
 #: src/features/agents/ui/useTeamActions.ts
 msgid "Deleted team \"{0}\"."
@@ -4566,11 +4865,20 @@ msgstr "Team „{0}“ gelöscht."
 msgid "Deleting removes the local management record. Continue?"
 msgstr "Beim Löschen wird der lokale Verwaltungseintrag entfernt. Fortfahren?"
 
+#: src/features/profile/ui/UserProfileAgentManagementRows.tsx
+msgid "Deleting removes this agent’s local management record, not its remote deployment."
+msgstr "Beim Löschen wird der lokale Verwaltungseintrag dieses Agenten entfernt, nicht sein Remote-Deployment."
+
+#: src/features/profile/ui/UserProfileAgentManagementRows.tsx
+msgid "Deleting this agent stops and removes the agent from this community."
+msgstr "Beim Löschen wird der Agent gestoppt und aus dieser Community entfernt."
+
 #: src/features/channels/ui/ChannelManagementModerationActions.tsx
 #: src/features/sidebar/ui/SidebarProjectsSection.tsx
 msgid "Deleting..."
 msgstr "Wird gelöscht …"
 
+#: src/features/profile/ui/UserProfileAgentManagementRows.tsx
 #: src/features/projects/ui/ProjectBranchDialogs.tsx
 #: src/features/projects/ui/ProjectCards.tsx
 msgid "Deleting…"
@@ -4600,6 +4908,10 @@ msgstr "{successCount} {0} in {1} bereitgestellt."
 #: src/features/agents/ui/useTeamActions.ts
 msgid "Deployed {successCount} {0} to {1}. {failCount} failed."
 msgstr "{successCount} {0} in {1} bereitgestellt. {failCount} fehlgeschlagen."
+
+#: src/features/profile/ui/useAgentLifecycleActions.ts
+msgid "Deploying {agentName}."
+msgstr "{agentName} wird bereitgestellt."
 
 #: src/features/agents/ui/AgentDefinitionDialog.tsx
 msgid "Describe what this agent should do."
@@ -4866,6 +5178,10 @@ msgstr "Entwurfs-Reviews können nicht zusammengeführt werden."
 msgid "Drafts"
 msgstr "Entwürfe"
 
+#: src/features/profile/ui/ProfileAvatarEditor.tsx
+msgid "Drag or browse"
+msgstr "Ziehen oder durchsuchen"
+
 #: src/features/channels/ui/RightAuxiliaryPane.tsx
 #: src/features/home/ui/HomeView.tsx
 msgid "Drag to resize."
@@ -4892,9 +5208,21 @@ msgstr ".agent.json oder .agent.png zum Importieren ablegen"
 msgid "Drop an .agent.json or .agent.png file anywhere in this window, or choose a file."
 msgstr "Leg eine .agent.json- oder .agent.png-Datei irgendwo in diesem Fenster ab oder wähl eine Datei."
 
+#: src/features/profile/ui/AvatarUpload.tsx
+msgid "Drop an image or <0>browse</0>"
+msgstr "Zieh ein Bild hierher oder <0>durchsuche</0>"
+
 #: src/features/messages/ui/ComposerAttachments.tsx
 msgid "Drop files to upload"
 msgstr "Dateien zum Hochladen hier ablegen"
+
+#: src/features/profile/ui/ProfileAvatarEditor.tsx
+msgid "Drop image here"
+msgstr "Bild hier ablegen"
+
+#: src/features/profile/ui/ProfileAvatarEditor.tsx
+msgid "Drop or <0>browse</0>"
+msgstr "Ablegen oder <0>durchsuchen</0>"
 
 #: src/features/agents/ui/AgentCreationPreview.tsx
 msgid "Drop or browse"
@@ -4907,6 +5235,7 @@ msgstr "Zieh deine Backup-Datei hierher"
 
 #: src/features/agents/ui/PersonaActionsMenu.tsx
 #: src/features/agents/ui/TeamsSection.tsx
+#: src/features/profile/ui/UserProfileAgentActions.tsx
 #: src/features/settings/ui/ChannelTemplatesSettingsCard.tsx
 msgid "Duplicate"
 msgstr "Duplizieren"
@@ -4917,6 +5246,10 @@ msgstr "Duplizieren"
 #: src/features/agents/ui/useTeamActions.ts
 msgid "Duplicate {0}"
 msgstr "{0} duplizieren"
+
+#: src/features/profile/ui/UserProfileAgentManagementRows.tsx
+msgid "Duplicate agent"
+msgstr "Agent duplizieren"
 
 #: src/features/settings/ui/ChannelTemplatesSettingsCard.tsx
 msgid "Duplicated as \"{name}\""
@@ -4944,6 +5277,7 @@ msgstr "Frühere beobachtete Sitzung"
 
 #: src/features/agents/ui/PersonaActionsMenu.tsx
 #: src/features/agents/ui/TeamsSection.tsx
+#: src/features/profile/ui/UserProfilePanelHeaderContent.tsx
 #: src/features/settings/ui/ChannelTemplatesSettingsCard.tsx
 #: src/features/settings/ui/HarnessRow.tsx
 #: src/features/settings/ui/ProfileSettingsCard.tsx
@@ -4961,6 +5295,10 @@ msgstr "{0} bearbeiten"
 msgid "Edit {assetLabel}"
 msgstr "{assetLabel} bearbeiten"
 
+#: src/features/profile/ui/UserProfilePanelSections.tsx
+msgid "Edit {displayName}"
+msgstr "{displayName} bearbeiten"
+
 #: src/features/agents/ui/AgentConfigPanel.tsx
 #: src/features/settings/ui/ProfileSettingsCard.tsx
 msgid "Edit {label}"
@@ -4968,6 +5306,7 @@ msgstr "{label} bearbeiten"
 
 #: src/features/agents/ui/AgentManagementDialogs.tsx
 #: src/features/agents/ui/personaDialogState.ts
+#: src/features/profile/ui/UserProfilePanelHeaderContent.tsx
 msgid "Edit agent"
 msgstr "Agent bearbeiten"
 
@@ -5050,6 +5389,7 @@ msgstr "Aufwand"
 
 #: src/features/agents/ui/AgentCreationPreview.tsx
 #: src/features/messages/ui/ComposerEmojiPicker.tsx
+#: src/features/profile/ui/ProfileAvatarModeTabs.tsx
 msgid "Emoji"
 msgstr "Emoji"
 
@@ -5112,6 +5452,14 @@ msgstr "Code auf dem Handy eingeben"
 msgid "Enter the password to prove you can unlock this backup."
 msgstr "Gib das Passwort ein, um zu zeigen, dass du dieses Backup entsperren kannst."
 
+#: src/features/profile/ui/NostrBindConsentDialog.tsx
+msgid "Enter the six-digit code shown in your browser"
+msgstr "Gib den sechsstelligen Code ein, der in deinem Browser steht"
+
+#: src/features/profile/ui/NostrBindConsentDialog.tsx
+msgid "Enter verification code"
+msgstr "Verifizierungscode eingeben"
+
 #: src/features/onboarding/ui/MachineOnboardingFlow.tsx
 msgid "Enter your backup password to restore your identity."
 msgstr "Gib dein Backup-Passwort ein, um deine Identität wiederherzustellen."
@@ -5171,6 +5519,7 @@ msgid "Ephemeral channel. Cleanup is due now."
 msgstr "Temporärer Kanal. Das Aufräumen ist jetzt fällig."
 
 #: src/features/agents/ui/agentSessionToolCatalog.ts
+#: src/features/profile/ui/UserProfilePanelSections.tsx
 msgid "Error"
 msgstr "Fehler"
 
@@ -5214,8 +5563,13 @@ msgstr "Beschreib, was dieses Projekt sein soll"
 #: src/features/agents/ui/AgentSnapshotExportDialog.tsx
 #: src/features/agents/ui/PersonaShareDialog.tsx
 #: src/features/agents/ui/TeamSnapshotExportDialog.tsx
+#: src/features/profile/ui/UserProfileAgentActions.tsx
 msgid "Export"
 msgstr "Exportieren"
+
+#: src/features/profile/ui/UserProfileAgentManagementRows.tsx
+msgid "Export agent"
+msgstr "Agent exportieren"
 
 #. placeholder {0}: shared ? "share" : "unshare"
 #: src/features/agents/ui/useTeamActions.ts
@@ -5286,6 +5640,7 @@ msgstr "Löschen fehlgeschlagen"
 
 #: src/features/agents/ui/useManagedAgentActions.ts
 #: src/features/agents/ui/usePersonaActions.ts
+#: src/features/profile/ui/UserProfilePanel.tsx
 msgid "Failed to delete agent."
 msgstr "Der Agent konnte nicht gelöscht werden."
 
@@ -5312,6 +5667,7 @@ msgid "Failed to encrypt your key."
 msgstr "Dein Schlüssel konnte nicht verschlüsselt werden."
 
 #: src/features/agents/ui/usePersonaActions.ts
+#: src/features/profile/ui/UserProfileSnapshotExportDialog.tsx
 msgid "Failed to export agent snapshot."
 msgstr "Der Agent-Snapshot konnte nicht exportiert werden."
 
@@ -5433,6 +5789,7 @@ msgid "Failed to save"
 msgstr "Speichern fehlgeschlagen"
 
 #: src/features/agents/ui/usePersonaActions.ts
+#: src/features/profile/ui/UserProfilePanelPersonaSubmit.ts
 msgid "Failed to save agent."
 msgstr "Der Agent konnte nicht gespeichert werden."
 
@@ -5465,7 +5822,12 @@ msgstr "Nachricht konnte nicht gesendet werden."
 msgid "Failed to set up starter channels"
 msgstr "Die Start-Kanäle konnten nicht eingerichtet werden"
 
+#: src/features/profile/ui/NostrBindConsentDialog.tsx
+msgid "Failed to sign binding response."
+msgstr "Die Bindungsantwort konnte nicht signiert werden."
+
 #: src/features/agents/ui/useManagedAgentActions.ts
+#: src/features/profile/ui/UserProfilePanel.tsx
 msgid "Failed to start agent."
 msgstr "Der Agent konnte nicht gestartet werden."
 
@@ -5495,6 +5857,7 @@ msgid "Failed to update review"
 msgstr "Review konnte nicht aktualisiert werden"
 
 #: src/features/agents/ui/useManagedAgentActions.ts
+#: src/features/profile/ui/UserProfilePanel.tsx
 msgid "Failed to update startup preference."
 msgstr "Die Starteinstellung konnte nicht aktualisiert werden."
 
@@ -5570,6 +5933,10 @@ msgstr "Posteingang filtern: {activeLabel}. {statusLabel}"
 msgid "Find in channel"
 msgstr "Im Kanal suchen"
 
+#: src/features/profile/ui/NostrBindConsentDialog.tsx
+msgid "Finish on the {productName} website"
+msgstr "Auf der {productName}-Website abschließen"
+
 #: src/features/messages/ui/useComposerVoiceNote.tsx
 msgid "Finish or discard the voice note before attaching a file."
 msgstr "Beende oder verwirf die Sprachnachricht, bevor du eine Datei anhängst."
@@ -5594,6 +5961,10 @@ msgstr "Fizz"
 #: src/features/settings/ui/AppearanceSettingsControls.tsx
 msgid "Focus"
 msgstr "Fokus"
+
+#: src/features/profile/ui/UserProfilePrimaryActions.tsx
+msgid "Follow"
+msgstr "Folgen"
 
 #: src/features/onboarding/ui/SetupStep.tsx
 msgid "Follow the setup guide to install {label}. When you’re done, come back and check again."
@@ -5663,6 +6034,10 @@ msgstr "Foren, denen du beitrittst, erscheinen hier."
 msgid "Found on PATH"
 msgstr "Im PATH gefunden"
 
+#: src/features/profile/ui/AnimatedAvatarReviewNav.tsx
+msgid "Frame"
+msgstr "Bild"
+
 #: src/features/agents/ui/McpServersSection.tsx
 msgid "From config file ({mcpConfigFilePath})"
 msgstr "Aus Konfigurationsdatei ({mcpConfigFilePath})"
@@ -5687,6 +6062,10 @@ msgstr "Passwort erzeugen"
 #: src/features/settings/ui/MobilePairingCard.tsx
 msgid "Generate new pairing code"
 msgstr "Neuen Kopplungscode erzeugen"
+
+#: src/features/profile/ui/AnimatedAvatarControls.tsx
+msgid "Generating frame thumbnails"
+msgstr "Vorschaubilder werden erzeugt"
 
 #: src/features/onboarding/ui/IdentityRecoveryPairing.tsx
 msgid "Generating pairing code..."
@@ -5774,6 +6153,11 @@ msgstr "Harness"
 #: src/features/agents/ui/AgentAiConfigurationMode.tsx
 msgid "Harness default"
 msgstr "Harness-Standard"
+
+#: src/features/profile/ui/UserProfilePanelTabs.tsx
+#: src/features/profile/ui/UserProfilePanelUtils.ts
+msgid "Harness log"
+msgstr "Harness-Protokoll"
 
 #: src/features/agents/ui/ManagedAgentLogPanel.tsx
 msgid "Harness Log"
@@ -5879,6 +6263,10 @@ msgstr "Gehostete Communitys"
 msgid "Hosted community"
 msgstr "Gehostete Community"
 
+#: src/features/profile/ui/AnimatedAvatarCapture.tsx
+msgid "Hover to play"
+msgstr "Zum Abspielen mit der Maus darüber"
+
 #: src/features/messages/lib/useLinkEditor.tsx
 msgid "https://example.com"
 msgstr "https://beispiel.de"
@@ -5886,6 +6274,11 @@ msgstr "https://beispiel.de"
 #: src/features/projects/ui/AddProjectRepositoryDialog.tsx
 msgid "https://relay.example.com/git/mobile-app.git"
 msgstr "https://relay.example.com/git/mobile-app.git"
+
+#: src/features/profile/ui/UserProfilePopover.tsx
+#: src/features/profile/ui/UserProfilePrimaryActions.tsx
+msgid "Huddle"
+msgstr "Huddle"
 
 #: src/features/onboarding/ui/EncryptedBackupCreator.tsx
 #: src/features/settings/ui/EncryptedBackupCreator.tsx
@@ -5949,6 +6342,7 @@ msgid "Idle"
 msgstr "Untätig"
 
 #: src/features/agents/ui/AgentCreationPreview.tsx
+#: src/features/profile/ui/ProfileAvatarModeTabs.tsx
 msgid "Image"
 msgstr "Bild"
 
@@ -6055,6 +6449,12 @@ msgstr "Um Gedächtnis einzubeziehen, brauchst du eine verknüpfte Agent-Instanz
 #: src/shared/lib/keyboard-shortcuts.ts
 msgid "Increase the zoom level"
 msgstr "Die Zoomstufe erhöhen"
+
+#: src/features/profile/ui/UserProfilePanelFocusedViews.tsx
+#: src/features/profile/ui/UserProfilePanelSections.tsx
+#: src/features/profile/ui/UserProfilePanelTabs.tsx
+msgid "Info"
+msgstr "Infos"
 
 #: src/features/agents/lib/agentConfigCore.ts
 msgid "Inherit (agent default)"
@@ -6178,6 +6578,10 @@ msgstr "Update wird installiert …"
 #: src/features/agents/ui/PersonaAdvancedFields.tsx
 msgid "Instance name pool"
 msgstr "Pool für Instanznamen"
+
+#: src/features/profile/ui/ProfileInstancesSection.tsx
+msgid "Instances"
+msgstr "Instanzen"
 
 #: src/features/channels/ui/AgentSessionThreadPanel.tsx
 msgid "Interrupt the current ACP turn without stopping the agent process."
@@ -6389,6 +6793,11 @@ msgstr "Größer"
 msgid "Last changed {0}"
 msgstr "Zuletzt geändert {0}"
 
+#: src/features/profile/ui/UserProfilePanelFields.tsx
+#: src/features/profile/ui/UserProfilePanelFocusedViews.tsx
+msgid "Last error"
+msgstr "Letzter Fehler"
+
 #: src/features/profile/ui/UserProfilePanelTabs.tsx
 msgid "Last live {label}"
 msgstr "Zuletzt live {label}"
@@ -6413,6 +6822,10 @@ msgstr "Letzte Woche"
 #: src/features/projects/ui/ProjectRepositoryActionsPanel.tsx
 msgid "Latest"
 msgstr "Neueste"
+
+#: src/features/profile/ui/UserProfilePanelTabs.tsx
+msgid "Latest Activity"
+msgstr "Letzte Aktivität"
 
 #: src/features/agents/ui/AgentSessionTranscriptList.tsx
 msgid "Latest live-observed session"
@@ -6448,6 +6861,10 @@ msgstr "Kanal verlassen"
 msgid "Leaving channel..."
 msgstr "Kanal wird verlassen …"
 
+#: src/features/profile/ui/UserProfilePanelSections.tsx
+msgid "less"
+msgstr "weniger"
+
 #: src/features/projects/ui/ProjectChannelRequestDialog.tsx
 msgid "Lifetime"
 msgstr "Lebensdauer"
@@ -6467,6 +6884,10 @@ msgstr "Hell"
 #: src/features/projects/ui/ProjectPullRequestFilesChangedPanel.tsx
 msgid "Line comment posted."
 msgstr "Zeilenkommentar gepostet."
+
+#: src/features/profile/ui/AnimatedAvatarCapture.tsx
+msgid "Line up your shot."
+msgstr "Richte dein Bild aus."
 
 #: src/features/messages/ui/FormattingToolbar.tsx
 msgid "Link"
@@ -6558,6 +6979,10 @@ msgstr "Kanalaktionen werden geladen …"
 #: src/features/projects/ui/DiscussionChannels.tsx
 msgid "Loading channel discussions"
 msgstr "Kanaldiskussionen werden geladen"
+
+#: src/features/profile/ui/UserProfilePanelFocusedViews.tsx
+msgid "Loading channels…"
+msgstr "Kanäle werden geladen…"
 
 #: src/features/projects/ui/ProjectHomeCommitsPanel.tsx
 msgid "Loading commits"
@@ -6770,8 +7195,13 @@ msgstr "Repository-Zugriff verwalten"
 msgid "managed by"
 msgstr "verwaltet von"
 
+#: src/features/profile/ui/UserProfilePanelFields.tsx
+msgid "Managed by"
+msgstr "Verwaltet von"
+
 #: src/features/channels/ui/AddMemberSearchResultRow.tsx
 #: src/features/messages/ui/NewMessageResultRow.tsx
+#: src/features/profile/ui/UserProfilePopover.tsx
 msgid "managed by {ownerLabel}"
 msgstr "verwaltet von {ownerLabel}"
 
@@ -6852,6 +7282,10 @@ msgstr "Maximale LLM- und Tool-Aufruf-Runden pro Zug. 0 = unbegrenzt. Leer lasse
 msgid "Maximum tokens the LLM may generate per response. Leave blank to inherit."
 msgstr "Maximale Tokens, die das LLM pro Antwort erzeugen darf. Leer lassen, um sie zu erben."
 
+#: src/features/profile/ui/UserProfilePanelFields.tsx
+msgid "MCP command"
+msgstr "MCP-Befehl"
+
 #: src/features/agents/ui/AgentConfigPanel.tsx
 #: src/features/agents/ui/McpServersSection.tsx
 msgid "MCP servers"
@@ -6900,6 +7334,8 @@ msgstr "Mitgliedschaft erforderlich"
 #: src/features/agents/ui/AgentCardMintDialog.tsx
 #: src/features/agents/ui/AgentSnapshotExportDialog.tsx
 #: src/features/agents/ui/TeamSnapshotExportDialog.tsx
+#: src/features/profile/ui/UserProfilePanelSections.tsx
+#: src/features/profile/ui/UserProfilePanelUtils.ts
 msgid "Memories"
 msgstr "Gedächtnis"
 
@@ -6970,6 +7406,8 @@ msgid "Merging…"
 msgstr "Wird zusammengeführt…"
 
 #: src/features/agents/ui/AgentSessionToolItem/SentMessageContextDialog.tsx
+#: src/features/profile/ui/UserProfilePopover.tsx
+#: src/features/profile/ui/UserProfilePrimaryActions.tsx
 #: src/features/search/ui/SearchResultItem.tsx
 #: src/features/search/ui/TopbarSearch.tsx
 msgid "Message"
@@ -7117,6 +7555,7 @@ msgid "Moderation action failed"
 msgstr "Moderationsaktion fehlgeschlagen"
 
 #: src/features/agents/ui/RestartDiffBadge.tsx
+#: src/features/profile/ui/UserProfilePanelSections.tsx
 msgid "more"
 msgstr "mehr"
 
@@ -7351,9 +7790,17 @@ msgstr "Füge als Nächstes ein Anzeigebild hinzu"
 msgid "Nice work."
 msgstr "Gut gemacht."
 
+#: src/features/profile/ui/UserProfilePanelFields.tsx
+msgid "NIP-05"
+msgstr "NIP-05"
+
 #: src/features/settings/ui/ProfileSettingsCard.tsx
 msgid "NIP-05 handle"
 msgstr "NIP-05-Handle"
+
+#: src/features/profile/ui/UserProfilePanelFields.tsx
+msgid "No"
+msgstr "Nein"
 
 #: src/features/projects/ui/ProjectCards.tsx
 msgid "No access"
@@ -7575,6 +8022,10 @@ msgstr "Auf dem Relay von {productName} wurde kein Git-Repository gefunden."
 #: src/features/settings/ui/HostedCommunitiesSettingsCard.tsx
 msgid "No hosted communities yet."
 msgstr "Noch keine gehosteten Communitys."
+
+#: src/features/profile/ui/UserProfilePanelAgentDetails.tsx
+msgid "No instruction set."
+msgstr "Keine Anweisung gesetzt."
 
 #: src/features/agents/ui/CommunityCatalogDialog.tsx
 msgid "No instructions"
@@ -7906,6 +8357,10 @@ msgstr "Noch kein Mitglied"
 msgid "Not configured"
 msgstr "Nicht konfiguriert"
 
+#: src/features/profile/ui/UserProfilePanelFields.tsx
+msgid "Not deployed"
+msgstr "Nicht bereitgestellt"
+
 #: src/features/settings/ui/CustomHarnessForm.tsx
 msgid "Not found on PATH"
 msgstr "Nicht im PATH gefunden"
@@ -8016,6 +8471,10 @@ msgstr "Dauerhaft"
 msgid "Ongoing channel"
 msgstr "Dauerhafter Kanal"
 
+#: src/features/profile/ui/UserProfilePanelFields.tsx
+msgid "Only {ownerDisplayName} (owner)"
+msgstr "Nur {ownerDisplayName} (Besitzer)"
+
 #: src/features/projects/lib/projectBranches.ts
 msgid "Only a published remote branch can be deleted."
 msgstr "Nur ein veröffentlichter Remote-Branch kann gelöscht werden."
@@ -8047,6 +8506,10 @@ msgstr "Nur ich (Standard)"
 #: src/features/agents/ui/PersonaShareDialog.tsx
 msgid "Only share with people you trust."
 msgstr "Teil nur mit Leuten, denen du vertraust."
+
+#: src/features/profile/ui/UserProfilePanelFields.tsx
+msgid "Only the owner"
+msgstr "Nur der Besitzer"
 
 #: src/features/projects/ui/ProjectChannelManagement.tsx
 msgid "Only the project owner can add channels"
@@ -8113,9 +8576,17 @@ msgstr "Profil von {authorLabel} öffnen"
 msgid "Open {displayName} profile"
 msgstr "Profil von {displayName} öffnen"
 
+#: src/features/profile/ui/UserProfilePanelFields.tsx
+msgid "Open {label}"
+msgstr "{label} öffnen"
+
 #: src/features/projects/ui/ProjectRightPanelControls.tsx
 msgid "Open {productName} Term"
 msgstr "{productName}-Terminal öffnen"
+
+#: src/features/profile/ui/UserProfilePanelFocusedViews.tsx
+msgid "Open #{channelName}"
+msgstr "#{channelName} öffnen"
 
 #: src/features/projects/ui/DiscussionChannels.tsx
 msgid "Open #{name}"
@@ -8227,6 +8698,10 @@ msgstr "Profil von {memberLabel} öffnen"
 #: src/features/sidebar/ui/SidebarProfileCard.tsx
 msgid "Open profile menu for {resolvedDisplayName}"
 msgstr "Profilmenü für {resolvedDisplayName} öffnen"
+
+#: src/features/profile/ui/UserProfileAgentActions.tsx
+msgid "Open profile settings"
+msgstr "Profileinstellungen öffnen"
 
 #: src/features/projects/ui/ProjectRepositoryActionsPanel.tsx
 msgid "Open project chat to ask for repository access"
@@ -8391,6 +8866,10 @@ msgstr "oder"
 msgid "Or drop an .agent.json or .agent.png snapshot here to import."
 msgstr "Oder leg einen .agent.json- oder .agent.png-Snapshot hier ab, um ihn zu importieren."
 
+#: src/features/profile/ui/AvatarUpload.tsx
+msgid "Or paste a direct image URL."
+msgstr "Oder füg eine direkte Bild-URL ein."
+
 #: src/features/messages/ui/FormattingToolbar.tsx
 msgid "Ordered list"
 msgstr "Nummerierte Liste"
@@ -8422,6 +8901,14 @@ msgstr "Veraltet"
 #: src/features/projects/ui/ProjectPullRequestsPanel.tsx
 msgid "Outdated"
 msgstr "Veraltet"
+
+#: src/features/profile/ui/AnimatedAvatarControls.tsx
+msgid "Outline off"
+msgstr "Kontur aus"
+
+#: src/features/profile/ui/AnimatedAvatarControls.tsx
+msgid "Outline on"
+msgstr "Kontur an"
 
 #: src/features/agents/ui/EnvVarsEditor.tsx
 msgid "Overrides"
@@ -8456,6 +8943,10 @@ msgstr "Gekoppelt"
 #: src/features/settings/ui/MobilePairingCard.tsx
 msgid "Pairing code expired."
 msgstr "Der Kopplungscode ist abgelaufen."
+
+#: src/features/profile/ui/NostrBindConsentDialog.tsx
+msgid "Pairing didn’t finish automatically?"
+msgstr "Die Kopplung ist nicht automatisch fertig geworden?"
 
 #: src/features/settings/ui/MobilePairingCard.tsx
 msgid "Pairing mobile device..."
@@ -8496,8 +8987,13 @@ msgid "Password (min {MIN_PASSPHRASE_LEN} characters)"
 msgstr "Passwort (mindestens {MIN_PASSPHRASE_LEN} Zeichen)"
 
 #: src/features/agents/ui/AgentCreationPreview.tsx
+#: src/features/profile/ui/ProfileAvatarEditor.tsx
 msgid "Paste a URL"
 msgstr "URL einfügen"
+
+#: src/features/profile/ui/ProfileAvatarEditor.tsx
+msgid "Paste a URL (Slack profile, etc.)"
+msgstr "URL einfügen (Slack-Profil usw.)"
 
 #: src/features/agents/ui/PersonaProviderApiKeyField.tsx
 msgid "Paste API key…"
@@ -8635,6 +9131,10 @@ msgstr "Pocket-TTS-Stimme"
 msgid "Pocket TTS voice: {0}"
 msgstr "Pocket-TTS-Stimme: {0}"
 
+#: src/features/profile/ui/AnimatedAvatarReviewNav.tsx
+msgid "Position yourself"
+msgstr "Positionier dich"
+
 #: src/features/settings/ui/SendFeedbackDialog.tsx
 msgid "Praise"
 msgstr "Lob"
@@ -8681,6 +9181,10 @@ msgstr "Willkommen wird vorbereitet"
 msgid "Preparing…"
 msgstr "Wird vorbereitet…"
 
+#: src/features/profile/ui/ProfilePopover.tsx
+msgid "Presence status"
+msgstr "Anwesenheitsstatus"
+
 #: src/features/settings/ui/PreventSleepSettingsCard.tsx
 msgid "Prevents your computer from sleeping while local agents are running. Automatically releases when all agents stop or after 1 hour without agent activity."
 msgstr "Verhindert, dass dein Rechner in den Ruhezustand geht, während lokale Agenten laufen. Wird automatisch freigegeben, sobald alle Agenten gestoppt sind oder nach 1 Stunde ohne Agentenaktivität."
@@ -8698,6 +9202,10 @@ msgstr "{0} anhören"
 #: src/features/settings/ui/SoundPicker.tsx
 msgid "Preview {value}"
 msgstr "{value} anhören"
+
+#: src/features/profile/ui/NostrBindConsentDialog.tsx
+msgid "Preview response copied."
+msgstr "Vorschau-Antwort kopiert."
 
 #: src/features/projects/ui/AgentContextPayloadPreview.tsx
 msgid "Preview the exact context appended to your message"
@@ -8744,10 +9252,15 @@ msgstr "Aktionen für den privaten Schlüssel"
 msgid "private welcome channel"
 msgstr "privaten Willkommenskanals"
 
+#: src/features/profile/ui/AnimatedAvatarCapture.tsx
+msgid "Processing recording"
+msgstr "Aufnahme wird verarbeitet"
+
 #: src/features/settings/ui/AppearanceSettingsControls.tsx
 msgid "Product updates — a fresh look at conversations"
 msgstr "Produkt-Updates — ein frischer Blick auf Unterhaltungen"
 
+#: src/features/profile/ui/UserProfilePanelUtils.ts
 #: src/features/settings/ui/ProfileSettingsCard.tsx
 #: src/features/settings/ui/SettingsPanels.tsx
 msgid "Profile"
@@ -8765,9 +9278,17 @@ msgstr "Profilangaben"
 msgid "Profile info"
 msgstr "Profilangaben"
 
+#: src/features/profile/ui/ProfilePopover.tsx
+msgid "Profile menu"
+msgstr "Profilmenü"
+
 #: src/features/settings/ui/ProfileSettingsCard.tsx
 msgid "Profile saved"
 msgstr "Profil gespeichert"
+
+#: src/features/profile/ui/UserProfilePanelTabs.tsx
+msgid "Profile sections"
+msgstr "Profilbereiche"
 
 #: src/features/agents/ui/TeamSnapshotImportDialog.tsx
 msgid "Profile sync failed for:"
@@ -8905,6 +9426,7 @@ msgstr "Öffentlich"
 msgid "Public channel"
 msgstr "Öffentlicher Kanal"
 
+#: src/features/profile/ui/UserProfilePanelFields.tsx
 #: src/features/settings/ui/ProfileSettingsCard.tsx
 msgid "Public key"
 msgstr "Öffentlicher Schlüssel"
@@ -9161,9 +9683,17 @@ msgstr "Neuverbindung läuft"
 msgid "Record voice note"
 msgstr "Sprachnachricht aufnehmen"
 
+#: src/features/profile/ui/AnimatedAvatarCapture.tsx
+msgid "Recording failed. Try again."
+msgstr "Aufnahme fehlgeschlagen. Versuch es nochmal."
+
 #: src/features/messages/ui/VoiceNoteRecorder.tsx
 msgid "Recording voice note"
 msgstr "Sprachnachricht wird aufgenommen"
+
+#: src/features/profile/ui/AnimatedAvatarCapture.tsx
+msgid "Recording... hold still-ish."
+msgstr "Aufnahme läuft… halt möglichst still."
 
 #: src/features/onboarding/ui/MachineOnboardingFlow.tsx
 msgid "Recover from your phone"
@@ -9306,6 +9836,10 @@ msgstr "{0} entfernen"
 msgid "Remove {displayName}"
 msgstr "{displayName} entfernen"
 
+#: src/features/profile/ui/SelectedRecipientChip.tsx
+msgid "Remove {label}"
+msgstr "{label} entfernen"
+
 #: src/features/messages/ui/ComposerAttachments.tsx
 msgid "Remove {mediaLabel}"
 msgstr "{mediaLabel} entfernen"
@@ -9343,6 +9877,10 @@ msgstr "Aus Abschnitt entfernen"
 msgid "Remove from sidebar"
 msgstr "Aus der Seitenleiste entfernen"
 
+#: src/features/profile/ui/AvatarUpload.tsx
+msgid "Remove photo"
+msgstr "Foto entfernen"
+
 #: src/features/messages/ui/ComposerAttachments.tsx
 msgid "Remove spoiler"
 msgstr "Spoiler entfernen"
@@ -9359,6 +9897,18 @@ msgstr "Sprachnachricht entfernen"
 #: src/features/agents/ui/RestartDiffBadge.tsx
 msgid "removed"
 msgstr "entfernt"
+
+#: src/features/profile/ui/UserProfilePanel.tsx
+msgid "Removed {agentName} from My Agents."
+msgstr "{agentName} aus „Meine Agenten“ entfernt."
+
+#: src/features/profile/ui/UserProfileAgentManagementRows.tsx
+msgid "Removes the agent from every channel it belongs to"
+msgstr "Entfernt den Agenten aus jedem Kanal, zu dem er gehört"
+
+#: src/features/profile/ui/UserProfileAgentManagementRows.tsx
+msgid "Removes the local management record and saved agent key"
+msgstr "Entfernt den lokalen Verwaltungseintrag und den gespeicherten Agent-Schlüssel"
 
 #: src/features/settings/ui/SignOutSection.tsx
 msgid "Removes your identity key and all local app data from this device. Before signing out, create and test a password-protected key backup above — this cannot be undone."
@@ -9582,12 +10132,17 @@ msgstr "Antworten-an-Liste"
 msgid "Restart {0} to finish recovery"
 msgstr "Starte {0} neu, um die Wiederherstellung abzuschließen"
 
+#: src/features/profile/ui/UserProfilePrimaryActions.tsx
+msgid "Restart agent"
+msgstr "Agent neu starten"
+
 #: src/features/agents/managedAgentRuntimeStatus.ts
 #: src/features/agents/ui/AgentRuntimeAvatarControl.tsx
 msgid "Restart Agent"
 msgstr "Agent neu starten"
 
 #: src/features/agents/ui/RestartDiffBadge.tsx
+#: src/features/profile/ui/UserProfilePanelTabs.tsx
 msgid "Restart required"
 msgstr "Neustart erforderlich"
 
@@ -9603,6 +10158,10 @@ msgstr "neu starten zum Anwenden"
 #: src/features/channels/ui/useMembersSidebarActions.ts
 msgid "Restarted {0} in this community."
 msgstr "{0} in dieser Community neu gestartet."
+
+#: src/features/profile/ui/useAgentLifecycleActions.ts
+msgid "Restarted {restartedName}."
+msgstr "{restartedName} neu gestartet."
 
 #: src/features/agents/ui/AgentRuntimeAvatarControl.tsx
 msgid "Restarting Agent"
@@ -9644,6 +10203,14 @@ msgstr "Kanal wird wiederhergestellt …"
 msgid "Restoring..."
 msgstr "Wird wiederhergestellt …"
 
+#: src/features/profile/ui/AnimatedAvatarReviewNav.tsx
+msgid "Retake"
+msgstr "Neu aufnehmen"
+
+#: src/features/profile/ui/AnimatedAvatarReviewNav.tsx
+msgid "Retake the recording"
+msgstr "Aufnahme neu machen"
+
 #: src/features/agents/ui/ModelPicker.tsx
 #: src/features/channels/ui/ChannelWorkflowsSection.tsx
 #: src/features/home/ui/InboxDetailPane.tsx
@@ -9653,6 +10220,7 @@ msgstr "Wird wiederhergestellt …"
 #: src/features/messages/ui/MessageTimelineErrorCard.tsx
 #: src/features/onboarding/hooks.ts
 #: src/features/onboarding/ui/CommunityOnboardingFlow.tsx
+#: src/features/profile/avatarPresentationStore.ts
 #: src/features/projects/ui/ProjectDetailUnavailableState.tsx
 #: src/features/projects/ui/ProjectRepositoryUnavailableState.tsx
 #: src/features/projects/ui/ProjectsIssuesList.tsx
@@ -9809,6 +10377,9 @@ msgid "Running"
 msgstr "Läuft"
 
 #: src/features/agents/ui/ManagedAgentRow.tsx
+#: src/features/profile/ui/UserProfilePanelFields.tsx
+#: src/features/profile/ui/UserProfilePanelSections.tsx
+#: src/features/profile/ui/UserProfilePanelUtils.ts
 msgid "Runtime"
 msgstr "Runtime"
 
@@ -9904,6 +10475,11 @@ msgstr "Gespeichert. {restartedCount} Agent{0} neu gestartet.{1}"
 msgid "Saved. We couldn't verify against the latest revision just now — check History if a concurrent edit appears."
 msgstr "Gespeichert. Wir konnten gerade nicht gegen die neueste Version prüfen — sieh im Verlauf nach, falls eine parallele Bearbeitung auftaucht."
 
+#: src/features/profile/ui/ProfileAvatarEditor.tsx
+msgid "Saving"
+msgstr "Wird gespeichert"
+
+#: src/features/profile/ui/ProfileAvatarEditor.tsx
 #: src/features/settings/ui/ProfileSettingsCard.tsx
 msgid "Saving avatar"
 msgstr "Avatar wird gespeichert"
@@ -9932,6 +10508,10 @@ msgstr "Wird gespeichert…"
 #: src/features/onboarding/ui/DefaultConfigStep.tsx
 msgid "Saving…"
 msgstr "Wird gespeichert …"
+
+#: src/features/profile/ui/AnimatedAvatarCapture.helpers.ts
+msgid "Scale just past the color circle for a pop-out look."
+msgstr "Skalier knapp über den Farbkreis hinaus für einen Pop-out-Effekt."
 
 #: src/features/settings/ui/MobilePairingCard.tsx
 msgid "Scan QR code"
@@ -10205,6 +10785,7 @@ msgstr "Für „Meine Agenten“ ausgewählt"
 
 #: src/features/agents/lib/agentAccessWarning.ts
 #: src/features/agents/ui/RespondToField.tsx
+#: src/features/profile/ui/UserProfilePanelFields.tsx
 msgid "Selected people"
 msgstr "Ausgewählte Personen"
 
@@ -10242,6 +10823,7 @@ msgstr "Senden fehlgeschlagen: {0}"
 msgid "Send failed."
 msgstr "Senden fehlgeschlagen."
 
+#: src/features/profile/ui/ProfilePopover.tsx
 #: src/features/settings/ui/SendFeedbackDialog.tsx
 msgid "Send feedback"
 msgstr "Feedback senden"
@@ -10356,6 +10938,7 @@ msgstr "Richte diesen Agenten auf diesem Gerät ein, um ihn zu starten."
 msgid "Setting up your welcome team…"
 msgstr "Dein Willkommensteam wird eingerichtet …"
 
+#: src/features/profile/ui/ProfilePopover.tsx
 #: src/shared/lib/keyboard-shortcuts.ts
 msgid "Settings"
 msgstr "Einstellungen"
@@ -10432,6 +11015,10 @@ msgstr "Tastenkürzel"
 #: src/features/sidebar/ui/SidebarProjectsSection.tsx
 msgid "Show"
 msgstr "Anzeigen"
+
+#: src/features/profile/ui/UserProfilePanelTabs.tsx
+msgid "Show #{channelName} activity"
+msgstr "Aktivität von #{channelName} anzeigen"
 
 #: src/features/settings/ui/NotificationSettingsCard.tsx
 msgid "Show a Home badge for mentions and needs-action items in the sidebar."
@@ -10609,6 +11196,10 @@ msgstr "Anmeldung nötig"
 msgid "Sign-in unavailable"
 msgstr "Anmeldung nicht verfügbar"
 
+#: src/features/profile/ui/NostrBindConsentDialog.tsx
+msgid "Signed response copied. Paste it into the {productName} admin console."
+msgstr "Signierte Antwort kopiert. Füg sie in die {productName}-Adminkonsole ein."
+
 #: src/features/settings/ui/HostedCommunitiesSettingsCard.tsx
 msgid "Signing in…"
 msgstr "Anmeldung läuft …"
@@ -10621,6 +11212,10 @@ msgstr "Abmeldung läuft"
 #: src/features/settings/ui/SignOutSection.tsx
 msgid "Signing out…"
 msgstr "Abmeldung läuft …"
+
+#: src/features/profile/ui/NostrBindConsentDialog.tsx
+msgid "Signing…"
+msgstr "Wird signiert…"
 
 #: src/features/agents/ui/AgentCardMintDialog.tsx
 msgid "sk-…"
@@ -10735,6 +11330,7 @@ msgid "Start a huddle to talk to them."
 msgstr "Starte ein Huddle, um mit ihnen zu sprechen."
 
 #: src/features/agents/lib/managedAgentControlActions.ts
+#: src/features/profile/ui/UserProfilePrimaryActions.tsx
 msgid "Start agent"
 msgstr "Agent starten"
 
@@ -10755,6 +11351,10 @@ msgstr "Neue Identität beginnen"
 #: src/features/agents/ui/AgentInstanceEditDialog.tsx
 msgid "Start now"
 msgstr "Jetzt starten"
+
+#: src/features/profile/ui/UserProfilePanelFields.tsx
+msgid "Start on launch"
+msgstr "Beim Start starten"
 
 #: src/shared/lib/keyboard-shortcuts.ts
 msgid "Start or join a huddle in the current channel; leave when connected"
@@ -10781,6 +11381,11 @@ msgstr "Mit neuem Passwort beginnen"
 msgid "Started {0} in this community."
 msgstr "{0} in dieser Community gestartet."
 
+#: src/features/profile/ui/useAgentLifecycleActions.ts
+#: src/features/profile/ui/UserProfilePanel.tsx
+msgid "Started {agentName}."
+msgstr "{agentName} gestartet."
+
 #: src/features/projects/ui/ProjectOriginReference.tsx
 msgid "started from"
 msgstr "gestartet aus"
@@ -10793,6 +11398,10 @@ msgstr "privat gestartet mit"
 msgid "Starting Agent"
 msgstr "Agent wird gestartet"
 
+#: src/features/profile/ui/AnimatedAvatarCapture.tsx
+msgid "Starting camera"
+msgstr "Kamera wird gestartet"
+
 #: src/features/onboarding/ui/EncryptedBackupCreator.tsx
 msgid "Starting over lets you pick a new password and download a fresh backup file. Backups you saved earlier will still work — just use the password you created them with."
 msgstr "Wenn du neu beginnst, kannst du ein neues Passwort wählen und eine frische Backup-Datei herunterladen. Früher gespeicherte Backups funktionieren weiterhin — nutze dafür einfach das Passwort, mit dem du sie erstellt hast."
@@ -10804,6 +11413,7 @@ msgstr "Kopplung wird gestartet …"
 
 #: src/features/agents/ui/AgentSessionToolItem/SentMessageContextDialog.tsx
 #: src/features/agents/ui/ManagedAgentRow.tsx
+#: src/features/profile/ui/UserProfilePanelFields.tsx
 #: src/features/projects/ui/ProjectIssuesPanel.tsx
 #: src/features/projects/ui/ProjectsWorkItemTable.tsx
 #: src/features/projects/ui/ProjectWorkItemContextDetails.tsx
@@ -10814,6 +11424,10 @@ msgstr "Status"
 #: src/features/onboarding/ui/SetupStep.tsx
 msgid "Status unavailable"
 msgstr "Status nicht verfügbar"
+
+#: src/features/profile/ui/AnimatedAvatarReviewNav.tsx
+msgid "Still frame"
+msgstr "Standbild"
 
 #: src/features/agents/managedAgentRuntimeStatus.ts
 msgid "Stop Agent"
@@ -10849,9 +11463,17 @@ msgstr "{0} in dieser Community gestoppt."
 msgid "Stopped {0}."
 msgstr "{0} gestoppt."
 
+#: src/features/profile/ui/useAgentLifecycleActions.ts
+msgid "Stopped {stoppedName}."
+msgstr "{stoppedName} gestoppt."
+
 #: src/features/agents/managedAgentRuntimeStatus.ts
 msgid "Stopped by you"
 msgstr "Von dir gestoppt"
+
+#: src/features/profile/ui/UserProfileAgentManagementRows.tsx
+msgid "Stops any local agent process before deleting the record"
+msgstr "Stoppt alle lokalen Agent-Prozesse, bevor der Eintrag gelöscht wird"
 
 #: src/features/onboarding/ui/BackupStep.tsx
 msgid "Stored in private device storage"
@@ -11107,6 +11729,10 @@ msgstr "Diese Adresse ist frei."
 msgid "That Buzz address is already taken."
 msgstr "Diese Buzz-Adresse ist schon vergeben."
 
+#: src/features/profile/ui/NostrBindConsentDialog.tsx
+msgid "That code doesn't match. Check the code and try again."
+msgstr "Der Code stimmt nicht. Prüf den Code und versuch es nochmal."
+
 #: src/features/onboarding/ui/BackupTestFlow.tsx
 #: src/features/settings/ui/BackupTestFlow.tsx
 msgid "That doesn't look like a key backup file."
@@ -11307,6 +11933,10 @@ msgstr "Diese Funktionen laufen, werden aber noch verfeinert. Aktiviere sie, um 
 msgid "These settings apply to all agents unless you override them. Agent-specific settings always take priority. Changes may restart running agents."
 msgstr "Diese Einstellungen gelten für alle Agenten, außer du überschreibst sie. Agent-spezifische Einstellungen haben immer Vorrang. Änderungen können laufende Agenten neu starten."
 
+#: src/features/profile/ui/ArchiveConfirmDialog.tsx
+msgid "They won't appear in search, autocomplete, or when adding members"
+msgstr "Nicht mehr in der Suche, in der Autovervollständigung oder beim Hinzufügen von Mitgliedern sichtbar"
+
 #: src/features/agents/ui/buzzAgentModelTuningFields.tsx
 msgid "Thinking / Effort"
 msgstr "Denken / Aufwand"
@@ -11354,6 +11984,10 @@ msgstr "Dieser Agent ist für die Runtime \"{personaRuntimeId}\" konfiguriert, a
 msgid "This agent is in the community catalog. Your changes will be published when you save."
 msgstr "Dieser Agent ist im Community-Katalog. Deine Änderungen werden veröffentlicht, wenn du speicherst."
 
+#: src/features/profile/ui/UserProfilePanel.tsx
+msgid "This agent is managed by a team."
+msgstr "Dieser Agent wird von einem Team verwaltet."
+
 #: src/features/agents/lib/useAgentAvailability.ts
 msgid "This agent is present on the relay. Starting another instance is unavailable."
 msgstr "Dieser Agent ist auf dem Relay vorhanden. Eine weitere Instanz lässt sich nicht starten."
@@ -11390,6 +12024,10 @@ msgstr "Der OpenAI-Schlüssel dieses Agenten steht in der Prozessumgebung — ak
 #: src/features/settings/ui/BackupTestFlow.tsx
 msgid "This backup works"
 msgstr "Dieses Backup funktioniert"
+
+#: src/features/profile/ui/NostrBindConsentDialog.tsx
+msgid "This binding link has expired. Request a new one from the requesting app."
+msgstr "Dieser Bindungslink ist abgelaufen. Fordere in der anfragenden App einen neuen an."
 
 #: src/features/agents/ui/RespondToField.tsx
 msgid "This build disallows changing this setting."
@@ -11508,6 +12146,10 @@ msgstr "Diese Nachricht wurde bearbeitet"
 msgid "This model may not support {selectValue}. "
 msgstr "Dieses Modell unterstützt {selectValue} möglicherweise nicht. "
 
+#: src/features/profile/ui/ArchiveConfirmDialog.tsx
+msgid "This only affects <0>this space</0> — not their account anywhere else"
+msgstr "Das betrifft nur <0>diese Community</0> — nicht das Konto an anderer Stelle"
+
 #: src/features/onboarding/ui/IdentityRecoveryPairing.tsx
 msgid "This pairing code expired or lost its connection. Create a new code and try again."
 msgstr "Dieser Kopplungscode ist abgelaufen oder hat die Verbindung verloren. Erstelle einen neuen Code und versuche es noch einmal."
@@ -11531,6 +12173,10 @@ msgstr "Dieser Projekteintrag wurde nicht gefunden."
 #: src/features/projects/ui/ProjectChannelHome.tsx
 msgid "This project's channel could not be found."
 msgstr "Der Kanal dieses Projekts wurde nicht gefunden."
+
+#: src/features/profile/ui/UserProfilePanelPersonaSubmit.ts
+msgid "This provider"
+msgstr "Dieser Anbieter"
 
 #: src/features/agents/ui/WhereToRunSection.tsx
 msgid "This provider at"
@@ -11799,6 +12445,10 @@ msgstr "Versuch einen anderen Inhaber-Filter oder eine andere Sortierung."
 msgid "Try another search or create a new project."
 msgstr "Versuch eine andere Suche oder leg ein neues Projekt an."
 
+#: src/features/profile/ui/AnimatedAvatarCameraControls.tsx
+msgid "Try camera again"
+msgstr "Kamera nochmal versuchen"
+
 #: src/features/agents/ui/agentSessionTranscript.ts
 msgid "Turn error"
 msgstr "Turn-Fehler"
@@ -11810,6 +12460,14 @@ msgstr "Ausschalten"
 #: src/features/home/ui/InboxListPane.tsx
 msgid "Turn off Show unread only to see read activity."
 msgstr "Schalte „Nur ungelesene anzeigen“ aus, um gelesene Aktivität zu sehen."
+
+#: src/features/profile/ui/AnimatedAvatarControls.tsx
+msgid "Turn outline off"
+msgstr "Kontur ausschalten"
+
+#: src/features/profile/ui/AnimatedAvatarControls.tsx
+msgid "Turn outline on"
+msgstr "Kontur einschalten"
 
 #: src/features/agents/ui/personaLibraryCopy.ts
 msgid "Turn this off to remove the agent from teams and agent creation in this app."
@@ -11845,14 +12503,28 @@ msgstr "Wiederherstellen"
 msgid "Unarchive {displayName}?"
 msgstr "{displayName} wiederherstellen?"
 
+#: src/features/profile/ui/UserProfileAgentActions.tsx
+#: src/features/profile/ui/UserProfileAgentManagementRows.tsx
+msgid "Unarchive agent"
+msgstr "Agent aus dem Archiv holen"
+
 #: src/features/channels/ui/ChannelManagementModerationActions.tsx
 #: src/features/channels/ui/ChannelManagementSheet.tsx
 msgid "Unarchive channel"
 msgstr "Kanal wiederherstellen"
 
+#: src/features/profile/ui/UserProfileAgentActions.tsx
+msgid "Unarchive identity"
+msgstr "Identität aus dem Archiv holen"
+
 #: src/features/settings/ui/HostedCommunitiesSettingsCard.tsx
 msgid "Unarchiving community…"
 msgstr "Community wird wiederhergestellt …"
+
+#: src/features/profile/ui/UserProfileAgentActions.tsx
+#: src/features/profile/ui/UserProfileAgentManagementRows.tsx
+msgid "Unarchiving…"
+msgstr "Wird aus dem Archiv geholt…"
 
 #: src/features/projects/ui/IssueAssigneesRow.tsx
 msgid "Unassign {label}"
@@ -11886,6 +12558,10 @@ msgstr "Erledigt rückgängig machen"
 #: src/features/messages/ui/ComposerImageEditor.tsx
 msgid "Undo last stroke"
 msgstr "Letzten Strich rückgängig machen"
+
+#: src/features/profile/ui/UserProfilePrimaryActions.tsx
+msgid "Unfollow"
+msgstr "Nicht mehr folgen"
 
 #: src/features/messages/ui/MessageActionBar.tsx
 msgid "Unfollow thread"
@@ -11940,6 +12616,10 @@ msgstr "Unbekannter öffentlicher Schlüssel"
 #: src/features/messages/ui/DraftsPanel.tsx
 msgid "Unknown time"
 msgstr "Unbekannte Zeit"
+
+#: src/features/profile/ui/UserProfileAgentManagementRows.tsx
+msgid "Unless the agent is known to be Offline, {productName} first requests shutdown through a channel when available. A failed request cancels deletion. The remote process may still be running even after a successful request."
+msgstr "Solange der Agent nicht bekanntermaßen offline ist, fordert {productName} das Herunterfahren zuerst über einen Kanal an, falls verfügbar. Eine fehlgeschlagene Anfrage bricht das Löschen ab. Der Remote-Prozess kann auch nach einer erfolgreichen Anfrage noch laufen."
 
 #: src/features/messages/lib/useLinkEditor.tsx
 msgid "Unlink"
@@ -12068,6 +12748,10 @@ msgstr "Update-Status"
 msgid "Update this channel template configuration."
 msgstr "Passe diese Kanalvorlage an."
 
+#: src/features/profile/ui/ProfilePopover.tsx
+msgid "Update your status"
+msgstr "Status aktualisieren"
+
 #: src/features/projects/ui/ProjectsWorkItemTable.tsx
 msgid "Updated"
 msgstr "Aktualisiert"
@@ -12139,11 +12823,17 @@ msgstr "{0} wird hochgeladen"
 msgid "Uploading {assetLabel}"
 msgstr "{assetLabel} wird hochgeladen"
 
+#: src/features/profile/ui/AnimatedAvatarCapture.tsx
+msgid "Uploading animated avatar"
+msgstr "Animierter Avatar wird hochgeladen"
+
 #: src/features/onboarding/ui/AvatarStep.tsx
 msgid "Uploading avatar"
 msgstr "Avatar wird hochgeladen"
 
 #: src/features/agents/ui/AgentDefinitionDialogFooter.tsx
+#: src/features/profile/ui/AvatarUpload.tsx
+#: src/features/profile/ui/ProfileAvatarEditor.tsx
 msgid "Uploading..."
 msgstr "Wird hochgeladen…"
 
@@ -12159,7 +12849,12 @@ msgstr "Verwende {CHANNEL_NAME_TOKEN} und {TEMPLATE_NAME_TOKEN} als Platzhalter.
 msgid "Use {colorName} accent"
 msgstr "Akzentfarbe {colorName} verwenden"
 
+#: src/features/profile/ui/AnimatedAvatarBackdropPanel.tsx
+msgid "Use {swatch} backdrop"
+msgstr "Hintergrund {swatch} verwenden"
+
 #: src/features/agents/ui/AgentCreationPreview.tsx
+#: src/features/profile/ui/ProfileAvatarEditor.tsx
 msgid "Use {swatch} background"
 msgstr "{swatch}-Hintergrund verwenden"
 
@@ -12209,13 +12904,29 @@ msgstr "Vorhandenen Schlüssel verwenden"
 msgid "Use app default"
 msgstr "App-Standard verwenden"
 
+#: src/features/profile/ui/AnimatedAvatarCapture.tsx
+msgid "Use as avatar"
+msgstr "Als Avatar verwenden"
+
+#: src/features/profile/ui/AvatarCustomColorPanel.tsx
+msgid "Use color"
+msgstr "Farbe verwenden"
+
 #: src/features/agents/ui/AgentAiConfigurationMode.tsx
 msgid "Use harness defaults"
 msgstr "Harness-Standardwerte verwenden"
 
+#: src/features/profile/ui/AnimatedAvatarCameraPicker.tsx
+msgid "Use iPhone"
+msgstr "iPhone verwenden"
+
 #: src/features/settings/ui/HostedCommunitiesSettingsCard.tsx
 msgid "Use lowercase letters, numbers, and single hyphens."
 msgstr "Nutze Kleinbuchstaben, Zahlen und einzelne Bindestriche."
+
+#: src/features/profile/ui/AnimatedAvatarCameraPicker.tsx
+msgid "Use this computer"
+msgstr "Diesen Computer verwenden"
 
 #: src/features/onboarding/ui/OnboardingFlow.tsx
 msgid "Use your existing key"
@@ -12292,6 +13003,10 @@ msgstr "Variablenwert"
 msgid "VARIABLE_NAME"
 msgstr "VARIABLE_NAME"
 
+#: src/features/profile/ui/NostrBindConsentDialog.tsx
+msgid "Verification code"
+msgstr "Verifizierungscode"
+
 #: src/features/settings/ui/MobilePairingCard.tsx
 msgid "Verification code {code} ready. Check that it matches on your mobile device, then confirm the codes match."
 msgstr "Bestätigungscode {code} bereit. Prüfe, ob er auf deinem Mobilgerät übereinstimmt, und bestätige dann die Übereinstimmung."
@@ -12299,6 +13014,19 @@ msgstr "Bestätigungscode {code} bereit. Prüfe, ob er auf deinem Mobilgerät ü
 #: src/features/settings/ui/MobilePairingCard.tsx
 msgid "Verification code {code} ready. Enter this code in the Buzz app on your phone."
 msgstr "Bestätigungscode {code} bereit. Gib diesen Code in der Buzz-App auf deinem Handy ein."
+
+#. placeholder {0}: index + 1
+#: src/features/profile/ui/NostrBindConsentDialog.tsx
+msgid "Verification code digit {0} of {VERIFICATION_CODE_LENGTH}"
+msgstr "Stelle {0} von {VERIFICATION_CODE_LENGTH} des Verifizierungscodes"
+
+#: src/features/profile/ui/SelectedRecipientChip.tsx
+msgid "Verify {label}"
+msgstr "{label} verifizieren"
+
+#: src/features/profile/ui/SelectedRecipientChip.tsx
+msgid "Verify {label} public key"
+msgstr "Öffentlichen Schlüssel von {label} verifizieren"
 
 #: src/features/onboarding/ui/BackupTestFlow.tsx
 #: src/features/settings/ui/BackupTestFlow.tsx
@@ -12333,6 +13061,10 @@ msgstr "Profil von {label} anzeigen"
 #: src/features/channels/ui/MembersSidebarMemberCard.tsx
 msgid "View activity"
 msgstr "Aktivität ansehen"
+
+#: src/features/profile/ui/UserProfilePopover.tsx
+msgid "View activity log"
+msgstr "Aktivitätsprotokoll ansehen"
 
 #: src/features/settings/ui/NotificationSettingsCard.tsx
 msgid "View all"
@@ -12438,6 +13170,7 @@ msgstr "Du siehst <0>#{0}</0>"
 
 #: src/features/channels/ui/ChannelManagementSheet.tsx
 #: src/features/channels/ui/ChannelPermissionsSettings.tsx
+#: src/features/profile/ui/UserProfilePanelTabs.tsx
 #: src/features/projects/ui/ProjectChannelRequestDialog.tsx
 msgid "Visibility"
 msgstr "Sichtbarkeit"
@@ -12445,6 +13178,10 @@ msgstr "Sichtbarkeit"
 #: src/features/channels/ui/ChannelPermissionsSettings.tsx
 msgid "Visibility: {visibilityLabel}"
 msgstr "Sichtbarkeit: {visibilityLabel}"
+
+#: src/features/profile/ui/UserProfilePanelFocusedViews.tsx
+msgid "Visible memberships appear as this agent joins channels."
+msgstr "Sichtbare Mitgliedschaften erscheinen, sobald dieser Agent Kanälen beitritt."
 
 #: src/features/agents/ui/AgentDefinitionDialog.tsx
 msgid "Visit Settings > Agents to set it up."
@@ -12524,6 +13261,11 @@ msgstr "wurde erstellt"
 msgid "was created successfully."
 msgstr "wurde erfolgreich erstellt."
 
+#: src/features/profile/ui/UserProfilePopover.tsx
+#: src/features/profile/ui/UserProfilePrimaryActions.tsx
+msgid "Wave"
+msgstr "Winken"
+
 #: src/features/messages/ui/AudioMessageAttachment.tsx
 msgid "Waveform preview unavailable. Playback may still work."
 msgstr "Wellenform-Vorschau nicht verfügbar. Die Wiedergabe funktioniert möglicherweise trotzdem."
@@ -12539,6 +13281,10 @@ msgstr "Die Kopplung konnte nicht gestartet werden. Versuch es noch einmal."
 #: src/features/agents/ui/AgentConfigFields.tsx
 msgid "We couldn’t validate this API key. Check the key or your connection and try again."
 msgstr "Wir konnten diesen API-Schlüssel nicht prüfen. Prüfe den Schlüssel oder deine Verbindung und versuche es erneut."
+
+#: src/features/profile/ui/UserProfilePanelTabs.tsx
+msgid "What archived means"
+msgstr "Was archiviert bedeutet"
 
 #: src/features/projects/ui/PullRequestReviewCard.tsx
 msgid "What looks good?"
@@ -12629,6 +13375,7 @@ msgid "White"
 msgstr "Weiß"
 
 #: src/features/agents/ui/RespondToField.tsx
+#: src/features/profile/ui/UserProfilePanelFields.tsx
 msgid "Who can send instructions"
 msgstr "Wer Anweisungen senden kann"
 
@@ -12648,6 +13395,10 @@ msgstr "erhält den privaten Schlüssel deines Agenten. Nutze nur Anbieter aus v
 #: src/features/agents/ui/useManagedAgentActions.ts
 msgid "Will start {0} automatically when the desktop app opens."
 msgstr "Startet {0} automatisch, wenn die Desktop-App geöffnet wird."
+
+#: src/features/profile/ui/UserProfilePanel.tsx
+msgid "Will start {agentName} automatically."
+msgstr "{agentName} wird künftig automatisch gestartet."
 
 #: src/features/settings/ui/HarnessesSettingsPanel.tsx
 msgid "Windows tools required by supported agents."
@@ -12675,6 +13426,14 @@ msgstr "Arbeitet"
 msgid "Working in #"
 msgstr "Arbeitet in #"
 
+#: src/features/profile/ui/UserProfilePopover.tsx
+msgid "Working in #{name} · {elapsed}"
+msgstr "Arbeitet in #{name} · {elapsed}"
+
+#: src/features/profile/ui/UserProfilePanelFocusedViews.tsx
+msgid "Working…"
+msgstr "Läuft…"
+
 #: src/features/agents/ui/agentSessionTranscriptHelpers.ts
 msgid "Workspace"
 msgstr "Arbeitsbereich"
@@ -12695,11 +13454,16 @@ msgstr "Der Coding-Agent von xAI, über seinen ACP-Einstiegspunkt mit {productNa
 msgid "Yellow"
 msgstr "Gelb"
 
+#: src/features/profile/ui/UserProfilePanelFields.tsx
+msgid "Yes"
+msgstr "Ja"
+
 #: src/shared/lib/datetime.ts
 msgid "Yesterday"
 msgstr "Gestern"
 
 #: src/features/messages/ui/DraftDetailPane.tsx
+#: src/features/profile/ui/AnimatedAvatarReviewNav.tsx
 msgid "You"
 msgstr "Du"
 
@@ -12710,6 +13474,10 @@ msgstr "Du ("
 #: src/features/agents/ui/useSnapshotSendController.ts
 msgid "You are currently timed out and cannot send messages."
 msgstr "Du bist gerade im Timeout und kannst keine Nachrichten senden."
+
+#: src/features/profile/ui/ArchiveConfirmDialog.tsx
+msgid "You can also delete this agent from the profile settings menu if you want to remove the agent instead of hiding it."
+msgstr "Du kannst diesen Agenten auch über das Profileinstellungsmenü löschen, wenn du ihn entfernen statt ausblenden willst."
 
 #: src/features/agents/ui/RespondToField.tsx
 msgid "You can always use this agent."
@@ -12730,6 +13498,10 @@ msgstr "Du kannst 5 Minuten lang eine weitere Kopie herunterladen."
 #: src/features/messages/ui/NonMemberMentionDialog.tsx
 msgid "You can still send without inviting them."
 msgstr "Du kannst trotzdem senden, ohne sie einzuladen."
+
+#: src/features/profile/ui/ArchiveConfirmDialog.tsx
+msgid "You can unarchive them at any time to restore them"
+msgstr "Du kannst sie jederzeit aus dem Archiv holen, um sie wiederherzustellen"
 
 #: src/features/projects/lib/projectGitError.ts
 msgid "You need access to the repository’s channel before you can clone it."
@@ -12816,6 +13588,10 @@ msgstr "Deine Communitys"
 #: src/features/agents/lib/agentAccessWarning.ts
 msgid "your computer, including files, accounts, and connected tools"
 msgstr "deinen Computer, einschließlich Dateien, Konten und verbundener Tools"
+
+#: src/features/profile/avatarPresentationStore.ts
+msgid "Your default avatar is showing instead."
+msgstr "Stattdessen wird dein Standard-Avatar angezeigt."
 
 #: src/features/onboarding/ui/DownloadKeyStep.tsx
 msgid "Your file and password can restore your identity."

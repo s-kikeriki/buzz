@@ -1,3 +1,5 @@
+import { i18n } from "@lingui/core";
+import { msg } from "@lingui/core/macro";
 import * as React from "react";
 import { isRelayRemovedError } from "@/features/agents/managedAgentRelayCleanup";
 import { toast } from "sonner";
@@ -470,14 +472,17 @@ export function UserProfilePanel({
       } else if (created.spawnError) {
         toast.error(created.spawnError);
       } else {
-        toast.success(`Started ${created.agent.name}.`);
+        const agentName = created.agent.name;
+        toast.success(i18n._(msg`Started ${agentName}.`));
       }
       if (created.profileSyncError) {
         toast.warning(created.profileSyncError);
       }
     } catch (error) {
       toast.error(
-        error instanceof Error ? error.message : "Failed to start agent.",
+        error instanceof Error
+          ? error.message
+          : i18n._(msg`Failed to start agent.`),
       );
     }
   }, [createManagedAgentForPersona, resolvedPersona]);
@@ -490,16 +495,17 @@ export function UserProfilePanel({
         pubkey: managedAgent.pubkey,
         startOnAppLaunch: !managedAgent.startOnAppLaunch,
       });
+      const agentName = updated.name;
       toast.success(
         updated.startOnAppLaunch
-          ? `Will start ${updated.name} automatically.`
-          : `${updated.name} will stay manual-start only.`,
+          ? i18n._(msg`Will start ${agentName} automatically.`)
+          : i18n._(msg`${agentName} will stay manual-start only.`),
       );
     } catch (error) {
       toast.error(
         error instanceof Error
           ? error.message
-          : "Failed to update startup preference.",
+          : i18n._(msg`Failed to update startup preference.`),
       );
     }
   }, [managedAgent, startOnLaunchMutation.mutateAsync]);
@@ -511,11 +517,14 @@ export function UserProfilePanel({
       const result = await deleteManagedAgentRecord(managedAgent);
       if (result.cancelled) return;
 
-      toast.success(`Deleted ${managedAgent.name}.`);
+      const agentName = managedAgent.name;
+      toast.success(i18n._(msg`Deleted ${agentName}.`));
       onClose();
     } catch (error) {
       toast.error(
-        error instanceof Error ? error.message : "Failed to delete agent.",
+        error instanceof Error
+          ? error.message
+          : i18n._(msg`Failed to delete agent.`),
       );
     }
   }, [deleteManagedAgentRecord, managedAgent, onClose]);
@@ -575,18 +584,21 @@ export function UserProfilePanel({
           id: resolvedPersona.id,
           active: false,
         });
-        toast.success(`Removed ${resolvedPersona.displayName} from My Agents.`);
+        const agentName = resolvedPersona.displayName;
+        toast.success(i18n._(msg`Removed ${agentName} from My Agents.`));
         onClose();
       } catch (error) {
         toast.error(
-          error instanceof Error ? error.message : "Failed to delete agent.",
+          error instanceof Error
+            ? error.message
+            : i18n._(msg`Failed to delete agent.`),
         );
       }
       return;
     }
 
     if (resolvedPersona.sourceTeam) {
-      toast.error("This agent is managed by a team.");
+      toast.error(i18n._(msg`This agent is managed by a team.`));
       return;
     }
 
@@ -601,19 +613,22 @@ export function UserProfilePanel({
   const handleConfirmDeletePersona = React.useCallback(
     async (personaToConfirm: AgentPersona) => {
       if (personaToConfirm.sourceTeam) {
-        toast.error("This agent is managed by a team.");
+        toast.error(i18n._(msg`This agent is managed by a team.`));
         setPersonaToDelete(null);
         return;
       }
 
       try {
         await deletePersonaMutation.mutateAsync(personaToConfirm.id);
-        toast.success(`Deleted ${personaToConfirm.displayName}.`);
+        const agentName = personaToConfirm.displayName;
+        toast.success(i18n._(msg`Deleted ${agentName}.`));
         setPersonaToDelete(null);
         onClose();
       } catch (error) {
         toast.error(
-          error instanceof Error ? error.message : "Failed to delete agent.",
+          error instanceof Error
+            ? error.message
+            : i18n._(msg`Failed to delete agent.`),
         );
       }
     },
@@ -634,12 +649,16 @@ export function UserProfilePanel({
 
   const handleAddedToChannel = React.useCallback(
     (channel: Channel, result: AttachManagedAgentToChannelResult) => {
-      if (result.started) {
-        toast.success(`Added ${result.agent.name} to ${channel.name}.`);
-      } else if (result.membershipAdded) {
-        toast.success(`Added ${result.agent.name} to ${channel.name}.`);
+      // Hoisted locals, not `result.agent.name` inline: lingui names a
+      // placeholder after the expression it interpolates, and a dot inside
+      // ICU braces makes the whole message invalid — lingui then drops it
+      // from every compiled catalogue and the string renders English.
+      const agentName = result.agent.name;
+      const channelName = channel.name;
+      if (result.started || result.membershipAdded) {
+        toast.success(i18n._(msg`Added ${agentName} to ${channelName}.`));
       } else {
-        toast.success(`${result.agent.name} is already in ${channel.name}.`);
+        toast.success(i18n._(msg`${agentName} is already in ${channelName}.`));
       }
       void managedAgentsQuery.refetch();
       void relayAgentsQuery.refetch();
@@ -762,6 +781,7 @@ export function UserProfilePanel({
     {
       agentSettingsMenu,
       effectivePubkey,
+      i18n,
       ownerPubkey: profile?.ownerPubkey,
       logCopyValue: isDiagnosticsLikeView ? managedAgentLogContent : null,
       logSubtitle: logHeaderSubtitle,

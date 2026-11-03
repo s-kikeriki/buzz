@@ -66,10 +66,15 @@ let React;
 let render;
 let act;
 let ProfileAvatar;
+// `ProfileAvatar` reads the avatar `alt` and the upload-pending label through
+// `useLingui()`, which throws without a provider — imported lazily like the
+// rest so the JSDOM globals above are installed first.
+let withI18n;
 
 before(async () => {
   React = (await import("react")).default;
   ({ render, act } = await import("@testing-library/react"));
+  ({ withI18n } = await import("@/testing/withI18n.mjs"));
   ({ ProfileAvatar } = await import("./ProfileAvatar.tsx"));
 });
 
@@ -80,7 +85,7 @@ const networkAssignments = () =>
 
 async function renderAvatar(props) {
   await act(async () => {
-    render(React.createElement(ProfileAvatar, props));
+    render(withI18n(React.createElement(ProfileAvatar, props)));
   });
 }
 

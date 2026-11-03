@@ -1,3 +1,6 @@
+import type { I18n } from "@lingui/core";
+import { msg } from "@lingui/core/macro";
+import { Trans } from "@lingui/react/macro";
 import type { ReactNode } from "react";
 
 import { AgentManagementMarker } from "@/features/agents/ui/OtherSetupAgentMarker";
@@ -14,9 +17,15 @@ import {
 } from "@/shared/layout/AuxiliaryPanel";
 import { Button } from "@/shared/ui/button";
 
+/**
+ * `i18n` is a required parameter, not a module import: this builder runs on a
+ * render path, and a module-scope default would let a caller resolve the
+ * header once and freeze it in the boot locale.
+ */
 export function getUserProfilePanelHeaderContent({
   agentSettingsMenu,
   effectivePubkey,
+  i18n,
   ownerPubkey,
   logCopyValue,
   logSubtitle,
@@ -27,6 +36,7 @@ export function getUserProfilePanelHeaderContent({
 }: {
   agentSettingsMenu: ReactNode;
   effectivePubkey: string | null;
+  i18n: I18n;
   ownerPubkey?: string | null;
   logCopyValue?: string | null;
   logSubtitle?: string | null;
@@ -35,13 +45,13 @@ export function getUserProfilePanelHeaderContent({
   view: ProfilePanelView;
   viewerIsOwner: boolean;
 }) {
-  const title = PROFILE_PANEL_VIEW_TITLES[view];
+  const title = i18n._(PROFILE_PANEL_VIEW_TITLES[view]);
   const shouldShowLogDetails =
     (view === "diagnostics" || view === "logs") && Boolean(logSubtitle);
   const headerLeftContent = (
     <AuxiliaryPanelHeaderGroup
       align={shouldShowLogDetails ? "start" : "center"}
-      backButtonAriaLabel="Back to profile"
+      backButtonAriaLabel={i18n._(msg`Back to profile`)}
       backButtonTestId="user-profile-panel-back"
       onBack={view !== "summary" ? onBack : undefined}
     >
@@ -71,7 +81,7 @@ export function getUserProfilePanelHeaderContent({
       {view === "summary" ? agentSettingsMenu : null}
       {view === "summary" && onEditAgent ? (
         <Button
-          aria-label="Edit agent"
+          aria-label={i18n._(msg`Edit agent`)}
           className="text-sm"
           data-testid="user-profile-header-edit-agent"
           onClick={onEditAgent}
@@ -79,14 +89,14 @@ export function getUserProfilePanelHeaderContent({
           type="button"
           variant="ghost"
         >
-          Edit
+          <Trans>Edit</Trans>
         </Button>
       ) : null}
       {shouldShowLogDetails ? (
         <CopyButton
           className="text-muted-foreground hover:text-foreground"
           iconOnly
-          label="Copy log"
+          label={i18n._(msg`Copy log`)}
           size="icon"
           value={logCopyValue ?? ""}
           variant="ghost"

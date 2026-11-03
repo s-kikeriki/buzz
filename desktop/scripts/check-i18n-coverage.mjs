@@ -545,6 +545,50 @@ const CONVERTED_FILES = [
   // stop being module-level strings — the first takes `i18n` as a required
   // parameter, the second became descriptors resolved per render.
   "src/features/onboarding/ui/SetupStep.tsx",
+  // Tranche: the profile panel, popover and avatar editor — the screens a
+  // person reaches by clicking a name anywhere in the app.
+  //
+  // `avatarPresentationStore.ts`, `AnimatedAvatarCapture.helpers.ts`,
+  // `UserProfilePanelUtils.ts`, `UserProfilePanelPersonaSubmit.ts`,
+  // `useAgentLifecycleActions.ts` and `useProfileInteractionActions.ts` are
+  // libraries, not UI, and are listed because they *produce* copy: the panel
+  // titles, the retry toast, the framing tip and every agent lifecycle
+  // message come from there and appear in no JSX node.
+  "src/features/profile/avatarPresentationStore.ts",
+  "src/features/profile/ui/AnimatedAvatarBackdropPanel.tsx",
+  "src/features/profile/ui/AnimatedAvatarCameraControls.tsx",
+  "src/features/profile/ui/AnimatedAvatarCameraPicker.tsx",
+  "src/features/profile/ui/AnimatedAvatarCapture.helpers.ts",
+  "src/features/profile/ui/AnimatedAvatarCapture.tsx",
+  "src/features/profile/ui/AnimatedAvatarControls.tsx",
+  "src/features/profile/ui/AnimatedAvatarReviewNav.tsx",
+  "src/features/profile/ui/ArchiveConfirmDialog.tsx",
+  "src/features/profile/ui/AvatarCustomColorPanel.tsx",
+  "src/features/profile/ui/AvatarUpload.tsx",
+  "src/features/profile/ui/MaskedAvatarBadgeFrame.tsx",
+  "src/features/profile/ui/NostrBindConsentDialog.tsx",
+  "src/features/profile/ui/ProfileAvatar.tsx",
+  "src/features/profile/ui/ProfileAvatarEditor.tsx",
+  "src/features/profile/ui/ProfileAvatarModeTabs.tsx",
+  "src/features/profile/ui/ProfileInstancesSection.tsx",
+  "src/features/profile/ui/ProfilePopover.tsx",
+  "src/features/profile/ui/SelectedRecipientChip.tsx",
+  "src/features/profile/ui/UserProfileAgentActions.tsx",
+  "src/features/profile/ui/UserProfileAgentManagementRows.tsx",
+  "src/features/profile/ui/UserProfilePanel.tsx",
+  "src/features/profile/ui/UserProfilePanelAgentDetails.tsx",
+  "src/features/profile/ui/UserProfilePanelFields.tsx",
+  "src/features/profile/ui/UserProfilePanelFocusedViews.tsx",
+  "src/features/profile/ui/UserProfilePanelHeaderContent.tsx",
+  "src/features/profile/ui/UserProfilePanelPersonaSubmit.ts",
+  "src/features/profile/ui/UserProfilePanelSections.tsx",
+  "src/features/profile/ui/UserProfilePanelTabs.tsx",
+  "src/features/profile/ui/UserProfilePanelUtils.ts",
+  "src/features/profile/ui/UserProfilePopover.tsx",
+  "src/features/profile/ui/UserProfilePrimaryActions.tsx",
+  "src/features/profile/ui/UserProfileSnapshotExportDialog.tsx",
+  "src/features/profile/ui/useAgentLifecycleActions.ts",
+  "src/features/profile/ui/useProfileInteractionActions.ts",
 ];
 
 /**
@@ -632,6 +676,17 @@ const OVERRIDES = new Map([
       "twin of the animated mention. A name, not copy — translating it would " +
       "announce an agent that does not exist. The visible half renders the " +
       "same handle from `WELCOME_PERSONA_NAMES`.",
+  ],
+  [
+    "src/features/profile/ui/AvatarUpload.tsx:196",
+    "Example URL showing the required shape of a direct image link. " +
+      "`example.com` is reserved for exactly this and is not prose.",
+  ],
+  [
+    "src/features/profile/ui/MaskedAvatarBadgeFrame.tsx:577",
+    "An SVG circle path, inlined into the CSS mask next to " +
+      "`ROUNDED_SQUIRCLE_PATH`. Geometry, not words — the detector sees the " +
+      "`A`/`M`/`Z` path commands as letters.",
   ],
 ]);
 

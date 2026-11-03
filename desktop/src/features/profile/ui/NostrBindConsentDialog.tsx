@@ -1,3 +1,6 @@
+import { i18n } from "@lingui/core";
+import { msg } from "@lingui/core/macro";
+import { Trans, useLingui } from "@lingui/react/macro";
 import * as DialogPrimitive from "@radix-ui/react-dialog";
 import { openUrl } from "@tauri-apps/plugin-opener";
 import { ChevronDown } from "lucide-react";
@@ -5,6 +8,7 @@ import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import * as React from "react";
 import { toast } from "sonner";
 
+import { BRAND } from "@/shared/branding/brand";
 import { getIdentity } from "@/shared/api/tauriIdentity";
 import type { Identity } from "@/shared/api/types";
 import type { NostrBindDeepLinkPayload } from "@/shared/deep-link";
@@ -18,16 +22,22 @@ import { Button } from "@/shared/ui/button";
 import { StartupWindowDragRegion } from "@/shared/ui/StartupWindowDragRegion";
 import { writeTextToClipboard } from "@/shared/lib/clipboard";
 
-const COPY_SUCCESS_MESSAGE =
-  "Signed response copied. Paste it into the Buzz admin console.";
-const PREVIEW_COPY_SUCCESS_MESSAGE = "Preview response copied.";
-const COPY_FAILURE_MESSAGE = "Buzz couldn't access the clipboard. Try again.";
-const EXPIRED_LINK_MESSAGE =
-  "This binding link has expired. Request a new one from the requesting app.";
+const { productName } = BRAND;
+/**
+ * Descriptors, not strings: this module is evaluated once at import, so a
+ * plain string would freeze each message in whatever locale booted first.
+ * Every call site resolves them with `i18n._()`.
+ *
+ * Three of these said "Buzz" rather than the configured product name — on a
+ * screen a person reaches while binding their identity from another app.
+ */
+const COPY_SUCCESS_MESSAGE = msg`Signed response copied. Paste it into the ${productName} admin console.`;
+const PREVIEW_COPY_SUCCESS_MESSAGE = msg`Preview response copied.`;
+const COPY_FAILURE_MESSAGE = msg`${productName} couldn't access the clipboard. Try again.`;
+const EXPIRED_LINK_MESSAGE = msg`This binding link has expired. Request a new one from the requesting app.`;
 const VERIFICATION_CODE_LENGTH = 6;
 const VERIFICATION_CODE_DIGIT_KEYS = ["1", "2", "3", "4", "5", "6"] as const;
-const VERIFICATION_CODE_MISMATCH_MESSAGE =
-  "That code doesn't match. Check the code and try again.";
+const VERIFICATION_CODE_MISMATCH_MESSAGE = msg`That code doesn't match. Check the code and try again.`;
 const COPY_BUTTON_LABEL_CLASS =
   "col-start-1 row-start-1 transition-[opacity,transform] duration-150 ease-[cubic-bezier(0.23,1,0.32,1)] motion-reduce:translate-y-0 motion-reduce:duration-0";
 const NOSTR_BIND_PREVIEW_PAYLOAD: NostrBindDeepLinkPayload = {
@@ -138,21 +148,34 @@ async function returnSignedResponseToBrowser(
     return null;
   } catch (error) {
     console.warn("return signed nostr binding response failed:", error);
-    return "Could not open the browser. Copy the response below to finish manually.";
+    return i18n._(
+      msg`Could not open the browser. Copy the response below to finish manually.`,
+    );
   }
 }
 
+/**
+ * `isCopied` is a boolean, not the rendered label.
+ *
+ * This used to take the label string and decide which of the two stacked
+ * spans was visible by comparing it to the literal `"Copy response"`. Once
+ * the labels are translated that comparison can only ever be false, so the
+ * button would animate to blank in German. The state the animation depends on
+ * is the state, not its copy.
+ */
 function SignedResponseControls({
   copyFailed,
-  copyLabel,
+  isCopied,
   onCopy,
   signedResponse,
 }: {
   copyFailed: boolean;
-  copyLabel: string;
+  isCopied: boolean;
   onCopy: () => void;
   signedResponse: string;
 }) {
+  const { t } = useLingui();
+  const copyLabel = isCopied ? t`Copied` : t`Copy response`;
   return (
     <div className="space-y-4" data-testid="nostr-bind-manual-fallback-content">
       <pre
@@ -166,7 +189,7 @@ function SignedResponseControls({
 
       {copyFailed ? (
         <p className="w-full rounded-md border border-destructive/30 bg-destructive/10 px-3 py-2 text-left text-sm text-destructive">
-          {COPY_FAILURE_MESSAGE}
+          {i18n._(COPY_FAILURE_MESSAGE)}
         </p>
       ) : null}
 
@@ -187,22 +210,22 @@ function SignedResponseControls({
           <span
             className={cn(
               COPY_BUTTON_LABEL_CLASS,
-              copyLabel === "Copy response"
-                ? "translate-y-0 opacity-100"
-                : "-translate-y-0.5 opacity-0",
+              isCopied
+                ? "-translate-y-0.5 opacity-0"
+                : "translate-y-0 opacity-100",
             )}
           >
-            Copy response
+            <Trans>Copy response</Trans>
           </span>
           <span
             className={cn(
               COPY_BUTTON_LABEL_CLASS,
-              copyLabel === "Copied"
+              isCopied
                 ? "translate-y-0 opacity-100"
                 : "translate-y-0.5 opacity-0",
             )}
           >
-            Copied
+            <Trans>Copied</Trans>
           </span>
         </span>
       </Button>
@@ -211,6 +234,7 @@ function SignedResponseControls({
 }
 
 export function NostrBindConsentDialog() {
+  const { t } = useLingui();
   const isPreview = isNostrBindPreviewEnabled();
   const [payload, setPayload] = React.useState<NostrBindDeepLinkPayload | null>(
     isPreview ? NOSTR_BIND_PREVIEW_PAYLOAD : null,
@@ -245,8 +269,7 @@ export function NostrBindConsentDialog() {
     enteredVerificationCode.length === VERIFICATION_CODE_LENGTH;
   const isVerificationCodeValid =
     payload !== null && enteredVerificationCode === payload.verificationCode;
-  const copyButtonLabel = isSigning ? "Signing…" : "Continue";
-  const finishCopyButtonLabel = isCopied ? "Copied" : "Copy response";
+  const copyButtonLabel = isSigning ? t`Signing…` : t`Continue`;
 
   const clearCopiedState = React.useCallback(() => {
     if (copiedTimerRef.current) {
@@ -298,7 +321,9 @@ export function NostrBindConsentDialog() {
         .catch((error) => {
           console.warn("get_identity for nostr bind failed:", error);
           setIdentity(null);
-          setError("Could not load the current Buzz identity.");
+          setError(
+            i18n._(msg`Could not load the current ${productName} identity.`),
+          );
         });
     });
 
@@ -515,7 +540,7 @@ export function NostrBindConsentDialog() {
       return;
     }
     if (isNostrBindRequestExpired(payload)) {
-      setError(EXPIRED_LINK_MESSAGE);
+      setError(i18n._(EXPIRED_LINK_MESSAGE));
       return;
     }
     if (!isVerificationCodeValid) {
@@ -563,7 +588,9 @@ export function NostrBindConsentDialog() {
       }
     } catch (error) {
       if (activeSignAttemptRef.current === attempt) {
-        setError(formatError(error) || "Failed to sign binding response.");
+        setError(
+          formatError(error) || i18n._(msg`Failed to sign binding response.`),
+        );
       }
     } finally {
       if (activeSignAttemptRef.current === attempt) {
@@ -623,10 +650,10 @@ export function NostrBindConsentDialog() {
         await notifySignedResponseReady(payload.callbackUrl);
       }
       toast.success(
-        isPreview ? PREVIEW_COPY_SUCCESS_MESSAGE : COPY_SUCCESS_MESSAGE,
+        i18n._(isPreview ? PREVIEW_COPY_SUCCESS_MESSAGE : COPY_SUCCESS_MESSAGE),
       );
     } else {
-      toast.warning(COPY_FAILURE_MESSAGE);
+      toast.warning(i18n._(COPY_FAILURE_MESSAGE));
     }
   }, [
     isPreview,
@@ -652,7 +679,7 @@ export function NostrBindConsentDialog() {
             <StartupWindowDragRegion />
             <div className="m-auto flex w-full max-w-[500px] flex-col items-center text-center">
               <img
-                alt="Buzz"
+                alt={productName}
                 className="h-14 w-14 rounded-xl shadow-xs"
                 src="/app-icon@2x.png"
                 srcSet="/app-icon@2x.png 1x, /app-icon@3x.png 2x"
@@ -666,17 +693,27 @@ export function NostrBindConsentDialog() {
                   transitionKey="nostr-bind-finish"
                 >
                   <DialogPrimitive.Title className="mt-6 text-3xl font-semibold tracking-tight">
-                    {payload.returnMode === "browser_fragment_v1"
-                      ? "Continue in your browser"
-                      : "Finish on the Buzz website"}
+                    {payload.returnMode === "browser_fragment_v1" ? (
+                      <Trans>Continue in your browser</Trans>
+                    ) : (
+                      <Trans>Finish on the {productName} website</Trans>
+                    )}
                   </DialogPrimitive.Title>
                   <DialogPrimitive.Description
                     className="mt-3 max-w-[440px] text-sm leading-6 text-muted-foreground"
                     id="nostr-bind-description"
                   >
-                    {payload.returnMode === "browser_fragment_v1"
-                      ? "Buzz opened your browser to finish verification."
-                      : "Copy the response below, then paste it into the Buzz website to finish verification."}
+                    {payload.returnMode === "browser_fragment_v1" ? (
+                      <Trans>
+                        {productName} opened your browser to finish
+                        verification.
+                      </Trans>
+                    ) : (
+                      <Trans>
+                        Copy the response below, then paste it into the{" "}
+                        {productName} website to finish verification.
+                      </Trans>
+                    )}
                   </DialogPrimitive.Description>
 
                   {error ? (
@@ -695,16 +732,21 @@ export function NostrBindConsentDialog() {
                       open={isManualFallbackOpen}
                     >
                       <summary className="flex cursor-pointer list-none items-center justify-between gap-4 px-4 py-3 text-sm font-medium transition-colors hover:bg-muted/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring [&::-webkit-details-marker]:hidden">
-                        <span>Pairing didn’t finish automatically?</span>
+                        <span>
+                          <Trans>Pairing didn’t finish automatically?</Trans>
+                        </span>
                         <ChevronDown className="h-4 w-4 shrink-0 text-muted-foreground transition-transform duration-150 group-open:rotate-180" />
                       </summary>
                       <div className="space-y-4 border-t border-border/55 p-4">
                         <p className="text-sm leading-6 text-muted-foreground">
-                          Copy this response and paste it into the pairing page.
+                          <Trans>
+                            Copy this response and paste it into the pairing
+                            page.
+                          </Trans>
                         </p>
                         <SignedResponseControls
                           copyFailed={copyFailed}
-                          copyLabel={finishCopyButtonLabel}
+                          isCopied={isCopied}
                           onCopy={handleCopyAgain}
                           signedResponse={signedResponse}
                         />
@@ -714,7 +756,7 @@ export function NostrBindConsentDialog() {
                     <div className="mt-10 w-full">
                       <SignedResponseControls
                         copyFailed={copyFailed}
-                        copyLabel={finishCopyButtonLabel}
+                        isCopied={isCopied}
                         onCopy={handleCopyAgain}
                         signedResponse={signedResponse}
                       />
@@ -728,7 +770,7 @@ export function NostrBindConsentDialog() {
                       type="button"
                       variant="ghost"
                     >
-                      Continue
+                      <Trans>Continue</Trans>
                     </Button>
                   </div>
                 </OnboardingSlideTransition>
@@ -740,13 +782,15 @@ export function NostrBindConsentDialog() {
                   transitionKey="nostr-bind-code"
                 >
                   <DialogPrimitive.Title className="mt-6 text-3xl font-semibold tracking-tight">
-                    Enter verification code
+                    <Trans>Enter verification code</Trans>
                   </DialogPrimitive.Title>
                   <DialogPrimitive.Description
                     className="mt-3 max-w-[440px] text-sm leading-6 text-muted-foreground"
                     id="nostr-bind-description"
                   >
-                    Enter the six-digit code shown in your browser
+                    <Trans>
+                      Enter the six-digit code shown in your browser
+                    </Trans>
                   </DialogPrimitive.Description>
 
                   <div className="mt-10 w-full space-y-4 text-sm">
@@ -757,7 +801,9 @@ export function NostrBindConsentDialog() {
                       aria-invalid={hasCodeMismatch}
                       className="w-full min-w-0 text-center"
                     >
-                      <legend className="sr-only">Verification code</legend>
+                      <legend className="sr-only">
+                        <Trans>Verification code</Trans>
+                      </legend>
                       <div
                         className="flex justify-center gap-2"
                         data-testid="nostr-bind-verification-code"
@@ -769,7 +815,7 @@ export function NostrBindConsentDialog() {
                             key={VERIFICATION_CODE_DIGIT_KEYS[index]}
                           >
                             <input
-                              aria-label={`Verification code digit ${index + 1} of ${VERIFICATION_CODE_LENGTH}`}
+                              aria-label={t`Verification code digit ${index + 1} of ${VERIFICATION_CODE_LENGTH}`}
                               autoComplete={
                                 index === 0 ? "one-time-code" : "off"
                               }
@@ -851,14 +897,14 @@ export function NostrBindConsentDialog() {
                         role={hasCodeMismatch ? "alert" : undefined}
                       >
                         {hasCodeMismatch
-                          ? VERIFICATION_CODE_MISMATCH_MESSAGE
+                          ? i18n._(VERIFICATION_CODE_MISMATCH_MESSAGE)
                           : "\u00a0"}
                       </p>
                     </fieldset>
 
                     {isExpired ? (
                       <p className="rounded-md border border-destructive/30 bg-destructive/10 px-3 py-2 text-left text-destructive">
-                        {EXPIRED_LINK_MESSAGE}
+                        {i18n._(EXPIRED_LINK_MESSAGE)}
                       </p>
                     ) : null}
 
@@ -893,22 +939,22 @@ export function NostrBindConsentDialog() {
                         <span
                           className={cn(
                             COPY_BUTTON_LABEL_CLASS,
-                            copyButtonLabel === "Continue"
-                              ? "translate-y-0 opacity-100"
-                              : "-translate-y-0.5 opacity-0",
+                            isSigning
+                              ? "-translate-y-0.5 opacity-0"
+                              : "translate-y-0 opacity-100",
                           )}
                         >
-                          Continue
+                          <Trans>Continue</Trans>
                         </span>
                         <span
                           className={cn(
                             COPY_BUTTON_LABEL_CLASS,
-                            copyButtonLabel === "Signing…"
+                            isSigning
                               ? "translate-y-0 opacity-100"
                               : "translate-y-0.5 opacity-0",
                           )}
                         >
-                          Signing…
+                          <Trans>Signing…</Trans>
                         </span>
                       </span>
                     </Button>
@@ -919,7 +965,7 @@ export function NostrBindConsentDialog() {
                       type="button"
                       variant="ghost"
                     >
-                      Cancel
+                      <Trans>Cancel</Trans>
                     </Button>
                   </div>
                 </OnboardingSlideTransition>

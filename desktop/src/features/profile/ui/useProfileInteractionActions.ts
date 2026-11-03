@@ -1,3 +1,5 @@
+import { i18n } from "@lingui/core";
+import { msg } from "@lingui/core/macro";
 import { useQueryClient } from "@tanstack/react-query";
 import * as React from "react";
 import { toast } from "sonner";
@@ -134,8 +136,8 @@ export function useProfileInteractionActions({
             error instanceof Error
               ? error.message
               : action === "wave"
-                ? "Couldn't send the wave."
-                : "Couldn't open the direct message.",
+                ? i18n._(msg`Couldn't send the wave.`)
+                : i18n._(msg`Couldn't open the direct message.`),
           );
         }
       } finally {

@@ -1,3 +1,7 @@
+import type { MessageDescriptor } from "@lingui/core";
+import { msg } from "@lingui/core/macro";
+import { useLingui } from "@lingui/react/macro";
+import * as React from "react";
 import { createPortal } from "react-dom";
 
 import type {
@@ -9,15 +13,16 @@ import { SegmentedControl } from "@/shared/ui/segmented-control";
 import { Tabs, TabsList, TabsTrigger } from "@/shared/ui/tabs";
 
 const MODE_TAB_ORDER: AvatarMode[] = ["image", "emoji", "animated"];
-const MODE_TAB_LABELS: Record<AvatarMode, string> = {
-  animated: "Animated",
-  emoji: "Emoji",
-  image: "Image",
+/**
+ * Descriptors, not strings. The tab labels are keyed by mode rather than
+ * living in a `label:` field, which is why the coverage detector never saw
+ * them — they still render on screen, so they still have to translate.
+ */
+const MODE_TAB_LABELS: Record<AvatarMode, MessageDescriptor> = {
+  animated: msg`Animated`,
+  emoji: msg`Emoji`,
+  image: msg`Image`,
 };
-const MODE_SEGMENT_OPTIONS = MODE_TAB_ORDER.map((value) => ({
-  label: MODE_TAB_LABELS[value],
-  value,
-}));
 
 type ProfileAvatarModeTabsProps = {
   disabled: boolean;
@@ -34,17 +39,27 @@ export function ProfileAvatarModeTabs({
   presentation,
   portalContainer,
 }: ProfileAvatarModeTabsProps) {
+  const { i18n, t } = useLingui();
   const isOnboardingModal = presentation === "onboarding-modal";
   const isOnboardingInline = presentation === "onboarding-inline";
+  // Rebuilt per render so a locale switch re-resolves the labels.
+  const modeSegmentOptions = React.useMemo(
+    () =>
+      MODE_TAB_ORDER.map((value) => ({
+        label: i18n._(MODE_TAB_LABELS[value]),
+        value,
+      })),
+    [i18n],
+  );
   const tabs = isOnboardingInline ? (
     <SegmentedControl
       className="w-full bg-muted"
       disabled={disabled}
       indicatorTestId="onboarding-avatar-mode-indicator"
-      legend="Avatar type"
+      legend={t`Avatar type`}
       onValueChange={onModeChange}
       optionTestIdPrefix="onboarding-avatar-mode"
-      options={MODE_SEGMENT_OPTIONS}
+      options={modeSegmentOptions}
       testId="onboarding-avatar-mode-control"
       value={mode}
     />
@@ -57,7 +72,7 @@ export function ProfileAvatarModeTabs({
       value={mode}
     >
       <TabsList
-        aria-label="Avatar type"
+        aria-label={t`Avatar type`}
         className={cn(
           isOnboardingModal
             ? "relative isolate grid h-10 w-full max-w-[320px] grid-cols-3 overflow-hidden rounded-full bg-[color:rgb(var(--buzz-onboarding-avatar-control-fg)_/_0.12)] p-1 text-muted-foreground"
@@ -89,7 +104,7 @@ export function ProfileAvatarModeTabs({
             key={tabMode}
             value={tabMode}
           >
-            {MODE_TAB_LABELS[tabMode]}
+            {i18n._(MODE_TAB_LABELS[tabMode])}
           </TabsTrigger>
         ))}
       </TabsList>

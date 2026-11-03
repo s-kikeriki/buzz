@@ -1,3 +1,6 @@
+import { i18n } from "@lingui/core";
+import { msg } from "@lingui/core/macro";
+
 import { useExportAgentSnapshotMutation } from "@/features/agents/hooks";
 import { AgentSnapshotExportDialog } from "@/features/agents/ui/AgentSnapshotExportDialog";
 import type { AgentPersona } from "@/shared/api/types";
@@ -41,7 +44,7 @@ export function UserProfileSnapshotExportDialog({
               toast.error(
                 error instanceof Error
                   ? error.message
-                  : "Failed to export agent snapshot.",
+                  : i18n._(msg`Failed to export agent snapshot.`),
               );
             },
           },

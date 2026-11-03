@@ -58,6 +58,7 @@ import { toast } from "sonner";
 import { AdminConsoleSettingsCard } from "./AdminConsoleSettingsCard.tsx";
 import { AdminConsolePanel } from "./AdminConsolePanel.tsx";
 import { CommunitiesProvider } from "@/features/communities/useCommunities.tsx";
+import { withI18n } from "@/testing/withI18n.mjs";
 
 // ── Success-toast capture ────────────────────────────────────────────────────
 //
@@ -203,21 +204,25 @@ export function mountPanel({
   } = {}) => {
     await act(async () => {
       root.render(
-        React.createElement(
-          QueryClientProvider,
-          { client: qc },
+        // `withI18n`, because the panel mounts `ProfileAvatar` for member
+        // rows and that component reads its copy through `useLingui()`.
+        withI18n(
           React.createElement(
-            CommunitiesProvider,
-            null,
-            React.createElement(AdminConsolePanel, {
-              canMutate: m,
-              origin: o,
-              pubkey: p,
-              ...(role !== undefined ? { role } : {}),
-              ...(initialTab !== undefined ? { initialTab } : {}),
-              ...(initialCommunity !== undefined ? { initialCommunity } : {}),
-              ...(onSelfMutation !== undefined ? { onSelfMutation } : {}),
-            }),
+            QueryClientProvider,
+            { client: qc },
+            React.createElement(
+              CommunitiesProvider,
+              null,
+              React.createElement(AdminConsolePanel, {
+                canMutate: m,
+                origin: o,
+                pubkey: p,
+                ...(role !== undefined ? { role } : {}),
+                ...(initialTab !== undefined ? { initialTab } : {}),
+                ...(initialCommunity !== undefined ? { initialCommunity } : {}),
+                ...(onSelfMutation !== undefined ? { onSelfMutation } : {}),
+              }),
+            ),
           ),
         ),
       );
@@ -388,6 +393,7 @@ export {
   act,
   fireEvent,
   createRoot,
+  withI18n,
   QueryClient,
   QueryClientProvider,
   CommunitiesProvider,

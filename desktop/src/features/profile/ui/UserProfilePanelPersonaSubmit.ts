@@ -1,3 +1,5 @@
+import { i18n } from "@lingui/core";
+import { msg } from "@lingui/core/macro";
 import { toast } from "sonner";
 
 import { personaManagedAgentUpdate } from "@/features/profile/ui/UserProfilePanelUtils";
@@ -59,8 +61,10 @@ export function validateLinkedAgentRuntimeEdit({
     return null;
   }
 
-  const runtimeLabel = runtime?.label ?? "This provider";
-  return `${runtimeLabel} is not available. Install it before saving this linked agent.`;
+  const runtimeLabel = runtime?.label ?? i18n._(msg`This provider`);
+  return i18n._(
+    msg`${runtimeLabel} is not available. Install it before saving this linked agent.`,
+  );
 }
 
 export async function submitProfilePersonaDialog({
@@ -118,10 +122,19 @@ export async function submitProfilePersonaDialog({
           );
         }
       } catch (error) {
+        // Hoisted locals: lingui names an ICU placeholder after the
+        // expression it interpolates, and a dot inside the braces makes the
+        // whole message invalid — lingui then drops it from every catalogue.
+        const agentName = persona.displayName;
+        const reason = error instanceof Error ? error.message : null;
         toast.error(
-          error instanceof Error
-            ? `${persona.displayName} was created, but the agent instance could not be created: ${error.message}`
-            : `${persona.displayName} was created, but the agent instance could not be created.`,
+          reason
+            ? i18n._(
+                msg`${agentName} was created, but the agent instance could not be created: ${reason}`,
+              )
+            : i18n._(
+                msg`${agentName} was created, but the agent instance could not be created.`,
+              ),
         );
       }
     }
@@ -129,7 +142,9 @@ export async function submitProfilePersonaDialog({
     onDone();
   } catch (error) {
     toast.error(
-      error instanceof Error ? error.message : "Failed to save agent.",
+      error instanceof Error
+        ? error.message
+        : i18n._(msg`Failed to save agent.`),
     );
   }
 }

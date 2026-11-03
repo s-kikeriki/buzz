@@ -26,6 +26,9 @@ let render;
 let screen;
 let createElement;
 let ProfileInstancesSection;
+// The section's title and its "Archived" header now resolve through
+// `useLingui()`, which throws without a provider.
+let withI18n;
 
 const LIVE_PK = "b".repeat(64);
 const SECOND_LIVE_PK = "c".repeat(64);
@@ -52,7 +55,9 @@ function baseProps(overrides = {}) {
 }
 
 function renderSection(props) {
-  return render(createElement(ProfileInstancesSection, baseProps(props)));
+  return render(
+    withI18n(createElement(ProfileInstancesSection, baseProps(props))),
+  );
 }
 
 before(async () => {
@@ -77,6 +82,7 @@ before(async () => {
     "@testing-library/react"
   ));
   ({ createElement } = await import("react"));
+  ({ withI18n } = await import("@/testing/withI18n.mjs"));
   ({ ProfileInstancesSection } = await import("./ProfileInstancesSection.tsx"));
 });
 

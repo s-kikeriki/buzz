@@ -1,3 +1,5 @@
+import { msg } from "@lingui/core/macro";
+
 import {
   ANIMATED_AVATAR_DURATION_MS,
   ANIMATED_AVATAR_SIZE,
@@ -25,8 +27,12 @@ const PHONE_DEFAULT_PERSON_SCALE =
   (Math.round(DEFAULT_PERSON_SCALE * 100) - SLIDER_TICK_STEP) / 100;
 
 export const RECORD_SECONDS = ANIMATED_AVATAR_DURATION_MS / 1000;
-export const PERSON_SIZE_TIP =
-  "Scale just past the color circle for a pop-out look.";
+/**
+ * A descriptor, not a string: this module is evaluated once at import, so a
+ * plain string here would freeze the tip in whatever locale booted first.
+ * Callers resolve it per render with `i18n._()`.
+ */
+export const PERSON_SIZE_TIP = msg`Scale just past the color circle for a pop-out look.`;
 export const ENTRANCE_TRANSITION = {
   duration: 0.18,
   ease: [0.23, 1, 0.32, 1],
