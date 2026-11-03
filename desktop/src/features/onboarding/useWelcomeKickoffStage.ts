@@ -1,6 +1,7 @@
 import * as React from "react";
 
 import { isWelcomeChannel } from "@/features/onboarding/welcome";
+import { WELCOME_TEAM_ENABLED } from "@/features/onboarding/welcomeTeamEnabled";
 import type { Channel } from "@/shared/api/types";
 
 /**
@@ -38,6 +39,14 @@ export type WelcomeKickoffStagePhase =
 export const WELCOME_KICKOFF_STAGE_TIMEOUT_MS = 90_000;
 
 export type WelcomeKickoffStageInput = {
+  /**
+   * This build provisions a welcome team at all ({@link WELCOME_TEAM_ENABLED}).
+   *
+   * A build with the starter agents removed must never stage them: nothing
+   * will ever create the team, so the characters would stand there for the
+   * full timeout window above a banner promising a team that is not coming.
+   */
+  teamEnabled: boolean;
   /** The active channel is the private Welcome channel. */
   isWelcome: boolean;
   /** The timeline query has settled — an empty list means truly empty. */
@@ -60,6 +69,12 @@ export function resolveWelcomeKickoffStagePhase(
   current: WelcomeKickoffStagePhase,
   input: WelcomeKickoffStageInput,
 ): WelcomeKickoffStagePhase {
+  // Checked before `done`, unlike every other gate here. `teamEnabled` is a
+  // build constant, not runtime state, so there is no terminal phase to
+  // launder: a build without the team never leaves `hidden` in the first
+  // place, and the characters and the banner's setup claim both derive from
+  // this phase, so one gate silences both.
+  if (!input.teamEnabled) return "hidden";
   // Checked before `isWelcome` so the terminal state can never be laundered
   // back into `hidden` (and from there into a replay) by a channel that
   // momentarily reads as non-Welcome. Real channel changes reset the hook.
@@ -120,6 +135,7 @@ export function useWelcomeKickoffStage(
   React.useEffect(() => {
     setPhase((current) =>
       resolveWelcomeKickoffStagePhase(current, {
+        teamEnabled: WELCOME_TEAM_ENABLED,
         isWelcome,
         timelineSettled: !timelineLoading,
         hasMessages: hasTimelineMessages,

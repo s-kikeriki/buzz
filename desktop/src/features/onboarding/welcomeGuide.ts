@@ -36,8 +36,15 @@ export const WELCOME_GUIDE_INTRO_MESSAGE =
  * kikeriki fork: the bee starter agents are removed from this build, so
  * nothing may provision or start the Welcome Team. The provisioning code
  * below stays intact, and its call sites check this first.
+ *
+ * Re-exported from {@link welcomeTeamEnabled} so the kickoff *animation* can
+ * gate on the same value without importing this module's Tauri surface.
+ * Provisioning being off is not enough on its own: the stage reads nothing
+ * but the channel and the timeline, so an ungated build walked three bees on
+ * and left them there for the full timeout, promising a team no code path
+ * would ever create.
  */
-export const WELCOME_TEAM_ENABLED = false;
+export { WELCOME_TEAM_ENABLED } from "@/features/onboarding/welcomeTeamEnabled";
 
 export type WelcomeTeamRole = "lead" | "teammate";
 

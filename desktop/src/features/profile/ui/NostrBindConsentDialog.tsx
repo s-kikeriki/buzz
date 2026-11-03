@@ -12,8 +12,10 @@ import { listenForNostrBindDeepLinks } from "@/shared/deep-link";
 import { OnboardingSlideTransition } from "@/features/onboarding/ui/OnboardingSlideTransition";
 import { buildNostrBindCallbackUrl } from "@/features/profile/lib/nostrBindCallback";
 import { signNostrIdentityBinding } from "@/features/profile/lib/nostrIdentityBinding";
+import { BRAND } from "@/shared/branding/brand";
 import { cn } from "@/shared/lib/cn";
 import { useSystemColorScheme } from "@/shared/theme/useSystemColorScheme";
+import { BrandMark } from "@/shared/ui/BrandMark";
 import { Button } from "@/shared/ui/button";
 import { StartupWindowDragRegion } from "@/shared/ui/StartupWindowDragRegion";
 import { writeTextToClipboard } from "@/shared/lib/clipboard";
@@ -651,11 +653,28 @@ export function NostrBindConsentDialog() {
           >
             <StartupWindowDragRegion />
             <div className="m-auto flex w-full max-w-[500px] flex-col items-center text-center">
-              <img
-                alt="Buzz"
-                className="h-14 w-14 rounded-xl shadow-xs"
-                src="/app-icon@2x.png"
-                srcSet="/app-icon@2x.png 1x, /app-icon@3x.png 2x"
+              {/*
+                `surface` from this dialog's own `data-system-color-scheme`,
+                not the document's mode: the content pins the system scheme on
+                itself above, so a `dark:` variant would read the wrong
+                surface and paint the unreadable cut.
+
+                The stock asset is the Buzz bee on its own black tile, so the
+                flavor path drops the tile with it — `rounded-xl shadow-xs`
+                would frame a transparent mark in a floating grey square.
+              */}
+              <BrandMark
+                className="h-14 w-14"
+                fallback={
+                  <img
+                    alt={BRAND.productName}
+                    className="h-14 w-14 rounded-xl shadow-xs"
+                    src="/app-icon@2x.png"
+                    srcSet="/app-icon@2x.png 1x, /app-icon@3x.png 2x"
+                  />
+                }
+                label={BRAND.productName}
+                surface={systemColorScheme === "dark" ? "ink" : "light"}
               />
 
               {signedResponse ? (

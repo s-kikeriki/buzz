@@ -16,6 +16,7 @@ import { writeTextToClipboard } from "@/shared/lib/clipboard";
 import { Button } from "@/shared/ui/button";
 import { StyledQrCode } from "@/shared/ui/styled-qr-code";
 import { BRAND } from "@/shared/branding/brand";
+import { BRAND_QR_CENTER_ICON_URL } from "@/shared/branding/brandAppIcon";
 
 type Step = "loading" | "qr" | "sas" | "receiving" | "done" | "error";
 
@@ -168,7 +169,7 @@ export function IdentityRecoveryPairing({
         {step === "qr" && qrUri ? (
           <StyledQrCode
             animate
-            centerImageSrc="/app-icon@2x.png"
+            centerImageSrc={BRAND_QR_CENTER_ICON_URL}
             data-testid="identity-recovery-qr"
             size={240}
             title="Desktop identity recovery QR code"

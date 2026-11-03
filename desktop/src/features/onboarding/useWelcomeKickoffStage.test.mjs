@@ -6,8 +6,10 @@ import {
   isWelcomeKickoffStageExiting,
   resolveWelcomeKickoffStagePhase,
 } from "./useWelcomeKickoffStage.ts";
+import { WELCOME_TEAM_ENABLED } from "./welcomeTeamEnabled.ts";
 
 const base = {
+  teamEnabled: true,
   isWelcome: true,
   timelineSettled: true,
   hasMessages: false,
@@ -21,6 +23,48 @@ test("stage stays hidden outside the Welcome channel", () => {
   );
   assert.equal(
     resolveWelcomeKickoffStagePhase("active", { ...base, isWelcome: false }),
+    "hidden",
+  );
+});
+
+// The three kickoff characters are the Buzz bees, and no build of ours ships
+// one. Provisioning was already off (`WELCOME_TEAM_ENABLED`) while the stage
+// still animated them, so these pin the gate rather than the intent.
+test("a build with no welcome team never stages its characters", () => {
+  for (const phase of ["hidden", "active", "exiting", "timed-out", "done"]) {
+    assert.equal(
+      resolveWelcomeKickoffStagePhase(phase, {
+        ...base,
+        teamEnabled: false,
+      }),
+      "hidden",
+      `${phase} must not survive into a build with no welcome team`,
+    );
+  }
+});
+
+test("a build with no welcome team never claims it is setting one up", () => {
+  assert.equal(
+    isWelcomeKickoffSettingUp(
+      resolveWelcomeKickoffStagePhase("hidden", {
+        ...base,
+        teamEnabled: false,
+      }),
+    ),
+    false,
+  );
+});
+
+// Binds the gate to the value this fork actually ships. Flipping the constant
+// back on, or dropping the `teamEnabled` check from the resolver, fails here
+// rather than at a client's first launch.
+test("this build ships with the bee starter team off", () => {
+  assert.equal(WELCOME_TEAM_ENABLED, false);
+  assert.equal(
+    resolveWelcomeKickoffStagePhase("hidden", {
+      ...base,
+      teamEnabled: WELCOME_TEAM_ENABLED,
+    }),
     "hidden",
   );
 });

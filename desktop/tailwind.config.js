@@ -86,13 +86,11 @@ export default {
         "sidebar-label": "var(--sidebar-group-label-height)",
       },
       fontFamily: {
-        sans: [
-          '"Inter Variable"',
-          "Inter",
-          '"Avenir Next"',
-          '"Segoe UI"',
-          "sans-serif",
-        ],
+        // One property, declared with the stock stack in `theme.css`, so a
+        // flavor can repoint `font-sans` and the `body` rule together instead
+        // of this list and that rule drifting apart. See
+        // `shared/branding/applyBrandFont.ts`.
+        sans: ["var(--font-sans)"],
       },
       colors: {
         background: "hsl(var(--background))",

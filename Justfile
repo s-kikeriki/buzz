@@ -359,6 +359,82 @@ desktop-demo-build demo_name target="aarch64-apple-darwin":
     codesign --force --deep --sign - "$APP_PATH"
     VOL_NAME="$DMG_VOLUME_NAME" ./desktop/scripts/package-macos-dmg.sh "$APP_PATH" "desktop/src-tauri/target/$TARGET/release/bundle/dmg/${DMG_FILE_STEM}_${VERSION}_${DMG_ARCH}.dmg"
 
+# Build a flavored, ad-hoc-signed macOS DMG from a committed flavor file.
+#
+# The one correct way to build a flavor, in the repo rather than in a wrapper
+# outside it. `desktop-demo-build` above mints a *random* build id and reads no
+# flavor, so it cannot produce the app a flavor describes; the ki.keriki DMG
+# that shipped with no brand mark, the stock accent and `ws://localhost:3000`
+# baked in was built by a hand-written wrapper standing in for this recipe.
+#
+# `eval "$(flavor-config.mjs <id>)"` is the whole of the environment step —
+# every line carries its own `export`, so a variable added to `flavorBuildEnv`
+# later reaches this build with no edit here. Nothing is named on the build
+# command line, deliberately: a name that has to be typed is a name that can be
+# forgotten, and an unexported variable and an unset one look identical to the
+# build while reading back perfectly from the shell that set them.
+desktop-flavor-build flavor target="aarch64-apple-darwin":
+    #!/usr/bin/env bash
+    set -euo pipefail
+    TARGET={{target}}
+    FLAVOR={{quote(flavor)}}
+    [[ "$(uname -s)" == "Darwin" && "$TARGET" == *-apple-darwin ]] || { echo "Flavored DMGs require a macOS Apple target" >&2; exit 2; }
+
+    # Before anything is built: the flavor's values, in this shell, and a
+    # refusal if any asset it declares is missing from the checkout.
+    eval "$(node desktop/scripts/flavor-config.mjs "$FLAVOR")"
+    FLAVOR_JSON="$(node desktop/scripts/flavor-config.mjs "$FLAVOR" --json)"
+    read_flavor() { node -e 'console.log(JSON.parse(process.argv[1])[process.argv[2]] ?? "")' "$FLAVOR_JSON" "$1"; }
+    IDENTIFIER="$(read_flavor identifier)"
+    DMG_STEM="$(node -e 'console.log(JSON.parse(process.argv[1]).displayName.replace(/[^A-Za-z0-9._-]+/g, "_"))' "$FLAVOR_JSON")"
+
+    cargo build --release --target "$TARGET" \
+      -p buzz-acp -p buzz-agent -p buzz-backend-kubernetes -p buzz-dev-mcp \
+      -p git-credential-nostr -p buzz-cli
+    ./scripts/bundle-sidecars.sh "$TARGET"
+    pnpm install
+
+    # Staging overwrites tracked files in `src-tauri/icons/`. Restore them
+    # however this recipe exits, so a failed build does not leave one
+    # organisation's artwork staged for the next one.
+    trap 'git checkout -- desktop/src-tauri/icons/ 2>/dev/null || true' EXIT
+    node desktop/scripts/stage-flavor-icons.mjs "$FLAVOR"
+    node desktop/scripts/build-flavor-tauri-config.mjs "$FLAVOR" src-tauri/tauri.flavor.conf.json
+
+    cd {{desktop_dir}}
+    pnpm tauri build --features mesh-llm --target "$TARGET" --bundles app \
+      --config src-tauri/tauri.flavor.conf.json
+    cd ..
+
+    # Read the brand back out of the frontend the build actually embedded,
+    # before the bundle is signed and shipped. A build log that printed the
+    # right values is a claim about inputs; this is the artifact.
+    node desktop/scripts/check-frontend-brand.mjs "$FLAVOR" --target "$TARGET"
+
+    VERSION="$(node -p "require('./desktop/package.json').version")"
+    DMG_ARCH="${TARGET%%-*}"; [[ "$DMG_ARCH" == "x86_64" ]] && DMG_ARCH=x64
+    APP_PATH="desktop/src-tauri/target/$TARGET/release/bundle/macos/$BRAND_NAME.app"
+    OUT_DMG="desktop/src-tauri/target/$TARGET/release/bundle/dmg/${DMG_STEM}_${VERSION}_${DMG_ARCH}.dmg"
+
+    # Tauri names the `.app` folder from `productName` but leaves
+    # `CFBundleName` and `CFBundleDisplayName` as the Cargo package's own —
+    # `Buzz`. Those two are what the Finder's Get Info panel, the Force Quit
+    # list and the login-items list show, so without this the folder says
+    # Brawado and three places the user can actually look say Buzz.
+    # `desktop-demo-build` has always done this; `verify-macos-dmg.sh` is what
+    # noticed it was missing here. Before `codesign`, never after: editing the
+    # bundle afterwards invalidates the signature that was just applied.
+    PLIST="$APP_PATH/Contents/Info.plist"
+    /usr/libexec/PlistBuddy -c "Set :CFBundleName $BRAND_NAME" "$PLIST"
+    /usr/libexec/PlistBuddy -c "Set :CFBundleDisplayName $BRAND_NAME" "$PLIST" \
+      || /usr/libexec/PlistBuddy -c "Add :CFBundleDisplayName string $BRAND_NAME" "$PLIST"
+    codesign --force --deep --sign - "$APP_PATH"
+    VOL_NAME="$BRAND_NAME" ./desktop/scripts/package-macos-dmg.sh "$APP_PATH" "$OUT_DMG"
+    ./desktop/scripts/verify-macos-dmg.sh "$OUT_DMG" \
+      --identifier "$IDENTIFIER" --name "$BRAND_NAME" --version "$VERSION" \
+      --app-icon "desktop/$(read_flavor icon)"
+    echo "$OUT_DMG"
+
 # Run desktop checks suitable for CI / pre-push
 desktop-ci: desktop-check desktop-test desktop-tauri-fmt-check desktop-build desktop-tauri-check desktop-tauri-test
 

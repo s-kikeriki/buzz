@@ -15,6 +15,7 @@ flavor is always an explicit choice at build time.
 |---|---|---|
 | `zeniad.json` | Zeniad | active |
 | `ki.keriki.json` | ki.keriki | active |
+| `brawado.json` | Brawado | active — **client**, artwork not committed |
 | `KI.keri.KI.json` | KI.keri.KI | **frozen** — kept for reproducibility, not developed further |
 | `example-client.json` | — | **example** — the documented template; building it is refused |
 
@@ -40,6 +41,10 @@ flavor is always an explicit choice at build time.
   "dmgBackground": "flavors/icons/acme-dmg.png", // optional DMG window panel
   "relayUrl": "wss://relay.acme.test",    // default relay baked into the binary
   "autoConnectDefaultRelay": true,        // optional, default false
+  "fontFamily": "Poppins",                // optional — `Inter` or `Poppins`, see below
+  "defaultLocale": "de",                  // optional — `en` or `de`, see below
+  "clientArtwork": true,                  // optional — artwork lives outside the repo
+  "defaultAgents": [ /* see below */ ],   // optional — agents a fresh install starts with
   "accentColor": "#3b82f6",               // optional, lowercase #rrggbb
   "themeLabel": "Acme",                   // optional — renames the Buzz theme pair
   "celebrationEmojis": ["🎉", "✨"],       // optional — the backup-test burst
@@ -135,12 +140,137 @@ frozen app.
 | `BUZZ_BUILD_BUNDLE_NAME` | `src-tauri/build.rs` → `src-tauri/src/build_identity.rs` | The flavor's `displayName`, which is what Tauri's bundler puts in filesystem paths — the `.app` folder, and on Linux the `/usr/lib/<name>/` a package's resources go into. `build_identity::sidecar_dirs` resolves `/usr/lib/<name>/sidecars` from it, where a flavored `.deb` keeps `buzz`, `buzz-acp` and the rest: `externalBin` would put them in `/usr/bin`, which a real Buzz's package already owns, and dpkg refuses two owners of one path. A **different field** from `BUZZ_BUILD_PRODUCT_NAME` above on purpose — that one is the name the app calls itself in its own copy, and a flavor may set the two differently |
 | `BUZZ_BUILD_TRAY_ICON` | `src-tauri/build.rs` → `src-tauri/src/brand.rs` | Repo-relative path to the flavor's `trayIcon`, embedded at compile time. A **raster**, unlike every other mark here: the menu-bar glyph is handed to AppKit as pixels and nothing in the Rust build can rasterise an SVG. Omitted when the flavor declares none, which keeps the Buzz bee |
 | `DMG_BACKGROUND` | `scripts/package-macos-dmg.sh` | Repo-relative path to the flavor's `dmgBackground`. Omitted when the flavor declares none, which keeps the stock panel |
+| `VITE_BUZZ_PRODUCT_FONT` | `shared/branding/brandFont.ts` | The flavor's `fontFamily`. Resolved to a CSS stack and put on the root element as `--font-sans`, which the `body` rule and Tailwind's `font-sans` both read. Omitted when the flavor declares none, which keeps the Inter stack |
+| `VITE_BUZZ_DEFAULT_LOCALE` | `shared/lib/localePreference.ts` | The flavor's `defaultLocale`. The language a fresh install starts in, before anyone has chosen one. Omitted when the flavor declares none, which follows the operating system and falls back to English — so the absence is the setting, not a gap |
+| `BUZZ_BUILD_DEFAULT_AGENTS` | `src-tauri/build.rs` → `managed_agents/default_agents.rs` | The flavor's `defaultAgents`, as JSON, with each declared `avatar` replaced by the file's bytes as a data URL. Base64 into the binary; seeded as built-in definitions on first launch. Omitted when the flavor declares none |
 | `BUZZ_RELAY_URL` | `src-tauri/build.rs` → `relay::relay_ws_url` | Default relay |
 | `BUZZ_BUILD_AUTO_CONNECT_DEFAULT_RELAY` | `commands::identity` | Connect to that relay without asking |
 
 `BRAND_NAME` brands the shell only. It does **not** choose the app — that is
 `BUZZ_BUILD_DEMO_SLUG`. Read `CFBundleIdentifier` off the built `.app` and match
 it against the flavor before delivering anything.
+
+## The interface font
+
+`fontFamily` is the one brand value that cannot be carried by naming it. A
+colour is a string the renderer understands; a font is bytes the webview has
+to have been given, and a family it cannot resolve falls through to the next
+entry in the stack with nothing in the build log to say so — on the machine
+the design was made on, where the font is installed, it looks correct.
+
+So the field is a closed set, `Inter` and `Poppins` today, and each entry is
+a family `src/main.tsx` imports a `@fontsource` stylesheet for.
+`flavor-config.mjs` refuses anything else at load, and
+`flavor-config.test.mjs` holds the list against the imports in `main.tsx`, so
+the two cannot drift into "accepted but never bundled".
+
+Adding a family is therefore two edits in one change: the `@fontsource`
+import in `main.tsx`, and the entry in `BUNDLED_FONT_FAMILIES` *and*
+`FONT_STACKS` (`shared/branding/brandFont.ts`). Every stack ends in the
+trunk's own, so a glyph the brand font has no cut for — and the first paint
+before the woff2 is decoded — lands on the fallbacks Buzz has always used.
+
+## The starting language
+
+`defaultLocale` is the interface language a fresh install opens in.
+
+Without it — every flavor until Brawado — a new install follows the operating
+system and falls back to English. That is right for an organisation whose
+people have their laptops in the language they work in, and wrong for one that
+does not: a German company whose machines came set to English got an English
+app, and the screens that suffer most are the first-run ones, which by
+definition run before anybody could have changed the setting.
+
+So a flavor that declares a language gets it, and **the OS is not consulted**.
+
+It is a default, not a lock. The moment someone picks a language in Settings
+that choice is stored and wins from then on. What this field answers is only
+"which language before anyone has said", and the honest cost is that a person
+whose machine is English sees German until they change it — which for a
+single-language organisation is the trade that was asked for.
+
+`en` and `de` are the shipped catalogues. `pseudo` is deliberately not
+accepted: it is the generated overflow-proofing locale, never offered in a
+shipped build, so a flavor defaulting to it would hand users unreadable
+accented copy with no control rendered to escape it.
+
+## Default agents
+
+`defaultAgents` is the list of agents a fresh install of a flavor starts
+with. Each entry becomes a **definition** — the key-less card the Agents list
+shows — flagged built-in, carrying its runtime, model, provider, access gate,
+parallelism and environment.
+
+```jsonc
+{
+  "id": "builtin:router",            // `builtin:<slug>`; becomes the card's slug
+  "displayName": "Router",
+  "runtime": "buzz-agent",           // harness id, not a command
+  "acpCommand": "buzz-acp",          // optional
+  "provider": "openrouter",          // optional
+  "model": "anthropic/claude-haiku-5.5",
+  "respondTo": "owner-only",         // owner-only | allowlist | anyone
+  "respondToAllowlist": [],          // only under `allowlist`
+  "parallelism": 10,
+  "envVars": { "OPENROUTER_API_KEY": "" },
+  "avatar": "flavors/avatars/acme-router.jpg"
+}
+```
+
+**Definitions, not running agents.** Starting an agent mints a Nostr key and
+publishes an identity to the organisation's relay. A build that did that
+unattended on first launch would put an agent on a relay on the strength of
+someone opening the app once to look at it, so it stays a decision. Nothing
+is lost by waiting: `buildInstanceInputForDefinition` copies the definition's
+configuration onto the instance it creates and turns auto-start on, so the
+agent after one press of start is the agent the flavor described.
+
+**No `agentCommand` or `mcpCommand` field, deliberately.** Both are resolved
+from the runtime catalog when the instance is created — for `buzz-agent`,
+that is the `buzz-agent` and `buzz-dev-mcp` the bundle shipped. A bare
+command name pinned here would resolve against `PATH` instead, which on a
+developer's machine is usually the same binary and on a user's is usually
+nothing.
+
+**A credential ships as an empty string, never as a value.** `""` is how a
+flavor declares the *shape* of a secret: the field is in the agent's
+environment for its owner to fill in, and no key is in the repo, in the diff,
+or in a build. `flavor-config.test.mjs` fails any flavor that gives a
+key-shaped name a non-empty value, and `build.rs` rejects an env key Buzz
+reserves for its own identity and access gates.
+
+The seed is add-only, by id. An edited card keeps its edits; a *deleted* one
+comes back on the next launch, which is what "the flavor ships with this
+agent" means.
+
+## Client artwork
+
+`clientArtwork: true` says the flavor's assets belong to a client and are not
+in this repository.
+
+This fork is public, so committing a client's icon, logo or agent portrait
+publishes it. A client flavor therefore declares its paths like any other and
+the files are placed there before the build — which is the arrangement
+`icons/README.md` and `logos/README.md` have described all along; the flag is
+what makes it enforceable rather than a convention.
+
+What the flag changes:
+
+- `flavor-config.test.mjs` skips the two committed-asset checks for it, and
+  adds one of its own: every asset a `clientArtwork` flavor declares must be
+  **untracked**. Setting the flag and committing the files anyway is the one
+  mistake the flag exists to prevent, so it fails the suite.
+- `node scripts/flavor-config.mjs <id>` refuses to print a build environment
+  while any declared asset is missing, naming each one. That moves the
+  failure from `codesign`, twenty minutes into a release build and in a shell
+  script outside this repo, to the first command the build runs.
+- `.gitignore` denies the paths outright, so the mistake needs a `-f` rather
+  than a lapse.
+
+`brawado.json` is the first of these. Its assets are generated outside the
+checkout by `~/.kikeriki/brand/brawado/make-brawado-assets.py`, from
+`www.brawado.com` and the Router portrait, and placed at the paths the flavor
+names.
 
 ## Icons
 

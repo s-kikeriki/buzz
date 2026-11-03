@@ -72,3 +72,20 @@ identity.key
 
 # Helm dependency tarballs — regenerable from Chart.lock via `helm dependency build`
 deploy/charts/*/charts/*.tgz
+
+# Client flavor artwork — a `clientArtwork` flavor's icon, logo, tray glyph,
+# DMG panel and agent avatars. This repository is a public fork, so committing
+# a client's artwork publishes it; the flavor names the paths and the build
+# places the files there (see desktop/flavors/README.md § Client artwork).
+# Denied by default and allowed back per file, so a new client is covered the
+# day its flavor is written rather than the day someone remembers this list.
+# Written by `build-flavor-tauri-config.mjs` on every flavored build: the
+# product name, identifier and deep-link scheme the bundler reads. Derived
+# from the flavor file, so committing it would be a second copy to disagree
+# with the first.
+desktop/src-tauri/tauri.flavor.conf.json
+
+desktop/flavors/avatars/*
+!desktop/flavors/avatars/README.md
+desktop/flavors/icons/brawado*
+desktop/flavors/logos/brawado*

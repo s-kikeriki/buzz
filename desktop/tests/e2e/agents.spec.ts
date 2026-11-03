@@ -708,7 +708,9 @@ test("team cards use the thread-style overlapping avatar stack", async ({
   await installMockBridge(page, {
     personas: [
       {
-        avatarUrl: "/onboarding/starter-team/fizz.png",
+        // Any real image works here; the test asserts avatar *stacking*, not
+        // the artwork. Was a starter-team bee APNG until those were deleted.
+        avatarUrl: "/app-icon@2x.png",
         id: personaIds[0],
         displayName: "Design",
         systemPrompt: "You design interfaces.",

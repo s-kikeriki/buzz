@@ -127,8 +127,10 @@ const RETIRED_PERSONAS: &[(&str, &str)] = &[
     ),
 ];
 
+/// Every built-in definition this build has: the compiled-in personas, plus
+/// whatever the flavor baked in.
 fn built_in_persona_records(now: &str) -> Vec<AgentDefinition> {
-    BUILT_IN_PERSONAS
+    let mut records: Vec<AgentDefinition> = BUILT_IN_PERSONAS
         .iter()
         .map(|persona| AgentDefinition {
             id: persona.id.to_string(),
@@ -156,7 +158,9 @@ fn built_in_persona_records(now: &str) -> Vec<AgentDefinition> {
             created_at: now.to_string(),
             updated_at: now.to_string(),
         })
-        .collect()
+        .collect();
+    records.extend(super::default_agents::default_agent_definitions(now));
+    records
 }
 
 pub(crate) fn built_in_persona_definition(id: &str, now: &str) -> Option<AgentDefinition> {
@@ -165,10 +169,22 @@ pub(crate) fn built_in_persona_definition(id: &str, now: &str) -> Option<AgentDe
         .find(|persona| persona.id == id)
 }
 
+/// Where a built-in sorts, and — because `merge_personas` demotes any
+/// built-in-flagged record whose id this does not recognise — whether it is
+/// still a built-in at all.
+///
+/// A flavor's default agents sort after the compiled-in list rather than
+/// among it. The compiled-in order is a product decision about the bee
+/// personas; a flavor's is the order its own file declares, and interleaving
+/// the two would make either one unreadable.
 fn built_in_order(id: &str) -> Option<usize> {
-    BUILT_IN_PERSONAS
+    if let Some(index) = BUILT_IN_PERSONAS
         .iter()
         .position(|persona| persona.id == id)
+    {
+        return Some(index);
+    }
+    super::default_agents::default_agent_order(id).map(|index| BUILT_IN_PERSONAS.len() + index)
 }
 
 fn sort_personas(records: &mut [AgentDefinition]) {

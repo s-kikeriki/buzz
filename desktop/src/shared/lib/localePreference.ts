@@ -1,5 +1,7 @@
 import * as React from "react";
 
+import { parseBrandDefaultLocale } from "@/shared/branding/brandLocale";
+
 /**
  * Interface language. `pseudo` is a generated locale used to prove a screen is
  * fully extracted and survives German-length copy; it is never offered in a
@@ -11,6 +13,18 @@ export const APP_LOCALES: readonly AppLocale[] = ["en", "de", "pseudo"];
 
 export const LOCALE_STORAGE_KEY = "buzz.appearance.locale";
 export const DEFAULT_LOCALE: AppLocale = "en";
+
+/**
+ * The language this build starts in before anyone has chosen one, or `null`
+ * to follow the operating system as Buzz always has.
+ *
+ * Read through its own parser rather than inline so the module stays
+ * importable by the plain-Node test runner, where `import.meta.env` does not
+ * exist.
+ */
+function configuredDefaultLocale(): AppLocale | null {
+  return parseBrandDefaultLocale(import.meta.env?.VITE_BUZZ_DEFAULT_LOCALE);
+}
 
 const listeners = new Set<() => void>();
 let locale: AppLocale = DEFAULT_LOCALE;
@@ -102,10 +116,20 @@ function readStoredLocale(): AppLocale {
     return DEFAULT_LOCALE;
   }
   if (raw === null) {
-    // Nothing saved: follow the OS. Only the absent key takes this path — a
-    // stored value this build does not recognise is still a choice someone
-    // made, and `parseLocale` has always resolved it to the default.
-    return localeFromOsPreference(osPreferredLocales()) ?? DEFAULT_LOCALE;
+    // Nothing saved. A flavor that declared a default owns this slot and the
+    // OS is not consulted: an organisation that works in German does so on
+    // whatever language its laptops were bought with, and the first-run
+    // screens — the ones that run before anybody could have chosen — are
+    // exactly where that matters most.
+    //
+    // Only the absent key takes this path. A stored value this build does not
+    // recognise is still a choice someone made, and `parseLocale` has always
+    // resolved it to the default.
+    return (
+      configuredDefaultLocale() ??
+      localeFromOsPreference(osPreferredLocales()) ??
+      DEFAULT_LOCALE
+    );
   }
   const stored = parseLocale(raw);
   // A build that drops the pseudo-locale must not stay stuck in it because an
