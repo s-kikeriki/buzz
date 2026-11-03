@@ -227,3 +227,103 @@ test.describe("the first-run screens read German", () => {
     await page.screenshot({ path: `${SHOTS}/04-existing-key.png` });
   });
 });
+
+/**
+ * The screens after the key exists — the batch the key-creation tranche adds.
+ *
+ * These are reached only by actually creating a key, so they sit in their own
+ * describe with their own navigation rather than extending the first-run
+ * block above. Same rule as there: every German assertion is paired with a
+ * negative on the English source, because a half-applied catalogue renders
+ * the English string and a positive assertion alone would pass on the
+ * regression.
+ */
+test.describe("the key and backup screens read German", () => {
+  test.beforeEach(async ({ page }) => {
+    await seedStoredLocale(page, "de");
+    await installMockBridge(page, undefined, {
+      skipCommunitySeed: true,
+      skipOnboardingSeed: true,
+    });
+    await page.goto("/");
+    await page
+      .getByRole("button", { name: "Neuen Identitätsschlüssel erstellen" })
+      .click();
+    await page
+      .getByRole("button", { name: "Meinen privaten Schlüssel erstellen" })
+      .click();
+    await expect(page.getByTestId("onboarding-page-backup")).toBeVisible();
+  });
+
+  test("the key well, after the creation hold", async ({ page }) => {
+    // The step sells the creation moment first and swaps the heading after a
+    // hold, so both headings are asserted: a German "creating" line and an
+    // English "created" one would otherwise pass on the first check alone.
+    await expect(
+      page.getByRole("heading", {
+        name: "Dein Identitätsschlüssel wird erstellt",
+      }),
+    ).toBeVisible();
+    await expect(
+      page.getByRole("heading", { name: "Dein privater Identitätsschlüssel" }),
+    ).toBeVisible();
+    for (const english of [
+      "Creating your identity key",
+      "Your private identity key",
+    ]) {
+      await expect(page.getByRole("heading", { name: english })).toHaveCount(0);
+    }
+
+    const step = page.getByTestId("onboarding-page-backup");
+    await expect(step).toContainText(
+      "Gib diesen Schlüssel nicht weiter. Wer ihn hat, kann auf dein Konto zugreifen.",
+    );
+    await expect(step).not.toContainText("Don’t share this key");
+    await expect(page.getByTestId("backup-option-password")).toContainText(
+      "Passwortgeschütztes Backup erstellen",
+    );
+    await expect(step).not.toContainText("Create locked backup");
+    await expect(page.getByTestId("onboarding-next")).toHaveText("Weiter");
+
+    await waitForAnimations(page);
+    await page.screenshot({ path: `${SHOTS}/05-key-well.png` });
+  });
+
+  test("the locked-backup screen and its password field", async ({ page }) => {
+    await page.getByTestId("backup-option-password").click();
+
+    const creator = page.getByTestId("encrypted-backup-creator");
+    await expect(creator).toBeVisible();
+    await expect(
+      page.getByRole("heading", { name: "Sichere Backup-Datei erstellen" }),
+    ).toBeVisible();
+    await expect(
+      page.getByRole("heading", { name: "Create a secure backup file" }),
+    ).toHaveCount(0);
+
+    // The `aria-label` path, not just JSX text: the field's accessible name
+    // comes from `t`` ` and was the shape the detector had to learn.
+    await expect(page.getByTestId("backup-passphrase-input")).toHaveAttribute(
+      "aria-label",
+      "Verschlüsselungspasswort",
+    );
+    await expect(page.getByTestId("encrypted-backup-create")).toContainText(
+      "Backup speichern",
+    );
+    await expect(page.getByTestId("encrypted-backup-create")).not.toContainText(
+      "Save backup",
+    );
+
+    // The generator popover: a module-level copy table resolved through
+    // `i18n._`, so a plain string there would freeze in the boot locale and
+    // render English here even with the catalogue loaded.
+    await page.getByTestId("backup-passphrase-generate").click();
+    const separator = page.getByTestId("backup-passphrase-separator");
+    await expect(separator).toBeVisible();
+    await expect(separator.locator("option").first()).toHaveText("Leerzeichen");
+    await expect(separator.locator("option")).not.toContainText(["Spaces"]);
+
+    await waitForAnimations(page);
+    await page.screenshot({ path: `${SHOTS}/06-locked-backup.png` });
+  });
+});
