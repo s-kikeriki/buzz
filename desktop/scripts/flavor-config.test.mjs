@@ -23,6 +23,28 @@ const desktopDir = path.resolve(
   "..",
 );
 
+/**
+ * Whether a declared asset is readable here.
+ *
+ * Only ever false for a `clientArtwork` flavor, whose artwork is deliberately
+ * not committed — so on a clean CI checkout it is absent, and a test that read
+ * it would fail for the one reason the flag exists to create. Where the
+ * artwork *is* present (a developer's machine, a build host) these tests run
+ * in full, and `flavor-config.mjs <id>` refuses to emit a build environment
+ * while any declared asset is missing, so the promise is kept at the moment it
+ * matters rather than dropped.
+ */
+function assetReadable(flavor, declared) {
+  if (declared === undefined) return false;
+  if (existsSync(path.join(desktopDir, declared))) return true;
+  assert.equal(
+    flavor.clientArtwork,
+    true,
+    `${flavor.id}: declares ${declared}, which is not in the repo`,
+  );
+  return false;
+}
+
 function goodFlavor(overrides = {}) {
   return {
     id: "acme",
@@ -389,7 +411,7 @@ test("every committed logo is the kind of file its style can paint", () => {
   // diff, so assert the match in both directions rather than one.
   for (const id of listFlavorIds()) {
     const flavor = loadFlavor(id);
-    if (flavor.logo === undefined) continue;
+    if (!assetReadable(flavor, flavor.logo)) continue;
     const svg = readFileSync(path.join(desktopDir, flavor.logo), "utf8");
     if (flavor.logoStyle === "color") {
       assert.doesNotMatch(
@@ -409,7 +431,7 @@ test("every committed logo is the kind of file its style can paint", () => {
         `${id}: a masked mark must not pin a colour the mask discards`,
       );
     }
-    if (flavor.logoLight === undefined) continue;
+    if (!assetReadable(flavor, flavor.logoLight)) continue;
     // The light cut is only worth a second file and a second request if it
     // is a different drawing. Two paths lead to it being neither: the wrong
     // file copied in, or a regeneration that recoloured nothing. Both ship a
@@ -438,7 +460,10 @@ test("every committed mark's light cut is a real recolour", () => {
   // screenshot that would show it is the one nobody takes.
   for (const id of listFlavorIds()) {
     const flavor = loadFlavor(id);
-    if (flavor.logoMark === undefined || flavor.logoMarkLight === undefined) {
+    if (
+      !assetReadable(flavor, flavor.logoMark) ||
+      !assetReadable(flavor, flavor.logoMarkLight)
+    ) {
       continue;
     }
     const dark = readFileSync(path.join(desktopDir, flavor.logoMark), "utf8");
@@ -544,10 +569,16 @@ test("the chrome surface each flavor declares is the one that is built", () => {
 
 test("only the flavors that drew a mark send one to the startup gates", () => {
   // The loading screen and the onboarding field fall back to the Buzz bee
-  // when no mark reaches the build, so "Zeniad and the trunk keep the bee" is
-  // a fact about which flavors emit this variable. Bound to the committed
-  // files so giving another flavor a mark is a deliberate edit.
-  const expected = new Set(["ki.keriki"]);
+  // when no mark reaches the build, so which flavors emit this variable *is*
+  // which apps show a bee on their first screen. Bound to the committed files
+  // so giving another flavor a mark is a deliberate edit.
+  //
+  // Brawado joins ki.keriki here. It was added after a build without a mark
+  // was opened and the landing field came up full of drifting Buzz bees on a
+  // client's app — the one screen a new install renders first. `zeniad` is
+  // knowingly still on the list of flavors that have no mark and therefore
+  // still show them.
+  const expected = new Set(["ki.keriki", "brawado"]);
   for (const id of listFlavorIds()) {
     const flavor = loadFlavor(id);
     const emitted =

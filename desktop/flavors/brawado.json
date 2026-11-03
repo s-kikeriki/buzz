@@ -13,7 +13,10 @@
   "shortDescription": "Team chat, projects and agents for BRAWADO",
   "longDescription": "Brawado is BRAWADO's team workspace: channels, direct messages, shared projects and AI agents in one place, on a relay the organisation runs itself.",
   "logo": "flavors/logos/brawado.svg",
-  "logoStyle": "mask",
+  "logoLight": "flavors/logos/brawado-light.svg",
+  "logoMark": "flavors/logos/brawado-mark.svg",
+  "logoMarkLight": "flavors/logos/brawado-mark-light.svg",
+  "logoStyle": "color",
   "trayIcon": "flavors/icons/brawado-tray.png",
   "dmgBackground": "flavors/icons/brawado-dmg-background.png",
   "relayUrl": "wss://brawado.communities.buzz.xyz",
@@ -41,5 +44,5 @@
       "avatar": "flavors/avatars/brawado-router.jpg"
     }
   ],
-  "notes": "Client flavor. Artwork is NOT committed — see clientArtwork in flavors/README.md; it is generated outside this repo by ~/.kikeriki/brand/brawado/make-brawado-assets.py from www.brawado.com. accentColor is the brand red, which is the site's action colour; the navy #0A1647 is the site's theme-color and carries the app icon, the DMG panel and the ink chrome instead. OPENROUTER_API_KEY ships empty on purpose: the key is pasted in by its owner, never committed and never baked."
+  "notes": "Client flavor. Artwork is NOT committed — see clientArtwork in flavors/README.md; it is generated outside this repo by ~/.kikeriki/brand/brawado/make-brawado-assets.py from www.brawado.com. logoStyle is color, not mask: the onboarding landing paints the wordmark with a plain <img>, where a currentColor file resolves to black on the ink canvas. All four cuts are the same lockup because Brawado's own 32px favicon is that lockup — it is their glyph, not a crop of the wordmark. accentColor is the brand red, the site's action colour; the navy #0A1647 is the site's theme-color and carries the app icon, the DMG panel and the ink chrome. OPENROUTER_API_KEY ships empty on purpose: the key is pasted in by its owner, never committed and never baked."
 }
