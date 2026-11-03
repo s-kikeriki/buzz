@@ -51,11 +51,12 @@ function isRelayMembershipDeniedError(error: unknown): boolean {
   );
 }
 
-const STARTER_PERSONA_ANIMATIONS: Record<string, string> = {
-  Fizz: "/onboarding/starter-team/fizz.png",
-  Honey: "/onboarding/starter-team/honey.png",
-  Pollen: "/onboarding/starter-team/pollen.png",
-};
+// The starter personas used to render as three animated bee characters here.
+// No build of ours ships a Buzz bee, so the grid falls back to the ordinary
+// `ProfileAvatar` every other persona uses. In practice it renders nothing at
+// all: `is_suppressed_persona_id` keeps Fizz, Honey and Pollen out of
+// `listPersonas`, so `starterPersonas` is empty. The avatar path is what
+// stops a *differently* named persona reaching a bee asset by display name.
 
 /** Fade duration for the "entering" curtain over the mounting app. */
 const ENTERING_CURTAIN_FADE_MS = 500;
@@ -761,34 +762,22 @@ export function CommunityOnboardingFlow({
                 <div className="flex w-full flex-1 items-center justify-center py-6">
                   {starterPersonas.length > 0 ? (
                     <div className="grid w-full grid-cols-3 gap-6">
-                      {starterPersonas.map((persona) => {
-                        const animationUrl =
-                          STARTER_PERSONA_ANIMATIONS[persona.displayName];
-                        return (
-                          <div
-                            className="flex min-w-0 flex-col items-center gap-2"
-                            key={persona.id}
-                          >
-                            {animationUrl ? (
-                              <img
-                                alt={`${persona.displayName} animated character`}
-                                className="size-24 object-contain"
-                                data-testid={`starter-persona-${persona.displayName.toLowerCase()}`}
-                                src={animationUrl}
-                              />
-                            ) : (
-                              <ProfileAvatar
-                                avatarUrl={persona.avatarUrl}
-                                className="size-24 text-3xl"
-                                label={persona.displayName}
-                              />
-                            )}
-                            <span className="font-mono text-xs font-medium uppercase tracking-[0.15em]">
-                              {persona.displayName}
-                            </span>
-                          </div>
-                        );
-                      })}
+                      {starterPersonas.map((persona) => (
+                        <div
+                          className="flex min-w-0 flex-col items-center gap-2"
+                          key={persona.id}
+                        >
+                          <ProfileAvatar
+                            avatarUrl={persona.avatarUrl}
+                            className="size-24 text-3xl"
+                            label={persona.displayName}
+                            testId={`starter-persona-${persona.displayName.toLowerCase()}`}
+                          />
+                          <span className="font-mono text-xs font-medium uppercase tracking-[0.15em]">
+                            {persona.displayName}
+                          </span>
+                        </div>
+                      ))}
                     </div>
                   ) : null}
                 </div>

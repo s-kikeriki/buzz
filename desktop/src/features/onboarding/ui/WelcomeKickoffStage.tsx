@@ -11,12 +11,21 @@ type StageCharacter = {
   animationUrl: string;
 };
 
-/** Same animated APNGs the "Meet your starter team" onboarding step uses. */
-const STAGE_CHARACTERS: readonly StageCharacter[] = [
-  { name: "Fizz", animationUrl: "/onboarding/starter-team/fizz.png" },
-  { name: "Honey", animationUrl: "/onboarding/starter-team/honey.png" },
-  { name: "Pollen", animationUrl: "/onboarding/starter-team/pollen.png" },
-];
+/**
+ * Empty on the kikeriki fork, and the APNGs behind it are deleted.
+ *
+ * Fizz, Honey and Pollen were three animated Buzz bees, and no build of ours
+ * ships a bee. `WELCOME_TEAM_ENABLED` already stops this component from
+ * mounting at all — this is the second lock, so that re-enabling the welcome
+ * team is a decision about agents rather than an accidental way to put the
+ * bees back on a client's first screen.
+ *
+ * The component is kept whole rather than deleted, matching how
+ * `welcomeGuide.ts` keeps the provisioning it will not run: the stage's phase
+ * machine, its exit animation and its tests all still hold, so the feature is
+ * one list away from working if upstream ever wants it back.
+ */
+const STAGE_CHARACTERS: readonly StageCharacter[] = [];
 
 const STAGE_EXIT_ANIMATION = "motion-kickoff-stage-exit";
 
