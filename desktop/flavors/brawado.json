@@ -1,0 +1,45 @@
+{
+  "id": "brawado",
+  "displayName": "Brawado",
+  "productName": "Brawado",
+  "identifier": "xyz.block.buzz.app.demo.brawado-620b201fb54fb428",
+  "demo": {
+    "name": "Brawado",
+    "buildId": "620b201fb54fb428"
+  },
+  "clientArtwork": true,
+  "icon": "flavors/icons/brawado.icns",
+  "publisher": "kikeriki GmbH <support@kikeriki.net>",
+  "shortDescription": "Team chat, projects and agents for BRAWADO",
+  "longDescription": "Brawado is BRAWADO's team workspace: channels, direct messages, shared projects and AI agents in one place, on a relay the organisation runs itself.",
+  "logo": "flavors/logos/brawado.svg",
+  "logoStyle": "mask",
+  "trayIcon": "flavors/icons/brawado-tray.png",
+  "dmgBackground": "flavors/icons/brawado-dmg-background.png",
+  "relayUrl": "wss://brawado.communities.buzz.xyz",
+  "autoConnectDefaultRelay": true,
+  "fontFamily": "Poppins",
+  "accentColor": "#e30613",
+  "chromeSurface": "ink",
+  "themeLabel": "Brawado",
+  "collapseLongPosts": true,
+  "celebrationEmojis": ["🎉", "✨", "✅", "💧", "🔥", "🛠️"],
+  "defaultAgents": [
+    {
+      "id": "builtin:router",
+      "displayName": "Router",
+      "runtime": "buzz-agent",
+      "acpCommand": "buzz-acp",
+      "provider": "openrouter",
+      "model": "anthropic/claude-haiku-5.5",
+      "respondTo": "owner-only",
+      "parallelism": 10,
+      "envVars": {
+        "OPENROUTER_API_KEY": "",
+        "OPENROUTER_BASE_URL": "https://eu.openrouter.ai/api/v1"
+      },
+      "avatar": "flavors/avatars/brawado-router.jpg"
+    }
+  ],
+  "notes": "Client flavor. Artwork is NOT committed — see clientArtwork in flavors/README.md; it is generated outside this repo by ~/.kikeriki/brand/brawado/make-brawado-assets.py from www.brawado.com. accentColor is the brand red, which is the site's action colour; the navy #0A1647 is the site's theme-color and carries the app icon, the DMG panel and the ink chrome instead. OPENROUTER_API_KEY ships empty on purpose: the key is pasted in by its owner, never committed and never baked."
+}

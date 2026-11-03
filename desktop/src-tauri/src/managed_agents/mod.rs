@@ -17,6 +17,7 @@ pub(crate) mod bestie_assignment;
 pub(crate) mod claude_config;
 pub(crate) mod config_bridge;
 pub(crate) mod custom_harnesses;
+mod default_agents;
 mod definition_validation;
 mod discovery;
 pub(crate) mod effective_config;

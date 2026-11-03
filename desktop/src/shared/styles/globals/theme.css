@@ -1,5 +1,17 @@
 @layer base {
   :root {
+    /*
+     * The interface family, as one property every text surface resolves
+     * through: the `body` rule below and Tailwind's `font-sans` token both
+     * read it, so a flavor moves all of them by setting this one value.
+     *
+     * Declared here with the stock stack rather than only in the flavored
+     * path, so an unflavored build needs nothing at runtime and a flavored
+     * one overrides a declaration that already exists (see
+     * `shared/branding/applyBrandFont.ts`).
+     */
+    --font-sans: "Inter Variable", Inter, "Avenir Next", "Segoe UI", sans-serif;
+
     /* Catppuccin Latte (mauve accent) */
     --radius: 0.625rem;
     --background: 220 23.08% 94.9%;
@@ -152,7 +164,7 @@
 
   body {
     @apply bg-background text-foreground antialiased;
-    font-family: "Inter Variable", Inter, "Avenir Next", "Segoe UI", sans-serif;
+    font-family: var(--font-sans);
   }
 
   /*

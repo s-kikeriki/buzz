@@ -1,4 +1,4 @@
-import { readdirSync, readFileSync } from "node:fs";
+import { existsSync, readdirSync, readFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { pathToFileURL } from "node:url";
@@ -62,6 +62,60 @@ const DEFAULT_LOGO_STYLE = "mask";
  */
 const CHROME_SURFACES = ["auto", "ink"];
 const DEFAULT_CHROME_SURFACE = "auto";
+
+/**
+ * The interface families a build can be set to, and the only values
+ * `fontFamily` accepts.
+ *
+ * A font is not like an accent colour: naming one is only half the change,
+ * because the webview can render nothing it was not given the bytes for. Each
+ * entry here is a family `src/main.tsx` imports a `@fontsource` stylesheet
+ * for, so the list is the set of families the app can actually paint — and a
+ * flavor naming anything else is refused at load rather than shipping a build
+ * that silently falls back to the stock stack on every machine but the one it
+ * was designed on.
+ *
+ * `Inter` is the trunk's own family and the fallback a flavor gets by
+ * declaring nothing; it is listed so a flavor may pin it explicitly.
+ */
+export const BUNDLED_FONT_FAMILIES = ["Inter", "Poppins"];
+
+/**
+ * Agents a fresh install of this flavor starts with.
+ *
+ * Seeded as *definitions* — the key-less cards the Agents list shows — not as
+ * running instances. Minting a Nostr key and connecting it to the flavor's
+ * relay is something the user does by starting the agent, and a build that
+ * did it unattended on first launch would publish an identity nobody asked
+ * for. An instance created from one of these inherits its model, provider,
+ * env, access gate and parallelism, and `buildInstanceInputForDefinition`
+ * turns auto-start on for it, so starting the agent once is the whole of the
+ * setup the user is left with.
+ *
+ * `avatar` is a path like every other asset field, and like the logos its
+ * *bytes* travel in the build environment rather than its path: the seed runs
+ * in the packaged app, long after the checkout it was built from is gone.
+ */
+const DEFAULT_AGENT_REQUIRED_FIELDS = ["id", "displayName", "runtime"];
+const DEFAULT_AGENT_RESPOND_TO = ["owner-only", "allowlist", "anyone"];
+/**
+ * Avatar extensions a flavor may declare.
+ *
+ * The media type each maps to is resolved on the Rust side, by
+ * `avatar_media_type` in `src-tauri/src/managed_agents/default_agents_spec.rs`
+ * — that is where the bytes are read and the `data:` URL is written, so that
+ * is where the mapping belongs. This list is the early half of the same
+ * check: it fails in the diff rather than twenty minutes later in `build.rs`.
+ * Keep the two sets of extensions in step; a format accepted here and unknown
+ * there fails the build loudly, which is the safe direction.
+ */
+const AVATAR_MEDIA_TYPES = {
+  ".png": "image/png",
+  ".jpg": "image/jpeg",
+  ".jpeg": "image/jpeg",
+  ".svg": "image/svg+xml",
+  ".webp": "image/webp",
+};
 
 /**
  * The icons a flavor can replace besides the macOS `.icns`, keyed by the file
@@ -150,6 +204,124 @@ function escapesRepo(value) {
   return (
     /^([a-zA-Z]:|[/\\])/.test(value) || value.split(/[/\\]/).includes("..")
   );
+}
+
+/**
+ * Validate a flavor's `defaultAgents` list.
+ *
+ * Every rule here has a counterpart in `managed_agents/default_agents.rs`,
+ * which refuses the same shapes at boot. Checking twice is deliberate: this
+ * side fails in a diff a reviewer reads, and that side fails on a store that
+ * a hand edit could have reached since.
+ */
+function validateDefaultAgents(agents, flavorId) {
+  if (!Array.isArray(agents) || agents.length === 0) {
+    // Refused rather than ignored, like `celebrationEmojis`: an empty list is
+    // not "the default set", it is a half-made edit that reads in review as
+    // agents this build ships with.
+    fail(flavorId, "defaultAgents must be a non-empty array of objects");
+  }
+
+  const seen = new Set();
+  for (const agent of agents) {
+    if (agent === null || typeof agent !== "object" || Array.isArray(agent)) {
+      fail(flavorId, "defaultAgents entries must be objects");
+    }
+    for (const field of DEFAULT_AGENT_REQUIRED_FIELDS) {
+      if (typeof agent[field] !== "string" || agent[field].trim() === "") {
+        fail(flavorId, `defaultAgents[].${field} must be a non-empty string`);
+      }
+    }
+    if (!/^builtin:[a-z0-9][a-z0-9-]*$/.test(agent.id)) {
+      // The id is the definition's `slug`, which is the `d` tag of the
+      // published 30175 coordinate. Pinning the shape here keeps a seeded
+      // agent addressable by the same coordinate on every machine, and the
+      // `builtin:` prefix is what `merge_personas` reads to keep the card
+      // flagged built-in instead of demoting it on the next boot.
+      fail(
+        flavorId,
+        `defaultAgents[].id must look like \`builtin:<slug>\`, got "${agent.id}"`,
+      );
+    }
+    if (seen.has(agent.id)) {
+      fail(flavorId, `defaultAgents has two entries with id "${agent.id}"`);
+    }
+    seen.add(agent.id);
+
+    if (agent.avatar !== undefined) {
+      if (typeof agent.avatar !== "string" || agent.avatar.trim() === "") {
+        fail(flavorId, "defaultAgents[].avatar must be a non-empty string");
+      }
+      if (escapesRepo(agent.avatar)) {
+        fail(
+          flavorId,
+          "defaultAgents[].avatar must be a repo-relative path without `..`",
+        );
+      }
+      if (!(path.extname(agent.avatar).toLowerCase() in AVATAR_MEDIA_TYPES)) {
+        fail(
+          flavorId,
+          `defaultAgents[].avatar must be one of ${Object.keys(AVATAR_MEDIA_TYPES).join(", ")}`,
+        );
+      }
+    }
+
+    if (
+      agent.respondTo !== undefined &&
+      !DEFAULT_AGENT_RESPOND_TO.includes(agent.respondTo)
+    ) {
+      fail(
+        flavorId,
+        `defaultAgents[].respondTo must be one of ${DEFAULT_AGENT_RESPOND_TO.join(", ")}`,
+      );
+    }
+    if (agent.respondTo !== "allowlist" && agent.respondToAllowlist?.length) {
+      // An allowlist under any other gate is state that cannot be reached.
+      // It reads in review as an access decision that is in force, and it is
+      // not.
+      fail(
+        flavorId,
+        "defaultAgents[].respondToAllowlist only applies to respondTo allowlist",
+      );
+    }
+    if (agent.parallelism !== undefined) {
+      if (!Number.isInteger(agent.parallelism) || agent.parallelism < 1) {
+        fail(
+          flavorId,
+          "defaultAgents[].parallelism must be a positive integer",
+        );
+      }
+    }
+    if (agent.envVars !== undefined) {
+      const env = agent.envVars;
+      if (env === null || typeof env !== "object" || Array.isArray(env)) {
+        fail(flavorId, "defaultAgents[].envVars must be an object");
+      }
+      for (const [key, value] of Object.entries(env)) {
+        if (typeof value !== "string") {
+          fail(flavorId, `defaultAgents[].envVars["${key}"] must be a string`);
+        }
+        if (key.trim() === "" || key.includes("=")) {
+          fail(
+            flavorId,
+            `defaultAgents[].envVars has an unusable key ${JSON.stringify(key)}`,
+          );
+        }
+        // Keys reserved by Buzz are rejected in `src-tauri/build.rs`, which
+        // `include!`s `reserved_env_keys.rs` — the same source the runtime
+        // filters with. Re-listing them here would be a second copy to drift
+        // against the first, so the check stays on the side that owns the
+        // list.
+        if (/^\s*$/.test(value) && value !== "") {
+          fail(
+            flavorId,
+            `defaultAgents[].envVars["${key}"] must be a value or "" — ` +
+              "whitespace reads as a value and spawns as one",
+          );
+        }
+      }
+    }
+  }
 }
 
 /** Absolute path of a flavor's JSON file. */
@@ -499,11 +671,31 @@ export function validateFlavor(flavor, flavorId) {
     }
   }
 
+  if (flavor.fontFamily !== undefined) {
+    if (!BUNDLED_FONT_FAMILIES.includes(flavor.fontFamily)) {
+      // An arbitrary family name would be a silent failure of exactly the
+      // kind this module exists to prevent: the CSS would resolve to whatever
+      // the operating system happens to have, which on the build machine is
+      // often the right font and on the user's machine is the fallback. Only
+      // families this repo actually ships a woff2 for are accepted.
+      fail(
+        flavorId,
+        `fontFamily must be one of ${BUNDLED_FONT_FAMILIES.join(", ")} — ` +
+          "a family the app bundles, not one it hopes to find installed",
+      );
+    }
+  }
+
+  if (flavor.defaultAgents !== undefined) {
+    validateDefaultAgents(flavor.defaultAgents, flavorId);
+  }
+
   for (const flag of [
     "frozen",
     "example",
     "autoConnectDefaultRelay",
     "collapseLongPosts",
+    "clientArtwork",
   ]) {
     if (flavor[flag] !== undefined && typeof flavor[flag] !== "boolean") {
       fail(flavorId, `${flag} must be a boolean`);
@@ -568,10 +760,31 @@ export function validateFlavor(flavor, flavorId) {
     celebrationEmojis: Array.isArray(flavor.celebrationEmojis)
       ? flavor.celebrationEmojis.map((entry) => entry.trim())
       : undefined,
+    fontFamily: flavor.fontFamily,
+    defaultAgents:
+      flavor.defaultAgents === undefined
+        ? undefined
+        : flavor.defaultAgents.map((agent) => ({ ...agent })),
     frozen: flavor.frozen === true,
     example: flavor.example === true,
+    clientArtwork: flavor.clientArtwork === true,
     notes: typeof flavor.notes === "string" ? flavor.notes : undefined,
   };
+}
+
+/** The asset fields a flavor can declare, in the order a reader expects them. */
+export function declaredFlavorAssets(flavor) {
+  return [
+    flavor.icon,
+    ...Object.values(flavor.platformIcons ?? {}),
+    flavor.logo,
+    flavor.logoLight,
+    flavor.logoMark,
+    flavor.logoMarkLight,
+    flavor.trayIcon,
+    flavor.dmgBackground,
+    ...(flavor.defaultAgents ?? []).map((agent) => agent.avatar),
+  ].filter((declared) => declared !== undefined);
 }
 
 /** Load and validate one flavor by id. */
@@ -701,6 +914,23 @@ export function flavorBuildEnv(flavor, readFile = readFileSync) {
   if (flavor.dmgBackground !== undefined) {
     env.DMG_BACKGROUND = flavor.dmgBackground;
   }
+  if (flavor.fontFamily !== undefined) {
+    // Omitted when unset, like the theme label: absence is "keep the trunk's
+    // own family", which is a stack the frontend already defaults to, and an
+    // empty string would be a build asking for a nameless font.
+    env.VITE_BUZZ_PRODUCT_FONT = flavor.fontFamily;
+  }
+  if (flavor.defaultAgents !== undefined) {
+    // Paths, not bytes — the same split the tray icon and the DMG panel are
+    // on, and for the same reason. `build.rs` is the reader, it runs inside
+    // the checkout, and it inlines the avatar itself. Sending the bytes
+    // through here would put tens of kilobytes of base64 into a variable
+    // every later step of a CI job inherits, for a value one of them reads
+    // (see `flavor-github-env.mjs`). The logos travel as bytes because
+    // *Vite* reads those, and Vite builds in a temp directory this does not
+    // control.
+    env.BUZZ_BUILD_DEFAULT_AGENTS = JSON.stringify(flavor.defaultAgents);
+  }
   return env;
 }
 
@@ -766,6 +996,30 @@ if (
       console.error(
         `flavor ${flavorId} is the documented example, not a real app. ` +
           `Copy it to a new file and give it its own demo.buildId.`,
+      );
+      process.exit(1);
+    }
+    // Every declared asset, checked before a single variable is printed.
+    //
+    // For a committed flavor this is belt and braces — `flavor-config.test.mjs`
+    // already holds the same files. For a `clientArtwork` flavor it is the
+    // only check there is: its artwork is deliberately absent from the
+    // checkout, so the commit-time test has to skip it, and without this the
+    // first thing to notice a missing `.icns` would be `codesign`, twenty
+    // minutes into a release build, in a shell script outside this repo.
+    const missing = declaredFlavorAssets(flavor).filter(
+      (declared) => !existsSync(path.join(desktopDir, declared)),
+    );
+    if (missing.length > 0) {
+      console.error(
+        `flavor ${flavorId} declares ${missing.length} asset(s) that are not ` +
+          `in the checkout:\n` +
+          missing.map((declared) => `  desktop/${declared}`).join("\n") +
+          (flavor.clientArtwork
+            ? `\n\n${flavorId} is a clientArtwork flavor: its artwork is not ` +
+              `committed (this is a public repo). Place each file at the path ` +
+              `above before building.`
+            : ""),
       );
       process.exit(1);
     }

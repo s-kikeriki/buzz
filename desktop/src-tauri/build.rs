@@ -4,6 +4,9 @@ include!("src/commands/reconnect_hook_config.rs");
 // Same source of truth the runtime filters with, so a baked build env cannot
 // carry a reserved key the runtime believes it already rejected.
 include!("src/managed_agents/reserved_env_keys.rs");
+// Same source the runtime seeds from, so a spec this build accepts cannot be
+// one the app then drops.
+include!("src/managed_agents/default_agents_spec.rs");
 
 use base64::Engine as _;
 
@@ -58,9 +61,7 @@ fn bake_bundle_name() {
         panic!("BUZZ_BUILD_BUNDLE_NAME must not be empty or whitespace");
     }
     if name.contains('/') || name.contains('\\') || name.split('.').any(|part| part.is_empty()) {
-        panic!(
-            "BUZZ_BUILD_BUNDLE_NAME must be a single path component, got {name:?}"
-        );
+        panic!("BUZZ_BUILD_BUNDLE_NAME must be a single path component, got {name:?}");
     }
     println!("cargo:rustc-env=BUZZ_DESKTOP_BUILD_BUNDLE_NAME={name}");
 }
@@ -127,6 +128,78 @@ fn bake_brand_tray_icon() {
     }
 }
 
+/// The agents a fresh install of this flavor starts with.
+///
+/// Validated here rather than only at boot because the two failures are not
+/// equally visible. A spec the app refuses at startup produces an install with
+/// no agents and a line in a log nobody reads; a spec refused here stops the
+/// build, with the flavor file still in front of whoever edited it.
+///
+/// Base64 on the way out for the same reason `BUZZ_BUILD_AGENT_ENV` is: Cargo
+/// build-script output is line-oriented, and the value carries an avatar data
+/// URL tens of kilobytes long. Encoding it removes every way its own content
+/// could be read as the end of the directive.
+fn bake_default_agents() {
+    let Ok(raw) = std::env::var("BUZZ_BUILD_DEFAULT_AGENTS") else {
+        return;
+    };
+    let trimmed = raw.trim();
+    if trimmed.is_empty() {
+        return;
+    }
+
+    let mut specs: Vec<DefaultAgentSpec> = serde_json::from_str(trimmed).unwrap_or_else(|error| {
+        panic!("BUZZ_BUILD_DEFAULT_AGENTS is not a list of default agents: {error}")
+    });
+    if specs.is_empty() {
+        // Refused rather than treated as unset: an empty list is a flavor that
+        // meant to ship agents and emitted none, and silently building the
+        // plain app is the one outcome nobody would notice.
+        panic!("BUZZ_BUILD_DEFAULT_AGENTS is an empty list");
+    }
+    if let Some(problem) = validate_default_agents(&specs) {
+        panic!("BUZZ_BUILD_DEFAULT_AGENTS: {problem}");
+    }
+
+    // Inline each declared avatar. The path is repo-relative to `desktop/`,
+    // like the tray icon's, and is resolved the same way — against
+    // `CARGO_MANIFEST_DIR`, which is `desktop/src-tauri`. Refused rather than
+    // skipped when unreadable: an agent that silently seeded with no picture
+    // is a defect whose only evidence is a face nobody looks at twice.
+    let desktop_dir = std::path::Path::new(
+        &std::env::var("CARGO_MANIFEST_DIR")
+            .expect("CARGO_MANIFEST_DIR is always set for a build script"),
+    )
+    .parent()
+    .expect("src-tauri always has a parent")
+    .to_path_buf();
+    for spec in &mut specs {
+        let Some(relative) = spec.avatar.take() else {
+            continue;
+        };
+        let media_type = avatar_media_type(&relative)
+            .expect("validate_default_agents already refused an unpaintable extension");
+        let source = desktop_dir.join(&relative);
+        println!("cargo:rerun-if-changed={}", source.display());
+        let bytes = std::fs::read(&source).unwrap_or_else(|error| {
+            panic!(
+                "default agent {:?} names avatar {} which could not be read: {error}",
+                spec.id,
+                source.display()
+            )
+        });
+        let encoded = base64::engine::general_purpose::STANDARD.encode(&bytes);
+        spec.avatar_url = Some(format!("data:{media_type};base64,{encoded}"));
+    }
+
+    // Re-serialised from the parsed specs rather than passed through, so the
+    // bytes the app decodes are bytes this validation actually saw.
+    let canonical =
+        serde_json::to_string(&specs).expect("a parsed default-agent list always re-serialises");
+    let encoded = base64::engine::general_purpose::STANDARD.encode(canonical.as_bytes());
+    println!("cargo:rustc-env=BUZZ_DESKTOP_BUILD_DEFAULT_AGENTS={encoded}");
+}
+
 fn main() {
     println!("cargo:rerun-if-env-changed=BUZZ_RELAY_URL");
     println!("cargo:rerun-if-env-changed=BUZZ_RELAY_HTTP");
@@ -142,11 +215,13 @@ fn main() {
     println!("cargo:rerun-if-env-changed=BUZZ_BUILD_PRODUCT_NAME");
     println!("cargo:rerun-if-env-changed=BUZZ_BUILD_BUNDLE_NAME");
     println!("cargo:rerun-if-env-changed=BUZZ_BUILD_TRAY_ICON");
+    println!("cargo:rerun-if-env-changed=BUZZ_BUILD_DEFAULT_AGENTS");
     println!("cargo:rustc-check-cfg=cfg(buzz_updater_enabled)");
 
     bake_brand_product_name();
     bake_bundle_name();
     bake_brand_tray_icon();
+    bake_default_agents();
 
     if let Ok(slug) = std::env::var("BUZZ_BUILD_DEMO_SLUG") {
         let valid = !slug.is_empty()

@@ -7,8 +7,10 @@ import { fileURLToPath } from "node:url";
 
 import { demoBuildConfig } from "./demo-build-config.mjs";
 import {
+  BUNDLED_FONT_FAMILIES,
   FLAVOR_BUNDLE_ICONS,
   PLATFORM_ICON_TARGETS,
+  declaredFlavorAssets,
   flavorBuildEnv,
   flavorBuildEnvShell,
   listFlavorIds,
@@ -527,7 +529,9 @@ test("a flavor that declares no chrome surface builds as auto", () => {
 test("the chrome surface each flavor declares is the one that is built", () => {
   // Bound to the committed flavor files, so moving kikeriki off the ink rail
   // has to be a deliberate edit rather than something a refactor can drop.
-  const expected = { "ki.keriki": "ink" };
+  // Brawado joins it: the site's own house style is a navy header over a
+  // white body, which is the shape `ink` exists for.
+  const expected = { "ki.keriki": "ink", brawado: "ink" };
   for (const id of listFlavorIds()) {
     const flavor = loadFlavor(id);
     assert.equal(
@@ -813,12 +817,12 @@ test("only ki.keriki renames the theme; the others keep Buzz", () => {
   assert.equal(labels["KI.keri.KI"], undefined);
 });
 
-test("both active flavors clamp long posts; the frozen one and the trunk do not", () => {
+test("every active flavor clamps long posts; the frozen one and the trunk do not", () => {
   // The scope of the clamp, bound to the committed files. Zeniad joined
   // ki.keriki here on Ian's go; `KI.keri.KI` is frozen, so it keeps the
   // reading density it shipped with, and a flavorless trunk build gets no
   // variable at all. Adding a flavor to this set is an edit to this line.
-  const expected = new Set(["zeniad", "ki.keriki"]);
+  const expected = new Set(["zeniad", "ki.keriki", "brawado"]);
   for (const id of listFlavorIds()) {
     const flavor = loadFlavor(id);
     assert.equal(
@@ -926,7 +930,7 @@ test("every buildable flavor's logo is committed at the path it names", () => {
   // late, after `pnpm tauri build` has already run for minutes.
   for (const id of listFlavorIds()) {
     const flavor = loadFlavor(id);
-    if (flavor.frozen || flavor.example) continue;
+    if (flavor.frozen || flavor.example || flavor.clientArtwork) continue;
     for (const declared of [
       flavor.logo,
       flavor.logoLight,
@@ -949,10 +953,12 @@ test("every buildable flavor's icon is committed at the path it names", () => {
   // and the flavor's name". A declared icon that is not in the repo breaks
   // exactly that, and breaks it late — at `codesign`, in a shell script
   // outside this repo. Frozen and example flavors are exempt: both refuse to
-  // build, so neither needs its artwork here.
+  // build, so neither needs its artwork here. So is a `clientArtwork` flavor,
+  // whose artwork is deliberately absent because this is a public fork — the
+  // test below holds the promise for it instead, at the moment it is built.
   for (const id of listFlavorIds()) {
     const flavor = loadFlavor(id);
-    if (flavor.frozen || flavor.example) continue;
+    if (flavor.frozen || flavor.example || flavor.clientArtwork) continue;
     const iconPath = path.join(desktopDir, flavor.icon);
     assert.ok(
       existsSync(iconPath),
@@ -1356,4 +1362,210 @@ test("every declared platform icon is committed, and is the size its key promise
   // refactor stops returning `platformIcons`, which is the same unfalsifiable
   // shape as a guard whose skip is gated on the thing it asserts.
   assert.equal(checked, 7, "ki.keriki's seven platform icons must be checked");
+});
+
+test("a clientArtwork flavor keeps its artwork out of the repository", () => {
+  // The exemption above is a hole in the "a build needs nothing but a
+  // checkout" promise, and this is what keeps it from becoming a loophole:
+  // a flavor may skip the committed-asset check only by declaring itself a
+  // client's, and a client's artwork must then actually be absent. A flavor
+  // that set the flag and committed the files anyway would have published
+  // them — which is the single thing the flag exists to prevent.
+  for (const id of listFlavorIds()) {
+    const flavor = loadFlavor(id);
+    if (!flavor.clientArtwork) continue;
+    for (const declared of declaredFlavorAssets(flavor)) {
+      // `--error-unmatch` exits non-zero for a path git does not track, which
+      // is the passing case here — so the *absence* of a throw is the failure.
+      let committed = true;
+      try {
+        execFileSync(
+          "git",
+          ["ls-files", "--error-unmatch", `desktop/${declared}`],
+          {
+            cwd: path.join(desktopDir, ".."),
+            stdio: "pipe",
+          },
+        );
+      } catch {
+        committed = false;
+      }
+      assert.equal(
+        committed,
+        false,
+        `${id}: desktop/${declared} is committed, but ${id} is a clientArtwork flavor — a client's artwork in a public fork is a client's artwork published`,
+      );
+    }
+  }
+});
+
+test("fontFamily accepts only a family the app bundles", () => {
+  // A font is the one brand value that cannot be carried by naming it: the
+  // webview renders nothing it has no bytes for, and an unresolvable family
+  // falls through to the next entry in the stack with nothing in the build
+  // log to say so. On the designer's machine, where the font is installed,
+  // it looks right.
+  for (const family of BUNDLED_FONT_FAMILIES) {
+    const flavor = validateFlavor(goodFlavor({ fontFamily: family }), "acme");
+    assert.equal(flavor.fontFamily, family);
+    assert.equal(flavorBuildEnv(flavor).VITE_BUZZ_PRODUCT_FONT, family);
+  }
+
+  assert.throws(
+    () => validateFlavor(goodFlavor({ fontFamily: "Comic Sans MS" }), "acme"),
+    /fontFamily must be one of/,
+  );
+
+  // Omitted, not emptied — the frontend reads absence as "keep the stock
+  // stack", and an empty string would be a build asking for a nameless font.
+  assert.equal(
+    flavorBuildEnv(validateFlavor(goodFlavor(), "acme")).VITE_BUZZ_PRODUCT_FONT,
+    undefined,
+  );
+});
+
+test("every fontFamily a flavor may declare is one main.tsx imports", () => {
+  // The two lists are one decision. A family accepted here but never
+  // imported there produces exactly the silent fallback the closed list was
+  // added to prevent, and the failure is invisible on any machine that has
+  // the font installed.
+  const main = readFileSync(path.join(desktopDir, "src/main.tsx"), "utf8");
+  for (const family of BUNDLED_FONT_FAMILIES) {
+    const slug = family.toLowerCase();
+    assert.ok(
+      // Inter arrives as `@fontsource-variable/inter`, Poppins as
+      // `@fontsource/poppins` — match the package name either way.
+      new RegExp(`@fontsource(-variable)?/${slug}/`).test(main),
+      `fontFamily ${family} is accepted but src/main.tsx imports no ${slug} stylesheet`,
+    );
+  }
+});
+
+test("a default agent crosses as JSON naming its avatar, not carrying it", () => {
+  const flavor = validateFlavor(
+    goodFlavor({
+      defaultAgents: [
+        {
+          id: "builtin:router",
+          displayName: "Router",
+          runtime: "buzz-agent",
+          acpCommand: "buzz-acp",
+          provider: "openrouter",
+          model: "anthropic/claude-haiku-5.5",
+          respondTo: "owner-only",
+          parallelism: 10,
+          envVars: {
+            OPENROUTER_API_KEY: "",
+            OPENROUTER_BASE_URL: "https://eu.example/api",
+          },
+          avatar: "flavors/avatars/acme-router.png",
+        },
+      ],
+    }),
+    "acme",
+  );
+
+  const env = flavorBuildEnv(flavor);
+  const [agent] = JSON.parse(env.BUZZ_BUILD_DEFAULT_AGENTS);
+
+  // The path travels; `src-tauri/build.rs` reads the bytes. Keeping an avatar
+  // out of this variable is what keeps the block a CI job inherits down to
+  // short strings — the rule `flavor-github-env.mjs` is built around.
+  assert.equal(agent.avatar, "flavors/avatars/acme-router.png");
+  assert.equal(agent.avatarUrl, undefined);
+  assert.ok(
+    env.BUZZ_BUILD_DEFAULT_AGENTS.length < 1024,
+    "the default-agent variable must stay small enough to live in $GITHUB_ENV",
+  );
+  assert.equal(agent.id, "builtin:router");
+  assert.equal(agent.parallelism, 10);
+  assert.equal(agent.respondTo, "owner-only");
+  // An empty credential is carried, not dropped: the blank field in the UI is
+  // how its owner is shown where the key goes.
+  assert.equal(agent.envVars.OPENROUTER_API_KEY, "");
+});
+
+test("defaultAgents refuses the shapes that would seed a wrong agent", () => {
+  const withAgents = (agents) =>
+    validateFlavor(goodFlavor({ defaultAgents: agents }), "acme");
+  const base = {
+    id: "builtin:router",
+    displayName: "Router",
+    runtime: "buzz-agent",
+  };
+
+  assert.throws(() => withAgents([]), /non-empty array/);
+  assert.throws(
+    () => withAgents([{ ...base, id: "router" }]),
+    /must look like `builtin:<slug>`/,
+  );
+  assert.throws(() => withAgents([base, base]), /two entries with id/);
+  assert.throws(
+    () => withAgents([{ ...base, respondTo: "everybody" }]),
+    /respondTo must be one of/,
+  );
+  assert.throws(
+    () => withAgents([{ ...base, respondToAllowlist: ["ab".repeat(32)] }]),
+    /only applies to respondTo allowlist/,
+  );
+  assert.throws(
+    () => withAgents([{ ...base, parallelism: 0 }]),
+    /positive integer/,
+  );
+  assert.throws(
+    () => withAgents([{ ...base, avatar: "../../secrets/face.png" }]),
+    /repo-relative path without/,
+  );
+  assert.throws(
+    () => withAgents([{ ...base, avatar: "flavors/avatars/acme.txt" }]),
+    /avatar must be one of/,
+  );
+  // No agents at all is the trunk's answer and emits nothing.
+  assert.equal(
+    flavorBuildEnv(validateFlavor(goodFlavor(), "acme"))
+      .BUZZ_BUILD_DEFAULT_AGENTS,
+    undefined,
+  );
+});
+
+test("brawado is the client flavor it claims to be", () => {
+  // The three things about this flavor that are not like the others, held
+  // against the file rather than against the prose in README.md.
+  const brawado = loadFlavor("brawado");
+  assert.equal(brawado.clientArtwork, true);
+  assert.equal(brawado.relayUrl, "wss://brawado.communities.buzz.xyz");
+  assert.equal(brawado.fontFamily, "Poppins");
+
+  const [router] = brawado.defaultAgents;
+  assert.equal(router.id, "builtin:router");
+  assert.equal(router.runtime, "buzz-agent");
+  assert.equal(router.provider, "openrouter");
+  assert.equal(router.model, "anthropic/claude-haiku-5.5");
+  assert.equal(router.respondTo, "owner-only");
+  assert.equal(router.parallelism, 10);
+  assert.equal(
+    router.envVars.OPENROUTER_BASE_URL,
+    "https://eu.openrouter.ai/api/v1",
+  );
+  // The one assertion worth more than the rest: a key in the repo would be a
+  // key published, and this flavor is read by a public fork.
+  assert.equal(router.envVars.OPENROUTER_API_KEY, "");
+});
+
+test("no flavor bakes a non-empty credential into the repository", () => {
+  // Scoped to the shape a secret actually has here — a `defaultAgents` env
+  // value whose key names a key, token or secret. The flavor files are
+  // committed to a public fork, so a value in one is a value published.
+  for (const id of listFlavorIds()) {
+    for (const agent of loadFlavor(id).defaultAgents ?? []) {
+      for (const [key, value] of Object.entries(agent.envVars ?? {})) {
+        if (!/KEY|TOKEN|SECRET|PASSWORD/i.test(key)) continue;
+        assert.equal(
+          value,
+          "",
+          `${id}: ${agent.id} bakes a value for ${key} — it would be published`,
+        );
+      }
+    }
+  }
 });

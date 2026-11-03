@@ -7,6 +7,18 @@ import "@fontsource-variable/inter/opsz.css";
 import "@fontsource-variable/inter/opsz-italic.css";
 import "@fontsource/jetbrains-mono/400.css";
 import "@fontsource/jetbrains-mono/700.css";
+// Poppins, for flavors that declare it (`shared/branding/brandFont.ts`).
+// Imported unconditionally and by subset: `@font-face` is a declaration, not
+// a download — the browser fetches a woff2 only once something actually
+// resolves to that family — so an unflavored build pays for four rules it
+// never matches, and a flavored one needs no conditional import to be able
+// to paint at all. Latin only, like the stack it joins; Poppins also ships
+// Devanagari, which nothing in this app renders. The four weights are the
+// ones the interface asks for: normal, medium, semibold, bold.
+import "@fontsource/poppins/latin-400.css";
+import "@fontsource/poppins/latin-500.css";
+import "@fontsource/poppins/latin-600.css";
+import "@fontsource/poppins/latin-700.css";
 import "@/shared/styles/globals.css";
 import { UpdaterProvider } from "@/features/settings/hooks/UpdaterProvider";
 import { migrateLegacyCommunityStorageBeforeRender } from "@/features/communities/legacyCommunityStorage";
@@ -28,6 +40,7 @@ import { initializeSidebarChannelOrderPreference } from "@/features/sidebar/lib/
 import { initializeLocalePreference } from "@/shared/lib/localePreference";
 import { AppI18nProvider } from "@/shared/i18n/AppI18nProvider";
 import { applyBrandFavicon } from "@/shared/branding/applyBrandFavicon";
+import { applyBrandFont } from "@/shared/branding/applyBrandFont";
 
 type E2eWindow = Window & {
   __BUZZ_E2E__?: unknown;
@@ -135,6 +148,7 @@ async function bootstrap() {
   resetDevWebviewStateFromUrl();
   configureDevE2eBridgeFromUrl();
   applyBrandFavicon();
+  applyBrandFont();
   recoverLocalStorageQuotaOnStartup();
   initializeConversationDensityPreference();
   initializeFontSizePreference();

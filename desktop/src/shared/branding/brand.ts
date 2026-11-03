@@ -23,6 +23,7 @@ import {
 } from "./brandAccent";
 import { parseCelebrationEmojis } from "./brandCelebration";
 import { parseChromeSurface } from "./brandChrome";
+import { parseBrandFontFamily, parseBrandFontStack } from "./brandFont";
 import { parseCollapseLongPosts } from "./brandPostDensity";
 import { parseProductLogoStyle, parseProductLogoUrl } from "./brandLogo";
 import { parseThemeLabel } from "./brandThemeLabel";
@@ -85,6 +86,13 @@ export const BRAND = {
   ),
   /** Whether the navigation chrome stays on ink in both modes. */
   chromeSurface: parseChromeSurface(import.meta.env?.VITE_BUZZ_CHROME_SURFACE),
+  /**
+   * The CSS font stack this build paints its interface in, or `null` to keep
+   * the stock one. `applyBrandFont` is what puts it on the document.
+   */
+  fontStack: parseBrandFontStack(import.meta.env?.VITE_BUZZ_PRODUCT_FONT),
+  /** That stack's own family name, for read-back checks. `null` when unset. */
+  fontFamily: parseBrandFontFamily(import.meta.env?.VITE_BUZZ_PRODUCT_FONT),
   /**
    * What the appearance picker calls the first-party theme pair, or `null` to
    * keep calling it "Buzz". Only the label — the `buzz` / `buzz-dark`
