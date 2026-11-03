@@ -1,4 +1,6 @@
 import * as React from "react";
+import { i18n } from "@lingui/core";
+import { msg } from "@lingui/core/macro";
 
 import { useCommunityOnboarding } from "@/features/onboarding/communityOnboarding";
 import {
@@ -38,10 +40,14 @@ export function useClaimInvite() {
       .catch((error: unknown) =>
         update(
           {
+            // Resolved per call inside the `.catch`: there is no render here
+            // to read the active locale from through a hook.
             error: isInviteExpiredError(error)
-              ? "This invite code has expired — ask for a new one."
+              ? i18n._(msg`This invite code has expired — ask for a new one.`)
               : isInviteExhaustedError(error)
-                ? "This invite has reached its use limit. Ask for a new invite."
+                ? i18n._(
+                    msg`This invite has reached its use limit. Ask for a new invite.`,
+                  )
                 : inviteErrorMessage(error),
           },
           transaction.id,

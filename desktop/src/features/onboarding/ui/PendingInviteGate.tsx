@@ -4,6 +4,8 @@ import {
   BRAND_ONBOARDING_SURFACE,
   brandOnboardingColorScheme,
 } from "@/features/onboarding/brandSurface";
+import { Trans } from "@lingui/react/macro";
+
 import { useCommunityOnboarding } from "@/features/onboarding/communityOnboarding";
 import { cn } from "@/shared/lib/cn";
 import { useSystemColorScheme } from "@/shared/theme/useSystemColorScheme";
@@ -43,10 +45,13 @@ export function PendingInviteGate() {
           surface={BRAND_ONBOARDING_SURFACE}
         />
         <h1 className="mt-6 text-3xl font-semibold tracking-tight">
-          Opening community link
+          <Trans>Opening community link</Trans>
         </h1>
         <p className="mt-3 text-sm leading-6 text-muted-foreground">
-          You’ll connect to {transaction.communityName} once setup is finished.
+          <Trans>
+            You’ll connect to {transaction.communityName} once setup is
+            finished.
+          </Trans>
         </p>
         <div className="mt-8 flex w-full max-w-[300px] flex-col gap-3">
           <Button
@@ -55,7 +60,7 @@ export function PendingInviteGate() {
             onClick={() => update({ acknowledged: true })}
             type="button"
           >
-            Continue setup
+            <Trans>Continue setup</Trans>
           </Button>
           <Button
             className="h-10 w-full"
@@ -64,7 +69,7 @@ export function PendingInviteGate() {
             type="button"
             variant="ghost"
           >
-            Cancel
+            <Trans>Cancel</Trans>
           </Button>
         </div>
       </div>

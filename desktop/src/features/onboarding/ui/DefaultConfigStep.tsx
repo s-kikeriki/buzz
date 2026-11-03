@@ -1,4 +1,7 @@
 import * as React from "react";
+import type { I18n } from "@lingui/core";
+import { msg } from "@lingui/core/macro";
+import { Trans, useLingui } from "@lingui/react/macro";
 
 import {
   useAcpRuntimesQuery,
@@ -34,6 +37,7 @@ import {
 } from "./onboardingRuntimeSelection";
 import type { DefaultConfigDraft, DefaultConfigStepActions } from "./types";
 import { ONBOARDING_CARD_INPUT_CLASS } from "./onboardingCardStyles";
+import { BRAND } from "@/shared/branding/brand";
 
 type DefaultConfigStepProps = {
   actions: DefaultConfigStepActions;
@@ -43,9 +47,12 @@ type DefaultConfigStepProps = {
   readyRuntimeIds: readonly string[];
 };
 
-function formatHarnessLabel(runtime: AcpRuntimeCatalogEntry | undefined) {
-  if (!runtime) return "Select a harness";
-  return runtime.id === "buzz-agent" ? "Buzz" : runtime.label;
+function formatHarnessLabel(
+  i18n: I18n,
+  runtime: AcpRuntimeCatalogEntry | undefined,
+) {
+  if (!runtime) return i18n._(msg`Select a harness`);
+  return runtime.id === "buzz-agent" ? BRAND.productName : runtime.label;
 }
 
 function AgentDefaultsSection({
@@ -66,6 +73,7 @@ function AgentDefaultsSection({
   onUseDifferentHarness?: () => void;
   readyRuntimeIds: readonly string[];
 }) {
+  const { i18n, t } = useLingui();
   const cardLayout = useOnboardingCardLayout();
   const runtimesQuery = useAcpRuntimesQuery();
   const initialDraftRef = React.useRef(draft);
@@ -159,10 +167,10 @@ function AgentDefaultsSection({
   const harnessOptions = React.useMemo(
     () =>
       readyRuntimes.map((runtime) => ({
-        label: formatHarnessLabel(runtime),
+        label: formatHarnessLabel(i18n, runtime),
         value: runtime.id,
       })),
-    [readyRuntimes],
+    [i18n, readyRuntimes],
   );
 
   const updateDraft = React.useCallback(
@@ -236,11 +244,11 @@ function AgentDefaultsSection({
       {configSurfaceLoading ? (
         <div className="flex items-center justify-center gap-2 py-4 text-sm text-muted-foreground">
           <Spinner className="h-4 w-4 border-2" />
-          Loading…
+          <Trans>Loading…</Trans>
         </div>
       ) : configSurfaceError ? (
         <p className="py-4 text-center text-sm text-destructive">
-          Couldn't load harness settings. Go back and try again.
+          <Trans>Couldn't load harness settings. Go back and try again.</Trans>
         </p>
       ) : (
         <div className="space-y-7">
@@ -251,7 +259,7 @@ function AgentDefaultsSection({
                   className="text-sm font-medium"
                   htmlFor="global-agent-default-harness"
                 >
-                  Default harness
+                  <Trans>Default harness</Trans>
                 </label>
               </div>
               <AgentDropdownSelect
@@ -263,7 +271,7 @@ function AgentDefaultsSection({
                 id="global-agent-default-harness"
                 onValueChange={handleHarnessChange}
                 options={harnessOptions}
-                placeholder="Select a harness"
+                placeholder={t`Select a harness`}
                 placeholderClassName="text-foreground/70"
                 testId="global-agent-default-harness"
                 value={selectedRuntimeId}
@@ -315,7 +323,9 @@ function AgentDefaultsSection({
 
           {onUseDifferentHarness ? (
             <div className="flex items-baseline gap-1.5 text-sm text-foreground/70">
-              <span>or</span>
+              <span>
+                <Trans>or</Trans>
+              </span>
               <Button
                 className="h-auto p-0 text-sm text-foreground"
                 data-testid="onboarding-use-different-harness"
@@ -324,7 +334,7 @@ function AgentDefaultsSection({
                 type="button"
                 variant="link"
               >
-                Use a different harness
+                <Trans>Use a different harness</Trans>
               </Button>
             </div>
           ) : null}
@@ -346,6 +356,7 @@ export function DefaultConfigStep({
   onSavingChange,
   readyRuntimeIds,
 }: DefaultConfigStepProps) {
+  const { t } = useLingui();
   const cardLayout = useOnboardingCardLayout();
   const [persistenceState, setPersistenceState] = React.useState<{
     canComplete: boolean;
@@ -371,12 +382,12 @@ export function DefaultConfigStep({
       setSaveError(
         cause instanceof Error
           ? cause.message
-          : "Couldn’t save model settings.",
+          : t`Couldn’t save model settings.`,
       );
     } finally {
       setIsSaving(false);
     }
-  }, [actions, isSaving, persistenceState]);
+  }, [actions, isSaving, persistenceState, t]);
 
   const handleSkip = React.useCallback(() => {
     actions.discardDraft();
@@ -395,15 +406,15 @@ export function DefaultConfigStep({
       >
         <h1 className="text-title font-normal text-foreground">
           {actions.useDifferentHarness
-            ? "Connect with an API key"
-            : "Choose your model settings"}
+            ? t`Connect with an API key`
+            : t`Choose your model settings`}
         </h1>
         <p
           className={`w-full text-foreground/80 ${cardLayout ? "mt-2 text-base leading-6" : "mx-auto mt-3 max-w-[440px] text-sm leading-5"}`}
         >
           {actions.useDifferentHarness
-            ? "Choose your provider and enter an API key to connect to the Buzz harness."
-            : "Select the model and effort level your agents will use by default."}
+            ? t`Choose your provider and enter an API key to connect to the ${BRAND.productName} harness.`
+            : t`Select the model and effort level your agents will use by default.`}
         </p>
       </div>
 
@@ -431,7 +442,7 @@ export function DefaultConfigStep({
           type="button"
           variant="ghost"
         >
-          Skip for now
+          <Trans>Skip for now</Trans>
         </Button>
         <Button
           className={`${ONBOARDING_PRIMARY_CTA_CLASS} text-sm`}
@@ -440,7 +451,7 @@ export function DefaultConfigStep({
           onClick={() => void handleComplete()}
           type="button"
         >
-          {isSaving ? "Saving…" : "Next"}
+          {isSaving ? t`Saving…` : t`Next`}
         </Button>
 
         {saveError ? (
@@ -449,7 +460,7 @@ export function DefaultConfigStep({
             data-testid="onboarding-config-save-error"
             role="alert"
           >
-            Couldn’t save model settings. {saveError} Try again.
+            <Trans>Couldn’t save model settings. {saveError} Try again.</Trans>
           </p>
         ) : null}
       </OnboardingFooter>

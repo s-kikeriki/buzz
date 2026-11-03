@@ -21,6 +21,10 @@ msgstr " {failedRestartCount} konnten nicht neu starten — prüf die Agenten-Se
 msgid " successfully with {0} member{1}."
 msgstr " erfolgreich mit {0} Mitglied{1}."
 
+#: src/features/onboarding/ui/CommunityOnboardingFlow.tsx
+msgid " Try again."
+msgstr " Versuche es noch einmal."
+
 #: src/features/agents/ui/AgentSnapshotImportDialog.tsx
 msgid "— copy source allowlist to the new agent"
 msgstr "— Quell-Zulassungsliste zum neuen Agenten kopieren"
@@ -302,6 +306,16 @@ msgstr "{0} und die zugehörige lokale Audiodatei werden entfernt."
 msgid "{0} and its local audio file will be removed. {DEFAULT_VOICE_NAME} will be selected instead."
 msgstr "{0} und die zugehörige lokale Audiodatei werden entfernt. Stattdessen wird {DEFAULT_VOICE_NAME} ausgewählt."
 
+#. placeholder {0}: persona.displayName
+#: src/features/onboarding/ui/CommunityOnboardingFlow.tsx
+msgid "{0} animated character"
+msgstr "Animierte Figur von {0}"
+
+#. placeholder {0}: displayName.trim() || t`Your profile`
+#: src/features/onboarding/ui/CommunityOnboardingFlow.tsx
+msgid "{0} avatar"
+msgstr "Avatar von {0}"
+
 #. placeholder {0}: files.length
 #: src/features/projects/ui/ProjectPullRequestFilesChangedPanel.tsx
 msgid "{0} changed files"
@@ -400,6 +414,12 @@ msgstr "{0} bewahrt deinen Identitätsschlüssel in deinem Systemschlüsselbund 
 #: src/features/onboarding/ui/BackupStep.tsx
 msgid "{0} keeps your identity key protected on this device. Make a separate backup in case you lose access."
 msgstr "{0} bewahrt deinen Identitätsschlüssel geschützt auf diesem Gerät auf. Erstelle zusätzlich ein eigenes Backup, falls du den Zugriff verlierst."
+
+#. placeholder {0}: BRAND.productName
+#. placeholder {1}: BRAND.productName
+#: src/features/onboarding/ui/CommunityOnboardingFlow.tsx
+msgid "{0} lets you bring multiple agents into the same workspace. Your team will help you get started using {1}."
+msgstr "Mit {0} kannst du mehrere Agenten in denselben Arbeitsbereich holen. Dein Team hilft dir beim Start mit {1}."
 
 #. placeholder {0}: BRAND.productName
 #: src/features/messages/lib/composerMessageLinkNode.ts
@@ -794,6 +814,10 @@ msgstr "{pasteValidCount} gültige Pubkey{0} bereit."
 msgid "{personaCount, plural, one {# agent} other {# agents}}"
 msgstr "{personaCount, plural, one {# Agent} other {# Agenten}}"
 
+#: src/features/onboarding/ui/AvatarStep.tsx
+msgid "{previewName} avatar"
+msgstr "Avatar von {previewName}"
+
 #: src/features/agents/ui/acpCommandPicker.ts
 msgid "{productName} ACP (default)"
 msgstr "{productName} ACP (Standard)"
@@ -1179,6 +1203,18 @@ msgstr "Über {0}"
 msgid "Accent color"
 msgstr "Akzentfarbe"
 
+#: src/features/onboarding/ui/InviteRedeemForm.tsx
+msgid "Accept and join"
+msgstr "Annehmen und beitreten"
+
+#: src/features/onboarding/ui/InviteRedeemForm.tsx
+msgid "Accept and redeem invite"
+msgstr "Annehmen und Einladung einlösen"
+
+#: src/features/onboarding/ui/CommunityOnboardingFlow.tsx
+msgid "Accepting your invite…"
+msgstr "Deine Einladung wird angenommen …"
+
 #: src/features/projects/ui/AddProjectRepositoryDialog.tsx
 msgid "Access channel"
 msgstr "Zugriffskanal"
@@ -1296,9 +1332,17 @@ msgstr "Kommentar hinzufügen…"
 msgid "Add a description"
 msgstr "Beschreibung hinzufügen"
 
+#: src/features/onboarding/ui/AvatarStep.tsx
+msgid "Add a display image"
+msgstr "Anzeigebild hinzufügen"
+
 #: src/features/channels/ui/ChannelBrowserDialog.tsx
 msgid "Add a forum"
 msgstr "Forum hinzufügen"
+
+#: src/features/onboarding/ui/CommunityOnboardingFlow.tsx
+msgid "Add a name and avatar. They’ll show up on your messages, reactions, and agent handoffs."
+msgstr "Füge einen Namen und einen Avatar hinzu. Beide erscheinen bei deinen Nachrichten, Reaktionen und Agenten-Übergaben."
 
 #: src/features/projects/ui/ProjectBrowserDialog.tsx
 msgid "Add a project"
@@ -1335,6 +1379,10 @@ msgstr "Agenten hinzufügen"
 #: src/features/channels/ui/useChannelIntro.tsx
 msgid "Add an agent here."
 msgstr "Füge hier einen Agenten hinzu."
+
+#: src/features/onboarding/ui/CommunityOnboardingFlow.tsx
+msgid "Add an avatar"
+msgstr "Avatar hinzufügen"
 
 #: src/features/projects/ui/PullRequestReviewCard.tsx
 msgid "Add an optional summary for the author and other reviewers."
@@ -2204,7 +2252,11 @@ msgstr "Der Avatar gehört zur geteilten Identität."
 msgid "Awaiting review"
 msgstr "Wartet auf Review"
 
+#: src/features/onboarding/ui/AvatarStep.tsx
+#: src/features/onboarding/ui/InviteRedeemForm.tsx
+#: src/features/onboarding/ui/MembershipDenied.tsx
 #: src/features/onboarding/ui/OnboardingFlow.tsx
+#: src/features/onboarding/ui/ProfileStep.tsx
 #: src/features/projects/ui/ProjectWorkspaceTabList.tsx
 msgid "Back"
 msgstr "Zurück"
@@ -2372,6 +2424,10 @@ msgstr "Durchstöbere Teams, die auf diesem Relay geteilt werden."
 msgid "Bug"
 msgstr "Fehler"
 
+#: src/features/onboarding/ui/CommunityOnboardingFlow.tsx
+msgid "Build your profile"
+msgstr "Erstelle dein Profil"
+
 #: src/features/settings/ui/HostedCommunitiesSettingsCard.tsx
 msgid "Builderlab account"
 msgstr "Builderlab-Konto"
@@ -2439,8 +2495,11 @@ msgstr "Dieses Relay ist nicht erreichbar"
 #: src/features/messages/ui/DeleteMessageConfirmDialog.tsx
 #: src/features/messages/ui/DraftsPanel.tsx
 #: src/features/messages/ui/NonMemberMentionDialog.tsx
+#: src/features/onboarding/ui/CommunityOnboardingFlow.tsx
 #: src/features/onboarding/ui/IdentityRecoveryPairing.tsx
+#: src/features/onboarding/ui/InviteRedeemForm.tsx
 #: src/features/onboarding/ui/KeyringLockedScreen.tsx
+#: src/features/onboarding/ui/PendingInviteGate.tsx
 #: src/features/projects/ui/MergePullRequestButton.tsx
 #: src/features/projects/ui/ProjectBranchDialogs.tsx
 #: src/features/projects/ui/ProjectCards.tsx
@@ -2513,6 +2572,7 @@ msgstr "Schlüssel für die Kartenprägung"
 msgid "Category"
 msgstr "Kategorie"
 
+#: src/features/onboarding/ui/MembershipDenied.tsx
 #: src/features/onboarding/ui/OnboardingFlow.tsx
 msgid "Change community"
 msgstr "Community wechseln"
@@ -2528,6 +2588,10 @@ msgstr "Rolle ändern"
 #: src/features/onboarding/ui/EncryptedBackupCreator.tsx
 msgid "Change saved backup password"
 msgstr "Gespeichertes Backup-Passwort ändern"
+
+#: src/features/onboarding/ui/CommunityOnboardingFlow.tsx
+msgid "Change your avatar"
+msgstr "Avatar ändern"
 
 #: src/features/projects/ui/ProjectCommitDetailPanel.tsx
 msgid "Changes"
@@ -2850,6 +2914,10 @@ msgstr "Wähl zuerst ein Emoji"
 msgid "Choose an existing repository to add to {0}."
 msgstr "Wähl ein vorhandenes Repository, das du zu {0} hinzufügst."
 
+#: src/features/onboarding/ui/AvatarStep.tsx
+msgid "Choose an image or emoji as your avatar"
+msgstr "Wähle ein Bild oder Emoji als Avatar"
+
 #: src/features/messages/ui/NewMessageScreen.tsx
 msgid "Choose at least one recipient first."
 msgstr "Wähle zuerst mindestens einen Empfänger."
@@ -2878,6 +2946,10 @@ msgstr "Lege fest, wie {productName} aussieht und sich anfühlt."
 #: src/features/agents/ui/AgentCardMintDialog.tsx
 msgid "Choose how much memory the embedded agent carries."
 msgstr "Wähl, wie viel Gedächtnis der eingebettete Agent mitbekommt."
+
+#: src/features/onboarding/ui/ConnectionMethodSection.tsx
+msgid "Choose how your agents will access AI. You can change this later."
+msgstr "Wähle, wie deine Agenten auf KI zugreifen. Du kannst das später ändern."
 
 #: src/features/agents/ui/personaLibraryCopy.ts
 msgid "Choose one from Agent Catalog, create your own, or import one to get started."
@@ -2923,6 +2995,15 @@ msgstr "Lege fest, welche Runtime für jeden Agenten verwendet wird."
 #: src/features/channels/ui/EditRespondToDialog.tsx
 msgid "Choose who can send instructions to {agentLabel}."
 msgstr "Lege fest, wer {agentLabel} Anweisungen geben darf."
+
+#: src/features/onboarding/ui/DefaultConfigStep.tsx
+msgid "Choose your model settings"
+msgstr "Wähle deine Modelleinstellungen"
+
+#. placeholder {0}: BRAND.productName
+#: src/features/onboarding/ui/DefaultConfigStep.tsx
+msgid "Choose your provider and enter an API key to connect to the {0} harness."
+msgstr "Wähle deinen Anbieter und gib einen API-Schlüssel ein, um dich mit dem {0}-Harness zu verbinden."
 
 #: src/features/agents/ui/AgentConfigPanel.tsx
 msgid "CLAUDE_CONFIG_DIR"
@@ -3226,6 +3307,14 @@ msgstr "Community-Mitglied"
 msgid "Community settings"
 msgstr "Community-Einstellungen"
 
+#: src/features/onboarding/ui/InviteRedeemForm.tsx
+msgid "Community URL or invite link"
+msgstr "Community-URL oder Einladungslink"
+
+#: src/features/onboarding/ui/CommunityOnboardingFlow.tsx
+msgid "Community username"
+msgstr "Community-Benutzername"
+
 #: src/features/settings/ui/AppearanceSettingsControls.tsx
 msgid "Compact"
 msgstr "Kompakt"
@@ -3329,6 +3418,14 @@ msgstr "Mit dem Relay verbinden"
 msgid "Connect to the relay to browse channels and read messages."
 msgstr "Verbinde dich mit dem Relay, um Kanäle zu durchsuchen und Nachrichten zu lesen."
 
+#: src/features/onboarding/ui/DefaultConfigStep.tsx
+msgid "Connect with an API key"
+msgstr "Mit einem API-Schlüssel verbinden"
+
+#: src/features/onboarding/ui/ConnectionMethodSection.tsx
+msgid "Connect your AI provider"
+msgstr "Verbinde deinen KI-Anbieter"
+
 #: src/features/sidebar/ui/SidebarRelayConnectionCard.tsx
 msgid "Connected"
 msgstr "Verbunden"
@@ -3341,6 +3438,10 @@ msgstr "Verbindung wird hergestellt"
 #: src/features/settings/ui/HostedCommunitiesSettingsCard.tsx
 msgid "Connecting {productName} identity…"
 msgstr "{productName}-Identität wird verbunden …"
+
+#: src/features/onboarding/ui/CommunityOnboardingFlow.tsx
+msgid "Connecting securely…"
+msgstr "Sichere Verbindung wird aufgebaut …"
 
 #: src/features/settings/ui/HarnessRow.tsx
 msgid "Connection failed."
@@ -3357,12 +3458,19 @@ msgstr "Kontextlimit"
 
 #: src/features/onboarding/ui/BackupStep.tsx
 #: src/features/onboarding/ui/DownloadKeyStep.tsx
+#: src/features/onboarding/ui/ProfileStep.tsx
 msgid "Continue"
 msgstr "Weiter"
 
 #: src/features/onboarding/ui/MachineOnboardingFlow.tsx
+#: src/features/onboarding/ui/PendingInviteGate.tsx
 msgid "Continue setup"
 msgstr "Einrichtung fortsetzen"
+
+#: src/features/onboarding/ui/AvatarStep.tsx
+#: src/features/onboarding/ui/ProfileStep.tsx
+msgid "Continue without saving"
+msgstr "Ohne Speichern fortfahren"
 
 #: src/features/projects/lib/projectDetailAgentContext.ts
 #: src/features/projects/ui/ProjectRepositoryActionsPanel.tsx
@@ -3470,6 +3578,10 @@ msgstr "Log kopieren"
 #: src/features/messages/ui/MessageActionBar.tsx
 msgid "Copy message"
 msgstr "Nachricht kopieren"
+
+#: src/features/onboarding/ui/MembershipDenied.tsx
+msgid "Copy npub"
+msgstr "npub kopieren"
 
 #: src/features/onboarding/ui/IdentityRecoveryPairing.tsx
 #: src/features/settings/ui/MobilePairingCard.tsx
@@ -3680,6 +3792,10 @@ msgstr "Die Agent-Konfiguration konnte nicht geladen werden."
 msgid "Couldn't load agent defaults. Restart the app to try again."
 msgstr "Agent-Standards konnten nicht geladen werden. Starte die App neu und versuch es erneut."
 
+#: src/features/onboarding/ui/DefaultConfigStep.tsx
+msgid "Couldn't load harness settings. Go back and try again."
+msgstr "Die Harness-Einstellungen konnten nicht geladen werden. Geh zurück und versuche es noch einmal."
+
 #: src/features/messages/ui/MessageTimelineErrorCard.tsx
 msgid "Couldn't load messages"
 msgstr "Nachrichten konnten nicht geladen werden"
@@ -3741,6 +3857,14 @@ msgstr "Die Runtimes konnten nicht aktualisiert werden."
 #: src/features/home/ui/InboxListPane.tsx
 msgid "Couldn’t reopen"
 msgstr "Öffnen fehlgeschlagen"
+
+#: src/features/onboarding/ui/DefaultConfigStep.tsx
+msgid "Couldn’t save model settings."
+msgstr "Die Modelleinstellungen konnten nicht gespeichert werden."
+
+#: src/features/onboarding/ui/DefaultConfigStep.tsx
+msgid "Couldn’t save model settings. {saveError} Try again."
+msgstr "Die Modelleinstellungen konnten nicht gespeichert werden. {saveError} Versuche es noch einmal."
 
 #: src/features/agents/ui/AgentCardMintDialog.tsx
 msgid "Couldn't save the key."
@@ -3895,6 +4019,10 @@ msgstr "Agent erstellen"
 #: src/features/agents/ui/personaDialogState.ts
 msgid "Create an agent and start it immediately."
 msgstr "Leg einen Agenten an und starte ihn sofort."
+
+#: src/features/onboarding/ui/ProfileStep.tsx
+msgid "Create an identity key"
+msgstr "Identitätsschlüssel erstellen"
 
 #: src/features/agents/ui/AddTeamToChannelDialog.tsx
 msgid "Create and attach one agent per member of"
@@ -4197,6 +4325,7 @@ msgid "Default branch"
 msgstr "Standard-Branch"
 
 #: src/features/agents/ui/AgentDefaultsEditor.tsx
+#: src/features/onboarding/ui/DefaultConfigStep.tsx
 msgid "Default harness"
 msgstr "Standard-Harness"
 
@@ -4817,6 +4946,10 @@ msgstr "Team bearbeiten"
 msgid "Edit template"
 msgstr "Vorlage bearbeiten"
 
+#: src/features/onboarding/ui/CommunityOnboardingFlow.tsx
+msgid "Edit your avatar"
+msgstr "Avatar bearbeiten"
+
 #: src/features/messages/ui/MessageComposer.tsx
 msgid "Edit your message"
 msgstr "Bearbeite deine Nachricht"
@@ -4906,6 +5039,10 @@ msgstr "Gib das Passwort ein, um zu zeigen, dass du dieses Backup entsperren kan
 msgid "Enter your backup password to restore your identity."
 msgstr "Gib dein Backup-Passwort ein, um deine Identität wiederherzustellen."
 
+#: src/features/onboarding/ui/ProfileStep.tsx
+msgid "Enter your name"
+msgstr "Gib deinen Namen ein"
+
 #: src/features/onboarding/ui/DownloadKeyStep.tsx
 msgid "Enter your password to make sure you can unlock this file."
 msgstr "Gib dein Passwort ein, um sicherzugehen, dass du diese Datei entsperren kannst."
@@ -4913,6 +5050,10 @@ msgstr "Gib dein Passwort ein, um sicherzugehen, dass du diese Datei entsperren 
 #: src/features/onboarding/ui/MachineOnboardingFlow.tsx
 msgid "Enter your private key"
 msgstr "Privaten Schlüssel eingeben"
+
+#: src/features/onboarding/ui/CommunityOnboardingFlow.tsx
+msgid "Enter your username here"
+msgstr "Gib hier deinen Benutzernamen ein"
 
 #: src/features/agents/ui/PersonaAdvancedFields.tsx
 msgid "Entire channel"
@@ -5109,6 +5250,10 @@ msgstr "Es konnte kein Passwort erzeugt werden."
 #: src/features/agents/ui/usePersonaActions.ts
 msgid "Failed to import agent snapshot."
 msgstr "Der Agent-Snapshot konnte nicht importiert werden."
+
+#: src/features/onboarding/ui/MembershipDenied.tsx
+msgid "Failed to import key."
+msgstr "Der Schlüssel konnte nicht importiert werden."
 
 #: src/features/agents/ui/useTeamActions.ts
 msgid "Failed to import team snapshot."
@@ -5553,6 +5698,10 @@ msgstr "Harness-Standard"
 msgid "Harness Log"
 msgstr "Harness-Log"
 
+#: src/features/onboarding/ui/MembershipDenied.tsx
+msgid "Have an invite?"
+msgstr "Hast du eine Einladung?"
+
 #: src/features/channels/ui/MembersSidebarMemberCard.tsx
 msgid "Here"
 msgstr "Hier"
@@ -5666,6 +5815,29 @@ msgstr "Bindestriche"
 msgid "I added a longer message so you can compare line height and text spacing."
 msgstr "Ich habe eine längere Nachricht hinzugefügt, damit du Zeilenhöhe und Textabstände vergleichen kannst."
 
+#. placeholder {0}: BRAND.productName
+#: src/features/onboarding/ui/JoinPolicyNotice.tsx
+msgid "I agree to the {0} <0>Privacy Policy</0>."
+msgstr "Ich stimme der <0>Datenschutzerklärung</0> von {0} zu."
+
+#. placeholder {0}: BRAND.productName
+#: src/features/onboarding/ui/JoinPolicyNotice.tsx
+msgid "I agree to the {0} <0>Terms of Service</0> and <1>Privacy Policy</1>."
+msgstr "Ich stimme den <0>Nutzungsbedingungen</0> und der <1>Datenschutzerklärung</1> von {0} zu."
+
+#. placeholder {0}: BRAND.productName
+#: src/features/onboarding/ui/JoinPolicyNotice.tsx
+msgid "I agree to the {0} <0>Terms of Service</0>."
+msgstr "Ich stimme den <0>Nutzungsbedingungen</0> von {0} zu."
+
+#: src/features/onboarding/ui/ProfileStep.tsx
+msgid "I already have a key"
+msgstr "Ich habe schon einen Schlüssel"
+
+#: src/features/onboarding/ui/JoinPolicyNotice.tsx
+msgid "I am 18 years of age or older."
+msgstr "Ich bin 18 Jahre oder älter."
+
 #: src/features/settings/ui/SignOutSection.tsx
 msgid "I have tested a key backup or saved this private key somewhere safe."
 msgstr "Ich habe ein Schlüssel-Backup getestet oder diesen privaten Schlüssel an einem sicheren Ort gespeichert."
@@ -5714,6 +5886,10 @@ msgstr "Agent-Snapshot importieren"
 msgid "Import an agent"
 msgstr "Einen Agenten importieren"
 
+#: src/features/onboarding/ui/MembershipDenied.tsx
+msgid "Import key"
+msgstr "Schlüssel importieren"
+
 #: src/features/agents/ui/personaLibraryCopy.ts
 msgid "Import snapshot"
 msgstr "Snapshot importieren"
@@ -5736,6 +5912,10 @@ msgstr "{0} mit {memberCount} Mitglied{1} importiert."
 #: src/features/onboarding/ui/KeyringLockedScreen.tsx
 msgid "Importing a different nsec replaces the identity currently locked in the keyring for this install. The previous identity will no longer be accessible. Continue?"
 msgstr "Wenn du einen anderen nsec importierst, ersetzt das die Identität, die für diese Installation im Schlüsselbund liegt. Die bisherige Identität ist dann nicht mehr zugänglich. Fortfahren?"
+
+#: src/features/onboarding/ui/MembershipDenied.tsx
+msgid "Importing key"
+msgstr "Schlüssel wird importiert"
 
 #: src/features/projects/projectTaskCategories.ts
 msgid "Improvement"
@@ -5910,6 +6090,10 @@ msgstr "Den aktuellen ACP-Zug unterbrechen, ohne den Agentenprozess zu stoppen."
 msgid "Invite"
 msgstr "Einladen"
 
+#: src/features/onboarding/ui/InviteRedeemForm.tsx
+msgid "Invite link or code"
+msgstr "Einladungslink oder -code"
+
 #: src/features/channels/ui/useChannelIntro.tsx
 msgid "Invite members."
 msgstr "Lade Mitglieder ein."
@@ -5997,6 +6181,10 @@ msgstr "Auftragsergebnis"
 msgid "Join channel"
 msgstr "Kanal beitreten"
 
+#: src/features/onboarding/ui/InviteRedeemForm.tsx
+msgid "Join community"
+msgstr "Community beitreten"
+
 #: src/features/channels/ui/ChannelPane.tsx
 msgid "Join to participate"
 msgstr "Beitreten, um mitzumachen"
@@ -6009,6 +6197,11 @@ msgstr "Beigetreten"
 #: src/features/community-members/ui/CommunityMembersCard.tsx
 msgid "Joined {0}"
 msgstr "Beigetreten {0}"
+
+#. placeholder {0}: transaction.communityName
+#: src/features/onboarding/ui/CommunityOnboardingFlow.tsx
+msgid "Joining {0}"
+msgstr "Beitritt zu {0}"
 
 #: src/features/channels/ui/ChannelManagementSheet.tsx
 msgid "Joining channel..."
@@ -6331,6 +6524,10 @@ msgstr "Personen werden geladen"
 msgid "Loading people and agents"
 msgstr "Personen und Agenten werden geladen"
 
+#: src/features/onboarding/ui/InviteRedeemForm.tsx
+msgid "Loading policy"
+msgstr "Richtlinie wird geladen"
+
 #: src/features/projects/ui/ProjectsActivityFeed.tsx
 msgid "Loading project activity"
 msgstr "Projektaktivität wird geladen"
@@ -6398,6 +6595,7 @@ msgid "Loading..."
 msgstr "Wird geladen …"
 
 #: src/features/agents/ui/AgentDefaultsEditor.tsx
+#: src/features/onboarding/ui/DefaultConfigStep.tsx
 #: src/features/settings/ui/PrivateKeyBackupRow.tsx
 #: src/features/settings/ui/SignOutSection.tsx
 msgid "Loading…"
@@ -6434,6 +6632,10 @@ msgstr "In einer Backup-Datei gesichert"
 #: src/features/agents/ui/AgentCardMintDialog.tsx
 msgid "Locking needs a linked agent instance — start this agent once to enable it."
 msgstr "Zum Sperren brauchst du eine verknüpfte Agent-Instanz — starte diesen Agenten einmal, um es zu aktivieren."
+
+#: src/features/onboarding/ui/ConnectionMethodSection.tsx
+msgid "Log in with a subscription"
+msgstr "Mit einem Abo anmelden"
 
 #: src/features/settings/ui/AppearanceSettingsControls.tsx
 msgid "Lower values reveal more of the desktop blur."
@@ -6554,6 +6756,10 @@ msgstr "Maximale Tokens, die das LLM pro Antwort erzeugen darf. Leer lassen, um 
 msgid "MCP servers"
 msgstr "MCP-Server"
 
+#: src/features/onboarding/ui/CommunityOnboardingFlow.tsx
+msgid "Meet your starter team"
+msgstr "Lerne dein Starter-Team kennen"
+
 #: src/features/agents/ui/AddAgentToChannelDialog.tsx
 #: src/features/agents/ui/AddTeamToChannelDialog.tsx
 #: src/features/agents/ui/RemoveMembersConfirmDialog.tsx
@@ -6585,6 +6791,10 @@ msgstr "Mitglieder ("
 #: src/features/projects/ui/AddProjectRepositoryDialog.tsx
 msgid "Members of this channel can access the repository."
 msgstr "Mitglieder dieses Kanals können auf das Repository zugreifen."
+
+#: src/features/onboarding/ui/MembershipDenied.tsx
+msgid "Membership required"
+msgstr "Mitgliedschaft erforderlich"
 
 #: src/features/agents/ui/AgentCardMintDialog.tsx
 #: src/features/agents/ui/AgentSnapshotExportDialog.tsx
@@ -6883,6 +7093,7 @@ msgstr "Meine Runtime"
 #: src/features/agents/ui/TeamDialog.tsx
 #: src/features/channels/ui/AddChannelBotGenericSection.tsx
 #: src/features/channels/ui/ChannelManagementSheet.tsx
+#: src/features/onboarding/ui/ProfileStep.tsx
 #: src/features/projects/ui/AddProjectRepositoryDialog.tsx
 #: src/features/projects/ui/CreateProjectFormContent.tsx
 #: src/features/projects/ui/ProjectChannelRequestDialog.tsx
@@ -7023,6 +7234,17 @@ msgstr "Neuer Workflow"
 #: src/features/sidebar/ui/SidebarProjectsSection.tsx
 msgid "Newest"
 msgstr "Neueste"
+
+#: src/features/onboarding/ui/AvatarStep.tsx
+#: src/features/onboarding/ui/CommunityOnboardingFlow.tsx
+#: src/features/onboarding/ui/DefaultConfigStep.tsx
+#: src/features/onboarding/ui/InviteRedeemForm.tsx
+msgid "Next"
+msgstr "Weiter"
+
+#: src/features/onboarding/ui/AvatarStep.tsx
+msgid "Next, add a display image"
+msgstr "Füge als Nächstes ein Anzeigebild hinzu"
 
 #: src/features/channels/ui/WelcomeComposerBanner.tsx
 msgid "Nice work."
@@ -7569,6 +7791,10 @@ msgstr "Noch keine"
 msgid "north-star"
 msgstr "north-star"
 
+#: src/features/onboarding/ui/MembershipDenied.tsx
+msgid "Not a member yet"
+msgstr "Noch kein Mitglied"
+
 #: src/features/agents/ui/AgentAiConfigurationMode.tsx
 #: src/features/agents/ui/AgentAiDefaults.tsx
 #: src/features/agents/ui/AgentDefinitionDialog.tsx
@@ -8000,6 +8226,10 @@ msgstr "OpenAI-kompatibel"
 msgid "OpenAI's coding agent, connected through the codex-acp adapter."
 msgstr "Der Coding-Agent von OpenAI, verbunden über den codex-acp-Adapter."
 
+#: src/features/onboarding/ui/PendingInviteGate.tsx
+msgid "Opening community link"
+msgstr "Community-Link wird geöffnet"
+
 #: src/features/messages/ui/NewMessageScreen.tsx
 msgid "Opening…"
 msgstr "Wird geöffnet …"
@@ -8034,6 +8264,10 @@ msgstr "Optionale Anweisungen für jedes bereitgestellte Teammitglied."
 #: src/features/agents/ui/AgentCardMintDialog.tsx
 msgid "Optional style notes for the art and card text"
 msgstr "Optionale Stilhinweise für Motiv und Kartentext"
+
+#: src/features/onboarding/ui/DefaultConfigStep.tsx
+msgid "or"
+msgstr "oder"
 
 #: src/features/agents/ui/personaLibraryCopy.ts
 msgid "Or drop an .agent.json or .agent.png snapshot here to import."
@@ -8219,6 +8453,11 @@ msgstr "Wähle einen verwalteten Agenten, um die neueste ACP-Log-Ausgabe zu sehe
 msgid "Pick an inbox item to see the full message and react to it."
 msgstr "Wähle einen Posteingangseintrag, um die ganze Nachricht zu sehen und darauf zu reagieren."
 
+#. placeholder {0}: BRAND.productName
+#: src/features/onboarding/ui/ProfileStep.tsx
+msgid "Pick the name people and agents will see in {0}. You can change it anytime."
+msgstr "Wähle den Namen, den Leute und Agenten in {0} sehen. Du kannst ihn jederzeit ändern."
+
 #: src/features/sidebar/ui/ChannelContextMenu.tsx
 msgid "Pin channel"
 msgstr "Kanal anheften"
@@ -8259,6 +8498,10 @@ msgstr "Wiedergabe"
 #: src/features/messages/ui/AudioMessageAttachment.tsx
 msgid "Playback speed {0}; next {1}"
 msgstr "Wiedergabegeschwindigkeit {0}; als Nächstes {1}"
+
+#: src/features/onboarding/ui/InviteRedeemForm.tsx
+msgid "Please enter a valid invite link or community URL"
+msgstr "Gib einen gültigen Einladungslink oder eine Community-URL ein"
 
 #: src/features/agents/ui/AgentSnapshotExportDialog.tsx
 #: src/features/agents/ui/TeamSnapshotExportDialog.tsx
@@ -8311,6 +8554,10 @@ msgstr "Update wird vorbereitet …"
 #: src/features/messages/ui/VoiceNoteRecorder.tsx
 msgid "Preparing voice note"
 msgstr "Sprachnachricht wird vorbereitet"
+
+#: src/features/onboarding/ui/CommunityOnboardingFlow.tsx
+msgid "Preparing Welcome"
+msgstr "Willkommen wird vorbereitet"
 
 #: src/features/projects/ui/MergePullRequestButton.tsx
 msgid "Preparing…"
@@ -8365,6 +8612,7 @@ msgstr "Privater Kanal"
 msgid "private ephemeral channel"
 msgstr "privaten temporären Kanals"
 
+#: src/features/onboarding/ui/MembershipDenied.tsx
 #: src/features/settings/ui/PrivateKeyBackupRow.tsx
 msgid "Private key"
 msgstr "Privater Schlüssel"
@@ -8808,6 +9056,14 @@ msgstr "Wiederherstellung gestoppt: {0}"
 msgid "Red"
 msgstr "Rot"
 
+#: src/features/onboarding/ui/InviteRedeemForm.tsx
+msgid "Redeem invite"
+msgstr "Einladung einlösen"
+
+#: src/features/onboarding/ui/InviteRedeemForm.tsx
+msgid "Redeeming invite"
+msgstr "Einladung wird eingelöst"
+
 #: src/features/messages/ui/ComposerImageEditor.tsx
 msgid "Redo (⇧⌘Z)"
 msgstr "Wiederherstellen (⇧⌘Z)"
@@ -8868,6 +9124,10 @@ msgstr "Verwandte Unterhaltungen"
 #: src/features/onboarding/ui/RecoveryScreen.tsx
 msgid "Relaunch {0}"
 msgstr "{0} neu starten"
+
+#: src/features/onboarding/ui/InviteRedeemForm.tsx
+msgid "Relay URL"
+msgstr "Relay-URL"
 
 #: src/features/projects/ui/ProjectsAgentPromptPage.tsx
 msgid "Release check"
@@ -9270,6 +9530,7 @@ msgstr "Wird wiederhergestellt …"
 #: src/features/messages/ui/MessageThreadReplyState.tsx
 #: src/features/messages/ui/MessageTimelineErrorCard.tsx
 #: src/features/onboarding/hooks.ts
+#: src/features/onboarding/ui/CommunityOnboardingFlow.tsx
 #: src/features/projects/ui/ProjectDetailUnavailableState.tsx
 #: src/features/projects/ui/ProjectRepositoryUnavailableState.tsx
 #: src/features/projects/ui/ProjectsIssuesList.tsx
@@ -9520,6 +9781,11 @@ msgstr "Avatar wird gespeichert"
 msgid "Saving backup…"
 msgstr "Backup wird gespeichert …"
 
+#: src/features/onboarding/ui/AvatarStep.tsx
+#: src/features/onboarding/ui/ProfileStep.tsx
+msgid "Saving profile"
+msgstr "Profil wird gespeichert"
+
 #: src/features/settings/ui/ProfileSettingsCard.tsx
 msgid "Saving profile photo"
 msgstr "Profilbild wird gespeichert"
@@ -9531,6 +9797,10 @@ msgstr "Profilbild wird gespeichert"
 #: src/features/settings/ui/ChannelTemplatesSettingsCard.tsx
 msgid "Saving..."
 msgstr "Wird gespeichert…"
+
+#: src/features/onboarding/ui/DefaultConfigStep.tsx
+msgid "Saving…"
+msgstr "Wird gespeichert …"
 
 #: src/features/settings/ui/MobilePairingCard.tsx
 msgid "Scan QR code"
@@ -9708,6 +9978,7 @@ msgid "Select a draft"
 msgstr "Wähle einen Entwurf"
 
 #: src/features/agents/ui/AgentDefaultsEditor.tsx
+#: src/features/onboarding/ui/DefaultConfigStep.tsx
 msgid "Select a harness"
 msgstr "Wähle ein Harness"
 
@@ -9774,6 +10045,10 @@ msgstr "Wähle die Teams, die in diese Vorlage aufgenommen werden."
 #: src/features/agents/ui/TeamDialog.tsx
 msgid "Select the agents to include in this team."
 msgstr "Wähle die Agenten aus, die zu diesem Team gehören."
+
+#: src/features/onboarding/ui/DefaultConfigStep.tsx
+msgid "Select the model and effort level your agents will use by default."
+msgstr "Wähle das Modell und die Aufwandsstufe, die deine Agenten standardmäßig nutzen."
 
 #: src/features/onboarding/ui/BackupTestFlow.tsx
 #: src/features/settings/ui/BackupTestFlow.tsx
@@ -10187,7 +10462,11 @@ msgstr "Abmeldung läuft …"
 msgid "sk-…"
 msgstr "sk-…"
 
+#: src/features/onboarding/ui/AvatarStep.tsx
+#: src/features/onboarding/ui/CommunityOnboardingFlow.tsx
+#: src/features/onboarding/ui/DefaultConfigStep.tsx
 #: src/features/onboarding/ui/DownloadKeyStep.tsx
+#: src/features/onboarding/ui/ProfileStep.tsx
 msgid "Skip for now"
 msgstr "Vorerst überspringen"
 
@@ -10483,6 +10762,11 @@ msgstr "System-Prompt-Überschreibung"
 #: src/features/projects/ui/ProjectRepositorySource.tsx
 msgid "Tags"
 msgstr "Tags"
+
+#. placeholder {0}: BRAND.productName
+#: src/features/onboarding/ui/CommunityOnboardingFlow.tsx
+msgid "Take me to {0}"
+msgstr "Los geht’s mit {0}"
 
 #: src/features/channels/ui/WelcomeAgentCreateDialog.tsx
 msgid "Talk through what you need. {guideName} will prepare a draft you can review and edit."
@@ -11008,6 +11292,14 @@ msgstr "Diese importierte Stimme und ihre lokale Audiodatei werden entfernt."
 msgid "This inbox item does not have a reply target."
 msgstr "Dieser Posteingangseintrag hat kein Antwortziel."
 
+#: src/features/onboarding/useClaimInvite.ts
+msgid "This invite code has expired — ask for a new one."
+msgstr "Dieser Einladungscode ist abgelaufen — frage nach einem neuen."
+
+#: src/features/onboarding/useClaimInvite.ts
+msgid "This invite has reached its use limit. Ask for a new invite."
+msgstr "Diese Einladung hat ihr Nutzungslimit erreicht. Frage nach einer neuen Einladung."
+
 #. placeholder {0}: i18n._(intro.channelKindLabel)
 #: src/features/messages/ui/ChannelIntroBlock.tsx
 msgid "This is the beginning of the <0>{0}</0>."
@@ -11021,6 +11313,10 @@ msgstr "Das ist der Anfang deiner Direktnachricht mit <0>{0}</0>."
 #: src/features/agents/ui/AgentSnapshotImportDialog.tsx
 msgid "This is the complete portable payload decoded from the file. Secrets, credentials, and source identity are not part of the snapshot format."
 msgstr "Das ist die vollständige portable Nutzlast, die aus der Datei dekodiert wurde. Geheimnisse, Zugangsdaten und die Quellidentität gehören nicht zum Snapshot-Format."
+
+#: src/features/onboarding/ui/MembershipDenied.tsx
+msgid "This is your public identity — it's safe to share. Send it to the relay admin so they can invite you."
+msgstr "Das ist deine öffentliche Identität — du kannst sie gefahrlos weitergeben. Schick sie der Relay-Administration, damit sie dich einladen kann."
 
 #: src/features/home/lib/homeMessageCapabilities.ts
 msgid "This item does not support inline replies yet."
@@ -11071,6 +11367,10 @@ msgstr "Dieser Anbieter unter"
 #: src/features/channels/ui/CanvasHistoryPanel.tsx
 msgid "This publishes {revisionLabel} as the current canvas for everyone in this channel. History is preserved."
 msgstr "Damit wird {revisionLabel} für alle in diesem Kanal zum aktuellen Canvas. Der Verlauf bleibt erhalten."
+
+#: src/features/onboarding/ui/MembershipDenied.tsx
+msgid "This relay requires an invitation. Ask a relay admin to add you as a member, then come back and try again."
+msgstr "Dieses Relay erfordert eine Einladung. Bitte die Relay-Administration, dich als Mitglied hinzuzufügen, und versuche es dann noch einmal."
 
 #: src/features/settings/ui/harnessCatalogLogic.ts
 msgid "This replaces the machine-wide {adapter} adapter. Other tools using the currently installed adapter will switch to the updated version."
@@ -11132,6 +11432,10 @@ msgstr "Das löscht deinen Identitätsschlüssel, alle Agenteneinstellungen und 
 #: src/features/messages/ui/DeleteMessageConfirmDialog.tsx
 msgid "This will permanently delete this message and cannot be undone."
 msgstr "Damit wird diese Nachricht endgültig gelöscht. Das lässt sich nicht rückgängig machen."
+
+#: src/features/onboarding/ui/MembershipDenied.tsx
+msgid "This will use this Nostr identity:"
+msgstr "Damit wird diese Nostr-Identität verwendet:"
 
 #: src/features/channels/ui/FocusThreadDrawer.tsx
 #: src/features/home/lib/inbox.ts
@@ -11301,6 +11605,7 @@ msgstr "Versuch eine andere Suche."
 #: src/features/agents/useCreatedAgentChannelAttachment.ts
 #: src/features/home/ui/HomeView.tsx
 #: src/features/onboarding/ui/IdentityRecoveryPairing.tsx
+#: src/features/onboarding/ui/MembershipDenied.tsx
 #: src/features/settings/ui/MobilePairingCard.tsx
 #: src/features/settings/ui/SettingsView.tsx
 msgid "Try again"
@@ -11455,6 +11760,10 @@ msgstr "Unbekannter Fehler"
 #: src/features/agents/ui/personaModelDiscoveryStatus.ts
 msgid "Unknown model discovery error"
 msgstr "Unbekannter Fehler bei der Modellsuche"
+
+#: src/features/onboarding/ui/MembershipDenied.tsx
+msgid "Unknown public key"
+msgstr "Unbekannter öffentlicher Schlüssel"
 
 #: src/features/messages/ui/DraftsPanel.tsx
 msgid "Unknown time"
@@ -11658,6 +11967,10 @@ msgstr "{0} wird hochgeladen"
 msgid "Uploading {assetLabel}"
 msgstr "{assetLabel} wird hochgeladen"
 
+#: src/features/onboarding/ui/AvatarStep.tsx
+msgid "Uploading avatar"
+msgstr "Avatar wird hochgeladen"
+
 #: src/features/agents/ui/AgentDefinitionDialogFooter.tsx
 msgid "Uploading..."
 msgstr "Wird hochgeladen…"
@@ -11682,6 +11995,14 @@ msgstr "{swatch}-Hintergrund verwenden"
 msgid "Use a different file"
 msgstr "Andere Datei verwenden"
 
+#: src/features/onboarding/ui/DefaultConfigStep.tsx
+msgid "Use a different harness"
+msgstr "Ein anderes Harness verwenden"
+
+#: src/features/onboarding/ui/MembershipDenied.tsx
+msgid "Use a different key"
+msgstr "Einen anderen Schlüssel verwenden"
+
 #: src/features/onboarding/ui/MachineOnboardingFlow.tsx
 msgid "Use a different key instead"
 msgstr "Stattdessen einen anderen Schlüssel verwenden"
@@ -11702,6 +12023,10 @@ msgstr "Agent-Standardwerte verwenden ({0})"
 #: src/features/agents/ui/agentConfigOptions.tsx
 msgid "Use agent defaults ({trimmedGlobal})"
 msgstr "Agent-Standardwerte verwenden ({trimmedGlobal})"
+
+#: src/features/onboarding/ui/ConnectionMethodSection.tsx
+msgid "Use an API key"
+msgstr "Einen API-Schlüssel verwenden"
 
 #: src/features/onboarding/ui/MachineOnboardingFlow.tsx
 msgid "Use an existing key"
@@ -12046,6 +12371,10 @@ msgstr "Was sieht gut aus?"
 msgid "What should this agent help with in the channel?"
 msgstr "Bei was soll dieser Agent im Kanal helfen?"
 
+#: src/features/onboarding/ui/ProfileStep.tsx
+msgid "What should we call you?"
+msgstr "Wie sollen wir dich nennen?"
+
 #: src/features/sidebar/ui/CreateChannelFormFields.tsx
 msgid "What this {kindLabel} is for"
 msgstr "Wofür dieser {kindLabel} gedacht ist"
@@ -12233,6 +12562,11 @@ msgstr "Du brauchst Zugriff auf den Kanal des Repositorys, bevor du es klonen ka
 msgid "You switched community or identity before it could start."
 msgstr "Du hast die Community oder Identität gewechselt, bevor der Start möglich war."
 
+#. placeholder {0}: transaction.communityName
+#: src/features/onboarding/ui/PendingInviteGate.tsx
+msgid "You’ll connect to {0} once setup is finished."
+msgstr "Du wirst mit {0} verbunden, sobald die Einrichtung abgeschlossen ist."
+
 #: src/features/agents/ui/personaLibraryCopy.ts
 msgid "You're all set"
 msgstr "Alles bereit"
@@ -12260,6 +12594,10 @@ msgstr "Dein Agent hat einen neuen Kanal in {projectName} angefragt. Prüf die D
 #: src/features/channels/ui/AddChannelBotPersonasSection.tsx
 msgid "Your agents"
 msgstr "Deine Agenten"
+
+#: src/features/onboarding/ui/AvatarStep.tsx
+msgid "Your avatar"
+msgstr "Dein Avatar"
 
 #: src/features/onboarding/ui/DownloadKeyStep.tsx
 msgid "Your backup is ready"
@@ -12350,9 +12688,14 @@ msgstr "Deine Leute, deine Agenten, deine Projekte –<0/>alles an einem Ort."
 msgid "Your private identity key"
 msgstr "Dein privater Identitätsschlüssel"
 
+#: src/features/onboarding/ui/CommunityOnboardingFlow.tsx
 #: src/features/settings/ui/ProfileSettingsCard.tsx
 msgid "Your profile"
 msgstr "Dein Profil"
+
+#: src/features/onboarding/ui/MembershipDenied.tsx
+msgid "Your public key (npub)"
+msgstr "Dein öffentlicher Schlüssel (npub)"
 
 #: src/features/settings/ui/HarnessesSettingsPanel.tsx
 msgid "Your runtimes"
@@ -12362,6 +12705,10 @@ msgstr "Deine Runtimes"
 #: src/features/onboarding/ui/BackupStep.tsx
 msgid "Your system keychain wasn’t available, so {0} keeps your identity key in a private file on this device."
 msgstr "Dein Systemschlüsselbund war nicht verfügbar, daher bewahrt {0} deinen Identitätsschlüssel in einer privaten Datei auf diesem Gerät auf."
+
+#: src/features/onboarding/ui/CommunityOnboardingFlow.tsx
+msgid "Your username"
+msgstr "Dein Benutzername"
 
 #: src/shared/lib/keyboard-shortcuts.ts
 msgid "Zoom"

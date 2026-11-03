@@ -515,6 +515,29 @@ const CONVERTED_FILES = [
   "src/features/onboarding/ui/RelaunchRequiredScreen.tsx",
   "src/features/onboarding/ui/ResetFailedScreen.tsx",
   "src/features/onboarding/welcome.ts",
+  // Tranche 7 — first run, part two: the screens a person reaches once a key
+  // exists. Name and avatar, the default-harness and model step, and the
+  // whole join path — invite redemption, the join-policy consent block, the
+  // pending-invite gate, the community profile flow and the
+  // membership-denied recovery screen.
+  //
+  // `useClaimInvite.ts` is a hook, not UI, and is listed because it produces
+  // the two invite refusals ("expired", "use limit") from inside a `.catch`,
+  // where there is no render to read the locale from.
+  //
+  // `SetupStep.tsx` is deliberately absent: 52 call sites across ten module
+  // -level helpers, and the largest single file in this sweep. It is its own
+  // batch rather than a tail on this one.
+  "src/features/onboarding/useClaimInvite.ts",
+  "src/features/onboarding/ui/AvatarStep.tsx",
+  "src/features/onboarding/ui/CommunityOnboardingFlow.tsx",
+  "src/features/onboarding/ui/ConnectionMethodSection.tsx",
+  "src/features/onboarding/ui/DefaultConfigStep.tsx",
+  "src/features/onboarding/ui/InviteRedeemForm.tsx",
+  "src/features/onboarding/ui/JoinPolicyNotice.tsx",
+  "src/features/onboarding/ui/MembershipDenied.tsx",
+  "src/features/onboarding/ui/PendingInviteGate.tsx",
+  "src/features/onboarding/ui/ProfileStep.tsx",
 ];
 
 /**
@@ -584,6 +607,17 @@ const OVERRIDES = new Map([
   [
     "src/features/onboarding/welcome.ts:46",
     "Dead duplicate of a Rust constant. The live value is STARTER_CHANNELS in src-tauri/src/commands/channels.rs; no TypeScript reads this one.",
+  ],
+  // Two more format examples, in the same family as the harness-form ones
+  // above: a German reader needs the same literal prefix and the same URL
+  // scheme, because what they paste has to match the format.
+  [
+    "src/features/onboarding/ui/MembershipDenied.tsx:197",
+    "`nsec1...` is the literal prefix of a Nostr private key, not a word.",
+  ],
+  [
+    "src/features/onboarding/ui/InviteRedeemForm.tsx:466",
+    "Example relay URL. `example.com` is reserved for exactly this, and `wss://` is a scheme.",
   ],
   [
     "src/features/channels/ui/WelcomeComposerBanner.tsx:251",
