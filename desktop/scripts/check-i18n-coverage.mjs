@@ -538,6 +538,13 @@ const CONVERTED_FILES = [
   "src/features/onboarding/ui/MembershipDenied.tsx",
   "src/features/onboarding/ui/PendingInviteGate.tsx",
   "src/features/onboarding/ui/ProfileStep.tsx",
+  // Tranche 7 — first run, part three: the harness setup step. One file, but
+  // 52 call sites across ten module-level helpers and four nested components,
+  // which is why it is its own change rather than a tail on the profile
+  // batch. `runtimeDetailText` and the subscription-name table both had to
+  // stop being module-level strings — the first takes `i18n` as a required
+  // parameter, the second became descriptors resolved per render.
+  "src/features/onboarding/ui/SetupStep.tsx",
 ];
 
 /**

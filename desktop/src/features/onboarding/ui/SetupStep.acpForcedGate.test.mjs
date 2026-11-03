@@ -178,11 +178,10 @@ function setupStepTree(
   onReadyRuntimeIdsChange = NOOP,
   initialMethod = "subscription",
 ) {
-  // `withI18n` is load-bearing: `ConnectionMethodSection`, which this step
-  // renders for the connection-method choice, calls `useLingui()` and throws
-  // without an `I18nProvider` — and the error blames a duplicate
-  // `@lingui/react` install rather than the missing provider, so it reads as a
-  // dependency problem instead of a test-setup one.
+  // `withI18n` is load-bearing: the step and every row inside it call
+  // `useLingui()` and throw without an `I18nProvider` — and the error blames a
+  // duplicate `@lingui/react` install rather than the missing provider, so it
+  // reads as a dependency problem instead of a test-setup one.
   return withI18n(
     React.createElement(
       QueryClientProvider,

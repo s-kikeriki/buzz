@@ -500,6 +500,11 @@ msgstr ""
 msgid "{0} will create a Nostr identity with two parts: a private key that signs you in and a public key you can safely share. You can find your public identity anytime in {1} settings."
 msgstr ""
 
+#. placeholder {0}: BRAND.productName
+#: src/features/onboarding/ui/SetupStep.tsx
+msgid "{0} will open a sign-in window for {label}."
+msgstr ""
+
 #. placeholder {0}: updated.name
 #: src/features/agents/ui/useManagedAgentActions.ts
 msgid "{0} will stay manual-start only."
@@ -1227,6 +1232,10 @@ msgstr ""
 msgid "Account uses"
 msgstr ""
 
+#: src/features/onboarding/ui/SetupStep.tsx
+msgid "ACP adapter detected but outdated — reinstall required."
+msgstr ""
+
 #: src/features/agents/ui/AcpCommandField.tsx
 #: src/features/agents/ui/EditAgentAdvancedFields.tsx
 msgid "ACP command"
@@ -1862,6 +1871,10 @@ msgstr ""
 
 #: src/shared/lib/keyboard-shortcuts.ts
 msgid "Always address agent"
+msgstr ""
+
+#: src/features/onboarding/ui/SetupStep.tsx
+msgid "Amp subscription"
 msgstr ""
 
 #: src/features/search/ui/SearchPromptPlaceholder.tsx
@@ -2729,6 +2742,16 @@ msgstr ""
 msgid "Chat with an agent about {sectionTitle}"
 msgstr ""
 
+#: src/features/onboarding/ui/SetupStep.tsx
+msgid "ChatGPT subscription"
+msgstr ""
+
+#. placeholder {0}: runtime.label
+#: src/features/onboarding/ui/SetupStep.tsx
+msgid "Check {0} again"
+msgstr ""
+
+#: src/features/onboarding/ui/SetupStep.tsx
 #: src/features/settings/ui/HarnessesSettingsPanel.tsx
 msgid "Check again"
 msgstr ""
@@ -2756,6 +2779,10 @@ msgstr ""
 
 #: src/features/settings/ui/MobilePairingCard.tsx
 msgid "Check that the six-digit code matches on both devices, then confirm it."
+msgstr ""
+
+#: src/features/onboarding/ui/SetupStep.tsx
+msgid "Check this runtime’s configuration and try again."
 msgstr ""
 
 #: src/features/projects/lib/projectGitError.ts
@@ -2803,6 +2830,7 @@ msgid "Checking which agents use this harness…"
 msgstr ""
 
 #: src/features/onboarding/ui/BackupTestFlow.tsx
+#: src/features/onboarding/ui/SetupStep.tsx
 #: src/features/settings/ui/BackupTestFlow.tsx
 msgid "Checking…"
 msgstr ""
@@ -2832,6 +2860,7 @@ msgid "Choose a different repositories directory or remove the existing checkout
 msgstr ""
 
 #: src/features/agents/ui/agentConfigOptions.tsx
+#: src/features/onboarding/ui/SetupStep.tsx
 msgid "Choose a harness"
 msgstr ""
 
@@ -2951,6 +2980,10 @@ msgstr ""
 msgid "Choose how your agents will access AI. You can change this later."
 msgstr ""
 
+#: src/features/onboarding/ui/SetupStep.tsx
+msgid "Choose how your agents will connect to AI providers. You can change this at any time."
+msgstr ""
+
 #: src/features/agents/ui/personaLibraryCopy.ts
 msgid "Choose one from Agent Catalog, create your own, or import one to get started."
 msgstr ""
@@ -3005,6 +3038,10 @@ msgstr ""
 msgid "Choose your provider and enter an API key to connect to the {0} harness."
 msgstr ""
 
+#: src/features/onboarding/ui/SetupStep.tsx
+msgid "Claude subscription"
+msgstr ""
+
 #: src/features/agents/ui/AgentConfigPanel.tsx
 msgid "CLAUDE_CONFIG_DIR"
 msgstr ""
@@ -3047,8 +3084,16 @@ msgstr ""
 msgid "Clearing existing profile fields is not supported yet. Blank display name and avatar values are ignored for now."
 msgstr ""
 
+#: src/features/onboarding/ui/SetupStep.tsx
+msgid "CLI detected; ACP adapter missing."
+msgstr ""
+
 #: src/features/settings/ui/harnessCatalogLogic.ts
 msgid "CLI needed"
+msgstr ""
+
+#: src/features/onboarding/ui/SetupStep.tsx
+msgid "CLI not detected."
 msgstr ""
 
 #: src/features/settings/ui/HarnessRow.tsx
@@ -3373,6 +3418,10 @@ msgstr ""
 msgid "Configuration changes only show the restart badge; restart manually to apply them."
 msgstr ""
 
+#: src/features/onboarding/ui/SetupStep.tsx
+msgid "Configuration invalid"
+msgstr ""
+
 #: src/features/agents/ui/ManagedAgentRow.tsx
 #: src/features/agents/ui/UnifiedAgentsSection.tsx
 msgid "Configuration missing"
@@ -3400,6 +3449,10 @@ msgstr ""
 
 #: src/features/settings/ui/HostedCommunitiesSettingsCard.tsx
 msgid "Connect"
+msgstr ""
+
+#: src/features/onboarding/ui/SetupStep.tsx
+msgid "Connect {label}"
 msgstr ""
 
 #: src/features/settings/ui/HostedCommunitiesSettingsCard.tsx
@@ -3465,6 +3518,10 @@ msgstr ""
 #: src/features/onboarding/ui/MachineOnboardingFlow.tsx
 #: src/features/onboarding/ui/PendingInviteGate.tsx
 msgid "Continue setup"
+msgstr ""
+
+#: src/features/onboarding/ui/SetupStep.tsx
+msgid "Continue with an AI subscription"
 msgstr ""
 
 #: src/features/onboarding/ui/AvatarStep.tsx
@@ -3816,6 +3873,10 @@ msgstr ""
 msgid "Couldn't load sign-in options: {reason}"
 msgstr ""
 
+#: src/features/onboarding/ui/SetupStep.tsx
+msgid "Couldn’t load sign-in options."
+msgstr ""
+
 #: src/features/agents/ui/AgentCardViewerDialog.tsx
 msgid "Couldn’t load your minted cards:"
 msgstr ""
@@ -3890,6 +3951,10 @@ msgstr ""
 msgid "Couldn't set up starter channels"
 msgstr ""
 
+#: src/features/onboarding/ui/SetupStep.tsx
+msgid "Couldn’t start sign-in. Try again."
+msgstr ""
+
 #: src/features/agents/lib/usePersonaCatalogRelay.ts
 msgid "Couldn’t subscribe to the community agent catalog"
 msgstr ""
@@ -3908,6 +3973,10 @@ msgstr ""
 
 #: src/features/agents/ui/ModelPicker.tsx
 msgid "Couldn't switch models — the agent wasn't running a turn to switch."
+msgstr ""
+
+#: src/features/onboarding/ui/SetupStep.tsx
+msgid "Couldn’t verify authentication."
 msgstr ""
 
 #: src/features/settings/ui/ChannelTemplatesSettingsCard.tsx
@@ -4208,6 +4277,10 @@ msgstr ""
 
 #: src/features/projects/lib/projectsActivityDigest.ts
 msgid "Currently tracking"
+msgstr ""
+
+#: src/features/onboarding/ui/SetupStep.tsx
+msgid "Cursor subscription"
 msgstr ""
 
 #: src/features/settings/ui/harnessCatalogCopy.ts
@@ -4590,6 +4663,10 @@ msgstr ""
 
 #: src/features/agents/ui/AgentInstanceEditDialog.tsx
 msgid "Detected at"
+msgstr ""
+
+#: src/features/onboarding/ui/SetupStep.tsx
+msgid "Devin account"
 msgstr ""
 
 #: src/features/messages/ui/DiffMessage.tsx
@@ -5518,6 +5595,10 @@ msgstr ""
 msgid "Focus"
 msgstr ""
 
+#: src/features/onboarding/ui/SetupStep.tsx
+msgid "Follow the setup guide to install {label}. When you’re done, come back and check again."
+msgstr ""
+
 #: src/features/messages/ui/MessageActionBar.tsx
 msgid "Follow thread"
 msgstr ""
@@ -6031,12 +6112,14 @@ msgstr ""
 msgid "Insert link"
 msgstr ""
 
+#: src/features/onboarding/ui/SetupStep.tsx
 #: src/features/settings/ui/harnessCatalogLogic.ts
 #: src/features/settings/ui/HarnessRow.tsx
 msgid "Install"
 msgstr ""
 
 #. placeholder {0}: runtime.label
+#: src/features/onboarding/ui/SetupStep.tsx
 #: src/features/settings/ui/HarnessRow.tsx
 msgid "Install {0}"
 msgstr ""
@@ -6045,6 +6128,7 @@ msgstr ""
 msgid "Install an agent runtime before adding an agent to this channel."
 msgstr ""
 
+#: src/features/onboarding/ui/SetupStep.tsx
 #: src/features/settings/ui/HarnessCatalogDialog.tsx
 #: src/features/settings/ui/HarnessRow.tsx
 msgid "Install failed."
@@ -6062,12 +6146,25 @@ msgstr ""
 msgid "Install Node.js"
 msgstr ""
 
+#: src/features/onboarding/ui/SetupStep.tsx
+msgid "Installation failed"
+msgstr ""
+
 #: src/features/settings/ui/HarnessCatalogDialog.tsx
 msgid "Installed"
 msgstr ""
 
 #: src/features/agents/ui/agentUi.ts
 msgid "installed on PATH"
+msgstr ""
+
+#: src/features/onboarding/ui/SetupStep.tsx
+msgid "Installing"
+msgstr ""
+
+#. placeholder {0}: runtime.label
+#: src/features/onboarding/ui/SetupStep.tsx
+msgid "Installing {0}"
 msgstr ""
 
 #: src/features/settings/UpdateChecker.tsx
@@ -6538,6 +6635,10 @@ msgstr ""
 
 #: src/features/home/ui/ProjectInboxDetail.tsx
 msgid "Loading project item…"
+msgstr ""
+
+#: src/features/onboarding/ui/SetupStep.tsx
+msgid "Loading providers…"
 msgstr ""
 
 #: src/features/projects/ui/ProjectReadmePanel.tsx
@@ -7698,6 +7799,10 @@ msgstr ""
 msgid "No skill content returned."
 msgstr ""
 
+#: src/features/onboarding/ui/SetupStep.tsx
+msgid "No supported harnesses are available for this connection method."
+msgstr ""
+
 #: src/features/agents/ui/AgentSnapshotImportDialog.tsx
 msgid "No system prompt included."
 msgstr ""
@@ -7807,6 +7912,10 @@ msgstr ""
 
 #: src/features/channels/ui/MembersSidebar.tsx
 msgid "Not in this channel"
+msgstr ""
+
+#: src/features/onboarding/ui/SetupStep.tsx
+msgid "Not installed"
 msgstr ""
 
 #: src/features/agents/ui/OtherSetupAgentMarker.tsx
@@ -7986,6 +8095,11 @@ msgstr ""
 msgid "Open {0} in {1}"
 msgstr ""
 
+#. placeholder {0}: getRuntimeDisplayLabel(runtime)
+#: src/features/onboarding/ui/SetupStep.tsx
+msgid "Open {0} setup"
+msgstr ""
+
 #. placeholder {0}: BRAND.productName
 #: src/features/channels/ui/ChannelScreenHeader.tsx
 msgid "Open {0} Term"
@@ -8062,6 +8176,10 @@ msgstr ""
 
 #: src/features/home/ui/InboxDetailPane.tsx
 msgid "Open full thread"
+msgstr ""
+
+#: src/features/onboarding/ui/SetupStep.tsx
+msgid "Open guide"
 msgstr ""
 
 #: src/features/home/ui/InboxDetailPane.tsx
@@ -9031,6 +9149,10 @@ msgstr ""
 msgid "Recipient npub"
 msgstr ""
 
+#: src/features/onboarding/ui/SetupStep.tsx
+msgid "Recommended"
+msgstr ""
+
 #: src/features/sidebar/ui/SidebarRelayConnectionCard.tsx
 msgid "Reconnecting"
 msgstr ""
@@ -9540,6 +9662,15 @@ msgstr ""
 #: src/features/settings/ui/HarnessCatalogDialog.tsx
 #: src/features/settings/UpdateChecker.tsx
 msgid "Retry"
+msgstr ""
+
+#: src/features/onboarding/ui/SetupStep.tsx
+msgid "Retry install"
+msgstr ""
+
+#. placeholder {0}: runtime.label
+#: src/features/onboarding/ui/SetupStep.tsx
+msgid "Retry installing {0}"
 msgstr ""
 
 #: src/features/messages/ui/AudioMessageAttachment.tsx
@@ -10205,8 +10336,16 @@ msgstr ""
 msgid "Set in runtime config"
 msgstr ""
 
+#: src/features/onboarding/ui/SetupStep.tsx
+msgid "Set up {label}"
+msgstr ""
+
 #: src/features/agents/ui/AgentsView.tsx
 msgid "Set up and manage your agents."
+msgstr ""
+
+#: src/features/onboarding/ui/SetupStep.tsx
+msgid "Set up later"
 msgstr ""
 
 #: src/features/agents/managedAgentRuntimeStatus.ts
@@ -10412,6 +10551,23 @@ msgstr ""
 msgid "Sidebar order"
 msgstr ""
 
+#: src/features/onboarding/ui/SetupStep.tsx
+msgid "Sign in"
+msgstr ""
+
+#: src/features/onboarding/ui/SetupStep.tsx
+msgid "Sign in required"
+msgstr ""
+
+#. placeholder {0}: runtime.label
+#: src/features/onboarding/ui/SetupStep.tsx
+msgid "Sign in to {0}"
+msgstr ""
+
+#: src/features/onboarding/ui/SetupStep.tsx
+msgid "Sign in to connect {label}. You can change this anytime."
+msgstr ""
+
 #: src/features/settings/ui/MobilePairingCard.tsx
 msgid "Sign in to generate a mobile pairing code."
 msgstr ""
@@ -10441,8 +10597,16 @@ msgstr ""
 msgid "Sign out failed."
 msgstr ""
 
+#: src/features/onboarding/ui/SetupStep.tsx
+msgid "Sign-in failed"
+msgstr ""
+
 #: src/features/settings/ui/harnessCatalogLogic.ts
 msgid "Sign-in needed"
+msgstr ""
+
+#: src/features/onboarding/ui/SetupStep.tsx
+msgid "Sign-in unavailable"
 msgstr ""
 
 #: src/features/settings/ui/HostedCommunitiesSettingsCard.tsx
@@ -10647,6 +10811,10 @@ msgstr ""
 msgid "Status"
 msgstr ""
 
+#: src/features/onboarding/ui/SetupStep.tsx
+msgid "Status unavailable"
+msgstr ""
+
 #: src/features/agents/managedAgentRuntimeStatus.ts
 msgid "Stop Agent"
 msgstr ""
@@ -10704,6 +10872,10 @@ msgstr ""
 
 #: src/features/agents/ui/runOnSummary.ts
 msgid "Structured value"
+msgstr ""
+
+#: src/features/onboarding/ui/SetupStep.tsx
+msgid "Subscriptions connect through a compatible harness, like Claude Code or Codex. Choose yours to sign in."
 msgstr ""
 
 #: src/features/sidebar/ui/ChannelSectionDialogs.tsx
@@ -12142,6 +12314,11 @@ msgstr ""
 #: src/features/projects/ui/ProjectCards.tsx
 #: src/features/projects/ui/RepositoryCards.tsx
 msgid "View {0}"
+msgstr ""
+
+#. placeholder {0}: runtime.label
+#: src/features/onboarding/ui/SetupStep.tsx
+msgid "View {0} install instructions"
 msgstr ""
 
 #: src/features/projects/ui/ProjectsActivityFeed.tsx

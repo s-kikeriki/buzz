@@ -1,7 +1,9 @@
+import { hexToBytes } from "@noble/hashes/utils.js";
 import { expect, type Page, test } from "@playwright/test";
+import { nsecEncode } from "nostr-tools/nip19";
 
 import { waitForAnimations } from "../helpers/animations";
-import { installMockBridge } from "../helpers/bridge";
+import { installMockBridge, TEST_IDENTITIES } from "../helpers/bridge";
 
 /**
  * First run under the German catalogue, and the OS-locale default that gets
@@ -325,5 +327,67 @@ test.describe("the key and backup screens read German", () => {
 
     await waitForAnimations(page);
     await page.screenshot({ path: `${SHOTS}/06-locked-backup.png` });
+  });
+});
+
+/**
+ * The harness setup step, reached the way the English specs reach it: an
+ * existing-key import lands straight on it.
+ *
+ * The connection-method screen it opens with belongs to the sibling tranche,
+ * so its own copy is asserted there and reached here by `data-testid`. That
+ * seam is deliberate: asserting the method screen's German in this block
+ * would make the spec fail for a change it does not guard.
+ */
+test.describe("the harness setup step reads German", () => {
+  test.beforeEach(async ({ page }) => {
+    await seedStoredLocale(page, "de");
+    await installMockBridge(page, undefined, {
+      skipCommunitySeed: true,
+      skipOnboardingSeed: true,
+    });
+    await page.goto("/");
+    await page
+      .getByRole("button", { name: "Vorhandenen Schlüssel verwenden" })
+      .click();
+    await page
+      .getByTestId("nostr-import-nsec-input")
+      .fill(nsecEncode(hexToBytes(TEST_IDENTITIES.alice.privateKey)));
+    await page.getByTestId("nostr-import-submit").click();
+    await expect(page.getByTestId("onboarding-page-2")).toBeVisible();
+  });
+
+  test("the skip affordance this step owns", async ({ page }) => {
+    await expect(page.getByTestId("onboarding-setup-skip")).toHaveText(
+      "Später einrichten",
+    );
+    await expect(
+      page.getByRole("button", { name: "Set up later" }),
+    ).toHaveCount(0);
+  });
+
+  // The subscription method, not the API-key one: choosing "api" hands
+  // straight over to the default-config step and never renders this list.
+  test("the harness list, after choosing a connection method", async ({
+    page,
+  }) => {
+    await page.getByTestId("onboarding-harness-method-subscription").click();
+
+    const list = page.getByTestId("onboarding-page-2");
+    await expect(
+      page.getByRole("heading", { name: "Mit einem KI-Abo fortfahren" }),
+    ).toBeVisible();
+    await expect(
+      page.getByRole("heading", { name: "Continue with an AI subscription" }),
+    ).toHaveCount(0);
+    await expect(list).toContainText(
+      "Abos verbinden sich über ein kompatibles Harness",
+    );
+    await expect(list).not.toContainText(
+      "Subscriptions connect through a compatible harness",
+    );
+
+    await waitForAnimations(page);
+    await page.screenshot({ path: `${SHOTS}/05-harness-list.png` });
   });
 });
