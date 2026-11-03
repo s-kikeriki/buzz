@@ -1054,7 +1054,7 @@ export function ProfileAvatarEditor({
                           key="ready"
                           transition={DONE_BUTTON_CONTENT_TRANSITION}
                         >
-                          {isOnboardingModal ? "Save" : "Done"}
+                          {isOnboardingModal ? t`Save` : t`Done`}
                         </motion.span>
                       )}
                     </AnimatePresence>

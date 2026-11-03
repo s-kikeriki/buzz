@@ -18,6 +18,7 @@ function ProfileInstanceRow({
   instance: ManagedAgent;
   onOpenInstance: (pubkey: string) => void;
 }) {
+  const { t } = useLingui();
   const isCurrent = instance.pubkey === currentPubkey;
   return (
     <button
@@ -31,9 +32,9 @@ function ProfileInstanceRow({
       </span>
       <span className="text-xs capitalize text-muted-foreground">
         {archived
-          ? "Archived"
+          ? t`Archived`
           : isCurrent
-            ? "Current"
+            ? t`Current`
             : instance.status.replace("_", " ")}
       </span>
       <ChevronRight className="h-4 w-4 shrink-0 text-muted-foreground" />

@@ -1676,6 +1676,7 @@ msgstr "Erweitert ("
 msgid "agent"
 msgstr "Agent"
 
+#: src/features/profile/ui/UserProfilePersonaDialogs.tsx
 #: src/features/projects/ui/ProjectAuthorIdentity.tsx
 msgid "Agent"
 msgstr "Agent"
@@ -4534,6 +4535,7 @@ msgid "Creating…"
 msgstr "Wird angelegt…"
 
 #: src/features/channels/ui/CanvasHistoryPanel.tsx
+#: src/features/profile/ui/ProfileInstancesSection.tsx
 msgid "Current"
 msgstr "Aktuell"
 
@@ -5111,6 +5113,7 @@ msgid "Don’t want to spend money? Ordinary export shares the same importable a
 msgstr "Du willst kein Geld ausgeben? Der normale Export teilt denselben importierbaren Agenten — kostenlos, nur ohne das Kartenmotiv."
 
 #: src/features/agents/ui/agentSessionToolCatalog.ts
+#: src/features/profile/ui/ProfileAvatarEditor.tsx
 #: src/features/settings/ui/ProfileSettingsCard.tsx
 msgid "Done"
 msgstr "Fertig"
@@ -5977,6 +5980,10 @@ msgstr "Thread folgen"
 #: src/features/settings/ui/AppearanceSettingsPanel.tsx
 msgid "Follow your system or choose a light or dark appearance."
 msgstr "Dem System folgen oder eine helle bzw. dunkle Darstellung wählen."
+
+#: src/features/profile/ui/UserProfilePrimaryActions.tsx
+msgid "Following failed: {reason}"
+msgstr "Folgen fehlgeschlagen: {reason}"
 
 #: src/features/settings/ui/AppearanceSettingsControls.tsx
 msgid "Font size"
@@ -10399,6 +10406,8 @@ msgstr "Runtimes"
 
 #: src/features/messages/lib/useLinkEditor.tsx
 #: src/features/messages/ui/ComposerImageEditor.tsx
+#: src/features/profile/ui/ProfileAvatarEditor.tsx
+#: src/features/profile/ui/UserProfilePersonaDialogs.tsx
 #: src/features/settings/ui/ChannelTemplatesSettingsCard.tsx
 #: src/features/settings/ui/CustomHarnessForm.tsx
 msgid "Save"
@@ -12566,6 +12575,10 @@ msgstr "Nicht mehr folgen"
 #: src/features/messages/ui/MessageActionBar.tsx
 msgid "Unfollow thread"
 msgstr "Thread nicht mehr folgen"
+
+#: src/features/profile/ui/UserProfilePrimaryActions.tsx
+msgid "Unfollowing failed: {reason}"
+msgstr "Entfolgen fehlgeschlagen: {reason}"
 
 #: src/features/messages/ui/DiffMessageExpanded.tsx
 msgid "Unified"

@@ -1,3 +1,5 @@
+import { i18n } from "@lingui/core";
+import { msg } from "@lingui/core/macro";
 import { useLingui } from "@lingui/react/macro";
 import type { LucideIcon } from "lucide-react";
 import type { ReactNode, Ref } from "react";
@@ -70,10 +72,16 @@ export function ProfilePrimaryActions({
 
   const handleFollowClick = () => {
     followToggleMutation.mutate(pubkey, {
-      onError: (error) =>
+      onError: (error) => {
+        // Whole sentences, not an action name glued to " failed": German puts
+        // the verb last, so the two halves cannot be composed.
+        const reason = error.message;
         toast.error(
-          `${isFollowing ? "Unfollow" : "Follow"} failed: ${error.message}`,
-        ),
+          isFollowing
+            ? i18n._(msg`Unfollowing failed: ${reason}`)
+            : i18n._(msg`Following failed: ${reason}`),
+        );
+      },
     });
   };
 

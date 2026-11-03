@@ -1,3 +1,4 @@
+import { useLingui } from "@lingui/react/macro";
 import * as React from "react";
 
 import type {
@@ -88,6 +89,7 @@ export function UserProfilePersonaDialogs({
   onExportSnapshot: (persona: AgentPersona) => void;
   onSubmit: (input: CreatePersonaInput | UpdatePersonaInput) => Promise<void>;
 }) {
+  const { t } = useLingui();
   const runtimeCatalogStatus = runtimesLoading
     ? "loading"
     : runtimesError
@@ -110,8 +112,8 @@ export function UserProfilePersonaDialogs({
         }}
         onSubmit={onSubmit}
         open={personaDialogState !== null}
-        submitLabel={personaDialogState?.submitLabel ?? "Save"}
-        title={personaDialogState?.title ?? "Agent"}
+        submitLabel={personaDialogState?.submitLabel ?? t`Save`}
+        title={personaDialogState?.title ?? t`Agent`}
       />
       <PersonaDeleteDialog
         instanceCount={instanceCount}

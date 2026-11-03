@@ -584,6 +584,7 @@ const CONVERTED_FILES = [
   "src/features/profile/ui/UserProfilePanelSections.tsx",
   "src/features/profile/ui/UserProfilePanelTabs.tsx",
   "src/features/profile/ui/UserProfilePanelUtils.ts",
+  "src/features/profile/ui/UserProfilePersonaDialogs.tsx",
   "src/features/profile/ui/UserProfilePopover.tsx",
   "src/features/profile/ui/UserProfilePrimaryActions.tsx",
   "src/features/profile/ui/UserProfileSnapshotExportDialog.tsx",
