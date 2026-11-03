@@ -52,8 +52,26 @@ msgstr ""
 msgid ", but {0} member{1} failed to publish {2}."
 msgstr ""
 
+#. placeholder {0}: modelStatus.stt
+#: src/features/huddle/components/HuddleBar.tsx
+msgid ", STT model {0}"
+msgstr ""
+
 #: src/features/projects/ui/ProjectRepositoryUnavailableState.tsx
 msgid ", the repository owner,"
+msgstr ""
+
+#. placeholder {0}: modelStatus.tts
+#: src/features/huddle/components/HuddleBar.tsx
+msgid ", TTS model {0}"
+msgstr ""
+
+#: src/features/huddle/components/HuddleBar.tsx
+msgid ", voice input: push to talk, press Ctrl+Space to transmit"
+msgstr ""
+
+#: src/features/huddle/components/HuddleBar.tsx
+msgid ", voice input: voice activity detection"
 msgstr ""
 
 #: src/features/agents/ui/AgentSnapshotImportDialog.tsx
@@ -622,6 +640,11 @@ msgstr ""
 msgid "{count, plural, one {# more addressed agent} other {# more addressed agents}}"
 msgstr ""
 
+#: src/features/huddle/components/HuddleAttachment.tsx
+#: src/features/huddle/components/ParticipantList.tsx
+msgid "{count, plural, one {# participant} other {# participants}}"
+msgstr ""
+
 #: src/features/projects/ui/ProjectCards.tsx
 #: src/features/projects/ui/projectDetailHelpers.ts
 msgid "{count, plural, one {commit} other {commits}}"
@@ -849,6 +872,10 @@ msgstr ""
 
 #: src/features/channels/ui/ChannelMemberAvatarStack.tsx
 msgid "{overflowCount} more members"
+msgstr ""
+
+#: src/features/huddle/components/HuddleIndicator.tsx
+msgid "{participantCount, plural, one {Join active huddle (# participant)} other {Join active huddle (# participants)}}"
 msgstr ""
 
 #. placeholder {0}: pasteValidCount === 1 ? "" : "s"
@@ -1495,6 +1522,7 @@ msgstr ""
 #: src/features/agents/ui/personaLibraryCopy.ts
 #: src/features/channels/ui/AddChannelBotDialog.tsx
 #: src/features/channels/ui/useChannelIntro.tsx
+#: src/features/huddle/components/HuddleBar.tsx
 msgid "Add agent"
 msgstr ""
 
@@ -1502,7 +1530,12 @@ msgstr ""
 msgid "Add agent to channel"
 msgstr ""
 
+#: src/features/huddle/components/HuddleBar.tsx
+msgid "Add agent to huddle"
+msgstr ""
+
 #: src/features/channels/ui/AddChannelBotDialog.tsx
+#: src/features/huddle/components/AddAgentDialog.tsx
 msgid "Add agents"
 msgstr ""
 
@@ -1690,6 +1723,15 @@ msgstr ""
 msgid "Added by"
 msgstr ""
 
+#: src/features/huddle/components/AddAgentDialog.tsx
+msgid "Added to huddle, but could not start agent: {msg}"
+msgstr ""
+
+#. placeholder {0}: result.parent_error
+#: src/features/huddle/components/AddAgentDialog.tsx
+msgid "Added to huddle, but parent channel failed: {0}"
+msgstr ""
+
 #: src/features/agents/ui/CommunityCatalogDialog.tsx
 #: src/features/agents/ui/personaLibraryCopy.ts
 msgid "Added to My Agents"
@@ -1698,6 +1740,11 @@ msgstr ""
 #: src/features/agents/ui/CommunityCatalogDialog.tsx
 #: src/features/agents/ui/teamLibraryCopy.ts
 msgid "Added to my teams"
+msgstr ""
+
+#. placeholder {0}: agent.name
+#: src/features/huddle/components/AddAgentDialog.tsx
+msgid "Adding {0}"
 msgstr ""
 
 #. placeholder {0}: created.agent.name
@@ -1777,6 +1824,7 @@ msgstr ""
 msgid "agent"
 msgstr ""
 
+#: src/features/huddle/components/ParticipantList.tsx
 #: src/features/profile/ui/UserProfilePersonaDialogs.tsx
 #: src/features/projects/ui/ProjectAuthorIdentity.tsx
 msgid "Agent"
@@ -1920,6 +1968,10 @@ msgstr ""
 msgid "Agent text to speech"
 msgstr ""
 
+#: src/features/huddle/components/AgentVoiceMenu.tsx
+msgid "Agent text-to-speech"
+msgstr ""
+
 #: src/features/agents/ui/TurnLivenessIndicator.tsx
 msgid "Agent turn in progress"
 msgstr ""
@@ -1931,6 +1983,14 @@ msgstr ""
 #: src/features/home/lib/inbox.ts
 #: src/features/search/ui/SearchResultItem.tsx
 msgid "Agent update"
+msgstr ""
+
+#: src/features/huddle/components/AgentVoiceMenu.tsx
+msgid "Agent voice"
+msgstr ""
+
+#: src/features/huddle/components/AgentVoiceMenu.tsx
+msgid "Agent voice could not be updated."
 msgstr ""
 
 #: src/features/messages/ui/useAutoPinMentionedAgents.ts
@@ -2006,6 +2066,10 @@ msgstr ""
 
 #: src/features/home/ui/InboxFilterMenu.tsx
 msgid "All"
+msgstr ""
+
+#: src/features/huddle/components/AddAgentDialog.tsx
+msgid "All available agents are already in this huddle."
 msgstr ""
 
 #: src/features/settings/ui/KeyboardShortcutsCard.tsx
@@ -2435,6 +2499,10 @@ msgstr ""
 
 #: src/features/settings/ui/SendFeedbackDialog.tsx
 msgid "Attaching…"
+msgstr ""
+
+#: src/features/huddle/components/MicControls.tsx
+msgid "Audio settings"
 msgstr ""
 
 #: src/features/messages/ui/AudioMessageAttachment.tsx
@@ -2928,6 +2996,10 @@ msgstr ""
 msgid "Change saved backup password"
 msgstr ""
 
+#: src/features/huddle/components/MicControls.tsx
+msgid "Change takes effect on next huddle"
+msgstr ""
+
 #: src/features/onboarding/ui/CommunityOnboardingFlow.tsx
 msgid "Change your avatar"
 msgstr ""
@@ -3074,6 +3146,10 @@ msgstr ""
 msgid "Chat with an agent about {sectionTitle}"
 msgstr ""
 
+#: src/features/huddle/components/HuddleTranscriptIntro.tsx
+msgid "Chat with huddle participants and agents. The transcript appears here too."
+msgstr ""
+
 #: src/features/onboarding/ui/SetupStep.tsx
 msgid "ChatGPT subscription"
 msgstr ""
@@ -3090,6 +3166,10 @@ msgstr ""
 
 #: src/features/settings/UpdateChecker.tsx
 msgid "Check Again"
+msgstr ""
+
+#: src/features/huddle/components/MicControls.tsx
+msgid "Check app microphone permission or select another input device."
 msgstr ""
 
 #: src/features/projects/ui/ProjectDetailScreen.tsx
@@ -3277,9 +3357,17 @@ msgstr ""
 msgid "Choose active channel feed"
 msgstr ""
 
+#: src/features/huddle/components/AgentVoiceMenu.tsx
+msgid "Choose agent voice"
+msgstr ""
+
 #: src/features/agents/ui/AcpCommandField.tsx
 #: src/features/agents/ui/EditAgentAdvancedFields.tsx
 msgid "Choose an ACP command"
+msgstr ""
+
+#: src/features/huddle/components/AddAgentDialog.tsx
+msgid "Choose an agent to join this huddle."
 msgstr ""
 
 #: src/features/agents/ui/usePersonaActions.ts
@@ -3502,6 +3590,10 @@ msgstr ""
 
 #: src/features/sidebar/ui/SidebarRelayConnectionCard.tsx
 msgid "Click to connect"
+msgstr ""
+
+#: src/features/huddle/components/MicControls.tsx
+msgid "Click to unmute or hold"
 msgstr ""
 
 #: src/features/settings/SidebarUpdateCard.tsx
@@ -4253,6 +4345,10 @@ msgstr ""
 msgid "Could not invite members."
 msgstr ""
 
+#: src/features/huddle/components/AddAgentDialog.tsx
+msgid "Could not load agents."
+msgstr ""
+
 #: src/features/projects/ui/ProjectPullRequestFilesChangedPanel.tsx
 msgid "Could not load changed files for this {subjectLabel}."
 msgstr ""
@@ -4425,6 +4521,10 @@ msgstr ""
 msgid "Couldn't detect agent harnesses."
 msgstr ""
 
+#: src/features/huddle/lib/huddleError.ts
+msgid "Couldn’t join the huddle."
+msgstr ""
+
 #: src/features/communities/ui/CommunitySwitcher.tsx
 msgid "Couldn't leave the community. Try again."
 msgstr ""
@@ -4553,6 +4653,10 @@ msgstr ""
 
 #: src/features/onboarding/ui/SetupStep.tsx
 msgid "Couldn’t start sign-in. Try again."
+msgstr ""
+
+#: src/features/huddle/lib/huddleError.ts
+msgid "Couldn’t start the huddle."
 msgstr ""
 
 #: src/features/agents/lib/usePersonaCatalogRelay.ts
@@ -5399,6 +5503,10 @@ msgstr ""
 msgid "Dismiss"
 msgstr ""
 
+#: src/features/huddle/components/HuddleBar.tsx
+msgid "Dismiss error"
+msgstr ""
+
 #: src/features/agents/ui/CardMintComposerChip.tsx
 msgid "Dismiss failed mint"
 msgstr ""
@@ -5768,6 +5876,10 @@ msgstr ""
 msgid "Emoji and GIFs"
 msgstr ""
 
+#: src/features/huddle/components/HuddleBar.tsx
+msgid "Emoji reactions"
+msgstr ""
+
 #: src/features/messages/ui/DraftsPanel.tsx
 msgid "Empty draft"
 msgstr ""
@@ -5793,6 +5905,10 @@ msgstr ""
 #: src/features/onboarding/ui/EncryptedBackupCreator.tsx
 #: src/features/settings/ui/EncryptedBackupCreator.tsx
 msgid "Encryption password"
+msgstr ""
+
+#: src/features/huddle/components/HuddleAttachment.tsx
+msgid "Ended"
 msgstr ""
 
 #: src/features/agents/ui/TeamDialog.tsx
@@ -5958,6 +6074,11 @@ msgstr ""
 #. placeholder {0}: shared ? "share" : "unshare"
 #: src/features/agents/ui/useTeamActions.ts
 msgid "Failed to {0} team."
+msgstr ""
+
+#: src/features/huddle/components/AddAgentDialog.tsx
+#: src/features/huddle/components/HuddleBar.tsx
+msgid "Failed to add agent: {msg}"
 msgstr ""
 
 #: src/features/agents/channelAgents.ts
@@ -6528,6 +6649,10 @@ msgstr ""
 msgid "Go forward"
 msgstr ""
 
+#: src/features/huddle/components/MicControls.tsx
+msgid "Got it"
+msgstr ""
+
 #: src/features/messages/ui/ComposerImageEditor.tsx
 msgid "Green"
 msgstr ""
@@ -6573,6 +6698,14 @@ msgstr ""
 
 #: src/features/onboarding/ui/MembershipDenied.tsx
 msgid "Have an invite?"
+msgstr ""
+
+#: src/features/huddle/components/MicControls.tsx
+msgid "Headphones help prevent echo"
+msgstr ""
+
+#: src/features/huddle/components/MicControls.tsx
+msgid "Headphones recommended"
 msgstr ""
 
 #: src/features/channels/ui/MembersSidebarMemberCard.tsx
@@ -6684,9 +6817,24 @@ msgstr ""
 msgid "https://relay.example.com/git/mobile-app.git"
 msgstr ""
 
+#: src/features/huddle/components/HuddleAttachment.tsx
+#: src/features/huddle/components/HuddleIndicator.tsx
+#: src/features/huddle/components/HuddleProfileControl.tsx
 #: src/features/profile/ui/UserProfilePopover.tsx
 #: src/features/profile/ui/UserProfilePrimaryActions.tsx
 msgid "Huddle"
+msgstr ""
+
+#: src/features/huddle/lib/huddleError.ts
+msgid "Huddle audio isn’t available on this server. Ask an administrator to turn it on."
+msgstr ""
+
+#: src/features/huddle/components/HuddleTranscriptIntro.tsx
+msgid "Huddle chat"
+msgstr ""
+
+#: src/features/huddle/components/HuddleAttachment.tsx
+msgid "Huddle unavailable"
 msgstr ""
 
 #: src/features/onboarding/ui/EncryptedBackupCreator.tsx
@@ -6762,6 +6910,10 @@ msgstr ""
 msgid "Idle"
 msgstr ""
 
+#: src/features/huddle/components/MicControls.tsx
+msgid "If people are nearby, speakers can feed back into your mic. Headphones keep huddles clearer."
+msgstr ""
+
 #: src/features/agents/ui/AgentCreationPreview.tsx
 #: src/features/profile/ui/ProfileAvatarModeTabs.tsx
 msgid "Image"
@@ -6817,12 +6969,32 @@ msgstr ""
 msgid "Improvement"
 msgstr ""
 
+#: src/features/huddle/components/HuddleProfileControl.tsx
+msgid "In a huddle"
+msgstr ""
+
 #: src/features/channels/ui/AddChannelBotPersonasSection.tsx
 msgid "In channel"
 msgstr ""
 
+#: src/features/huddle/components/ParticipantList.tsx
+msgid "In huddle"
+msgstr ""
+
+#: src/features/huddle/components/HuddleBar.tsx
+msgid "In huddle, microphone connected"
+msgstr ""
+
+#: src/features/huddle/components/HuddleBar.tsx
+msgid "In huddle, no microphone"
+msgstr ""
+
 #: src/shared/lib/relativeTime.ts
 msgid "in less than a minute"
+msgstr ""
+
+#: src/features/huddle/components/HuddleAttachment.tsx
+msgid "In progress"
 msgstr ""
 
 #: src/features/agents/ui/AgentCardMintDialog.tsx
@@ -6915,6 +7087,14 @@ msgstr ""
 
 #: src/shared/lib/keyboard-shortcuts.ts
 msgid "Inline code"
+msgstr ""
+
+#: src/features/huddle/components/MicControls.tsx
+msgid "Input Mode"
+msgstr ""
+
+#: src/features/huddle/components/MicControls.tsx
+msgid "Input Volume"
 msgstr ""
 
 #: src/shared/lib/keyboard-shortcuts.ts
@@ -7116,6 +7296,10 @@ msgstr ""
 msgid "Job result"
 msgstr ""
 
+#: src/features/huddle/components/HuddleAttachment.tsx
+msgid "Join"
+msgstr ""
+
 #: src/features/communities/ui/WelcomeSetup.tsx
 msgid "Join a community"
 msgstr ""
@@ -7130,6 +7314,10 @@ msgstr ""
 
 #: src/features/onboarding/ui/InviteRedeemForm.tsx
 msgid "Join community"
+msgstr ""
+
+#: src/features/huddle/components/HuddleIndicator.tsx
+msgid "Join huddle"
 msgstr ""
 
 #: src/features/communities/ui/WelcomeSetup.tsx
@@ -7151,6 +7339,10 @@ msgstr ""
 #. placeholder {0}: formatRelativeDate(member.createdAt, locale)
 #: src/features/community-members/ui/CommunityMembersCard.tsx
 msgid "Joined {0}"
+msgstr ""
+
+#: src/features/huddle/components/HuddleAttachment.tsx
+msgid "Joining"
 msgstr ""
 
 #. placeholder {0}: transaction.communityName
@@ -7293,6 +7485,8 @@ msgstr ""
 msgid "Learn how identity keys work"
 msgstr ""
 
+#: src/features/huddle/components/HuddleBar.tsx
+#: src/features/huddle/components/HuddleProfileControl.tsx
 #: src/features/sidebar/ui/ChannelSectionDialogs.tsx
 msgid "Leave"
 msgstr ""
@@ -7317,6 +7511,11 @@ msgstr ""
 
 #: src/features/communities/ui/CommunitySwitcher.tsx
 msgid "Leave community"
+msgstr ""
+
+#: src/features/huddle/components/HuddleBar.tsx
+#: src/features/huddle/components/HuddleProfileControl.tsx
+msgid "Leave huddle"
 msgstr ""
 
 #: src/features/channels/ui/ChannelManagementSheet.tsx
@@ -7428,6 +7627,10 @@ msgstr ""
 
 #: src/features/projects/ui/ProjectDetailFeedPanels.tsx
 msgid "Loading activity"
+msgstr ""
+
+#: src/features/huddle/components/AddAgentDialog.tsx
+msgid "Loading agents…"
 msgstr ""
 
 #: src/features/channels/ui/ChannelCanvas.tsx
@@ -7991,6 +8194,27 @@ msgstr ""
 msgid "Messages and sub-replies will appear here once the relay has history for this channel."
 msgstr ""
 
+#. placeholder {0}: d.deviceId.slice(0, 8)
+#: src/features/huddle/components/MicControls.tsx
+msgid "Mic {0}"
+msgstr ""
+
+#: src/features/huddle/components/MicControls.tsx
+msgid "Microphone"
+msgstr ""
+
+#: src/features/huddle/components/MicControls.tsx
+msgid "Microphone is continuous."
+msgstr ""
+
+#: src/features/huddle/components/MicControls.tsx
+msgid "Microphone unavailable"
+msgstr ""
+
+#: src/features/huddle/components/MicControls.tsx
+msgid "Microphone unavailable. Check app permissions or input device."
+msgstr ""
+
 #: src/features/communities/useNestNotifications.ts
 msgid "Migrated notes from ~/.sprout"
 msgstr ""
@@ -8144,8 +8368,16 @@ msgstr ""
 msgid "Move up"
 msgstr ""
 
+#: src/features/huddle/components/MicControls.tsx
+msgid "Mute agent speech"
+msgstr ""
+
 #: src/features/sidebar/ui/ChannelContextMenu.tsx
 msgid "Mute channel"
+msgstr ""
+
+#: src/features/huddle/components/MicControls.tsx
+msgid "Mute microphone"
 msgstr ""
 
 #: src/features/agents/ui/personaLibraryCopy.ts
@@ -9223,6 +9455,15 @@ msgstr ""
 msgid "Open guide"
 msgstr ""
 
+#: src/features/huddle/components/HuddleBar.tsx
+msgid "Open huddle in a new window"
+msgstr ""
+
+#: src/features/huddle/components/HuddleBar.tsx
+#: src/features/huddle/components/HuddleProfileControl.tsx
+msgid "Open huddle window"
+msgstr ""
+
 #: src/features/home/ui/InboxDetailPane.tsx
 #: src/features/home/ui/InboxListPane.tsx
 msgid "Open in channel"
@@ -9259,6 +9500,10 @@ msgstr ""
 
 #: src/shared/lib/keyboard-shortcuts.ts
 msgid "Open or close settings"
+msgstr ""
+
+#: src/features/huddle/components/ParticipantList.tsx
+msgid "Open profile for {displayName}"
 msgstr ""
 
 #: src/features/channels/ui/MembersSidebarMemberCard.tsx
@@ -9304,6 +9549,10 @@ msgstr ""
 
 #: src/features/settings/EncryptedBackupProvider.tsx
 msgid "Open settings"
+msgstr ""
+
+#: src/features/huddle/components/MicControls.tsx
+msgid "Open Settings"
 msgstr ""
 
 #: src/features/home/ui/ProjectInboxDetailPane.tsx
@@ -9554,6 +9803,10 @@ msgstr ""
 #: src/features/agents/ui/AgentSessionToolItem/SentMessageContextDialog.tsx
 #: src/features/agents/ui/AgentSessionToolItem/ToolDetailBlocks.tsx
 msgid "Parameters"
+msgstr ""
+
+#: src/features/huddle/components/ParticipantList.tsx
+msgid "Participants"
 msgstr ""
 
 #: src/features/onboarding/ui/EncryptedBackupCreator.tsx
@@ -10087,6 +10340,14 @@ msgstr ""
 msgid "Push to talk"
 msgstr ""
 
+#: src/features/huddle/components/MicControls.tsx
+msgid "Push to Talk"
+msgstr ""
+
+#: src/features/huddle/components/MicControls.tsx
+msgid "Push to Talk is enabled."
+msgstr ""
+
 #: src/features/messages/ui/ComposerAttachments.tsx
 msgid "Queued attachment"
 msgstr ""
@@ -10168,6 +10429,10 @@ msgstr ""
 
 #: src/features/messages/ui/MessageReactions.tsx
 msgid "reacted with"
+msgstr ""
+
+#: src/features/huddle/components/HuddleBar.tsx
+msgid "Reaction failed"
 msgstr ""
 
 #: src/features/agents/ui/agentSessionToolClassifier.ts
@@ -10439,6 +10704,11 @@ msgstr ""
 msgid "Remove {displayName}"
 msgstr ""
 
+#: src/features/huddle/components/AgentVoiceMenu.tsx
+#: src/features/huddle/components/ParticipantList.tsx
+msgid "Remove {displayName} from huddle"
+msgstr ""
+
 #: src/features/profile/ui/SelectedRecipientChip.tsx
 msgid "Remove {label}"
 msgstr ""
@@ -10478,6 +10748,10 @@ msgstr ""
 
 #: src/features/community-members/ui/CommunityMembersSettingsCard.tsx
 msgid "Remove from community"
+msgstr ""
+
+#: src/features/huddle/components/AgentVoiceMenu.tsx
+msgid "Remove from huddle"
 msgstr ""
 
 #: src/features/sidebar/ui/ChannelContextMenu.tsx
@@ -10879,6 +11153,10 @@ msgstr ""
 #: src/features/projects/ui/ProjectsPullRequestsList.tsx
 #: src/features/projects/ui/ProjectsWorkItemsLoadNotice.tsx
 msgid "Retrying…"
+msgstr ""
+
+#: src/features/huddle/components/HuddleBar.tsx
+msgid "Return huddle to drawer"
 msgstr ""
 
 #: src/features/onboarding/ui/MachineOnboardingFlow.tsx
@@ -11682,6 +11960,10 @@ msgstr ""
 msgid "Show a timestamp under each activity row."
 msgstr ""
 
+#: src/features/huddle/components/ParticipantList.tsx
+msgid "Show all huddle participants ({count})"
+msgstr ""
+
 #: src/features/channels/ui/AgentSessionThreadPanel.tsx
 msgid "Show Animations"
 msgstr ""
@@ -11989,6 +12271,18 @@ msgstr ""
 msgid "Spawned {0}."
 msgstr ""
 
+#: src/features/huddle/components/MicControls.tsx
+msgid "Speaker"
+msgstr ""
+
+#: src/features/huddle/components/MicControls.tsx
+msgid "Speaker settings"
+msgstr ""
+
+#: src/features/huddle/components/ParticipantList.tsx
+msgid "Speaking"
+msgstr ""
+
 #: src/features/messages/ui/DiffMessageExpanded.tsx
 #: src/features/settings/ui/AppearanceSettingsControls.tsx
 msgid "Split"
@@ -12020,6 +12314,7 @@ msgstr ""
 msgid "Start Agent"
 msgstr ""
 
+#: src/features/huddle/components/HuddleIndicator.tsx
 #: src/features/messages/ui/WaveMessageAttachment.tsx
 msgid "Start huddle"
 msgstr ""
@@ -12047,6 +12342,10 @@ msgstr ""
 
 #: src/features/settings/ui/MobilePairingCard.tsx
 msgid "Start pairing"
+msgstr ""
+
+#: src/features/huddle/components/HuddleBar.tsx
+msgid "Start transcript"
 msgstr ""
 
 #: src/features/channels/ui/WelcomeAgentCreateDialog.tsx
@@ -12083,6 +12382,10 @@ msgstr ""
 msgid "Starting camera"
 msgstr ""
 
+#: src/features/huddle/components/HuddleStartingView.tsx
+msgid "Starting huddle"
+msgstr ""
+
 #: src/features/onboarding/ui/EncryptedBackupCreator.tsx
 msgid "Starting over lets you pick a new password and download a fresh backup file. Backups you saved earlier will still work — just use the password you created them with."
 msgstr ""
@@ -12110,6 +12413,15 @@ msgstr ""
 msgid "Still frame"
 msgstr ""
 
+#: src/features/huddle/components/ParticipantList.tsx
+msgid "Stop"
+msgstr ""
+
+#. placeholder {0}: participant.displayName
+#: src/features/huddle/components/ParticipantList.tsx
+msgid "Stop {0} speaking"
+msgstr ""
+
 #: src/features/agents/managedAgentRuntimeStatus.ts
 msgid "Stop Agent"
 msgstr ""
@@ -12128,6 +12440,10 @@ msgstr ""
 
 #: src/features/agents/ui/AgentsView.tsx
 msgid "Stop running agents"
+msgstr ""
+
+#: src/features/huddle/components/HuddleBar.tsx
+msgid "Stop transcript"
 msgstr ""
 
 #: src/features/channels/ui/MembersSidebarMemberCard.tsx
@@ -12175,6 +12491,11 @@ msgstr ""
 
 #: src/features/agents/ui/runOnSummary.ts
 msgid "Structured value"
+msgstr ""
+
+#. placeholder {0}: modelStatus.stt
+#: src/features/huddle/components/HuddleBar.tsx
+msgid "STT model: {0}"
 msgstr ""
 
 #: src/features/onboarding/ui/SetupStep.tsx
@@ -12226,6 +12547,10 @@ msgstr ""
 #: src/features/agents/ui/agentSessionTranscriptHelpers.ts
 #: src/features/settings/ui/AppearanceSettingsPanel.tsx
 msgid "System"
+msgstr ""
+
+#: src/features/huddle/components/MicControls.tsx
+msgid "System default"
 msgstr ""
 
 #: src/features/settings/ui/HarnessesSettingsPanel.tsx
@@ -12834,6 +13159,10 @@ msgstr ""
 msgid "This gives this desktop permanent access to your {0} identity. Only continue if you trust it."
 msgstr ""
 
+#: src/features/huddle/components/HuddleAttachment.tsx
+msgid "This huddle card is missing session details."
+msgstr ""
+
 #. placeholder {0}: BRAND.productName
 #. placeholder {1}: BRAND.productName
 #: src/features/onboarding/ui/IdentityKeyHelpDialog.tsx
@@ -13132,6 +13461,10 @@ msgstr ""
 msgid "Tool call"
 msgstr ""
 
+#: src/features/huddle/components/HuddleBar.tsx
+msgid "Transcript failed: {message}"
+msgstr ""
+
 #: src/features/settings/ui/HostedCommunitiesSettingsCard.tsx
 msgid "Transfer"
 msgstr ""
@@ -13203,6 +13536,11 @@ msgstr ""
 msgid "Try camera again"
 msgstr ""
 
+#. placeholder {0}: modelStatus.tts
+#: src/features/huddle/components/HuddleBar.tsx
+msgid "TTS model: {0}"
+msgstr ""
+
 #: src/features/agents/ui/agentSessionTranscript.ts
 msgid "Turn error"
 msgstr ""
@@ -13211,8 +13549,16 @@ msgstr ""
 msgid "Turn off"
 msgstr ""
 
+#: src/features/huddle/components/MicControls.tsx
+msgid "Turn off Push to Talk"
+msgstr ""
+
 #: src/features/home/ui/InboxListPane.tsx
 msgid "Turn off Show unread only to see read activity."
+msgstr ""
+
+#: src/features/huddle/components/MicControls.tsx
+msgid "Turn on Push to Talk"
 msgstr ""
 
 #: src/features/profile/ui/AnimatedAvatarControls.tsx
@@ -13290,6 +13636,7 @@ msgstr ""
 
 #: src/features/agents/ui/ManagedAgentSessionPanel.tsx
 #: src/features/channels/ui/MembersSidebarMemberCard.tsx
+#: src/features/huddle/components/AgentVoiceMenu.tsx
 #: src/features/projects/ui/ProjectCards.tsx
 #: src/features/projects/ui/ProjectHomeContextPanel.tsx
 #: src/features/projects/ui/UnavailableProjectRepositories.tsx
@@ -13395,8 +13742,16 @@ msgstr ""
 msgid "Unlock your system keyring"
 msgstr ""
 
+#: src/features/huddle/components/MicControls.tsx
+msgid "Unmute agent speech"
+msgstr ""
+
 #: src/features/sidebar/ui/ChannelContextMenu.tsx
 msgid "Unmute channel"
+msgstr ""
+
+#: src/features/huddle/components/MicControls.tsx
+msgid "Unmute microphone"
 msgstr ""
 
 #: src/features/community-members/ui/CommunityMembersSettingsCard.tsx
@@ -13837,6 +14192,10 @@ msgstr ""
 msgid "Verify your backup"
 msgstr ""
 
+#: src/features/huddle/components/HuddleAttachment.tsx
+msgid "View"
+msgstr ""
+
 #. placeholder {0}: project.name
 #. placeholder {0}: repository.name
 #: src/features/projects/ui/ProjectCards.tsx
@@ -13918,6 +14277,10 @@ msgstr ""
 
 #: src/features/messages/ui/DiffMessage.tsx
 msgid "View full diff on {diffHostname}"
+msgstr ""
+
+#: src/features/huddle/components/HuddleAttachment.tsx
+msgid "View huddle"
 msgstr ""
 
 #: src/features/projects/ui/ProjectsPullRequestsList.tsx
@@ -14004,6 +14367,12 @@ msgstr ""
 msgid "Voice files stay private on this device."
 msgstr ""
 
+#. placeholder {0}: modelStatus.stt
+#. placeholder {1}: modelStatus.tts
+#: src/features/huddle/components/HuddleBar.tsx
+msgid "Voice models: STT {0}, TTS {1}"
+msgstr ""
+
 #: src/features/messages/ui/ComposerAttachments.tsx
 msgid "Voice note"
 msgstr ""
@@ -14022,6 +14391,15 @@ msgstr ""
 
 #: src/features/settings/ui/VoiceSettingsCard.tsx
 msgid "Voice settings could not be saved."
+msgstr ""
+
+#. placeholder {0}: participant.displayName
+#: src/features/huddle/components/ParticipantList.tsx
+msgid "Voice settings for {0}"
+msgstr ""
+
+#: src/features/huddle/components/AgentVoiceMenu.tsx
+msgid "Voice settings for {displayName}"
 msgstr ""
 
 #: src/features/agents/ui/AgentSessionTranscriptList.tsx

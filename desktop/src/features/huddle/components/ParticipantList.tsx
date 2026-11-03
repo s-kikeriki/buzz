@@ -1,3 +1,5 @@
+import { plural } from "@lingui/core/macro";
+import { Trans, useLingui } from "@lingui/react/macro";
 import { X } from "lucide-react";
 import * as React from "react";
 
@@ -150,6 +152,7 @@ export function HuddleParticipantsControl({
   appearance = "bar",
   className,
 }: ParticipantListProps) {
+  const { i18n, t } = useLingui();
   const { data } = useUsersBatchQuery(participants);
   const profiles = React.useMemo(() => {
     const resolvedProfiles: Record<
@@ -234,10 +237,15 @@ export function HuddleParticipantsControl({
 
   if (participants.length === 0) return null;
 
-  const participantLabel =
-    participants.length === 1
-      ? "1 participant"
-      : `${participants.length} participants`;
+  // A plural message, not a count glued to a noun: the English picked its own
+  // singular and plural with a ternary, which leaves German no form to inflect.
+  // Named `count` so this shares one catalogue entry with the huddle card's
+  // identical plural, rather than extracting a second copy under a different
+  // placeholder name.
+  const count = participants.length;
+  const participantLabel = i18n._(
+    plural(count, { one: "# participant", other: "# participants" }),
+  );
   const visibleIdentities = identities.slice(0, MAX_VISIBLE_PARTICIPANTS);
   const hiddenParticipantCount = identities.length - visibleIdentities.length;
   const participantDetails = (
@@ -248,7 +256,9 @@ export function HuddleParticipantsControl({
       sideOffset={10}
     >
       <div className="mb-3 flex items-center justify-between gap-3">
-        <h2 className="text-sm font-medium">Participants</h2>
+        <h2 className="text-sm font-medium">
+          <Trans>Participants</Trans>
+        </h2>
         <span className="shrink-0 text-xs text-foreground/60">
           {participantLabel}
         </span>
@@ -264,7 +274,7 @@ export function HuddleParticipantsControl({
             >
               <UserProfilePopover
                 pubkey={pubkey}
-                triggerAriaLabel={`Open profile for ${displayName}`}
+                triggerAriaLabel={t`Open profile for ${displayName}`}
                 triggerElement="span"
               >
                 <ParticipantAvatar participant={participant} size="list" />
@@ -275,13 +285,13 @@ export function HuddleParticipantsControl({
                   {displayName}
                 </div>
                 <div className="truncate text-xs text-foreground/60">
-                  {isActive ? "Speaking" : isAgent ? "Agent" : "In huddle"}
+                  {isActive ? t`Speaking` : isAgent ? t`Agent` : t`In huddle`}
                 </div>
               </div>
 
               {isAgent && onRemoveAgent && (
                 <Button
-                  aria-label={`Remove ${displayName} from huddle`}
+                  aria-label={t`Remove ${displayName} from huddle`}
                   className="h-7 w-7 shrink-0 text-foreground/65 hover:bg-destructive/15 hover:text-destructive"
                   onClick={() => void onRemoveAgent(pubkey)}
                   size="icon"
@@ -342,14 +352,14 @@ export function HuddleParticipantsControl({
               participant.isActive &&
               onInterruptAgentSpeech ? (
                 <Button
-                  aria-label={`Stop ${participant.displayName} speaking`}
+                  aria-label={t`Stop ${participant.displayName} speaking`}
                   className="h-5 min-h-0 w-full rounded-sm bg-destructive/15 px-0 py-0 text-xs font-medium leading-none text-destructive hover:bg-destructive/20 hover:text-destructive"
                   onClick={() => onInterruptAgentSpeech(participant.pubkey)}
                   size="sm"
                   type="button"
                   variant="ghost"
                 >
-                  Stop
+                  <Trans>Stop</Trans>
                 </Button>
               ) : (
                 <span className="w-full truncate text-center text-xs font-medium leading-none text-foreground/80">
@@ -381,7 +391,7 @@ export function HuddleParticipantsControl({
             settings={resolvedAgentVoiceSettings[participant.pubkey]}
             trigger={
               <button
-                aria-label={`Voice settings for ${participant.displayName}`}
+                aria-label={t`Voice settings for ${participant.displayName}`}
                 className="inline-flex shrink-0 cursor-pointer rounded-[30%] outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-black"
                 data-testid="huddle-agent-voice-menu-trigger"
                 type="button"
@@ -406,7 +416,7 @@ export function HuddleParticipantsControl({
       {hiddenParticipantCount > 0 ? (
         <PopoverTrigger asChild>
           <Button
-            aria-label={`Show all huddle participants (${participants.length})`}
+            aria-label={t`Show all huddle participants (${count})`}
             className={cn(
               "relative z-10 shrink-0 px-1 text-2xs font-semibold shadow-none tabular-nums",
               appearance === "room"

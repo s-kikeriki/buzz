@@ -625,6 +625,23 @@ const CONVERTED_FILES = [
   "src/features/community-members/ui/CommunityMembersSettingsCard.tsx",
   "src/features/community-members/ui/ConfirmRemoveDialog.tsx",
   "src/features/community-members/ui/InviteLinkSection.tsx",
+  // Tranche: huddle — the huddle bar and its controls, the participant strip
+  // and roster, the agent voice menu, the add-agent dialog and the huddle
+  // message card.
+  //
+  // `lib/huddleError.ts` is a library, not UI, and is listed because it
+  // *produces* copy: five call sites toast its three sentences.
+  "src/features/huddle/components/AddAgentDialog.tsx",
+  "src/features/huddle/components/AgentVoiceMenu.tsx",
+  "src/features/huddle/components/HuddleAttachment.tsx",
+  "src/features/huddle/components/HuddleBar.tsx",
+  "src/features/huddle/components/HuddleIndicator.tsx",
+  "src/features/huddle/components/HuddleProfileControl.tsx",
+  "src/features/huddle/components/HuddleStartingView.tsx",
+  "src/features/huddle/components/HuddleTranscriptIntro.tsx",
+  "src/features/huddle/components/MicControls.tsx",
+  "src/features/huddle/components/ParticipantList.tsx",
+  "src/features/huddle/lib/huddleError.ts",
 ];
 
 /**

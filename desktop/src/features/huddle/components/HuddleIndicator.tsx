@@ -1,3 +1,5 @@
+import { plural } from "@lingui/core/macro";
+import { Trans, useLingui } from "@lingui/react/macro";
 import { listen } from "@tauri-apps/api/event";
 import { Headphones } from "lucide-react";
 import * as React from "react";
@@ -51,6 +53,7 @@ export function HuddleIndicator({
   onStart,
   startDisabled,
 }: HuddleIndicatorProps) {
+  const { i18n, t } = useLingui();
   const { activeEphemeralChannelId, joinHuddle, isStarting } = useHuddle();
   const queryClient = useQueryClient();
   const [activeHuddle, setActiveHuddle] = React.useState<ActiveHuddle | null>(
@@ -277,7 +280,9 @@ export function HuddleIndicator({
           onSelect={() => onStart()}
         >
           <Headphones />
-          <span>Start huddle</span>
+          <span>
+            <Trans>Start huddle</Trans>
+          </span>
         </DropdownMenuItem>
       );
     }
@@ -290,7 +295,7 @@ export function HuddleIndicator({
             data-testid="channel-huddle-tooltip-trigger"
           >
             <Button
-              aria-label="Start huddle"
+              aria-label={t`Start huddle`}
               className={className}
               data-testid="channel-start-huddle-trigger"
               disabled={startDisabled || isStarting}
@@ -303,7 +308,9 @@ export function HuddleIndicator({
             </Button>
           </span>
         </TooltipTrigger>
-        <TooltipContent>Huddle</TooltipContent>
+        <TooltipContent>
+          <Trans>Huddle</Trans>
+        </TooltipContent>
       </Tooltip>
     );
   }
@@ -312,6 +319,16 @@ export function HuddleIndicator({
   // When START fell out of the event window, the creator isn't in the
   // reconstructed set — floor at 1 to avoid showing "0 participants".
   const participantCount = Math.max(1, activeHuddle.participants.size);
+
+  // A whole sentence per plural form rather than a count glued to a noun and
+  // an "s": the English built its own plural with a ternary, which leaves the
+  // German no form to inflect.
+  const joinLabel = i18n._(
+    plural(participantCount, {
+      one: "Join active huddle (# participant)",
+      other: "Join active huddle (# participants)",
+    }),
+  );
 
   async function doJoin() {
     if (!activeHuddle || isJoining) return;
@@ -341,7 +358,9 @@ export function HuddleIndicator({
         onSelect={() => void doJoin()}
       >
         <Headphones />
-        <span>Join huddle</span>
+        <span>
+          <Trans>Join huddle</Trans>
+        </span>
         <span className="ml-auto text-xs text-muted-foreground">
           {participantCount}
         </span>
@@ -353,7 +372,7 @@ export function HuddleIndicator({
     <Tooltip>
       <TooltipTrigger asChild>
         <Button
-          aria-label={`Join active huddle (${participantCount} participant${participantCount !== 1 ? "s" : ""})`}
+          aria-label={joinLabel}
           className={cn("relative", className)}
           disabled={isJoining || isStarting}
           onClick={() => void doJoin()}

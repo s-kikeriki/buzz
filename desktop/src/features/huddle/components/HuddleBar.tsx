@@ -1,3 +1,4 @@
+import { Trans, useLingui } from "@lingui/react/macro";
 import { invoke } from "@tauri-apps/api/core";
 import { listen } from "@tauri-apps/api/event";
 import { getCurrentWindow } from "@tauri-apps/api/window";
@@ -153,6 +154,7 @@ export function HuddleBar({
   onOpenHuddleWindow,
   onVisibilityChange,
 }: HuddleBarProps) {
+  const { t } = useLingui();
   const documentVisible = useDocumentVisible();
   const {
     leaveHuddle,
@@ -488,11 +490,17 @@ export function HuddleBar({
           "Failed to send huddle reaction.",
         );
       })().catch((error) => {
-        setReactionError("Reaction failed");
+        setReactionError(t`Reaction failed`);
         console.error("[huddle] Failed to send reaction:", error);
       });
     },
-    [burstHuddleReaction, customEmoji, reactionChannelId, reactionSenderName],
+    [
+      burstHuddleReaction,
+      customEmoji,
+      reactionChannelId,
+      reactionSenderName,
+      t,
+    ],
   );
 
   if (!barState) {
@@ -549,7 +557,7 @@ export function HuddleBar({
       setState(s);
     } catch (e) {
       const message = e instanceof Error ? e.message : String(e);
-      setTranscriptError(`Transcript failed: ${message}`);
+      setTranscriptError(t`Transcript failed: ${message}`);
       console.error("Failed to toggle huddle transcript:", e);
     }
   }
@@ -591,7 +599,7 @@ export function HuddleBar({
           >
             <span className="max-w-[220px] truncate">{huddleError}</span>
             <button
-              aria-label="Dismiss error"
+              aria-label={t`Dismiss error`}
               className="ml-1 opacity-60 hover:opacity-100"
               onClick={clearHuddleError}
               type="button"
@@ -610,10 +618,10 @@ export function HuddleBar({
                 {transcriptionEnabled &&
                 modelStatus.stt !== "ready" &&
                 modelStatus.tts !== "ready"
-                  ? `Voice models: STT ${modelStatus.stt}, TTS ${modelStatus.tts}`
+                  ? t`Voice models: STT ${modelStatus.stt}, TTS ${modelStatus.tts}`
                   : transcriptionEnabled && modelStatus.stt !== "ready"
-                    ? `STT model: ${modelStatus.stt}`
-                    : `TTS model: ${modelStatus.tts}`}
+                    ? t`STT model: ${modelStatus.stt}`
+                    : t`TTS model: ${modelStatus.tts}`}
               </span>
             </output>
           )}
@@ -660,7 +668,7 @@ export function HuddleBar({
               return result;
             } catch (e: unknown) {
               const msg = e instanceof Error ? e.message : String(e);
-              setAgentAddError(`Failed to add agent: ${msg}`);
+              setAgentAddError(t`Failed to add agent: ${msg}`);
               throw e; // Re-throw so AddAgentDialog shows its inline error.
             }
           }}
@@ -767,7 +775,7 @@ export function HuddleBar({
               <TooltipTrigger asChild>
                 <PopoverTrigger asChild>
                   <Button
-                    aria-label="Emoji reactions"
+                    aria-label={t`Emoji reactions`}
                     aria-pressed={isReactionPickerOpen}
                     className={cn(
                       "buzz-huddle-control-button h-12 w-12 shrink-0 rounded-md",
@@ -782,7 +790,7 @@ export function HuddleBar({
                 </PopoverTrigger>
               </TooltipTrigger>
               <TooltipContent className="buzz-huddle-tooltip" side="top">
-                Emoji reactions
+                <Trans>Emoji reactions</Trans>
               </TooltipContent>
             </Tooltip>
             <PopoverContent
@@ -799,7 +807,9 @@ export function HuddleBar({
             <TooltipTrigger asChild>
               <Button
                 aria-label={
-                  transcriptionEnabled ? "Stop transcript" : "Start transcript"
+                  transcriptionEnabled
+                    ? t`Stop transcript`
+                    : t`Start transcript`
                 }
                 aria-pressed={transcriptionEnabled}
                 className="buzz-huddle-control-button h-12 w-12 shrink-0 rounded-md"
@@ -812,14 +822,14 @@ export function HuddleBar({
               </Button>
             </TooltipTrigger>
             <TooltipContent className="buzz-huddle-tooltip" side="top">
-              {transcriptionEnabled ? "Stop transcript" : "Start transcript"}
+              {transcriptionEnabled ? t`Stop transcript` : t`Start transcript`}
             </TooltipContent>
           </Tooltip>
 
           <Tooltip>
             <TooltipTrigger asChild>
               <Button
-                aria-label="Add agent to huddle"
+                aria-label={t`Add agent to huddle`}
                 className="buzz-huddle-control-button h-12 w-12 shrink-0 rounded-md"
                 onClick={() => setShowAddAgent(true)}
                 size="icon"
@@ -830,7 +840,7 @@ export function HuddleBar({
               </Button>
             </TooltipTrigger>
             <TooltipContent className="buzz-huddle-tooltip" side="top">
-              Add agent
+              <Trans>Add agent</Trans>
             </TooltipContent>
           </Tooltip>
         </div>
@@ -841,7 +851,7 @@ export function HuddleBar({
           <Tooltip>
             <TooltipTrigger asChild>
               <Button
-                aria-label="Open huddle in a new window"
+                aria-label={t`Open huddle in a new window`}
                 className="buzz-huddle-control-button h-12 w-12 shrink-0 rounded-md"
                 onClick={() => void handleOpenHuddleWindow()}
                 size="icon"
@@ -852,14 +862,14 @@ export function HuddleBar({
               </Button>
             </TooltipTrigger>
             <TooltipContent className="buzz-huddle-tooltip" side="top">
-              Open huddle window
+              <Trans>Open huddle window</Trans>
             </TooltipContent>
           </Tooltip>
         ) : (
           <Tooltip>
             <TooltipTrigger asChild>
               <Button
-                aria-label="Return huddle to drawer"
+                aria-label={t`Return huddle to drawer`}
                 className="buzz-huddle-control-button h-12 w-12 shrink-0 rounded-md"
                 onClick={() => void handleReturnToDrawer()}
                 size="icon"
@@ -870,13 +880,13 @@ export function HuddleBar({
               </Button>
             </TooltipTrigger>
             <TooltipContent className="buzz-huddle-tooltip" side="top">
-              Return huddle to drawer
+              <Trans>Return huddle to drawer</Trans>
             </TooltipContent>
           </Tooltip>
         )}
 
         <Button
-          aria-label="Leave huddle"
+          aria-label={t`Leave huddle`}
           className="h-12 gap-2 px-4"
           disabled={isLeaving}
           aria-busy={isLeaving}
@@ -885,23 +895,25 @@ export function HuddleBar({
           variant="destructive"
         >
           <PhoneOff className="h-4 w-4" />
-          Leave
+          <Trans>Leave</Trans>
         </Button>
       </div>
 
       {/* Screen reader announcements for huddle state changes */}
       <output aria-live="polite" className="sr-only">
         {hasAvailableMic
-          ? "In huddle, microphone connected"
-          : "In huddle, no microphone"}
-        {`, voice input: ${isPttMode ? "push to talk, press Ctrl+Space to transmit" : "voice activity detection"}`}
+          ? t`In huddle, microphone connected`
+          : t`In huddle, no microphone`}
+        {isPttMode
+          ? t`, voice input: push to talk, press Ctrl+Space to transmit`
+          : t`, voice input: voice activity detection`}
         {modelStatus &&
           transcriptionEnabled &&
           modelStatus.stt !== "ready" &&
-          `, STT model ${modelStatus.stt}`}
+          t`, STT model ${modelStatus.stt}`}
         {modelStatus &&
           modelStatus.tts !== "ready" &&
-          `, TTS model ${modelStatus.tts}`}
+          t`, TTS model ${modelStatus.tts}`}
       </output>
     </div>
   );

@@ -1,3 +1,5 @@
+import { Trans, useLingui } from "@lingui/react/macro";
+
 import { ThemeGrainientBackground } from "@/app/ThemeGrainientBackground";
 import { BrandMark } from "@/shared/ui/BrandMark";
 import { FlappingBee } from "@/shared/ui/buzz-logo/FlappingBee";
@@ -12,15 +14,18 @@ import { FlappingBee } from "@/shared/ui/buzz-logo/FlappingBee";
  * and a flavor with a light cut gets it here.
  */
 export function HuddleStartingView() {
+  const { t } = useLingui();
   return (
     <div
-      aria-label="Starting huddle"
+      aria-label={t`Starting huddle`}
       className="buzz-setup-loading-shell flex min-h-0 flex-1 items-center justify-center overflow-hidden px-6 text-foreground"
       data-testid="huddle-starting-view"
       role="status"
     >
       <ThemeGrainientBackground />
-      <span className="sr-only">Starting huddle</span>
+      <span className="sr-only">
+        <Trans>Starting huddle</Trans>
+      </span>
       <BrandMark
         className="relative z-10 h-auto w-28"
         fallback={<FlappingBee className="relative z-10 h-auto w-28" />}
