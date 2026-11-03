@@ -111,6 +111,16 @@ const CONVERTED_FILES = [
   "src/features/communities/ui/CommunitySwitcher.tsx",
   "src/features/communities/ui/HostedCommunityCreateFlow.tsx",
   "src/features/communities/ui/HostedCommunityOnboarding.tsx",
+  // Community members: no leak found here, which is the point of adding them
+  // while the area is fresh. Onboarding, profile and communities each hid one,
+  // and in two of those the gate found what reading the files had missed.
+  "src/features/community-members/lib/joinAlerts.ts",
+  "src/features/community-members/ui/AddMemberDialog.tsx",
+  "src/features/community-members/ui/CommunityInviteDialog.tsx",
+  "src/features/community-members/ui/CommunityMembersCard.tsx",
+  "src/features/community-members/ui/CommunityMembersSettingsCard.tsx",
+  "src/features/community-members/ui/ConfirmRemoveDialog.tsx",
+  "src/features/community-members/ui/InviteLinkSection.tsx",
 ];
 
 /**

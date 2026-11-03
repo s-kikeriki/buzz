@@ -1,3 +1,5 @@
+import { i18n } from "@lingui/core";
+import { msg } from "@lingui/core/macro";
 /**
  * First-join alert bookkeeping for community owners/admins.
  *
@@ -201,12 +203,12 @@ export function reconcileJoinAlertLedger({
 export function joinAlertTitle(communityName: string | null | undefined) {
   const trimmed = communityName?.trim();
   return trimmed && trimmed.length > 0
-    ? `New member in ${trimmed}`
-    : "New community member";
+    ? i18n._(msg`New member in ${trimmed}`)
+    : i18n._(msg`New community member`);
 }
 
 export function joinAlertBody(displayName: string) {
-  return `${displayName} joined`;
+  return i18n._(msg`${displayName} joined`);
 }
 
 /**

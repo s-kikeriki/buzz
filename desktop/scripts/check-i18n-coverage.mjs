@@ -612,6 +612,19 @@ const CONVERTED_FILES = [
   "src/features/communities/ui/WelcomeSetup.tsx",
   "src/features/communities/useCommunityInit.ts",
   "src/features/communities/useNestNotifications.ts",
+  // Tranche: community members — the members card, the settings roster, the
+  // add-member and invite dialogs, and the invite-link section.
+  //
+  // `joinAlerts.ts` is a library, not UI, and is listed because it *produces*
+  // copy: the join notification's title and body come from there and appear
+  // in no JSX node.
+  "src/features/community-members/lib/joinAlerts.ts",
+  "src/features/community-members/ui/AddMemberDialog.tsx",
+  "src/features/community-members/ui/CommunityInviteDialog.tsx",
+  "src/features/community-members/ui/CommunityMembersCard.tsx",
+  "src/features/community-members/ui/CommunityMembersSettingsCard.tsx",
+  "src/features/community-members/ui/ConfirmRemoveDialog.tsx",
+  "src/features/community-members/ui/InviteLinkSection.tsx",
 ];
 
 /**

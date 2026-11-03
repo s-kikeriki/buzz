@@ -1,3 +1,6 @@
+import type { MessageDescriptor } from "@lingui/core";
+import { msg } from "@lingui/core/macro";
+import { Trans, useLingui } from "@lingui/react/macro";
 import { ChevronDown, Search } from "lucide-react";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import * as React from "react";
@@ -34,17 +37,21 @@ import {
 import { Input } from "@/shared/ui/input";
 import { Popover, PopoverAnchor, PopoverContent } from "@/shared/ui/popover";
 
+/**
+ * Descriptors, not strings: built once at module import, so a plain string
+ * would freeze both role names in whatever locale booted first.
+ */
 const ROLE_OPTIONS: Array<{
   value: RelayMemberRole;
-  label: string;
+  label: MessageDescriptor;
 }> = [
   {
     value: "member",
-    label: "Member",
+    label: msg`Member`,
   },
   {
     value: "admin",
-    label: "Admin",
+    label: msg`Admin`,
   },
 ];
 
@@ -52,13 +59,17 @@ export function DirectAddMemberForm({
   isOwner,
   onAdded,
   showLabel = true,
-  submitLabel = "Add member",
+  submitLabel,
 }: {
   isOwner: boolean;
   onAdded?: () => void;
   showLabel?: boolean;
   submitLabel?: string;
 }) {
+  const { i18n, t } = useLingui();
+  // Resolved here rather than as a default parameter: a default would need
+  // the hook at the signature, where it cannot run.
+  const resolvedSubmitLabel = submitLabel ?? t`Add member`;
   const addMutation = useAddRelayMemberMutation();
   const membersQuery = useRelayMembersQuery();
   const [query, setQuery] = React.useState("");
@@ -124,8 +135,9 @@ export function DirectAddMemberForm({
     () => ROLE_OPTIONS.filter((option) => isOwner || option.value === "member"),
     [isOwner],
   );
-  const selectedRoleLabel =
-    roleOptions.find((option) => option.value === role)?.label ?? "Member";
+  const selectedRoleLabel = i18n._(
+    roleOptions.find((option) => option.value === role)?.label ?? msg`Member`,
+  );
   const actionTransition = shouldReduceMotion
     ? { duration: 0 }
     : { duration: 0.18, ease: [0.23, 1, 0.32, 1] as const };
@@ -173,11 +185,11 @@ export function DirectAddMemberForm({
       toast.success(
         selectedUsers.length === 1
           ? role === "admin"
-            ? "Admin added"
-            : "Member added"
+            ? t`Admin added`
+            : t`Member added`
           : role === "admin"
-            ? "Admins added"
-            : "Members added",
+            ? t`Admins added`
+            : t`Members added`,
       );
       reset();
       onAdded?.();
@@ -198,7 +210,7 @@ export function DirectAddMemberForm({
       <div className="space-y-1.5">
         {showLabel ? (
           <label className="text-sm font-medium" htmlFor="member-search">
-            Person
+            <Trans>Person</Trans>
           </label>
         ) : null}
         <div className="flex gap-2">
@@ -266,7 +278,7 @@ export function DirectAddMemberForm({
                       }}
                       placeholder={
                         selectedUsers.length === 0
-                          ? "Search people or paste an npub"
+                          ? t`Search people or paste an npub`
                           : ""
                       }
                       ref={searchInputRef}
@@ -287,7 +299,7 @@ export function DirectAddMemberForm({
                         <DropdownMenu modal={false}>
                           <DropdownMenuTrigger asChild>
                             <button
-                              aria-label="Choose member role"
+                              aria-label={t`Choose member role`}
                               className="inline-flex items-center gap-1.5 bg-transparent text-sm text-muted-foreground outline-hidden transition-colors hover:text-foreground focus-visible:text-foreground disabled:cursor-not-allowed disabled:opacity-60"
                               data-testid="member-role"
                               disabled={addMutation.isPending}
@@ -314,7 +326,7 @@ export function DirectAddMemberForm({
                                   key={option.value}
                                   value={option.value}
                                 >
-                                  {option.label}
+                                  {i18n._(option.label)}
                                 </DropdownMenuRadioItem>
                               ))}
                             </DropdownMenuRadioGroup>
@@ -342,7 +354,7 @@ export function DirectAddMemberForm({
               >
                 {userSearchQuery.isLoading ? (
                   <p className="px-3 py-3 text-sm text-muted-foreground">
-                    Searching…
+                    <Trans>Searching…</Trans>
                   </p>
                 ) : searchResults.length > 0 || directResult ? (
                   <>
@@ -364,8 +376,10 @@ export function DirectAddMemberForm({
                   </>
                 ) : (
                   <p className="px-3 py-3 text-sm text-muted-foreground">
-                    No people found. Paste a full npub or hex public key to add
-                    someone directly.
+                    <Trans>
+                      No people found. Paste a full npub or hex public key to
+                      add someone directly.
+                    </Trans>
                   </p>
                 )}
               </div>
@@ -387,7 +401,7 @@ export function DirectAddMemberForm({
                   size="sm"
                   type="submit"
                 >
-                  {addMutation.isPending ? "Inviting…" : submitLabel}
+                  {addMutation.isPending ? t`Inviting…` : resolvedSubmitLabel}
                 </Button>
               </motion.div>
             ) : null}
@@ -395,7 +409,7 @@ export function DirectAddMemberForm({
         </div>
         {isAlreadyMember ? (
           <p className="text-xs text-destructive">
-            This person is already a community member.
+            <Trans>This person is already a community member.</Trans>
           </p>
         ) : null}
         {userSearchQuery.error instanceof Error ? (
@@ -431,9 +445,11 @@ export function AddMemberDialog({
       >
         <div className="flex max-h-[85vh] flex-col">
           <DialogHeader className="border-b border-border/60 px-6 py-5 pr-14">
-            <DialogTitle>Add member</DialogTitle>
+            <DialogTitle>
+              <Trans>Add member</Trans>
+            </DialogTitle>
             <DialogDescription>
-              Add a person to this community by their public key.
+              <Trans>Add a person to this community by their public key.</Trans>
             </DialogDescription>
           </DialogHeader>
           <div className="px-6 py-4">

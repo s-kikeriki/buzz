@@ -171,7 +171,11 @@ export const settingsSections: SettingsSectionDescriptor[] = [
   },
   {
     value: "relay-admin",
-    label: msg`Admin`,
+    // Contextualised, because "Admin" is also the *member role* in the channel
+    // member card and the add-member dialog. One msgid cannot carry both: the
+    // German for this nav entry is "Administration", and without a context it
+    // was what the role dropdowns rendered too.
+    label: msg({ context: "settings section", message: "Admin" }),
     icon: ServerCog,
   },
   {
