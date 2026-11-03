@@ -81,6 +81,19 @@ const DEFAULT_CHROME_SURFACE = "auto";
 export const BUNDLED_FONT_FAMILIES = ["Inter", "Poppins"];
 
 /**
+ * Languages a flavor may start in, and the only values `defaultLocale`
+ * accepts.
+ *
+ * The shipped catalogues, minus `pseudo` — that one is the generated
+ * overflow-proofing locale and is never offered in a shipped build, so a
+ * flavor defaulting to it would hand users unreadable copy with no control
+ * rendered to escape it. Mirrored by `BRAND_DEFAULT_LOCALES` in
+ * `src/shared/branding/brandLocale.ts`, which is what the frontend parses
+ * with; `flavor-config.test.mjs` holds the two lists against each other.
+ */
+export const BRAND_DEFAULT_LOCALES = ["en", "de"];
+
+/**
  * Agents a fresh install of this flavor starts with.
  *
  * Seeded as *definitions* — the key-less cards the Agents list shows — not as
@@ -686,6 +699,15 @@ export function validateFlavor(flavor, flavorId) {
     }
   }
 
+  if (flavor.defaultLocale !== undefined) {
+    if (!BRAND_DEFAULT_LOCALES.includes(flavor.defaultLocale)) {
+      fail(
+        flavorId,
+        `defaultLocale must be one of ${BRAND_DEFAULT_LOCALES.join(", ")}`,
+      );
+    }
+  }
+
   if (flavor.defaultAgents !== undefined) {
     validateDefaultAgents(flavor.defaultAgents, flavorId);
   }
@@ -761,6 +783,7 @@ export function validateFlavor(flavor, flavorId) {
       ? flavor.celebrationEmojis.map((entry) => entry.trim())
       : undefined,
     fontFamily: flavor.fontFamily,
+    defaultLocale: flavor.defaultLocale,
     defaultAgents:
       flavor.defaultAgents === undefined
         ? undefined
@@ -919,6 +942,13 @@ export function flavorBuildEnv(flavor, readFile = readFileSync) {
     // own family", which is a stack the frontend already defaults to, and an
     // empty string would be a build asking for a nameless font.
     env.VITE_BUZZ_PRODUCT_FONT = flavor.fontFamily;
+  }
+  if (flavor.defaultLocale !== undefined) {
+    // Omitted when unset, and the absence is load-bearing rather than tidy:
+    // the frontend reads "no value" as *follow the operating system*, which
+    // is what every build did before this field existed. Emitting `en` for an
+    // unconfigured flavor would silently pin every one of them to English.
+    env.VITE_BUZZ_DEFAULT_LOCALE = flavor.defaultLocale;
   }
   if (flavor.defaultAgents !== undefined) {
     // Paths, not bytes — the same split the tray icon and the DMG panel are

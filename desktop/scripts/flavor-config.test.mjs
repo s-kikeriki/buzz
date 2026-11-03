@@ -7,6 +7,7 @@ import { fileURLToPath } from "node:url";
 
 import { demoBuildConfig } from "./demo-build-config.mjs";
 import {
+  BRAND_DEFAULT_LOCALES,
   BUNDLED_FONT_FAMILIES,
   FLAVOR_BUNDLE_ICONS,
   PLATFORM_ICON_TARGETS,
@@ -1599,4 +1600,58 @@ test("no flavor bakes a non-empty credential into the repository", () => {
       }
     }
   }
+});
+
+test("defaultLocale accepts only a shipped catalogue", () => {
+  for (const locale of BRAND_DEFAULT_LOCALES) {
+    const flavor = validateFlavor(
+      goodFlavor({ defaultLocale: locale }),
+      "acme",
+    );
+    assert.equal(flavorBuildEnv(flavor).VITE_BUZZ_DEFAULT_LOCALE, locale);
+  }
+
+  // `pseudo` is a real `AppLocale` and is still refused: it is never
+  // selectable in a shipped build, so a flavor defaulting to it would strand
+  // users in unreadable copy with no control rendered to escape it.
+  for (const bad of ["pseudo", "fr", "de-AT", "DE"]) {
+    assert.throws(
+      () => validateFlavor(goodFlavor({ defaultLocale: bad }), "acme"),
+      /defaultLocale must be one of/,
+      `${bad} must be refused`,
+    );
+  }
+});
+
+test("a flavor that declares no language emits nothing and keeps following the OS", () => {
+  // The most load-bearing absence in this file. The frontend reads a missing
+  // `VITE_BUZZ_DEFAULT_LOCALE` as "follow the operating system", which is what
+  // every build did before the field existed — so emitting `en` by default
+  // here would silently pin ki.keriki, Zeniad and the trunk to English on a
+  // German machine.
+  const plain = flavorBuildEnv(validateFlavor(goodFlavor(), "acme"));
+  assert.equal(plain.VITE_BUZZ_DEFAULT_LOCALE, undefined);
+
+  const expected = { brawado: "de" };
+  for (const id of listFlavorIds()) {
+    assert.equal(
+      flavorBuildEnv(loadFlavor(id), () => "<svg/>").VITE_BUZZ_DEFAULT_LOCALE,
+      expected[id],
+      `${id}: the starting language that reaches the build`,
+    );
+  }
+});
+
+test("the locales a flavor may declare are the ones the frontend parses", () => {
+  // Two lists, one decision — the same shape as the font family check above.
+  // A locale accepted here and unknown to `brandLocale.ts` would be dropped
+  // at runtime and the build would start in English with nothing to say so.
+  const parser = readFileSync(
+    path.join(desktopDir, "src/shared/branding/brandLocale.ts"),
+    "utf8",
+  );
+  const declared = parser.match(/BRAND_DEFAULT_LOCALES = \[([^\]]*)\]/)?.[1];
+  assert.ok(declared, "brandLocale.ts must declare BRAND_DEFAULT_LOCALES");
+  const parsed = [...declared.matchAll(/"([a-z-]+)"/g)].map((m) => m[1]);
+  assert.deepEqual(parsed, BRAND_DEFAULT_LOCALES);
 });

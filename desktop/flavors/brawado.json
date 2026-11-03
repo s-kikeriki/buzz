@@ -22,6 +22,7 @@
   "relayUrl": "wss://brawado.communities.buzz.xyz",
   "autoConnectDefaultRelay": true,
   "fontFamily": "Poppins",
+  "defaultLocale": "de",
   "accentColor": "#e30613",
   "chromeSurface": "ink",
   "themeLabel": "Brawado",
