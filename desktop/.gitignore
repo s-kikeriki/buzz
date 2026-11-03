@@ -29,3 +29,10 @@ test-results
 *.njsproj
 *.sln
 *.sw?
+
+# Compiled message catalogues. `lingui compile` writes these next to the
+# `.po` files, but the app compiles in memory via the Vite plugin — the only
+# thing that runs the CLI compiler is the catalogue gate, and it cleans up
+# after itself. Build output, never source.
+src/locales/*/messages.js
+src/locales/*/messages.d.ts

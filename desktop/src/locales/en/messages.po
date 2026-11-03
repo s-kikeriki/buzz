@@ -391,6 +391,17 @@ msgid "{0} is ready"
 msgstr "{0} is ready"
 
 #. placeholder {0}: BRAND.productName
+#. placeholder {1}: BRAND.productName
+#: src/features/onboarding/ui/BackupStep.tsx
+msgid "{0} keeps your identity key in your system keychain. Your computer may ask for your password when {1} needs to read the key."
+msgstr "{0} keeps your identity key in your system keychain. Your computer may ask for your password when {1} needs to read the key."
+
+#. placeholder {0}: BRAND.productName
+#: src/features/onboarding/ui/BackupStep.tsx
+msgid "{0} keeps your identity key protected on this device. Make a separate backup in case you lose access."
+msgstr "{0} keeps your identity key protected on this device. Make a separate backup in case you lose access."
+
+#. placeholder {0}: BRAND.productName
 #: src/features/messages/lib/composerMessageLinkNode.ts
 msgid "{0} link"
 msgstr "{0} link"
@@ -457,6 +468,11 @@ msgstr "{0} was created, but the agent instance could not be created: {1}"
 #: src/features/agents/ui/usePersonaActions.ts
 msgid "{0} was created, but the agent instance could not be created."
 msgstr "{0} was created, but the agent instance could not be created."
+
+#. placeholder {0}: BRAND.productName
+#: src/features/onboarding/ui/ResetFailedScreen.tsx
+msgid "{0} was unable to fully clear your local data. Try relaunching — the reset will resume automatically. If this persists, contact support."
+msgstr "{0} was unable to fully clear your local data. Try relaunching — the reset will resume automatically. If this persists, contact support."
 
 #. placeholder {0}: BRAND.productName
 #. placeholder {1}: BRAND.productName
@@ -1111,6 +1127,10 @@ msgstr "A personal AI assistant that runs on your own devices."
 #: src/features/projects/ui/ProjectOriginReference.tsx
 msgid "a private channel"
 msgstr "a private channel"
+
+#: src/features/onboarding/welcome.ts
+msgid "A private channel for getting oriented in this community."
+msgstr "A private channel for getting oriented in this community."
 
 #: src/features/home/lib/inbox.ts
 msgid "A reminder is waiting for you."
@@ -2184,6 +2204,7 @@ msgstr "Avatar is shared identity"
 msgid "Awaiting review"
 msgstr "Awaiting review"
 
+#: src/features/onboarding/ui/OnboardingFlow.tsx
 #: src/features/projects/ui/ProjectWorkspaceTabList.tsx
 msgid "Back"
 msgstr "Back"
@@ -2225,13 +2246,26 @@ msgstr "Back to search"
 msgid "Backup key"
 msgstr "Backup key"
 
+#: src/features/onboarding/ui/BackupStep.tsx
+msgid "Backup options"
+msgstr "Backup options"
+
+#: src/features/onboarding/ui/BackupTestFlow.tsx
 #: src/features/settings/ui/BackupTestFlow.tsx
 msgid "Backup password"
 msgstr "Backup password"
 
+#: src/features/onboarding/ui/EncryptedBackupCreator.tsx
+msgid "Backup password saved; hidden for security."
+msgstr "Backup password saved; hidden for security."
+
 #: src/features/settings/EncryptedBackupProvider.tsx
 msgid "Backup ready to download"
 msgstr "Backup ready to download"
+
+#: src/features/onboarding/ui/EncryptedBackupCreator.tsx
+msgid "Backup saved to {savedPath}"
+msgstr "Backup saved to {savedPath}"
 
 #: src/features/settings/ui/PrivateKeyBackupRow.tsx
 msgid "Backups use the standard NIP-49 format, so this works for backups from compatible Nostr apps too."
@@ -2375,6 +2409,10 @@ msgstr "by public key"
 msgid "Can't reach the relay"
 msgstr "Can't reach the relay"
 
+#: src/features/onboarding/ui/OnboardingFlow.tsx
+msgid "Can't reach this relay"
+msgstr "Can't reach this relay"
+
 #: src/features/agents/ui/AddAgentToChannelDialog.tsx
 #: src/features/agents/ui/AddTeamToChannelDialog.tsx
 #: src/features/agents/ui/AgentCardMintDialog.tsx
@@ -2401,6 +2439,8 @@ msgstr "Can't reach the relay"
 #: src/features/messages/ui/DeleteMessageConfirmDialog.tsx
 #: src/features/messages/ui/DraftsPanel.tsx
 #: src/features/messages/ui/NonMemberMentionDialog.tsx
+#: src/features/onboarding/ui/IdentityRecoveryPairing.tsx
+#: src/features/onboarding/ui/KeyringLockedScreen.tsx
 #: src/features/projects/ui/MergePullRequestButton.tsx
 #: src/features/projects/ui/ProjectBranchDialogs.tsx
 #: src/features/projects/ui/ProjectCards.tsx
@@ -2473,6 +2513,10 @@ msgstr "Card-minting key"
 msgid "Category"
 msgstr "Category"
 
+#: src/features/onboarding/ui/OnboardingFlow.tsx
+msgid "Change community"
+msgstr "Change community"
+
 #: src/features/projects/projectTaskCategories.ts
 msgid "Change request"
 msgstr "Change request"
@@ -2480,6 +2524,10 @@ msgstr "Change request"
 #: src/features/channels/ui/MembersSidebarMemberCard.tsx
 msgid "Change role"
 msgstr "Change role"
+
+#: src/features/onboarding/ui/EncryptedBackupCreator.tsx
+msgid "Change saved backup password"
+msgstr "Change saved backup password"
 
 #: src/features/projects/ui/ProjectCommitDetailPanel.tsx
 msgid "Changes"
@@ -2650,6 +2698,10 @@ msgstr "Check that the six-digit code matches on both devices, then confirm it."
 msgid "Check your connection and try cloning again."
 msgstr "Check your connection and try cloning again."
 
+#: src/features/onboarding/ui/OnboardingFlow.tsx
+msgid "Check your connection or change your community."
+msgstr "Check your connection or change your community."
+
 #: src/features/agents/ui/agentSessionToolClassifier.ts
 msgid "Checked todos"
 msgstr "Checked todos"
@@ -2686,6 +2738,7 @@ msgstr "Checking sign-in…"
 msgid "Checking which agents use this harness…"
 msgstr "Checking which agents use this harness…"
 
+#: src/features/onboarding/ui/BackupTestFlow.tsx
 #: src/features/settings/ui/BackupTestFlow.tsx
 msgid "Checking…"
 msgstr "Checking…"
@@ -3031,6 +3084,7 @@ msgstr "Codebase"
 msgid "Codes confirmed. Pairing your mobile device."
 msgstr "Codes confirmed. Pairing your mobile device."
 
+#: src/features/onboarding/ui/IdentityRecoveryPairing.tsx
 #: src/features/settings/ui/MobilePairingCard.tsx
 msgid "Codes match"
 msgstr "Codes match"
@@ -3089,6 +3143,7 @@ msgstr "Command"
 msgid "Commands available: {0}"
 msgstr "Commands available: {0}"
 
+#: src/features/onboarding/ui/EncryptedBackupCreator.tsx
 #: src/features/settings/ui/EncryptedBackupCreator.tsx
 msgid "Commas"
 msgstr "Commas"
@@ -3300,6 +3355,11 @@ msgstr "Context compacted"
 msgid "Context limit"
 msgstr "Context limit"
 
+#: src/features/onboarding/ui/BackupStep.tsx
+#: src/features/onboarding/ui/DownloadKeyStep.tsx
+msgid "Continue"
+msgstr "Continue"
+
 #: src/features/onboarding/ui/MachineOnboardingFlow.tsx
 msgid "Continue setup"
 msgstr "Continue setup"
@@ -3347,11 +3407,17 @@ msgstr "Convert to draft"
 msgid "Converted to draft."
 msgstr "Converted to draft."
 
+#: src/features/onboarding/ui/IdentityRecoveryPairing.tsx
+msgid "Copied"
+msgstr "Copied"
+
+#: src/features/onboarding/ui/BackupStep.tsx
 #: src/features/settings/ui/MobilePairingCard.tsx
 #: src/features/settings/ui/ProfileSettingsCard.tsx
 msgid "Copied to clipboard"
 msgstr "Copied to clipboard"
 
+#: src/features/onboarding/ui/NsecMaskedDisplay.tsx
 #: src/features/settings/ui/ProfileSettingsCard.tsx
 #: src/features/sidebar/ui/ChannelContextMenu.tsx
 msgid "Copy"
@@ -3405,9 +3471,14 @@ msgstr "Copy log"
 msgid "Copy message"
 msgstr "Copy message"
 
+#: src/features/onboarding/ui/IdentityRecoveryPairing.tsx
 #: src/features/settings/ui/MobilePairingCard.tsx
 msgid "Copy pairing code"
 msgstr "Copy pairing code"
+
+#: src/features/onboarding/ui/NsecMaskedDisplay.tsx
+msgid "Copy private key"
+msgstr "Copy private key"
 
 #: src/features/agents/ui/AddAgentToChannelDialog.tsx
 msgid "Copy pubkey"
@@ -3423,6 +3494,18 @@ msgstr "Copy review link"
 msgid "Copy task link"
 msgstr "Copy task link"
 
+#: src/features/onboarding/ui/BackupStep.tsx
+msgid "Copy to clipboard"
+msgstr "Copy to clipboard"
+
+#: src/features/onboarding/ui/BackupStep.tsx
+msgid "Copy your identity key, then save it in a password manager like 1Password."
+msgstr "Copy your identity key, then save it in a password manager like 1Password."
+
+#: src/features/onboarding/ui/BackupStep.tsx
+msgid "Copying…"
+msgstr "Copying…"
+
 #: src/features/agents/ui/agentSessionTranscriptHelpers.ts
 msgid "Core Memory"
 msgstr "Core Memory"
@@ -3430,6 +3513,10 @@ msgstr "Core Memory"
 #: src/features/settings/ui/HostedCommunitiesSettingsCard.tsx
 msgid "Could not archive the community."
 msgstr "Could not archive the community."
+
+#: src/features/onboarding/ui/IdentityRecoveryPairing.tsx
+msgid "Could not confirm recovery."
+msgstr "Could not confirm recovery."
 
 #: src/features/agents/managedAgentRuntimeStatus.ts
 msgid "Could not connect"
@@ -3442,6 +3529,10 @@ msgstr "Could not connect the {productName} identity."
 #: src/features/settings/ui/HostedCommunitiesSettingsCard.tsx
 msgid "Could not connect this device's {productName} identity."
 msgstr "Could not connect this device's {productName} identity."
+
+#: src/features/onboarding/ui/IdentityRecoveryPairing.tsx
+msgid "Could not copy the pairing code. Try again."
+msgstr "Could not copy the pairing code. Try again."
 
 #: src/features/agents/hooks.ts
 msgid "Could not create agent."
@@ -3502,6 +3593,7 @@ msgstr "Could not load this project item."
 msgid "Could not probe provider:"
 msgstr "Could not probe provider:"
 
+#: src/features/onboarding/ui/BackupTestFlow.tsx
 #: src/features/settings/ui/BackupTestFlow.tsx
 msgid "Could not read that file."
 msgstr "Could not read that file."
@@ -3510,6 +3602,14 @@ msgstr "Could not read that file."
 msgid "Could not release the previously connected {productName} identity."
 msgstr "Could not release the previously connected {productName} identity."
 
+#: src/features/onboarding/ui/BackupTestFlow.tsx
+msgid "Could not retrieve your key."
+msgstr "Could not retrieve your key."
+
+#: src/features/onboarding/ui/BackupStep.tsx
+msgid "Could not retrieve your private key: {copyError}. You can continue and find it later in Settings > Profile > Identity."
+msgstr "Could not retrieve your private key: {copyError}. You can continue and find it later in Settings > Profile > Identity."
+
 #: src/features/agents/useAgentManagement.ts
 msgid "Could not save this agent."
 msgstr "Could not save this agent."
@@ -3517,6 +3617,10 @@ msgstr "Could not save this agent."
 #: src/features/messages/ui/useDetachedAgentStart.ts
 msgid "Could not start agent."
 msgstr "Could not start agent."
+
+#: src/features/onboarding/ui/IdentityRecoveryPairing.tsx
+msgid "Could not start recovery."
+msgstr "Could not start recovery."
 
 #: src/features/channels/useWelcomeAgentCreate.ts
 msgid "Could not start the conversation."
@@ -3538,6 +3642,7 @@ msgstr "Could not unpair the {productName} identity."
 msgid "Could not use that {assetLabel}."
 msgstr "Could not use that {assetLabel}."
 
+#: src/features/onboarding/ui/BackupTestFlow.tsx
 #: src/features/settings/ui/BackupTestFlow.tsx
 msgid "Could not verify this backup."
 msgstr "Could not verify this backup."
@@ -3657,6 +3762,10 @@ msgstr "Couldn’t send the card. Try again."
 msgid "Couldn't send to channel"
 msgstr "Couldn't send to channel"
 
+#: src/features/onboarding/hooks.ts
+msgid "Couldn't set up starter channels"
+msgstr "Couldn't set up starter channels"
+
 #: src/features/agents/lib/usePersonaCatalogRelay.ts
 msgid "Couldn’t subscribe to the community agent catalog"
 msgstr "Couldn’t subscribe to the community agent catalog"
@@ -3690,6 +3799,10 @@ msgstr "Create {agentName}'s card"
 msgid "Create {itemLabel}"
 msgstr "Create {itemLabel}"
 
+#: src/features/onboarding/ui/BackupStep.tsx
+msgid "Create a backup file and choose a password you can remember. You’ll need both to restore your account."
+msgstr "Create a backup file and choose a password you can remember. You’ll need both to restore your account."
+
 #: src/features/channels/ui/useChannelIntro.tsx
 msgid "Create a channel"
 msgstr "Create a channel"
@@ -3710,6 +3823,10 @@ msgstr "Create a new agent"
 #: src/features/agents/ui/personaDialogState.ts
 msgid "Create a new agent by copying this profile and adjusting it as needed."
 msgstr "Create a new agent by copying this profile and adjusting it as needed."
+
+#: src/features/onboarding/ui/EncryptedBackupCreator.tsx
+msgid "Create a new backup password?"
+msgstr "Create a new backup password?"
 
 #: src/features/channels/ui/ChannelBrowserDialog.tsx
 #: src/features/search/ui/TopbarSearch.tsx
@@ -3751,6 +3868,10 @@ msgstr "Create a remote branch"
 #: src/features/projects/ui/ProjectBranchDialogs.tsx
 msgid "Create a remote branch from"
 msgstr "Create a remote branch from"
+
+#: src/features/onboarding/ui/DownloadKeyStep.tsx
+msgid "Create a secure backup file"
+msgstr "Create a secure backup file"
 
 #: src/features/projects/ui/CreateIssueDialog.tsx
 #: src/features/projects/ui/CreateProjectIssueDialog.tsx
@@ -3803,6 +3924,10 @@ msgstr "Create canvas"
 #: src/features/sidebar/ui/CustomChannelSection.tsx
 msgid "Create channel"
 msgstr "Create channel"
+
+#: src/features/onboarding/ui/BackupStep.tsx
+msgid "Create locked backup"
+msgstr "Create locked backup"
 
 #: src/features/channels/ui/WelcomeAgentCreateDialog.tsx
 msgid "Create manually"
@@ -3916,6 +4041,10 @@ msgstr "Creating key…"
 #: src/features/agents/ui/TeamSnapshotImportDialog.tsx
 msgid "Creating team…"
 msgstr "Creating team…"
+
+#: src/features/onboarding/ui/BackupStep.tsx
+msgid "Creating your identity key"
+msgstr "Creating your identity key"
 
 #: src/features/settings/ui/ChannelTemplatesSettingsCard.tsx
 msgid "Creating..."
@@ -4313,6 +4442,10 @@ msgstr "Desktop alerts"
 msgid "Desktop alerts are on by default. Fine-tune what gets through below."
 msgstr "Desktop alerts are on by default. Fine-tune what gets through below."
 
+#: src/features/onboarding/ui/IdentityRecoveryPairing.tsx
+msgid "Desktop identity recovery QR code"
+msgstr "Desktop identity recovery QR code"
+
 #: src/features/settings/ui/NotificationSettingsCard.tsx
 msgid "Desktop notifications are blocked. Enable them in your system settings."
 msgstr "Desktop notifications are blocked. Enable them in your system settings."
@@ -4431,6 +4564,10 @@ msgstr "Do nothing"
 msgid "Docs URL"
 msgstr "Docs URL"
 
+#: src/features/onboarding/ui/IdentityRecoveryPairing.tsx
+msgid "Does this code match your phone?"
+msgstr "Does this code match your phone?"
+
 #. placeholder {0}: agent.displayName
 #. placeholder {0}: suggestion.displayName
 #: src/features/messages/ui/ComposerAddressControls.tsx
@@ -4446,6 +4583,10 @@ msgstr "Don't automatically mention {0} in this thread <0/>"
 #: src/features/messages/ui/MentionAutocomplete.tsx
 msgid "Don't automatically mention in this thread"
 msgstr "Don't automatically mention in this thread"
+
+#: src/features/onboarding/ui/BackupStep.tsx
+msgid "Don’t share this key. Anyone who has it can access your account."
+msgstr "Don’t share this key. Anyone who has it can access your account."
 
 #: src/features/agents/ui/AgentCardMintDialog.tsx
 msgid "Don’t want to spend money? Ordinary export shares the same importable agent — free, just without the card art."
@@ -4471,6 +4612,11 @@ msgstr "Download {writtenName}"
 #: src/features/settings/ui/PrivateKeyBackupRow.tsx
 msgid "Download backup"
 msgstr "Download backup"
+
+#: src/features/onboarding/ui/BackupTestFlow.tsx
+#: src/features/onboarding/ui/EncryptedBackupCreator.tsx
+msgid "Download backup again"
+msgstr "Download backup again"
 
 #: src/features/agents/ui/AgentCardViewerDialog.tsx
 msgid "Download card"
@@ -4548,6 +4694,7 @@ msgstr "Drop files to upload"
 msgid "Drop or browse"
 msgstr "Drop or browse"
 
+#: src/features/onboarding/ui/BackupTestFlow.tsx
 #: src/features/settings/ui/BackupTestFlow.tsx
 msgid "Drop your backup file here"
 msgstr "Drop your backup file here"
@@ -4717,10 +4864,12 @@ msgstr "Encode failed."
 msgid "Encrypt the embedded agent so only you and this agent can import it. Anyone else sees just the image."
 msgstr "Encrypt the embedded agent so only you and this agent can import it. Anyone else sees just the image."
 
+#: src/features/onboarding/ui/EncryptedBackupCreator.tsx
 #: src/features/settings/ui/EncryptedBackupCreator.tsx
 msgid "Encrypting your key"
 msgstr "Encrypting your key"
 
+#: src/features/onboarding/ui/EncryptedBackupCreator.tsx
 #: src/features/settings/ui/EncryptedBackupCreator.tsx
 msgid "Encryption password"
 msgstr "Encryption password"
@@ -4749,9 +4898,17 @@ msgstr "Enter an Anthropic API key to load Anthropic models."
 msgid "Enter code on your phone"
 msgstr "Enter code on your phone"
 
+#: src/features/onboarding/ui/BackupTestFlow.tsx
+msgid "Enter the password to prove you can unlock this backup."
+msgstr "Enter the password to prove you can unlock this backup."
+
 #: src/features/onboarding/ui/MachineOnboardingFlow.tsx
 msgid "Enter your backup password to restore your identity."
 msgstr "Enter your backup password to restore your identity."
+
+#: src/features/onboarding/ui/DownloadKeyStep.tsx
+msgid "Enter your password to make sure you can unlock this file."
+msgstr "Enter your password to make sure you can unlock this file."
 
 #: src/features/onboarding/ui/MachineOnboardingFlow.tsx
 msgid "Enter your private key"
@@ -4885,6 +5042,10 @@ msgstr "Failed to create"
 msgid "Failed to create {itemLabel}."
 msgstr "Failed to create {itemLabel}."
 
+#: src/features/onboarding/ui/OnboardingFlow.tsx
+msgid "Failed to create a new identity. Please try again."
+msgstr "Failed to create a new identity. Please try again."
+
 #: src/features/channels/ui/useQuickBotDrop.ts
 msgid "Failed to create agent."
 msgstr "Failed to create agent."
@@ -4927,6 +5088,7 @@ msgstr "Failed to deselect agent from My Agents."
 msgid "Failed to duplicate"
 msgstr "Failed to duplicate"
 
+#: src/features/onboarding/ui/EncryptedBackupCreator.tsx
 #: src/features/settings/EncryptedBackupProvider.tsx
 msgid "Failed to encrypt your key."
 msgstr "Failed to encrypt your key."
@@ -4939,6 +5101,7 @@ msgstr "Failed to export agent snapshot."
 msgid "Failed to export team snapshot."
 msgstr "Failed to export team snapshot."
 
+#: src/features/onboarding/ui/EncryptedBackupCreator.tsx
 #: src/features/settings/ui/EncryptedBackupCreator.tsx
 msgid "Failed to generate a password."
 msgstr "Failed to generate a password."
@@ -5037,6 +5200,7 @@ msgstr "Failed to respawn agent."
 msgid "Failed to restart agent."
 msgstr "Failed to restart agent."
 
+#: src/features/onboarding/ui/BackupStep.tsx
 #: src/features/settings/ui/PrivateKeyBackupRow.tsx
 #: src/features/settings/ui/SignOutSection.tsx
 msgid "Failed to retrieve private key."
@@ -5058,6 +5222,7 @@ msgstr "Failed to save identity"
 msgid "Failed to save team."
 msgstr "Failed to save team."
 
+#: src/features/onboarding/ui/EncryptedBackupCreator.tsx
 #: src/features/settings/EncryptedBackupProvider.tsx
 msgid "Failed to save your key."
 msgstr "Failed to save your key."
@@ -5073,6 +5238,10 @@ msgstr "Failed to send feedback."
 #: src/features/messages/ui/NewMessageScreen.tsx
 msgid "Failed to send message."
 msgstr "Failed to send message."
+
+#: src/features/onboarding/hooks.ts
+msgid "Failed to set up starter channels"
+msgstr "Failed to set up starter channels"
 
 #: src/features/agents/ui/useManagedAgentActions.ts
 msgid "Failed to start agent."
@@ -5131,6 +5300,10 @@ msgstr "Feedback is sent privately to this {productName} deployment and is not p
 #: src/features/projects/ui/ProjectRepositorySource.tsx
 msgid "Fetch"
 msgstr "Fetch"
+
+#: src/features/onboarding/ui/BackupTestFlow.tsx
+msgid "File and password verified. Keep them both somewhere safe — that's all you need to restore your identity."
+msgstr "File and password verified. Keep them both somewhere safe — that's all you need to restore your identity."
 
 #: src/features/agents/ui/AgentSnapshotExportDialog.tsx
 #: src/features/agents/ui/TeamSnapshotExportDialog.tsx
@@ -5280,6 +5453,7 @@ msgstr "Full path or shell command"
 msgid "Full-size attachment preview. Press Escape or click outside to close."
 msgstr "Full-size attachment preview. Press Escape or click outside to close."
 
+#: src/features/onboarding/ui/EncryptedBackupCreator.tsx
 #: src/features/settings/ui/EncryptedBackupCreator.tsx
 msgid "Generate a password"
 msgstr "Generate a password"
@@ -5287,6 +5461,10 @@ msgstr "Generate a password"
 #: src/features/settings/ui/MobilePairingCard.tsx
 msgid "Generate new pairing code"
 msgstr "Generate new pairing code"
+
+#: src/features/onboarding/ui/IdentityRecoveryPairing.tsx
+msgid "Generating pairing code..."
+msgstr "Generating pairing code..."
 
 #: src/features/channels/ui/AddChannelBotGenericSection.tsx
 msgid "Generic agent"
@@ -5400,6 +5578,8 @@ msgstr "Hide API key"
 msgid "Hide history"
 msgstr "Hide history"
 
+#: src/features/onboarding/ui/BackupTestFlow.tsx
+#: src/features/onboarding/ui/EncryptedBackupCreator.tsx
 #: src/features/settings/ui/BackupTestFlow.tsx
 #: src/features/settings/ui/EncryptedBackupCreator.tsx
 msgid "Hide password"
@@ -5409,6 +5589,7 @@ msgstr "Hide password"
 msgid "Hide per-row activity timestamps."
 msgstr "Hide per-row activity timestamps."
 
+#: src/features/onboarding/ui/NsecMaskedDisplay.tsx
 #: src/features/settings/ui/PrivateKeyBackupRow.tsx
 msgid "Hide private key"
 msgstr "Hide private key"
@@ -5430,6 +5611,10 @@ msgstr "Hide raw JSON-RPC payloads."
 #: src/features/projects/ui/ProjectAgentSubmittedContextPill.tsx
 msgid "Hide sent context"
 msgstr "Hide sent context"
+
+#: src/features/onboarding/ui/BackupTestFlow.tsx
+msgid "Hide unlocked private key"
+msgstr "Hide unlocked private key"
 
 #: src/features/settings/ui/AppearanceSettingsControls.tsx
 msgid "Highlights from this release: refreshed conversation layout, quicker link handling, and readability improvements."
@@ -5472,6 +5657,7 @@ msgstr "https://example.com"
 msgid "https://relay.example.com/git/mobile-app.git"
 msgstr "https://relay.example.com/git/mobile-app.git"
 
+#: src/features/onboarding/ui/EncryptedBackupCreator.tsx
 #: src/features/settings/ui/EncryptedBackupCreator.tsx
 msgid "Hyphens"
 msgstr "Hyphens"
@@ -5500,6 +5686,10 @@ msgstr "Identity"
 #: src/features/settings/ui/ProfileSettingsCard.tsx
 msgid "Identity details"
 msgstr "Identity details"
+
+#: src/features/onboarding/ui/IdentityRecoveryPairing.tsx
+msgid "Identity received securely"
+msgstr "Identity received securely"
 
 #: src/features/agents/ui/ManagedAgentSessionPanel.tsx
 msgid "Idle"
@@ -5532,11 +5722,20 @@ msgstr "Import snapshot"
 msgid "Import team snapshot"
 msgstr "Import team snapshot"
 
+#. placeholder {0}: BRAND.productName
+#: src/features/onboarding/ui/OnboardingFlow.tsx
+msgid "Import your Nostr private key to use that identity with {0}. If this key already has a profile on the relay, your name and avatar are restored automatically."
+msgstr "Import your Nostr private key to use that identity with {0}. If this key already has a profile on the relay, your name and avatar are restored automatically."
+
 #. placeholder {0}: result.team.name
 #. placeholder {1}: memberCount === 1 ? "" : "s"
 #: src/features/agents/ui/teamSnapshotImport.lib.ts
 msgid "Imported {0} with {memberCount} member{1}."
 msgstr "Imported {0} with {memberCount} member{1}."
+
+#: src/features/onboarding/ui/KeyringLockedScreen.tsx
+msgid "Importing a different nsec replaces the identity currently locked in the keyring for this install. The previous identity will no longer be accessible. Continue?"
+msgstr "Importing a different nsec replaces the identity currently locked in the keyring for this install. The previous identity will no longer be accessible. Continue?"
 
 #: src/features/projects/projectTaskCategories.ts
 msgid "Improvement"
@@ -5755,9 +5954,15 @@ msgstr "is working…"
 msgid "Issue"
 msgstr "Issue"
 
+#: src/features/onboarding/ui/BackupTestFlow.tsx
 #: src/features/settings/ui/BackupTestFlow.tsx
 msgid "It restores a different identity than the one signed in here."
 msgstr "It restores a different identity than the one signed in here."
+
+#. placeholder {0}: BRAND.productName
+#: src/features/onboarding/ui/BackupTestFlow.tsx
+msgid "It restores your current {0} identity."
+msgstr "It restores your current {0} identity."
 
 #: src/features/settings/ui/BackupTestFlow.tsx
 msgid "It restores your current {productName} identity."
@@ -5840,6 +6045,10 @@ msgstr "Keep {productName} up to date with the latest features and fixes."
 #: src/features/settings/ui/PreventSleepSettingsCard.tsx
 msgid "Keep awake while agents are active"
 msgstr "Keep awake while agents are active"
+
+#: src/features/onboarding/ui/EncryptedBackupCreator.tsx
+msgid "Keep current backup"
+msgstr "Keep current backup"
 
 #: src/features/agents/ui/AgentDefaultsDialog.tsx
 #: src/features/agents/ui/CommunityCatalogDialog.tsx
@@ -6217,6 +6426,10 @@ msgstr "Lock card"
 #: src/features/agents/ui/AgentSnapshotImportDialog.tsx
 msgid "locked"
 msgstr "locked"
+
+#: src/features/onboarding/ui/BackupStep.tsx
+msgid "Locked in a backup file"
+msgstr "Locked in a backup file"
 
 #: src/features/agents/ui/AgentCardMintDialog.tsx
 msgid "Locking needs a linked agent instance — start this agent once to enable it."
@@ -7922,6 +8135,10 @@ msgstr "Parallelism"
 msgid "Parameters"
 msgstr "Parameters"
 
+#: src/features/onboarding/ui/EncryptedBackupCreator.tsx
+msgid "Password"
+msgstr "Password"
+
 #: src/features/settings/ui/EncryptedBackupCreator.tsx
 msgid "Password (min {MIN_PASSPHRASE_LEN} characters)"
 msgstr "Password (min {MIN_PASSPHRASE_LEN} characters)"
@@ -7973,6 +8190,7 @@ msgstr "People"
 msgid "Per-agent env vars. Override the template's vars on collision."
 msgstr "Per-agent env vars. Override the template's vars on collision."
 
+#: src/features/onboarding/ui/EncryptedBackupCreator.tsx
 #: src/features/settings/ui/EncryptedBackupCreator.tsx
 msgid "Periods"
 msgstr "Periods"
@@ -8151,6 +8369,10 @@ msgstr "private ephemeral channel"
 msgid "Private key"
 msgstr "Private key"
 
+#: src/features/onboarding/ui/NsecMaskedDisplay.tsx
+msgid "Private key actions"
+msgstr "Private key actions"
+
 #. Only ever read inside "This is the beginning of the {kind}." — translate as the genitive form that frame needs.
 #: src/features/channels/ui/useChannelIntro.tsx
 msgid "private welcome channel"
@@ -8285,6 +8507,14 @@ msgstr "Prompt"
 #: src/features/agents/ui/AgentSessionTranscriptList.tsx
 msgid "Prompt context"
 msgstr "Prompt context"
+
+#: src/features/onboarding/ui/BackupStep.tsx
+msgid "Protected by your system keychain"
+msgstr "Protected by your system keychain"
+
+#: src/features/onboarding/ui/BackupStep.tsx
+msgid "Protected in private device storage"
+msgstr "Protected in private device storage"
 
 #: src/features/agents/ui/AgentConfigFields.tsx
 msgid "Provided by this build"
@@ -8435,6 +8665,18 @@ msgstr "Raw activity rows don't animate in."
 msgid "Re-add to channel"
 msgstr "Re-add to channel"
 
+#: src/features/onboarding/ui/BackupTestFlow.tsx
+msgid "Re-download backup"
+msgstr "Re-download backup"
+
+#: src/features/onboarding/ui/OnboardingFlow.tsx
+msgid "Re-import your key"
+msgstr "Re-import your key"
+
+#: src/features/onboarding/ui/KeyringLockedScreen.tsx
+msgid "Re-import your key instead"
+msgstr "Re-import your key instead"
+
 #: src/features/projects/ui/PullRequestReviewersRow.tsx
 msgid "Re-review needed"
 msgstr "Re-review needed"
@@ -8514,6 +8756,10 @@ msgstr "Ready to use, or one click from installed."
 msgid "rec."
 msgstr "rec."
 
+#: src/features/onboarding/ui/IdentityRecoveryPairing.tsx
+msgid "Receiving identity from mobile device..."
+msgstr "Receiving identity from mobile device..."
+
 #: src/features/channels/ui/ChannelBrowserDialog.tsx
 #: src/features/settings/ui/AppearanceSettingsControls.tsx
 #: src/features/sidebar/ui/CustomChannelSection.tsx
@@ -8552,6 +8798,11 @@ msgstr "Recording voice note"
 #: src/features/onboarding/ui/MachineOnboardingFlow.tsx
 msgid "Recover from your phone"
 msgstr "Recover from your phone"
+
+#. placeholder {0}: payload.reason
+#: src/features/onboarding/ui/IdentityRecoveryPairing.tsx
+msgid "Recovery stopped: {0}"
+msgstr "Recovery stopped: {0}"
 
 #: src/features/messages/ui/ComposerImageEditor.tsx
 msgid "Red"
@@ -8611,6 +8862,12 @@ msgstr "regular channel"
 #: src/features/projects/ui/DiscussionChannels.tsx
 msgid "Related Conversations"
 msgstr "Related Conversations"
+
+#. placeholder {0}: BRAND.productName
+#: src/features/onboarding/ui/KeyringLockedScreen.tsx
+#: src/features/onboarding/ui/RecoveryScreen.tsx
+msgid "Relaunch {0}"
+msgstr "Relaunch {0}"
 
 #: src/features/projects/ui/ProjectsAgentPromptPage.tsx
 msgid "Release check"
@@ -8938,6 +9195,11 @@ msgstr "Respawned {0}."
 msgid "Respond-to allowlist"
 msgstr "Respond-to allowlist"
 
+#. placeholder {0}: BRAND.productName
+#: src/features/onboarding/ui/RelaunchRequiredScreen.tsx
+msgid "Restart {0} to finish recovery"
+msgstr "Restart {0} to finish recovery"
+
 #: src/features/agents/managedAgentRuntimeStatus.ts
 #: src/features/agents/ui/AgentRuntimeAvatarControl.tsx
 msgid "Restart Agent"
@@ -9007,6 +9269,7 @@ msgstr "Restoring..."
 #: src/features/home/ui/ProjectInboxDetail.tsx
 #: src/features/messages/ui/MessageThreadReplyState.tsx
 #: src/features/messages/ui/MessageTimelineErrorCard.tsx
+#: src/features/onboarding/hooks.ts
 #: src/features/projects/ui/ProjectDetailUnavailableState.tsx
 #: src/features/projects/ui/ProjectRepositoryUnavailableState.tsx
 #: src/features/projects/ui/ProjectsIssuesList.tsx
@@ -9041,14 +9304,21 @@ msgstr "Reuse existing agent"
 msgid "Reveal"
 msgstr "Reveal"
 
+#: src/features/onboarding/ui/BackupTestFlow.tsx
+#: src/features/onboarding/ui/EncryptedBackupCreator.tsx
 #: src/features/settings/ui/BackupTestFlow.tsx
 #: src/features/settings/ui/EncryptedBackupCreator.tsx
 msgid "Reveal password"
 msgstr "Reveal password"
 
+#: src/features/onboarding/ui/NsecMaskedDisplay.tsx
 #: src/features/settings/ui/PrivateKeyBackupRow.tsx
 msgid "Reveal private key"
 msgstr "Reveal private key"
+
+#: src/features/onboarding/ui/BackupTestFlow.tsx
+msgid "Reveal unlocked private key"
+msgstr "Reveal unlocked private key"
 
 #: src/features/messages/ui/ComposerAttachments.tsx
 msgid "Revert"
@@ -9183,6 +9453,10 @@ msgstr "Save access"
 msgid "Save and publish"
 msgstr "Save and publish"
 
+#: src/features/onboarding/ui/EncryptedBackupCreator.tsx
+msgid "Save backup"
+msgstr "Save backup"
+
 #: src/features/channels/ui/ChannelCanvas.tsx
 msgid "Save canvas"
 msgstr "Save canvas"
@@ -9218,6 +9492,10 @@ msgstr "Saved as the generic agent's system prompt override."
 #: src/features/agents/ui/agentConfigControls.tsx
 msgid "Saved changes take effect on the next start."
 msgstr "Saved changes take effect on the next start."
+
+#: src/features/onboarding/ui/BackupStep.tsx
+msgid "Saved in your password manager"
+msgstr "Saved in your password manager"
 
 #. placeholder {0}: failedRestartCount === 1 ? "" : "s"
 #: src/features/agents/ui/AgentDefaultsEditor.tsx
@@ -9497,6 +9775,7 @@ msgstr "Select teams to include in this template."
 msgid "Select the agents to include in this team."
 msgstr "Select the agents to include in this team."
 
+#: src/features/onboarding/ui/BackupTestFlow.tsx
 #: src/features/settings/ui/BackupTestFlow.tsx
 msgid "Select your backup file"
 msgstr "Select your backup file"
@@ -9629,6 +9908,7 @@ msgstr "Sent project context"
 msgid "Sent to channel"
 msgstr "Sent to channel"
 
+#: src/features/onboarding/ui/EncryptedBackupCreator.tsx
 #: src/features/settings/ui/EncryptedBackupCreator.tsx
 msgid "Separator"
 msgstr "Separator"
@@ -9878,6 +10158,10 @@ msgstr "Sign out"
 msgid "Sign out and wipe all data?"
 msgstr "Sign out and wipe all data?"
 
+#: src/features/onboarding/ui/ResetFailedScreen.tsx
+msgid "Sign out could not complete"
+msgstr "Sign out could not complete"
+
 #: src/features/settings/ui/SignOutSection.tsx
 msgid "Sign out failed."
 msgstr "Sign out failed."
@@ -9903,6 +10187,10 @@ msgstr "Signing out…"
 msgid "sk-…"
 msgstr "sk-…"
 
+#: src/features/onboarding/ui/DownloadKeyStep.tsx
+msgid "Skip for now"
+msgstr "Skip for now"
+
 #: src/features/settings/ui/PreventSleepSettingsCard.tsx
 msgid "Sleep prevention expired after 1 hour without agent activity. It will resume on the next agent activity, or toggle off and on to re-enable now."
 msgstr "Sleep prevention expired after 1 hour without agent activity. It will resume on the next agent activity, or toggle off and on to re-enable now."
@@ -9926,6 +10214,10 @@ msgstr "Some message context could not be loaded."
 #: src/features/messages/lib/waveMessage.ts
 msgid "Someone waved at you."
 msgstr "Someone waved at you."
+
+#: src/features/onboarding/ui/OnboardingFlow.tsx
+msgid "Something went wrong"
+msgstr "Something went wrong"
 
 #: src/features/sidebar/ui/CustomChannelSection.tsx
 #: src/features/sidebar/ui/SidebarProjectsSection.tsx
@@ -9956,6 +10248,7 @@ msgstr "Sound"
 msgid "Source"
 msgstr "Source"
 
+#: src/features/onboarding/ui/EncryptedBackupCreator.tsx
 #: src/features/settings/ui/EncryptedBackupCreator.tsx
 msgid "Spaces"
 msgstr "Spaces"
@@ -10012,6 +10305,7 @@ msgid "Start huddle"
 msgstr "Start huddle"
 
 #: src/features/onboarding/ui/MachineOnboardingFlow.tsx
+#: src/features/onboarding/ui/OnboardingFlow.tsx
 msgid "Start new identity"
 msgstr "Start new identity"
 
@@ -10035,6 +10329,10 @@ msgstr "Start pairing"
 msgid "Start with a conversation, or set everything up yourself."
 msgstr "Start with a conversation, or set everything up yourself."
 
+#: src/features/onboarding/ui/EncryptedBackupCreator.tsx
+msgid "Start with a new password"
+msgstr "Start with a new password"
+
 #. placeholder {0}: agent.name
 #: src/features/channels/ui/useMembersSidebarActions.ts
 msgid "Started {0} in this community."
@@ -10052,6 +10350,11 @@ msgstr "started privately with"
 msgid "Starting Agent"
 msgstr "Starting Agent"
 
+#: src/features/onboarding/ui/EncryptedBackupCreator.tsx
+msgid "Starting over lets you pick a new password and download a fresh backup file. Backups you saved earlier will still work — just use the password you created them with."
+msgstr "Starting over lets you pick a new password and download a fresh backup file. Backups you saved earlier will still work — just use the password you created them with."
+
+#: src/features/onboarding/ui/IdentityRecoveryPairing.tsx
 #: src/features/settings/ui/MobilePairingCard.tsx
 msgid "Starting pairing..."
 msgstr "Starting pairing..."
@@ -10102,6 +10405,10 @@ msgstr "Stopped {0}."
 #: src/features/agents/managedAgentRuntimeStatus.ts
 msgid "Stopped by you"
 msgstr "Stopped by you"
+
+#: src/features/onboarding/ui/BackupStep.tsx
+msgid "Stored in private device storage"
+msgstr "Stored in private device storage"
 
 #: src/features/onboarding/ui/IdentityKeyIntroduction.tsx
 msgid "Stored securely on this device"
@@ -10311,6 +10618,7 @@ msgstr "Terminal"
 msgid "Test a key backup"
 msgstr "Test a key backup"
 
+#: src/features/onboarding/ui/BackupTestFlow.tsx
 #: src/features/settings/ui/BackupTestFlow.tsx
 msgid "Test another backup"
 msgstr "Test another backup"
@@ -10318,6 +10626,14 @@ msgstr "Test another backup"
 #: src/features/settings/ui/PrivateKeyBackupRow.tsx
 msgid "Test backup"
 msgstr "Test backup"
+
+#: src/features/onboarding/ui/BackupTestFlow.tsx
+msgid "Test your backup"
+msgstr "Test your backup"
+
+#: src/features/onboarding/ui/DownloadKeyStep.tsx
+msgid "Test your backup to make sure it works, or continue without testing."
+msgstr "Test your backup to make sure it works, or continue without testing."
 
 #: src/features/messages/lib/useLinkEditor.tsx
 msgid "Text to display"
@@ -10335,13 +10651,22 @@ msgstr "That address is available."
 msgid "That Buzz address is already taken."
 msgstr "That Buzz address is already taken."
 
+#: src/features/onboarding/ui/BackupTestFlow.tsx
 #: src/features/settings/ui/BackupTestFlow.tsx
 msgid "That doesn't look like a key backup file."
 msgstr "That doesn't look like a key backup file."
 
+#: src/features/onboarding/ui/BackupTestFlow.tsx
+msgid "That doesn't look like your key backup. Choose the file you just downloaded."
+msgstr "That doesn't look like your key backup. Choose the file you just downloaded."
+
 #: src/features/agents/ui/ModelPicker.tsx
 msgid "That model isn't available for this agent."
 msgstr "That model isn't available for this agent."
+
+#: src/features/onboarding/ui/BackupTestFlow.tsx
+msgid "That's a key backup, but not the one you just downloaded."
+msgstr "That's a key backup, but not the one you just downloaded."
 
 #: src/features/settings/ui/BackupTestFlow.tsx
 msgid "That's the one. Now enter your password to prove you can unlock it."
@@ -10387,6 +10712,10 @@ msgstr "The card carries the agent — anyone who imports this PNG gets a workin
 #: src/features/messages/ui/MessageTimelineErrorCard.tsx
 msgid "The channel history didn't load. Check your connection and try again."
 msgstr "The channel history didn't load. Check your connection and try again."
+
+#: src/features/onboarding/ui/IdentityRecoveryPairing.tsx
+msgid "The codes didn't match. Pairing was canceled."
+msgstr "The codes didn't match. Pairing was canceled."
 
 #: src/features/settings/ui/harnessCatalogCopy.ts
 msgid "The coding agent and development environment that runs anywhere and everywhere."
@@ -10445,6 +10774,10 @@ msgstr "The relay did not return a feed response."
 #: src/features/projects/ui/ProjectsWorkItemsLoadNotice.tsx
 msgid "The relay request failed."
 msgstr "The relay request failed."
+
+#: src/features/onboarding/ui/OnboardingFlow.tsx
+msgid "The relay returned an error. Try again."
+msgstr "The relay returned an error. Try again."
 
 #: src/features/projects/ui/ProjectCards.tsx
 msgid "The repository has no access channel binding, so the relay cannot authorize reads."
@@ -10597,6 +10930,7 @@ msgstr "This agent's OpenAI key is set in its own agent settings — update it t
 msgid "This agent's OpenAI key is set in the process environment — update it in your shell or launch config."
 msgstr "This agent's OpenAI key is set in the process environment — update it in your shell or launch config."
 
+#: src/features/onboarding/ui/BackupTestFlow.tsx
 #: src/features/settings/ui/BackupTestFlow.tsx
 msgid "This backup works"
 msgstr "This backup works"
@@ -10638,6 +10972,11 @@ msgstr "This computer"
 msgid "This conversation could not be loaded."
 msgstr "This conversation could not be loaded."
 
+#. placeholder {0}: BRAND.productName
+#: src/features/onboarding/ui/DownloadKeyStep.tsx
+msgid "This creates a password-protected file with your private key. Remember, {0} can’t recover your key if you lose it."
+msgstr "This creates a password-protected file with your private key. Remember, {0} can’t recover your key if you lose it."
+
 #: src/features/settings/ui/HostedCommunitiesSettingsCard.tsx
 msgid "This device"
 msgstr "This device"
@@ -10649,6 +10988,11 @@ msgstr "This device's {productName} identity is already reserved by another Buil
 #: src/features/projects/ui/AgentContextPayloadPreview.tsx
 msgid "This exact text is appended to your message before it is signed and sent. Quoted values are untrusted workspace metadata —{productName} does not verify or rewrite them."
 msgstr "This exact text is appended to your message before it is signed and sent. Quoted values are untrusted workspace metadata —{productName} does not verify or rewrite them."
+
+#. placeholder {0}: BRAND.productName
+#: src/features/onboarding/ui/IdentityRecoveryPairing.tsx
+msgid "This gives this desktop permanent access to your {0} identity. Only continue if you trust it."
+msgstr "This gives this desktop permanent access to your {0} identity. Only continue if you trust it."
 
 #. placeholder {0}: BRAND.productName
 #. placeholder {1}: BRAND.productName
@@ -10695,6 +11039,10 @@ msgstr "This message has been edited"
 #: src/features/agents/ui/EffortPickerField.tsx
 msgid "This model may not support {selectValue}. "
 msgstr "This model may not support {selectValue}. "
+
+#: src/features/onboarding/ui/IdentityRecoveryPairing.tsx
+msgid "This pairing code expired or lost its connection. Create a new code and try again."
+msgstr "This pairing code expired or lost its connection. Create a new code and try again."
 
 #: src/features/projects/ui/ProjectChannelRequestDialog.tsx
 msgid "this project"
@@ -10773,6 +11121,7 @@ msgid "This week:"
 msgstr "This week:"
 
 #: src/features/onboarding/ui/MachineOnboardingFlow.tsx
+#: src/features/onboarding/ui/OnboardingFlow.tsx
 msgid "This will create a new identity and abandon your previous key. This cannot be undone. Continue?"
 msgstr "This will create a new identity and abandon your previous key. This cannot be undone. Continue?"
 
@@ -10951,6 +11300,7 @@ msgstr "Try a different search."
 #: src/features/agents/ui/HarnessCatalogRetryNotice.tsx
 #: src/features/agents/useCreatedAgentChannelAttachment.ts
 #: src/features/home/ui/HomeView.tsx
+#: src/features/onboarding/ui/IdentityRecoveryPairing.tsx
 #: src/features/settings/ui/MobilePairingCard.tsx
 #: src/features/settings/ui/SettingsView.tsx
 msgid "Try again"
@@ -11121,6 +11471,10 @@ msgstr "Unlisted"
 #: src/features/onboarding/ui/MachineOnboardingFlow.tsx
 msgid "Unlock your account"
 msgstr "Unlock your account"
+
+#: src/features/onboarding/ui/KeyringLockedScreen.tsx
+msgid "Unlock your system keyring"
+msgstr "Unlock your system keyring"
 
 #: src/features/sidebar/ui/ChannelContextMenu.tsx
 msgid "Unmute channel"
@@ -11313,8 +11667,8 @@ msgid "URL"
 msgstr "URL"
 
 #: src/features/settings/ui/ChannelTemplatesSettingsCard.tsx
-msgid "Use {channel.name} and {template.name} as placeholders."
-msgstr "Use {channel.name} and {template.name} as placeholders."
+msgid "Use {CHANNEL_NAME_TOKEN} and {TEMPLATE_NAME_TOKEN} as placeholders."
+msgstr "Use {CHANNEL_NAME_TOKEN} and {TEMPLATE_NAME_TOKEN} as placeholders."
 
 #: src/features/settings/ui/AppearanceSettingsControls.tsx
 msgid "Use {colorName} accent"
@@ -11365,6 +11719,10 @@ msgstr "Use harness defaults"
 #: src/features/settings/ui/HostedCommunitiesSettingsCard.tsx
 msgid "Use lowercase letters, numbers, and single hyphens."
 msgstr "Use lowercase letters, numbers, and single hyphens."
+
+#: src/features/onboarding/ui/OnboardingFlow.tsx
+msgid "Use your existing key"
+msgstr "Use your existing key"
 
 #: src/features/agents/ui/agentConfigOptions.tsx
 msgid "Used for minting agent trading cards"
@@ -11445,9 +11803,14 @@ msgstr "Verification code {code} ready. Check that it matches on your mobile dev
 msgid "Verification code {code} ready. Enter this code in the Buzz app on your phone."
 msgstr "Verification code {code} ready. Enter this code in the Buzz app on your phone."
 
+#: src/features/onboarding/ui/BackupTestFlow.tsx
 #: src/features/settings/ui/BackupTestFlow.tsx
 msgid "Verify backup"
 msgstr "Verify backup"
+
+#: src/features/onboarding/ui/DownloadKeyStep.tsx
+msgid "Verify your backup"
+msgstr "Verify your backup"
 
 #. placeholder {0}: project.name
 #. placeholder {0}: repository.name
@@ -11788,6 +12151,7 @@ msgstr "Windows tools required by supported agents."
 msgid "with will receive a copy they can add and use. Changes you make later won’t sync."
 msgstr "with will receive a copy they can add and use. Changes you make later won’t sync."
 
+#: src/features/onboarding/ui/EncryptedBackupCreator.tsx
 #: src/features/settings/ui/EncryptedBackupCreator.tsx
 msgid "Words"
 msgstr "Words"
@@ -11897,6 +12261,15 @@ msgstr "Your agent requested a new channel in {projectName}. Review the details 
 msgid "Your agents"
 msgstr "Your agents"
 
+#: src/features/onboarding/ui/DownloadKeyStep.tsx
+msgid "Your backup is ready"
+msgstr "Your backup is ready"
+
+#: src/features/onboarding/ui/DownloadKeyStep.tsx
+msgid "Your backup is verified"
+msgstr "Your backup is verified"
+
+#: src/features/onboarding/ui/BackupTestFlow.tsx
 #: src/features/settings/ui/BackupTestFlow.tsx
 msgid "Your backup password"
 msgstr "Your backup password"
@@ -11904,6 +12277,10 @@ msgstr "Your backup password"
 #: src/features/settings/EncryptedBackupProvider.tsx
 msgid "Your backup will be available to download for 5 minutes."
 msgstr "Your backup will be available to download for 5 minutes."
+
+#: src/features/onboarding/ui/BackupTestFlow.tsx
+msgid "Your backup works!"
+msgstr "Your backup works!"
 
 #: src/features/settings/ui/HostedCommunitiesSettingsCard.tsx
 msgid "Your Builderlab account owns communities under another {productName} key, so connecting them here would join a relay this device isn't a member of. Creating and connecting are paused until the identities match."
@@ -11925,6 +12302,30 @@ msgstr "Your communities"
 msgid "your computer, including files, accounts, and connected tools"
 msgstr "your computer, including files, accounts, and connected tools"
 
+#: src/features/onboarding/ui/DownloadKeyStep.tsx
+msgid "Your file and password can restore your identity."
+msgstr "Your file and password can restore your identity."
+
+#. placeholder {0}: BRAND.productName
+#: src/features/onboarding/ui/OnboardingFlow.tsx
+msgid "Your identity is no longer in the system keyring. Re-import your nsec to restore it — {0} will restart to finish recovery. Or go back to start a new identity with a fresh key."
+msgstr "Your identity is no longer in the system keyring. Re-import your nsec to restore it — {0} will restart to finish recovery. Or go back to start a new identity with a fresh key."
+
+#. placeholder {0}: BRAND.productName
+#: src/features/onboarding/ui/KeyringLockedScreen.tsx
+msgid "Your identity is safe in the OS keyring, but it's unreachable this session. Unlock your keyring or sign into your desktop session, then relaunch {0}."
+msgstr "Your identity is safe in the OS keyring, but it's unreachable this session. Unlock your keyring or sign into your desktop session, then relaunch {0}."
+
+#. placeholder {0}: BRAND.productName
+#: src/features/onboarding/ui/BackupStep.tsx
+msgid "Your identity key works like a password for your {0} account. Keep a copy somewhere safe. You can create a backup file and lock it with a password you can remember."
+msgstr "Your identity key works like a password for your {0} account. Keep a copy somewhere safe. You can create a backup file and lock it with a password you can remember."
+
+#. placeholder {0}: BRAND.productName
+#: src/features/onboarding/ui/RelaunchRequiredScreen.tsx
+msgid "Your identity was updated. {0} needs to restart so syncing and agents run under it."
+msgstr "Your identity was updated. {0} needs to restart so syncing and agents run under it."
+
 #: src/features/settings/ui/ProfileSettingsCard.tsx
 msgid "Your keypair and NIP-05 handle are fixed for this device."
 msgstr "Your keypair and NIP-05 handle are fixed for this device."
@@ -11937,9 +12338,17 @@ msgstr "Your mobile app is now connected to this relay."
 msgid "Your mobile app is now paired."
 msgstr "Your mobile app is now paired."
 
+#: src/features/onboarding/ui/EncryptedBackupCreator.tsx
+msgid "Your password isn't kept — download another copy anytime, or start over to choose a new password."
+msgstr "Your password isn't kept — download another copy anytime, or start over to choose a new password."
+
 #: src/features/onboarding/ui/MachineOnboardingFlow.tsx
 msgid "Your people, your agents, your projects —<0/>all in one place."
 msgstr "Your people, your agents, your projects —<0/>all in one place."
+
+#: src/features/onboarding/ui/BackupStep.tsx
+msgid "Your private identity key"
+msgstr "Your private identity key"
 
 #: src/features/settings/ui/ProfileSettingsCard.tsx
 msgid "Your profile"
@@ -11948,6 +12357,11 @@ msgstr "Your profile"
 #: src/features/settings/ui/HarnessesSettingsPanel.tsx
 msgid "Your runtimes"
 msgstr "Your runtimes"
+
+#. placeholder {0}: BRAND.productName
+#: src/features/onboarding/ui/BackupStep.tsx
+msgid "Your system keychain wasn’t available, so {0} keeps your identity key in a private file on this device."
+msgstr "Your system keychain wasn’t available, so {0} keeps your identity key in a private file on this device."
 
 #: src/shared/lib/keyboard-shortcuts.ts
 msgid "Zoom"

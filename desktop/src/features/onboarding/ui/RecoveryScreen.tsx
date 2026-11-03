@@ -1,4 +1,5 @@
 import { relaunch } from "@tauri-apps/plugin-process";
+import { Trans } from "@lingui/react/macro";
 
 import {
   BRAND_ACCENT_STYLE,
@@ -46,7 +47,7 @@ export function RecoveryScreen({
           }}
           type="button"
         >
-          Relaunch {BRAND.productName}
+          <Trans>Relaunch {BRAND.productName}</Trans>
         </Button>
       </div>
     </div>
