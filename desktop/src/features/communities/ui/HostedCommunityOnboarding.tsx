@@ -1,3 +1,4 @@
+import { Trans, useLingui } from "@lingui/react/macro";
 import * as React from "react";
 import { AlertCircle, LoaderCircle } from "lucide-react";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
@@ -60,6 +61,8 @@ const MODAL_PRIMARY_ACTION_CLASS = `${ONBOARDING_PRIMARY_CTA_CLASS} !text-[rgb(v
 const MODAL_BACK_ACTION_CLASS =
   "h-9 rounded-full bg-foreground/10 px-6 hover:bg-foreground/15";
 
+const { productName } = BRAND;
+
 type HostedCommunityOnboardingProps = {
   onBack: () => void;
   /**
@@ -80,6 +83,7 @@ export function HostedCommunityOnboarding({
   onReady,
   stageHidden = false,
 }: HostedCommunityOnboardingProps) {
+  const { t } = useLingui();
   const onboarding = useCommunityOnboarding();
   const shouldReduceMotion = useReducedMotion();
   const localPubkey = useIdentityQuery().data?.pubkey ?? null;
@@ -95,6 +99,16 @@ export function HostedCommunityOnboarding({
   const [checkingName, setCheckingName] = React.useState(false);
   const [loading, setLoading] = React.useState(true);
   const [action, setAction] = React.useState<string | null>(null);
+  /**
+   * Whether the browser sign-in is the step currently running.
+   *
+   * Separate from `action`, which carries that step's label: the sign-in
+   * screen used to recognise itself by comparing `action` to the literal
+   * "Signing in…", which is false the moment the label is translated and
+   * would leave the screen showing the start button while a login is in
+   * flight.
+   */
+  const [isSigningIn, setIsSigningIn] = React.useState(false);
   const [error, setError] = React.useState<string | null>(null);
   const loginAttempt = React.useRef(0);
 
@@ -139,7 +153,8 @@ export function HostedCommunityOnboarding({
 
   const signIn = () => {
     const attempt = ++loginAttempt.current;
-    setAction("Signing in…");
+    setAction(t`Signing in…`);
+    setIsSigningIn(true);
     setError(null);
     void startBuilderlabLogin()
       .then(async (nextAuth) => {
@@ -152,13 +167,17 @@ export function HostedCommunityOnboarding({
         setError(cause instanceof Error ? cause.message : String(cause));
       })
       .finally(() => {
-        if (loginAttempt.current === attempt) setAction(null);
+        if (loginAttempt.current === attempt) {
+          setAction(null);
+          setIsSigningIn(false);
+        }
       });
   };
 
   const cancelSignInAndGoBack = () => {
     loginAttempt.current += 1;
     setAction(null);
+    setIsSigningIn(false);
     setError(null);
     onBack();
     void cancelBuilderlabLogin().catch(() => {
@@ -168,7 +187,7 @@ export function HostedCommunityOnboarding({
   };
 
   const signOut = () =>
-    run("Signing out…", async () => {
+    run(t`Signing out…`, async () => {
       await clearBuilderlabAuth();
       setAuth(null);
       setIdentity(null);
@@ -180,21 +199,21 @@ export function HostedCommunityOnboarding({
     });
 
   const goBack = () => {
-    void run("Signing out…", async () => {
+    void run(t`Signing out…`, async () => {
       await clearBuilderlabAuth();
       onBack();
     });
   };
 
   const connectIdentity = () =>
-    run("Connecting identity…", async () => {
+    run(t`Connecting identity…`, async () => {
       const response = await bindBuilderlabIdentity();
       if (response.error) {
         throw new Error(
           hostedCommunityErrorMessage(
             response.error,
             response.correlation_id,
-            "Could not connect the Buzz identity.",
+            t`Could not connect the ${productName} identity.`,
           ),
         );
       }
@@ -228,14 +247,14 @@ export function HostedCommunityOnboarding({
   );
 
   const switchToDeviceIdentity = () =>
-    run("Switching identity…", async () => {
+    run(t`Switching identity…`, async () => {
       const released = await deleteBuilderlabIdentity();
       if (released.error) {
         throw new Error(
           hostedCommunityErrorMessage(
             released.error,
             released.correlation_id,
-            "Could not disconnect the account's previous Buzz identity.",
+            t`Could not disconnect the account's previous ${productName} identity.`,
           ),
         );
       }
@@ -244,11 +263,11 @@ export function HostedCommunityOnboarding({
         await loadAccount();
         throw new Error(
           bound.error.code === "pubkey_already_bound"
-            ? "This device's Buzz identity belongs to a different Builderlab account and can't be moved from here. Sign out, then sign in with the account that already owns this identity."
+            ? t`This device's ${productName} identity belongs to a different Builderlab account and can't be moved from here. Sign out, then sign in with the account that already owns this identity.`
             : hostedCommunityErrorMessage(
                 bound.error,
                 bound.correlation_id,
-                "Could not connect this device's Buzz identity.",
+                t`Could not connect this device's ${productName} identity.`,
               ),
         );
       }
@@ -256,6 +275,7 @@ export function HostedCommunityOnboarding({
       await loadAccount();
     });
 
+  const accountSuffix = auth?.email ? ` (${auth.email})` : "";
   const activeCommunities = communities.filter(
     (community) => !community.archived_at && hostedCommunityRelayUrl(community),
   );
@@ -301,10 +321,14 @@ export function HostedCommunityOnboarding({
 
   const connect = (community: HostedCommunity, created = false) => {
     const relayUrl = hostedCommunityRelayUrl(community);
-    const retryPrefix = created ? "The community was created, but " : "";
     if (!relayUrl) {
+      // Two whole sentences rather than a prefix glued to one: German moves
+      // the verb, so "The community was created, but " cannot be prepended to
+      // a clause and stay grammatical.
       throw new Error(
-        `${retryPrefix}Builderlab did not return its relay address. Try connecting it again, or contact support if it does not appear in your communities.`,
+        created
+          ? t`The community was created, but Builderlab did not return its relay address. Try connecting it again, or contact support if it does not appear in your communities.`
+          : t`Builderlab did not return its relay address. Try connecting it again, or contact support if it does not appear in your communities.`,
       );
     }
     if (
@@ -316,7 +340,9 @@ export function HostedCommunityOnboarding({
       })
     ) {
       throw new Error(
-        `${retryPrefix}onboarding is already in progress for another community. Go back and finish or restart that connection, then connect this community from your owned communities list.`,
+        created
+          ? t`The community was created, but onboarding is already in progress for another community. Go back and finish or restart that connection, then connect this community from your owned communities list.`
+          : t`Onboarding is already in progress for another community. Go back and finish or restart that connection, then connect this community from your owned communities list.`,
       );
     }
   };
@@ -330,7 +356,7 @@ export function HostedCommunityOnboarding({
       atCommunityLimit
     )
       return;
-    void run("Creating community…", async () => {
+    void run(t`Creating community…`, async () => {
       const available = await checkHostedCommunityName(normalizedName);
       if (available.error || !available.available) {
         setAvailability(false);
@@ -338,7 +364,7 @@ export function HostedCommunityOnboarding({
           hostedCommunityErrorMessage(
             available.error,
             available.correlation_id,
-            "That Buzz address is already taken.",
+            t`That ${productName} address is already taken.`,
           ),
         );
       }
@@ -389,15 +415,15 @@ export function HostedCommunityOnboarding({
   ) : null;
 
   const creationFeedback = atCommunityLimit
-    ? "You’ve reached your hosted community creation limit."
+    ? t`You’ve reached your hosted community creation limit.`
     : name && !validName
-      ? "Use lowercase letters, numbers, and single hyphens."
+      ? t`Use lowercase letters, numbers, and single hyphens.`
       : checkingName
-        ? "Checking availability…"
+        ? t`Checking availability…`
         : availability === false
-          ? "That address is already taken."
+          ? t`That address is already taken.`
           : availability === true
-            ? "That address is available."
+            ? t`That address is available.`
             : null;
 
   // The composed `<name>.<suffix>` line renders at text-4xl, but a valid name
@@ -421,7 +447,7 @@ export function HostedCommunityOnboarding({
       aria-describedby={
         creationFeedback ? "hosted-community-feedback" : undefined
       }
-      aria-label="Community name"
+      aria-label={t`Community name`}
       autoComplete="off"
       className={
         inline
@@ -436,7 +462,7 @@ export function HostedCommunityOnboarding({
         setName(event.target.value.toLowerCase());
         setAvailability(null);
       }}
-      placeholder={inline ? "Community name here" : "your-community"}
+      placeholder={inline ? t`Community name here` : "your-community"}
       spellCheck={false}
       style={
         inline
@@ -459,7 +485,7 @@ export function HostedCommunityOnboarding({
       >
         <div className={COMMUNITY_ROW_CLASS}>
           <label className="text-sm" htmlFor="hosted-community-address">
-            Set new community name
+            <Trans>Set new community name</Trans>
           </label>
           {creationInput(true)}
         </div>
@@ -524,47 +550,55 @@ export function HostedCommunityOnboarding({
           {!auth ? (
             <>
               <DialogTitle className="text-xl font-medium text-foreground">
-                Set up your community
+                <Trans>Set up your community</Trans>
               </DialogTitle>
               <DialogDescription className="mt-2 text-sm leading-6 text-foreground">
-                Sign in to connect a community you already own or create a new
-                one. We’ll open Builderlab in your browser, then bring you back
-                to {BRAND.productName}.
+                <Trans>
+                  Sign in to connect a community you already own or create a new
+                  one. We’ll open Builderlab in your browser, then bring you
+                  back to {productName}.
+                </Trans>
               </DialogDescription>
               {errorBox ? <div className="mt-5 w-full">{errorBox}</div> : null}
-              {action === "Signing in…" ? (
+              {/* `isSigningIn` rather than `action === "Signing in…"`: the
+                  label is translated now, so comparing to the English literal
+                  would leave this screen permanently on the second branch. */}
+              {isSigningIn ? (
                 <Button
                   className={`mt-6 ${MODAL_PRIMARY_ACTION_CLASS}`}
                   disabled
                 >
                   <LoaderCircle className="h-4 w-4 animate-spin" />
-                  Waiting for your browser…
+                  <Trans>Waiting for your browser…</Trans>
                 </Button>
               ) : (
                 <Button
                   className={`mt-6 ${MODAL_PRIMARY_ACTION_CLASS}`}
                   onClick={signIn}
                 >
-                  Sign in to continue
+                  <Trans>Sign in to continue</Trans>
                 </Button>
               )}
               {/* Quiet breadcrumb: Buzz itself is open source; this hosted
                     relay is the one account-backed piece of the flow. */}
               <p className="mt-6 w-full border-t border-foreground/10 pt-4 text-xs leading-5 text-foreground/45">
-                Buzz is open source. Builderlab hosts the relay for this
-                account.
+                <Trans>
+                  {productName} is open source. Builderlab hosts the relay for
+                  this account.
+                </Trans>
               </p>
             </>
           ) : !identity ? (
             <>
               <DialogTitle className="text-xl font-medium text-foreground">
-                Finish connecting Buzz
+                <Trans>Finish connecting {productName}</Trans>
               </DialogTitle>
               <DialogDescription className="mt-2 text-sm leading-6 text-foreground">
-                Your Builderlab account
-                {auth.email ? ` (${auth.email})` : ""} is ready. Connect this
-                device’s Buzz identity to finish setup. Your private key stays
-                on this device.
+                <Trans>
+                  Your Builderlab account{accountSuffix} is ready. Connect this
+                  device’s {productName} identity to finish setup. Your private
+                  key stays on this device.
+                </Trans>
               </DialogDescription>
               {errorBox ? <div className="mt-5 w-full">{errorBox}</div> : null}
               <Button
@@ -575,22 +609,26 @@ export function HostedCommunityOnboarding({
                 {busy ? (
                   <LoaderCircle className="h-4 w-4 animate-spin" />
                 ) : null}
-                {busy ? action : "Connect and continue"}
+                {busy ? action : t`Connect and continue`}
               </Button>
             </>
           ) : (
             <>
               <DialogTitle className="text-xl font-medium text-foreground">
-                This account uses a different Buzz identity
+                <Trans>
+                  This account uses a different {productName} identity
+                </Trans>
               </DialogTitle>
               <DialogDescription className="mt-2 text-sm leading-6 text-foreground">
-                This account is connected to another Buzz identity. Reconnect
-                this device, or sign out to use a different email.
+                <Trans>
+                  This account is connected to another {productName} identity.
+                  Reconnect this device, or sign out to use a different email.
+                </Trans>
               </DialogDescription>
               <p className="mt-4 w-full break-all rounded-xl bg-[rgb(var(--buzz-hosted-community-identity-bg)/0.5)] px-4 py-3 text-left font-mono text-xs text-foreground">
-                Account: {boundNpub ?? UNAVAILABLE_KEY_LABEL}
+                <Trans>Account:</Trans> {boundNpub ?? UNAVAILABLE_KEY_LABEL}
                 <br />
-                This device: {localNpub ?? UNAVAILABLE_KEY_LABEL}
+                <Trans>This device:</Trans> {localNpub ?? UNAVAILABLE_KEY_LABEL}
               </p>
               {errorBox ? <div className="mt-5 w-full">{errorBox}</div> : null}
               <div className="mt-6 flex flex-col items-stretch gap-2">
@@ -599,7 +637,7 @@ export function HostedCommunityOnboarding({
                   disabled={busy}
                   onClick={() => void switchToDeviceIdentity()}
                 >
-                  {busy ? action : "Use this device's identity"}
+                  {busy ? action : t`Use this device's identity`}
                 </Button>
                 <Button
                   className={MODAL_BACK_ACTION_CLASS}
@@ -607,7 +645,7 @@ export function HostedCommunityOnboarding({
                   onClick={() => void signOut()}
                   variant="ghost"
                 >
-                  Sign in with a different email
+                  <Trans>Sign in with a different email</Trans>
                 </Button>
               </div>
             </>
@@ -626,19 +664,27 @@ export function HostedCommunityOnboarding({
   return (
     <div className="flex min-h-[calc(100dvh-15.625rem)] w-full max-w-[920px] flex-col items-center text-center">
       <h1 className="max-w-[620px] text-title font-normal leading-[1.18] tracking-[-0.025em]">
-        {hasCommunities ? "Choose a community" : "Create a community"}
+        {hasCommunities ? (
+          <Trans>Choose a community</Trans>
+        ) : (
+          <Trans>Create a community</Trans>
+        )}
       </h1>
       <p className="mx-auto mt-2 max-w-[560px] text-sm leading-6 text-foreground">
-        {hasCommunities
-          ? "Connect one you own, or start something new."
-          : "Claim a Buzz address to get started."}
+        {hasCommunities ? (
+          <Trans>Connect one you own, or start something new.</Trans>
+        ) : (
+          <Trans>Claim a {productName} address to get started.</Trans>
+        )}
       </p>
 
       <div className="flex w-full flex-1 flex-col justify-center text-left">
         {loading ? (
           <div className="flex justify-center py-10" role="status">
             <LoaderCircle className="h-6 w-6 animate-spin" />
-            <span className="sr-only">Checking sign-in</span>
+            <span className="sr-only">
+              <Trans>Checking sign-in</Trans>
+            </span>
           </div>
         ) : ready ? (
           <>
@@ -652,7 +698,7 @@ export function HostedCommunityOnboarding({
                 >
                   <section className={COMMUNITY_LIST_CLASS}>
                     <h2 className="text-center text-sm font-medium">
-                      Your communities
+                      <Trans>Your communities</Trans>
                     </h2>
                     <ul className="mt-2">
                       {activeCommunities.map((community, index) => (
@@ -666,7 +712,7 @@ export function HostedCommunityOnboarding({
                             <p className="truncate text-sm">
                               {community.name ??
                                 community.slug ??
-                                "Hosted community"}
+                                t`Hosted community`}
                             </p>
                             <p className="mt-1 truncate text-sm text-foreground/55">
                               {community.normalized_host}
@@ -676,14 +722,14 @@ export function HostedCommunityOnboarding({
                             className={COMMUNITY_ACTION_CLASS}
                             disabled={busy}
                             onClick={() =>
-                              void run("Connecting community…", async () => {
+                              void run(t`Connecting community…`, async () => {
                                 connect(community);
                               })
                             }
                             size="sm"
                             variant="ghost"
                           >
-                            Connect
+                            <Trans>Connect</Trans>
                           </Button>
                         </li>
                       ))}
@@ -709,7 +755,7 @@ export function HostedCommunityOnboarding({
                           }}
                         >
                           <p className="text-sm">
-                            Want to create a new community?
+                            <Trans>Want to create a new community?</Trans>
                           </p>
                           <Button
                             className={COMMUNITY_ACTION_CLASS}
@@ -719,7 +765,7 @@ export function HostedCommunityOnboarding({
                             type="button"
                             variant="ghost"
                           >
-                            + Add new
+                            <Trans>+ Add new</Trans>
                           </Button>
                         </motion.div>
                       ) : (
@@ -756,7 +802,7 @@ export function HostedCommunityOnboarding({
                   }`}
                   id="hosted-community-feedback"
                 >
-                  {creationFeedback ?? "Community address status"}
+                  {creationFeedback ?? t`Community address status`}
                 </p>
               </>
             ) : (
@@ -773,7 +819,7 @@ export function HostedCommunityOnboarding({
                   }`}
                   id="hosted-community-feedback"
                 >
-                  {creationFeedback ?? "Community address status"}
+                  {creationFeedback ?? t`Community address status`}
                 </p>
               </>
             )}
@@ -802,7 +848,7 @@ export function HostedCommunityOnboarding({
             type="submit"
           >
             {busy ? <LoaderCircle className="h-4 w-4 animate-spin" /> : null}
-            {action ?? "Next"}
+            {action ?? t`Next`}
           </Button>
           <Button
             className={PAGE_BACK_CLASS}
@@ -811,7 +857,7 @@ export function HostedCommunityOnboarding({
             type="button"
             variant="ghost"
           >
-            Back
+            <Trans>Back</Trans>
           </Button>
         </OnboardingFooter>
       ) : null}

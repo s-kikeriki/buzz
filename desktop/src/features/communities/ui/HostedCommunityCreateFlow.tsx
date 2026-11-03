@@ -1,3 +1,5 @@
+import { Trans, useLingui } from "@lingui/react/macro";
+import { BRAND } from "@/shared/branding/brand";
 import * as React from "react";
 import { AlertCircle, ExternalLink, LoaderCircle } from "lucide-react";
 
@@ -32,6 +34,8 @@ import { UNAVAILABLE_KEY_LABEL } from "@/shared/lib/pubkey";
 import { Button } from "@/shared/ui/button";
 import { Input } from "@/shared/ui/input";
 
+const { productName } = BRAND;
+
 type HostedCommunityCreateFlowProps = {
   onComplete: () => void;
 };
@@ -39,6 +43,7 @@ type HostedCommunityCreateFlowProps = {
 export function HostedCommunityCreateFlow({
   onComplete,
 }: HostedCommunityCreateFlowProps) {
+  const { t } = useLingui();
   const onboarding = useCommunityOnboarding();
   const localPubkey = useIdentityQuery().data?.pubkey ?? null;
   const [auth, setAuth] = React.useState<BuilderlabAuth | null>(null);
@@ -104,7 +109,7 @@ export function HostedCommunityCreateFlow({
   const signIn = () => {
     const attempt = ++loginAttempt.current;
     signingIn.current = true;
-    setAction("Signing in…");
+    setAction(t`Signing in…`);
     setError(null);
     void startBuilderlabLogin()
       .then(async (nextAuth) => {
@@ -125,14 +130,14 @@ export function HostedCommunityCreateFlow({
   };
 
   const connectIdentity = () =>
-    run("Connecting identity…", async () => {
+    run(t`Connecting identity…`, async () => {
       const response = await bindBuilderlabIdentity();
       if (response.error) {
         throw new Error(
           hostedCommunityErrorMessage(
             response.error,
             response.correlation_id,
-            "Could not connect the Buzz identity.",
+            t`Could not connect the ${productName} identity.`,
           ),
         );
       }
@@ -175,14 +180,14 @@ export function HostedCommunityCreateFlow({
   );
 
   const switchToDeviceIdentity = () =>
-    run("Switching identity…", async () => {
+    run(t`Switching identity…`, async () => {
       const released = await deleteBuilderlabIdentity();
       if (released.error) {
         throw new Error(
           hostedCommunityErrorMessage(
             released.error,
             released.correlation_id,
-            "Could not disconnect the account's previous Buzz identity.",
+            t`Could not disconnect the account's previous ${productName} identity.`,
           ),
         );
       }
@@ -191,11 +196,11 @@ export function HostedCommunityCreateFlow({
         await loadAccount();
         throw new Error(
           bound.error.code === "pubkey_already_bound"
-            ? "This device's Buzz identity belongs to a different Builderlab account. Sign in with the account that already owns this identity."
+            ? t`This device's ${productName} identity belongs to a different Builderlab account. Sign in with the account that already owns this identity.`
             : hostedCommunityErrorMessage(
                 bound.error,
                 bound.correlation_id,
-                "Could not connect this device's Buzz identity.",
+                t`Could not connect this device's ${productName} identity.`,
               ),
         );
       }
@@ -247,7 +252,7 @@ export function HostedCommunityCreateFlow({
       atCommunityLimit
     )
       return;
-    void run("Creating community…", async () => {
+    void run(t`Creating community…`, async () => {
       const available = await checkHostedCommunityName(normalizedName);
       if (available.error || !available.available) {
         setAvailability(false);
@@ -255,7 +260,7 @@ export function HostedCommunityCreateFlow({
           hostedCommunityErrorMessage(
             available.error,
             available.correlation_id,
-            "That Buzz address is already taken.",
+            t`That ${productName} address is already taken.`,
           ),
         );
       }
@@ -303,7 +308,9 @@ export function HostedCommunityCreateFlow({
     return (
       <div className="flex min-h-40 items-center justify-center" role="status">
         <LoaderCircle className="h-5 w-5 animate-spin text-muted-foreground" />
-        <span className="sr-only">Checking sign-in</span>
+        <span className="sr-only">
+          <Trans>Checking sign-in</Trans>
+        </span>
       </div>
     );
   }
@@ -312,16 +319,21 @@ export function HostedCommunityCreateFlow({
     return (
       <div className="space-y-5">
         <p className="text-sm leading-6 text-muted-foreground">
-          Sign in with Builderlab to create and host a community. Buzz will open
-          your browser, then bring you back here.
+          <Trans>
+            Sign in with Builderlab to create and host a community.{" "}
+            {productName} will open your browser, then bring you back here.
+          </Trans>
         </p>
         {errorBox}
         <div className="flex justify-end pt-1">
           <Button disabled={Boolean(action)} onClick={signIn} type="button">
-            {action === "Signing in…" ? (
-              <LoaderCircle className="h-4 w-4 animate-spin" />
-            ) : null}
-            {action ?? "Continue to Builderlab"}
+            {/* `action` is the running step's label. It used to be compared
+                to the literal "Signing in…" here, which is false the moment
+                that label is translated; sign-in is the only action this
+                screen can start, so the truthiness check is equivalent and
+                has no copy in it. */}
+            {action ? <LoaderCircle className="h-4 w-4 animate-spin" /> : null}
+            {action ?? t`Continue to Builderlab`}
             {action ? null : <ExternalLink className="h-4 w-4" />}
           </Button>
         </div>
@@ -333,8 +345,10 @@ export function HostedCommunityCreateFlow({
     return (
       <div className="space-y-5">
         <p className="text-sm leading-6 text-muted-foreground">
-          Connect this device’s Buzz identity to your Builderlab account. Your
-          private key stays on this device.
+          <Trans>
+            Connect this device’s {productName} identity to your Builderlab
+            account. Your private key stays on this device.
+          </Trans>
         </p>
         {errorBox}
         <div className="flex justify-end gap-2 pt-1">
@@ -344,7 +358,7 @@ export function HostedCommunityCreateFlow({
             type="button"
             variant="outline"
           >
-            Use a different account
+            <Trans>Use a different account</Trans>
           </Button>
           <Button
             disabled={Boolean(action)}
@@ -352,7 +366,7 @@ export function HostedCommunityCreateFlow({
             type="button"
           >
             {action ? <LoaderCircle className="h-4 w-4 animate-spin" /> : null}
-            {action ?? "Connect and continue"}
+            {action ?? t`Connect and continue`}
           </Button>
         </div>
       </div>
@@ -363,15 +377,17 @@ export function HostedCommunityCreateFlow({
     return (
       <div className="space-y-5">
         <p className="text-sm leading-6 text-muted-foreground">
-          This Builderlab account uses a different Buzz identity. Switch it to
-          this device, or sign in with another account.
+          <Trans>
+            This Builderlab account uses a different {productName} identity.
+            Switch it to this device, or sign in with another account.
+          </Trans>
         </p>
         <div className="rounded-xl bg-muted/40 px-4 py-3 font-mono text-xs text-muted-foreground">
           <p className="break-all">
-            Account: {boundNpub ?? UNAVAILABLE_KEY_LABEL}
+            <Trans>Account:</Trans> {boundNpub ?? UNAVAILABLE_KEY_LABEL}
           </p>
           <p className="mt-1 break-all">
-            This device: {localNpub ?? UNAVAILABLE_KEY_LABEL}
+            <Trans>This device:</Trans> {localNpub ?? UNAVAILABLE_KEY_LABEL}
           </p>
         </div>
         {errorBox}
@@ -382,7 +398,7 @@ export function HostedCommunityCreateFlow({
             type="button"
             variant="outline"
           >
-            Use a different account
+            <Trans>Use a different account</Trans>
           </Button>
           <Button
             disabled={Boolean(action)}
@@ -390,7 +406,7 @@ export function HostedCommunityCreateFlow({
             type="button"
           >
             {action ? <LoaderCircle className="h-4 w-4 animate-spin" /> : null}
-            {action ?? "Use this device"}
+            {action ?? t`Use this device`}
           </Button>
         </div>
       </div>
@@ -398,16 +414,16 @@ export function HostedCommunityCreateFlow({
   }
 
   const feedback = atCommunityLimit
-    ? "You’ve reached your hosted community creation limit."
+    ? t`You’ve reached your hosted community creation limit.`
     : name && !validName
-      ? "Use lowercase letters, numbers, and single hyphens."
+      ? t`Use lowercase letters, numbers, and single hyphens.`
       : checkingName
-        ? "Checking availability…"
+        ? t`Checking availability…`
         : availability === false
-          ? "That address is already taken."
+          ? t`That address is already taken.`
           : availability === true
-            ? "That address is available."
-            : "You can’t change this address after creating the community.";
+            ? t`That address is available.`
+            : t`You can’t change this address after creating the community.`;
 
   return (
     <form className="space-y-5" onSubmit={create}>
@@ -416,7 +432,7 @@ export function HostedCommunityCreateFlow({
           className="text-sm font-medium text-foreground"
           htmlFor="hosted-community-create-name"
         >
-          Community address
+          <Trans>Community address</Trans>
         </label>
         <div
           className={cn(
@@ -475,7 +491,7 @@ export function HostedCommunityCreateFlow({
           type="submit"
         >
           {action ? <LoaderCircle className="h-4 w-4 animate-spin" /> : null}
-          {action ?? "Create community"}
+          {action ?? t`Create community`}
         </Button>
       </div>
     </form>

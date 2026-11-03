@@ -1,3 +1,6 @@
+import type { MessageDescriptor } from "@lingui/core";
+import { msg } from "@lingui/core/macro";
+import { Trans, useLingui } from "@lingui/react/macro";
 import {
   Check,
   ChevronDown,
@@ -15,6 +18,7 @@ import {
 import * as React from "react";
 import { toast } from "sonner";
 
+import { BRAND } from "@/shared/branding/brand";
 import type { LeaveCommunityResult } from "@/features/communities/leaveCommunity";
 import type { Community } from "@/features/communities/types";
 import {
@@ -57,13 +61,19 @@ import { EditCommunityDialog } from "./EditCommunityDialog";
 const PROFILE_MENU_HOVER_OPEN_DELAY_MS = 80;
 const PROFILE_MENU_HOVER_CLOSE_DELAY_MS = 160;
 
-const CONNECTION_STATE_LABEL: Record<ConnectionState, string> = {
-  idle: "Not connected",
-  connecting: "Connecting…",
-  connected: "Connected",
-  reconnecting: "Reconnecting to relay…",
-  stalled: "Connection lost — relay is not responding",
-  disconnected: "Disconnected from relay",
+const { productName } = BRAND;
+/**
+ * Descriptors, not strings: keyed by connection state rather than living in a
+ * `label:` field, which is why the coverage detector never saw this table. It
+ * still renders — as the switcher's accessible name and its degraded tooltip.
+ */
+const CONNECTION_STATE_LABEL: Record<ConnectionState, MessageDescriptor> = {
+  idle: msg`Not connected`,
+  connecting: msg`Connecting…`,
+  connected: msg`Connected`,
+  reconnecting: msg`Reconnecting to relay…`,
+  stalled: msg`Connection lost — relay is not responding`,
+  disconnected: msg`Disconnected from relay`,
 };
 
 type CommunitySwitcherProps = {
@@ -123,6 +133,7 @@ export function CommunitySwitcher({
   onLeaveCommunity,
   onRemoveCommunityFromDevice,
 }: CommunitySwitcherProps) {
+  const { i18n, t } = useLingui();
   const [editingCommunity, setEditingCommunity] =
     React.useState<Community | null>(null);
   const [dropdownOpen, setDropdownOpen] = React.useState(false);
@@ -133,7 +144,12 @@ export function CommunitySwitcher({
   const profileMenuHoverTimer = React.useRef<number | null>(null);
   const connectionState = useRelayConnection();
   const degraded = isRelayConnectionDegraded(connectionState);
-  const connectionLabel = CONNECTION_STATE_LABEL[connectionState];
+  const connectionLabel = i18n._(CONNECTION_STATE_LABEL[connectionState]);
+  // Hoisted locals: lingui names an ICU placeholder after the expression it
+  // interpolates, and a dot inside the braces invalidates the whole message.
+  const activeCommunityName = activeCommunity?.name ?? t`Community`;
+  const degradedLabel = t`${activeCommunityName} — ${connectionLabel}`;
+  const removingCommunityName = removingCommunity?.name ?? "";
   const activeIconQuery = useActiveCommunityIcon(activeCommunity?.relayUrl);
   const activeIcon = activeIconQuery.data ?? null;
   const isProfileVariant = variant === "profile";
@@ -189,24 +205,23 @@ export function CommunitySwitcher({
       const result = await onLeaveCommunity(activeCommunity.id);
       setDropdownOpen(false);
       if (result?.status === "already-absent") {
-        toast("Community removed", {
-          description:
-            "You were no longer a member, so Buzz removed the community from this device.",
+        toast(t`Community removed`, {
+          description: t`You were no longer a member, so ${productName} removed the community from this device.`,
         });
       }
     } catch (error) {
       const message =
         error instanceof Error
           ? error.message
-          : "Couldn't leave the community. Try again.";
+          : t`Couldn't leave the community. Try again.`;
       setLeaveError(
-        `${message} If the community no longer exists, use Remove from this device.`,
+        t`${message} If the community no longer exists, use Remove from this device.`,
       );
       setDropdownOpen(true);
     } finally {
       setIsLeaving(false);
     }
-  }, [activeCommunity, isLeaving, onLeaveCommunity]);
+  }, [activeCommunity, isLeaving, onLeaveCommunity, t]);
 
   const handleRemoveFromDevice = React.useCallback(async () => {
     if (!removingCommunity) return;
@@ -218,10 +233,10 @@ export function CommunitySwitcher({
       toast.error(
         error instanceof Error
           ? error.message
-          : "Couldn't remove the community from this device. Try again.",
+          : t`Couldn't remove the community from this device. Try again.`,
       );
     }
-  }, [onRemoveCommunityFromDevice, removingCommunity]);
+  }, [onRemoveCommunityFromDevice, removingCommunity, t]);
 
   const triggerContent = (
     <>
@@ -262,7 +277,7 @@ export function CommunitySwitcher({
             : "min-w-0 flex-1 truncate font-medium"
         }
       >
-        {activeCommunity?.name ?? "No community"}
+        {activeCommunity?.name ?? t`No community`}
       </span>
       {variant === "profile-menu" ? (
         <ChevronRight className="h-4 w-4 shrink-0 text-muted-foreground" />
@@ -285,11 +300,7 @@ export function CommunitySwitcher({
           <button
             aria-expanded={dropdownOpen}
             aria-haspopup="menu"
-            aria-label={
-              degraded
-                ? `${activeCommunity?.name ?? "Community"} — ${connectionLabel}`
-                : "Community actions"
-            }
+            aria-label={degraded ? degradedLabel : t`Community actions`}
             className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-left text-sm text-popover-foreground outline-hidden transition-colors hover:bg-muted/50 focus:bg-muted/50 focus:outline-none focus-visible:bg-muted/50 focus-visible:outline-none data-[state=open]:bg-muted/50 data-[state=open]:text-popover-foreground"
             data-testid="community-switcher"
             onMouseEnter={() => scheduleProfileMenu(true)}
@@ -310,7 +321,7 @@ export function CommunitySwitcher({
           sideOffset={0}
         >
           <div
-            aria-label="Community actions"
+            aria-label={t`Community actions`}
             data-testid="profile-community-actions"
             role="menu"
           >
@@ -326,7 +337,9 @@ export function CommunitySwitcher({
                   type="button"
                 >
                   <Link2 className="h-4 w-4" />
-                  <span>Copy community URL</span>
+                  <span>
+                    <Trans>Copy community URL</Trans>
+                  </span>
                 </button>
                 {canInvite && onInvite ? (
                   <button
@@ -339,7 +352,9 @@ export function CommunitySwitcher({
                     type="button"
                   >
                     <Ticket className="h-4 w-4" />
-                    <span>Invite to community</span>
+                    <span>
+                      <Trans>Invite to community</Trans>
+                    </span>
                   </button>
                 ) : null}
                 <button
@@ -352,7 +367,9 @@ export function CommunitySwitcher({
                   type="button"
                 >
                   <Settings2 className="h-4 w-4" />
-                  <span>Community settings</span>
+                  <span>
+                    <Trans>Community settings</Trans>
+                  </span>
                 </button>
                 <button
                   className="flex min-h-9 w-full items-center gap-2 rounded-lg px-3 py-2 text-left text-sm text-destructive outline-hidden transition-colors hover:bg-destructive/10 focus:bg-destructive/10 focus:outline-none focus-visible:bg-destructive/10 focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50"
@@ -362,7 +379,7 @@ export function CommunitySwitcher({
                   type="button"
                 >
                   <LogOut className="h-4 w-4" />
-                  <span>{isLeaving ? "Leaving…" : "Leave community"}</span>
+                  <span>{isLeaving ? t`Leaving…` : t`Leave community`}</span>
                 </button>
                 <button
                   className="flex min-h-9 w-full items-center gap-2 rounded-lg px-3 py-2 text-left text-sm text-destructive outline-hidden transition-colors hover:bg-destructive/10 focus:bg-destructive/10 focus:outline-none focus-visible:bg-destructive/10 focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50"
@@ -375,7 +392,9 @@ export function CommunitySwitcher({
                   type="button"
                 >
                   <Trash2 className="h-4 w-4" />
-                  <span>Remove from this device</span>
+                  <span>
+                    <Trans>Remove from this device</Trans>
+                  </span>
                 </button>
                 {leaveError ? (
                   <p
@@ -398,7 +417,9 @@ export function CommunitySwitcher({
               type="button"
             >
               <Plus className="h-4 w-4" />
-              <span>Add a community</span>
+              <span>
+                <Trans>Add a community</Trans>
+              </span>
             </button>
           </div>
         </PopoverContent>
@@ -414,11 +435,7 @@ export function CommunitySwitcher({
       <DropdownMenuTrigger asChild>
         {variant === "profile" ? (
           <button
-            aria-label={
-              degraded
-                ? `${activeCommunity?.name ?? "Community"} — ${connectionLabel}`
-                : "Switch community"
-            }
+            aria-label={degraded ? degradedLabel : t`Switch community`}
             className="flex min-w-0 max-w-full items-center gap-1.5 rounded-md py-0.5 text-left text-xs text-sidebar-foreground/50 outline-hidden transition-colors hover:text-sidebar-foreground focus:outline-none focus-visible:outline-none data-[state=open]:text-sidebar-foreground"
             data-testid="community-switcher"
             type="button"
@@ -427,11 +444,7 @@ export function CommunitySwitcher({
           </button>
         ) : (
           <SidebarMenuButton
-            aria-label={
-              degraded
-                ? `${activeCommunity?.name ?? "Community"} — ${connectionLabel}`
-                : undefined
-            }
+            aria-label={degraded ? degradedLabel : undefined}
             className="h-auto gap-2 rounded-xl px-2.5 py-2 data-[state=open]:bg-sidebar-accent"
             data-testid="community-switcher"
             type="button"
@@ -447,39 +460,46 @@ export function CommunitySwitcher({
         side={variant === "profile" ? "top" : "bottom"}
         sideOffset={4}
       >
-        {communities.map((community) => (
-          <DropdownMenuItem
-            key={community.id}
-            className="group flex items-center gap-2 pr-1"
-            onSelect={() => {
-              onSwitchCommunity(community.id);
-            }}
-          >
-            <span className="flex h-4 w-4 shrink-0 items-center justify-center">
-              {activeCommunity?.id === community.id ? (
-                <Check className="h-4 w-4 text-primary" />
-              ) : null}
-            </span>
-            <span className="min-w-0 flex-1 truncate">{community.name}</span>
-            <button
-              aria-label={`Edit ${community.name}`}
-              className="flex h-5 w-5 shrink-0 items-center justify-center rounded opacity-0 hover:bg-accent group-hover:opacity-100 group-focus:opacity-100"
-              onClick={(e) => {
-                e.stopPropagation();
-                e.preventDefault();
-                setDropdownOpen(false);
-                setEditingCommunity(community);
+        {communities.map((community) => {
+          // Hoisted: `community.name` inside the template would put a dot
+          // inside ICU braces and drop the message from every catalogue.
+          const communityName = community.name;
+          return (
+            <DropdownMenuItem
+              key={community.id}
+              className="group flex items-center gap-2 pr-1"
+              onSelect={() => {
+                onSwitchCommunity(community.id);
               }}
-              type="button"
             >
-              <MoreHorizontal className="h-4 w-4" />
-            </button>
-          </DropdownMenuItem>
-        ))}
+              <span className="flex h-4 w-4 shrink-0 items-center justify-center">
+                {activeCommunity?.id === community.id ? (
+                  <Check className="h-4 w-4 text-primary" />
+                ) : null}
+              </span>
+              <span className="min-w-0 flex-1 truncate">{community.name}</span>
+              <button
+                aria-label={t`Edit ${communityName}`}
+                className="flex h-5 w-5 shrink-0 items-center justify-center rounded opacity-0 hover:bg-accent group-hover:opacity-100 group-focus:opacity-100"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  e.preventDefault();
+                  setDropdownOpen(false);
+                  setEditingCommunity(community);
+                }}
+                type="button"
+              >
+                <MoreHorizontal className="h-4 w-4" />
+              </button>
+            </DropdownMenuItem>
+          );
+        })}
         <DropdownMenuSeparator />
         <DropdownMenuItem onSelect={onAddCommunity}>
           <Plus className="h-4 w-4" />
-          <span>Add a community</span>
+          <span>
+            <Trans>Add a community</Trans>
+          </span>
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
@@ -515,15 +535,23 @@ export function CommunitySwitcher({
       >
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Remove from this device</AlertDialogTitle>
+            <AlertDialogTitle>
+              <Trans>Remove from this device</Trans>
+            </AlertDialogTitle>
             <AlertDialogDescription>
-              {`Remove "${removingCommunity?.name ?? ""}" from this device? Buzz won't contact the relay, so your membership isn't revoked. You can add the community again later.`}
+              <Trans>
+                Remove "{removingCommunityName}" from this device? {productName}{" "}
+                won't contact the relay, so your membership isn't revoked. You
+                can add the community again later.
+              </Trans>
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogCancel>
+              <Trans>Cancel</Trans>
+            </AlertDialogCancel>
             <AlertDialogAction onClick={() => void handleRemoveFromDevice()}>
-              Remove
+              <Trans>Remove</Trans>
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
