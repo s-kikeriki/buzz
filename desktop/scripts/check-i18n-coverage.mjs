@@ -92,6 +92,10 @@ const CONVERTED_FILES = [
   "src/features/onboarding/ui/IdentityKeyHelpDialog.tsx",
   "src/features/onboarding/ui/IdentityKeyIntroduction.tsx",
   "src/features/onboarding/ui/MachineOnboardingFlow.tsx",
+  // The first-run identity path. Onboarding was outside the original German
+  // sweep, so a German build walked from a translated landing screen straight
+  // into untranslated English at the first prompt.
+  "src/features/onboarding/ui/NostrKeyImportForm.tsx",
   // Tranche 4 — the projects area. Every screen under
   // src/features/projects that now speaks through the catalogue, including
   // the library modules that produce the copy those screens render.

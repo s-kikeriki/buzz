@@ -2225,6 +2225,7 @@ msgstr "Back to search"
 msgid "Backup key"
 msgstr "Backup key"
 
+#: src/features/onboarding/ui/NostrKeyImportForm.tsx
 #: src/features/settings/ui/BackupTestFlow.tsx
 msgid "Backup password"
 msgstr "Backup password"
@@ -2697,6 +2698,10 @@ msgstr "Checks"
 #: src/features/agents/ui/personaLibraryCopy.ts
 msgid "Choose"
 msgstr "Choose"
+
+#: src/features/onboarding/ui/NostrKeyImportForm.tsx
+msgid "Choose a backup file"
+msgstr "Choose a backup file"
 
 #: src/features/projects/ui/CreatePullRequestDialog.tsx
 msgid "Choose a base branch."
@@ -3304,6 +3309,10 @@ msgstr "Context limit"
 msgid "Continue setup"
 msgstr "Continue setup"
 
+#: src/features/onboarding/ui/NostrKeyImportForm.tsx
+msgid "Continue with this key"
+msgstr "Continue with this key"
+
 #: src/features/projects/lib/projectDetailAgentContext.ts
 #: src/features/projects/ui/ProjectRepositoryActionsPanel.tsx
 #: src/features/projects/ui/ProjectWorkspaceTabList.tsx
@@ -3567,6 +3576,10 @@ msgstr "Couldn’t create backup"
 msgid "Couldn't detect agent harnesses."
 msgstr "Couldn't detect agent harnesses."
 
+#: src/features/onboarding/ui/NostrKeyImportForm.tsx
+msgid "Couldn't import this key."
+msgstr "Couldn't import this key."
+
 #: src/features/agents/ui/AgentConfigPanel.tsx
 msgid "Couldn't load agent configuration."
 msgstr "Couldn't load agent configuration."
@@ -3619,6 +3632,10 @@ msgstr "Couldn’t reach repository"
 #: src/features/projects/lib/projectGitError.ts
 msgid "Couldn’t reach the repository"
 msgstr "Couldn’t reach the repository"
+
+#: src/features/onboarding/ui/NostrKeyImportForm.tsx
+msgid "Couldn't read that file."
+msgstr "Couldn't read that file."
 
 #: src/features/channels/ui/ChannelCanvas.tsx
 msgid "Couldn't refresh canvas — showing last known content."
@@ -4536,6 +4553,10 @@ msgstr "Drawing canvas"
 msgid "Drop .agent.json or .agent.png to import"
 msgstr "Drop .agent.json or .agent.png to import"
 
+#: src/features/onboarding/ui/NostrKeyImportForm.tsx
+msgid "Drop a key here"
+msgstr "Drop a key here"
+
 #: src/features/agents/ui/CommunityCatalogDialog.tsx
 msgid "Drop an .agent.json or .agent.png file anywhere in this window, or choose a file."
 msgstr "Drop an .agent.json or .agent.png file anywhere in this window, or choose a file."
@@ -4548,6 +4569,7 @@ msgstr "Drop files to upload"
 msgid "Drop or browse"
 msgstr "Drop or browse"
 
+#: src/features/onboarding/ui/NostrKeyImportForm.tsx
 #: src/features/settings/ui/BackupTestFlow.tsx
 msgid "Drop your backup file here"
 msgstr "Drop your backup file here"
@@ -4749,9 +4771,17 @@ msgstr "Enter an Anthropic API key to load Anthropic models."
 msgid "Enter code on your phone"
 msgstr "Enter code on your phone"
 
+#: src/features/onboarding/ui/NostrKeyImportForm.tsx
+msgid "Enter the password for this key backup."
+msgstr "Enter the password for this key backup."
+
 #: src/features/onboarding/ui/MachineOnboardingFlow.tsx
 msgid "Enter your backup password to restore your identity."
 msgstr "Enter your backup password to restore your identity."
+
+#: src/features/onboarding/ui/NostrKeyImportForm.tsx
+msgid "Enter your key here"
+msgstr "Enter your key here"
 
 #: src/features/onboarding/ui/MachineOnboardingFlow.tsx
 msgid "Enter your private key"
@@ -5400,6 +5430,7 @@ msgstr "Hide API key"
 msgid "Hide history"
 msgstr "Hide history"
 
+#: src/features/onboarding/ui/NostrKeyImportForm.tsx
 #: src/features/settings/ui/BackupTestFlow.tsx
 #: src/features/settings/ui/EncryptedBackupCreator.tsx
 msgid "Hide password"
@@ -5409,6 +5440,7 @@ msgstr "Hide password"
 msgid "Hide per-row activity timestamps."
 msgstr "Hide per-row activity timestamps."
 
+#: src/features/onboarding/ui/NostrKeyImportForm.tsx
 #: src/features/settings/ui/PrivateKeyBackupRow.tsx
 msgid "Hide private key"
 msgstr "Hide private key"
@@ -5537,6 +5569,10 @@ msgstr "Import team snapshot"
 #: src/features/agents/ui/teamSnapshotImport.lib.ts
 msgid "Imported {0} with {memberCount} member{1}."
 msgstr "Imported {0} with {memberCount} member{1}."
+
+#: src/features/onboarding/ui/NostrKeyImportForm.tsx
+msgid "Importing key"
+msgstr "Importing key"
 
 #: src/features/projects/projectTaskCategories.ts
 msgid "Improvement"
@@ -6811,6 +6847,10 @@ msgstr "New workflow"
 msgid "Newest"
 msgstr "Newest"
 
+#: src/features/onboarding/ui/NostrKeyImportForm.tsx
+msgid "Next"
+msgstr "Next"
+
 #: src/features/channels/ui/WelcomeComposerBanner.tsx
 msgid "Nice work."
 msgstr "Nice work."
@@ -7356,6 +7396,10 @@ msgstr "None yet"
 msgid "north-star"
 msgstr "north-star"
 
+#: src/features/onboarding/ui/NostrKeyImportForm.tsx
+msgid "Nostr identity found"
+msgstr "Nostr identity found"
+
 #: src/features/agents/ui/AgentAiConfigurationMode.tsx
 #: src/features/agents/ui/AgentAiDefaults.tsx
 #: src/features/agents/ui/AgentDefinitionDialog.tsx
@@ -7411,6 +7455,10 @@ msgstr "now"
 #: src/features/agents/ui/RespondToField.tsx
 msgid "npub1… or abcdef0123…"
 msgstr "npub1… or abcdef0123…"
+
+#: src/features/onboarding/ui/NostrKeyImportForm.tsx
+msgid "nsec1..."
+msgstr "nsec1..."
 
 #. placeholder {0}: error.message
 #: src/features/agents/observerRelayStore.ts
@@ -8147,6 +8195,7 @@ msgstr "Private channel"
 msgid "private ephemeral channel"
 msgstr "private ephemeral channel"
 
+#: src/features/onboarding/ui/NostrKeyImportForm.tsx
 #: src/features/settings/ui/PrivateKeyBackupRow.tsx
 msgid "Private key"
 msgstr "Private key"
@@ -9041,11 +9090,13 @@ msgstr "Reuse existing agent"
 msgid "Reveal"
 msgstr "Reveal"
 
+#: src/features/onboarding/ui/NostrKeyImportForm.tsx
 #: src/features/settings/ui/BackupTestFlow.tsx
 #: src/features/settings/ui/EncryptedBackupCreator.tsx
 msgid "Reveal password"
 msgstr "Reveal password"
 
+#: src/features/onboarding/ui/NostrKeyImportForm.tsx
 #: src/features/settings/ui/PrivateKeyBackupRow.tsx
 msgid "Reveal private key"
 msgstr "Reveal private key"
@@ -10335,9 +10386,17 @@ msgstr "That address is available."
 msgid "That Buzz address is already taken."
 msgstr "That Buzz address is already taken."
 
+#: src/features/onboarding/ui/NostrKeyImportForm.tsx
+msgid "That doesn't look like a complete ncryptsec backup."
+msgstr "That doesn't look like a complete ncryptsec backup."
+
 #: src/features/settings/ui/BackupTestFlow.tsx
 msgid "That doesn't look like a key backup file."
 msgstr "That doesn't look like a key backup file."
+
+#: src/features/onboarding/ui/NostrKeyImportForm.tsx
+msgid "That doesn't look like a valid nsec. Paste an nsec1 key."
+msgstr "That doesn't look like a valid nsec. Paste an nsec1 key."
 
 #: src/features/agents/ui/ModelPicker.tsx
 msgid "That model isn't available for this agent."
@@ -10783,6 +10842,10 @@ msgstr "This will delete your identity key, all agent settings, and cached data 
 #: src/features/messages/ui/DeleteMessageConfirmDialog.tsx
 msgid "This will permanently delete this message and cannot be undone."
 msgstr "This will permanently delete this message and cannot be undone."
+
+#: src/features/onboarding/ui/NostrKeyImportForm.tsx
+msgid "This will use this Nostr identity:"
+msgstr "This will use this Nostr identity:"
 
 #: src/features/channels/ui/FocusThreadDrawer.tsx
 #: src/features/home/lib/inbox.ts
@@ -11621,6 +11684,14 @@ msgstr "Voice settings could not be loaded."
 #: src/features/settings/ui/VoiceSettingsCard.tsx
 msgid "Voice settings could not be saved."
 msgstr "Voice settings could not be saved."
+
+#: src/features/onboarding/ui/NostrKeyImportForm.tsx
+msgid "Waiting for a complete ncryptsec backup"
+msgstr "Waiting for a complete ncryptsec backup"
+
+#: src/features/onboarding/ui/NostrKeyImportForm.tsx
+msgid "Waiting for a valid nsec1 key"
+msgstr "Waiting for a valid nsec1 key"
 
 #: src/features/agents/ui/AgentSessionTranscriptList.tsx
 msgid "Waiting for ACP activity"
