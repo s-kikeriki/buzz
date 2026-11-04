@@ -1,3 +1,4 @@
+import { i18n } from "@lingui/core";
 import assert from "node:assert/strict";
 import test from "node:test";
 
@@ -37,11 +38,11 @@ test("formatDurationSeconds produces compact labels with significant units", () 
 });
 
 test("formatDurationSecondsVerbose spells out units with correct plurals", () => {
-  assert.equal(formatDurationSecondsVerbose(0), "0 seconds");
-  assert.equal(formatDurationSecondsVerbose(300), "5 minutes");
-  assert.equal(formatDurationSecondsVerbose(604_800), "1 week");
+  assert.equal(formatDurationSecondsVerbose(0, i18n), "0 seconds");
+  assert.equal(formatDurationSecondsVerbose(300, i18n), "5 minutes");
+  assert.equal(formatDurationSecondsVerbose(604_800, i18n), "1 week");
   assert.equal(
-    formatDurationSecondsVerbose(1_483_506),
+    formatDurationSecondsVerbose(1_483_506, i18n),
     "2 weeks 3 days 4 hours 5 minutes 6 seconds",
   );
 });

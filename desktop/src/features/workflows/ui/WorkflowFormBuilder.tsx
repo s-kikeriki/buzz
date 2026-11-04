@@ -12,6 +12,7 @@ import {
   X,
 } from "lucide-react";
 import { FocusScope } from "@radix-ui/react-focus-scope";
+import { useLingui } from "@lingui/react/macro";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import * as React from "react";
 import { createPortal } from "react-dom";
@@ -371,6 +372,10 @@ export const WorkflowFormBuilder = React.forwardRef<
   },
   ref,
 ) {
+  // Boundary only: this canvas's own copy is still English and belongs to the
+  // next workflows tranche. `i18n` is here because a step summary on a node
+  // can now contain a localized duration.
+  const { i18n } = useLingui();
   // Parse once on mount instead of calling yamlToFormState three times
   const initialParseRef = React.useRef(yaml ? yamlToFormState(yaml) : null);
   const [formState, setFormState] = React.useState<WorkflowFormState>(
@@ -713,9 +718,11 @@ export const WorkflowFormBuilder = React.forwardRef<
                             (channel) => channel.id === step.channel,
                           )?.name
                         : undefined;
-                      const nodeDescription = workflowStepDescription(step, {
-                        channelLabel,
-                      });
+                      const nodeDescription = workflowStepDescription(
+                        step,
+                        i18n,
+                        { channelLabel },
+                      );
                       const stepEmoji =
                         step.action === "add_reaction"
                           ? step.emoji?.trim()

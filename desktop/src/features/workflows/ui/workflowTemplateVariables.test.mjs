@@ -1,9 +1,11 @@
+import { i18n } from "@lingui/core";
 import assert from "node:assert/strict";
 import { test } from "node:test";
 
 import {
   activeTemplateToken,
   insertTemplateVariable,
+  TEMPLATE_VARIABLE_GROUP_LABELS,
   workflowTemplateVariables,
 } from "./workflowTemplateVariables.ts";
 
@@ -77,6 +79,53 @@ test("keeps prior-step ordering and ignores unsafe step IDs", () => {
     "steps.second.output.sent",
     "steps.second.output.event_id",
   ]);
+});
+
+/**
+ * Descriptions are resolved through `i18n._`, the same call the popover makes.
+ * Asserting `descriptor.message` instead would read the source string straight
+ * back out, so a row wired to the wrong descriptor would still pass.
+ */
+test("describes each offered variable, trigger fields and step outputs alike", () => {
+  const described = workflowTemplateVariables("message_posted", [
+    { id: "call", action: "call_webhook" },
+  ]).map(({ value, description }) => [value, i18n._(description)]);
+
+  assert.deepEqual(described, [
+    ["trigger.text", "Message text"],
+    ["trigger.author", "Author pubkey"],
+    ["trigger.channel_id", "Channel UUID"],
+    ["trigger.timestamp", "Unix timestamp"],
+    ["trigger.message_id", "Message event ID"],
+    ["steps.call.output.status", "HTTP response status"],
+    ["steps.call.output.body", "HTTP response body"],
+  ]);
+});
+
+/**
+ * The group is a token the popover compares to decide where to draw a section
+ * break, and separately a label it prints. Before this split it was one
+ * string doing both jobs, so a translated heading also changed the grouping
+ * key. Both halves are asserted here, because a token split is only right if
+ * it is right in both directions.
+ */
+test("groups variables by a token, and labels every token it can emit", () => {
+  const groups = workflowTemplateVariables("message_posted", [
+    { id: "call", action: "call_webhook" },
+  ]).map(({ group }) => group);
+
+  assert.deepEqual(new Set(groups), new Set(["trigger", "previous_steps"]));
+  for (const group of new Set(groups)) {
+    assert.ok(
+      TEMPLATE_VARIABLE_GROUP_LABELS[group],
+      `no label for group ${group}`,
+    );
+  }
+  assert.equal(i18n._(TEMPLATE_VARIABLE_GROUP_LABELS.trigger), "Trigger");
+  assert.equal(
+    i18n._(TEMPLATE_VARIABLE_GROUP_LABELS.previous_steps),
+    "Previous steps",
+  );
 });
 
 test("only offers values populated by the selected trigger", () => {

@@ -1,3 +1,5 @@
+import type { I18n } from "@lingui/core";
+
 import { truncateNpub } from "@/shared/lib/pubkey";
 import {
   formatDurationSecondsVerbose,
@@ -36,6 +38,7 @@ function destination(value: string | undefined): string | null {
 
 function configuredStepDetail(
   step: StepFormState,
+  i18n: I18n,
   channelLabel?: string,
 ): string | null {
   switch (step.action) {
@@ -44,7 +47,9 @@ function configuredStepDetail(
       if (!duration) return null;
       const seconds = parseDurationSeconds(duration);
       return compact(
-        seconds === null ? duration : formatDurationSecondsVerbose(seconds),
+        seconds === null
+          ? duration
+          : formatDurationSecondsVerbose(seconds, i18n),
       );
     }
     case "send_message": {
@@ -80,10 +85,11 @@ function configuredStepDetail(
 /** Build the concise action summary rendered on a workflow step node. */
 export function workflowStepDescription(
   step: StepFormState,
+  i18n: I18n,
   options: { channelLabel?: string; includeName?: boolean } = {},
 ): string {
   const name = options.includeName === false ? undefined : step.name?.trim();
-  const detail = configuredStepDetail(step, options.channelLabel);
+  const detail = configuredStepDetail(step, i18n, options.channelLabel);
   if (name && detail) return `${name} · ${detail}`;
   return name || detail || ACTION_LABELS[step.action];
 }

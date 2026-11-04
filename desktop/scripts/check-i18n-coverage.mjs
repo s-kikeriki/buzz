@@ -707,6 +707,17 @@ const CONVERTED_FILES = [
   "src/shared/ui/buzz-logo/BuzzLogoAnimation.tsx",
   "src/shared/ui/buzz-logo/FuzzyLogo.tsx",
   "src/shared/ui/sidebar-action-card.tsx",
+  // Tranche 7a — the workflow editor dialog, its step forms, and the copy
+  // those render. The canvas node labels and the trigger summary stay English
+  // for now: they come from the trigger/step description engine, which parses
+  // its own English output in four places and is its own tranche.
+  "src/features/workflows/ui/WorkflowDetailPanel.tsx",
+  "src/features/workflows/ui/WorkflowDialog.tsx",
+  "src/features/workflows/ui/WorkflowStepCard.tsx",
+  "src/features/workflows/ui/WorkflowTemplateTextarea.tsx",
+  "src/features/workflows/ui/workflowActivationWarning.ts",
+  "src/features/workflows/ui/workflowDuration.ts",
+  "src/features/workflows/ui/workflowTemplateVariables.ts",
 ];
 
 /**
@@ -714,6 +725,48 @@ const CONVERTED_FILES = [
  * is not copy, the comment is how a reviewer checks that claim.
  */
 const OVERRIDES = new Map([
+  // Workflow step fields: every one of these is the literal shape of a value
+  // the relay parses, so a German reader has to type the same characters.
+  [
+    "src/features/workflows/ui/WorkflowStepCard.tsx:292",
+    "Example URL showing the required scheme; not prose.",
+  ],
+  [
+    "src/features/workflows/ui/WorkflowStepCard.tsx:311",
+    "HTTP method sent on the wire.",
+  ],
+  [
+    "src/features/workflows/ui/WorkflowStepCard.tsx:312",
+    "HTTP method sent on the wire.",
+  ],
+  [
+    "src/features/workflows/ui/WorkflowStepCard.tsx:313",
+    "HTTP method sent on the wire.",
+  ],
+  [
+    "src/features/workflows/ui/WorkflowStepCard.tsx:314",
+    "HTTP method sent on the wire.",
+  ],
+  [
+    "src/features/workflows/ui/WorkflowStepCard.tsx:315",
+    "HTTP method sent on the wire.",
+  ],
+  [
+    "src/features/workflows/ui/WorkflowStepCard.tsx:336",
+    "Example JSON request body, including a `{{trigger.text}}` template the engine resolves by that exact name.",
+  ],
+  [
+    "src/features/workflows/ui/WorkflowStepCard.tsx:532",
+    "Compact duration syntax the relay parses (`5m`), not a word.",
+  ],
+  [
+    "src/features/workflows/ui/WorkflowStepCard.tsx:572",
+    "Example step id showing the required snake_case format; the YAML key is matched literally.",
+  ],
+  [
+    "src/features/workflows/ui/WorkflowDialog.tsx:773",
+    "Name of the definition format. `YAML` is the same word in German and names the tab's editor mode.",
+  ],
   [
     "src/features/projects/lib/projectDetailAgentContext.ts:9",
     "Stable agent-prompt marker. The parser and its tests match this exact English line; it is not rendered as UI copy.",

@@ -1,3 +1,4 @@
+import { i18n } from "@lingui/core";
 import assert from "node:assert/strict";
 import test from "node:test";
 
@@ -9,7 +10,7 @@ function workflowYaml(trigger) {
 
 test("warns when a message trigger matches every message", () => {
   assert.deepEqual(
-    getWorkflowActivationWarning(workflowYaml("  on: message_posted")),
+    getWorkflowActivationWarning(workflowYaml("  on: message_posted"), i18n),
     {
       description:
         "It will run for every new message in this channel. Review the trigger before turning it on.",
@@ -22,6 +23,7 @@ test("does not warn when a message trigger is narrowed", () => {
   assert.equal(
     getWorkflowActivationWarning(
       workflowYaml('  on: message_posted\n  filter: text == "deploy"'),
+      i18n,
     ),
     null,
   );
@@ -31,12 +33,14 @@ test("warns for hourly-or-faster interval schedules with concrete copy", () => {
   assert.equal(
     getWorkflowActivationWarning(
       workflowYaml("  on: schedule\n  interval: 15m"),
+      i18n,
     )?.description,
     "It is scheduled to run every 15 minutes. Review the schedule before turning it on.",
   );
   assert.equal(
     getWorkflowActivationWarning(
       workflowYaml("  on: schedule\n  interval: 2h"),
+      i18n,
     ),
     null,
   );
@@ -47,6 +51,7 @@ test("warns for clear hourly-or-faster cron schedules", () => {
     assert.equal(
       getWorkflowActivationWarning(
         workflowYaml(`  on: schedule\n  cron: "${cron}"`),
+        i18n,
       )?.description,
       "It is scheduled to run every 5 minutes. Review the schedule before turning it on.",
     );
@@ -54,12 +59,14 @@ test("warns for clear hourly-or-faster cron schedules", () => {
   assert.equal(
     getWorkflowActivationWarning(
       workflowYaml('  on: schedule\n  cron: "*/10 * * * * *"'),
+      i18n,
     )?.description,
     "It is scheduled to run multiple times a minute. Review the schedule before turning it on.",
   );
   assert.equal(
     getWorkflowActivationWarning(
       workflowYaml('  on: schedule\n  cron: "0 9 * * *"'),
+      i18n,
     ),
     null,
   );
@@ -76,6 +83,7 @@ test("warns for stepped, ranged, and listed hourly cron schedules", () => {
     assert.equal(
       getWorkflowActivationWarning(
         workflowYaml(`  on: schedule\n  cron: "${cron}"`),
+        i18n,
       )?.description,
       "It is scheduled to run every hour. Review the schedule before turning it on.",
       cron,
@@ -84,6 +92,7 @@ test("warns for stepped, ranged, and listed hourly cron schedules", () => {
   assert.equal(
     getWorkflowActivationWarning(
       workflowYaml('  on: schedule\n  cron: "*/5 0-23 * * *"'),
+      i18n,
     )?.description,
     "It is scheduled to run every 5 minutes. Review the schedule before turning it on.",
   );
@@ -91,6 +100,7 @@ test("warns for stepped, ranged, and listed hourly cron schedules", () => {
     assert.equal(
       getWorkflowActivationWarning(
         workflowYaml(`  on: schedule\n  cron: "${cron}"`),
+        i18n,
       ),
       null,
       cron,
@@ -99,9 +109,9 @@ test("warns for stepped, ranged, and listed hourly cron schedules", () => {
 });
 
 test("returns no warning for malformed or unrelated definitions", () => {
-  assert.equal(getWorkflowActivationWarning("not: [valid"), null);
+  assert.equal(getWorkflowActivationWarning("not: [valid", i18n), null);
   assert.equal(
-    getWorkflowActivationWarning(workflowYaml("  on: reaction_added")),
+    getWorkflowActivationWarning(workflowYaml("  on: reaction_added"), i18n),
     null,
   );
 });

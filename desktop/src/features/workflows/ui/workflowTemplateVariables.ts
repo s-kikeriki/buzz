@@ -1,12 +1,35 @@
+import type { MessageDescriptor } from "@lingui/core";
+import { msg } from "@lingui/core/macro";
+
 import type {
   ActionType,
   StepFormState,
   TriggerType,
 } from "./workflowFormTypes";
 
+/**
+ * Which section of the suggestion list a variable belongs to.
+ *
+ * A token, not the heading. The group used to *be* the heading string, and
+ * the popover both printed it and compared it against the previous row to
+ * decide where to draw a section break — so translating the heading would
+ * have kept working by accident in German while any future heading change
+ * silently split the list. The label lives in
+ * `TEMPLATE_VARIABLE_GROUP_LABELS`; the code reads this key.
+ */
+export type WorkflowTemplateVariableGroup = "trigger" | "previous_steps";
+
+export const TEMPLATE_VARIABLE_GROUP_LABELS: Record<
+  WorkflowTemplateVariableGroup,
+  MessageDescriptor
+> = {
+  trigger: msg`Trigger`,
+  previous_steps: msg`Previous steps`,
+};
+
 export type WorkflowTemplateVariable = {
-  description: string;
-  group: "Trigger" | "Previous steps";
+  description: MessageDescriptor;
+  group: WorkflowTemplateVariableGroup;
   value: string;
 };
 
@@ -19,35 +42,40 @@ export type ActiveTemplateToken = {
 const COMMON_EVENT_VARIABLES: WorkflowTemplateVariable[] = [
   {
     value: "trigger.author",
-    description: "Author pubkey",
-    group: "Trigger",
+    description: msg`Author pubkey`,
+    group: "trigger",
   },
   {
     value: "trigger.channel_id",
-    description: "Channel UUID",
-    group: "Trigger",
+    description: msg`Channel UUID`,
+    group: "trigger",
   },
   {
     value: "trigger.timestamp",
-    description: "Unix timestamp",
-    group: "Trigger",
+    description: msg`Unix timestamp`,
+    group: "trigger",
   },
   {
     value: "trigger.message_id",
-    description: "Message event ID",
-    group: "Trigger",
+    description: msg`Message event ID`,
+    group: "trigger",
   },
 ];
 
-const STEP_OUTPUTS: Partial<Record<ActionType, Record<string, string>>> = {
-  delay: { slept_secs: "Seconds elapsed" },
+const STEP_OUTPUTS: Partial<
+  Record<ActionType, Record<string, MessageDescriptor>>
+> = {
+  delay: { slept_secs: msg`Seconds elapsed` },
   send_message: {
-    sent: "Whether the message was sent",
-    event_id: "Sent message ID",
+    sent: msg`Whether the message was sent`,
+    event_id: msg`Sent message ID`,
   },
-  call_webhook: { status: "HTTP response status", body: "HTTP response body" },
+  call_webhook: {
+    status: msg`HTTP response status`,
+    body: msg`HTTP response body`,
+  },
   add_reaction: {
-    added: "Whether the reaction was added",
+    added: msg`Whether the reaction was added`,
   },
 };
 
@@ -59,22 +87,26 @@ function triggerVariables(
       return [
         {
           value: "trigger.text",
-          description: "Message text",
-          group: "Trigger",
+          description: msg`Message text`,
+          group: "trigger",
         },
         ...COMMON_EVENT_VARIABLES,
       ];
     case "diff_posted":
       return [
-        { value: "trigger.text", description: "Diff text", group: "Trigger" },
+        {
+          value: "trigger.text",
+          description: msg`Diff text`,
+          group: "trigger",
+        },
         ...COMMON_EVENT_VARIABLES,
       ];
     case "reaction_added":
       return [
         {
           value: "trigger.emoji",
-          description: "Reaction emoji",
-          group: "Trigger",
+          description: msg`Reaction emoji`,
+          group: "trigger",
         },
         ...COMMON_EVENT_VARIABLES,
       ];
@@ -87,8 +119,8 @@ function triggerVariables(
       return [
         {
           value: "trigger.channel_id",
-          description: "Workflow channel UUID",
-          group: "Trigger",
+          description: msg`Workflow channel UUID`,
+          group: "trigger",
         },
       ];
   }
@@ -104,7 +136,7 @@ export function workflowTemplateVariables(
     return Object.entries(outputs).map(([field, description]) => ({
       value: `steps.${step.id}.output.${field}`,
       description,
-      group: "Previous steps" as const,
+      group: "previous_steps" as const,
     }));
   });
 
