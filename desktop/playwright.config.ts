@@ -43,6 +43,7 @@ export default defineConfig({
         "**/messages-german.spec.ts",
         "**/profile-german.spec.ts",
         "**/communities-german.spec.ts",
+        "**/shared-ui-german.spec.ts",
         "**/institutional-chrome.spec.ts",
         "**/kikeriki-theme.spec.ts",
         "**/onboarding-brand.spec.ts",

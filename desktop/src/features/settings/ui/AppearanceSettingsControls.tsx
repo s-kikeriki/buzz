@@ -419,8 +419,11 @@ const LINK_PREVIEW_SAMPLE_BASE: Omit<
   kind: "generic-link",
   href: "https://example.com/product-updates",
   provider: "example.com",
-  // Not copy: `typeLabel` is a closed union the preview renderer switches on,
-  // not text shown verbatim. Translating it would break the type.
+  // `typeLabel` is a closed union the preview renderer switches on, so the
+  // token stays English and translating it here would break the type. It *is*
+  // shown verbatim though — the card's `aria-label` and its screen-reader twin
+  // both read "Open {provider} {typeLabel}: {title}" — so the translation
+  // happens at that render site, through `shared/ui/linkPreviewTypeLabel.ts`.
   typeLabel: "link",
   imageState: "image",
   imageDomain: "example.com",
