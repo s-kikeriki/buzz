@@ -53,8 +53,12 @@ const COMPACT_NPUB = "npub1a2d…yp60";
 async function renderPubKey(props) {
   const React = await import("react");
   const { render, within } = await import("@testing-library/react");
+  const { withI18n } = await import("@/testing/withI18n.mjs");
   const { PubKey } = await import("./PubKey.tsx");
-  const view = render(React.createElement(PubKey, props));
+  // `PubKey` reads its copy through `useLingui()`, which throws without a
+  // provider — and the error blames a duplicate `@lingui/react` install rather
+  // than the missing one.
+  const view = render(withI18n(React.createElement(PubKey, props)));
   // render()'s bound queries search the whole body; scope to this render so
   // earlier mounts (cleaned up only per test) stay invisible.
   return { ...within(view.container), container: view.container };

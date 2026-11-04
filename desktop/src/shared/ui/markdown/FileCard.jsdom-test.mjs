@@ -44,6 +44,7 @@ const React = (await import("react")).default;
 const { act } = await import("react");
 const { createRoot } = await import("react-dom/client");
 const { FileCard } = await import("./FileCard.tsx");
+const { withI18n } = await import("@/testing/withI18n.mjs");
 
 const HREF = `https://relay.example.test/media/${"a".repeat(64)}.pdf`;
 
@@ -67,7 +68,11 @@ async function mount(props) {
   document.body.append(container);
   root = createRoot(container);
   await act(async () =>
-    root.render(React.createElement(FileCard, { href: HREF, ...props })),
+    // `FileCard` and the preview dialog it opens both read their copy through
+    // `useLingui()`, which throws without a provider.
+    root.render(
+      withI18n(React.createElement(FileCard, { href: HREF, ...props })),
+    ),
   );
 }
 

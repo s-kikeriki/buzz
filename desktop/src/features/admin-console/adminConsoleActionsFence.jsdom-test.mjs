@@ -77,8 +77,9 @@ function mountSection(child) {
   }
   const render = (community) =>
     root.render(
-      // `withI18n`, because the member picker mounts `ProfileAvatar`, which
-      // reads its copy through `useLingui()`.
+      // `withI18n`, because this section mounts two components that read
+      // their copy through `useLingui()` and throw without the provider:
+      // `ProfileAvatar` in the member picker and `PubKey` in the rows.
       withI18n(
         React.createElement(
           QueryClientProvider,

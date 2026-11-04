@@ -216,9 +216,9 @@ test("the modal close button reads German", async ({ page }) => {
   await expect(dialog).toBeVisible();
   await waitForAnimations(page);
 
-  await expect(
-    dialog.getByRole("button", { name: /^Schließen$/ }),
-  ).toHaveCount(1);
+  await expect(dialog.getByRole("button", { name: /^Schließen$/ })).toHaveCount(
+    1,
+  );
   await expect(dialog.getByRole("button", { name: /^Close$/ })).toHaveCount(0);
 });
 
@@ -259,7 +259,7 @@ test("the same surfaces still read English under en", async ({ page }) => {
   await expect(dialog).toBeVisible();
   await waitForAnimations(page);
   await expect(dialog.getByRole("button", { name: /^Close$/ })).toHaveCount(1);
-  await expect(
-    dialog.getByRole("button", { name: /^Schließen$/ }),
-  ).toHaveCount(0);
+  await expect(dialog.getByRole("button", { name: /^Schließen$/ })).toHaveCount(
+    0,
+  );
 });
