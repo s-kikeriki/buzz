@@ -17,6 +17,7 @@
 
 import assert from "node:assert/strict";
 import test from "node:test";
+import { i18n } from "@lingui/core";
 
 // Provide a minimal window shim for the event dispatch path.
 const _eventTarget = new EventTarget();
@@ -35,6 +36,7 @@ import {
   consumePendingOpenEditAgent,
   requestOpenEditAgent,
 } from "../../features/agents/openEditAgentEvent.ts";
+import { BRAND } from "../branding/brand.ts";
 
 const AGENT_PUBKEY = "aabbccddeeff00112233445566778899";
 
@@ -69,10 +71,17 @@ test("shouldOpenDoctor_missingBinary_routesToAgentRuntimes", () => {
   );
 });
 
-test("missingBinaryRecoveryMessage_requiresBuzzRestart", () => {
+test("missingBinaryRecoveryMessage_requiresProductRestart", () => {
+  // The restart sentence names the product, and a de-branded build renames it.
+  // Asserting the interpolated `BRAND.productName` rather than the literal
+  // "Buzz" is what keeps this row from re-hardcoding the fork's origin.
   assert.equal(
-    missingBinaryRecoveryMessage(),
-    "not found in PATH — install it or update PATH, then restart Buzz",
+    missingBinaryRecoveryMessage(i18n),
+    `not found in PATH — install it or update PATH, then restart ${BRAND.productName}`,
+  );
+  assert.match(
+    missingBinaryRecoveryMessage(i18n),
+    new RegExp(`restart ${BRAND.productName}$`),
   );
 });
 

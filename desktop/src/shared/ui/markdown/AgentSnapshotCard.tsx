@@ -1,5 +1,6 @@
 import * as React from "react";
 import { Bot, Download, Loader2, Users } from "lucide-react";
+import { useLingui } from "@lingui/react/macro";
 
 import { invokeTauri } from "@/shared/api/tauri";
 import { fetchSnapshotBytes } from "@/shared/api/tauriMedia";
@@ -67,6 +68,7 @@ export function AgentSnapshotCard({
   thumb,
   onImport,
 }: AgentSnapshotCardProps) {
+  const { t } = useLingui();
   const [importState, setImportState] = React.useState<ImportState>({
     phase: "idle",
   });
@@ -89,10 +91,15 @@ export function AgentSnapshotCard({
     } catch (err) {
       setImportState({
         phase: "error",
+        // One whole sentence per kind. `snapshotKind` is an English
+        // discriminant, so dropping it into a frame would leave "agent" or
+        // "team" untranslated inside a German sentence.
         message:
           err instanceof Error
             ? err.message
-            : `Couldn’t load this ${snapshotKind}. Try again.`,
+            : snapshotKind === "team"
+              ? t`Couldn’t load this team. Try again.`
+              : t`Couldn’t load this agent. Try again.`,
       });
     } finally {
       inFlightRef.current = false;
@@ -116,7 +123,7 @@ export function AgentSnapshotCard({
         : size < 1024 * 1024
           ? `${(size / 1024).toFixed(1)} KB`
           : `${(size / (1024 * 1024)).toFixed(1)} MB`;
-  const metadata = [sharedBy ? `Shared by ${sharedBy}` : null, formattedSize]
+  const metadata = [sharedBy ? t`Shared by ${sharedBy}` : null, formattedSize]
     .filter(Boolean)
     .join(" · ");
 
@@ -177,16 +184,16 @@ export function AgentSnapshotCard({
         ) : null}
       </AttachmentContent>
       <AttachmentActions
-        aria-label={`Actions for ${displayName}`}
+        aria-label={t`Actions for ${displayName}`}
         className="ml-4 gap-2"
         role="group"
       >
         <AttachmentAction
-          aria-label={`Download ${displayName}`}
+          aria-label={t`Download ${displayName}`}
           data-testid="agent-snapshot-card-download"
           onClick={handleDownload}
           size="icon"
-          title="Download"
+          title={t`Download`}
           type="button"
           variant="ghost"
         >
@@ -203,10 +210,10 @@ export function AgentSnapshotCard({
         >
           {isFetching ? <Loader2 className="animate-spin" /> : <SnapshotIcon />}
           {isFetching
-            ? "Loading…"
+            ? t`Loading…`
             : snapshotKind === "team"
-              ? "Add team"
-              : "Add agent"}
+              ? t`Add team`
+              : t`Add agent`}
         </AttachmentAction>
       </AttachmentActions>
     </Attachment>

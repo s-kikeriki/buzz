@@ -3,6 +3,7 @@
 import * as React from "react";
 import * as DialogPrimitive from "@radix-ui/react-dialog";
 import { X } from "lucide-react";
+import { Trans } from "@lingui/react/macro";
 
 import { cn } from "@/shared/lib/cn";
 import { useTheme } from "@/shared/theme/ThemeProvider";
@@ -126,7 +127,9 @@ const DialogContent = React.forwardRef<
               )}
             >
               <X className="h-4 w-4" />
-              <span className="sr-only">Close</span>
+              <span className="sr-only">
+                <Trans>Close</Trans>
+              </span>
             </DialogPrimitive.Close>
           ) : null}
         </DialogPrimitive.Content>

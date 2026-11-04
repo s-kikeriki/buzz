@@ -1,3 +1,6 @@
+import { useLingui } from "@lingui/react/macro";
+
+import { BRAND } from "@/shared/branding/brand";
 import { cn } from "@/shared/lib/cn";
 import BuzzLogoAnimation, {
   type BuzzLogoAnimationProps,
@@ -25,20 +28,23 @@ export type FuzzyLogoProps = {
 export function FuzzyLogo({
   fuzz = true,
   className,
-  ariaLabel = "Buzz logo",
+  ariaLabel,
   loop = false,
   loopRestSeconds = 0,
   pulse = true,
   reverse = false,
   variant = "v8",
 }: FuzzyLogoProps) {
+  const { t } = useLingui();
+  const productName = BRAND.productName;
+  const resolvedAriaLabel = ariaLabel ?? t`${productName} logo`;
   // The rest-window loop already reads as "alive"; skip the pulse so the two
   // opacity animations don't fight.
   const hasRestWindow = loop && loopRestSeconds > 0;
 
   return (
     <BuzzLogoAnimation
-      ariaLabel={ariaLabel}
+      ariaLabel={resolvedAriaLabel}
       className={cn(
         pulse && !fuzz && !hasRestWindow && "buzz-logo--pulse",
         className,

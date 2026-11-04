@@ -3,6 +3,7 @@ import useEmblaCarousel, {
   type UseEmblaCarouselType,
 } from "embla-carousel-react";
 import { ArrowLeft, ArrowRight } from "lucide-react";
+import { Trans, useLingui } from "@lingui/react/macro";
 
 import { cn } from "@/shared/lib/cn";
 import { Button } from "@/shared/ui/button";
@@ -63,6 +64,7 @@ const Carousel = React.forwardRef<
       },
       plugins,
     );
+    const { t } = useLingui();
     const [canScrollPrev, setCanScrollPrev] = React.useState(false);
     const [canScrollNext, setCanScrollNext] = React.useState(false);
 
@@ -135,7 +137,7 @@ const Carousel = React.forwardRef<
       >
         {/* biome-ignore lint/a11y/useSemanticElements: shadcn carousel pattern */}
         <div
-          aria-roledescription="carousel"
+          aria-roledescription={t`carousel`}
           className={cn("relative", className)}
           onKeyDownCapture={handleKeyDown}
           ref={ref}
@@ -176,12 +178,13 @@ const CarouselItem = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement>
 >(({ className, children, ...props }, ref) => {
+  const { t } = useLingui();
   const { orientation } = useCarousel();
 
   return (
     // biome-ignore lint/a11y/useSemanticElements: shadcn carousel pattern
     <div
-      aria-roledescription="slide"
+      aria-roledescription={t`slide`}
       className={cn(
         "min-w-0 shrink-0 grow-0 basis-full",
         orientation === "horizontal" ? "pl-4" : "pt-4",
@@ -220,7 +223,9 @@ const CarouselPrevious = React.forwardRef<
       {...props}
     >
       <ArrowLeft className="h-4 w-4" />
-      <span className="sr-only">Previous slide</span>
+      <span className="sr-only">
+        <Trans>Previous slide</Trans>
+      </span>
     </Button>
   );
 });
@@ -249,7 +254,9 @@ const CarouselNext = React.forwardRef<
       {...props}
     >
       <ArrowRight className="h-4 w-4" />
-      <span className="sr-only">Next slide</span>
+      <span className="sr-only">
+        <Trans>Next slide</Trans>
+      </span>
     </Button>
   );
 });

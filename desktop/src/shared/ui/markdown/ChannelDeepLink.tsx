@@ -23,6 +23,7 @@ import { BuzzInlineLink, BuzzLinkChip } from "./BuzzLinkChip";
 import { MessageLinkPill } from "./MessageLinkPill";
 import { useMarkdownRuntime } from "./runtimeContext";
 import { t } from "@lingui/core/macro";
+import { useLingui } from "@lingui/react/macro";
 
 import type { AppLocale } from "@/shared/lib/localePreference";
 import { useLocale } from "@/shared/lib/localePreference";
@@ -124,6 +125,7 @@ function ChannelPermalinkChipContents({
   label: string;
   openable?: boolean;
 }) {
+  const { t } = useLingui();
   return (
     <ChannelMetadataTooltip channel={channel}>
       <BuzzLinkChip
@@ -131,7 +133,7 @@ function ChannelPermalinkChipContents({
         href={href}
         icon="channel"
         title={href}
-        aria-label={openable ? `Open channel ${label}` : `Channel ${label}`}
+        aria-label={openable ? t`Open channel ${label}` : t`Channel ${label}`}
         interactive={openable && interactive}
         onOpenLink={() => {
           if (openable) onOpenChannel(channelId);
@@ -179,6 +181,7 @@ function ResolvedAuthoredDeepLink({
   onOpenChannel,
   onOpenMessageLink,
 }: AuthoredDeepLinkProps) {
+  const { t } = useLingui();
   const channel = useChannelReference(channelId);
   const openable = isChannelReferenceOpenable(channel);
   const label = getReactNodeText(children);
@@ -193,7 +196,9 @@ function ResolvedAuthoredDeepLink({
     <BuzzInlineLink
       href={href}
       title={href}
-      aria-label={`${messageLink ? "Open message" : "Open channel"}: ${label}`}
+      aria-label={
+        messageLink ? t`Open message: ${label}` : t`Open channel: ${label}`
+      }
       interactive={interactive}
       onOpenLink={() =>
         messageLink ? onOpenMessageLink(messageLink) : onOpenChannel(channelId)
@@ -225,6 +230,7 @@ export function AuthoredDeepLinkAnchor({
   interactive: boolean;
   messageLink: AuthoredMessageLink | null;
 }) {
+  const { t } = useLingui();
   const {
     channels,
     onOpenChannel,
@@ -240,7 +246,9 @@ export function AuthoredDeepLinkAnchor({
       <BuzzInlineLink
         href={href}
         title={href}
-        aria-label={`${messageLink ? "Open message" : "Open channel"}: ${label}`}
+        aria-label={
+          messageLink ? t`Open message: ${label}` : t`Open channel: ${label}`
+        }
         interactive={interactive}
         onOpenLink={openLink}
       >
@@ -411,6 +419,7 @@ function ChannelReferenceChip({
   interactive,
   onOpenChannel,
 }: ChannelReferenceChipProps) {
+  const { t } = useLingui();
   return (
     <ChannelMetadataTooltip channel={channel}>
       <BuzzLinkChip
@@ -420,7 +429,7 @@ function ChannelReferenceChip({
         href={channel ? buildChannelLink(channel.id) : undefined}
         icon="channel"
         aria-label={
-          channel ? `Open channel ${channelName}` : `Channel ${channelName}`
+          channel ? t`Open channel ${channelName}` : t`Channel ${channelName}`
         }
         interactive={Boolean(channel) && interactive}
         onOpenLink={() => {

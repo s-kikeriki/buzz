@@ -1,5 +1,6 @@
 import { ImageOff } from "lucide-react";
 import { useRef, useState } from "react";
+import { Trans, useLingui } from "@lingui/react/macro";
 
 import type { ResolvedLinkPreview } from "@/shared/lib/useResolvedLinkPreviews";
 import { cn } from "@/shared/lib/cn";
@@ -12,6 +13,7 @@ import {
   AttachmentTrigger,
 } from "@/shared/ui/attachment";
 import { LinkPreviewControls } from "@/shared/ui/link-preview-controls";
+import { linkPreviewTypeLabel } from "@/shared/ui/linkPreviewTypeLabel";
 import { BrandMark } from "@/shared/ui/BrandMark";
 import { BuzzMark } from "@/shared/ui/buzz-logo/BuzzMark";
 import { useSmoothCorners } from "@/shared/ui/smoothCorners";
@@ -62,6 +64,7 @@ export function CompactLinkPreviewAttachment({
   preview: ResolvedLinkPreview;
   showControls?: boolean;
 }) {
+  const { i18n, t } = useLingui();
   const reserveImage = preview.imageState !== "none";
   const imageSrc =
     preview.imageState === "image" ? (preview.imageDataUrl ?? null) : null;
@@ -81,6 +84,7 @@ export function CompactLinkPreviewAttachment({
     preview.kind === "buzz-pull-request" ||
     preview.kind === "buzz-issue" ||
     preview.kind === "buzz-repository";
+  const typeLabel = linkPreviewTypeLabel(preview.typeLabel, i18n);
 
   return (
     <div className={cn("relative w-96 max-w-full shrink-0", className)}>
@@ -105,7 +109,7 @@ export function CompactLinkPreviewAttachment({
           >
             {showImage ? (
               <img
-                alt={`Preview from ${preview.imageDomain}`}
+                alt={t`Preview from ${preview.imageDomain}`}
                 className="h-full w-full object-cover"
                 onError={() => setFailedImageSrc(imageSrc)}
                 src={imageSrc ?? undefined}
@@ -169,12 +173,14 @@ export function CompactLinkPreviewAttachment({
         </AttachmentContent>
         {onOpen ? (
           <AttachmentTrigger
-            aria-label={`Open ${preview.provider} ${preview.typeLabel}: ${preview.title}`}
+            aria-label={t`Open ${preview.provider} ${typeLabel}: ${preview.title}`}
             className={reserveImage ? undefined : "rounded-none"}
             onClick={onOpen}
           >
             <span className="sr-only">
-              Open {preview.provider} {preview.typeLabel}: {preview.title}
+              <Trans>
+                Open {preview.provider} {typeLabel}: {preview.title}
+              </Trans>
             </span>
           </AttachmentTrigger>
         ) : (
@@ -183,13 +189,15 @@ export function CompactLinkPreviewAttachment({
             className={reserveImage ? undefined : "rounded-none"}
           >
             <a
-              aria-label={`Open ${preview.provider} ${preview.typeLabel}: ${preview.title}`}
+              aria-label={t`Open ${preview.provider} ${typeLabel}: ${preview.title}`}
               href={preview.href}
               rel="noreferrer"
               target="_blank"
             >
               <span className="sr-only">
-                Open {preview.provider} {preview.typeLabel}: {preview.title}
+                <Trans>
+                  Open {preview.provider} {typeLabel}: {preview.title}
+                </Trans>
               </span>
             </a>
           </AttachmentTrigger>

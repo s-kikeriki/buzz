@@ -1,4 +1,5 @@
 import type * as React from "react";
+import { useLingui } from "@lingui/react/macro";
 
 import { cn } from "@/shared/lib/cn";
 
@@ -42,9 +43,10 @@ export function VideoReviewTimecodeButton({
   surface?: "message" | "review";
   timecode: string;
 }) {
+  const { t } = useLingui();
   return (
     <button
-      aria-label={`Jump to ${timecode}`}
+      aria-label={t`Jump to ${timecode}`}
       className={timecodeClasses({ className, interactive: true, surface })}
       data-testid="video-review-comment-timecode"
       type="button"

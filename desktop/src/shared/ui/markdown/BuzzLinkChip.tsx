@@ -1,4 +1,5 @@
 import * as React from "react";
+import { useLingui } from "@lingui/react/macro";
 
 import { copyTextToClipboard } from "@/shared/lib/clipboard";
 import { cn } from "@/shared/lib/cn";
@@ -26,6 +27,7 @@ function useBuzzLinkContextMenu({
   interactive: boolean;
   onOpenLink: () => void;
 }) {
+  const { t } = useLingui();
   const [position, setPosition] =
     React.useState<MediaContextMenuPosition | null>(null);
   const closeMenu = React.useCallback(() => setPosition(null), []);
@@ -46,17 +48,17 @@ function useBuzzLinkContextMenu({
         dataAttributes={["data-buzz-link-context-menu"]}
         items={[
           {
-            label: "Open link",
+            label: t`Open link`,
             onSelect: () => {
               closeMenu();
               onOpenLink();
             },
           },
           {
-            label: "Copy link",
+            label: t`Copy link`,
             onSelect: () => {
               closeMenu();
-              copyTextToClipboard(href, "Link copied to clipboard");
+              copyTextToClipboard(href, t`Link copied to clipboard`);
             },
           },
         ]}

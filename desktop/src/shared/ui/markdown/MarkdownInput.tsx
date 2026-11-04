@@ -1,4 +1,5 @@
 import type * as React from "react";
+import { useLingui } from "@lingui/react/macro";
 
 import { cn } from "@/shared/lib/cn";
 import { Checkbox } from "@/shared/ui/checkbox";
@@ -14,10 +15,11 @@ export function MarkdownInput({
   type,
   ...props
 }: MarkdownInputProps) {
+  const { t } = useLingui();
   if (type === "checkbox") {
     return (
       <Checkbox
-        aria-label={checked ? "Completed task" : "Incomplete task"}
+        aria-label={checked ? t`Completed task` : t`Incomplete task`}
         checked={Boolean(checked)}
         className={cn(
           "pointer-events-none mr-1.5 inline-flex align-[-0.125rem] disabled:opacity-45",

@@ -1,6 +1,7 @@
 import * as React from "react";
 import { Slot } from "@radix-ui/react-slot";
 import { cva, type VariantProps } from "class-variance-authority";
+import { Trans, useLingui } from "@lingui/react/macro";
 
 import { cn } from "@/shared/lib/cn";
 import { performSidebarDefaultHaptic } from "@/shared/lib/haptics";
@@ -328,8 +329,12 @@ const Sidebar = React.forwardRef<
             side={side}
           >
             <SheetHeader className="sr-only">
-              <SheetTitle>Sidebar</SheetTitle>
-              <SheetDescription>Displays the mobile sidebar.</SheetDescription>
+              <SheetTitle>
+                <Trans>Sidebar</Trans>
+              </SheetTitle>
+              <SheetDescription>
+                <Trans>Displays the mobile sidebar.</Trans>
+              </SheetDescription>
             </SheetHeader>
             <div className="flex h-full w-full flex-col">{children}</div>
           </SheetContent>
@@ -412,7 +417,9 @@ const SidebarTrigger = React.forwardRef<
       {...props}
     >
       <DrawerPanelIcon side={open ? "left" : "right"} />
-      <span className="sr-only">Toggle Sidebar</span>
+      <span className="sr-only">
+        <Trans>Toggle Sidebar</Trans>
+      </span>
     </Button>
   );
 });
@@ -433,6 +440,7 @@ const SidebarRail = React.forwardRef<
     },
     ref,
   ) => {
+    const { t } = useLingui();
     const {
       setIsResizing,
       setSidebarWidth,
@@ -474,7 +482,7 @@ const SidebarRail = React.forwardRef<
       <button
         ref={ref}
         data-sidebar="rail"
-        aria-label="Resize sidebar"
+        aria-label={t`Resize sidebar`}
         tabIndex={-1}
         disabled={isRailDisabled || state !== "expanded"}
         onPointerCancel={(event) => {
@@ -547,7 +555,7 @@ const SidebarRail = React.forwardRef<
           onPointerUp?.(event);
           finishResize(event);
         }}
-        title="Drag to resize sidebar"
+        title={t`Drag to resize sidebar`}
         className={cn(
           "absolute inset-y-0 z-20 hidden w-4 -translate-x-1/2 transition-all ease-linear group-data-[side=left]:-right-4 group-data-[side=right]:left-0 sm:flex",
           "cursor-col-resize",

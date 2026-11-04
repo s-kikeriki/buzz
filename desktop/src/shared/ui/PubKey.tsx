@@ -1,5 +1,6 @@
 import { Check, Copy } from "lucide-react";
 import * as React from "react";
+import { useLingui } from "@lingui/react/macro";
 
 import { copyTextToClipboard } from "@/shared/lib/clipboard";
 import { cn } from "@/shared/lib/cn";
@@ -39,6 +40,7 @@ type PubKeyProps = {
 };
 
 function CopyRow({ label, value }: { label: string; value: string }) {
+  const { t } = useLingui();
   const [copied, setCopied] = React.useState(false);
   const resetTimer = React.useRef<number | undefined>(undefined);
   React.useEffect(() => () => window.clearTimeout(resetTimer.current), []);
@@ -52,9 +54,9 @@ function CopyRow({ label, value }: { label: string; value: string }) {
         <div className="break-all font-mono text-xs">{value}</div>
       </div>
       <Button
-        aria-label={`Copy ${label}`}
+        aria-label={t`Copy ${label}`}
         onClick={() => {
-          copyTextToClipboard(value, `${label} copied`);
+          copyTextToClipboard(value, t`${label} copied`);
           setCopied(true);
           window.clearTimeout(resetTimer.current);
           resetTimer.current = window.setTimeout(() => setCopied(false), 1500);
@@ -88,6 +90,7 @@ export function PubKey({
   className,
   testId,
 }: PubKeyProps) {
+  const { t } = useLingui();
   const [open, setOpen] = React.useState(false);
   const hoverTimerRef = React.useRef<ReturnType<typeof setTimeout> | null>(
     null,
@@ -138,7 +141,7 @@ export function PubKey({
           <Popover>
             <PopoverTrigger asChild>
               <Button
-                aria-label="Copy public key"
+                aria-label={t`Copy public key`}
                 size="icon-xs"
                 type="button"
                 variant="ghost"
@@ -177,7 +180,7 @@ export function PubKey({
     <Popover onOpenChange={setOpen} open={open}>
       <PopoverTrigger asChild>
         <button
-          aria-label="Show full public key"
+          aria-label={t`Show full public key`}
           className={cn(
             "cursor-pointer rounded font-mono hover:underline focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-ring",
             className,

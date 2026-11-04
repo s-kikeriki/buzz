@@ -1,4 +1,9 @@
 import { AlertTriangle } from "lucide-react";
+import type { I18n } from "@lingui/core";
+import { msg } from "@lingui/core/macro";
+import { Trans, useLingui } from "@lingui/react/macro";
+
+import { BRAND } from "@/shared/branding/brand";
 
 import {
   requestOpenEditAgent,
@@ -74,8 +79,11 @@ export function shouldOpenDoctor(
   );
 }
 
-export function missingBinaryRecoveryMessage(): string {
-  return "not found in PATH — install it or update PATH, then restart Buzz";
+export function missingBinaryRecoveryMessage(i18n: I18n): string {
+  const productName = BRAND.productName;
+  return i18n._(
+    msg`not found in PATH — install it or update PATH, then restart ${productName}`,
+  );
 }
 
 /**
@@ -113,17 +121,20 @@ function cliLoginMessage(
     ConfigNudgePayload["requirements"][number],
     { surface: "cli_login" }
   >,
+  i18n: I18n,
 ): string {
-  const harness = req.probe_args[0] ?? "the CLI tool";
+  const harness = req.probe_args[0] ?? i18n._(msg`the CLI tool`);
   switch (req.availability) {
     case "not_installed":
-      return `${harness} isn't installed`;
+      return i18n._(msg`${harness} isn't installed`);
     case "cli_missing":
-      return `${harness} CLI is missing`;
+      return i18n._(msg`${harness} CLI is missing`);
     case "adapter_missing":
-      return `${harness} ACP adapter isn't installed`;
+      return i18n._(msg`${harness} ACP adapter isn't installed`);
     case "adapter_outdated":
-      return `${harness} ACP adapter is outdated — reinstall required`;
+      return i18n._(
+        msg`${harness} ACP adapter is outdated — reinstall required`,
+      );
     case "available":
       // Tooling is present but authentication is needed — fall back to
       // the backend-supplied copy which has the exact login command.
@@ -198,6 +209,7 @@ export function ConfigNudgeCard({
   className?: string;
   nudge: ConfigNudgePayload;
 }) {
+  const { i18n, t } = useLingui();
   const { openProfilePanel } = useProfilePanel();
   const { onOpenSettings } = useAppShell();
 
@@ -268,13 +280,14 @@ export function ConfigNudgeCard({
       </AttachmentMedia>
       <AttachmentContent>
         <AttachmentTitle className="whitespace-normal text-destructive line-clamp-2">
-          {nudge.agent_name} needs configuration
+          <Trans>{nudge.agent_name} needs configuration</Trans>
         </AttachmentTitle>
         <div className="mt-1 flex flex-col gap-0.5">
           {nudge.requirements.map((req, i) => (
             <RequirementRow
               key={requirementKey(req, i)}
               allCliLogin={allCliLogin}
+              i18n={i18n}
               onOpenDoctor={handleOpenDoctor}
               onOpenEditAgent={handleOpenEditAgent}
               requirement={req}
@@ -287,7 +300,7 @@ export function ConfigNudgeCard({
       {opensDoctor && !informationalOnly && (
         <AttachmentActions className="items-end self-end">
           <span className="text-xs text-muted-foreground">
-            Open Agent runtimes →
+            <Trans>Open Agent runtimes →</Trans>
           </span>
         </AttachmentActions>
       )}
@@ -296,8 +309,8 @@ export function ConfigNudgeCard({
         <AttachmentTrigger
           aria-label={
             opensDoctor
-              ? `Open Agent runtimes for ${nudge.agent_name}`
-              : `Open Edit Agent for ${nudge.agent_name}`
+              ? t`Open Agent runtimes for ${nudge.agent_name}`
+              : t`Open Edit Agent for ${nudge.agent_name}`
           }
           onClick={handleOpen}
         />
@@ -308,11 +321,13 @@ export function ConfigNudgeCard({
 
 function RequirementRow({
   allCliLogin,
+  i18n,
   onOpenDoctor,
   onOpenEditAgent,
   requirement,
 }: {
   allCliLogin: boolean;
+  i18n: I18n;
   onOpenDoctor: (e: React.MouseEvent) => void;
   onOpenEditAgent: (
     e: React.MouseEvent,
@@ -325,11 +340,13 @@ function RequirementRow({
       return (
         <div className="flex items-center gap-2 text-xs leading-4 text-muted-foreground">
           <span className="flex-1 [overflow-wrap:anywhere]">
-            Set{" "}
-            <code className="rounded bg-muted px-1 py-0.5 font-mono text-xs text-foreground">
-              {requirement.key}
-            </code>{" "}
-            in Edit Agent → Environment variables
+            <Trans>
+              Set{" "}
+              <code className="rounded bg-muted px-1 py-0.5 font-mono text-xs text-foreground">
+                {requirement.key}
+              </code>{" "}
+              in Edit Agent → Environment variables
+            </Trans>
           </span>
           {!allCliLogin && (
             <button
@@ -339,7 +356,7 @@ function RequirementRow({
               }
               type="button"
             >
-              Edit Agent →
+              <Trans>Edit Agent →</Trans>
             </button>
           )}
         </div>
@@ -348,8 +365,10 @@ function RequirementRow({
       return (
         <div className="flex items-center gap-2 text-xs leading-4 text-muted-foreground">
           <span className="flex-1 [overflow-wrap:anywhere]">
-            Set the <strong>{requirement.field}</strong> field in Edit Agent
-            dropdowns
+            <Trans>
+              Set the <strong>{requirement.field}</strong> field in Edit Agent
+              dropdowns
+            </Trans>
           </span>
           {!allCliLogin && (
             <button
@@ -359,7 +378,7 @@ function RequirementRow({
               }
               type="button"
             >
-              Edit Agent →
+              <Trans>Edit Agent →</Trans>
             </button>
           )}
         </div>
@@ -368,7 +387,7 @@ function RequirementRow({
       return (
         <div className="flex items-center gap-2 text-xs leading-4 text-muted-foreground">
           <span className="flex-1 [overflow-wrap:anywhere]">
-            {cliLoginMessage(requirement)}
+            {cliLoginMessage(requirement, i18n)}
           </span>
           {/* (B) Per-row Agent runtimes CTA — shown only on mixed cards where the
               card-level trigger opens Edit Agent (not auth-only cards). When
@@ -384,7 +403,7 @@ function RequirementRow({
               onClick={onOpenDoctor}
               type="button"
             >
-              Open Agent runtimes →
+              <Trans>Open Agent runtimes →</Trans>
             </button>
           )}
         </div>
@@ -393,7 +412,9 @@ function RequirementRow({
       return (
         <div className="flex items-center gap-2 text-xs leading-4 text-muted-foreground">
           <span className="flex-1 [overflow-wrap:anywhere]">
-            Git for Windows is required for buzz-agent shell tools
+            <Trans>
+              Git for Windows is required for buzz-agent shell tools
+            </Trans>
           </span>
         </div>
       );
@@ -407,7 +428,7 @@ function RequirementRow({
             <code className="rounded bg-muted px-1 py-0.5 font-mono text-xs text-foreground">
               {requirement.command}
             </code>{" "}
-            {missingBinaryRecoveryMessage()}
+            {missingBinaryRecoveryMessage(i18n)}
           </span>
         </div>
       );
@@ -416,16 +437,18 @@ function RequirementRow({
       // Config-invalid rows are purely informational — the user must edit an
       // external file. No Agent runtimes CTA (Buzz can't repair ~/.codex/config.toml)
       // and no Edit Agent CTA (the field isn't managed by Buzz).
-      const cli = requirement.probe_args[0] ?? "the CLI";
+      const cli = requirement.probe_args[0] ?? i18n._(msg`the CLI`);
       const configFile = `~/.${cli}/config.toml`;
       return (
         <div className="flex items-center gap-2 text-xs leading-4 text-muted-foreground">
           <span className="flex-1 [overflow-wrap:anywhere]">
-            {configFile} is invalid:{" "}
-            <code className="rounded bg-muted px-1 py-0.5 font-mono text-xs text-foreground">
-              {requirement.diagnostic}
-            </code>{" "}
-            — fix the config and restart the agent
+            <Trans>
+              {configFile} is invalid:{" "}
+              <code className="rounded bg-muted px-1 py-0.5 font-mono text-xs text-foreground">
+                {requirement.diagnostic}
+              </code>{" "}
+              — fix the config and restart the agent
+            </Trans>
           </span>
         </div>
       );

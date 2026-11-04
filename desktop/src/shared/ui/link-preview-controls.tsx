@@ -1,5 +1,8 @@
 import { EllipsisVertical, EyeOff } from "lucide-react";
 import { toast } from "sonner";
+import { msg } from "@lingui/core/macro";
+import type { MessageDescriptor } from "@lingui/core";
+import { Trans, useLingui } from "@lingui/react/macro";
 
 import { useAppShell } from "@/app/AppShellContext";
 import {
@@ -25,12 +28,14 @@ import {
 const CONTROL_BUTTON_CLASS =
   "h-5 w-5 rounded-full text-muted-foreground opacity-0 transition-opacity hover:text-foreground focus-visible:opacity-100 group-hover/message:opacity-100 data-[state=open]:opacity-100";
 
+// Built at import, so the labels are descriptors resolved per render. A plain
+// string here would freeze in whatever locale the module first loaded under.
 const LINK_PREVIEW_STYLE_OPTIONS: {
   value: LinkPreviewStyle;
-  label: string;
+  label: MessageDescriptor;
 }[] = [
-  { value: "rich", label: "Rich" },
-  { value: "compact", label: "Compact" },
+  { value: "rich", label: msg`Rich` },
+  { value: "compact", label: msg`Compact` },
 ];
 
 export function LinkPreviewControls({
@@ -40,6 +45,7 @@ export function LinkPreviewControls({
   onRemove?: () => void;
   placement?: "left" | "right";
 }) {
+  const { i18n, t } = useLingui();
   const style = useLinkPreviewStyle();
   const { onOpenSettings } = useAppShell();
 
@@ -52,17 +58,21 @@ export function LinkPreviewControls({
     }
 
     setLinkPreviewStyle(nextStyle);
+    // One whole sentence per style rather than a style name dropped into a
+    // frame: German inflects the adjective, so "set to Rich" and "set to
+    // Compact" are not the same sentence with a different noun in it.
     toast.success(
-      `Link previews set to ${nextStyle === "rich" ? "Rich" : "Compact"}.`,
+      nextStyle === "rich"
+        ? t`Link previews set to Rich.`
+        : t`Link previews set to Compact.`,
       {
         action: onOpenSettings
           ? {
-              label: "Appearance",
+              label: t`Appearance`,
               onClick: () => onOpenSettings("appearance"),
             }
           : undefined,
-        description:
-          "You can always modify this and other settings in Appearance.",
+        description: t`You can always modify this and other settings in Appearance.`,
       },
     );
   };
@@ -77,10 +87,10 @@ export function LinkPreviewControls({
       <DropdownMenu modal={false}>
         <DropdownMenuTrigger asChild>
           <Button
-            aria-label="Link display settings"
+            aria-label={t`Link display settings`}
             className={CONTROL_BUTTON_CLASS}
             size="icon-xs"
-            title="Link display settings"
+            title={t`Link display settings`}
             type="button"
             variant="ghost"
           >
@@ -89,7 +99,9 @@ export function LinkPreviewControls({
         </DropdownMenuTrigger>
         <DropdownMenuContent align="start" side="right">
           <DropdownMenuSub>
-            <DropdownMenuSubTrigger>Display</DropdownMenuSubTrigger>
+            <DropdownMenuSubTrigger>
+              <Trans>Display</Trans>
+            </DropdownMenuSubTrigger>
             <DropdownMenuSubContent>
               <DropdownMenuRadioGroup
                 onValueChange={handleStyleChange}
@@ -100,7 +112,7 @@ export function LinkPreviewControls({
                     key={option.value}
                     value={option.value}
                   >
-                    {option.label}
+                    {i18n._(option.label)}
                   </DropdownMenuRadioItem>
                 ))}
               </DropdownMenuRadioGroup>
@@ -114,7 +126,7 @@ export function LinkPreviewControls({
                 onClick={onRemove}
               >
                 <EyeOff aria-hidden="true" />
-                Remove preview
+                <Trans>Remove preview</Trans>
               </DropdownMenuItem>
             </>
           ) : null}

@@ -1,5 +1,8 @@
 import { useId, useLayoutEffect, useRef } from "react";
 import type { CSSProperties } from "react";
+import { useLingui } from "@lingui/react/macro";
+
+import { BRAND } from "@/shared/branding/brand";
 import "./buzz-logo-animation.css";
 
 const LOOP = "indefinite";
@@ -622,7 +625,7 @@ function RestWindowFade({
 }
 
 export default function BuzzLogoAnimation({
-  ariaLabel = "Buzz logo animation",
+  ariaLabel,
   className = "",
   fullScreen = true,
   loop = false,
@@ -633,6 +636,13 @@ export default function BuzzLogoAnimation({
   textured = true,
   variant = "v8",
 }: BuzzLogoAnimationProps) {
+  const { t } = useLingui();
+  // The default is computed rather than a literal default parameter: it is the
+  // accessible name of the mark, so it has to name *this* build's product and
+  // speak this build's language. `??` rather than `||` on purpose — a caller
+  // passing `ariaLabel=""` means "decorative" and must keep it.
+  const productName = BRAND.productName;
+  const resolvedAriaLabel = ariaLabel ?? t`${productName} logo animation`;
   const markRef = useRef<SVGSVGElement>(null);
   const idSuffix = idPart(useId());
   const baseConfig = VARIANTS[variant] ?? VARIANTS.v8;
@@ -682,7 +692,12 @@ export default function BuzzLogoAnimation({
   }, [loop, reverse, restSeconds, textured, variant]);
 
   return (
-    <div className={classes} style={style} role="img" aria-label={ariaLabel}>
+    <div
+      className={classes}
+      style={style}
+      role="img"
+      aria-label={resolvedAriaLabel}
+    >
       <svg
         ref={markRef}
         className="buzz-logo__mark"

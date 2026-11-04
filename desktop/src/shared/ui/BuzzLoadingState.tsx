@@ -1,3 +1,5 @@
+import { useLingui } from "@lingui/react/macro";
+
 import { cn } from "@/shared/lib/cn";
 import { BrandMark } from "@/shared/ui/BrandMark";
 import BuzzLogoAnimation from "@/shared/ui/buzz-logo/BuzzLogoAnimation";
@@ -18,12 +20,14 @@ import BuzzLogoAnimation from "@/shared/ui/buzz-logo/BuzzLogoAnimation";
 export function BuzzLoadingState({
   className,
   fill = false,
-  label = "Loading",
+  label,
 }: {
   className?: string;
   fill?: boolean;
   label?: string;
 }) {
+  const { t } = useLingui();
+  const resolvedLabel = label ?? t`Loading`;
   return (
     <div
       className={cn(
@@ -38,7 +42,7 @@ export function BuzzLoadingState({
         className="w-8 opacity-45"
         fallback={
           <BuzzLogoAnimation
-            ariaLabel={label}
+            ariaLabel={resolvedLabel}
             className="buzz-logo--scale-pulse"
             fullScreen={false}
             showBackground={false}
@@ -46,7 +50,7 @@ export function BuzzLoadingState({
             textured={false}
           />
         }
-        label={label}
+        label={resolvedLabel}
         motion
       />
     </div>
