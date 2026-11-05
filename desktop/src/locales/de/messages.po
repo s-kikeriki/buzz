@@ -15146,11 +15146,11 @@ msgstr "Auslösen"
 
 #: src/features/workflows/ui/WorkflowFormBuilder.tsx
 msgid "Trigger event"
-msgstr "Trigger-Ereignis"
+msgstr "Auslöser-Ereignis"
 
 #: src/features/workflows/ui/WorkflowFormBuilder.tsx
 msgid "Trigger: {triggerDescription}"
-msgstr "Trigger: {triggerDescription}"
+msgstr "Auslöser: {triggerDescription}"
 
 #: src/features/workflows/ui/workflowFormTypes.ts
 msgid "trigger.on is required"

@@ -12,13 +12,11 @@ import { installMockBridge } from "../helpers/bridge";
  * descriptor that is built and never resolved, or a copy table resolved once
  * at module scope, satisfies both and still puts English on screen.
  *
- * Scope note: this tranche converts the editor dialog, its step forms and the
- * copy those render. The canvas node labels and the trigger summary come from
- * the trigger/step description engine, which is a later tranche — so the
- * helpers below reach those controls by their English names on purpose.
- * Asserting German there would make this spec pass only once that tranche
- * lands, which is the kind of coupling that makes a test lie about what it
- * guards.
+ * Scope note: this file covers the editor dialog and its step forms. The
+ * canvas and the trigger description engine are covered by
+ * `workflow-triggers-german.spec.ts`; the helpers below reach two canvas
+ * controls, and they now use the German names those controls acquired in that
+ * tranche. They were English here on purpose until it landed.
  *
  * Every German assertion has an English counterpart at the bottom asserting
  * the same phrases are absent under `en`. Without that control, a label
@@ -86,11 +84,21 @@ async function openCreateDialog(page: Page): Promise<Locator> {
 }
 
 /** Add a send-message step and leave its inspector open. */
-async function addSendMessageStep(page: Page, dialog: Locator) {
-  // The canvas "+" button, named in English on purpose: it belongs to the
-  // form builder, which is a later tranche.
-  await dialog.getByRole("button", { name: "Add step", exact: true }).click();
-  await page.getByRole("menuitem", { name: "Send Message" }).click();
+async function addSendMessageStep(
+  page: Page,
+  dialog: Locator,
+  locale: "en" | "de",
+) {
+  // The canvas "+" button. Its accessible name is the same message as the
+  // dialog's primary action, so it is scoped to the node list rather than the
+  // dialog; the primary action is a button, not a list item.
+  const addStep = { de: "Schritt hinzufügen", en: "Add step" };
+  const sendMessage = { de: "Nachricht senden", en: "Send Message" };
+  await dialog
+    .getByRole("list")
+    .getByRole("button", { name: addStep[locale], exact: true })
+    .click();
+  await page.getByRole("menuitem", { name: sendMessage[locale] }).click();
   const inspector = dialog.getByTestId("workflow-node-inspector");
   await expect(inspector).toBeVisible();
   await waitForAnimations(page);
@@ -141,7 +149,7 @@ test("the step form and its variable popover are German, and the popover filters
 }) => {
   await openWorkflowsIn(page, "de");
   const dialog = await openCreateDialog(page);
-  const inspector = await addSendMessageStep(page, dialog);
+  const inspector = await addSendMessageStep(page, dialog, "de");
 
   // The field label is a `t` call in the step card; the section buttons are
   // the two accordion headers.
@@ -200,7 +208,9 @@ test("the activation warning is German, including its spelled-out interval", asy
   // is the one path on a converted screen that renders a spelled-out
   // duration, so it is the only place the ICU unit plurals are observable.
   await dialog.getByRole("tab", { name: "YAML" }).click();
-  const yamlEditor = dialog.getByRole("textbox", { name: "Workflow YAML" });
+  // German, since the canvas tranche landed: the editor's own label is
+  // "Workflow-YAML" now.
+  const yamlEditor = dialog.getByRole("textbox", { name: "Workflow-YAML" });
   await expect(yamlEditor).toBeVisible();
   await yamlEditor.fill(
     [
@@ -255,7 +265,7 @@ test("none of the German copy appears under en", async ({ page }) => {
     await expect(dialog.getByText(phrase)).toHaveCount(0);
   }
 
-  const inspector = await addSendMessageStep(page, dialog);
+  const inspector = await addSendMessageStep(page, dialog, "en");
   await expect(inspector.getByLabel("Message text")).toBeVisible();
   for (const phrase of [
     "Nachrichtentext",
