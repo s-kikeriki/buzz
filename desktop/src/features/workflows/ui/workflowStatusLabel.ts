@@ -15,6 +15,24 @@ import { msg } from "@lingui/core/macro";
  * Two copies of one decision, drifted apart — the same shape as the Vite
  * macro-extension list that blanked the whole app.
  */
+/**
+ * The statuses this build names. The badge variants in the detail panel and
+ * the run trace switch on the same tokens.
+ */
+export const WORKFLOW_RUN_STEP_STATUSES = [
+  "active",
+  "disabled",
+  "archived",
+  "completed",
+  "failed",
+  "error",
+  "running",
+  "pending",
+  "cancelled",
+  "skipped",
+  "waiting_approval",
+] as const;
+
 export function workflowStatusLabel(status: string, i18n: I18n): string {
   switch (status) {
     case "active":

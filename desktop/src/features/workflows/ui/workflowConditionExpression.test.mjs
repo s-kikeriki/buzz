@@ -1,3 +1,4 @@
+import { i18n } from "@lingui/core";
 import assert from "node:assert/strict";
 import { test } from "node:test";
 
@@ -7,6 +8,7 @@ import {
   conditionFieldsForTrigger,
   conditionOperatorsForField,
   conditionValueError,
+  conditionValueIsInvalid,
   parseConditionExpression,
   parseConditionExpressions,
 } from "./workflowConditionExpression.ts";
@@ -38,16 +40,31 @@ test("limits opaque identifiers to equality and validates 64-char hex", () => {
       "not_equals",
     ]);
   }
+  // Two functions on purpose: the parser and the submit gate ask the
+  // predicate, and only the editor needs the sentence.
+  assert.equal(conditionValueIsInvalid("trigger_author", "abc"), true);
+  assert.equal(conditionValueIsInvalid("trigger_author", AUTHOR), false);
   assert.equal(
-    conditionValueError("trigger_author", "abc"),
+    conditionValueIsInvalid("trigger_message_id", "z".repeat(64)),
+    true,
+  );
+  assert.equal(
+    conditionValueIsInvalid("trigger_message_id", MESSAGE_ID),
+    false,
+  );
+  assert.equal(
+    conditionValueError("trigger_author", "abc", i18n),
     "Enter a 64-character hex pubkey.",
   );
-  assert.equal(conditionValueError("trigger_author", AUTHOR), null);
+  assert.equal(conditionValueError("trigger_author", AUTHOR, i18n), null);
   assert.equal(
-    conditionValueError("trigger_message_id", "z".repeat(64)),
+    conditionValueError("trigger_message_id", "z".repeat(64), i18n),
     "Enter a 64-character hex event ID.",
   );
-  assert.equal(conditionValueError("trigger_message_id", MESSAGE_ID), null);
+  assert.equal(
+    conditionValueError("trigger_message_id", MESSAGE_ID, i18n),
+    null,
+  );
 });
 
 test("normalizes generated hex identifiers to lowercase", () => {
