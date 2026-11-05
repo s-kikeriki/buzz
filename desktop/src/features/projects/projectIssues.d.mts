@@ -51,6 +51,12 @@ export const PROJECT_ISSUE_STATUS: {
   CLOSED: "Closed";
 };
 
+/**
+ * The translated label for a status token. `ProjectIssueStatus` itself stays
+ * English — it is the value every comparison and the agent prompt use.
+ */
+export function projectIssueStatusLabel(status: ProjectIssueStatus): string;
+
 export function getTag(event: RelayEvent, name: string): string | undefined;
 export function getAllTags(event: RelayEvent, name: string): string[];
 export function getImetaTags(event: RelayEvent): string[][];

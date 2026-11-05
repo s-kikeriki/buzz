@@ -10,6 +10,7 @@ import type {
   Repository,
 } from "@/features/projects/hooks";
 import { issueShareLink } from "@/features/projects/lib/projectShareLinks";
+import { projectIssueStatusLabel } from "@/features/projects/projectIssues.mjs";
 import { selectionItemFromTask } from "@/features/projects/lib/projectSelection";
 import type { ProjectWorkItemSection } from "@/features/projects/projectWorkItems";
 import {
@@ -112,7 +113,7 @@ const IssueGridCard = React.memo(function IssueGridCard({
           data-testid="projects-grid-card-indicator"
         >
           <ProjectEventTypeIcon className="h-3.5 w-3.5" kind="issue" />
-          <span>{issue.status}</span>
+          <span>{projectIssueStatusLabel(issue.status)}</span>
         </div>
       </div>
     </Card>

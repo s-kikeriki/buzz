@@ -107,7 +107,7 @@ export function ProjectInboxDetail({
   if (failedSections && failedSections.length > 0) {
     return (
       <ProjectInboxStatus
-        message="Some project activity could not be loaded. Actions are unavailable until the item is current."
+        message={t`Some project activity could not be loaded. Actions are unavailable until the item is current.`}
         onBack={onBack}
         onRetry={() => void projectsWorkItemsQuery.refetch()}
       />

@@ -1,4 +1,5 @@
-import { t } from "@lingui/core/macro";
+import { i18n } from "@lingui/core";
+import { msg, t } from "@lingui/core/macro";
 import { sortEvents } from "../../shared/api/relayClientShared.ts";
 import { projectTaskCategoryFromLabels } from "./projectTaskCategories.ts";
 
@@ -10,6 +11,14 @@ import { projectTaskCategoryFromLabels } from "./projectTaskCategories.ts";
 export const ISSUE_ASSIGNMENT_LABEL = "assignment";
 export const ISSUE_UNASSIGNMENT_LABEL = "unassignment";
 
+/**
+ * Machine status tokens. Eight places compare against these values — the
+ * status icon, the progress state, the colour class, the group order, the
+ * "has open work" predicate — and two more put them in an agent prompt. They
+ * are deliberately *not* translated: translate these and every one of those
+ * comparisons silently stops matching. `projectIssueStatusLabel` below is
+ * what the screen gets.
+ */
 export const PROJECT_ISSUE_STATUS = {
   TRIAGE: "Triage",
   BACKLOG: "Backlog",
@@ -18,6 +27,23 @@ export const PROJECT_ISSUE_STATUS = {
   DONE: "Done",
   CLOSED: "Closed",
 };
+
+const PROJECT_ISSUE_STATUS_LABELS = {
+  [PROJECT_ISSUE_STATUS.TRIAGE]: msg`Triage`,
+  [PROJECT_ISSUE_STATUS.BACKLOG]: msg`Backlog`,
+  [PROJECT_ISSUE_STATUS.IN_PROGRESS]: msg`In Progress`,
+  [PROJECT_ISSUE_STATUS.IN_REVIEW]: msg`In Review`,
+  [PROJECT_ISSUE_STATUS.DONE]: msg`Done`,
+  [PROJECT_ISSUE_STATUS.CLOSED]: msg`Closed`,
+};
+
+/** The translated label for a status token. Resolve this at render, never store it. */
+export function projectIssueStatusLabel(status) {
+  return i18n._(
+    PROJECT_ISSUE_STATUS_LABELS[status] ??
+      PROJECT_ISSUE_STATUS_LABELS[PROJECT_ISSUE_STATUS.BACKLOG],
+  );
+}
 
 function isNonEmptyString(value) {
   return typeof value === "string" && value.length > 0;

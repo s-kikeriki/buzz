@@ -118,19 +118,23 @@ export function ModelPicker({
   // Provenance label shown only for post-spawn agents where the model origin
   // is known from the config surface and the source is not a user-explicit
   // Buzz setting (which is already self-evident from the picker state).
+  // biome-ignore lint/correctness/useExhaustiveDependencies: i18n is intentional — the t`` macro compiles to a lookup on the active catalogue, which biome cannot see, so without this dep the labels stay in the boot locale after a language switch
   const modelOriginLabel = React.useMemo(() => {
     const origin = configSurface?.normalized.model?.origin;
     if (!origin || origin === "buzzExplicit") return null;
     const labels: Record<string, string> = {
-      acpNativeRead: "from ACP",
-      acpConfigOption: "from ACP config",
-      envVar: "from env",
-      configFile: "from config file",
-      personaDefault: "template default",
-      runtimeOverride: "live override",
+      acpNativeRead: t`from ACP`,
+      acpConfigOption: t`from ACP config`,
+      envVar: t`from env`,
+      configFile: t`from config file`,
+      personaDefault: t`template default`,
+      runtimeOverride: t`live override`,
     };
     return labels[origin] ?? null;
-  }, [configSurface]);
+    // The four all-lowercase labels read as a Tailwind class list to the
+    // coverage detector, so only the two with capitals were reported; all six
+    // are copy and all six are translated here.
+  }, [configSurface, i18n]);
 
   // Send a live `switch_model` frame to each channel the agent is working in
   // and wait for the harness to acknowledge. A single `unsupported_model`

@@ -300,7 +300,7 @@ function PullRequestRow({
     <ProjectWorkItemRow
       eventId={pullRequest.id}
       identifier={`#${pullRequest.id.slice(0, 8)}`}
-      identifierTitle="View review"
+      identifierTitle={t`View review`}
       metadata={
         pullRequest.branchName ? (
           <span className="inline-flex min-w-0 items-center gap-1">
@@ -863,7 +863,7 @@ export function ProjectPullRequestDetail({
           onSubmit={handleCommentSubmit}
           placeholder={t`Add a comment…`}
           profiles={profiles}
-          secondarySubmitLabel="Request changes"
+          secondarySubmitLabel={t`Request changes`}
         />
       </div>
     </div>

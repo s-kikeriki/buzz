@@ -11,6 +11,8 @@ import {
 } from "lucide-react";
 import type * as React from "react";
 
+import { projectIssueStatusLabel } from "@/features/projects/projectIssues.mjs";
+
 import type {
   ProjectIssue,
   ProjectPullRequest,
@@ -56,7 +58,7 @@ export function ProjectWorkItemContextDetails({
         <ContextDetailRow
           icon={CircleDot}
           label={t`Status`}
-          value={issue.status}
+          value={projectIssueStatusLabel(issue.status)}
         />
         <ContextDetailRow
           icon={Users}

@@ -18,12 +18,20 @@ import { parseAsync } from "@babel/core";
  *     `KEYBOARD_SHORTCUTS` hold 58 strings that no JSX node ever mentions.
  *     These must be `msg`` ` plus `i18n._()` at render, not `t`` `, or they
  *     freeze in whichever locale booted.
- *  6. **Copy tables keyed by something other than a copy field** —
- *     `{ all: "No activity yet", mention: "No mentions found" }`. Rule 4 keys
- *     off the field *name*, so two tables of inbox empty states — sixteen
- *     strings — read as clean while every one of them was hardcoded English.
- *     An object whose every value is prose is a copy table whatever its keys
- *     are called; one non-prose value and it is data again.
+ *  6. **Prose under any object key** — `{ all: "No activity yet",
+ *     backLabel: "Back to Tasks", apiKeyLabel: "Anthropic API Key" }`. Rule 4
+ *     keys off the field *name*, so anything under a key it does not know
+ *     reads as clean. Two tables of inbox empty states — sixteen strings — hid
+ *     behind that, and so did 32 more strings in nine files the ratchet
+ *     already called converted, including the API-key labels and every
+ *     transcript section heading.
+ *
+ *     What keeps this from flagging the kind-to-token and id-to-class maps
+ *     that fill this codebase is `isProse`: two or more words. The earlier
+ *     version of this rule instead required *every* value in the object to be
+ *     prose, which is why it saw none of those 32 — one `className` or one
+ *     numeric field anywhere in the object and it stopped looking. Prose is a
+ *     property of the string, not of its neighbours.
  *
  *  5. **Prose assigned to a variable, then rendered** — `const browseTitle =
  *     isForumMode ? "Add a forum" : "Browse channels"`. No JSX node and no
@@ -54,6 +62,35 @@ export const COPY_PROPS = new Set([
   "resetLabel",
   "subtitle",
   "title",
+]);
+
+/**
+ * Props that carry markup, identity or routing rather than language.
+ *
+ * The prose rule below reads any prop it does not recognise, so these have to
+ * be named: a two-token `className` with a capital letter in it is
+ * indistinguishable from a sentence to `isProse`, and a `name` or `type` is a
+ * form field's machine identity. `aria-*` props are deliberately *not* here —
+ * a screen-reader label is copy, and two of them were hardcoded.
+ */
+const STRUCTURAL_PROPS = new Set([
+  "accept",
+  "autoComplete",
+  "class",
+  "className",
+  "href",
+  "id",
+  "key",
+  "name",
+  "pattern",
+  "ref",
+  "rel",
+  "src",
+  "srcSet",
+  "style",
+  "testId",
+  "to",
+  "type",
 ]);
 
 /**
@@ -211,6 +248,30 @@ export function findHardcodedCopy(ast) {
         node.name?.type === "JSXIdentifier" ? node.name.name : undefined;
       const value = node.value;
 
+      // Prose handed to a prop `COPY_PROPS` has never heard of. Every
+      // component here invents its own names — `quickCreateLabel`,
+      // `titlePlaceholder`, `backButtonAriaLabel`, `helpText` — so the closed
+      // list cannot keep up, and 21 strings in already-converted files sat
+      // behind exactly that, including the sidebar's "Browse channels" and two
+      // screen-reader labels. Same reasoning as the object-key rule: read the
+      // string, not the name.
+      if (
+        name &&
+        !insideMacro &&
+        !COPY_PROPS.has(name) &&
+        !STRUCTURAL_PROPS.has(name) &&
+        !name.startsWith("data-") &&
+        value?.type === "StringLiteral" &&
+        isProse(value.value) &&
+        isTranslatableText(value.value)
+      ) {
+        findings.push({
+          line: node.loc?.start.line ?? 0,
+          kind: `prose-prop:${name}`,
+          text: normalizeText(value.value),
+        });
+      }
+
       if (name && COPY_PROPS.has(name)) {
         if (value?.type === "StringLiteral") {
           const text = normalizeText(value.value);
@@ -248,6 +309,27 @@ export function findHardcodedCopy(ast) {
           : node.key?.type === "StringLiteral"
             ? node.key.value
             : undefined;
+      // Prose under a key this script has never heard of. `backLabel`,
+      // `apiKeyLabel`, `detailsTitle`, `fallbackErrorMessage` — the names are
+      // unbounded, so the rule cannot key off them; it keys off the string.
+      // Reported from the value's own line, because a multi-line property puts
+      // the string somewhere below `node.loc`, and an override has to name the
+      // line the reader can see the copy on.
+      if (
+        key &&
+        !insideMacro &&
+        !COPY_PROPS.has(key) &&
+        node.value?.type === "StringLiteral" &&
+        isProse(node.value.value) &&
+        isTranslatableText(node.value.value)
+      ) {
+        findings.push({
+          line: node.value.loc?.start.line ?? 0,
+          kind: `prose-field:${key}`,
+          text: normalizeText(node.value.value),
+        });
+      }
+
       if (key && COPY_PROPS.has(key)) {
         if (node.value?.type === "StringLiteral") {
           const text = normalizeText(node.value.value);
@@ -267,60 +349,6 @@ export function findHardcodedCopy(ast) {
               text,
             });
           }
-        }
-      }
-    }
-
-    // An object whose *every* value is prose is a copy table, whatever its
-    // keys are called. Rule 4 above keys off the field name — `label`,
-    // `description`, `title` — and read `INBOX_EMPTY_STATE_TITLES` as clean
-    // because its keys are filter ids (`all`, `mention`, `needs_action`).
-    // Sixteen empty states in the inbox were hardcoded English behind that
-    // gap. Requiring *all* values to be prose is what keeps this from firing
-    // on the kind-to-token and id-to-class maps that fill this codebase: one
-    // non-prose value and the object is data, not copy.
-    if (node.type === "ObjectExpression" && !insideMacro) {
-      const properties = node.properties;
-      const values = properties.map((property) =>
-        property.type === "ObjectProperty" && !property.computed
-          ? property.value
-          : null,
-      );
-      const isHardcoded = (value) =>
-        value?.type === "StringLiteral" &&
-        isProse(value.value) &&
-        isTranslatableText(value.value);
-      // Every value is either hardcoded prose or an already-converted message.
-      //
-      // "Every value is prose" was the first version, and a break test killed
-      // it: converting seven of eight entries and leaving one plain string —
-      // which is exactly what adding a ninth filter would do — made the object
-      // mixed, so the rule stopped seeing a copy table at all and reported
-      // nothing. A half-converted table is the regression this rule is for.
-      // Counting `msg`/`t` as table-shaped keeps that case in scope while
-      // still excluding the kind-to-token and id-to-class maps that fill this
-      // codebase: one value that is neither and the object is data again.
-      const isConverted = (value) =>
-        value?.type === "TaggedTemplateExpression" &&
-        value.tag?.type === "Identifier" &&
-        MACRO_CALLS.has(value.tag.name);
-      const hardcoded = values.filter(isHardcoded);
-      const tableShaped =
-        values.length >= 2 &&
-        hardcoded.length > 0 &&
-        values.every((value) => isHardcoded(value) || isConverted(value));
-      if (tableShaped) {
-        for (const [index, value] of values.entries()) {
-          if (!isHardcoded(value)) continue;
-          const key =
-            properties[index].key?.type === "Identifier"
-              ? properties[index].key.name
-              : properties[index].key?.value;
-          findings.push({
-            line: value.loc?.start.line ?? 0,
-            kind: `copy-table:${key}`,
-            text: normalizeText(value.value),
-          });
         }
       }
     }

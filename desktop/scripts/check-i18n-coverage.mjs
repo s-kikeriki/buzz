@@ -872,6 +872,30 @@ const OVERRIDES = new Map([
     "src/features/agents/managedAgentRuntimeStatus.ts:13",
     "Status token compared by the sidebar and its tests. The badge translates it at the render site.",
   ],
+  // Task status: the same split. Eight places compare against these tokens
+  // (icon, progress state, colour, group order, the open-work predicate), and
+  // `projectIssueStatusLabel` is what every screen renders.
+  [
+    "src/features/projects/projectIssues.mjs:25",
+    "Machine status token. Translated for display by projectIssueStatusLabel.",
+  ],
+  [
+    "src/features/projects/projectIssues.mjs:26",
+    "Machine status token. Translated for display by projectIssueStatusLabel.",
+  ],
+  // The project agent-context block is an English prompt handed to the
+  // harness, not a screen: `- Repository: <name> (address: <addr>)`. These two
+  // stand in for a repository name when the context is a whole-overview or a
+  // multi-item selection, so they belong to the prompt's language, not the
+  // reader's.
+  [
+    "src/features/projects/lib/projectDetailAgentContext.ts:102",
+    "Agent prompt payload, not UI copy — see projectDetailAgentContextBlock.",
+  ],
+  [
+    "src/features/projects/lib/projectDetailAgentContext.ts:115",
+    "Agent prompt payload, not UI copy — see projectDetailAgentContextBlock.",
+  ],
   // Input placeholders that are examples of a *format*, not prose: a German
   // reader needs the same `my-runtime`, the same shell command and the same
   // `npub1…` prefix, because what they type has to match the format, not the

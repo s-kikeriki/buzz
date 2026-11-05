@@ -35,6 +35,7 @@ import {
   projectTaskCategoryLabel,
   projectTaskUserLabels,
 } from "@/features/projects/projectTaskCategories";
+import { projectIssueStatusLabel } from "@/features/projects/projectIssues.mjs";
 import { useIdentityQuery } from "@/shared/api/hooks";
 import type { ChannelMember } from "@/shared/api/types";
 import { BuzzLoadingState } from "@/shared/ui/BuzzLoadingState";
@@ -184,7 +185,7 @@ function IssueRow({
     <ProjectWorkItemRow
       eventId={issue.id}
       identifier={`#${issue.id.slice(0, 8)}`}
-      identifierTitle="View task"
+      identifierTitle={t`View task`}
       onOpen={onOpen}
       selection={{
         item: issueSelectionItem(project, issue),
@@ -192,7 +193,7 @@ function IssueRow({
       }}
       statusIcon={
         <ProjectStatusProgressIcon
-          aria-label={issue.status}
+          aria-label={projectIssueStatusLabel(issue.status)}
           className={`h-3.5 w-3.5 shrink-0 ${status.className}`}
           state={status.progress}
         />
@@ -372,7 +373,7 @@ export function ProjectIssueDetail({
       <ProjectDetailMetaList>
         <ProjectDetailMetaRow icon={status.icon} label={t`Status`}>
           <span className={`font-medium ${status.className}`}>
-            {issue.status}
+            {projectIssueStatusLabel(issue.status)}
           </span>
         </ProjectDetailMetaRow>
         <ProjectDetailMetaRow icon={CircleDot} label={t`Category`}>
@@ -520,7 +521,7 @@ export function ProjectIssuesPanel({
               issueSelectionItem(itemProject, issue),
             )}
             key={status}
-            label={status}
+            label={projectIssueStatusLabel(status)}
           >
             {items.map(({ issue, project: itemProject }) => (
               <IssueRow

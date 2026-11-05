@@ -753,7 +753,7 @@ export function ProjectsAgentPromptPage({
           <div className="flex justify-end pt-1">
             <AgentContextPayloadPreview
               payload={repoContextPayload}
-              triggerLabel="Context appended to your first message"
+              triggerLabel={t`Context appended to your first message`}
             />
           </div>
         )}
