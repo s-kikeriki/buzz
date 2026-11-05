@@ -19,6 +19,7 @@
  */
 
 import { useEffect, useRef, useState } from "react";
+import { Trans, useLingui } from "@lingui/react/macro";
 import {
   AlertCircle,
   Check,
@@ -43,6 +44,7 @@ import {
   type AdminProbeState,
 } from "./api";
 import { AdminConsolePanel } from "./AdminConsolePanel";
+import { principalRoleLabel } from "./adminConsoleLabels";
 import { useIdentityQuery } from "@/shared/api/hooks";
 
 // ── Probe state → UI copy ─────────────────────────────────────────────────
@@ -50,6 +52,7 @@ import { useIdentityQuery } from "@/shared/api/hooks";
 // ── DeniedBadge — copy-icon button for the pubkey ─────────────────────────
 
 function DeniedBadge({ pubkeyHex }: { pubkeyHex: string }) {
+  const { t } = useLingui();
   const [copied, setCopied] = useState(false);
   const resetTimer = useRef<number | undefined>(undefined);
   useEffect(() => () => window.clearTimeout(resetTimer.current), []);
@@ -58,11 +61,13 @@ function DeniedBadge({ pubkeyHex }: { pubkeyHex: string }) {
     <span className="flex flex-col gap-1 text-xs text-destructive">
       <span className="flex items-center gap-1.5">
         <AlertCircle className="h-3.5 w-3.5 shrink-0" />
-        Access denied
+        <Trans>Access denied</Trans>
       </span>
       <span className="text-muted-foreground">
-        Your pubkey is not authorized as an operator on this relay. Ask a relay
-        operator to add:
+        <Trans>
+          Your pubkey is not authorized as an operator on this relay. Ask a
+          relay operator to add:
+        </Trans>
       </span>
       <span className="flex min-w-0 items-center gap-1.5 rounded bg-muted px-1.5 py-0.5">
         <code
@@ -72,10 +77,10 @@ function DeniedBadge({ pubkeyHex }: { pubkeyHex: string }) {
           {pubkeyHex}
         </code>
         <Button
-          aria-label="Copy pubkey"
+          aria-label={t`Copy pubkey`}
           data-testid="admin-denied-pubkey-copy"
           onClick={() => {
-            copyTextToClipboard(pubkeyHex, "Pubkey copied");
+            copyTextToClipboard(pubkeyHex, t`Pubkey copied`);
             setCopied(true);
             window.clearTimeout(resetTimer.current);
             resetTimer.current = window.setTimeout(
@@ -95,7 +100,10 @@ function DeniedBadge({ pubkeyHex }: { pubkeyHex: string }) {
         </Button>
       </span>
       <span className="text-muted-foreground">
-        Other possible causes: clock skew &gt; 60 s or a relay config mismatch.
+        <Trans>
+          Other possible causes: clock skew &gt; 60 s or a relay config
+          mismatch.
+        </Trans>
       </span>
     </span>
   );
@@ -117,21 +125,24 @@ type ProbeUiState =
   | { kind: "error"; message: string };
 
 function ProbeStatusBadge({ uiState }: { uiState: ProbeUiState }) {
+  const { i18n } = useLingui();
   if (uiState.kind === "idle") return null;
   if (uiState.kind === "probing") {
     return (
       <span className="flex items-center gap-1.5 text-xs text-muted-foreground">
         <LoaderCircle className="h-3.5 w-3.5 animate-spin" />
-        Probing…
+        <Trans>Probing…</Trans>
       </span>
     );
   }
   if (uiState.kind === "authorized") {
-    const roleLabel = uiState.role ?? "operator";
+    // The relay's role identifier, translated — it is read as a word here
+    // ("Connected as moderator"), not as an API token.
+    const roleLabel = principalRoleLabel(i18n, uiState.role ?? "operator");
     return (
       <span className="flex items-center gap-1.5 text-xs text-emerald-600 dark:text-emerald-400">
         <CheckCircle2 className="h-3.5 w-3.5" />
-        Connected as {roleLabel}
+        <Trans>Connected as {roleLabel}</Trans>
       </span>
     );
   }
@@ -142,8 +153,10 @@ function ProbeStatusBadge({ uiState }: { uiState: ProbeUiState }) {
     return (
       <span className="flex items-center gap-1.5 text-xs text-amber-600 dark:text-amber-400">
         <Info className="h-3.5 w-3.5" />
-        Auth is disabled on this relay. The admin console is read-only; taking
-        action requires BUZZ_ADMIN_AUTH=nip98.
+        <Trans>
+          Auth is disabled on this relay. The admin console is read-only; taking
+          action requires BUZZ_ADMIN_AUTH=nip98.
+        </Trans>
       </span>
     );
   }
@@ -151,8 +164,10 @@ function ProbeStatusBadge({ uiState }: { uiState: ProbeUiState }) {
     return (
       <span className="flex items-center gap-1.5 text-xs text-muted-foreground">
         <AlertCircle className="h-3.5 w-3.5" />
-        No admin API found at this origin. Check the URL matches{" "}
-        <code className="font-mono">BUZZ_ADMIN_HOST</code>.
+        <Trans>
+          No admin API found at this origin. Check the URL matches{" "}
+          <code className="font-mono">BUZZ_ADMIN_HOST</code>.
+        </Trans>
       </span>
     );
   }
@@ -160,8 +175,10 @@ function ProbeStatusBadge({ uiState }: { uiState: ProbeUiState }) {
     return (
       <span className="flex items-center gap-1.5 text-xs text-destructive">
         <AlertCircle className="h-3.5 w-3.5" />
-        Could not reach the relay. Check: network, TLS certificate, DNS, or
-        whether a VPN/SSO layer (e.g. Cloudflare Access) intercepts this host.
+        <Trans>
+          Could not reach the relay. Check: network, TLS certificate, DNS, or
+          whether a VPN/SSO layer (e.g. Cloudflare Access) intercepts this host.
+        </Trans>
       </span>
     );
   }
@@ -205,6 +222,7 @@ function probeStateToUiState(
 // ── Main card ─────────────────────────────────────────────────────────────
 
 export function AdminConsoleSettingsCard() {
+  const { t } = useLingui();
   const { data: identity } = useIdentityQuery();
   const pubkeyHex = identity?.pubkey ?? "";
 
@@ -214,8 +232,8 @@ export function AdminConsoleSettingsCard() {
       data-testid="settings-admin-console"
     >
       <SettingsSectionHeader
-        title="Admin"
-        description="Manage your relay's platform layer: triage cross-community reports, review product feedback, and configure the relay operator roster."
+        title={t`Admin`}
+        description={t`Manage your relay's platform layer: triage cross-community reports, review product feedback, and configure the relay operator roster.`}
       />
       {pubkeyHex ? (
         <AdminConsoleSettingsSession key={pubkeyHex} pubkeyHex={pubkeyHex} />
@@ -504,7 +522,7 @@ function AdminConsoleSettingsSession({ pubkeyHex }: { pubkeyHex: string }) {
         >
           <summary className="flex cursor-pointer list-none items-center gap-1.5 px-3 py-2 text-xs font-medium text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring [&::-webkit-details-marker]:hidden">
             <ChevronRight className="h-3.5 w-3.5 shrink-0 transition-transform group-open/advanced:rotate-90" />
-            Advanced: admin origin
+            <Trans>Advanced: admin origin</Trans>
           </summary>
           <div className="space-y-3 px-3 pb-3">
             <div className="flex gap-2">
@@ -539,7 +557,7 @@ function AdminConsoleSettingsSession({ pubkeyHex }: { pubkeyHex: string }) {
                 {isSaving ? (
                   <LoaderCircle className="h-3.5 w-3.5 animate-spin" />
                 ) : (
-                  "Save"
+                  <Trans>Save</Trans>
                 )}
               </Button>
               {savedOrigin && (
@@ -555,19 +573,25 @@ function AdminConsoleSettingsSession({ pubkeyHex }: { pubkeyHex: string }) {
                   type="button"
                   variant="ghost"
                 >
-                  Re-probe
+                  <Trans>Re-probe</Trans>
                 </Button>
               )}
             </div>
             {probeUiState.kind === "authorized" && probeUiState.source && (
               <p className="text-xs text-muted-foreground">
-                Origin resolved from{" "}
-                {probeUiState.source === "config"
-                  ? "relay config"
-                  : probeUiState.source === "owner_fallback"
-                    ? "relay config (owner fallback)"
-                    : "database"}
-                .
+                {/* Whole sentences per source, not a `{source}` hole: German
+                    needs a dative article before the noun ("aus der
+                    Relay-Konfiguration"), and the article agrees with the
+                    noun's gender, so one frame cannot hold all three. */}
+                {probeUiState.source === "config" ? (
+                  <Trans>Origin resolved from relay config.</Trans>
+                ) : probeUiState.source === "owner_fallback" ? (
+                  <Trans>
+                    Origin resolved from relay config (owner fallback).
+                  </Trans>
+                ) : (
+                  <Trans>Origin resolved from the database.</Trans>
+                )}
               </p>
             )}
           </div>

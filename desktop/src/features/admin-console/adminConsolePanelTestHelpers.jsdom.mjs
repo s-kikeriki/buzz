@@ -58,11 +58,25 @@ import { withI18n } from "@/testing/withI18n.mjs";
 import { act } from "react";
 import { fireEvent } from "@testing-library/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { I18nProvider } from "@lingui/react";
 import { toast } from "sonner";
 
+import { i18n } from "@/shared/i18n/i18n";
 import { AdminConsoleSettingsCard } from "./AdminConsoleSettingsCard.tsx";
 import { AdminConsolePanel } from "./AdminConsolePanel.tsx";
 import { CommunitiesProvider } from "@/features/communities/useCommunities.tsx";
+
+// ── i18n ────────────────────────────────────────────────────────────────────
+//
+// The console calls `useLingui`, which throws outside an `I18nProvider`. The
+// app provides one at the root via AppI18nProvider; that wrapper renders null
+// until its catalogue import resolves, and the import needs the Lingui Vite
+// plugin, so activate an empty English catalogue here instead. With no
+// catalogue Lingui renders the message id — the English source string — so
+// every assertion in these suites still reads the same words it did before
+// the strings were wrapped.
+
+i18n.loadAndActivate({ locale: "en", messages: {} });
 
 // ── Success-toast capture ────────────────────────────────────────────────────
 //
@@ -403,6 +417,10 @@ export {
   QueryClient,
   QueryClientProvider,
   CommunitiesProvider,
+  // Re-exported so a suite that mounts a sub-component directly wraps it in
+  // the same provider the mount helpers use — `useLingui` throws without one.
+  I18nProvider,
+  i18n,
   AdminConsoleSettingsCard,
   AdminConsolePanel,
 };

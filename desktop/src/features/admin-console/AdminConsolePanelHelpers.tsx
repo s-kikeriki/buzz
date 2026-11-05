@@ -7,6 +7,9 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { ReactNode } from "react";
+import type { MessageDescriptor } from "@lingui/core";
+import { msg } from "@lingui/core/macro";
+import { Trans } from "@lingui/react/macro";
 import { AlertCircle, LoaderCircle } from "lucide-react";
 import { localeDateTimeFormat } from "@/shared/lib/intlLocale";
 import type { AppLocale } from "@/shared/lib/localePreference";
@@ -162,8 +165,12 @@ export function adminMutationNotSent(e: unknown): boolean {
   return false;
 }
 
-export const UNSUPPORTED_BROWSING =
-  "This relay doesn't support community browsing yet.";
+/**
+ * Shown both as a tab-level empty state and as a read error inside the
+ * actions form, so it is one descriptor resolved at each site rather than a
+ * module-level string frozen in the boot locale.
+ */
+export const UNSUPPORTED_BROWSING: MessageDescriptor = msg`This relay doesn't support community browsing yet.`;
 
 /**
  * Whether a relay answered a new route the way a relay without it does: a
@@ -228,7 +235,7 @@ export function LoadingSpinner() {
   return (
     <div className="flex items-center gap-2 text-sm text-muted-foreground">
       <LoaderCircle className="h-4 w-4 animate-spin" />
-      Loading…
+      <Trans>Loading…</Trans>
     </div>
   );
 }

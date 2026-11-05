@@ -26,7 +26,9 @@
  */
 
 import { useEffect, useRef, useState } from "react";
+import { useLingui } from "@lingui/react/macro";
 import { Building2, MessageSquare, ShieldAlert, Users } from "lucide-react";
+import { type AdminTab, adminTabLabel } from "./adminConsoleLabels";
 import { useCommunities } from "@/features/communities/useCommunities";
 import { cn } from "@/shared/lib/cn";
 import type { AdminPrincipalRole } from "./api";
@@ -48,7 +50,8 @@ export {
 
 // ── Tab bar ───────────────────────────────────────────────────────────────
 
-type Tab = "reports" | "feedback" | "communities" | "operators";
+/** One source of truth with the label table, so the two cannot drift. */
+type Tab = AdminTab;
 
 function TabBar({
   activeTab,
@@ -59,19 +62,21 @@ function TabBar({
   onSelect: (tab: Tab) => void;
   visible: Set<Tab>;
 }) {
+  const { i18n } = useLingui();
+  // Labels resolve per render from `adminTabLabel`, so a locale switch while
+  // the console is open relabels the bar instead of keeping the boot locale.
   const allTabs: Array<{
     value: Tab;
-    label: string;
     Icon: React.ComponentType<{ className?: string }>;
   }> = [
-    { value: "reports", label: "Reports", Icon: ShieldAlert },
-    { value: "feedback", label: "Feedback", Icon: MessageSquare },
-    { value: "communities", label: "Communities", Icon: Building2 },
-    { value: "operators", label: "Operators", Icon: Users },
+    { value: "reports", Icon: ShieldAlert },
+    { value: "feedback", Icon: MessageSquare },
+    { value: "communities", Icon: Building2 },
+    { value: "operators", Icon: Users },
   ].filter((t) => visible.has(t.value as Tab)) as typeof allTabs;
   return (
     <div className="mb-4 flex gap-1 border-b border-border/60">
-      {allTabs.map(({ value, label, Icon }) => (
+      {allTabs.map(({ value, Icon }) => (
         <button
           className={cn(
             "flex items-center gap-1.5 border-b-2 px-3 pb-2 pt-1 text-sm font-medium transition-colors",
@@ -85,7 +90,7 @@ function TabBar({
           type="button"
         >
           <Icon className="h-3.5 w-3.5" />
-          {label}
+          {adminTabLabel(i18n, value)}
         </button>
       ))}
     </div>

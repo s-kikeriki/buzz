@@ -4,6 +4,7 @@
  */
 
 import { createContext, useContext } from "react";
+import { Trans, useLingui } from "@lingui/react/macro";
 import { cn } from "@/shared/lib/cn";
 import { getConnectedCommunityHost } from "./api";
 import { useAsyncLoad } from "./AdminConsolePanelHelpers";
@@ -47,6 +48,7 @@ export function CommunityBadge({
   icon?: string | null;
 }) {
   const { open } = useCommunityNav();
+  const { t } = useLingui();
   const base =
     "inline-flex max-w-full items-center gap-1.5 rounded-full border border-border/60 px-2 py-0.5 text-xs";
   if (id === null || !host) {
@@ -55,7 +57,7 @@ export function CommunityBadge({
         className={cn(base, "text-muted-foreground")}
         data-testid="community-badge-removed"
       >
-        community removed
+        <Trans>community removed</Trans>
       </span>
     );
   }
@@ -81,7 +83,7 @@ export function CommunityBadge({
       className={cn(base, "hover:bg-muted/50")}
       data-testid={`community-badge-${host}`}
       onClick={() => open({ id, host, icon })}
-      title={`Open ${host}`}
+      title={t`Open ${host}`}
       type="button"
     >
       {content}
@@ -98,7 +100,7 @@ export function NotConnectedWarning({ host }: { host: string }) {
       className="text-xs text-amber-600 dark:text-amber-400"
       data-testid="community-not-connected"
     >
-      Not the community you're connected to.
+      <Trans>Not the community you're connected to.</Trans>
     </span>
   );
 }

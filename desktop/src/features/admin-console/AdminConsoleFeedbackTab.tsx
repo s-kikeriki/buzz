@@ -7,6 +7,9 @@
  */
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import type { MessageDescriptor } from "@lingui/core";
+import { msg } from "@lingui/core/macro";
+import { Plural, Trans, useLingui } from "@lingui/react/macro";
 import { AlertCircle, ChevronLeft, Download, LoaderCircle } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/shared/ui/button";
@@ -37,6 +40,7 @@ import {
   useAsyncLoad,
 } from "./AdminConsolePanelHelpers";
 import { useLocale } from "@/shared/lib/localePreference";
+import { feedbackStatusLabel } from "./adminConsoleLabels";
 
 // ── Attachment budget ─────────────────────────────────────────────────────
 
@@ -95,6 +99,7 @@ export function FeedbackTab({
   generation: number;
 }) {
   const locale = useLocale();
+  const { i18n } = useLingui();
   const [selectedId, setSelectedId] = useState<string | null>(null);
   // List refresh fence: bumped when a feedback status change completes in the
   // detail view, so returning to the list shows fresh status without a tab
@@ -129,7 +134,11 @@ export function FeedbackTab({
 
   const items = listState.data;
   if (!Array.isArray(items) || items.length === 0) {
-    return <p className="text-sm text-muted-foreground">No feedback found.</p>;
+    return (
+      <p className="text-sm text-muted-foreground">
+        <Trans>No feedback found.</Trans>
+      </p>
+    );
   }
 
   return (
@@ -151,7 +160,7 @@ export function FeedbackTab({
                 <span className="block font-medium line-clamp-2">{text}</span>
                 {status !== "new" && (
                   <Badge className="shrink-0" variant="secondary">
-                    {status}
+                    {feedbackStatusLabel(i18n, status)}
                   </Badge>
                 )}
               </div>
@@ -185,6 +194,7 @@ function AttachmentViewer({
    *  context has changed and any in-flight load result is stale. */
   panelGeneration: number;
 }) {
+  const { t } = useLingui();
   const [blobUrl, setBlobUrl] = useState<string | null>(null);
   const [error, setError] = useState<AdminAttachmentErrorCode | null>(null);
   const [saving, setSaving] = useState(false);
@@ -289,7 +299,7 @@ function AttachmentViewer({
         attachment.size,
       );
       if (saved) {
-        toast.success("Attachment saved");
+        toast.success(t`Attachment saved`);
       }
     } catch (e) {
       setSaveError(
@@ -298,7 +308,16 @@ function AttachmentViewer({
     } finally {
       setSaving(false);
     }
-  }, [origin, feedbackId, attachment.sha256, attachment.mime, attachment.size]);
+    // `t` is a dependency: it changes identity when the locale does, and
+    // without it this closure would keep toasting in the boot locale.
+  }, [
+    t,
+    origin,
+    feedbackId,
+    attachment.sha256,
+    attachment.mime,
+    attachment.size,
+  ]);
 
   if (error) {
     return <AttachmentError code={error} />;
@@ -306,6 +325,11 @@ function AttachmentViewer({
 
   // Non-image types are never previewed: Save writes them through the native
   // dialog (a blob `<a download>` is a no-op in WKWebView).
+  //
+  // `mime` is bound to a local before it reaches the message so the extracted
+  // placeholder is a plain name. A member expression inside ICU braces is the
+  // shape that silently drops a message from every compiled catalogue.
+  const mime = attachment.mime;
   if (!attachment.mime.startsWith("image/")) {
     return (
       <div className="flex flex-col items-start gap-1">
@@ -322,7 +346,7 @@ function AttachmentViewer({
           ) : (
             <>
               <Download className="h-3.5 w-3.5" />
-              {`Save attachment (${attachment.mime})`}
+              <Trans>Save attachment ({mime})</Trans>
             </>
           )}
         </Button>
@@ -335,14 +359,14 @@ function AttachmentViewer({
     return (
       <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
         <LoaderCircle className="h-3.5 w-3.5 animate-spin" />
-        Loading…
+        <Trans>Loading…</Trans>
       </div>
     );
   }
 
   return (
     <img
-      alt="Feedback attachment"
+      alt={t`Feedback attachment`}
       className="max-h-96 max-w-full rounded-md border border-border/60 object-contain"
       src={blobUrl}
     />
@@ -353,27 +377,30 @@ function AttachmentViewer({
 
 function FeedbackFields({ data }: { data: AdminFeedbackDto }) {
   const locale = useLocale();
+  const { t } = useLingui();
   return (
     <div
       className="space-y-1.5 rounded-md border border-border/60 px-3 py-2.5"
       data-testid="feedback-detail-fields"
     >
-      <DetailRow label="ID" value={data.id} mono />
-      <DetailRow label="Body" value={data.body} />
-      <DetailRow label="Submitter" value={data.submitterPubkey} mono />
-      <DetailRow label="Category" value={data.category ?? null} />
-      <DetailRow label="Community" value={data.communityId} mono />
+      <DetailRow label={t`ID`} value={data.id} mono />
+      <DetailRow label={t`Body`} value={data.body} />
+      <DetailRow label={t`Submitter`} value={data.submitterPubkey} mono />
+      <DetailRow label={t`Category`} value={data.category ?? null} />
+      <DetailRow label={t`Community`} value={data.communityId} mono />
       <div className="flex items-center gap-2 text-xs">
-        <span className="text-muted-foreground">Host</span>
+        <span className="text-muted-foreground">
+          <Trans>Host</Trans>
+        </span>
         <CommunityBadge host={data.communityHost} id={data.communityId} />
       </div>
-      <DetailRow label="Event ID" value={data.eventId} mono />
+      <DetailRow label={t`Event ID`} value={data.eventId} mono />
       <DetailRow
-        label="Event created"
+        label={t`Event created`}
         value={formatTimestamp(data.eventCreatedAt, locale)}
       />
       <DetailRow
-        label="Received"
+        label={t`Received`}
         value={formatTimestamp(data.receivedAt, locale)}
       />
     </div>
@@ -381,6 +408,13 @@ function FeedbackFields({ data }: { data: AdminFeedbackDto }) {
 }
 
 // ── Feedback status control ───────────────────────────────────────────────
+
+/** Confirmation toast per target status. */
+const FEEDBACK_MARKED: Record<AdminFeedbackStatus, MessageDescriptor> = {
+  new: msg`Feedback marked new`,
+  reviewed: msg`Feedback marked reviewed`,
+  archived: msg`Feedback marked archived`,
+};
 
 /**
  * Status-control widget for a feedback entry.
@@ -398,6 +432,7 @@ function FeedbackStatusControl({
   origin: string;
   onStatusChanged: (newStatus: AdminFeedbackStatus) => void;
 }) {
+  const { i18n } = useLingui();
   const [isWorking, setIsWorking] = useState(false);
 
   const statuses: AdminFeedbackStatus[] = ["new", "reviewed", "archived"];
@@ -407,7 +442,10 @@ function FeedbackStatusControl({
     setIsWorking(true);
     try {
       await patchAdminFeedback(origin, feedbackId, newStatus);
-      toast.success(`Feedback marked ${newStatus}`);
+      // Whole sentences per status, not `Feedback marked {status}`: German
+      // inflects the participle and puts it last, so the three outcomes do
+      // not share one frame.
+      toast.success(i18n._(FEEDBACK_MARKED[newStatus]));
       onStatusChanged(newStatus);
     } catch (e) {
       toast.error(adminErrorMessage(e));
@@ -421,7 +459,9 @@ function FeedbackStatusControl({
       className="flex flex-col gap-1.5"
       data-testid="feedback-status-control"
     >
-      <span className="text-xs font-medium text-muted-foreground">Status</span>
+      <span className="text-xs font-medium text-muted-foreground">
+        <Trans>Status</Trans>
+      </span>
       <div className="flex gap-1.5">
         {statuses.map((s) => (
           <Button
@@ -438,7 +478,7 @@ function FeedbackStatusControl({
             type="button"
             variant={currentStatus === s ? "default" : "outline"}
           >
-            {s}
+            {feedbackStatusLabel(i18n, s)}
           </Button>
         ))}
       </div>
@@ -466,6 +506,7 @@ export function FeedbackDetail({
   /** Called after a status change completes so the parent list can refetch. */
   onMutated: () => void;
 }) {
+  const { i18n } = useLingui();
   // Local status state: initialized from server, updated on PATCH.
   const [localStatus, setLocalStatus] = useState<AdminFeedbackStatus | null>(
     null,
@@ -506,7 +547,7 @@ export function FeedbackDetail({
         type="button"
       >
         <ChevronLeft className="h-3.5 w-3.5" />
-        Back to feedback
+        <Trans>Back to feedback</Trans>
       </button>
       {detailState.status === "loading" && <LoadingSpinner />}
       {detailState.status === "error" && (
@@ -532,15 +573,19 @@ export function FeedbackDetail({
                 data-testid="feedback-status-readonly"
               >
                 <span className="text-xs font-medium text-muted-foreground">
-                  Status
+                  <Trans>Status</Trans>
                 </span>
-                <Badge variant="secondary">{localStatus}</Badge>
+                <Badge variant="secondary">
+                  {feedbackStatusLabel(i18n, localStatus)}
+                </Badge>
               </div>
             )
           )}
           {attachments.length > 0 && (
             <div className="space-y-3">
-              <h4 className="text-sm font-medium">Attachments</h4>
+              <h4 className="text-sm font-medium">
+                <Trans>Attachments</Trans>
+              </h4>
               {attachments.map((a) => (
                 <AttachmentViewer
                   attachment={a}
@@ -556,9 +601,14 @@ export function FeedbackDetail({
                   className="text-xs text-muted-foreground"
                   data-testid="attachment-truncated-notice"
                 >
-                  {truncatedCount} attachment
-                  {truncatedCount === 1 ? "" : "s"} not shown (display limit
-                  reached).
+                  {/* An ICU `plural`, not a conditional "s": German inflects
+                      the noun rather than suffixing it, and needs a whole
+                      form per branch. */}
+                  <Plural
+                    value={truncatedCount}
+                    one="# attachment not shown (display limit reached)."
+                    other="# attachments not shown (display limit reached)."
+                  />
                 </p>
               )}
             </div>
@@ -569,20 +619,26 @@ export function FeedbackDetail({
   );
 }
 
-const FRIENDLY_ATTACHMENT_ERROR: Record<string, string> = {
-  admin_attachment_too_large: "Attachment exceeds the 10 MiB desktop cap.",
-  admin_attachment_mime_mismatch:
-    "Attachment MIME type does not match the imeta record.",
-  admin_attachment_size_mismatch:
-    "Attachment byte count does not match the imeta record.",
-  admin_attachment_network_error: "Network error fetching attachment.",
+/**
+ * Descriptors, not strings: a plain table here would resolve once at module
+ * scope and freeze these four messages in the boot locale.
+ */
+const FRIENDLY_ATTACHMENT_ERROR: Record<string, MessageDescriptor> = {
+  admin_attachment_too_large: msg`Attachment exceeds the 10 MiB desktop cap.`,
+  admin_attachment_mime_mismatch: msg`Attachment MIME type does not match the imeta record.`,
+  admin_attachment_size_mismatch: msg`Attachment byte count does not match the imeta record.`,
+  admin_attachment_network_error: msg`Network error fetching attachment.`,
 };
 
 function AttachmentError({ code }: { code: AdminAttachmentErrorCode }) {
+  const { i18n } = useLingui();
+  const friendly = FRIENDLY_ATTACHMENT_ERROR[code];
   return (
     <div className="flex items-center gap-1.5 text-xs text-destructive">
       <AlertCircle className="h-3.5 w-3.5" />
-      {FRIENDLY_ATTACHMENT_ERROR[code] ?? `Error: ${code}`}
+      {/* The fallback keeps the relay's raw code visible — an operator has to
+          be able to quote a code the console does not recognise. */}
+      {friendly ? i18n._(friendly) : <Trans>Error: {code}</Trans>}
     </div>
   );
 }

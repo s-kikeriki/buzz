@@ -27,6 +27,9 @@ import {
   useRef,
   useState,
 } from "react";
+import type { I18n, MessageDescriptor } from "@lingui/core";
+import { msg } from "@lingui/core/macro";
+import { Trans, useLingui } from "@lingui/react/macro";
 import { toast } from "sonner";
 import { containsSecretKey } from "@/features/onboarding/lib/keyImportInput";
 import {
@@ -69,33 +72,38 @@ import {
 } from "./AdminConsolePanelHelpers";
 import { useLocale } from "@/shared/lib/localePreference";
 import { reasonAudienceCopy } from "./AdminConsoleReportsTab";
+import { directActionLabel } from "./adminConsoleLabels";
 
-const ACTION_LABELS: Record<AdminDirectAction, string> = {
-  ban: "Ban member",
-  timeout: "Time out member",
-  delete: "Delete message",
-};
+/** The three direct-action verbs, in the order the button row shows them. */
+const DIRECT_ACTIONS: AdminDirectAction[] = ["ban", "timeout", "delete"];
 
-const STAFF_COPY =
-  "Relay staff can't be banned or timed out. Remove their staff role first.";
+const STAFF_COPY: MessageDescriptor = msg`Relay staff can't be banned or timed out. Remove their staff role first.`;
 
-function directErrorMessage(e: unknown): string {
+function directErrorMessage(i18n: I18n, e: unknown): string {
   switch (adminErrorCode(e)) {
     case "target_is_staff":
-      return STAFF_COPY;
+      return i18n._(STAFF_COPY);
     case "request_id_conflict":
-      return "This request id was already used for a different action. Review again to send it with a new id.";
+      return i18n._(
+        msg`This request id was already used for a different action. Review again to send it with a new id.`,
+      );
     default:
       return adminRouteUnsupported(e)
-        ? "This relay doesn't support direct actions yet."
+        ? i18n._(msg`This relay doesn't support direct actions yet.`)
         : adminErrorMessage(e);
   }
 }
 
 /** Why a read failed, in words; never "not found" unless the relay said so. */
-function readErrorMessage(e: unknown, notFound: string): string {
-  if (adminRouteUnsupported(e)) return UNSUPPORTED_BROWSING;
-  if (adminReadErrorCode(e) === "event_not_found") return notFound;
+function readErrorMessage(
+  i18n: I18n,
+  e: unknown,
+  notFound: MessageDescriptor | string,
+): string {
+  if (adminRouteUnsupported(e)) return i18n._(UNSUPPORTED_BROWSING);
+  if (adminReadErrorCode(e) === "event_not_found") {
+    return typeof notFound === "string" ? notFound : i18n._(notFound);
+  }
   return adminErrorMessage(e);
 }
 
@@ -206,6 +214,7 @@ export function DirectActionsProvider({
   generation: number;
   children: ReactNode;
 }) {
+  const { i18n, t } = useLingui();
   const [draft, setDraft] = useState<Draft | null>(null);
   const [frozen, setFrozen] = useState<Frozen | null>(null);
   const [pending, setPending] = useState(false);
@@ -265,7 +274,8 @@ export function DirectActionsProvider({
         if (result.state === "pending") {
           setPending(true);
         } else {
-          toast.success(`${ACTION_LABELS[intent.action]}: done`);
+          const action = directActionLabel(i18n, intent.action);
+          toast.success(t`${action}: done`);
           setFrozen(null);
           setDraft(emptyDraft(intent.communityHost));
         }
@@ -281,12 +291,12 @@ export function DirectActionsProvider({
         ) {
           setFrozen(null);
         }
-        const message = directErrorMessage(e);
+        const message = directErrorMessage(i18n, e);
         setError(message);
         if (shownHost.current !== intent.communityHost) {
-          toast.error(
-            `${ACTION_LABELS[intent.action]} in ${intent.communityHost} failed: ${message}`,
-          );
+          const action = directActionLabel(i18n, intent.action);
+          const host = intent.communityHost;
+          toast.error(t`${action} in ${host} failed: ${message}`);
         }
       }
     });
@@ -320,32 +330,47 @@ export function DirectActionsProvider({
 
 // ── Actions section ───────────────────────────────────────────────────────
 
-/** Client-side checks; the relay re-validates everything. */
-function validate(draft: Draft, eventId: string | null): string | null {
+/**
+ * Client-side checks; the relay re-validates everything.
+ *
+ * `i18n` is a parameter rather than a module import: this runs on the Review
+ * click, and a module-scope resolution would freeze the three messages in the
+ * boot locale.
+ */
+function validate(
+  i18n: I18n,
+  draft: Draft,
+  eventId: string | null,
+): string | null {
   if (draft.action === "delete" && !eventId) {
-    return "Enter a 64-hex event id, or a note1… or nevent1… link.";
+    return i18n._(msg`Enter a 64-hex event id, or a note1… or nevent1… link.`);
   }
   if (draft.action !== "delete" && !draft.member) {
-    return "Choose a member: search by name, or paste an npub or hex key.";
+    return i18n._(
+      msg`Choose a member: search by name, or paste an npub or hex key.`,
+    );
   }
   const secs = Number(draft.secs);
   if (draft.action === "timeout" && !(Number.isInteger(secs) && secs > 0)) {
-    return "Duration must be a whole number of seconds above zero.";
+    return i18n._(msg`Duration must be a whole number of seconds above zero.`);
   }
   return null;
 }
 
 function MemberState({ member }: { member: AdminMemberDetailDto }) {
   const locale = useLocale();
+  const { i18n, t } = useLingui();
+  // `role` is the relay's roster role and is rendered as data; only the
+  // "Role:" frame around it is translated.
+  const role = member.role;
+  const mutedUntil = member.mutedUntil
+    ? formatAbsoluteTimestamp(member.mutedUntil, locale)
+    : null;
   const facts = [
-    member.role === null
-      ? "Not on the community roster"
-      : `Role: ${member.role}`,
-    member.banned ? "Currently banned" : null,
-    member.mutedUntil
-      ? `Timed out until ${formatAbsoluteTimestamp(member.mutedUntil, locale)}`
-      : null,
-    member.isStaff ? "Relay staff" : null,
+    role === null ? i18n._(msg`Not on the community roster`) : t`Role: ${role}`,
+    member.banned ? i18n._(msg`Currently banned`) : null,
+    mutedUntil ? t`Timed out until ${mutedUntil}` : null,
+    member.isStaff ? i18n._(msg`Relay staff`) : null,
   ].filter(Boolean);
   return (
     <p
@@ -359,6 +384,9 @@ function MemberState({ member }: { member: AdminMemberDetailDto }) {
 
 function EventPreview({ event }: { event: AdminEventPreviewDto }) {
   const locale = useLocale();
+  const deletedAt = event.deletedAt
+    ? formatTimestamp(event.deletedAt, locale)
+    : null;
   return (
     <div
       className="space-y-1 rounded-md border border-border/60 px-2 py-1.5 text-xs"
@@ -366,9 +394,9 @@ function EventPreview({ event }: { event: AdminEventPreviewDto }) {
     >
       <PubKey pubkey={event.authorPubkey} variant="full" />
       <p className="whitespace-pre-wrap break-words">{event.content}</p>
-      {event.deletedAt && (
+      {deletedAt && (
         <p className="text-muted-foreground">
-          Already deleted {formatTimestamp(event.deletedAt, locale)}.
+          <Trans>Already deleted {deletedAt}.</Trans>
         </p>
       )}
     </div>
@@ -377,6 +405,7 @@ function EventPreview({ event }: { event: AdminEventPreviewDto }) {
 
 export function ActionsSection({ community }: { community: CommunityRef }) {
   const communityHost = community.host;
+  const { i18n, t } = useLingui();
   const c = useDirectActions();
   const { frozen } = c;
   const draft = c.draftFor(communityHost);
@@ -406,19 +435,21 @@ export function ActionsSection({ community }: { community: CommunityRef }) {
   const lookup = draft.action === "delete" ? previewState : memberState;
   const lookupBlock =
     lookup.status === "error"
-      ? readErrorMessage(lookup.error, "Not found in this community.")
+      ? readErrorMessage(i18n, lookup.error, msg`Not found in this community.`)
       : memberState.status === "ok" &&
           draft.action !== "delete" &&
           memberState.data.isStaff
-        ? STAFF_COPY
+        ? i18n._(STAFF_COPY)
         : null;
 
   if (frozen && frozen.intent.communityHost !== communityHost) {
+    const pendingHost = frozen.intent.communityHost;
     return (
       <div className="space-y-2 text-xs" data-testid="direct-elsewhere">
         <p>
-          Finish or discard the pending action in{" "}
-          <code>{frozen.intent.communityHost}</code>.
+          <Trans>
+            Finish or discard the pending action in <code>{pendingHost}</code>.
+          </Trans>
         </p>
         <ConfirmStep readOnly />
       </div>
@@ -427,7 +458,7 @@ export function ActionsSection({ community }: { community: CommunityRef }) {
 
   const locked = frozen !== null || c.submitting || !c.canMutate;
   const handleReview = () => {
-    const problem = validate(draft, eventId);
+    const problem = validate(i18n, draft, eventId);
     setInvalid(problem);
     if (problem || lookup.status !== "ok" || lookupBlock) return;
     void c.review(draft, eventId ?? memberPk ?? "", {
@@ -460,7 +491,7 @@ export function ActionsSection({ community }: { community: CommunityRef }) {
   return (
     <div className="space-y-3" data-testid="actions-tab">
       <div className="flex gap-1.5">
-        {(Object.keys(ACTION_LABELS) as AdminDirectAction[]).map((a) => (
+        {DIRECT_ACTIONS.map((a) => (
           <Button
             data-testid={`direct-action-${a}`}
             disabled={locked}
@@ -470,12 +501,12 @@ export function ActionsSection({ community }: { community: CommunityRef }) {
             type="button"
             variant={a === draft.action ? "default" : "outline"}
           >
-            {ACTION_LABELS[a]}
+            {directActionLabel(i18n, a)}
           </Button>
         ))}
       </div>
       {draft.action === "delete" ? (
-        input("target", "Event id (hex), note1… or nevent1…", "font-mono")
+        input("target", t`Event id (hex), note1… or nevent1…`, "font-mono")
       ) : (
         <AdminMemberPicker
           communityHost={communityHost}
@@ -499,13 +530,13 @@ export function ActionsSection({ community }: { community: CommunityRef }) {
         </p>
       )}
       {draft.action === "timeout" &&
-        input("secs", "Duration (seconds)", "", "number")}
-      {input("reason", "Reason (optional)")}
+        input("secs", t`Duration (seconds)`, "", "number")}
+      {input("reason", t`Reason (optional)`)}
       <p
         className="text-xs text-muted-foreground"
         data-testid="direct-reason-audience"
       >
-        {reasonAudienceCopy(frozen?.intent.action ?? draft.action)}
+        {reasonAudienceCopy(i18n, frozen?.intent.action ?? draft.action)}
       </p>
       {error && (
         <p className="text-xs text-destructive" data-testid="direct-error">
@@ -527,7 +558,9 @@ export function ActionsSection({ community }: { community: CommunityRef }) {
           size="sm"
           type="button"
         >
-          Review
+          {/* Context-qualified: the bare msgid "Review" is already the
+              Inbox/project noun ("Review"), while this is an imperative. */}
+          <Trans context="button that opens the confirm step">Review</Trans>
         </Button>
       )}
     </div>
@@ -536,33 +569,51 @@ export function ActionsSection({ community }: { community: CommunityRef }) {
 
 /** The frozen intent, leading with its community. */
 function ConfirmStep({ readOnly = false }: { readOnly?: boolean }) {
+  const { i18n } = useLingui();
   const c = useDirectActions();
   if (!c.frozen) return null;
   const { intent, community, name, member, preview } = c.frozen;
+  const action = directActionLabel(i18n, intent.action);
+  const secs = intent.expirationSecs ?? null;
+  const reason = intent.reason ?? null;
+  const target = (
+    <>
+      {intent.action === "delete" ? (
+        <code>{intent.target}</code>
+      ) : (
+        <span data-testid="direct-confirm-member">
+          {name ? `${name} ` : ""}
+          <code>
+            {name
+              ? `(${truncateNpub(intent.target)})`
+              : truncateNpub(intent.target)}
+          </code>
+        </span>
+      )}
+    </>
+  );
   return (
     <div
       className="space-y-2 rounded-md border border-border/60 px-3 py-2 text-xs"
       data-testid="direct-confirm"
     >
       <p className="flex flex-wrap items-center gap-1.5">
-        In <CommunityBadge {...community} />
+        <Trans>In</Trans> <CommunityBadge {...community} />
         <NotConnectedWarning host={intent.communityHost} />
       </p>
+      {/* Two whole questions rather than one frame plus an optional " for Ns"
+          tail: German puts the duration before the verb-final participle, so
+          appending it to the end of the sentence is wrong. */}
       <p>
-        {ACTION_LABELS[intent.action]}{" "}
-        {intent.action === "delete" ? (
-          <code>{intent.target}</code>
+        {secs !== null ? (
+          <Trans>
+            {action} {target} for {secs}s?
+          </Trans>
         ) : (
-          <span data-testid="direct-confirm-member">
-            {name ? `${name} ` : ""}
-            <code>
-              {name
-                ? `(${truncateNpub(intent.target)})`
-                : truncateNpub(intent.target)}
-            </code>
-          </span>
+          <Trans>
+            {action} {target}?
+          </Trans>
         )}
-        {intent.expirationSecs ? ` for ${intent.expirationSecs}s` : ""}?
       </p>
       {intent.action !== "delete" && (
         <PubKey
@@ -574,11 +625,17 @@ function ConfirmStep({ readOnly = false }: { readOnly?: boolean }) {
       {member && <MemberState member={member} />}
       {preview && <EventPreview event={preview} />}
       <p data-testid="direct-confirm-reason">
-        Reason: {intent.reason ?? "(none)"}
+        {reason ? (
+          <Trans>Reason: {reason}</Trans>
+        ) : (
+          <Trans>Reason: (none)</Trans>
+        )}
       </p>
       {c.pending && (
         <p className="text-muted-foreground" data-testid="direct-pending">
-          Accepted; the relay is still applying it. Retry to check.
+          <Trans>
+            Accepted; the relay is still applying it. Retry to check.
+          </Trans>
         </p>
       )}
       <div className="flex gap-1.5">
@@ -591,7 +648,11 @@ function ConfirmStep({ readOnly = false }: { readOnly?: boolean }) {
             type="button"
             variant="destructive"
           >
-            {c.error || c.pending ? "Retry" : "Confirm"}
+            {c.error || c.pending ? (
+              <Trans>Retry</Trans>
+            ) : (
+              <Trans>Confirm</Trans>
+            )}
           </Button>
         )}
         <Button
@@ -602,7 +663,7 @@ function ConfirmStep({ readOnly = false }: { readOnly?: boolean }) {
           type="button"
           variant="ghost"
         >
-          Discard
+          <Trans>Discard</Trans>
         </Button>
       </div>
     </div>
@@ -616,6 +677,7 @@ function ConfirmStep({ readOnly = false }: { readOnly?: boolean }) {
  * like the lookups. A pasted secret key never leaves the device.
  */
 function useAdminMemberSearch(communityHost: string, query: string) {
+  const { i18n } = useLingui();
   const c = useDirectActions();
   const secret = containsSecretKey(query);
   const state = useFencedLoad(
@@ -640,7 +702,7 @@ function useAdminMemberSearch(communityHost: string, query: string) {
     isLoading: state.status === "loading",
     error:
       state.status === "error"
-        ? readErrorMessage(state.error, state.message)
+        ? readErrorMessage(i18n, state.error, state.message)
         : null,
   };
 }
@@ -660,6 +722,7 @@ export function AdminMemberPicker({
   member: UserSearchResult | null;
   onChange: (member: UserSearchResult | null) => void;
 }) {
+  const { t } = useLingui();
   const [query, setQuery] = useState("");
   const deferred = useDeferredValue(query.trim());
   const search = useAdminMemberSearch(communityHost, deferred);
@@ -683,7 +746,7 @@ export function AdminMemberPicker({
           type="button"
           variant="link"
         >
-          Change
+          <Trans>Change</Trans>
         </Button>
       </div>
     );
@@ -695,7 +758,7 @@ export function AdminMemberPicker({
         data-testid="direct-member-input"
         disabled={disabled}
         onChange={(e) => setQuery(e.target.value)}
-        placeholder="Search by name, or paste an npub or hex key"
+        placeholder={t`Search by name, or paste an npub or hex key`}
         value={query}
       />
       {secret && (
@@ -703,7 +766,7 @@ export function AdminMemberPicker({
           className="text-xs text-destructive"
           data-testid="direct-member-secret"
         >
-          That's a secret key. Never paste it here.
+          <Trans>That's a secret key. Never paste it here.</Trans>
         </p>
       )}
       {search.error && !secret && (
@@ -746,6 +809,8 @@ export function MembersSection({
   const c = useDirectActions();
   const [member, setMember] = useState<UserSearchResult | null>(null);
   return (
+    // The two shorthand verbs here are the member row's own buttons, not the
+    // full `directActionLabel` phrases: the member is already named above.
     <div className="space-y-2" data-testid="community-members">
       <AdminMemberPicker
         communityHost={communityHost}
@@ -768,7 +833,7 @@ export function MembersSection({
               type="button"
               variant="outline"
             >
-              {action === "ban" ? "Ban" : "Time out"}
+              {action === "ban" ? <Trans>Ban</Trans> : <Trans>Time out</Trans>}
             </Button>
           ))}
         </span>

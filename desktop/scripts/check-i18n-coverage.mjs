@@ -756,6 +756,25 @@ const CONVERTED_FILES = [
   "src/features/workflows/ui/workflowConditionExpression.ts",
   "src/features/workflows/ui/workflowMessageTextCondition.ts",
   "src/features/workflows/ui/workflowStatusLabel.ts",
+  // Tranche 6 — the relay admin console. Reachable from Settings → Admin by
+  // any identity (the panel itself gates on the relay's auth probe), so a
+  // German app showed an English screen to every operator.
+  //
+  // `adminConsoleLabels.ts` is a library, not UI, and is listed because it
+  // *produces* copy: the report statuses, enforcement states, feedback
+  // statuses, operator roles and provenance badges are relay identifiers that
+  // no JSX node mentions. None of them was ever a literal in a component, so
+  // the detector reported zero findings for the whole set.
+  "src/features/admin-console/AdminConsoleActionsTab.tsx",
+  "src/features/admin-console/AdminConsoleCommunities.tsx",
+  "src/features/admin-console/AdminConsoleCommunityBadge.tsx",
+  "src/features/admin-console/AdminConsoleFeedbackTab.tsx",
+  "src/features/admin-console/AdminConsolePanel.tsx",
+  "src/features/admin-console/AdminConsolePanelHelpers.tsx",
+  "src/features/admin-console/AdminConsoleReportsTab.tsx",
+  "src/features/admin-console/AdminConsoleSettingsCard.tsx",
+  "src/features/admin-console/AdminConsoleStaffingTab.tsx",
+  "src/features/admin-console/adminConsoleLabels.ts",
 ];
 
 /**
@@ -845,6 +864,10 @@ const OVERRIDES = new Map([
   [
     "src/features/settings/ui/CustomHarnessForm.tsx:444",
     "Example URL. `example.com` is reserved for exactly this and is not prose.",
+  ],
+  [
+    "src/features/admin-console/AdminConsoleSettingsCard.tsx:541",
+    "Example admin origin showing the required scheme-and-host format. `example.com` is reserved for exactly this and is not prose.",
   ],
   [
     "src/features/settings/ui/CustomHarnessForm.tsx:465",

@@ -10,6 +10,8 @@ import {
   act,
   fireEvent,
   createRoot,
+  i18n,
+  I18nProvider,
   QueryClientProvider,
   CommunitiesProvider,
   AdminConsolePanel,
@@ -242,18 +244,22 @@ test("staffing-tab-reset-on-role-downgrade: panel shows reports content after op
     await act(async () => {
       root.render(
         React.createElement(
-          QueryClientProvider,
-          { client: qc },
+          I18nProvider,
+          { i18n },
           React.createElement(
-            CommunitiesProvider,
-            null,
-            React.createElement(AdminConsolePanel, {
-              canMutate: true,
-              origin,
-              pubkey,
-              role,
-              initialTab: "operators",
-            }),
+            QueryClientProvider,
+            { client: qc },
+            React.createElement(
+              CommunitiesProvider,
+              null,
+              React.createElement(AdminConsolePanel, {
+                canMutate: true,
+                origin,
+                pubkey,
+                role,
+                initialTab: "operators",
+              }),
+            ),
           ),
         ),
       );
@@ -407,7 +413,8 @@ test("staffing-add-duplicate-guard: submitting an existing key produces zero PUT
       ),
     );
     assert.ok(
-      errEls.some((el) => el.textContent.includes("operator")),
+      // "Operator" — the translated role label, not the relay's `operator`.
+      errEls.some((el) => el.textContent.includes("Operator")),
       `inline error must name the existing effective role "operator"; found: ${errEls.map((e) => e.textContent).join(", ")}`,
     );
 
@@ -422,7 +429,8 @@ test("staffing-add-duplicate-guard: submitting an existing key produces zero PUT
       "existing operator row must still render after duplicate-submit rejection",
     );
     assert.ok(
-      existingRow.textContent.includes("operator"),
+      // "Operator" — the translated role label, not the relay's `operator`.
+      existingRow.textContent.includes("Operator"),
       `existing row must still show the "operator" role after rejection; got: ${existingRow.textContent}`,
     );
 
