@@ -718,6 +718,22 @@ const CONVERTED_FILES = [
   "src/features/workflows/ui/workflowActivationWarning.ts",
   "src/features/workflows/ui/workflowDuration.ts",
   "src/features/workflows/ui/workflowTemplateVariables.ts",
+  // Tranche 7b — the trigger description engine and the canvas. The engine is
+  // split in two: `workflowTriggerDescriptor` holds the facts and carries no
+  // copy at all, and the two renderers below word them for the canvas and for
+  // a workflow card. It is in this list so copy cannot drift back into it.
+  "src/features/workflows/ui/CronExpressionInput.tsx",
+  "src/features/workflows/ui/WorkflowFormBuilder.tsx",
+  "src/features/workflows/ui/WorkflowRichTriggerDescription.tsx",
+  "src/features/workflows/ui/WorkflowScheduleFields.tsx",
+  "src/features/workflows/ui/cronExpression.ts",
+  "src/features/workflows/ui/workflowDefinition.ts",
+  "src/features/workflows/ui/workflowFormTypes.ts",
+  "src/features/workflows/ui/workflowSchedule.ts",
+  "src/features/workflows/ui/workflowStepDescription.ts",
+  "src/features/workflows/ui/workflowTriggerCardClause.ts",
+  "src/features/workflows/ui/workflowTriggerDescription.ts",
+  "src/features/workflows/ui/workflowTriggerDescriptor.ts",
 ];
 
 /**

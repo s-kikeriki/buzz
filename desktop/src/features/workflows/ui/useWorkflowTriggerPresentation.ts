@@ -1,14 +1,17 @@
+import { useLingui } from "@lingui/react";
 import { useQuery } from "@tanstack/react-query";
 
 import { getEventById } from "@/shared/api/tauri";
 import { useWorkflowAuthorPresentation } from "./useWorkflowAuthorPresentation";
 import { parseConditionExpressions } from "./workflowConditionExpression";
+import { TRIGGER_LABELS } from "./workflowFormTypes";
 import type { TriggerConfig } from "./workflowFormTypes";
 import {
   normalizeMessageEventId,
   validatedWorkflowMessageCandidate,
 } from "./workflowMessageCandidates";
-import { workflowTriggerDescription } from "./workflowTriggerDescription";
+import { workflowTriggerDescriptorText } from "./workflowTriggerDescription";
+import { workflowTriggerDescriptor } from "./workflowTriggerDescriptor";
 
 export type WorkflowTriggerPresentation = ReturnType<
   typeof useWorkflowAuthorPresentation
@@ -34,6 +37,7 @@ export function useWorkflowTriggerPresentation(
   trigger: TriggerConfig,
   workflowChannelId?: string | null,
 ): WorkflowTriggerPresentation {
+  const { i18n } = useLingui();
   const author = useWorkflowAuthorPresentation(trigger);
   const messageId = workflowTriggerMessageId(trigger);
   const messageQuery = useQuery({
@@ -55,14 +59,19 @@ export function useWorkflowTriggerPresentation(
   );
   const messageLabel = message?.content?.trim() || null;
 
+  const descriptor = workflowTriggerDescriptor(trigger, {
+    authorLabel: author.label ?? undefined,
+    authorLoading: author.loading,
+    messageLabel: messageLabel ?? undefined,
+    messageLoading,
+  });
+
   return {
     ...author,
-    description: workflowTriggerDescription(trigger, {
-      authorLabel: author.label ?? undefined,
-      authorLoading: author.loading,
-      messageLabel: messageLabel ?? undefined,
-      messageLoading,
-    }),
+    description: descriptor
+      ? workflowTriggerDescriptorText(descriptor, i18n)
+      : i18n._(TRIGGER_LABELS[trigger.on]),
+    descriptor,
     messageId,
     messageLabel,
     messageLoading,

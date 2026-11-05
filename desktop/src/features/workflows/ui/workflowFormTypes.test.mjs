@@ -1,3 +1,4 @@
+import { i18n } from "@lingui/core";
 import assert from "node:assert/strict";
 import test from "node:test";
 import { parse as parseYaml } from "yaml";
@@ -12,7 +13,7 @@ import {
 } from "./workflowFormTypes.ts";
 
 function accepted(yaml) {
-  const result = yamlToFormState(yaml);
+  const result = yamlToFormState(yaml, i18n);
   assert.equal(result.ok, true, result.ok ? undefined : result.error);
   return result.state;
 }
@@ -82,7 +83,7 @@ test("recognized nodes with unknown fields are refused without touching YAML", (
 
   for (const yaml of fixtures) {
     const original = yaml;
-    const result = yamlToFormState(yaml);
+    const result = yamlToFormState(yaml, i18n);
     assert.equal(result.ok, false);
     assert.match(result.error, /YAML editor/);
     assert.equal(yaml, original);
@@ -138,14 +139,14 @@ test("invalid IDs, shapes, and scalar types are refused", () => {
   ];
 
   for (const [name, yaml] of cases) {
-    assert.equal(yamlToFormState(yaml).ok, false, name);
+    assert.equal(yamlToFormState(yaml, i18n).ok, false, name);
   }
 });
 
 test("step condition capabilities stay in YAML mode", () => {
   const condition = `name: Conditional\ntrigger: { on: webhook }\nsteps: [{ id: s1, if: trigger_author == "abc", action: send_message, text: hi }]\n`;
 
-  const conditionResult = yamlToFormState(condition);
+  const conditionResult = yamlToFormState(condition, i18n);
   assert.equal(conditionResult.ok, false);
   assert.match(conditionResult.error, /conditions.*YAML editor/);
 });
@@ -161,7 +162,7 @@ test("malformed and unowned schedule definitions stay losslessly in YAML mode", 
 
   for (const yaml of fixtures) {
     const original = yaml;
-    const result = yamlToFormState(yaml);
+    const result = yamlToFormState(yaml, i18n);
     assert.equal(result.ok, false);
     assert.match(result.error, /YAML editor/);
     assert.equal(yaml, original);
@@ -213,7 +214,8 @@ test("values the Form serializer would normalize are refused", () => {
     `name: Test\ntrigger: { on: webhook }\nsteps: [{ id: s1, action: call_webhook, url: https://example.com, headers: { " padded ": value } }]\n`,
   ];
 
-  for (const yaml of fixtures) assert.equal(yamlToFormState(yaml).ok, false);
+  for (const yaml of fixtures)
+    assert.equal(yamlToFormState(yaml, i18n).ok, false);
 });
 
 test("reply_in_thread is emitted only when the checkbox is on", () => {
@@ -265,7 +267,7 @@ test("an ineligible trigger cannot resurrect reply_in_thread through an action c
 
 test("invalid reply_in_thread values are refused rather than normalized", () => {
   const original = (yaml) => {
-    const result = yamlToFormState(yaml);
+    const result = yamlToFormState(yaml, i18n);
     assert.equal(result.ok, false);
     assert.match(result.error, /YAML editor/);
     return result;
@@ -292,7 +294,7 @@ test("reply_in_thread eligibility follows trigger capability", () => {
 });
 test("reply_in_thread round-trips YAML -> form -> YAML", () => {
   const yaml = formStateToYaml(sendMessageState({ replyInThread: true }));
-  const parsed = yamlToFormState(yaml);
+  const parsed = yamlToFormState(yaml, i18n);
   assert.equal(parsed.ok, true);
   assert.equal(parsed.state.steps[0].replyInThread, true);
 
@@ -311,7 +313,7 @@ test("absent reply_in_thread parses as false", () => {
     "    text: hi",
     "",
   ].join("\n");
-  const parsed = yamlToFormState(yaml);
+  const parsed = yamlToFormState(yaml, i18n);
   assert.equal(parsed.ok, true);
   assert.equal(parsed.state.steps[0].replyInThread, false);
 });
@@ -328,6 +330,7 @@ test("stored hex to/from keys display as npubs in the form", () => {
 trigger: { on: message_posted }
 steps: [{ id: s1, action: send_dm, to: ${KEY_HEX}, text: hi }, { id: s2, action: request_approval, from: ${KEY_HEX}, message: ok }]
 `,
+    i18n,
   );
   assert.equal(parsed.ok, true);
   assert.equal(parsed.state.steps[0].to, KEY_NPUB);
@@ -377,6 +380,7 @@ test("templates and roles pass through both directions untouched", () => {
 trigger: { on: message_posted }
 steps: [{ id: s1, action: send_dm, to: "{{trigger.author}}", text: hi }, { id: s2, action: request_approval, from: manager, message: ok }]
 `,
+    i18n,
   );
   assert.equal(parsed.ok, true);
   assert.equal(parsed.state.steps[0].to, "{{trigger.author}}");

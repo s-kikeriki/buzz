@@ -1,7 +1,21 @@
+import type { I18n, MessageDescriptor } from "@lingui/core";
+import { msg, plural } from "@lingui/core/macro";
+
+import { resolveDescriptor } from "@/shared/i18n/resolveDescriptor";
+
+/**
+ * The five cron fields.
+ *
+ * `key` is the stable identifier: it builds the input's DOM id and its React
+ * key, and names the field in every error below. `label` is only ever read by a
+ * person. They were one string before — the id was
+ * `wf-trigger-cron-${label.toLowerCase()}`, so translating the label silently
+ * renamed every input and every `htmlFor` that pointed at one.
+ */
 export const CRON_FIELD_DEFINITIONS = [
-  { label: "Minute", max: 59, min: 0 },
-  { label: "Hour", max: 23, min: 0 },
-  { label: "Day", max: 31, min: 1 },
+  { key: "minute", label: msg`Minute`, max: 59, min: 0 },
+  { key: "hour", label: msg`Hour`, max: 23, min: 0 },
+  { key: "day", label: msg`Day`, max: 31, min: 1 },
   {
     aliases: [
       "JAN",
@@ -17,19 +31,39 @@ export const CRON_FIELD_DEFINITIONS = [
       "NOV",
       "DEC",
     ],
-    label: "Month",
+    key: "month",
+    label: msg`Month`,
     max: 12,
     min: 1,
   },
   {
     aliases: ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"],
-    label: "Weekday",
+    key: "weekday",
+    label: msg`Weekday`,
     max: 7,
     min: 0,
   },
 ] as const;
 
 export type CronFields = [string, string, string, string, string];
+
+/**
+ * Every way a cron field can be wrong, as one whole sentence each.
+ *
+ * The field name is a placeholder rather than a sentence prefix: German needs
+ * it in the same opening position, but the verb that follows it inflects, so
+ * the sentence cannot be assembled as `label + rest`.
+ */
+const FIELD_ERRORS = {
+  emptyListItem: msg`{field} has an empty list item.`,
+  invalidRange: msg`{field} has an invalid range.`,
+  invalidStep: msg`{field} has an invalid step.`,
+  outOfRange: msg`{field} must be between {min} and {max}.`,
+  rangeOrder: msg`{field} range must go from lower to higher.`,
+  required: msg`{field} is required.`,
+  stepNotPositive: msg`{field} step must be a positive whole number.`,
+  unsupportedValue: msg`{field} contains “{atom}”, which is not a supported value.`,
+} as const;
 
 export function cronFieldsFromExpression(expression: string): CronFields {
   const values = expression.trim() ? expression.trim().split(/\s+/) : [];
@@ -52,22 +86,44 @@ export function normalizeCronExpression(expression: string): string {
 
 export function cronFieldsFromPaste(
   pastedValue: string,
+  i18n: I18n,
 ): { fields: CronFields; ok: true } | { error: string; ok: false } {
   const values = pastedValue.trim().split(/\s+/);
   if (values.length !== CRON_FIELD_DEFINITIONS.length) {
+    const count = values.length;
     return {
-      error: `Paste a 5-field cron expression. Found ${values.length} field${values.length === 1 ? "" : "s"}.`,
+      // One plural over the whole sentence: German inflects "Feld"/"Felder"
+      // inside it, so a `${n} field(s)` fragment has nothing to agree with.
+      error: i18n._(
+        msg`${plural(count, {
+          one: "Paste a 5-field cron expression. Found # field.",
+          other: "Paste a 5-field cron expression. Found # fields.",
+        })}`,
+      ),
       ok: false,
     };
   }
   return { fields: values as CronFields, ok: true };
 }
 
-type CronFieldDefinition = (typeof CRON_FIELD_DEFINITIONS)[number];
+export type CronFieldDefinition = (typeof CRON_FIELD_DEFINITIONS)[number];
+
+function fieldError(
+  definition: CronFieldDefinition,
+  i18n: I18n,
+  descriptor: MessageDescriptor,
+  values: Record<string, string | number> = {},
+): string {
+  return resolveDescriptor(i18n, descriptor, {
+    field: i18n._(definition.label),
+    ...values,
+  });
+}
 
 function atomError(
   atom: string,
   definition: CronFieldDefinition,
+  i18n: I18n,
 ): string | null {
   const upperAtom = atom.toUpperCase();
   if (
@@ -77,12 +133,17 @@ function atomError(
     return null;
   }
   if (!/^\d+$/.test(atom)) {
-    return `${definition.label} contains “${atom}”, which is not a supported value.`;
+    return fieldError(definition, i18n, FIELD_ERRORS.unsupportedValue, {
+      atom,
+    });
   }
 
   const value = Number(atom);
   if (value < definition.min || value > definition.max) {
-    return `${definition.label} must be between ${definition.min} and ${definition.max}.`;
+    return fieldError(definition, i18n, FIELD_ERRORS.outOfRange, {
+      max: definition.max,
+      min: definition.min,
+    });
   }
   return null;
 }
@@ -90,16 +151,17 @@ function atomError(
 function segmentError(
   segment: string,
   definition: CronFieldDefinition,
+  i18n: I18n,
 ): string | null {
   const stepParts = segment.split("/");
   if (stepParts.length > 2 || stepParts.some((part) => !part)) {
-    return `${definition.label} has an invalid step.`;
+    return fieldError(definition, i18n, FIELD_ERRORS.invalidStep);
   }
 
   const [base, step] = stepParts;
   if (step !== undefined) {
     if (!/^\d+$/.test(step) || Number(step) < 1) {
-      return `${definition.label} step must be a positive whole number.`;
+      return fieldError(definition, i18n, FIELD_ERRORS.stepNotPositive);
     }
   }
 
@@ -107,20 +169,20 @@ function segmentError(
 
   const rangeParts = base.split("-");
   if (rangeParts.length > 2 || rangeParts.some((part) => !part)) {
-    return `${definition.label} has an invalid range.`;
+    return fieldError(definition, i18n, FIELD_ERRORS.invalidRange);
   }
 
-  const startError = atomError(rangeParts[0], definition);
+  const startError = atomError(rangeParts[0], definition, i18n);
   if (startError) return startError;
   if (rangeParts.length === 1) return null;
 
-  const endError = atomError(rangeParts[1], definition);
+  const endError = atomError(rangeParts[1], definition, i18n);
   if (endError) return endError;
 
   const start = Number(rangeParts[0]);
   const end = Number(rangeParts[1]);
   if (Number.isFinite(start) && Number.isFinite(end) && start > end) {
-    return `${definition.label} range must go from lower to higher.`;
+    return fieldError(definition, i18n, FIELD_ERRORS.rangeOrder);
   }
   return null;
 }
@@ -128,29 +190,36 @@ function segmentError(
 export function validateCronField(
   value: string,
   definition: CronFieldDefinition,
+  i18n: I18n,
 ): string | null {
-  if (!value) return `${definition.label} is required.`;
+  if (!value) return fieldError(definition, i18n, FIELD_ERRORS.required);
 
   const segments = value.split(",");
   if (segments.some((segment) => !segment)) {
-    return `${definition.label} has an empty list item.`;
+    return fieldError(definition, i18n, FIELD_ERRORS.emptyListItem);
   }
 
   for (const segment of segments) {
-    const error = segmentError(segment, definition);
+    const error = segmentError(segment, definition, i18n);
     if (error) return error;
   }
   return null;
 }
 
-export function validateCronFields(fields: CronFields): Array<string | null> {
+export function validateCronFields(
+  fields: CronFields,
+  i18n: I18n,
+): Array<string | null> {
   return fields.map((field, index) =>
-    validateCronField(field, CRON_FIELD_DEFINITIONS[index]),
+    validateCronField(field, CRON_FIELD_DEFINITIONS[index], i18n),
   );
 }
 
-export function cronExpressionError(expression: string): string | null {
-  const parsed = cronFieldsFromPaste(expression);
+export function cronExpressionError(
+  expression: string,
+  i18n: I18n,
+): string | null {
+  const parsed = cronFieldsFromPaste(expression, i18n);
   if (!parsed.ok) return parsed.error;
-  return validateCronFields(parsed.fields).find(Boolean) ?? null;
+  return validateCronFields(parsed.fields, i18n).find(Boolean) ?? null;
 }

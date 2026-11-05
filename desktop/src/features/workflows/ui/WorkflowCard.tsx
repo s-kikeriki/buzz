@@ -33,7 +33,7 @@ import {
 import { StatusEmoji } from "@/features/user-status/ui/StatusEmoji";
 import type { WorkflowCardAuthorPresentation } from "./useWorkflowListAuthorPresentations";
 import type { WorkflowMessagePresentation } from "./useWorkflowListMessagePresentations";
-import { workflowTriggerDescription } from "./workflowTriggerDescription";
+import { workflowTriggerDescriptor } from "./workflowTriggerDescriptor";
 
 type WorkflowCardProps = {
   workflow: Workflow;
@@ -219,8 +219,8 @@ export function WorkflowCard({
   const isEnabled = getWorkflowEnabled(workflow.definition);
   const configuredTrigger = getWorkflowTriggerConfig(workflow.definition);
   const cardLabel = getWorkflowCardLabel(workflow.definition, i18n, {
-    triggerDescription: configuredTrigger
-      ? workflowTriggerDescription(configuredTrigger, {
+    triggerDescriptor: configuredTrigger
+      ? workflowTriggerDescriptor(configuredTrigger, {
           authorLabel: authorPresentation?.label ?? undefined,
           authorLoading: authorPresentation?.loading,
           messageLabel: messagePresentation?.messageLabel ?? undefined,

@@ -694,6 +694,10 @@ msgstr "{count, plural, one {Lass uns über diesen Review sprechen:} other {Lass
 msgid "{count, plural, one {Let's talk about this task:} other {Let's talk about these tasks:}}"
 msgstr "{count, plural, one {Lass uns über diese Aufgabe sprechen:} other {Lass uns über diese Aufgaben sprechen:}}"
 
+#: src/features/workflows/ui/cronExpression.ts
+msgid "{count, plural, one {Paste a 5-field cron expression. Found # field.} other {Paste a 5-field cron expression. Found # fields.}}"
+msgstr "{count, plural, one {Füge einen Cron-Ausdruck mit 5 Feldern ein. # Feld gefunden.} other {Füge einen Cron-Ausdruck mit 5 Feldern ein. # Felder gefunden.}}"
+
 #: src/features/channels/ui/useMembersSidebarActions.ts
 msgid "{count, plural, one {Removed 1 managed bot from this channel.} other {Removed # managed bots from this channel.}}"
 msgstr "{count, plural, one {1 verwalteter Bot aus diesem Kanal entfernt.} other {# verwaltete Bots aus diesem Kanal entfernt.}}"
@@ -766,9 +770,53 @@ msgstr "{earlierCommentCount, plural, one {# früheren Kommentar anzeigen} other
 msgid "{earlierReviewHistoryCount, plural, one {Show # earlier activity} other {Show # earlier activities}}"
 msgstr "{earlierReviewHistoryCount, plural, one {# frühere Aktivität anzeigen} other {# frühere Aktivitäten anzeigen}}"
 
+#: src/features/workflows/ui/workflowTriggerDescription.ts
+msgid "{emoji} reaction added"
+msgstr "{emoji} Reaktion hinzugefügt"
+
+#: src/features/workflows/ui/workflowTriggerDescription.ts
+msgid "{emoji} reaction added {attribution}"
+msgstr "{emoji} Reaktion {attribution} hinzugefügt"
+
+#: src/features/workflows/ui/workflowFormTypes.ts
+msgid "{error} — use the YAML editor"
+msgstr "{error} – nutze den YAML-Editor"
+
 #: src/features/agents/ui/ManagedAgentSessionPanel.tsx
 msgid "{eventCount, plural, one {# event} other {# events}}"
 msgstr "{eventCount, plural, one {# Ereignis} other {# Ereignisse}}"
+
+#: src/features/workflows/ui/cronExpression.ts
+msgid "{field} contains “{atom}”, which is not a supported value."
+msgstr "{field} enthält „{atom}“ – das ist kein unterstützter Wert."
+
+#: src/features/workflows/ui/cronExpression.ts
+msgid "{field} has an empty list item."
+msgstr "{field} hat einen leeren Listeneintrag."
+
+#: src/features/workflows/ui/cronExpression.ts
+msgid "{field} has an invalid range."
+msgstr "{field} hat einen ungültigen Bereich."
+
+#: src/features/workflows/ui/cronExpression.ts
+msgid "{field} has an invalid step."
+msgstr "{field} hat eine ungültige Schrittweite."
+
+#: src/features/workflows/ui/cronExpression.ts
+msgid "{field} is required."
+msgstr "{field} ist erforderlich."
+
+#: src/features/workflows/ui/cronExpression.ts
+msgid "{field} must be between {min} and {max}."
+msgstr "{field} muss zwischen {min} und {max} liegen."
+
+#: src/features/workflows/ui/cronExpression.ts
+msgid "{field} range must go from lower to higher."
+msgstr "Der Bereich von {field} muss von klein nach groß gehen."
+
+#: src/features/workflows/ui/cronExpression.ts
+msgid "{field} step must be a positive whole number."
+msgstr "Die Schrittweite von {field} muss eine positive ganze Zahl sein."
 
 #: src/features/agents/ui/bakedEnvHelpers.ts
 msgid "{friendlyName} (inherited from build)"
@@ -854,6 +902,10 @@ msgstr "{label} (1M Kontext)"
 msgid "{label} avatar"
 msgstr "Avatar von {label}"
 
+#: src/features/workflows/ui/workflowFormTypes.ts
+msgid "{label} cannot be empty in Form mode — use the YAML editor"
+msgstr "{label} darf im Formularmodus nicht leer sein – nutze den YAML-Editor"
+
 #: src/shared/ui/PubKey.tsx
 msgid "{label} copied"
 msgstr "{label} kopiert"
@@ -861,6 +913,14 @@ msgstr "{label} kopiert"
 #: src/features/agents/ui/AgentRuntimeAvatarControl.tsx
 msgid "{label} has a runtime error. Open runtime details."
 msgstr "{label} hat einen Laufzeitfehler. Laufzeitdetails öffnen."
+
+#: src/features/workflows/ui/workflowFormTypes.ts
+msgid "{label} must be a non-empty string"
+msgstr "{label} muss eine nicht leere Zeichenkette sein"
+
+#: src/features/workflows/ui/workflowFormTypes.ts
+msgid "{label} must be a string"
+msgstr "{label} muss eine Zeichenkette sein"
 
 #: src/features/settings/ui/SettingsView.tsx
 msgid "{label} settings sections"
@@ -873,6 +933,10 @@ msgstr "Vorschau von {mediaLabel}"
 #: src/features/communities/hostedCommunityApi.ts
 msgid "{message} Correlation ID: {correlationId}"
 msgstr "{message} Korrelations-ID: {correlationId}"
+
+#: src/features/workflows/ui/workflowStepDescription.ts
+msgid "{message} from {approver}"
+msgstr "{message} von {approver}"
 
 #: src/features/communities/ui/CommunitySwitcher.tsx
 msgid "{message} If the community no longer exists, use Remove from this device."
@@ -1141,6 +1205,70 @@ msgstr "{startedName} konnte nicht starten{0}"
 msgid "{startedName} saved while stopped."
 msgstr "{startedName} gespeichert, bleibt aber gestoppt."
 
+#: src/features/workflows/ui/workflowTriggerDescription.ts
+msgid "{subject} “{value}” is posted"
+msgstr "{subject} „{value}“ wird gepostet"
+
+#: src/features/workflows/ui/workflowTriggerDescription.ts
+msgid "{subject} “{value}” is posted {attribution}"
+msgstr "{subject} „{value}“ wird {attribution} gepostet"
+
+#: src/features/workflows/ui/workflowTriggerDescription.ts
+msgid "{subject} {attribution} contains “{value}”"
+msgstr "{subject} {attribution} enthält „{value}“"
+
+#: src/features/workflows/ui/workflowTriggerDescription.ts
+msgid "{subject} {attribution} doesn’t contain “{value}”"
+msgstr "{subject} {attribution} enthält nicht „{value}“"
+
+#: src/features/workflows/ui/workflowTriggerDescription.ts
+msgid "{subject} {attribution} ends with “{value}”"
+msgstr "{subject} {attribution} endet mit „{value}“"
+
+#: src/features/workflows/ui/workflowTriggerDescription.ts
+msgid "{subject} {attribution} starts with “{value}”"
+msgstr "{subject} {attribution} beginnt mit „{value}“"
+
+#: src/features/workflows/ui/workflowTriggerDescription.ts
+msgid "{subject} contains “{value}”"
+msgstr "{subject} enthält „{value}“"
+
+#: src/features/workflows/ui/workflowTriggerDescription.ts
+msgid "{subject} doesn’t contain “{value}”"
+msgstr "{subject} enthält nicht „{value}“"
+
+#: src/features/workflows/ui/workflowTriggerDescription.ts
+msgid "{subject} ends with “{value}”"
+msgstr "{subject} endet mit „{value}“"
+
+#: src/features/workflows/ui/workflowTriggerDescription.ts
+msgid "{subject} starts with “{value}”"
+msgstr "{subject} beginnt mit „{value}“"
+
+#: src/features/workflows/ui/workflowTriggerDescription.ts
+msgid "{subject} with text other than “{value}” posted"
+msgstr "{subject} mit anderem Text als „{value}“ gepostet"
+
+#: src/features/workflows/ui/workflowTriggerDescription.ts
+msgid "{subject} with text other than “{value}” posted {attribution}"
+msgstr "{subject} mit anderem Text als „{value}“ {attribution} gepostet"
+
+#: src/features/workflows/ui/workflowTriggerDescription.ts
+msgid "{subject} with text posted"
+msgstr "{subject} mit Text gepostet"
+
+#: src/features/workflows/ui/workflowTriggerDescription.ts
+msgid "{subject} with text posted {attribution}"
+msgstr "{subject} mit Text {attribution} gepostet"
+
+#: src/features/workflows/ui/workflowTriggerDescription.ts
+msgid "{subject} without text posted"
+msgstr "{subject} ohne Text gepostet"
+
+#: src/features/workflows/ui/workflowTriggerDescription.ts
+msgid "{subject} without text posted {attribution}"
+msgstr "{subject} ohne Text {attribution} gepostet"
+
 #: src/features/sidebar/ui/ChannelSectionDialogs.tsx
 msgid "{subsectionCount, plural, one {Its subsection moves to the top level.} other {Its # subsections move to the top level.}}"
 msgstr "{subsectionCount, plural, one {Sein Unterbereich wird auf die oberste Ebene verschoben.} other {Seine # Unterbereiche werden auf die oberste Ebene verschoben.}}"
@@ -1170,6 +1298,14 @@ msgstr "Mitglieder-Avatare von {teamName}"
 msgid "{text} in"
 msgstr "{text} in"
 
+#: src/features/workflows/ui/workflowStepDescription.ts
+msgid "{text} in {channel}"
+msgstr "{text} in {channel}"
+
+#: src/features/workflows/ui/workflowStepDescription.ts
+msgid "{text} to {recipient}"
+msgstr "{text} an {recipient}"
+
 #: src/features/agents/ui/UnifiedAgentsSection.tsx
 msgid "{title} agent profile"
 msgstr "Agentenprofil von {title}"
@@ -1189,6 +1325,14 @@ msgstr "{totalMemoryTotal, plural, one {# Gedächtniseintrag über alle Mitglied
 #: src/features/agents/ui/TeamSnapshotImportDialog.tsx
 msgid "{totalMemoryTotal, plural, one {Memory partially restored: {totalMemoryWritten} of # entry written across all members.} other {Memory partially restored: {totalMemoryWritten} of # entries written across all members.}}"
 msgstr "{totalMemoryTotal, plural, one {Gedächtnis teilweise wiederhergestellt: {totalMemoryWritten} von # Eintrag über alle Mitglieder geschrieben.} other {Gedächtnis teilweise wiederhergestellt: {totalMemoryWritten} von # Einträgen über alle Mitglieder geschrieben.}}"
+
+#: src/features/workflows/ui/workflowDefinition.ts
+msgid "{triggerClause}, {firstAction}"
+msgstr "{triggerClause}, {firstAction}"
+
+#: src/features/workflows/ui/workflowDefinition.ts
+msgid "{triggerClause}, {firstAction}, then {remainingStepCount, plural, one {# more step} other {# more steps}}"
+msgstr "{triggerClause}, {firstAction}, dann {remainingStepCount, plural, one {# weiterer Schritt} other {# weitere Schritte}}"
 
 #: src/features/channels/ui/BotActivityBar.tsx
 msgid "{triggerLabel}. View activity."
@@ -1401,6 +1545,10 @@ msgstr "Ein Coding-Agent für das Terminal mit integrierten Entwicklungswerkzeug
 msgid "a thread"
 msgstr "einem Thread"
 
+#: src/features/workflows/ui/WorkflowFormBuilder.tsx
+msgid "A unique URL is generated after creation."
+msgstr "Nach dem Erstellen wird eine eindeutige URL erzeugt."
+
 #: src/features/messages/ui/useComposerVoiceNote.tsx
 msgid "A voice note must be the only attachment."
 msgstr "Eine Sprachnachricht muss der einzige Anhang sein."
@@ -1470,6 +1618,10 @@ msgstr "ACP-Wire-Quelle: {source}"
 #: src/features/profile/ui/UserProfilePopover.tsx
 msgid "ACP:"
 msgstr "ACP:"
+
+#: src/features/workflows/ui/WorkflowFormBuilder.tsx
+msgid "Action"
+msgstr "Aktion"
 
 #: src/features/settings/ui/HarnessesSettingsPanel.tsx
 msgid "Action needed"
@@ -1573,6 +1725,10 @@ msgstr "{instanceName} ({0}) hinzufügen"
 msgid "Add {name}"
 msgstr "{name} hinzufügen"
 
+#: src/features/workflows/ui/workflowDefinition.ts
+msgid "add a {detail} reaction"
+msgstr "eine {detail}-Reaktion hinzufügen"
+
 #: src/features/projects/ui/ProjectIssuesPanel.tsx
 #: src/features/projects/ui/ProjectPullRequestsPanel.tsx
 msgid "Add a comment…"
@@ -1610,6 +1766,10 @@ msgstr "Profilfoto hinzufügen"
 msgid "Add a project"
 msgstr "Projekt hinzufügen"
 
+#: src/features/workflows/ui/workflowDefinition.ts
+msgid "add a reaction"
+msgstr "eine Reaktion hinzufügen"
+
 #: src/features/projects/ui/ProjectReadmePanel.tsx
 msgid "Add a README to describe setup, usage, and project context."
 msgstr "Füg ein README hinzu, das Einrichtung, Nutzung und den Projektkontext beschreibt."
@@ -1621,6 +1781,10 @@ msgstr "Füge ein Repo hinzu."
 #: src/features/projects/ui/ProjectHomeContextPanel.tsx
 msgid "Add a repository to this project"
 msgstr "Repository zu diesem Projekt hinzufügen"
+
+#: src/features/workflows/ui/WorkflowFormBuilder.tsx
+msgid "Add after {title}"
+msgstr "Nach {title} hinzufügen"
 
 #: src/features/agents/ui/AgentsView.tsx
 #: src/features/agents/ui/CommunityCatalogDialog.tsx
@@ -1750,6 +1914,10 @@ msgstr "Pubkey direkt hinzufügen"
 msgid "Add reaction"
 msgstr "Reaktion hinzufügen"
 
+#: src/features/workflows/ui/workflowFormTypes.ts
+msgid "Add Reaction"
+msgstr "Reaktion hinzufügen"
+
 #: src/features/projects/ui/AddProjectRepositoryDialog.tsx
 #: src/features/projects/ui/ProjectRepositoryManagement.tsx
 #: src/features/projects/ui/projectsOverviewContext.ts
@@ -1770,6 +1938,7 @@ msgid "Add someone directly or share a link they can use to join."
 msgstr "Füg jemanden direkt hinzu oder teil einen Link zum Beitreten."
 
 #: src/features/workflows/ui/WorkflowDialog.tsx
+#: src/features/workflows/ui/WorkflowFormBuilder.tsx
 msgid "Add step"
 msgstr "Schritt hinzufügen"
 
@@ -2305,6 +2474,14 @@ msgstr "Das agentische Coding-Werkzeug von Anthropic, das im Terminal läuft."
 msgid "Any command that speaks ACP over stdio works."
 msgstr "Jeder Befehl, der ACP über stdio spricht, funktioniert."
 
+#: src/features/workflows/ui/workflowTriggerDescription.ts
+msgid "Any reaction except {emoji} added"
+msgstr "Jede Reaktion außer {emoji} hinzugefügt"
+
+#: src/features/workflows/ui/workflowTriggerDescription.ts
+msgid "Any reaction except {emoji} added {attribution}"
+msgstr "Jede Reaktion außer {emoji} {attribution} hinzugefügt"
+
 #: src/features/agents/ui/RespondToField.tsx
 #: src/features/channels/ui/MembersSidebarMemberCard.tsx
 #: src/features/profile/ui/UserProfilePanelFields.tsx
@@ -2330,6 +2507,18 @@ msgstr "Jeder mit dem Link kann es ansehen."
 #: src/features/agents/ui/PersonaShareDialog.tsx
 msgid "Anyone you share this"
 msgstr "Jeder, mit dem du dieses"
+
+#: src/features/workflows/ui/workflowTriggerDescription.ts
+msgid "anywhere except “{message}”"
+msgstr "überall außer „{message}“"
+
+#: src/features/workflows/ui/workflowTriggerDescription.ts
+msgid "anywhere except {message}"
+msgstr "überall außer {message}"
+
+#: src/features/workflows/ui/workflowTriggerDescription.ts
+msgid "anywhere except loading message"
+msgstr "überall außer (lädt …)"
 
 #: src/features/agents/ui/AgentDefinitionDialog.tsx
 msgid "API key"
@@ -2993,9 +3182,37 @@ msgstr "Mitgeliefertes Preset"
 msgid "buzz-agent model tuning"
 msgstr "buzz-agent-Modellabstimmung"
 
+#: src/features/workflows/ui/workflowTriggerDescription.ts
+msgid "by {author}"
+msgstr "von {author}"
+
+#: src/features/workflows/ui/workflowTriggerDescription.ts
+msgid "by anyone except {author}"
+msgstr "von allen außer {author}"
+
+#: src/features/workflows/ui/workflowTriggerDescription.ts
+msgid "by anyone except loading author"
+msgstr "von allen außer (lädt …)"
+
+#: src/features/workflows/ui/workflowTriggerDescription.ts
+msgid "by loading author"
+msgstr "von (lädt …)"
+
 #: src/features/channels/ui/ChannelMemberInviteCard.tsx
 msgid "by public key"
 msgstr "nach öffentlichem Schlüssel"
+
+#: src/features/workflows/ui/workflowDefinition.ts
+msgid "call {detail}"
+msgstr "{detail} aufrufen"
+
+#: src/features/workflows/ui/workflowDefinition.ts
+msgid "call a webhook"
+msgstr "einen Webhook aufrufen"
+
+#: src/features/workflows/ui/workflowFormTypes.ts
+msgid "Call Webhook"
+msgstr "Webhook aufrufen"
 
 #: src/features/sidebar/ui/SidebarRelayConnectionCard.tsx
 msgid "Can't reach the relay"
@@ -3088,6 +3305,10 @@ msgstr "abgebrochen"
 #: src/features/home/ui/InboxListPane.tsx
 msgid "Cannot remind without a channel"
 msgstr "Ohne Kanal ist keine Erinnerung möglich"
+
+#: src/features/workflows/ui/WorkflowFormBuilder.tsx
+msgid "Cannot switch to form view: {parseError}"
+msgstr "Wechsel zur Formularansicht nicht möglich: {parseError}"
 
 #: src/features/settings/ui/ChannelTemplatesSettingsCard.tsx
 msgid "canvas"
@@ -3838,6 +4059,14 @@ msgstr "Direktnachricht schließen"
 #: src/features/messages/ui/MessageComposerToolbar.tsx
 msgid "Close formatting"
 msgstr "Formatierung schließen"
+
+#: src/features/workflows/ui/WorkflowFormBuilder.tsx
+msgid "Close inspector"
+msgstr "Inspektor schließen"
+
+#: src/features/workflows/ui/WorkflowFormBuilder.tsx
+msgid "Close inspector overlay"
+msgstr "Inspektor-Overlay schließen"
 
 #: src/features/messages/ui/ComposerAttachments.tsx
 #: src/shared/ui/SimpleImageLightbox.tsx
@@ -5273,6 +5502,10 @@ msgstr "Wird angelegt …"
 msgid "Creating…"
 msgstr "Wird angelegt…"
 
+#: src/features/workflows/ui/CronExpressionInput.tsx
+msgid "Cron expression"
+msgstr "Cron-Ausdruck"
+
 #: src/features/channels/ui/CanvasHistoryPanel.tsx
 #: src/features/profile/ui/ProfileInstancesSection.tsx
 msgid "Current"
@@ -5324,6 +5557,10 @@ msgstr "Eigene Agenten"
 msgid "Custom command"
 msgstr "Eigener Befehl"
 
+#: src/features/workflows/ui/workflowSchedule.ts
+msgid "Custom cron"
+msgstr "Eigener Cron"
+
 #: src/features/settings/ui/SettingsPanels.tsx
 #: src/shared/ui/markdown/InlineEmojiPopover.tsx
 msgid "Custom emoji"
@@ -5373,6 +5610,10 @@ msgstr "Für diesen Agenten anpassen"
 msgid "Cutting you out of the background..."
 msgstr "Du wirst vom Hintergrund freigestellt…"
 
+#: src/features/workflows/ui/workflowSchedule.ts
+msgid "Daily"
+msgstr "Täglich"
+
 #: src/features/settings/ui/AppearanceSettingsPanel.tsx
 msgid "Dark"
 msgstr "Dunkel"
@@ -5400,6 +5641,14 @@ msgstr "Databricks v2"
 #: src/features/projects/ui/ProjectCommitDetailPanel.tsx
 msgid "Date"
 msgstr "Datum"
+
+#: src/features/workflows/ui/cronExpression.ts
+msgid "Day"
+msgstr "Tag"
+
+#: src/features/workflows/ui/WorkflowScheduleFields.tsx
+msgid "Day of month"
+msgstr "Tag des Monats"
 
 #: src/features/profile/ui/UserProfilePanelFields.tsx
 msgid "Declared owner verified"
@@ -5465,6 +5714,10 @@ msgstr "Standard ist der Name der ausgewählten Runtime."
 #: src/features/workflows/ui/WorkflowDetailPanel.tsx
 msgid "Definition"
 msgstr "Definition"
+
+#: src/features/workflows/ui/workflowFormTypes.ts
+msgid "Delay"
+msgstr "Verzögerung"
 
 #: src/features/agents/ui/PersonaActionsMenu.tsx
 #: src/features/agents/ui/PersonaDeleteDialog.tsx
@@ -5687,6 +5940,14 @@ msgstr "Beschreib, was dieser Agent tun soll."
 msgid "Description"
 msgstr "Beschreibung"
 
+#: src/features/workflows/ui/workflowFormTypes.ts
+msgid "description cannot be empty or have surrounding whitespace in Form mode — use the YAML editor"
+msgstr "description darf im Formularmodus nicht leer sein und keine Leerzeichen am Rand haben – nutze den YAML-Editor"
+
+#: src/features/workflows/ui/workflowFormTypes.ts
+msgid "description must be a string"
+msgstr "description muss eine Zeichenkette sein"
+
 #: src/features/agents/ui/personaLibraryCopy.ts
 msgid "Deselect"
 msgstr "Abwählen"
@@ -5740,6 +6001,22 @@ msgstr "Erkannt unter"
 #: src/features/onboarding/ui/SetupStep.tsx
 msgid "Devin account"
 msgstr "Devin-Konto"
+
+#: src/features/workflows/ui/workflowTriggerDescription.ts
+msgid "Diff"
+msgstr "Diff"
+
+#: src/features/workflows/ui/workflowTriggerDescription.ts
+msgid "Diff posted"
+msgstr "Diff gepostet"
+
+#: src/features/workflows/ui/workflowFormTypes.ts
+msgid "Diff Posted"
+msgstr "Diff gepostet"
+
+#: src/features/workflows/ui/workflowTriggerDescription.ts
+msgid "Diff posted {attribution}"
+msgstr "Diff {attribution} gepostet"
 
 #: src/features/workflows/ui/workflowTemplateVariables.ts
 msgid "Diff text"
@@ -6076,6 +6353,10 @@ msgstr "{0} duplizieren"
 msgid "Duplicate agent"
 msgstr "Agent duplizieren"
 
+#: src/features/workflows/ui/workflowFormTypes.ts
+msgid "Duplicate step ID \"{id}\" — use the YAML editor"
+msgstr "Doppelte Schritt-ID „{id}“ – nutze den YAML-Editor"
+
 #: src/features/workflows/ui/WorkflowDialog.tsx
 msgid "Duplicate workflow"
 msgstr "Workflow duplizieren"
@@ -6232,6 +6513,10 @@ msgstr "Team bearbeiten"
 msgid "Edit template"
 msgstr "Vorlage bearbeiten"
 
+#: src/features/workflows/ui/WorkflowFormBuilder.tsx
+msgid "Edit the raw YAML definition directly."
+msgstr "Bearbeite die YAML-Definition direkt."
+
 #: src/features/workflows/ui/WorkflowDialog.tsx
 msgid "Edit workflow"
 msgstr "Workflow bearbeiten"
@@ -6283,6 +6568,14 @@ msgstr "Emoji-Reaktionen"
 #: src/features/messages/ui/DraftsPanel.tsx
 msgid "Empty draft"
 msgstr "Leerer Entwurf"
+
+#: src/features/workflows/ui/WorkflowFormBuilder.tsx
+msgid "Enable workflow"
+msgstr "Workflow aktivieren"
+
+#: src/features/workflows/ui/workflowFormTypes.ts
+msgid "enabled must be a boolean"
+msgstr "enabled muss ein Wahrheitswert sein"
 
 #. placeholder {0}: err.message
 #: src/features/agents/ui/useSnapshotSendController.ts
@@ -6426,6 +6719,18 @@ msgstr "Temporärer Kanal. Das Aufräumen ist jetzt fällig."
 msgid "Error"
 msgstr "Fehler"
 
+#: src/features/workflows/ui/workflowDefinition.ts
+msgid "Every {interval}"
+msgstr "Alle {interval}"
+
+#: src/features/workflows/ui/workflowSchedule.ts
+msgid "Every 15 minutes"
+msgstr "Alle 15 Minuten"
+
+#: src/features/workflows/ui/workflowSchedule.ts
+msgid "Every 30 minutes"
+msgstr "Alle 30 Minuten"
+
 #: src/features/projects/ui/AttachProjectRepositoryDialog.tsx
 msgid "Every available repository is already in this project."
 msgstr "Jedes verfügbare Repository ist schon in diesem Projekt."
@@ -6433,6 +6738,22 @@ msgstr "Jedes verfügbare Repository ist schon in diesem Projekt."
 #: src/features/agents/ui/AgentCardViewerDialog.tsx
 msgid "Every card you’ve minted, newest first. Click one to view, save, or share it."
 msgstr "Jede Karte, die du geprägt hast, neueste zuerst. Klick eine an, um sie anzusehen, zu speichern oder zu teilen."
+
+#: src/features/workflows/ui/workflowDefinition.ts
+msgid "Every day at {time} UTC"
+msgstr "Täglich um {time} UTC"
+
+#: src/features/workflows/ui/workflowSchedule.ts
+msgid "Every hour"
+msgstr "Jede Stunde"
+
+#: src/features/workflows/ui/workflowDefinition.ts
+msgid "Every month at {time} UTC"
+msgstr "Monatlich um {time} UTC"
+
+#: src/features/workflows/ui/workflowDefinition.ts
+msgid "Every week at {time} UTC"
+msgstr "Wöchentlich um {time} UTC"
 
 #: src/features/search/ui/SearchPromptPlaceholder.tsx
 msgid "everything"
@@ -6445,6 +6766,10 @@ msgstr "Alles aus dem Agenten-Katalog ist schon in „Meine Agenten“."
 #: src/features/workflows/ui/WorkflowDetailPanel.tsx
 msgid "Execution Trace"
 msgstr "Ausführungsprotokoll"
+
+#: src/features/workflows/ui/WorkflowScheduleFields.tsx
+msgid "Existing interval"
+msgstr "Bestehendes Intervall"
 
 #: src/features/messages/ui/DiffMessage.tsx
 msgid "Expand diff"
@@ -6478,6 +6803,11 @@ msgstr "Exportieren"
 #: src/features/profile/ui/UserProfileAgentManagementRows.tsx
 msgid "Export agent"
 msgstr "Agent exportieren"
+
+#: src/features/workflows/ui/WorkflowScheduleFields.tsx
+msgctxt "Friday"
+msgid "F"
+msgstr "Fr"
 
 #: src/features/workflows/ui/WorkflowDetailPanel.tsx
 msgid "failed"
@@ -7021,6 +7351,10 @@ msgstr "Im PATH gefunden"
 msgid "Frame"
 msgstr "Bild"
 
+#: src/features/workflows/ui/WorkflowScheduleFields.tsx
+msgid "Friday"
+msgstr "Freitag"
+
 #: src/features/workflows/ui/WorkflowStepCard.tsx
 msgid "From (approver)"
 msgstr "Von (Freigeber)"
@@ -7287,6 +7621,10 @@ msgstr "Gehostete Communitys"
 #: src/features/settings/ui/HostedCommunitiesSettingsCard.tsx
 msgid "Hosted community"
 msgstr "Gehostete Community"
+
+#: src/features/workflows/ui/cronExpression.ts
+msgid "Hour"
+msgstr "Stunde"
 
 #: src/features/profile/ui/AnimatedAvatarCapture.tsx
 msgid "Hover to play"
@@ -7707,6 +8045,10 @@ msgstr "Instanzen"
 msgid "Interrupt the current ACP turn without stopping the agent process."
 msgstr "Den aktuellen ACP-Zug unterbrechen, ohne den Agentenprozess zu stoppen."
 
+#: src/features/workflows/ui/workflowFormTypes.ts
+msgid "Invalid YAML"
+msgstr "Ungültiges YAML"
+
 #: src/features/community-members/ui/CommunityInviteDialog.tsx
 #: src/features/messages/ui/NonMemberMentionDialog.tsx
 msgid "Invite"
@@ -7972,6 +8314,10 @@ msgstr "Ausgeschaltet lassen"
 msgid "Keep the file private and save its password somewhere safe — {productName} cannot reset it. Once ready, the backup remains available to download for 5 minutes."
 msgstr "Halte die Datei privat und bewahre ihr Passwort an einem sicheren Ort auf — {productName} kann es nicht zurücksetzen. Sobald es fertig ist, steht das Backup 5 Minuten lang zum Download bereit."
 
+#: src/features/workflows/ui/WorkflowScheduleFields.tsx
+msgid "Keep this legacy interval or choose a repeat option above. All schedules use UTC."
+msgstr "Behalte dieses alte Intervall oder wähle oben eine Wiederholung. Alle Zeitpläne nutzen UTC."
+
 #: src/features/agents/ui/PersonaAdvancedFields.tsx
 msgid "Keeps a separate conversation for each channel thread. Direct messages remain shared."
 msgstr "Für jeden Kanal-Thread eine eigene Unterhaltung. Direktnachrichten bleiben gemeinsam."
@@ -8232,6 +8578,10 @@ msgstr "Aktivität wird geladen"
 msgid "Loading agents…"
 msgstr "Agenten werden geladen…"
 
+#: src/features/workflows/ui/WorkflowRichTriggerDescription.tsx
+msgid "Loading author"
+msgstr "Autor wird geladen"
+
 #: src/features/channels/ui/ChannelCanvas.tsx
 msgid "Loading canvas..."
 msgstr "Canvas wird geladen …"
@@ -8461,6 +8811,11 @@ msgstr "Mit einem Abo anmelden"
 #: src/features/settings/ui/AppearanceSettingsControls.tsx
 msgid "Lower values reveal more of the desktop blur."
 msgstr "Niedrigere Werte lassen mehr vom weichgezeichneten Schreibtisch durchscheinen."
+
+#: src/features/workflows/ui/WorkflowScheduleFields.tsx
+msgctxt "Monday"
+msgid "M"
+msgstr "Mo"
 
 #: src/features/community-members/ui/CommunityMembersSettingsCard.tsx
 msgid "Made community admin"
@@ -8752,6 +9107,7 @@ msgstr "Wird zusammengeführt…"
 #: src/features/search/ui/SearchResultItem.tsx
 #: src/features/search/ui/TopbarSearch.tsx
 #: src/features/workflows/ui/WorkflowStepCard.tsx
+#: src/features/workflows/ui/workflowTriggerDescription.ts
 msgid "Message"
 msgstr "Nachricht"
 
@@ -8798,6 +9154,18 @@ msgstr "Nachricht in"
 #: src/shared/ui/markdown/MessageLinkPill.tsx
 msgid "Message in channel {channelLabel}"
 msgstr "Nachricht im Kanal {channelLabel}"
+
+#: src/features/workflows/ui/workflowTriggerDescription.ts
+msgid "Message posted"
+msgstr "Nachricht gepostet"
+
+#: src/features/workflows/ui/workflowFormTypes.ts
+msgid "Message Posted"
+msgstr "Nachricht gepostet"
+
+#: src/features/workflows/ui/workflowTriggerDescription.ts
+msgid "Message posted {attribution}"
+msgstr "Nachricht {attribution} gepostet"
 
 #: src/features/workflows/ui/WorkflowStepCard.tsx
 #: src/features/workflows/ui/workflowTemplateVariables.ts
@@ -8888,6 +9256,10 @@ msgstr "Eine Karte zu prägen kostet Geld — das erzeugt Motiv und Kartentext �
 msgid "Minting calls the OpenAI API with your key and costs money — typically well under a dollar per mint, billed by OpenAI. It runs in the background (takes a few minutes); you can keep using"
 msgstr "Das Prägen ruft die OpenAI-API mit deinem Schlüssel auf und kostet Geld — typischerweise deutlich unter einem Dollar pro Prägung, abgerechnet von OpenAI. Es läuft im Hintergrund (dauert ein paar Minuten); nutzen kannst du"
 
+#: src/features/workflows/ui/cronExpression.ts
+msgid "Minute"
+msgstr "Minute"
+
 #: src/features/agents/ui/TeamIdentityCard.tsx
 msgid "Mixed models"
 msgstr "Gemischte Modelle"
@@ -8933,6 +9305,18 @@ msgstr "Modell für diese Sitzung gewechselt."
 #: src/features/channels/ui/useMembersSidebarModeration.ts
 msgid "Moderation action failed"
 msgstr "Moderationsaktion fehlgeschlagen"
+
+#: src/features/workflows/ui/WorkflowScheduleFields.tsx
+msgid "Monday"
+msgstr "Montag"
+
+#: src/features/workflows/ui/cronExpression.ts
+msgid "Month"
+msgstr "Monat"
+
+#: src/features/workflows/ui/workflowSchedule.ts
+msgid "Monthly"
+msgstr "Monatlich"
 
 #: src/features/agents/ui/RestartDiffBadge.tsx
 #: src/features/profile/ui/UserProfilePanelSections.tsx
@@ -9048,6 +9432,10 @@ msgstr "Name"
 #: src/features/workflows/ui/WorkflowStepCard.tsx
 msgid "Name (optional)"
 msgstr "Name (optional)"
+
+#: src/features/workflows/ui/workflowFormTypes.ts
+msgid "name must be a string"
+msgstr "name muss eine Zeichenkette sein"
 
 #: src/features/settings/ui/NotificationSettingsCard.tsx
 msgid "Native desktop alerts are enabled for the categories you have armed below."
@@ -9924,6 +10312,14 @@ msgstr "Ein"
 #: src/features/messages/lib/dateFormatters.ts
 msgid "on {date}"
 msgstr "am {date}"
+
+#: src/features/workflows/ui/workflowDefinition.ts
+msgid "On a custom schedule"
+msgstr "Nach eigenem Zeitplan"
+
+#: src/features/workflows/ui/workflowDefinition.ts
+msgid "On a schedule"
+msgstr "Nach Zeitplan"
 
 #: src/features/communities/ui/HostedCommunityOnboarding.tsx
 msgid "Onboarding is already in progress for another community. Go back and finish or restart that connection, then connect this community from your owned communities list."
@@ -11276,6 +11672,18 @@ msgstr "Mit {displayName} reagieren"
 msgid "reacted with"
 msgstr "reagierte mit"
 
+#: src/features/workflows/ui/workflowTriggerDescription.ts
+msgid "Reaction added"
+msgstr "Reaktion hinzugefügt"
+
+#: src/features/workflows/ui/workflowFormTypes.ts
+msgid "Reaction Added"
+msgstr "Reaktion hinzugefügt"
+
+#: src/features/workflows/ui/workflowTriggerDescription.ts
+msgid "Reaction added {attribution}"
+msgstr "Reaktion {attribution} hinzugefügt"
+
 #: src/features/workflows/ui/workflowTemplateVariables.ts
 msgid "Reaction emoji"
 msgstr "Reaktions-Emoji"
@@ -11578,6 +11986,10 @@ msgstr "{mediaLabel} entfernen"
 msgid "Remove {scopeLabel} search scope"
 msgstr "Suchbereich {scopeLabel} entfernen"
 
+#: src/features/workflows/ui/WorkflowFormBuilder.tsx
+msgid "Remove {title}"
+msgstr "{title} entfernen"
+
 #: src/features/channels/ui/MembersSidebarAgentControls.tsx
 msgid "Remove all from channel"
 msgstr "Alle aus dem Kanal entfernen"
@@ -11631,6 +12043,7 @@ msgstr "Vorschau entfernen"
 msgid "Remove spoiler"
 msgstr "Spoiler entfernen"
 
+#: src/features/workflows/ui/WorkflowFormBuilder.tsx
 #: src/features/workflows/ui/WorkflowStepCard.tsx
 msgid "Remove step"
 msgstr "Schritt entfernen"
@@ -11695,6 +12108,14 @@ msgstr "Review wieder öffnen"
 msgid "Reopening…"
 msgstr "Wird wieder geöffnet …"
 
+#: src/features/workflows/ui/WorkflowScheduleFields.tsx
+msgid "Repeat on"
+msgstr "Wiederholen am"
+
+#: src/features/workflows/ui/WorkflowScheduleFields.tsx
+msgid "Repeats"
+msgstr "Wiederholung"
+
 #: src/features/channels/ui/ChannelLogoEditor.tsx
 msgid "Replace logo"
 msgstr "Logo ersetzen"
@@ -11727,6 +12148,10 @@ msgstr "An {replyAuthor} in #{channelName} antworten"
 #: src/features/workflows/ui/WorkflowStepCard.tsx
 msgid "Reply to triggering message in thread"
 msgstr "Im Thread auf die auslösende Nachricht antworten"
+
+#: src/features/workflows/ui/workflowFormTypes.ts
+msgid "reply_in_thread is not supported for {triggerType} triggers — use the YAML editor"
+msgstr "reply_in_thread wird für {triggerType}-Trigger nicht unterstützt – nutze den YAML-Editor"
 
 #. placeholder {0}: replyTarget.author
 #. placeholder {0}: replyTarget.comment.author
@@ -11813,6 +12238,18 @@ msgstr "Repository nicht initialisiert"
 #: src/features/projects/lib/projectRepoAvailability.ts
 msgid "Repository unavailable"
 msgstr "Repository nicht verfügbar"
+
+#: src/features/workflows/ui/workflowDefinition.ts
+msgid "request approval"
+msgstr "eine Freigabe anfordern"
+
+#: src/features/workflows/ui/workflowFormTypes.ts
+msgid "Request Approval"
+msgstr "Freigabe anfordern"
+
+#: src/features/workflows/ui/workflowDefinition.ts
+msgid "request approval: {detail}"
+msgstr "eine Freigabe anfordern: {detail}"
 
 #: src/features/workflows/ui/WorkflowStepCard.tsx
 msgid "Request body (optional)"
@@ -12197,6 +12634,10 @@ msgstr "Der Ausführungsverlauf konnte nicht geladen werden."
 msgid "Run on"
 msgstr "Ausführen auf"
 
+#: src/features/workflows/ui/WorkflowScheduleFields.tsx
+msgid "Run time (UTC)"
+msgstr "Laufzeit (UTC)"
+
 #: src/features/workflows/ui/WorkflowDetailPanel.tsx
 msgid "running"
 msgstr "läuft"
@@ -12226,6 +12667,20 @@ msgstr "Runtime-Überschreibung: {0} statt {1}."
 #: src/features/settings/ui/ChannelTemplatesSettingsCard.tsx
 msgid "Runtimes"
 msgstr "Runtimes"
+
+#: src/features/workflows/ui/WorkflowScheduleFields.tsx
+msgctxt "Saturday"
+msgid "S"
+msgstr "Sa"
+
+#: src/features/workflows/ui/WorkflowScheduleFields.tsx
+msgctxt "Sunday"
+msgid "S"
+msgstr "So"
+
+#: src/features/workflows/ui/WorkflowScheduleFields.tsx
+msgid "Saturday"
+msgstr "Samstag"
 
 #: src/features/messages/lib/useLinkEditor.tsx
 #: src/features/messages/ui/ComposerImageEditor.tsx
@@ -12369,6 +12824,18 @@ msgstr "Scanne diesen Code mit einem Gerät, auf dem du gerade bei {0} angemelde
 #: src/features/onboarding/ui/MachineOnboardingFlow.tsx
 msgid "Scan to sign in"
 msgstr "Zum Anmelden scannen"
+
+#: src/features/workflows/ui/workflowFormTypes.ts
+msgid "Schedule"
+msgstr "Zeitplan"
+
+#: src/features/workflows/ui/workflowFormTypes.ts
+msgid "Schedule triggers cannot specify both cron and interval — use the YAML editor"
+msgstr "Zeitplan-Trigger können nicht cron und interval gleichzeitig angeben – nutze den YAML-Editor"
+
+#: src/features/workflows/ui/workflowFormTypes.ts
+msgid "Schedule triggers require either cron or interval — use the YAML editor"
+msgstr "Zeitplan-Trigger brauchen entweder cron oder interval – nutze den YAML-Editor"
 
 #. placeholder {0}: projectsSectionTitle(filter)
 #. placeholder {0}: projectsSectionTitle(filter).toLocaleLowerCase()
@@ -12672,9 +13139,29 @@ msgstr "Wählt den ACP-Transport, der beim Bereitstellen dieses Agenten verwende
 msgid "Send"
 msgstr "Senden"
 
+#: src/features/workflows/ui/workflowDefinition.ts
+msgid "send {detail}"
+msgstr "{detail} senden"
+
+#: src/features/workflows/ui/workflowDefinition.ts
+msgid "send a channel message"
+msgstr "eine Kanalnachricht senden"
+
+#: src/features/workflows/ui/workflowDefinition.ts
+msgid "send a direct message"
+msgstr "eine Direktnachricht senden"
+
+#: src/features/workflows/ui/workflowDefinition.ts
+msgid "send a message in {detail}"
+msgstr "eine Nachricht in {detail} senden"
+
 #: src/features/messages/ui/NonMemberMentionDialog.tsx
 msgid "Send anyway"
 msgstr "Trotzdem senden"
+
+#: src/features/workflows/ui/workflowFormTypes.ts
+msgid "Send DM"
+msgstr "DM senden"
 
 #. placeholder {0}: err.message
 #: src/features/agents/ui/useSnapshotSendController.ts
@@ -12697,6 +13184,7 @@ msgid "Send message"
 msgstr "Nachricht senden"
 
 #: src/features/agents/ui/agentSessionToolClassifier.ts
+#: src/features/workflows/ui/workflowFormTypes.ts
 msgid "Send Message"
 msgstr "Nachricht senden"
 
@@ -12780,6 +13268,10 @@ msgstr "Setz <0>{0}</0> unter „Agent bearbeiten“ → Umgebungsvariablen"
 msgid "Set agent defaults"
 msgstr "Agent-Standardwerte festlegen"
 
+#: src/features/workflows/ui/workflowFormTypes.ts
+msgid "Set Channel Topic"
+msgstr "Kanalthema setzen"
+
 #: src/features/agents/ui/EnvVarsEditor.tsx
 msgid "Set in goose config"
 msgstr "In der goose-Konfiguration gesetzt"
@@ -12797,6 +13289,10 @@ msgstr "Neuen Community-Namen setzen"
 #: src/shared/ui/config-nudge-attachment.tsx
 msgid "Set the <0>{0}</0> field in Edit Agent dropdowns"
 msgstr "Setz das Feld <0>{0}</0> in den Dropdowns von „Agent bearbeiten“"
+
+#: src/features/workflows/ui/workflowDefinition.ts
+msgid "set the channel topic to {detail}"
+msgstr "das Kanalthema auf {detail} setzen"
 
 #: src/features/onboarding/ui/SetupStep.tsx
 msgid "Set up {label}"
@@ -13398,13 +13894,50 @@ msgstr "Status"
 msgid "Status unavailable"
 msgstr "Status nicht verfügbar"
 
+#: src/features/workflows/ui/WorkflowFormBuilder.tsx
+msgid "Step {inspectorStepNumber}"
+msgstr "Schritt {inspectorStepNumber}"
+
+#: src/features/workflows/ui/workflowFormTypes.ts
+msgid "Step {number} {field}"
+msgstr "Schritt {number} {field}"
+
+#: src/features/workflows/ui/workflowFormTypes.ts
+msgid "Step {number} must be an object"
+msgstr "Schritt {number} muss ein Objekt sein"
+
+#: src/features/workflows/ui/workflowFormTypes.ts
+msgid "Step {number} name has surrounding whitespace — use the YAML editor"
+msgstr "Der name von Schritt {number} hat Leerzeichen am Rand – nutze den YAML-Editor"
+
+#: src/features/workflows/ui/workflowFormTypes.ts
+msgid "Step {number} reply_in_thread must be a boolean — use the YAML editor"
+msgstr "reply_in_thread von Schritt {number} muss ein Wahrheitswert sein – nutze den YAML-Editor"
+
+#: src/features/workflows/ui/workflowFormTypes.ts
+msgid "Step {number} requires a unique 1–64 character alphanumeric or underscore ID"
+msgstr "Schritt {number} braucht eine eindeutige ID aus 1–64 Buchstaben, Zahlen oder Unterstrichen"
+
+#: src/features/workflows/ui/workflowFormTypes.ts
+msgid "Step {number} timeout_secs must be a positive integer"
+msgstr "timeout_secs von Schritt {number} muss eine positive ganze Zahl sein"
+
 #: src/shared/ui/step-progress.tsx
 msgid "Step {safeCurrentStep} of {safeTotalSteps}"
 msgstr "Schritt {safeCurrentStep} von {safeTotalSteps}"
 
+#: src/features/workflows/ui/WorkflowFormBuilder.tsx
 #: src/features/workflows/ui/WorkflowStepCard.tsx
 msgid "Step {stepNumber}"
 msgstr "Schritt {stepNumber}"
+
+#: src/features/workflows/ui/WorkflowFormBuilder.tsx
+msgid "Step {stepNumber}: {nodeDescription}"
+msgstr "Schritt {stepNumber}: {nodeDescription}"
+
+#: src/features/workflows/ui/workflowFormTypes.ts
+msgid "Step conditions are only available in the YAML editor"
+msgstr "Schritt-Bedingungen gibt es nur im YAML-Editor"
 
 #: src/features/workflows/ui/WorkflowStepCard.tsx
 msgid "Step details"
@@ -13413,6 +13946,10 @@ msgstr "Schritt-Details"
 #: src/features/workflows/ui/WorkflowStepCard.tsx
 msgid "Step ID"
 msgstr "Schritt-ID"
+
+#: src/features/workflows/ui/workflowFormTypes.ts
+msgid "steps must be a list"
+msgstr "steps muss eine Liste sein"
 
 #: src/features/profile/ui/AnimatedAvatarReviewNav.tsx
 msgid "Still frame"
@@ -13523,6 +14060,10 @@ msgstr "Fass die letzte Repository-Aktivität zusammen."
 msgid "Summarize the open tasks and flag anything urgent."
 msgstr "Fass die offenen Aufgaben zusammen und markier, was dringend ist."
 
+#: src/features/workflows/ui/WorkflowScheduleFields.tsx
+msgid "Sunday"
+msgstr "Sonntag"
+
 #: src/features/agents/ui/EffortPickerField.tsx
 msgid "Support for {selectValue} isn't known yet. "
 msgstr "Unterstützung für {selectValue} ist noch nicht bekannt. "
@@ -13569,6 +14110,16 @@ msgstr "System-Prompt"
 #: src/features/agents/ui/EditAgentAdvancedFields.tsx
 msgid "System prompt override"
 msgstr "System-Prompt-Überschreibung"
+
+#: src/features/workflows/ui/WorkflowScheduleFields.tsx
+msgctxt "Thursday"
+msgid "T"
+msgstr "Do"
+
+#: src/features/workflows/ui/WorkflowScheduleFields.tsx
+msgctxt "Tuesday"
+msgid "T"
+msgstr "Di"
 
 #: src/features/projects/ui/ProjectRepositorySource.tsx
 msgid "Tags"
@@ -14335,6 +14886,10 @@ msgstr "Dieser Review ist noch in Arbeit."
 msgid "This runtime does not support switching models."
 msgstr "Diese Runtime unterstützt das Wechseln von Modellen nicht."
 
+#: src/features/workflows/ui/WorkflowScheduleFields.tsx
+msgid "This schedule won’t run in some months."
+msgstr "Dieser Zeitplan läuft in manchen Monaten nicht."
+
 #: src/features/agents/ui/AgentSnapshotImportDialog.tsx
 msgid "This snapshot includes"
 msgstr "Dieser Snapshot enthält"
@@ -14437,6 +14992,10 @@ msgstr "Threads öffnen sich in einem Seitenbereich neben dem Kanal"
 msgid "Threads open over the channel"
 msgstr "Threads öffnen sich über dem Kanal"
 
+#: src/features/workflows/ui/WorkflowScheduleFields.tsx
+msgid "Thursday"
+msgstr "Donnerstag"
+
 #: src/features/channels/ui/MembersSidebarMemberCard.tsx
 msgid "Time out"
 msgstr "Auszeit geben"
@@ -14461,13 +15020,25 @@ msgstr "Titel"
 msgid "To"
 msgstr "An"
 
+#: src/features/workflows/ui/workflowTriggerDescription.ts
+msgid "to “{message}”"
+msgstr "zu „{message}“"
+
 #: src/features/workflows/ui/WorkflowStepCard.tsx
 msgid "To (pubkey)"
 msgstr "An (Pubkey)"
 
+#: src/features/workflows/ui/workflowTriggerDescription.ts
+msgid "to {message}"
+msgstr "zu {message}"
+
 #: src/features/agents/ui/AddAgentToChannelDialog.tsx
 msgid "to a channel so desktop chat can `@mention` it. Running agents pick up new channels automatically via membership notifications."
 msgstr "zu einem Kanal, damit der Desktop-Chat ihn per `@mention` erwähnen kann. Laufende Agenten übernehmen neue Kanäle automatisch über Mitgliedschaftsbenachrichtigungen."
+
+#: src/features/workflows/ui/workflowTriggerDescription.ts
+msgid "to loading message"
+msgstr "zu (lädt …)"
 
 #: src/features/agents/ui/AgentConfigPanel.tsx
 msgid "to match your default login."
@@ -14563,6 +15134,7 @@ msgstr "translateX({0}%)"
 msgid "Triage task"
 msgstr "Aufgabe triagieren"
 
+#: src/features/workflows/ui/WorkflowFormBuilder.tsx
 #: src/features/workflows/ui/workflowTemplateVariables.ts
 msgid "Trigger"
 msgstr "Auslöser"
@@ -14571,6 +15143,18 @@ msgstr "Auslöser"
 msgctxt "button that runs a workflow now"
 msgid "Trigger"
 msgstr "Auslösen"
+
+#: src/features/workflows/ui/WorkflowFormBuilder.tsx
+msgid "Trigger event"
+msgstr "Trigger-Ereignis"
+
+#: src/features/workflows/ui/WorkflowFormBuilder.tsx
+msgid "Trigger: {triggerDescription}"
+msgstr "Trigger: {triggerDescription}"
+
+#: src/features/workflows/ui/workflowFormTypes.ts
+msgid "trigger.on is required"
+msgstr "trigger.on ist erforderlich"
 
 #. placeholder {0}: ids.length === 1 ? "1 event" : `${ids.length} events`
 #: src/features/agents/ui/agentSessionTranscriptHelpers.ts
@@ -14625,6 +15209,10 @@ msgstr "Kamera nochmal versuchen"
 #: src/features/huddle/components/HuddleBar.tsx
 msgid "TTS model: {0}"
 msgstr "TTS-Modell: {0}"
+
+#: src/features/workflows/ui/WorkflowScheduleFields.tsx
+msgid "Tuesday"
+msgstr "Dienstag"
 
 #: src/features/agents/ui/agentSessionTranscript.ts
 msgid "Turn error"
@@ -14892,6 +15480,34 @@ msgstr "ungelesen"
 msgid "Unsaved changes made to agent defaults will be lost."
 msgstr "Ungespeicherte Änderungen an den Agent-Standardwerten gehen verloren."
 
+#: src/features/workflows/ui/workflowFormTypes.ts
+msgid "Unsupported {action} step field \"{field}\" — use the YAML editor"
+msgstr "Nicht unterstütztes Schritt-Feld „{field}“ für {action} – nutze den YAML-Editor"
+
+#: src/features/workflows/ui/workflowFormTypes.ts
+msgid "Unsupported {triggerType} trigger field \"{field}\" — use the YAML editor"
+msgstr "Nicht unterstütztes Trigger-Feld „{field}“ für {triggerType} – nutze den YAML-Editor"
+
+#: src/features/workflows/ui/workflowFormTypes.ts
+msgid "Unsupported action type \"{action}\" — use the YAML editor"
+msgstr "Nicht unterstützter Aktionstyp „{action}“ – nutze den YAML-Editor"
+
+#: src/features/workflows/ui/workflowFormTypes.ts
+msgid "Unsupported cron expression: {error} Use the YAML editor"
+msgstr "Nicht unterstützter Cron-Ausdruck: {error} Nutze den YAML-Editor"
+
+#: src/features/workflows/ui/workflowFormTypes.ts
+msgid "Unsupported trigger type \"{triggerType}\" — use the YAML editor"
+msgstr "Nicht unterstützter Trigger-Typ „{triggerType}“ – nutze den YAML-Editor"
+
+#: src/features/workflows/ui/workflowFormTypes.ts
+msgid "Unsupported webhook method \"{method}\" — use the YAML editor"
+msgstr "Nicht unterstützte Webhook-Methode „{method}“ – nutze den YAML-Editor"
+
+#: src/features/workflows/ui/workflowFormTypes.ts
+msgid "Unsupported workflow field \"{field}\" — use the YAML editor"
+msgstr "Nicht unterstütztes Workflow-Feld „{field}“ – nutze den YAML-Editor"
+
 #: src/features/projects/projectPullRequests.mjs
 msgid "Untitled review"
 msgstr "Review ohne Titel"
@@ -14969,6 +15585,10 @@ msgstr "Review aktualisieren"
 #: src/features/settings/UpdateChecker.tsx
 msgid "Update status"
 msgstr "Update-Status"
+
+#: src/features/workflows/ui/workflowDefinition.ts
+msgid "update the channel topic"
+msgstr "das Kanalthema aktualisieren"
 
 #: src/features/settings/ui/ChannelTemplatesSettingsCard.tsx
 msgid "Update this channel template configuration."
@@ -15245,6 +15865,10 @@ msgstr "Geerbte Standardwerte werden verwendet: Build-Aufwand {0} · {globalEnvL
 #: src/features/agents/ui/AgentCardMintDialog.tsx
 msgid "Using your saved OpenAI key"
 msgstr "Dein gespeicherter OpenAI-Schlüssel wird verwendet"
+
+#: src/features/workflows/ui/CronExpressionInput.tsx
+msgid "UTC · Paste all 5 fields, or use wildcards, lists, ranges, and steps."
+msgstr "UTC · Füge alle 5 Felder ein oder nutze Platzhalter, Listen, Bereiche und Schrittweiten."
 
 #: src/features/agents/ui/TeamIdentityCard.tsx
 msgid "v"
@@ -15543,6 +16167,19 @@ msgstr "Stimmeinstellungen für {displayName}"
 msgid "Volume"
 msgstr "Lautstärke"
 
+#: src/features/workflows/ui/WorkflowScheduleFields.tsx
+msgctxt "Wednesday"
+msgid "W"
+msgstr "Mi"
+
+#: src/features/workflows/ui/workflowDefinition.ts
+msgid "wait {detail}"
+msgstr "{detail} warten"
+
+#: src/features/workflows/ui/workflowDefinition.ts
+msgid "wait for a moment"
+msgstr "einen Moment warten"
+
 #: src/shared/ui/VideoPlayer.tsx
 msgid "Wait for the video message to finish sending."
 msgstr "Warte, bis die Videonachricht gesendet ist."
@@ -15621,6 +16258,30 @@ msgstr "Die Kopplung konnte nicht gestartet werden. Versuch es noch einmal."
 msgid "We couldn’t validate this API key. Check the key or your connection and try again."
 msgstr "Wir konnten diesen API-Schlüssel nicht prüfen. Prüfe den Schlüssel oder deine Verbindung und versuche es erneut."
 
+#: src/features/workflows/ui/workflowFormTypes.ts
+msgid "Webhook"
+msgstr "Webhook"
+
+#: src/features/workflows/ui/workflowFormTypes.ts
+msgid "Webhook header names cannot be empty or have surrounding whitespace in Form mode"
+msgstr "Webhook-Header-Namen dürfen im Formularmodus nicht leer sein und keine Leerzeichen am Rand haben"
+
+#: src/features/workflows/ui/workflowFormTypes.ts
+msgid "Webhook headers must be a non-empty object containing string values"
+msgstr "Webhook-Header müssen ein nicht leeres Objekt mit Zeichenketten als Werten sein"
+
+#: src/features/workflows/ui/WorkflowScheduleFields.tsx
+msgid "Wednesday"
+msgstr "Mittwoch"
+
+#: src/features/workflows/ui/cronExpression.ts
+msgid "Weekday"
+msgstr "Wochentag"
+
+#: src/features/workflows/ui/workflowSchedule.ts
+msgid "Weekly"
+msgstr "Wöchentlich"
+
 #: src/features/profile/ui/UserProfilePanelTabs.tsx
 msgid "What archived means"
 msgstr "Was archiviert bedeutet"
@@ -15669,6 +16330,176 @@ msgstr "Was ist ein Identitätsschlüssel?"
 msgid "What’s included"
 msgstr "Was enthalten ist"
 
+#: src/features/workflows/ui/workflowTriggerCardClause.ts
+msgid "When “{value}” is posted"
+msgstr "Wenn „{value}“ gepostet wird"
+
+#: src/features/workflows/ui/workflowTriggerCardClause.ts
+msgid "When “{value}” is posted {attribution}"
+msgstr "Wenn „{value}“ {attribution} gepostet wird"
+
+#: src/features/workflows/ui/workflowDefinition.ts
+msgid "When {event} happens"
+msgstr "Wenn {event} passiert"
+
+#: src/features/workflows/ui/workflowTriggerCardClause.ts
+msgid "When a diff “{value}” is posted"
+msgstr "Wenn ein Diff „{value}“ gepostet wird"
+
+#: src/features/workflows/ui/workflowTriggerCardClause.ts
+msgid "When a diff “{value}” is posted {attribution}"
+msgstr "Wenn ein Diff „{value}“ {attribution} gepostet wird"
+
+#: src/features/workflows/ui/workflowTriggerCardClause.ts
+msgid "When a diff {attribution} contains “{value}”"
+msgstr "Wenn ein Diff {attribution} „{value}“ enthält"
+
+#: src/features/workflows/ui/workflowTriggerCardClause.ts
+msgid "When a diff {attribution} doesn’t contain “{value}”"
+msgstr "Wenn ein Diff {attribution} „{value}“ nicht enthält"
+
+#: src/features/workflows/ui/workflowTriggerCardClause.ts
+msgid "When a diff {attribution} ends with “{value}”"
+msgstr "Wenn ein Diff {attribution} mit „{value}“ endet"
+
+#: src/features/workflows/ui/workflowTriggerCardClause.ts
+msgid "When a diff {attribution} starts with “{value}”"
+msgstr "Wenn ein Diff {attribution} mit „{value}“ beginnt"
+
+#: src/features/workflows/ui/workflowTriggerCardClause.ts
+msgid "When a diff contains “{value}”"
+msgstr "Wenn ein Diff „{value}“ enthält"
+
+#: src/features/workflows/ui/workflowTriggerCardClause.ts
+msgid "When a diff doesn’t contain “{value}”"
+msgstr "Wenn ein Diff „{value}“ nicht enthält"
+
+#: src/features/workflows/ui/workflowTriggerCardClause.ts
+msgid "When a diff ends with “{value}”"
+msgstr "Wenn ein Diff mit „{value}“ endet"
+
+#: src/features/workflows/ui/workflowDefinition.ts
+#: src/features/workflows/ui/workflowTriggerCardClause.ts
+msgid "When a diff is posted"
+msgstr "Wenn ein Diff gepostet wird"
+
+#: src/features/workflows/ui/workflowTriggerCardClause.ts
+msgid "When a diff is posted {attribution}"
+msgstr "Wenn ein Diff {attribution} gepostet wird"
+
+#: src/features/workflows/ui/workflowTriggerCardClause.ts
+msgid "When a diff starts with “{value}”"
+msgstr "Wenn ein Diff mit „{value}“ beginnt"
+
+#: src/features/workflows/ui/workflowTriggerCardClause.ts
+msgid "When a diff with text is posted"
+msgstr "Wenn ein Diff mit Text gepostet wird"
+
+#: src/features/workflows/ui/workflowTriggerCardClause.ts
+msgid "When a diff with text is posted {attribution}"
+msgstr "Wenn ein Diff mit Text {attribution} gepostet wird"
+
+#: src/features/workflows/ui/workflowTriggerCardClause.ts
+msgid "When a diff with text other than “{value}” is posted"
+msgstr "Wenn ein Diff mit anderem Text als „{value}“ gepostet wird"
+
+#: src/features/workflows/ui/workflowTriggerCardClause.ts
+msgid "When a diff with text other than “{value}” is posted {attribution}"
+msgstr "Wenn ein Diff mit anderem Text als „{value}“ {attribution} gepostet wird"
+
+#: src/features/workflows/ui/workflowTriggerCardClause.ts
+msgid "When a diff without text is posted"
+msgstr "Wenn ein Diff ohne Text gepostet wird"
+
+#: src/features/workflows/ui/workflowTriggerCardClause.ts
+msgid "When a diff without text is posted {attribution}"
+msgstr "Wenn ein Diff ohne Text {attribution} gepostet wird"
+
+#: src/features/workflows/ui/workflowDefinition.ts
+msgid "When a matching diff is posted"
+msgstr "Wenn ein passender Diff gepostet wird"
+
+#: src/features/workflows/ui/workflowDefinition.ts
+msgid "When a matching message is posted"
+msgstr "Wenn eine passende Nachricht gepostet wird"
+
+#: src/features/workflows/ui/workflowTriggerCardClause.ts
+msgid "When a message {attribution} contains “{value}”"
+msgstr "Wenn eine Nachricht {attribution} „{value}“ enthält"
+
+#: src/features/workflows/ui/workflowTriggerCardClause.ts
+msgid "When a message {attribution} doesn’t contain “{value}”"
+msgstr "Wenn eine Nachricht {attribution} „{value}“ nicht enthält"
+
+#: src/features/workflows/ui/workflowTriggerCardClause.ts
+msgid "When a message {attribution} ends with “{value}”"
+msgstr "Wenn eine Nachricht {attribution} mit „{value}“ endet"
+
+#: src/features/workflows/ui/workflowTriggerCardClause.ts
+msgid "When a message {attribution} starts with “{value}”"
+msgstr "Wenn eine Nachricht {attribution} mit „{value}“ beginnt"
+
+#: src/features/workflows/ui/workflowTriggerCardClause.ts
+msgid "When a message contains “{value}”"
+msgstr "Wenn eine Nachricht „{value}“ enthält"
+
+#: src/features/workflows/ui/workflowTriggerCardClause.ts
+msgid "When a message doesn’t contain “{value}”"
+msgstr "Wenn eine Nachricht „{value}“ nicht enthält"
+
+#: src/features/workflows/ui/workflowTriggerCardClause.ts
+msgid "When a message ends with “{value}”"
+msgstr "Wenn eine Nachricht mit „{value}“ endet"
+
+#: src/features/workflows/ui/workflowDefinition.ts
+#: src/features/workflows/ui/workflowTriggerCardClause.ts
+msgid "When a message is posted"
+msgstr "Wenn eine Nachricht gepostet wird"
+
+#: src/features/workflows/ui/workflowTriggerCardClause.ts
+msgid "When a message is posted {attribution}"
+msgstr "Wenn eine Nachricht {attribution} gepostet wird"
+
+#: src/features/workflows/ui/workflowTriggerCardClause.ts
+msgid "When a message starts with “{value}”"
+msgstr "Wenn eine Nachricht mit „{value}“ beginnt"
+
+#: src/features/workflows/ui/workflowTriggerCardClause.ts
+msgid "When a message with text is posted"
+msgstr "Wenn eine Nachricht mit Text gepostet wird"
+
+#: src/features/workflows/ui/workflowTriggerCardClause.ts
+msgid "When a message with text is posted {attribution}"
+msgstr "Wenn eine Nachricht mit Text {attribution} gepostet wird"
+
+#: src/features/workflows/ui/workflowTriggerCardClause.ts
+msgid "When a message with text other than “{value}” is posted"
+msgstr "Wenn eine Nachricht mit anderem Text als „{value}“ gepostet wird"
+
+#: src/features/workflows/ui/workflowTriggerCardClause.ts
+msgid "When a message with text other than “{value}” is posted {attribution}"
+msgstr "Wenn eine Nachricht mit anderem Text als „{value}“ {attribution} gepostet wird"
+
+#: src/features/workflows/ui/workflowTriggerCardClause.ts
+msgid "When a message without text is posted"
+msgstr "Wenn eine Nachricht ohne Text gepostet wird"
+
+#: src/features/workflows/ui/workflowTriggerCardClause.ts
+msgid "When a message without text is posted {attribution}"
+msgstr "Wenn eine Nachricht ohne Text {attribution} gepostet wird"
+
+#: src/features/workflows/ui/workflowTriggerCardClause.ts
+msgid "When a reaction is added"
+msgstr "Wenn eine Reaktion hinzugefügt wird"
+
+#: src/features/workflows/ui/workflowTriggerCardClause.ts
+msgid "When a reaction is added {attribution}"
+msgstr "Wenn eine Reaktion {attribution} hinzugefügt wird"
+
+#: src/features/workflows/ui/workflowDefinition.ts
+msgid "When a webhook arrives"
+msgstr "Wenn ein Webhook eintrifft"
+
 #: src/features/notifications/lib/sound.ts
 msgid "When an agent finishes a job."
 msgstr "Wenn ein Agent einen Auftrag abschließt."
@@ -15685,9 +16516,30 @@ msgstr "Wenn ein Agent einen Auftrag übernimmt."
 msgid "When an approval or reminder is waiting on you."
 msgstr "Wenn eine Freigabe oder Erinnerung auf dich wartet."
 
+#: src/features/workflows/ui/workflowTriggerCardClause.ts
+msgid "When any reaction except {emoji} is added"
+msgstr "Wenn eine andere Reaktion als {emoji} hinzugefügt wird"
+
+#: src/features/workflows/ui/workflowTriggerCardClause.ts
+msgid "When any reaction except {emoji} is added {attribution}"
+msgstr "Wenn eine andere Reaktion als {emoji} {attribution} hinzugefügt wird"
+
+#: src/features/workflows/ui/workflowDefinition.ts
+msgid "When someone adds a reaction"
+msgstr "Wenn jemand eine Reaktion hinzufügt"
+
 #: src/features/notifications/lib/sound.ts
 msgid "When someone messages you directly."
 msgstr "Wenn dir jemand direkt schreibt."
+
+#: src/features/workflows/ui/workflowDefinition.ts
+#: src/features/workflows/ui/workflowTriggerCardClause.ts
+msgid "When someone reacts with {emoji}"
+msgstr "Wenn jemand mit {emoji} reagiert"
+
+#: src/features/workflows/ui/workflowTriggerCardClause.ts
+msgid "When someone reacts with {emoji} {attribution}"
+msgstr "Wenn jemand {attribution} mit {emoji} reagiert"
 
 #: src/features/notifications/lib/sound.ts
 msgid "When someone replies in a thread you follow or posted in."
@@ -15696,6 +16548,10 @@ msgstr "Wenn jemand in einem Thread antwortet, dem du folgst oder in dem du gesc
 #: src/features/notifications/lib/sound.ts
 msgid "When someone tags you in a channel."
 msgstr "Wenn dich jemand in einem Kanal erwähnt."
+
+#: src/features/workflows/ui/workflowDefinition.ts
+msgid "When this workflow starts"
+msgstr "Wenn dieser Workflow startet"
 
 #: src/features/workflows/ui/workflowTemplateVariables.ts
 msgid "Whether the message was sent"
@@ -15776,6 +16632,18 @@ msgstr "Modus des Workflow-Editors"
 msgid "Workflow name"
 msgstr "Workflow-Name"
 
+#: src/features/workflows/ui/WorkflowFormBuilder.tsx
+msgid "Workflow node inspector"
+msgstr "Workflow-Knoten-Inspektor"
+
+#: src/features/workflows/ui/WorkflowFormBuilder.tsx
+msgid "Workflow sequence"
+msgstr "Workflow-Ablauf"
+
+#: src/features/workflows/ui/WorkflowFormBuilder.tsx
+msgid "Workflow YAML"
+msgstr "Workflow-YAML"
+
 #: src/features/channels/ui/ChannelManagementSheet.tsx
 #: src/features/sidebar/ui/AppSidebarPinnedHeader.tsx
 msgid "Workflows"
@@ -15812,6 +16680,10 @@ msgstr "Schreibt in {productName}."
 #: src/features/settings/ui/harnessCatalogCopy.ts
 msgid "xAI's coding agent, connected to {productName} through its ACP entrypoint."
 msgstr "Der Coding-Agent von xAI, über seinen ACP-Einstiegspunkt mit {productName} verbunden."
+
+#: src/features/workflows/ui/workflowFormTypes.ts
+msgid "YAML must be an object"
+msgstr "YAML muss ein Objekt sein"
 
 #: src/features/messages/ui/ComposerImageEditor.tsx
 msgid "Yellow"

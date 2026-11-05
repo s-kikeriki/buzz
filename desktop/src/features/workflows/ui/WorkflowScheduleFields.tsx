@@ -1,3 +1,6 @@
+import type { I18n, MessageDescriptor } from "@lingui/core";
+import { msg } from "@lingui/core/macro";
+import { Trans, useLingui } from "@lingui/react/macro";
 import { AlertTriangle } from "lucide-react";
 import * as React from "react";
 
@@ -15,21 +18,62 @@ import {
 } from "./workflowSchedule";
 import type { ScheduleFormState } from "./workflowSchedule";
 
-const WEEKDAYS = [
-  ["0", "Sunday", "S"],
-  ["1", "Monday", "M"],
-  ["2", "Tuesday", "T"],
-  ["3", "Wednesday", "W"],
-  ["4", "Thursday", "T"],
-  ["5", "Friday", "F"],
-  ["6", "Saturday", "S"],
-] as const;
+/**
+ * The weekday picker's labels.
+ *
+ * The one-letter forms carry a `context` because English reuses letters across
+ * days — "S" is both Sunday and Saturday, "T" both Tuesday and Thursday — and
+ * one msgid can only hold one translation. Without it, German's "So"/"Sa" and
+ * "Di"/"Do" would collapse into whichever was extracted first, which is the
+ * same collision that put "Administration" in the member-role dropdown.
+ */
+const WEEKDAYS: ReadonlyArray<{
+  initial: MessageDescriptor;
+  name: MessageDescriptor;
+  value: string;
+}> = [
+  {
+    initial: msg({ context: "Sunday", message: "S" }),
+    name: msg`Sunday`,
+    value: "0",
+  },
+  {
+    initial: msg({ context: "Monday", message: "M" }),
+    name: msg`Monday`,
+    value: "1",
+  },
+  {
+    initial: msg({ context: "Tuesday", message: "T" }),
+    name: msg`Tuesday`,
+    value: "2",
+  },
+  {
+    initial: msg({ context: "Wednesday", message: "W" }),
+    name: msg`Wednesday`,
+    value: "3",
+  },
+  {
+    initial: msg({ context: "Thursday", message: "T" }),
+    name: msg`Thursday`,
+    value: "4",
+  },
+  {
+    initial: msg({ context: "Friday", message: "F" }),
+    name: msg`Friday`,
+    value: "5",
+  },
+  {
+    initial: msg({ context: "Saturday", message: "S" }),
+    name: msg`Saturday`,
+    value: "6",
+  },
+];
 
 const MONTH_DAYS = Array.from({ length: 31 }, (_, index) => String(index + 1));
 
-function monthlyDayWarning(monthDay: string): string | null {
+function monthlyDayWarning(monthDay: string, i18n: I18n): string | null {
   return Number(monthDay) > 28
-    ? "This schedule won’t run in some months."
+    ? i18n._(msg`This schedule won’t run in some months.`)
     : null;
 }
 
@@ -58,6 +102,7 @@ export function WorkflowScheduleFields({
   onUpdate: (trigger: TriggerConfig) => void;
   trigger: TriggerConfig;
 }) {
+  const { i18n } = useLingui();
   const [forceCustomCron, setForceCustomCron] = React.useState(false);
   const parsedSchedule = scheduleFormFromTrigger(trigger);
   const schedule: ScheduleFormState = forceCustomCron
@@ -74,12 +119,14 @@ export function WorkflowScheduleFields({
   const selectedWeekdays = new Set(
     scheduleWeekdaysFromCronField(schedule.weekday),
   );
-  const warning = monthlyDayWarning(schedule.monthDay);
+  const warning = monthlyDayWarning(schedule.monthDay, i18n);
 
   return (
     <div className="space-y-3">
       <fieldset>
-        <legend className="sr-only">Repeats</legend>
+        <legend className="sr-only">
+          <Trans>Repeats</Trans>
+        </legend>
         <div className="grid grid-cols-2 gap-2.5">
           {SCHEDULE_FREQUENCIES.map((frequency) => {
             const id = `wf-trigger-frequency-${frequency}`;
@@ -122,7 +169,7 @@ export function WorkflowScheduleFields({
                   )}
                   htmlFor={id}
                 >
-                  {SCHEDULE_FREQUENCY_LABELS[frequency]}
+                  {i18n._(SCHEDULE_FREQUENCY_LABELS[frequency])}
                 </label>
               </div>
             );
@@ -133,15 +180,15 @@ export function WorkflowScheduleFields({
       {schedule.frequency === "weekly" ? (
         <fieldset className="space-y-1.5">
           <legend className="text-xs font-medium text-muted-foreground">
-            Repeat on
+            <Trans>Repeat on</Trans>
           </legend>
           <div className="grid grid-cols-7 gap-2">
-            {WEEKDAYS.map(([value, label, shortLabel]) => {
+            {WEEKDAYS.map(({ initial, name, value }) => {
               const id = `wf-trigger-weekday-${value}`;
               return (
                 <div className="relative" key={value}>
                   <input
-                    aria-label={label}
+                    aria-label={i18n._(name)}
                     checked={selectedWeekdays.has(value)}
                     className="peer sr-only"
                     disabled={disabled}
@@ -156,7 +203,7 @@ export function WorkflowScheduleFields({
                         nextWeekdays.add(value);
                       }
                       updateSchedule({
-                        weekday: WEEKDAYS.map(([day]) => day)
+                        weekday: WEEKDAYS.map((weekday) => weekday.value)
                           .filter((day) => nextWeekdays.has(day))
                           .join(","),
                       });
@@ -175,7 +222,7 @@ export function WorkflowScheduleFields({
                     )}
                     htmlFor={id}
                   >
-                    {shortLabel}
+                    {i18n._(initial)}
                   </label>
                 </div>
               );
@@ -186,7 +233,9 @@ export function WorkflowScheduleFields({
 
       {schedule.frequency === "monthly" ? (
         <div className="space-y-1.5">
-          <FieldLabel htmlFor="wf-trigger-month-day">Day of month</FieldLabel>
+          <FieldLabel htmlFor="wf-trigger-month-day">
+            <Trans>Day of month</Trans>
+          </FieldLabel>
           <FormSelect
             disabled={disabled}
             id="wf-trigger-month-day"
@@ -213,7 +262,9 @@ export function WorkflowScheduleFields({
 
       {usesTime ? (
         <div className="space-y-1.5">
-          <FieldLabel htmlFor="wf-trigger-time">Run time (UTC)</FieldLabel>
+          <FieldLabel htmlFor="wf-trigger-time">
+            <Trans>Run time (UTC)</Trans>
+          </FieldLabel>
           <Input
             disabled={disabled}
             id="wf-trigger-time"
@@ -235,7 +286,7 @@ export function WorkflowScheduleFields({
       {schedule.frequency === "custom_interval" ? (
         <div className="space-y-1.5">
           <FieldLabel htmlFor="wf-trigger-interval">
-            Existing interval
+            <Trans>Existing interval</Trans>
           </FieldLabel>
           <Input
             autoCapitalize="off"
@@ -248,8 +299,10 @@ export function WorkflowScheduleFields({
             value={schedule.customInterval}
           />
           <p className="text-xs text-muted-foreground">
-            Keep this legacy interval or choose a repeat option above. All
-            schedules use UTC.
+            <Trans>
+              Keep this legacy interval or choose a repeat option above. All
+              schedules use UTC.
+            </Trans>
           </p>
         </div>
       ) : null}

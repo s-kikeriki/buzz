@@ -2,6 +2,7 @@ import { i18n } from "@lingui/core";
 import assert from "node:assert/strict";
 import test from "node:test";
 
+import { workflowTriggerDescriptor } from "./workflowTriggerDescriptor.ts";
 import {
   getWorkflowActionTiles,
   getWorkflowCardLabel,
@@ -107,7 +108,15 @@ test("builds a plain-language workflow card label", () => {
         steps: [{ action: "send_message", text: "Deploying now" }],
       },
       i18n,
-      { triggerDescription: "Message posted by Carl" },
+      {
+        triggerDescriptor: workflowTriggerDescriptor(
+          {
+            on: "message_posted",
+            filter: `trigger_author == "${"a".repeat(64)}"`,
+          },
+          { authorLabel: "Carl" },
+        ),
+      },
     ),
     "When a message is posted by Carl, send “Deploying now”",
   );
@@ -122,7 +131,12 @@ test("builds a plain-language workflow card label", () => {
         steps: [{ action: "call_webhook" }],
       },
       i18n,
-      { triggerDescription: "Message contains “deploy”" },
+      {
+        triggerDescriptor: workflowTriggerDescriptor({
+          on: "message_posted",
+          filter: 'str_contains(trigger_text, "deploy")',
+        }),
+      },
     ),
     "When a message contains “deploy”, call a webhook",
   );
@@ -166,7 +180,13 @@ test("builds a plain-language workflow card label", () => {
       },
       i18n,
       {
-        triggerDescription: "Message “FUCK” is posted by Carl",
+        triggerDescriptor: workflowTriggerDescriptor(
+          {
+            on: "message_posted",
+            filter: `trigger_text == "FUCK" && trigger_author == "${"a".repeat(64)}"`,
+          },
+          { authorLabel: "Carl" },
+        ),
       },
     ),
     "When “FUCK” is posted by Carl, send “{{trigger.text}} yourself”",
@@ -175,27 +195,34 @@ test("builds a plain-language workflow card label", () => {
 
 test("builds a concise semantic trigger label for workflow cards", () => {
   assert.equal(
-    getWorkflowTriggerSummary({
-      trigger: {
-        on: "message_posted",
-        filter: 'str_contains(trigger_text, "deploy")',
+    getWorkflowTriggerSummary(
+      {
+        trigger: {
+          on: "message_posted",
+          filter: 'str_contains(trigger_text, "deploy")',
+        },
       },
-    }),
+      i18n,
+    ),
     "Message contains “deploy”",
   );
   assert.equal(
-    getWorkflowTriggerSummary({
-      trigger: {
-        on: "reaction_added",
-        filter: `trigger_emoji == "🔥" && trigger_author == "${"a".repeat(64)}" && trigger_message_id == "${"b".repeat(64)}"`,
+    getWorkflowTriggerSummary(
+      {
+        trigger: {
+          on: "reaction_added",
+          filter: `trigger_emoji == "🔥" && trigger_author == "${"a".repeat(64)}" && trigger_message_id == "${"b".repeat(64)}"`,
+        },
       },
-    }),
+      i18n,
+    ),
     "🔥 reaction added",
   );
   assert.equal(
-    getWorkflowTriggerSummary({
-      trigger: { on: "schedule", interval: "15m" },
-    }),
+    getWorkflowTriggerSummary(
+      { trigger: { on: "schedule", interval: "15m" } },
+      i18n,
+    ),
     "Schedule",
   );
 });

@@ -2,7 +2,7 @@ import * as React from "react";
 import { Check, Code, Pencil, X } from "lucide-react";
 import { useBlocker } from "@tanstack/react-router";
 import { stringify as yamlStringify } from "yaml";
-import type { MessageDescriptor } from "@lingui/core";
+import type { I18n, MessageDescriptor } from "@lingui/core";
 import { msg } from "@lingui/core/macro";
 import { Trans, useLingui } from "@lingui/react/macro";
 
@@ -88,9 +88,9 @@ function getInitialYaml(
   return yamlStringify(def);
 }
 
-function getInitialEditorMode(yaml: string): WorkflowEditorMode {
+function getInitialEditorMode(yaml: string, i18n: I18n): WorkflowEditorMode {
   if (!yaml) return "form";
-  return yamlToFormState(yaml).ok ? "form" : "yaml";
+  return yamlToFormState(yaml, i18n).ok ? "form" : "yaml";
 }
 
 // Built at import, so these are descriptors resolved per render. Plain strings
@@ -252,7 +252,7 @@ export function WorkflowDialog({
     getInitialYaml(mode, workflowSnapshot),
   );
   const [editorMode, setEditorMode] = React.useState<WorkflowEditorMode>(() =>
-    getInitialEditorMode(getInitialYaml(mode, workflowSnapshot)),
+    getInitialEditorMode(getInitialYaml(mode, workflowSnapshot), i18n),
   );
   const [editorParseError, setEditorParseError] = React.useState<string | null>(
     null,
@@ -297,7 +297,7 @@ export function WorkflowDialog({
   const selectedChannel =
     channels.find((c) => c.id === selectedChannelId) ?? null;
   const parsedDefinition = yamlDefinition.trim()
-    ? yamlToFormState(yamlDefinition)
+    ? yamlToFormState(yamlDefinition, i18n)
     : null;
   const isAddingFirstStep =
     mode === "create" &&
@@ -504,7 +504,7 @@ export function WorkflowDialog({
         return;
       }
 
-      const result = yamlToFormState(yamlDefinition);
+      const result = yamlToFormState(yamlDefinition, i18n);
       if (result.ok) {
         setEditorParseError(null);
         setEditorMode("form");
@@ -512,7 +512,7 @@ export function WorkflowDialog({
         setEditorParseError(result.error);
       }
     },
-    [editorMode, yamlDefinition],
+    [editorMode, i18n, yamlDefinition],
   );
 
   // Header state reads the YAML document directly rather than the fully

@@ -1,4 +1,7 @@
 import type { I18n } from "@lingui/core";
+import { msg, plural } from "@lingui/core/macro";
+
+import { resolveDescriptor } from "@/shared/i18n/resolveDescriptor";
 
 import type { Workflow } from "@/shared/api/types";
 import {
@@ -6,7 +9,7 @@ import {
   SCHEDULE_FREQUENCY_LABELS,
 } from "./workflowSchedule";
 import {
-  ACTION_LABELS,
+  ACTION_TYPES,
   TRIGGER_LABELS,
   TRIGGER_TYPES,
 } from "./workflowFormTypes";
@@ -16,9 +19,12 @@ import type {
   TriggerConfig,
   TriggerType,
 } from "./workflowFormTypes";
-import { workflowStepDescription } from "./workflowStepDescription";
+import { workflowStepDetail } from "./workflowStepDescription";
 import { parseConditionExpressions } from "./workflowConditionExpression";
+import { workflowTriggerCardClause } from "./workflowTriggerCardClause";
 import { workflowTriggerDescription } from "./workflowTriggerDescription";
+import { workflowTriggerDescriptor } from "./workflowTriggerDescriptor";
+import type { WorkflowTriggerDescriptor } from "./workflowTriggerDescriptor";
 
 function asRecord(value: unknown): Record<string, unknown> | null {
   if (!value || typeof value !== "object" || Array.isArray(value)) {
@@ -113,182 +119,107 @@ export function getWorkflowTriggerConfig(
   };
 }
 
-function getScheduleCardClause(trigger: Record<string, unknown>): string {
+function getScheduleCardClause(
+  trigger: Record<string, unknown>,
+  i18n: I18n,
+): string {
   const schedule = scheduleFormFromTrigger({
     on: "schedule",
     cron: nonEmptyString(trigger.cron) ?? undefined,
     interval: nonEmptyString(trigger.interval) ?? undefined,
   });
+  const { time } = schedule;
 
   switch (schedule.frequency) {
     case "daily":
-      return `Every day at ${schedule.time} UTC`;
+      return i18n._(msg`Every day at ${time} UTC`);
     case "weekly":
-      return `Every week at ${schedule.time} UTC`;
+      return i18n._(msg`Every week at ${time} UTC`);
     case "monthly":
-      return `Every month at ${schedule.time} UTC`;
-    case "custom_interval":
-      return schedule.customInterval
-        ? `Every ${schedule.customInterval}`
-        : "On a schedule";
+      return i18n._(msg`Every month at ${time} UTC`);
+    case "custom_interval": {
+      const interval = schedule.customInterval;
+      return interval
+        ? i18n._(msg`Every ${interval}`)
+        : i18n._(msg`On a schedule`);
+    }
     case "custom_cron":
-      return "On a custom schedule";
+      return i18n._(msg`On a custom schedule`);
     default:
-      return SCHEDULE_FREQUENCY_LABELS[schedule.frequency];
+      return i18n._(SCHEDULE_FREQUENCY_LABELS[schedule.frequency]);
   }
 }
 
-function getTriggerCardClause(
+/**
+ * The card clause for a trigger with no conditions to describe: webhooks and
+ * schedules, an absent trigger, a trigger type this build does not know yet,
+ * and an unfiltered message, diff or reaction trigger.
+ *
+ * A reaction's emoji reaches this clause through `presentedReaction` or the
+ * legacy `trigger.emoji` field rather than through a condition, which is why it
+ * is not covered by the descriptor path.
+ */
+function getUnconditionalTriggerCardClause(
   definition: Record<string, unknown>,
+  i18n: I18n,
   presentedReaction?: string,
 ): string {
   const trigger = asRecord(definition.trigger);
   const triggerType = nonEmptyString(trigger?.on);
-  if (!trigger || !triggerType) return "When this workflow starts";
+  if (!trigger || !triggerType) {
+    return i18n._(msg`When this workflow starts`);
+  }
 
   switch (triggerType) {
     case "message_posted":
       return nonEmptyString(trigger.filter)
-        ? "When a matching message is posted"
-        : "When a message is posted";
+        ? i18n._(msg`When a matching message is posted`)
+        : i18n._(msg`When a message is posted`);
+    case "diff_posted":
+      return nonEmptyString(trigger.filter)
+        ? i18n._(msg`When a matching diff is posted`)
+        : i18n._(msg`When a diff is posted`);
     case "reaction_added": {
       const emoji = nonEmptyString(presentedReaction ?? trigger.emoji);
       return emoji
-        ? `When someone reacts with ${emoji}`
-        : "When someone adds a reaction";
+        ? resolveDescriptor(i18n, msg`When someone reacts with {emoji}`, {
+            emoji,
+          })
+        : i18n._(msg`When someone adds a reaction`);
     }
-    case "diff_posted":
-      return nonEmptyString(trigger.filter)
-        ? "When a matching diff is posted"
-        : "When a diff is posted";
     case "webhook":
-      return "When a webhook arrives";
+      return i18n._(msg`When a webhook arrives`);
     case "schedule":
-      return getScheduleCardClause(trigger);
-    default:
-      return `When ${humanizeIdentifier(triggerType)} happens`;
+      return getScheduleCardClause(trigger, i18n);
+    default: {
+      // A trigger type from a newer relay: its identifier is data, so it is
+      // humanized rather than translated.
+      const event = humanizeIdentifier(triggerType);
+      return i18n._(msg`When ${event} happens`);
+    }
   }
 }
 
-function eventDescriptionCardClause(
-  description: string,
-  event: "message" | "diff",
-): string | null {
-  const subject = event === "message" ? "Message" : "Diff";
-  const eventPhrase = `${subject} posted`;
-  if (!description.startsWith(eventPhrase)) return null;
+const ACTION_CARD_CLAUSES = {
+  add_reaction: msg`add a {detail} reaction`,
+  call_webhook: msg`call {detail}`,
+  delay: msg`wait {detail}`,
+  request_approval: msg`request approval: {detail}`,
+  send_dm: msg`send {detail}`,
+  send_message: msg`send {detail}`,
+  send_message_in: msg`send a message in {detail}`,
+  set_channel_topic: msg`set the channel topic to {detail}`,
+} as const;
 
-  const detail = description.slice(eventPhrase.length);
-  if (!detail) return `When a ${event} is posted`;
-  if (detail.startsWith(" is ") || detail.startsWith(" is not ")) {
-    return `When a ${event}${detail}`;
-  }
-  if (
-    detail.startsWith(" containing ") ||
-    detail.startsWith(" without ") ||
-    detail.startsWith(" starting with ") ||
-    detail.startsWith(" ending with ") ||
-    detail === " with text"
-  ) {
-    return `When a ${event}${detail} is posted`;
-  }
-  return `When a ${event} is posted${detail}`;
-}
-
-function textDescriptionCardClause(
-  description: string,
-  event: "message" | "diff",
-): string | null {
-  const subject = event === "message" ? "Message" : "Diff";
-  if (!description.startsWith(`${subject} `)) return null;
-  return `When a ${event}${description.slice(subject.length)}`;
-}
-
-function postedValueCardClause(description: string): string | null {
-  const postedIndex = description.indexOf(" posted");
-  if (postedIndex < 1) return null;
-
-  const value = description.slice(0, postedIndex);
-  if (!value.startsWith("“") && !value.startsWith("Anything except ")) {
-    return null;
-  }
-  const normalizedValue = value.startsWith("Anything")
-    ? `anything${value.slice("Anything".length)}`
-    : value;
-  return `When ${normalizedValue} is posted${description.slice(postedIndex + " posted".length)}`;
-}
-
-function qualifiedPostedEventCardClause(
-  description: string,
-  event: "message" | "diff",
-): string | null {
-  const subject = event === "message" ? "Message" : "Diff";
-  const postedIndex = description.indexOf(" posted");
-  if (postedIndex < 1) return null;
-
-  const suffix = description.slice(postedIndex + " posted".length);
-  const otherTextPrefix = `${subject} with text other than `;
-  if (description.startsWith(otherTextPrefix)) {
-    const value = description.slice(otherTextPrefix.length, postedIndex);
-    return `When a ${event} with text other than ${value} is posted${suffix}`;
-  }
-
-  if (description.startsWith(`${subject} with text posted`)) {
-    return `When a ${event} with text is posted${suffix}`;
-  }
-  if (description.startsWith(`${subject} without text posted`)) {
-    return `When a ${event} without text is posted${suffix}`;
-  }
-  return null;
-}
-
-function exactValueEventCardClause(
-  description: string,
-  event: "message" | "diff",
-): string | null {
-  const subject = event === "message" ? "Message" : "Diff";
-  const prefix = `${subject} “`;
-  const postedMarker = " is posted";
-  if (!description.startsWith(prefix)) return null;
-
-  const postedIndex = description.indexOf(postedMarker);
-  if (postedIndex < prefix.length) return null;
-  const value = description.slice(subject.length + 1, postedIndex);
-  const suffix = description.slice(postedIndex + postedMarker.length);
-  return event === "message"
-    ? `When ${value} is posted${suffix}`
-    : `When a diff ${value} is posted${suffix}`;
-}
-
-function getPresentedTriggerCardClause(description?: string): string | null {
-  if (!description) return null;
-
-  const eventClause =
-    exactValueEventCardClause(description, "message") ??
-    exactValueEventCardClause(description, "diff") ??
-    qualifiedPostedEventCardClause(description, "message") ??
-    qualifiedPostedEventCardClause(description, "diff") ??
-    postedValueCardClause(description) ??
-    eventDescriptionCardClause(description, "message") ??
-    eventDescriptionCardClause(description, "diff") ??
-    textDescriptionCardClause(description, "message") ??
-    textDescriptionCardClause(description, "diff");
-  if (eventClause) return eventClause;
-
-  if (description.startsWith("Reaction added")) {
-    return `When a reaction is added${description.slice("Reaction added".length)}`;
-  }
-  if (description.endsWith(" reaction added")) {
-    return `When someone reacts with ${description.slice(0, -" reaction added".length)}`;
-  }
-  if (
-    description.startsWith("Any reaction ") &&
-    description.endsWith(" added")
-  ) {
-    return `When ${description.slice(0, -" added".length).toLocaleLowerCase()} is added`;
-  }
-  return null;
-}
+const UNCONFIGURED_ACTION_CARD_CLAUSES = {
+  add_reaction: msg`add a reaction`,
+  call_webhook: msg`call a webhook`,
+  delay: msg`wait for a moment`,
+  request_approval: msg`request approval`,
+  send_dm: msg`send a direct message`,
+  send_message: msg`send a channel message`,
+  set_channel_topic: msg`update the channel topic`,
+} as const;
 
 function getActionCardClause(
   step: Record<string, unknown>,
@@ -298,73 +229,38 @@ function getActionCardClause(
   const action = nonEmptyString(step.action);
   if (!action) return null;
 
-  const actionLabel = ACTION_LABELS[action as ActionType];
-  const parsedStep: StepFormState | null = actionLabel
-    ? {
-        action: action as ActionType,
-        id: nonEmptyString(step.id) ?? "step_1",
-        duration: nonEmptyString(step.duration) ?? undefined,
-        emoji: nonEmptyString(step.emoji) ?? undefined,
-        from: nonEmptyString(step.from) ?? undefined,
-        message: nonEmptyString(step.message) ?? undefined,
-        method: nonEmptyString(step.method) ?? undefined,
-        name: nonEmptyString(step.name) ?? undefined,
-        text: nonEmptyString(step.text) ?? undefined,
-        to: nonEmptyString(step.to) ?? undefined,
-        topic: nonEmptyString(step.topic) ?? undefined,
-        url: nonEmptyString(step.url) ?? undefined,
-      }
-    : null;
-  const detail = parsedStep
-    ? workflowStepDescription(parsedStep, i18n, {
-        channelLabel,
-        includeName: false,
-      })
-    : null;
-  const configuredDetail =
-    detail &&
-    detail !== actionLabel &&
-    detail !==
-      (actionLabel
-        ? `${actionLabel[0]}${actionLabel.slice(1).toLocaleLowerCase()}`
-        : null)
-      ? detail
-      : null;
-
-  switch (action) {
-    case "delay": {
-      return configuredDetail
-        ? `wait ${configuredDetail}`
-        : "wait for a moment";
-    }
-    case "send_message":
-      if (!configuredDetail) return "send a channel message";
-      return nonEmptyString(step.text)
-        ? `send ${configuredDetail}`
-        : `send a message in ${configuredDetail}`;
-    case "call_webhook":
-      return configuredDetail ? `call ${configuredDetail}` : "call a webhook";
-    case "send_dm":
-      return configuredDetail
-        ? `send ${configuredDetail}`
-        : "send a direct message";
-    case "request_approval":
-      return configuredDetail
-        ? `request approval: ${configuredDetail}`
-        : "request approval";
-    case "add_reaction": {
-      return configuredDetail
-        ? `add a ${configuredDetail} reaction`
-        : "add a reaction";
-    }
-    case "set_channel_topic":
-      return configuredDetail
-        ? `set the channel topic to ${configuredDetail}`
-        : "update the channel topic";
-    default: {
-      return (actionLabel ?? humanizeIdentifier(action)).toLocaleLowerCase();
-    }
+  if (!ACTION_TYPES.includes(action as ActionType)) {
+    // An action type from a newer relay. Its identifier is data, not copy.
+    return humanizeIdentifier(action).toLocaleLowerCase();
   }
+
+  const actionType = action as ActionType;
+  const parsedStep: StepFormState = {
+    action: actionType,
+    id: nonEmptyString(step.id) ?? "step_1",
+    duration: nonEmptyString(step.duration) ?? undefined,
+    emoji: nonEmptyString(step.emoji) ?? undefined,
+    from: nonEmptyString(step.from) ?? undefined,
+    message: nonEmptyString(step.message) ?? undefined,
+    method: nonEmptyString(step.method) ?? undefined,
+    name: nonEmptyString(step.name) ?? undefined,
+    text: nonEmptyString(step.text) ?? undefined,
+    to: nonEmptyString(step.to) ?? undefined,
+    topic: nonEmptyString(step.topic) ?? undefined,
+    url: nonEmptyString(step.url) ?? undefined,
+  };
+  const detail = workflowStepDetail(parsedStep, i18n, channelLabel);
+  if (!detail) {
+    return i18n._(UNCONFIGURED_ACTION_CARD_CLAUSES[actionType]);
+  }
+
+  // A configured `send_message` with no text names the channel it posts in,
+  // so it reads as a destination rather than as the message body.
+  const descriptor =
+    actionType === "send_message" && !nonEmptyString(step.text)
+      ? ACTION_CARD_CLAUSES.send_message_in
+      : ACTION_CARD_CLAUSES[actionType];
+  return resolveDescriptor(i18n, descriptor, { detail });
 }
 
 export function getWorkflowStepCount(
@@ -379,21 +275,31 @@ export function getWorkflowCardLabel(
   i18n: I18n,
   options: {
     actionChannelLabel?: string;
-    triggerDescription?: string;
+    triggerDescriptor?: WorkflowTriggerDescriptor | null;
     triggerReaction?: string;
   } = {},
 ): string {
   const triggerConfig = getWorkflowTriggerConfig(definition);
-  const triggerClause =
-    getPresentedTriggerCardClause(options.triggerDescription) ??
-    getPresentedTriggerCardClause(
-      triggerConfig?.filter && !options.triggerReaction
-        ? workflowTriggerDescription(triggerConfig, {
-            omitUnresolvedReferences: true,
-          })
-        : undefined,
-    ) ??
-    getTriggerCardClause(definition, options.triggerReaction);
+  // The caller's descriptor is preferred: it carries the author and message
+  // labels it has already resolved. Falling back to one built here, references
+  // that have not resolved are left out rather than shown as a raw npub or
+  // event id — and a caller that presents the reaction itself wants the
+  // reaction clause, not a condition sentence.
+  const descriptor =
+    options.triggerDescriptor ??
+    (triggerConfig?.filter && !options.triggerReaction
+      ? workflowTriggerDescriptor(triggerConfig, {
+          omitUnresolvedReferences: true,
+        })
+      : null);
+  const triggerClause = descriptor
+    ? workflowTriggerCardClause(descriptor, i18n)
+    : getUnconditionalTriggerCardClause(
+        definition,
+        i18n,
+        options.triggerReaction,
+      );
+
   const steps = getWorkflowSteps(definition);
   const firstAction = steps[0]
     ? getActionCardClause(steps[0], i18n, options.actionChannelLabel)
@@ -401,11 +307,19 @@ export function getWorkflowCardLabel(
   if (!firstAction) return triggerClause;
 
   const remainingStepCount = steps.length - 1;
-  if (remainingStepCount === 0) return `${triggerClause}, ${firstAction}`;
+  if (remainingStepCount === 0) {
+    return i18n._(msg`${triggerClause}, ${firstAction}`);
+  }
 
-  return `${triggerClause}, ${firstAction}, then ${remainingStepCount} more ${
-    remainingStepCount === 1 ? "step" : "steps"
-  }`;
+  // One plural covering the whole tail, not a `${n} more step(s)` fragment
+  // spliced into it: the cardinal and its noun sit together in the clause and
+  // German inflects both.
+  return i18n._(
+    msg`${triggerClause}, ${firstAction}, then ${plural(remainingStepCount, {
+      one: "# more step",
+      other: "# more steps",
+    })}`,
+  );
 }
 
 export function getWorkflowDescription(
@@ -445,16 +359,18 @@ export function getWorkflowDisplayStatus(
 
 export function getWorkflowTriggerSummary(
   definition: Record<string, unknown>,
+  i18n: I18n,
 ): string | null {
   const trigger = getWorkflowTriggerConfig(definition);
-  if (trigger)
-    return workflowTriggerDescription(trigger, {
+  if (trigger) {
+    return workflowTriggerDescription(trigger, i18n, {
       omitUnresolvedReferences: true,
     });
+  }
 
   const rawTrigger = asRecord(definition.trigger);
   const triggerType = nonEmptyString(rawTrigger?.on);
-  return triggerType
-    ? (TRIGGER_LABELS[triggerType as TriggerType] ?? triggerType)
-    : null;
+  if (!triggerType) return null;
+  const label = TRIGGER_LABELS[triggerType as TriggerType];
+  return label ? i18n._(label) : triggerType;
 }
