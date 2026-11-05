@@ -3,6 +3,7 @@ import { createRoot, type Root } from "react-dom/client";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { AgentSessionThreadPanel } from "@/features/channels/ui/AgentSessionThreadPanel";
 import { CommunitiesProvider } from "@/features/communities/useCommunities";
+import { AppI18nProvider } from "@/shared/i18n/AppI18nProvider";
 import { BRAND } from "@/shared/branding/brand";
 import { bytesToHex, hexToBytes } from "@noble/hashes/utils.js";
 import { emit, listen } from "@tauri-apps/api/event";
@@ -11689,19 +11690,28 @@ export function maybeInstallE2eTauriMocks() {
       React.createElement(
         QueryClientProvider,
         { client: directPanelQueryClient },
+        // `AppI18nProvider` mirrors the app's provider stack. Without it any
+        // converted component in this subtree throws on `useLingui()` — which
+        // is the convention here, because a context read re-renders past a
+        // `React.memo` boundary and the global `t` macro does not. The panel
+        // then renders nothing at all, which reads as a product bug.
         React.createElement(
-          CommunitiesProvider,
+          AppI18nProvider,
           null,
-          React.createElement(AgentSessionThreadPanel, {
-            agent,
-            canInterruptTurn,
-            channel: null,
-            channelId,
-            isSinglePanelView: true,
-            layout: "standalone",
-            onClose: () => {},
-            widthPx: 420,
-          }),
+          React.createElement(
+            CommunitiesProvider,
+            null,
+            React.createElement(AgentSessionThreadPanel, {
+              agent,
+              canInterruptTurn,
+              channel: null,
+              channelId,
+              isSinglePanelView: true,
+              layout: "standalone",
+              onClose: () => {},
+              widthPx: 420,
+            }),
+          ),
         ),
       ),
     );

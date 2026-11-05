@@ -56,6 +56,7 @@ export default defineConfig({
         "**/workflow-triggers-german.spec.ts",
         "**/workflow-filters-german.spec.ts",
         "**/admin-console-german.spec.ts",
+        "**/agents-transcript-german.spec.ts",
         "**/boot-splash-brand.spec.ts",
         "**/flavor-preview.spec.ts",
         "**/mock-subscription-readiness.spec.ts",

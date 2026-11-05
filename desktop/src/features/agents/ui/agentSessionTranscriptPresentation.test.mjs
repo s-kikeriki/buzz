@@ -49,6 +49,40 @@ test("getActivityHeadline formats tool titles and assistant text", () => {
   assert.equal(getActivityHeadline(makeMessage({ text: "   " })), "Responding");
 });
 
+/**
+ * A plan thought is recognised by its wire kind, not by `title === "Plan"`.
+ *
+ * The title is display copy. Once translated it stops matching, and the
+ * headline falls through to the raw title instead of "Planning" — so the
+ * German activity bar read "Plan" where English read "Planning".
+ */
+test("getActivityHeadline recognises a plan thought by its wire kind", () => {
+  const planThought = {
+    id: "thinking:1",
+    type: "thought",
+    title: "Plan",
+    text: "- [ ] step one",
+    timestamp: baseTimestamp,
+    acpSource: "plan",
+  };
+
+  assert.equal(getActivityHeadline(planThought), "Planning");
+  assert.equal(
+    getActivityHeadline({ ...planThought, title: "Plan (de)" }),
+    "Planning",
+    "a translated plan title is still a plan",
+  );
+  assert.equal(
+    getActivityHeadline({
+      ...planThought,
+      acpSource: "agent_thought_chunk",
+      title: "Thinking",
+    }),
+    "Thinking",
+    "a non-plan thought keeps its own title",
+  );
+});
+
 test("isMeaningfulItem ignores lifecycle noise and raw JSON-RPC metadata", () => {
   assert.equal(
     isMeaningfulItem({

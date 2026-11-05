@@ -192,6 +192,39 @@ test("buildCompactToolSummary uses running and failed labels", () => {
   );
 });
 
+/**
+ * The failure suffix is applied in two places — `classifyTool` when the item
+ * is an error, and `labelForStatus` when the status is failed — so it has to
+ * be idempotent. The dedup used to be `label.endsWith("failed")`, a test
+ * against English copy: once the label is translated it never matches and the
+ * suffix lands twice. `labelIsFailure` records the fact instead of re-reading
+ * the copy, which is what this asserts, in a way that does not depend on the
+ * active catalogue.
+ */
+test("buildCompactToolSummary does not suffix a label already marked failed", () => {
+  const summary = buildCompactToolSummary(
+    makeTool({
+      toolName: "read_file",
+      status: "failed",
+      isError: true,
+      args: { path: "src/app.tsx" },
+      descriptor: {
+        renderClass: "error",
+        // Stands in for any translated label: it does not end in "failed",
+        // so the old copy-reading dedup would append the suffix again.
+        label: "Datei gelesen – fehlgeschlagen",
+        labelIsFailure: true,
+        preview: "src/app.tsx",
+        action: { verb: "Gelesen", object: "src/app.tsx" },
+        source: "harness",
+        groupKey: "read_file",
+      },
+    }),
+  );
+
+  assert.equal(summary.label, "Datei gelesen – fehlgeschlagen");
+});
+
 test("buildCompactToolSummary promotes non-send buzz CLI commands to relay ops", () => {
   const summary = buildCompactToolSummary(
     makeTool({
