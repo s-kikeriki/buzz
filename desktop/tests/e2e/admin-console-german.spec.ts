@@ -69,11 +69,16 @@ const TABS: Array<{ tab: string; german: string[]; placeholders?: string[] }> =
     {
       // Also covers the probe badge and the section header, which render above
       // the tab bar on every tab.
+      //
+      // "Meldungen" is deliberately NOT asserted here: the section header's
+      // description contains the word, so a page-wide match stays green even
+      // with the whole tab bar frozen in English — the break test proved it.
+      // The tab labels get their own test below, bound to the buttons that
+      // render them.
       tab: "reports",
       german: [
         "Verbunden als Operator",
         "Verwalte die Plattformebene",
-        "Meldungen",
         "Melder:",
         "Offen",
       ],
@@ -111,6 +116,28 @@ for (const { tab, german, placeholders } of TABS) {
     }
   });
 }
+
+/**
+ * The tab bar, bound to the four buttons that render it.
+ *
+ * Each label is asserted on its own element rather than page-wide, because
+ * every one of the four words also appears elsewhere on the screen — the
+ * section header mentions reports and feedback, the operator roster mentions
+ * operators. A page-wide match therefore passes with the tab bar frozen in
+ * English, which is the exact regression the descriptor table exists to stop.
+ */
+test("the admin console tab bar reads German", async ({ page }) => {
+  await openAdminConsoleIn(page, "de");
+
+  for (const [tab, label] of [
+    ["reports", "Meldungen"],
+    ["feedback", "Feedback"],
+    ["communities", "Communitys"],
+    ["operators", "Operatoren"],
+  ] as const) {
+    await expect(page.getByTestId(`admin-tab-${tab}`)).toHaveText(label);
+  }
+});
 
 /**
  * The report detail and its resolve form — where the action matrix, the
@@ -221,6 +248,9 @@ test("the admin console reads English under en", async ({ page }) => {
   ]) {
     await expect(section.getByText(german, { exact: false })).toHaveCount(0);
   }
+
+  await expect(page.getByTestId("admin-tab-reports")).toHaveText("Reports");
+  await expect(page.getByTestId("admin-tab-operators")).toHaveText("Operators");
 
   await page.getByTestId("admin-tab-operators").click();
   await waitForAnimations(page);
