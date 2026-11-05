@@ -1,3 +1,4 @@
+import { Trans, useLingui } from "@lingui/react/macro";
 import {
   Copy,
   MoreHorizontal,
@@ -39,11 +40,12 @@ export function WorkflowActionsMenu({
   onTrigger,
   showEnabledToggle = true,
 }: WorkflowActionsMenuProps) {
+  const { t } = useLingui();
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button
-          aria-label="Workflow actions"
+          aria-label={t`Workflow actions`}
           className="h-8 w-8 text-muted-foreground hover:bg-background/80 hover:text-foreground data-[state=open]:bg-background/80 data-[state=open]:text-foreground"
           size="icon"
           type="button"
@@ -55,15 +57,25 @@ export function WorkflowActionsMenu({
       <DropdownMenuContent align="end">
         <DropdownMenuItem onClick={onTrigger}>
           <Play className="mr-2 h-4 w-4" />
-          Trigger
+          {/*
+            Same collision the detail panel's button already carries a context
+            for: `Trigger` is the canvas node and the template-variable group
+            heading (a noun, "Auslöser") and this menu item (a verb,
+            "Auslösen"). One msgid holds one translation, so this one reuses
+            that context rather than quietly inheriting the noun.
+          */}
+          {t({
+            message: `Trigger`,
+            context: "button that runs a workflow now",
+          })}
         </DropdownMenuItem>
         <DropdownMenuItem onClick={onEdit}>
           <Pencil className="mr-2 h-4 w-4" />
-          Edit
+          <Trans>Edit</Trans>
         </DropdownMenuItem>
         <DropdownMenuItem onClick={onDuplicate}>
           <Copy className="mr-2 h-4 w-4" />
-          Duplicate
+          <Trans>Duplicate</Trans>
         </DropdownMenuItem>
         {showEnabledToggle ? (
           <DropdownMenuCheckboxItem
@@ -80,7 +92,9 @@ export function WorkflowActionsMenu({
             ) : (
               <PowerOff className="mr-2 h-4 w-4 shrink-0" />
             )}
-            <span>Enable</span>
+            <span>
+              <Trans>Enable</Trans>
+            </span>
             <span
               aria-hidden="true"
               className={
@@ -101,7 +115,7 @@ export function WorkflowActionsMenu({
         <DropdownMenuSeparator />
         <DropdownMenuItem className="text-destructive" onClick={onDelete}>
           <Trash2 className="mr-2 h-4 w-4" />
-          Delete
+          <Trans>Delete</Trans>
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

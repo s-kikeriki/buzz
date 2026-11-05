@@ -1,3 +1,6 @@
+import type { I18n } from "@lingui/core";
+import { msg } from "@lingui/core/macro";
+import { Trans, useLingui } from "@lingui/react/macro";
 import { useInfiniteQuery, useQueries, useQuery } from "@tanstack/react-query";
 import { Check, LoaderCircle, Search } from "lucide-react";
 import * as React from "react";
@@ -25,9 +28,9 @@ import {
 
 const PAGE_SIZE = 25;
 
-function truncateContent(content: string | null): string {
+function truncateContent(content: string | null, i18n: I18n): string {
   const normalized = content?.trim().replaceAll(/\s+/g, " ") ?? "";
-  if (!normalized) return "No message body";
+  if (!normalized) return i18n._(msg`No message body`);
   return normalized.length > 120
     ? `${normalized.slice(0, 117)}...`
     : normalized;
@@ -58,6 +61,7 @@ export function WorkflowMessagePicker({
   onEscape?: () => void;
   value: string;
 }) {
+  const { t } = useLingui();
   const optionRefs = React.useRef(new Map<string, HTMLButtonElement>());
   const [query, setQuery] = React.useState("");
   const [activeIndex, setActiveIndex] = React.useState<number | null>(null);
@@ -235,7 +239,7 @@ export function WorkflowMessagePicker({
               : undefined
           }
           aria-controls={listId}
-          aria-label="Search messages or paste a message ID"
+          aria-label={t`Search messages or paste a message ID`}
           aria-expanded="true"
           autoCapitalize="none"
           autoComplete="off"
@@ -286,8 +290,8 @@ export function WorkflowMessagePicker({
           }}
           placeholder={
             channelId
-              ? "Search messages or paste a message ID…"
-              : "Choose a channel first"
+              ? t`Search messages or paste a message ID…`
+              : t`Choose a channel first`
           }
           role="combobox"
           spellCheck={false}
@@ -298,18 +302,18 @@ export function WorkflowMessagePicker({
         searchEventsFetching ||
         exactQuery.isFetching ? (
           <LoaderCircle
-            aria-label="Loading messages"
+            aria-label={t`Loading messages`}
             className="absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 animate-spin text-muted-foreground"
           />
         ) : null}
       </div>
       {invalidDirectResult ? (
         <p className="shrink-0 border-b border-border/70 px-3 py-2 text-xs text-destructive">
-          That message is not available in this channel.
+          <Trans>That message is not available in this channel.</Trans>
         </p>
       ) : null}
       <div
-        aria-label="Messages"
+        aria-label={t`Messages`}
         className="min-h-0 flex-1 space-y-1 overflow-y-auto overscroll-contain p-2"
         data-testid="workflow-message-picker-results"
         id={listId}
@@ -352,15 +356,16 @@ export function WorkflowMessagePicker({
             className="flex items-center justify-center gap-2 px-3 py-8 text-sm text-muted-foreground"
             role="status"
           >
-            <LoaderCircle className="h-4 w-4 animate-spin" /> Loading messages…
+            <LoaderCircle className="h-4 w-4 animate-spin" />{" "}
+            <Trans>Loading messages…</Trans>
           </p>
         ) : visibleCandidates.length === 0 ? (
           <p className="px-3 py-8 text-center text-sm text-muted-foreground">
             {failed
-              ? "Couldn’t load messages."
+              ? t`Couldn’t load messages.`
               : normalizedQuery
-                ? "No messages found."
-                : "No messages yet."}
+                ? t`No messages found.`
+                : t`No messages yet.`}
           </p>
         ) : null}
         {failed ? (
@@ -376,7 +381,7 @@ export function WorkflowMessagePicker({
             }}
             type="button"
           >
-            Couldn’t load all messages. Retry
+            <Trans>Couldn’t load all messages. Retry</Trans>
           </button>
         ) : null}
         {!normalizedQuery && historyQuery.hasNextPage ? (
@@ -387,8 +392,8 @@ export function WorkflowMessagePicker({
             type="button"
           >
             {historyQuery.isFetchingNextPage
-              ? "Loading older messages…"
-              : "Load older messages"}
+              ? t`Loading older messages…`
+              : t`Load older messages`}
           </button>
         ) : null}
       </div>
@@ -415,9 +420,13 @@ function MessageOption({
   profiles?: UserProfileLookup;
   selected: boolean;
 }) {
+  const { i18n, t } = useLingui();
+  // A candidate found by pasting an event id has no author to name yet. The
+  // fallback reads oddly for a byline; it is translated as it stands rather
+  // than reworded inside a translation tranche.
   const author = candidate.pubkey
     ? resolveUserLabel({ profiles, pubkey: candidate.pubkey })
-    : "Selected message";
+    : t`Selected message`;
   const profile = candidate.pubkey
     ? profiles?.[candidate.pubkey.toLowerCase()]
     : undefined;
@@ -456,7 +465,7 @@ function MessageOption({
           ) : null}
         </span>
         <span className="mt-1 block min-w-0 break-words text-sm leading-5 text-foreground [overflow-wrap:anywhere]">
-          {truncateContent(candidate.content)}
+          {truncateContent(candidate.content, i18n)}
         </span>
         <span className="mt-1 block font-mono text-2xs text-muted-foreground">
           {candidate.id.slice(0, 12)}…{candidate.id.slice(-8)}

@@ -1,4 +1,4 @@
-import { useLingui } from "@lingui/react/macro";
+import { Trans, useLingui } from "@lingui/react/macro";
 import {
   ArrowRight,
   CalendarClock,
@@ -94,9 +94,10 @@ function StatusToggle({
   enabled: boolean;
   onToggle: () => void;
 }) {
+  const { t } = useLingui();
   return (
     <Switch
-      aria-label={enabled ? "Disable workflow" : "Enable workflow"}
+      aria-label={enabled ? t`Disable workflow` : t`Enable workflow`}
       checked={enabled}
       disabled={disabled}
       onCheckedChange={(checked) => {
@@ -209,9 +210,6 @@ export function WorkflowCard({
   onDuplicate,
   onDelete,
 }: WorkflowCardProps) {
-  // Boundary only: this card's own copy is still English and belongs to the
-  // next workflows tranche. `i18n` is here because the step summary inside the
-  // card label can now contain a localized duration.
   const { i18n } = useLingui();
   const locale = useLocale();
   const [triggerAnimationSequence, setTriggerAnimationSequence] =
@@ -246,7 +244,9 @@ export function WorkflowCard({
         onClick={() => onView(workflow)}
         type="button"
       >
-        <span className="sr-only">View {workflow.name}</span>
+        <span className="sr-only">
+          <Trans>View {workflow.name}</Trans>
+        </span>
       </button>
 
       <div className="pointer-events-none relative z-10 flex min-h-48 flex-1 flex-col">

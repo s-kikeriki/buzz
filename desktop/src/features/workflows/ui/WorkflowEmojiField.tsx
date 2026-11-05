@@ -1,3 +1,4 @@
+import { Trans } from "@lingui/react/macro";
 import { SmilePlus, X } from "lucide-react";
 import * as React from "react";
 
@@ -60,7 +61,9 @@ export function WorkflowEmojiField({
             ) : (
               <>
                 <SmilePlus className="text-muted-foreground" />
-                <span className="text-muted-foreground">Choose a reaction</span>
+                <span className="text-muted-foreground">
+                  <Trans>Choose a reaction</Trans>
+                </span>
               </>
             )}
           </Button>

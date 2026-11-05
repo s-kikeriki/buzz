@@ -1,3 +1,4 @@
+import { Trans, useLingui } from "@lingui/react/macro";
 import type { Workflow } from "@/shared/api/types";
 import {
   AlertDialog,
@@ -27,6 +28,7 @@ export function WorkflowDeleteDialog({
   onConfirm,
   onOpenChange,
 }: WorkflowDeleteDialogProps) {
+  const { t } = useLingui();
   return (
     <AlertDialog
       onOpenChange={(nextOpen) => {
@@ -36,11 +38,13 @@ export function WorkflowDeleteDialog({
     >
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>Delete workflow?</AlertDialogTitle>
+          <AlertDialogTitle>
+            <Trans>Delete workflow?</Trans>
+          </AlertDialogTitle>
           <AlertDialogDescription>
             {workflow
-              ? `Delete "${workflow.name}". This removes the current workflow and stops new triggers. Publishing its definition again, even an older version, can recreate it.`
-              : "Delete this workflow."}
+              ? t`Delete "${workflow.name}". This removes the current workflow and stops new triggers. Publishing its definition again, even an older version, can recreate it.`
+              : t`Delete this workflow.`}
           </AlertDialogDescription>
           {error ? (
             <p
@@ -48,15 +52,17 @@ export function WorkflowDeleteDialog({
               className="rounded-xl border border-destructive/30 bg-destructive/10 px-3 py-2 text-sm text-destructive"
               role="alert"
             >
-              Couldn’t delete workflow. {error} Try again or cancel to keep
-              editing.
+              <Trans>
+                Couldn’t delete workflow. {error} Try again or cancel to keep
+                editing.
+              </Trans>
             </p>
           ) : null}
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel asChild>
             <Button disabled={isPending} type="button" variant="outline">
-              Cancel
+              <Trans>Cancel</Trans>
             </Button>
           </AlertDialogCancel>
           <Button
@@ -69,7 +75,7 @@ export function WorkflowDeleteDialog({
             type="button"
             variant="destructive"
           >
-            {isPending ? "Deleting…" : "Delete"}
+            {isPending ? t`Deleting…` : t`Delete`}
           </Button>
         </AlertDialogFooter>
       </AlertDialogContent>

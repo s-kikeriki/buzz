@@ -1,3 +1,4 @@
+import { Trans, useLingui } from "@lingui/react/macro";
 import { Plus, Trash2 } from "lucide-react";
 
 import { Button } from "@/shared/ui/button";
@@ -25,10 +26,13 @@ export function WorkflowWebhookHeadersEditor({
   onChange,
   stepId,
 }: WorkflowWebhookHeadersEditorProps) {
+  const { t } = useLingui();
   return (
     <div className="space-y-2">
       <div className="flex items-center justify-between">
-        <FieldLabel>Headers (optional)</FieldLabel>
+        <FieldLabel>
+          <Trans>Headers (optional)</Trans>
+        </FieldLabel>
         <Button
           className="h-7 gap-1 text-xs"
           disabled={disabled}
@@ -49,11 +53,13 @@ export function WorkflowWebhookHeadersEditor({
           variant="outline"
         >
           <Plus className="h-4 w-4" />
-          Add header
+          <Trans>Add header</Trans>
         </Button>
       </div>
       {headers.length === 0 ? (
-        <p className="text-xs text-muted-foreground">No custom headers.</p>
+        <p className="text-xs text-muted-foreground">
+          <Trans>No custom headers.</Trans>
+        </p>
       ) : (
         <div className="space-y-2">
           {headers.map((header, index) => (
@@ -72,7 +78,7 @@ export function WorkflowWebhookHeadersEditor({
                     ),
                   )
                 }
-                placeholder="Header name"
+                placeholder={t`Header name`}
                 value={header.key}
               />
               <Input
@@ -89,11 +95,11 @@ export function WorkflowWebhookHeadersEditor({
                     ),
                   )
                 }
-                placeholder="Header value"
+                placeholder={t`Header value`}
                 value={header.value}
               />
               <Button
-                aria-label="Remove header"
+                aria-label={t`Remove header`}
                 className="h-9 w-9 shrink-0"
                 disabled={disabled}
                 onClick={() =>

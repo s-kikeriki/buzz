@@ -43,7 +43,7 @@ import { WorkflowScheduleFields } from "./WorkflowScheduleFields";
 import { WorkflowStepCard } from "./WorkflowStepCard";
 import {
   parseConditionExpressions,
-  conditionValueError,
+  conditionValueIsInvalid,
   type ParsedConditionExpression,
 } from "./workflowConditionExpression";
 import type { WorkflowEditorPane } from "./workflowEditorPane";
@@ -402,7 +402,7 @@ export const WorkflowFormBuilder = React.forwardRef<
   const conditionDraftsValid =
     triggerConditionDrafts === null ||
     triggerConditionDrafts.every(
-      (condition) => !conditionValueError(condition.field, condition.value),
+      (condition) => !conditionValueIsInvalid(condition.field, condition.value),
     );
 
   React.useEffect(() => {
