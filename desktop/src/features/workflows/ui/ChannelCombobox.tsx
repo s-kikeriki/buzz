@@ -242,7 +242,7 @@ export function ChannelCombobox({
           aria-controls={listboxId}
           aria-expanded={open}
           aria-haspopup="listbox"
-          aria-label={ariaLabel}
+          aria-label={label}
           aria-required={required}
           className={cn(
             "group flex w-full items-center rounded-lg px-3 py-2 focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50",
