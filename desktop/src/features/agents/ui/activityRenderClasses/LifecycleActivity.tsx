@@ -1,40 +1,25 @@
 import { AlertCircle, CheckCircle2, ShieldCheck, XCircle } from "lucide-react";
 import { useLocale } from "@/shared/lib/localePreference";
 
+import type { PermissionDecision } from "../agentSessionTypes";
 import { formatTranscriptTimestampTitle } from "../agentSessionUtils";
 import { ActivityRow, ActivityRowLabel } from "./ActivityRow";
 import { ToolActivity } from "./ToolActivity";
 import type { ActivityRenderClassItemProps } from "./types";
 
 /**
- * Split the permission item's text into the request description lines and the
- * options line.  The text is newline-joined by describePermissionRequest:
- *   [request title?] [toolCallId?] ["Options: ..."]
- * We surface the options line separately so the render can style it distinctly.
+ * Map the recorded decision to the row's tone and icon.
+ *
+ * Reads `outcomeDecision`, which `describePermissionOutcome` sets alongside
+ * the display copy. The previous version derived the tone from that copy with
+ * `outcome.startsWith("Approved")` — a match against English, so in every
+ * other locale an approval rendered with the cancelled tone and icon.
  */
-function splitPermissionText(text: string): {
-  requestLines: string;
-  optionsLine: string | null;
-} {
-  const lines = text.split("\n");
-  const optionsIdx = lines.findIndex((l) => l.startsWith("Options: "));
-  if (optionsIdx === -1) {
-    return { requestLines: text, optionsLine: null };
-  }
-  return {
-    requestLines: lines.slice(0, optionsIdx).join("\n"),
-    optionsLine: lines[optionsIdx],
-  };
-}
-
-/**
- * Derive the visual tone and icon for a resolved permission outcome string.
- * Outcome strings come from describePermissionOutcome:
- *   "Approved (...)" | "Denied (...)" | "Cancelled"
- */
-function permissionOutcomeTone(outcome: string): "approve" | "deny" | "cancel" {
-  if (outcome.startsWith("Approved")) return "approve";
-  if (outcome.startsWith("Denied")) return "deny";
+function permissionOutcomeTone(
+  decision: PermissionDecision | undefined,
+): "approve" | "deny" | "cancel" {
+  if (decision === "approved") return "approve";
+  if (decision === "denied") return "deny";
   return "cancel";
 }
 
@@ -47,9 +32,10 @@ export function LifecycleActivity(props: ActivityRenderClassItemProps) {
     return null;
   }
 
-  const isError =
-    props.item.renderClass === "error" ||
-    props.item.title.toLowerCase().includes("error");
+  // `renderClass` is already set from the observer event kind upstream; the
+  // old `title.includes("error")` fallback was a match on translated copy and
+  // reported false for every localized error title.
+  const isError = props.item.renderClass === "error";
   const isPermission = props.item.renderClass === "permission";
   const timestampTitle = formatTranscriptTimestampTitle(
     props.item.timestamp,
@@ -57,9 +43,12 @@ export function LifecycleActivity(props: ActivityRenderClassItemProps) {
   );
 
   if (isPermission) {
-    const { requestLines, optionsLine } = splitPermissionText(props.item.text);
+    const requestLines = props.item.text;
+    const optionsLine = props.item.optionsText ?? null;
     const outcome = props.item.outcome;
-    const tone = outcome ? permissionOutcomeTone(outcome) : null;
+    const tone = outcome
+      ? permissionOutcomeTone(props.item.outcomeDecision)
+      : null;
     return (
       <div
         className="rounded-md border border-amber-500/20 bg-amber-500/5 px-2 py-1.5 text-left text-xs text-amber-700 dark:text-amber-400"

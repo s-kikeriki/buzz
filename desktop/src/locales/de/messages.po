@@ -118,6 +118,10 @@ msgstr "(gelöscht)"
 msgid "(edited)"
 msgstr "(bearbeitet)"
 
+#: src/features/agents/ui/agentSessionTranscriptHelpers.ts
+msgid "(in progress)"
+msgstr "(läuft)"
+
 #: src/features/communities/ui/EditCommunityDialog.tsx
 #: src/features/settings/ui/ChannelTemplatesSettingsCard.tsx
 #: src/features/settings/ui/CustomHarnessForm.tsx
@@ -316,6 +320,11 @@ msgstr "{0, plural, one {Commits aus {1} von {2} Repositories. # Repository konn
 msgid "{0, plural, one {team · # agent} other {team · # agents}}"
 msgstr "{0, plural, one {Team · # Agent} other {Team · # Agenten}}"
 
+#. placeholder {0}: ids.length
+#: src/features/agents/ui/agentSessionTranscriptHelpers.ts
+msgid "{0, plural, one {Triggered by # event.} other {Triggered by # events.}}"
+msgstr "{0, plural, one {Ausgelöst durch # Ereignis.} other {Ausgelöst durch # Ereignisse.}}"
+
 #. placeholder {0}: issue.comments.length
 #: src/features/projects/ui/ProjectIssuesPanel.tsx
 msgid "{0, plural, one {View # comment} other {View # comments}}"
@@ -486,11 +495,6 @@ msgstr "{0} von {quotaLimit} genutzt"
 #: src/features/messages/ui/ComposerImageEditor.tsx
 msgid "{0} pen"
 msgstr "Stift {0}"
-
-#. placeholder {0}: contextOpen ? "Hide" : "Show"
-#: src/features/agents/ui/AgentSessionTranscriptList.tsx
-msgid "{0} prompt context"
-msgstr "{0} Prompt-Kontext"
 
 #. placeholder {0}: team.name
 #: src/features/agents/ui/TeamsSection.tsx
@@ -680,6 +684,11 @@ msgstr "{count, plural, one {{n} Review} other {{n} Reviews}}"
 msgid "{count, plural, one {{n} task} other {{n} tasks}}"
 msgstr "{count, plural, one {{n} Aufgabe} other {{n} Aufgaben}}"
 
+#: src/features/agents/ui/agentSessionToolClassifier.ts
+#: src/features/agents/ui/agentSessionTranscriptGrouping.ts
+msgid "{count, plural, one {# item} other {# items}}"
+msgstr "{count, plural, one {# Eintrag} other {# Einträge}}"
+
 #: src/features/messages/ui/ComposerAddressControls.tsx
 msgid "{count, plural, one {# more addressed agent} other {# more addressed agents}}"
 msgstr "{count, plural, one {# weiterer adressierter Agent} other {# weitere adressierte Agenten}}"
@@ -693,6 +702,10 @@ msgstr "{count, plural, one {# Teilnehmer} other {# Teilnehmer}}"
 #: src/features/projects/ui/projectDetailHelpers.ts
 msgid "{count, plural, one {commit} other {commits}}"
 msgstr "{count, plural, one {Commit} other {Commits}}"
+
+#: src/features/agents/ui/agentSessionTranscriptGrouping.ts
+msgid "{count, plural, one {Edited # file} other {Edited # files}}"
+msgstr "{count, plural, one {# Datei bearbeitet} other {# Dateien bearbeitet}}"
 
 #: src/features/projects/lib/projectSelection.ts
 msgid "{count, plural, one {Let's talk about this channel:} other {Let's talk about these channels:}}"
@@ -721,6 +734,14 @@ msgstr "{count, plural, one {Lass uns über diese Aufgabe sprechen:} other {Lass
 #: src/features/workflows/ui/cronExpression.ts
 msgid "{count, plural, one {Paste a 5-field cron expression. Found # field.} other {Paste a 5-field cron expression. Found # fields.}}"
 msgstr "{count, plural, one {Füge einen Cron-Ausdruck mit 5 Feldern ein. # Feld gefunden.} other {Füge einen Cron-Ausdruck mit 5 Feldern ein. # Felder gefunden.}}"
+
+#: src/features/agents/ui/agentSessionTranscriptGrouping.ts
+msgid "{count, plural, one {Read # file} other {Read # files}}"
+msgstr "{count, plural, one {# Datei gelesen} other {# Dateien gelesen}}"
+
+#: src/features/agents/ui/agentSessionTranscriptGrouping.ts
+msgid "{count, plural, one {Read # skill} other {Read # skills}}"
+msgstr "{count, plural, one {# Skill gelesen} other {# Skills gelesen}}"
 
 #: src/features/channels/ui/useMembersSidebarActions.ts
 msgid "{count, plural, one {Removed 1 managed bot from this channel.} other {Removed # managed bots from this channel.}}"
@@ -916,11 +937,13 @@ msgstr "nur {itemLabel}"
 msgid "{label} “{value}”"
 msgstr "{label} „{value}“"
 
-#. placeholder {0}: attributes.included
-#. placeholder {1}: attributes.total
 #: src/features/agents/ui/agentSessionTranscriptHelpers.ts
-msgid "{label} ({0} of {1} messages{truncated})"
-msgstr "{label} ({0} von {1} Nachrichten{truncated})"
+msgid "{label} ({included} of {total} messages, truncated)"
+msgstr "{label} ({included} von {total} Nachrichten, gekürzt)"
+
+#: src/features/agents/ui/agentSessionTranscriptHelpers.ts
+msgid "{label} ({included} of {total} messages)"
+msgstr "{label} ({included} von {total} Nachrichten)"
 
 #: src/features/agents/ui/usePersonaModelDiscovery.ts
 msgid "{label} (1M context)"
@@ -937,6 +960,10 @@ msgstr "{label} darf im Formularmodus nicht leer sein – nutze den YAML-Editor"
 #: src/shared/ui/PubKey.tsx
 msgid "{label} copied"
 msgstr "{label} kopiert"
+
+#: src/features/agents/ui/agentSessionToolClassifier.ts
+msgid "{label} failed"
+msgstr "{label} – fehlgeschlagen"
 
 #: src/features/agents/ui/AgentRuntimeAvatarControl.tsx
 msgid "{label} has a runtime error. Open runtime details."
@@ -2055,6 +2082,7 @@ msgstr "Stimme hinzufügen"
 msgid "added"
 msgstr "hinzugefügt"
 
+#: src/features/agents/ui/agentSessionToolClassifier.ts
 #: src/features/projects/ui/ProjectBrowserDialog.tsx
 #: src/features/sidebar/ui/SidebarProjectsSection.tsx
 msgid "Added"
@@ -2722,6 +2750,10 @@ msgstr "Genehmigen"
 msgid "Approve review"
 msgstr "Review genehmigen"
 
+#: src/features/agents/ui/agentSessionTranscript.ts
+msgid "Approved ({kind})"
+msgstr "Genehmigt ({kind})"
+
 #: src/features/projects/ui/ProjectsActivityFeed.tsx
 msgid "approved a review in"
 msgstr "hat einen Review genehmigt in"
@@ -2781,6 +2813,7 @@ msgid "archived"
 msgstr "archiviert"
 
 #: src/features/admin-console/adminConsoleLabels.ts
+#: src/features/agents/ui/agentSessionToolClassifier.ts
 #: src/features/channels/ui/ChannelBrowserDialog.tsx
 #: src/features/channels/ui/MembersSidebar.tsx
 #: src/features/profile/ui/ProfileInstancesSection.tsx
@@ -2919,6 +2952,10 @@ msgstr "Mir zugewiesen"
 #: src/features/projects/ui/ProjectWorkItemContextDetails.tsx
 msgid "Assignees"
 msgstr "Zugewiesene"
+
+#: src/features/agents/ui/agentSessionTranscript.ts
+msgid "Assistant"
+msgstr "Assistent"
 
 #: src/features/projects/ui/ProjectHomeCodebasePanel.tsx
 msgid "Attach a repository to browse the file tree beside this channel."
@@ -3505,6 +3542,10 @@ msgstr "Upload abbrechen"
 msgid "cancelled"
 msgstr "abgebrochen"
 
+#: src/features/agents/ui/agentSessionTranscript.ts
+msgid "Cancelled"
+msgstr "Abgebrochen"
+
 #: src/features/home/ui/InboxListPane.tsx
 msgid "Cannot remind without a channel"
 msgstr "Ohne Kanal ist keine Erinnerung möglich"
@@ -3817,6 +3858,10 @@ msgstr "Prüf deine Verbindung und versuch das Klonen erneut."
 #: src/features/onboarding/ui/OnboardingFlow.tsx
 msgid "Check your connection or change your community."
 msgstr "Prüfe deine Verbindung oder wechsle die Community."
+
+#: src/features/agents/ui/agentSessionToolClassifier.ts
+msgid "Checked"
+msgstr "Geprüft"
 
 #: src/features/agents/ui/agentSessionToolClassifier.ts
 msgid "Checked todos"
@@ -4429,10 +4474,18 @@ msgstr "Demnächst"
 msgid "Comma-separated"
 msgstr "Kommagetrennt"
 
+#: src/features/agents/ui/agentSessionToolClassifier.ts
+msgid "command"
+msgstr "Befehl"
+
 #: src/features/settings/ui/CustomHarnessForm.tsx
 #: src/features/settings/ui/HarnessCatalogDialog.tsx
 msgid "Command"
 msgstr "Befehl"
+
+#: src/features/agents/ui/agentSessionTranscript.ts
+msgid "Commands"
+msgstr "Befehle"
 
 #. placeholder {0}: cmds.length
 #: src/features/agents/ui/agentSessionTranscript.ts
@@ -4606,6 +4659,10 @@ msgstr "Community-Benutzername"
 msgid "Compact"
 msgstr "Kompakt"
 
+#: src/features/agents/ui/agentSessionToolClassifier.ts
+msgid "Compacted"
+msgstr "Verdichtet"
+
 #: src/features/projects/ui/CreatePullRequestDialog.tsx
 msgid "Compare"
 msgstr "Vergleichen"
@@ -4650,6 +4707,10 @@ msgstr "Bedingt · {timeout}"
 
 #: src/features/admin-console/adminConsoleLabels.ts
 msgid "config"
+msgstr "Konfiguration"
+
+#: src/features/agents/ui/agentSessionTranscript.ts
+msgid "Config"
 msgstr "Konfiguration"
 
 #: src/features/agents/ui/RestartDiffBadge.tsx
@@ -4832,6 +4893,14 @@ msgstr "enthält"
 #: src/features/admin-console/AdminConsoleReportsTab.tsx
 msgid "Content"
 msgstr "Inhalt"
+
+#: src/features/agents/ui/agentSessionToolClassifier.ts
+msgid "context"
+msgstr "Kontext"
+
+#: src/features/agents/ui/agentSessionTranscriptHelpers.ts
+msgid "Context"
+msgstr "Kontext"
 
 #: src/features/agents/ui/agentSessionToolClassifier.ts
 msgid "Context compacted"
@@ -5791,6 +5860,7 @@ msgid "Create, discover, and import agents and teams."
 msgstr "Agenten und Teams anlegen, entdecken und importieren."
 
 #: src/features/admin-console/AdminConsoleReportsTab.tsx
+#: src/features/agents/ui/agentSessionToolClassifier.ts
 msgid "Created"
 msgstr "Erstellt"
 
@@ -6229,6 +6299,10 @@ msgstr "Stimme löschen"
 msgid "Delete workflow?"
 msgstr "Workflow löschen?"
 
+#: src/features/agents/ui/agentSessionToolClassifier.ts
+msgid "Deleted"
+msgstr "Gelöscht"
+
 #: src/features/settings/ui/ChannelTemplatesSettingsCard.tsx
 msgid "Deleted \"{name}\""
 msgstr "„{name}“ gelöscht"
@@ -6266,6 +6340,10 @@ msgstr "Wird gelöscht …"
 msgid "Deleting…"
 msgstr "Wird gelöscht…"
 
+#: src/features/agents/ui/agentSessionTranscript.ts
+msgid "Denied ({kind})"
+msgstr "Abgelehnt ({kind})"
+
 #: src/features/agents/ui/AddTeamToChannelDialog.tsx
 msgid "Deploy team to channel"
 msgstr "Team im Kanal bereitstellen"
@@ -6273,6 +6351,10 @@ msgstr "Team im Kanal bereitstellen"
 #: src/features/agents/ui/TeamsSection.tsx
 msgid "Deploy to channel"
 msgstr "Im Kanal bereitstellen"
+
+#: src/features/agents/ui/AgentStatusBadge.tsx
+msgid "deployed"
+msgstr "bereitgestellt"
 
 #. placeholder {0}: agent.name
 #: src/features/channels/ui/useMembersSidebarActions.ts
@@ -6962,6 +7044,11 @@ msgid "Edit your message"
 msgstr "Bearbeite deine Nachricht"
 
 #: src/features/agents/ui/agentSessionToolClassifier.ts
+#: src/features/agents/ui/AgentSessionToolItem/CompactToolSummaryRow.tsx
+msgid "Edited"
+msgstr "Bearbeitet"
+
+#: src/features/agents/ui/agentSessionToolClassifier.ts
 #: src/features/agents/ui/agentSessionToolSummary.ts
 msgid "Edited file"
 msgstr "Datei bearbeitet"
@@ -6996,6 +7083,10 @@ msgstr "Emoji-Reaktionen"
 #: src/features/messages/ui/DraftsPanel.tsx
 msgid "Empty draft"
 msgstr "Leerer Entwurf"
+
+#: src/features/agents/ui/agentSessionToolClassifier.ts
+msgid "empty list"
+msgstr "leere Liste"
 
 #: src/features/workflows/ui/WorkflowActionsMenu.tsx
 msgid "Enable"
@@ -7197,6 +7288,8 @@ msgid "error"
 msgstr "Fehler"
 
 #: src/features/agents/ui/agentSessionToolCatalog.ts
+#: src/features/agents/ui/AgentSessionToolItem/SentMessageContextDialog.tsx
+#: src/features/agents/ui/AgentSessionToolItem/ToolDetailBlocks.tsx
 #: src/features/profile/ui/UserProfilePanelSections.tsx
 #: src/features/workflows/ui/WorkflowRunTrace.tsx
 msgid "Error"
@@ -7711,6 +7804,7 @@ msgstr "Feedback als geprüft markiert"
 msgid "Fetch"
 msgstr "Fetch"
 
+#: src/features/agents/ui/agentSessionToolClassifier.ts
 #: src/shared/ui/linkPreviewTypeLabel.ts
 msgid "file"
 msgstr "Datei"
@@ -8140,6 +8234,10 @@ msgstr "Projekt-Chat ausblenden"
 msgid "Hide project context"
 msgstr "Projektkontext ausblenden"
 
+#: src/features/agents/ui/AgentSessionTranscriptList.tsx
+msgid "Hide prompt context"
+msgstr "Prompt-Kontext ausblenden"
+
 #: src/features/channels/ui/AgentSessionThreadPanel.tsx
 msgid "Hide raw JSON-RPC payloads."
 msgstr "Rohe JSON-RPC-Payloads ausblenden."
@@ -8243,6 +8341,10 @@ msgstr "Huddle-Audio ist auf diesem Server nicht verfügbar. Bitte eine Administ
 msgid "Huddle chat"
 msgstr "Huddle-Chat"
 
+#: src/features/agents/ui/agentSessionTranscriptHelpers.ts
+msgid "Huddle Instructions"
+msgstr "Huddle-Anweisungen"
+
 #: src/features/huddle/components/HuddleAttachment.tsx
 msgid "Huddle unavailable"
 msgstr "Huddle nicht verfügbar"
@@ -8325,6 +8427,10 @@ msgstr "Untätig"
 #: src/features/huddle/components/MicControls.tsx
 msgid "If people are nearby, speakers can feed back into your mic. Headphones keep huddles clearer."
 msgstr "Wenn Leute in der Nähe sind, können Lautsprecher in dein Mikrofon zurückkoppeln. Mit Kopfhörern bleiben Huddles klarer."
+
+#: src/features/agents/ui/agentSessionToolClassifier.ts
+msgid "image"
+msgstr "Bild"
 
 #: src/features/agents/ui/AgentCreationPreview.tsx
 #: src/features/profile/ui/ProfileAvatarModeTabs.tsx
@@ -9772,6 +9878,10 @@ msgstr "Zusammengeführt"
 msgid "Merging…"
 msgstr "Wird zusammengeführt…"
 
+#: src/features/agents/ui/agentSessionToolClassifier.ts
+msgid "message"
+msgstr "Nachricht"
+
 #: src/features/agents/ui/AgentSessionToolItem/SentMessageContextDialog.tsx
 #: src/features/profile/ui/UserProfilePopover.tsx
 #: src/features/profile/ui/UserProfilePrimaryActions.tsx
@@ -9961,6 +10071,7 @@ msgid "mobile-app"
 msgstr "mobile-app"
 
 #: src/features/agents/ui/AgentConfigPanel.tsx
+#: src/features/agents/ui/agentSessionTranscript.ts
 msgid "Mode"
 msgstr "Modus"
 
@@ -10969,6 +11080,10 @@ msgstr "Nicht konfiguriert"
 msgid "Not connected"
 msgstr "Nicht verbunden"
 
+#: src/features/agents/ui/AgentStatusBadge.tsx
+msgid "not deployed"
+msgstr "nicht bereitgestellt"
+
 #: src/features/profile/ui/UserProfilePanelFields.tsx
 msgid "Not deployed"
 msgstr "Nicht bereitgestellt"
@@ -11632,6 +11747,10 @@ msgstr "Optionale Anweisungen für jedes bereitgestellte Teammitglied."
 msgid "Optional style notes for the art and card text"
 msgstr "Optionale Stilhinweise für Motiv und Kartentext"
 
+#: src/features/agents/ui/agentSessionTranscript.ts
+msgid "Options: {optionList}"
+msgstr "Optionen: {optionList}"
+
 #: src/features/onboarding/ui/DefaultConfigStep.tsx
 msgid "or"
 msgstr "oder"
@@ -11923,8 +12042,16 @@ msgid "plan"
 msgstr "Plan"
 
 #: src/features/agents/ui/agentSessionTranscript.ts
+msgid "Plan"
+msgstr "Plan"
+
+#: src/features/agents/ui/agentSessionTranscript.ts
 msgid "Plan updated"
 msgstr "Plan aktualisiert"
+
+#: src/features/agents/ui/agentSessionTranscriptPresentation.ts
+msgid "Planning"
+msgstr "Planung"
 
 #: src/shared/ui/VideoPlayer.tsx
 msgid "Play review video"
@@ -12284,6 +12411,7 @@ msgstr "Hervorgehobener aktiver Tab"
 msgid "Prompt"
 msgstr "Prompt"
 
+#: src/features/agents/ui/agentSessionTranscript.ts
 #: src/features/agents/ui/AgentSessionTranscriptList.tsx
 msgid "Prompt context"
 msgstr "Prompt-Kontext"
@@ -12426,6 +12554,10 @@ msgstr "Schnellsuche"
 msgid "Quote"
 msgstr "Zitat"
 
+#: src/features/agents/ui/agentSessionToolClassifier.ts
+msgid "Ran"
+msgstr "Ausgeführt"
+
 #. placeholder {0}: items.length
 #: src/features/agents/ui/agentSessionTranscriptGrouping.ts
 msgid "Ran {0} tool calls"
@@ -12454,6 +12586,10 @@ msgstr "Roh"
 #: src/features/channels/ui/AgentSessionThreadPanel.tsx
 msgid "Raw ACP activity"
 msgstr "Rohe ACP-Aktivität"
+
+#: src/features/agents/ui/agentSessionTranscript.ts
+msgid "Raw ACP payload"
+msgstr "Rohe ACP-Nutzlast"
 
 #: src/features/channels/ui/AgentSessionThreadPanel.tsx
 msgid "Raw activity rows don't animate in."
@@ -12522,6 +12658,10 @@ msgstr "Reaktions-Emoji"
 #: src/features/huddle/components/HuddleBar.tsx
 msgid "Reaction failed"
 msgstr "Reaktion fehlgeschlagen"
+
+#: src/features/agents/ui/agentSessionToolClassifier.ts
+msgid "Read"
+msgstr "Gelesen"
 
 #: src/features/agents/ui/agentSessionToolClassifier.ts
 msgid "Read file"
@@ -12935,6 +13075,10 @@ msgstr "Sprachnachricht entfernen"
 msgid "removed"
 msgstr "entfernt"
 
+#: src/features/agents/ui/agentSessionToolClassifier.ts
+msgid "Removed"
+msgstr "Entfernt"
+
 #: src/features/profile/ui/UserProfilePanel.tsx
 msgid "Removed {agentName} from My Agents."
 msgstr "{agentName} aus „Meine Agenten“ entfernt."
@@ -13181,6 +13325,10 @@ msgstr "Anfrage fehlgeschlagen."
 msgid "Request OS permission and surface new mentions or needs-action items outside the app."
 msgstr "Systemberechtigung anfragen und neue Erwähnungen oder offene Aufgaben außerhalb der App anzeigen."
 
+#: src/features/agents/ui/agentSessionTranscript.ts
+msgid "Requested"
+msgstr "Angefragt"
+
 #: src/features/projects/ui/ProjectPullRequestsPanel.tsx
 msgid "requested a review"
 msgstr "hat einen Review angefragt"
@@ -13284,6 +13432,10 @@ msgstr "{0} neu gestartet."
 msgid "Respond-to allowlist"
 msgstr "Antworten-an-Liste"
 
+#: src/features/agents/ui/agentSessionTranscriptPresentation.ts
+msgid "Responding"
+msgstr "Antwortet"
+
 #. placeholder {0}: BRAND.productName
 #: src/features/onboarding/ui/RelaunchRequiredScreen.tsx
 msgid "Restart {0} to finish recovery"
@@ -13363,6 +13515,11 @@ msgstr "Wird wiederhergestellt …"
 #: src/features/admin-console/adminConsoleLabels.ts
 msgid "Restrictions"
 msgstr "Einschränkungen"
+
+#: src/features/agents/ui/AgentSessionToolItem/SentMessageContextDialog.tsx
+#: src/features/agents/ui/AgentSessionToolItem/ToolDetailBlocks.tsx
+msgid "Result"
+msgstr "Ergebnis"
 
 #: src/features/profile/ui/AnimatedAvatarReviewNav.tsx
 msgid "Retake"
@@ -13600,6 +13757,7 @@ msgstr "Ausführen auf"
 msgid "Run time (UTC)"
 msgstr "Laufzeit (UTC)"
 
+#: src/features/agents/ui/AgentStatusBadge.tsx
 #: src/features/workflows/ui/workflowStatusLabel.ts
 msgid "running"
 msgstr "läuft"
@@ -13954,6 +14112,10 @@ msgstr "Runtimes durchsuchen"
 msgid "Search runtimes…"
 msgstr "Runtimes durchsuchen …"
 
+#: src/features/agents/ui/agentSessionToolClassifier.ts
+msgid "Searched"
+msgstr "Gesucht"
+
 #: src/features/agents/ui/agentSessionToolCatalog.ts
 msgid "Searches relay-visible {productName} history."
 msgstr "Durchsucht die im Relay sichtbare {productName}-Historie."
@@ -14229,6 +14391,10 @@ msgstr "Wird gesendet"
 msgid "Sending…"
 msgstr "Wird gesendet …"
 
+#: src/features/agents/ui/agentSessionToolClassifier.ts
+msgid "Sent"
+msgstr "Gesendet"
+
 #: src/features/agents/ui/AgentCardViewerDialog.tsx
 msgid "Sent {agentName}'s card."
 msgstr "Karte von {agentName} gesendet."
@@ -14277,6 +14443,10 @@ msgstr "Wird wörtlich an den Melder gesendet."
 #: src/features/settings/ui/EncryptedBackupCreator.tsx
 msgid "Separator"
 msgstr "Trennzeichen"
+
+#: src/features/agents/ui/agentSessionTranscript.ts
+msgid "Session ready"
+msgstr "Sitzung bereit"
 
 #: src/features/agents/ui/AgentAiDefaults.tsx
 msgid "Set"
@@ -14676,6 +14846,10 @@ msgstr "Wird signiert…"
 msgid "sk-…"
 msgstr "sk-…"
 
+#: src/features/agents/ui/agentSessionToolClassifier.ts
+msgid "skill"
+msgstr "Skill"
+
 #: src/features/onboarding/ui/AvatarStep.tsx
 #: src/features/onboarding/ui/CommunityOnboardingFlow.tsx
 #: src/features/onboarding/ui/DefaultConfigStep.tsx
@@ -14907,6 +15081,10 @@ msgstr "Wenn du neu beginnst, kannst du ein neues Passwort wählen und eine fris
 msgid "Starting pairing..."
 msgstr "Kopplung wird gestartet …"
 
+#: src/features/agents/ui/AgentStatusBadge.tsx
+msgid "Starting…"
+msgstr "Startet…"
+
 #: src/features/workflows/ui/workflowMessageTextCondition.ts
 #: src/features/workflows/ui/WorkflowTriggerConditions.tsx
 msgid "starts with"
@@ -15020,6 +15198,10 @@ msgstr "Laufende Agenten stoppen"
 #: src/features/huddle/components/HuddleBar.tsx
 msgid "Stop transcript"
 msgstr "Transkript stoppen"
+
+#: src/features/agents/ui/AgentStatusBadge.tsx
+msgid "stopped"
+msgstr "gestoppt"
 
 #: src/features/channels/ui/MembersSidebarMemberCard.tsx
 msgid "Stopped"
@@ -15141,6 +15323,7 @@ msgid "System prerequisites"
 msgstr "Systemvoraussetzungen"
 
 #: src/features/agents/ui/AgentConfigPanel.tsx
+#: src/features/agents/ui/agentSessionTranscript.ts
 msgid "System prompt"
 msgstr "System-Prompt"
 
@@ -15625,6 +15808,10 @@ msgstr "Diese Einstellungen gelten für alle Agenten, außer du überschreibst s
 #: src/features/profile/ui/ArchiveConfirmDialog.tsx
 msgid "They won't appear in search, autocomplete, or when adding members"
 msgstr "Nicht mehr in der Suche, in der Autovervollständigung oder beim Hinzufügen von Mitgliedern sichtbar"
+
+#: src/features/agents/ui/agentSessionTranscript.ts
+msgid "Thinking"
+msgstr "Denkt nach"
 
 #: src/features/agents/ui/buzzAgentModelTuningFields.tsx
 msgid "Thinking / Effort"
@@ -16176,6 +16363,15 @@ msgstr "An:"
 msgid "Today"
 msgstr "Heute"
 
+#: src/features/agents/ui/agentSessionToolClassifier.ts
+msgid "todo list"
+msgstr "Aufgabenliste"
+
+#: src/features/agents/ui/agentSessionToolClassifier.ts
+#: src/features/agents/ui/AgentSessionToolItem/TodoToolSummary.tsx
+msgid "todos"
+msgstr "Aufgaben"
+
 #. placeholder {0}: reaction.emoji
 #: src/features/messages/ui/MessageReactions.tsx
 #: src/shared/ui/VideoPlayer.tsx
@@ -16211,6 +16407,10 @@ msgstr "Seitenleiste ein-/ausblenden"
 msgid "Toggle strikethrough formatting"
 msgstr "Durchstreichen ein-/ausschalten"
 
+#: src/features/agents/ui/agentSessionToolClassifier.ts
+msgid "tool"
+msgstr "Tool"
+
 #: src/features/agents/ui/AgentSessionToolItem/SentMessageContextDialog.tsx
 msgid "Tool"
 msgstr "Tool"
@@ -16218,6 +16418,10 @@ msgstr "Tool"
 #: src/features/agents/ui/agentSessionTranscriptHelpers.ts
 msgid "Tool call"
 msgstr "Tool-Aufruf"
+
+#: src/features/agents/ui/agentSessionTranscript.ts
+msgid "Tool call: {toolCallId}"
+msgstr "Tool-Aufruf: {toolCallId}"
 
 #: src/features/workflows/ui/WorkflowStepCard.tsx
 msgid "Topic"
@@ -16276,11 +16480,6 @@ msgstr "Auslöser: {triggerDescription}"
 #: src/features/workflows/ui/workflowFormTypes.ts
 msgid "trigger.on is required"
 msgstr "trigger.on ist erforderlich"
-
-#. placeholder {0}: ids.length === 1 ? "1 event" : `${ids.length} events`
-#: src/features/agents/ui/agentSessionTranscriptHelpers.ts
-msgid "Triggered by {0}."
-msgstr "Ausgelöst von {0}."
 
 #: src/features/workflows/ui/WorkflowDetailPanel.tsx
 msgid "Triggering..."
@@ -16378,6 +16577,10 @@ msgstr "Kontur ausschalten"
 msgid "Turn outline on"
 msgstr "Kontur einschalten"
 
+#: src/features/agents/ui/agentSessionTranscript.ts
+msgid "Turn started"
+msgstr "Turn gestartet"
+
 #: src/features/agents/ui/personaLibraryCopy.ts
 msgid "Turn this off to remove the agent from teams and agent creation in this app."
 msgstr "Schalte das aus, um den Agenten aus Teams und aus der Agenten-Erstellung in dieser App zu entfernen."
@@ -16425,6 +16628,10 @@ msgstr "Kanal wiederherstellen"
 #: src/features/profile/ui/UserProfileAgentActions.tsx
 msgid "Unarchive identity"
 msgstr "Identität aus dem Archiv holen"
+
+#: src/features/agents/ui/agentSessionToolClassifier.ts
+msgid "Unarchived"
+msgstr "Wiederhergestellt"
 
 #: src/features/settings/ui/HostedCommunitiesSettingsCard.tsx
 msgid "Unarchiving community…"
@@ -16738,6 +16945,9 @@ msgstr "Aktualisier deinen Community-Namen oder die Relay-URL."
 msgid "Update your status"
 msgstr "Status aktualisieren"
 
+#: src/features/agents/ui/activityRenderClasses/PlanActivity.tsx
+#: src/features/agents/ui/agentSessionToolClassifier.ts
+#: src/features/agents/ui/AgentSessionToolItem/TodoToolSummary.tsx
 #: src/features/projects/ui/ProjectsWorkItemTable.tsx
 msgid "Updated"
 msgstr "Aktualisiert"
@@ -16830,6 +17040,10 @@ msgstr "URL"
 #: src/features/workflows/ui/WorkflowStepCard.tsx
 msgid "URL must start with https://"
 msgstr "Die URL muss mit https:// beginnen"
+
+#: src/features/agents/ui/agentSessionTranscript.ts
+msgid "Usage"
+msgstr "Nutzung"
 
 #: src/features/settings/ui/ChannelTemplatesSettingsCard.tsx
 msgid "Use {CHANNEL_NAME_TOKEN} and {TEMPLATE_NAME_TOKEN} as placeholders."
@@ -16967,6 +17181,11 @@ msgstr "Wird zum Prägen von Agenten-Sammelkarten verwendet"
 #: src/features/workflows/ui/WorkflowStepCard.tsx
 msgid "Used in configuration and run history."
 msgstr "Wird in der Konfiguration und im Ausführungsverlauf verwendet."
+
+#: src/features/agents/ui/activityRenderClasses/UserMessageBubble.tsx
+#: src/features/agents/ui/agentSessionTranscript.ts
+msgid "User"
+msgstr "Nutzer"
 
 #: src/features/agents/ui/agentSessionTranscriptPresentation.ts
 msgid "User prompt"
@@ -17219,6 +17438,10 @@ msgstr "Thread mit {replyCount} ansehen"
 #: src/features/messages/ui/MessageThreadSummaryRow.tsx
 msgid "View thread with {replyCount} replies, last reply {lastReply}"
 msgstr "Thread mit {replyCount} ansehen, letzte Antwort {lastReply}"
+
+#: src/features/agents/ui/agentSessionToolClassifier.ts
+msgid "Viewed"
+msgstr "Angesehen"
 
 #: src/features/agents/ui/agentSessionToolClassifier.ts
 #: src/features/agents/ui/AgentSessionToolItem/ViewImageToolPreview.tsx
@@ -17753,6 +17976,10 @@ msgstr "{agentName} wird künftig automatisch gestartet."
 msgid "Windows tools required by supported agents."
 msgstr "Windows-Werkzeuge, die unterstützte Agenten brauchen."
 
+#: src/features/agents/ui/agentSessionTranscript.ts
+msgid "Wire parse error"
+msgstr "Fehler beim Parsen der Übertragung"
+
 #: src/features/agents/ui/PersonaShareDialog.tsx
 msgid "with will receive a copy they can add and use. Changes you make later won’t sync."
 msgstr "mit erhält eine Kopie, die sich hinzufügen und nutzen lässt. Änderungen, die du später machst, werden nicht synchronisiert."
@@ -17804,6 +18031,7 @@ msgstr "Workflow-YAML"
 msgid "Workflows"
 msgstr "Workflows"
 
+#: src/features/agents/ui/AgentStatusBadge.tsx
 #: src/features/sidebar/ui/ChannelActivityPopover.tsx
 msgid "Working"
 msgstr "Arbeitet"

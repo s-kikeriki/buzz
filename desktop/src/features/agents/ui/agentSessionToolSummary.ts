@@ -6,7 +6,7 @@ import type {
 } from "./agentSessionTypes";
 import type { AgentActivityDescriptor } from "./agentSessionTypes";
 import { getToolString } from "./agentSessionUtils";
-import { classifyToolItem } from "./agentSessionToolClassifier";
+import { classifyToolItem, failureLabel } from "./agentSessionToolClassifier";
 import {
   buildFileEditDiff,
   type FileEditDiff,
@@ -108,7 +108,7 @@ function labelForStatus(
     return t`Edited file`;
   }
   if (failed) {
-    return label.endsWith("failed") ? label : `${label} failed`;
+    return descriptor.labelIsFailure ? label : failureLabel(label);
   }
   if (running) return label;
   if (status === "completed") return label;

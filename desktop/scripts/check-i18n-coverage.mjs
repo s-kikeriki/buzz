@@ -775,6 +775,22 @@ const CONVERTED_FILES = [
   "src/features/admin-console/AdminConsoleSettingsCard.tsx",
   "src/features/admin-console/AdminConsoleStaffingTab.tsx",
   "src/features/admin-console/adminConsoleLabels.ts",
+  // Tranche 6 — the agent session transcript. Tranche 2 (#34) converted the
+  // agents area's JSX, which is why the detector reports this whole stack
+  // clean: the remaining English was in pure functions that *return* display
+  // strings — activity verbs, lifecycle titles, standing-context headings —
+  // and in two label tables that no JSX node mentions. None of that is a
+  // shape the detector can see, so these files join the ratchet to keep the
+  // conversion from regressing silently.
+  "src/features/agents/ui/AgentSessionToolItem/CompactToolSummaryRow.tsx",
+  "src/features/agents/ui/AgentStatusBadge.tsx",
+  "src/features/agents/ui/activityRenderClasses/ActivityRow.tsx",
+  "src/features/agents/ui/activityRenderClasses/LifecycleActivity.tsx",
+  "src/features/agents/ui/activityRenderClasses/MessageActivity.tsx",
+  "src/features/agents/ui/activityRenderClasses/SuppressedActivity.tsx",
+  "src/features/agents/ui/activityRenderClasses/ToolActivity.tsx",
+  "src/features/agents/ui/activityRenderClasses/TranscriptActivityItem.tsx",
+  "src/features/agents/ui/agentSessionTypes.ts",
 ];
 
 /**

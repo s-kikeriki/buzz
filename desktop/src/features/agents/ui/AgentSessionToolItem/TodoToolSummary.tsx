@@ -1,3 +1,4 @@
+import { t } from "@lingui/core/macro";
 import { Trans, useLingui } from "@lingui/react/macro";
 import { useLocale } from "@/shared/lib/localePreference";
 import { cn } from "@/shared/lib/cn";
@@ -37,8 +38,8 @@ export function TodoToolSummary({
   const variant = useAgentSessionTranscriptVariant();
   const isCompactPreview = variant === "compactPreview";
   const actionLabel = {
-    verb: "Updated",
-    object: fallbackPreview ?? "todos",
+    verb: t`Updated`,
+    object: fallbackPreview ?? t`todos`,
   };
 
   return (
@@ -127,7 +128,11 @@ function buildTodoDisplayItems(
     return resultTodos;
   }
 
-  return fallbackPreview && fallbackPreview !== "empty list"
+  // `fallbackPreview` is the classifier's display preview, so the
+  // empty-todo-list case is recognised from the args themselves rather than
+  // by comparing that preview to the English words "empty list".
+  const hasEmptyTodoList = Array.isArray(args.todos) && args.todos.length === 0;
+  return fallbackPreview && !hasEmptyTodoList
     ? [{ checked: false, text: fallbackPreview }]
     : [];
 }

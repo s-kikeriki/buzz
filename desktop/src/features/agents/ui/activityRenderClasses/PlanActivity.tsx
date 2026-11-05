@@ -31,7 +31,7 @@ export function PlanActivity(props: ActivityRenderClassItemProps) {
         <ActivityRowLabel
           object={<PlanUpdateLabelObject text={props.item.text} />}
           openToneScope="none"
-          verb="Updated"
+          verb={t`Updated`}
         />
       </ActivityRow>
     );
@@ -42,7 +42,11 @@ export function PlanActivity(props: ActivityRenderClassItemProps) {
       testId="transcript-plan-item"
       title={formatTranscriptTimestampTitle(props.item.timestamp, locale)}
     >
-      <ActivityRowLabel object="plan" openToneScope="tool" verb="Updated" />
+      <ActivityRowLabel
+        object={t`plan`}
+        openToneScope="tool"
+        verb={t`Updated`}
+      />
       <ActivityRowContent className="pt-1 pb-1.5 text-sm leading-5 text-muted-foreground">
         <Markdown
           className="leading-5"

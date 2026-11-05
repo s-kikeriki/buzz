@@ -21,10 +21,17 @@ export function shouldShowTranscriptRowTimestamp(
   return true;
 }
 
-const LIFECYCLE_NOISE = new Set([
-  "turn started",
-  "session ready",
-  "wire parse error",
+/**
+ * Observer event kinds whose lifecycle rows are infrastructure noise.
+ *
+ * Keyed on the wire kind, not on `item.title.toLowerCase()`: the title is
+ * display copy, so matching it leaked every one of these rows into the
+ * activity-bar headline as soon as the titles were translated.
+ */
+const LIFECYCLE_NOISE_SOURCES = new Set([
+  "turn_started",
+  "session_resolved",
+  "acp_parse_error",
 ]);
 
 /** Human-readable headline for a single transcript item. */
@@ -45,13 +52,15 @@ export function getActivityHeadline(item: TranscriptItem): string | null {
             : firstLine;
         }
       }
-      return "Responding";
+      return t`Responding`;
     }
     return item.title || t`User prompt`;
   }
 
   if (item.type === "thought") {
-    return item.title === "Plan" ? "Planning" : item.title;
+    // `acpSource` is the ACP update type, so a plan thought is recognised by
+    // its wire kind rather than by comparing its translated title to "Plan".
+    return item.acpSource === "plan" ? t`Planning` : item.title;
   }
 
   if (item.type === "metadata") {
@@ -64,7 +73,9 @@ export function getActivityHeadline(item: TranscriptItem): string | null {
 function isLifecycleNoise(
   item: Extract<TranscriptItem, { type: "lifecycle" }>,
 ) {
-  return LIFECYCLE_NOISE.has(item.title.toLowerCase());
+  return (
+    item.acpSource !== undefined && LIFECYCLE_NOISE_SOURCES.has(item.acpSource)
+  );
 }
 
 /** Whether an item should contribute to the headline scan (noise gate). */

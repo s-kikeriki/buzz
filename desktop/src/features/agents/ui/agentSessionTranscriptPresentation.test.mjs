@@ -57,9 +57,37 @@ test("isMeaningfulItem ignores lifecycle noise and raw JSON-RPC metadata", () =>
       title: "Turn started",
       text: "",
       timestamp: baseTimestamp,
+      acpSource: "turn_started",
     }),
     false,
     "turn started is lifecycle noise → not meaningful",
+  );
+  // The noise gate reads the wire kind, not the row's heading. A German app
+  // renders this row as "Turn gestartet", which the old title-matching gate
+  // let through into the activity-bar headline.
+  assert.equal(
+    isMeaningfulItem({
+      id: "life:1-de",
+      type: "lifecycle",
+      title: "Turn gestartet",
+      text: "",
+      timestamp: baseTimestamp,
+      acpSource: "turn_started",
+    }),
+    false,
+    "a translated lifecycle title is still noise",
+  );
+  assert.equal(
+    isMeaningfulItem({
+      id: "life:2",
+      type: "lifecycle",
+      title: "Mode",
+      text: "chat",
+      timestamp: baseTimestamp,
+      acpSource: "current_mode_update",
+    }),
+    true,
+    "a non-noise lifecycle kind stays meaningful",
   );
   assert.equal(
     isMeaningfulItem({
