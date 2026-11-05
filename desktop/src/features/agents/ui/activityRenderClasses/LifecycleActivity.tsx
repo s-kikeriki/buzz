@@ -32,10 +32,19 @@ export function LifecycleActivity(props: ActivityRenderClassItemProps) {
     return null;
   }
 
-  // `renderClass` is already set from the observer event kind upstream; the
-  // old `title.includes("error")` fallback was a match on translated copy and
-  // reported false for every localized error title.
-  const isError = props.item.renderClass === "error";
+  // The translated-copy bug this branch used to carry is fixed upstream:
+  // `renderClass` now comes from the observer event kind
+  // (`isLifecycleErrorSource`), so a localized "Turn-Fehler" is classified as
+  // an error before it reaches here.
+  //
+  // The title fallback stays for the one row class `renderClass` cannot
+  // classify: a freeform observer status, whose title is arbitrary text from
+  // the agent runtime rather than copy from a catalogue. Those are always
+  // pushed as "status", and dropping the fallback would have quietly taken the
+  // error styling off a runtime-reported "Connection error".
+  const isError =
+    props.item.renderClass === "error" ||
+    props.item.title.toLowerCase().includes("error");
   const isPermission = props.item.renderClass === "permission";
   const timestampTitle = formatTranscriptTimestampTitle(
     props.item.timestamp,
@@ -52,6 +61,7 @@ export function LifecycleActivity(props: ActivityRenderClassItemProps) {
     return (
       <div
         className="rounded-md border border-amber-500/20 bg-amber-500/5 px-2 py-1.5 text-left text-xs text-amber-700 dark:text-amber-400"
+        data-lifecycle-tone="permission"
         data-testid="transcript-permission-item"
         title={timestampTitle}
       >
@@ -79,6 +89,7 @@ export function LifecycleActivity(props: ActivityRenderClassItemProps) {
                     ? "flex items-center gap-1 font-medium text-destructive"
                     : "flex items-center gap-1 font-medium text-muted-foreground"
               }
+              data-permission-tone={tone}
               data-testid="transcript-permission-outcome"
             >
               {tone === "approve" ? (
@@ -100,6 +111,7 @@ export function LifecycleActivity(props: ActivityRenderClassItemProps) {
     return (
       <div
         className="rounded-md border border-destructive/20 bg-destructive/5 px-2 py-1.5 text-left text-xs text-destructive"
+        data-lifecycle-tone="error"
         data-testid="transcript-lifecycle-item"
         title={timestampTitle}
       >
@@ -113,7 +125,11 @@ export function LifecycleActivity(props: ActivityRenderClassItemProps) {
   }
 
   return (
-    <ActivityRow testId="transcript-lifecycle-item" title={timestampTitle}>
+    <ActivityRow
+      dataLifecycleTone="status"
+      testId="transcript-lifecycle-item"
+      title={timestampTitle}
+    >
       <ActivityRowLabel
         object={props.item.text || undefined}
         openToneScope="none"
