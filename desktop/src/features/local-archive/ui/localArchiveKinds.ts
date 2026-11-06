@@ -1,3 +1,6 @@
+import type { I18n, MessageDescriptor } from "@lingui/core";
+import { msg } from "@lingui/core/macro";
+
 import {
   CHANNEL_AUX_EVENT_KINDS,
   CHANNEL_MESSAGE_EVENT_KINDS,
@@ -9,82 +12,122 @@ import {
   KIND_STREAM_MESSAGE_DIFF,
   KIND_SYSTEM_MESSAGE,
 } from "@/shared/constants/kinds";
+import { BRAND } from "@/shared/branding/brand";
+
+const { productName } = BRAND;
 
 // ── Kind groups (derived from shared constants — never raw literals) ──────────
 
+/**
+ * Stable group identity, independent of the displayed label. The checklist
+ * builds DOM ids and test ids from this, never from `label`: a translated
+ * label would otherwise change every `data-testid` with the locale.
+ */
+export type KindGroupId = "messages" | "aux" | "huddle" | "system";
+
 export type KindGroup = {
+  /** Locale-independent identity for ids, test ids and React keys. */
+  id: KindGroupId;
   /** Group label shown as a section header. */
   label: string;
   /** Individual kinds in this group, each with a human-readable name. */
   items: ReadonlyArray<{ kind: number; label: string }>;
 };
 
+type KindGroupSpec = {
+  id: KindGroupId;
+  label: MessageDescriptor;
+  /** `label` omitted = fall back to `kindLabel` for that kind. */
+  items: ReadonlyArray<{ kind: number; label?: MessageDescriptor }>;
+};
+
 /**
- * Ordered list of kind groups presented in the Step 2 checklist.
+ * Ordered list of kind groups presented in the Step 2 checklist, as message
+ * descriptors rather than resolved strings. Resolving at module scope would
+ * freeze every label in whichever locale happened to boot first.
+ *
  * Every item derives its kind value from a named constant in kinds.ts.
  */
-export const KIND_GROUPS: ReadonlyArray<KindGroup> = [
+const KIND_GROUP_SPECS: ReadonlyArray<KindGroupSpec> = [
   {
-    label: "Messages & posts",
+    id: "messages",
+    label: msg`Messages & posts`,
     items: [
-      ...CHANNEL_MESSAGE_EVENT_KINDS.map((k) => ({
-        kind: k,
-        label: kindLabel(k),
-      })),
-      { kind: KIND_STREAM_MESSAGE_DIFF, label: "Message diffs (kind 40008)" },
+      ...CHANNEL_MESSAGE_EVENT_KINDS.map((k) => ({ kind: k })),
+      {
+        kind: KIND_STREAM_MESSAGE_DIFF,
+        label: msg`Message diffs (kind 40008)`,
+      },
     ],
   },
   {
-    label: "Reactions, edits & deletions",
-    items: CHANNEL_AUX_EVENT_KINDS.map((k) => ({
-      kind: k,
-      label: kindLabel(k),
-    })),
+    id: "aux",
+    label: msg`Reactions, edits & deletions`,
+    items: CHANNEL_AUX_EVENT_KINDS.map((k) => ({ kind: k })),
   },
   {
-    label: "Huddle events",
+    id: "huddle",
+    label: msg`Huddle events`,
     items: [
-      { kind: KIND_HUDDLE_STARTED, label: "Huddle started" },
-      { kind: KIND_HUDDLE_PARTICIPANT_JOINED, label: "Participant joined" },
-      { kind: KIND_HUDDLE_PARTICIPANT_LEFT, label: "Participant left" },
-      { kind: KIND_HUDDLE_ENDED, label: "Huddle ended" },
+      { kind: KIND_HUDDLE_STARTED, label: msg`Huddle started` },
+      {
+        kind: KIND_HUDDLE_PARTICIPANT_JOINED,
+        label: msg`Participant joined`,
+      },
+      { kind: KIND_HUDDLE_PARTICIPANT_LEFT, label: msg`Participant left` },
+      { kind: KIND_HUDDLE_ENDED, label: msg`Huddle ended` },
     ],
   },
   {
-    label: "System messages",
+    id: "system",
+    label: msg`System messages`,
     items: [
-      { kind: KIND_SYSTEM_MESSAGE, label: "System messages (kind 40099)" },
+      { kind: KIND_SYSTEM_MESSAGE, label: msg`System messages (kind 40099)` },
     ],
   },
-] as const;
+];
 
-/** Human-readable label for a known kind number. */
-function kindLabel(kind: number): string {
-  switch (kind) {
-    case 5:
-      return "Event deletions (kind 5)";
-    case 7:
-      return "Reactions (kind 7)";
-    case 9:
-      return "Stream messages (kind 9)";
-    case 9005:
-      return "Buzz-native deletions (kind 9005)";
-    case 40002:
-      return "Stream messages v2 (kind 40002)";
-    case 40003:
-      return "Message edits (kind 40003)";
-    case 45001:
-      return "Forum posts (kind 45001)";
-    case 45003:
-      return "Forum comments (kind 45003)";
-    default:
-      return `Kind ${kind}`;
-  }
+/**
+ * The checklist's groups in the active locale.
+ *
+ * `i18n` is a required parameter rather than a module import, following
+ * `adminConsoleLabels`: this is called from a render path, and a module-level
+ * constant would resolve once and never follow a language change.
+ */
+export function kindGroups(i18n: I18n): ReadonlyArray<KindGroup> {
+  return KIND_GROUP_SPECS.map((spec) => ({
+    id: spec.id,
+    label: i18n._(spec.label),
+    items: spec.items.map((item) => ({
+      kind: item.kind,
+      label: item.label ? i18n._(item.label) : kindLabel(i18n, item.kind),
+    })),
+  }));
 }
 
-/** All kinds covered by KIND_GROUPS, as a flat sorted set for dedup checks. */
+const KIND_LABELS: ReadonlyMap<number, MessageDescriptor> = new Map([
+  [5, msg`Event deletions (kind 5)`],
+  [7, msg`Reactions (kind 7)`],
+  [9, msg`Stream messages (kind 9)`],
+  [9005, msg`${productName}-native deletions (kind 9005)`],
+  [40002, msg`Stream messages v2 (kind 40002)`],
+  [40003, msg`Message edits (kind 40003)`],
+  [45001, msg`Forum posts (kind 45001)`],
+  [45003, msg`Forum comments (kind 45003)`],
+]);
+
+/** Human-readable label for a known kind number. */
+function kindLabel(i18n: I18n, kind: number): string {
+  const descriptor = KIND_LABELS.get(kind);
+  return descriptor ? i18n._(descriptor) : i18n._(msg`Kind ${kind}`);
+}
+
+/**
+ * All kinds covered by the checklist, as a flat set for dedup checks. Derived
+ * from the specs, so it stays locale-independent.
+ */
 const GROUPED_KINDS: ReadonlySet<number> = new Set(
-  KIND_GROUPS.flatMap((g) => g.items.map((i) => i.kind)),
+  KIND_GROUP_SPECS.flatMap((g) => g.items.map((i) => i.kind)),
 );
 
 // ── Custom-kinds parser ───────────────────────────────────────────────────────

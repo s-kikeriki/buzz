@@ -1,7 +1,13 @@
+import { i18n } from "@lingui/core";
 import assert from "node:assert/strict";
 import { test } from "node:test";
 
 import { deriveServingIndicator } from "./servingUsage.ts";
+
+// The indicator takes `i18n` so it cannot resolve copy at module scope. Going
+// through the real instance (activated to `en` in `test-loader.mjs`) keeps the
+// expected strings as they were and still exercises `i18n._`, so a message
+// wired up wrong fails here rather than on screen.
 
 function usage(overrides = {}) {
   return {
@@ -19,17 +25,17 @@ function usage(overrides = {}) {
 }
 
 test("hidden when not sharing", () => {
-  const i = deriveServingIndicator(usage({ requestsServed: 5 }), false);
+  const i = deriveServingIndicator(i18n, usage({ requestsServed: 5 }), false);
   assert.equal(i.show, false);
 });
 
 test("hidden when usage not yet fetched", () => {
-  const i = deriveServingIndicator(null, true);
+  const i = deriveServingIndicator(i18n, null, true);
   assert.equal(i.show, false);
 });
 
 test("sharing but nothing served yet -> idle, no detail", () => {
-  const i = deriveServingIndicator(usage(), true);
+  const i = deriveServingIndicator(i18n, usage(), true);
   assert.equal(i.show, true);
   assert.equal(i.active, false);
   assert.equal(i.hasRemoteConsumers, false);
@@ -38,6 +44,7 @@ test("sharing but nothing served yet -> idle, no detail", () => {
 
 test("only local agent traffic -> not a remote consumer", () => {
   const i = deriveServingIndicator(
+    i18n,
     usage({ requestsServed: 4, localAttempts: 4, tokensPerSecond: 30 }),
     true,
   );
@@ -48,6 +55,7 @@ test("only local agent traffic -> not a remote consumer", () => {
 
 test("local agent live now -> serving your agent", () => {
   const i = deriveServingIndicator(
+    i18n,
     usage({ inflight: 1, localAttempts: 2, tokensPerSecond: 28 }),
     true,
   );
@@ -59,6 +67,7 @@ test("local agent live now -> serving your agent", () => {
 
 test("remote consumer, not live -> used by another member (headline case)", () => {
   const i = deriveServingIndicator(
+    i18n,
     usage({
       requestsServed: 7,
       remoteAttempts: 6,
@@ -76,6 +85,7 @@ test("remote consumer, not live -> used by another member (headline case)", () =
 
 test("remote consumer live now -> in use now, singular peer/request grammar", () => {
   const i = deriveServingIndicator(
+    i18n,
     usage({ inflight: 1, remoteAttempts: 1, peers: 1, tokensPerSecond: 31 }),
     true,
   );

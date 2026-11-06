@@ -1,8 +1,9 @@
+import { i18n } from "@lingui/core";
 import assert from "node:assert/strict";
 import test from "node:test";
 
 import {
-  KIND_GROUPS,
+  kindGroups,
   buildFinalKinds,
   buildSubscriptionRequest,
   isGroupFullyChecked,
@@ -14,14 +15,17 @@ import {
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
-function groupByLabel(label) {
-  const g = KIND_GROUPS.find((g) => g.label === label);
-  if (!g) throw new Error(`group not found: ${label}`);
+// Groups are looked up by their locale-independent `id`, never by the label the
+// user reads — that is the whole point of the id existing. One test below still
+// pins the English labels so a copy change is visible here.
+function groupById(id) {
+  const g = kindGroups(i18n).find((g) => g.id === id);
+  if (!g) throw new Error(`group not found: ${id}`);
   return g;
 }
 
-function kindsOfGroup(label) {
-  return groupByLabel(label).items.map((i) => i.kind);
+function kindsOfGroup(id) {
+  return groupById(id).items.map((i) => i.kind);
 }
 
 // ── parseCustomKinds ──────────────────────────────────────────────────────────
@@ -150,7 +154,7 @@ test("toggleKind_checkedKind_removesIt", () => {
 // ── toggleGroup ───────────────────────────────────────────────────────────────
 
 test("toggleGroup_noneChecked_checksAll", () => {
-  const group = groupByLabel("Messages & posts");
+  const group = groupById("messages");
   const result = toggleGroup(group, new Set());
   for (const item of group.items) {
     assert.ok(
@@ -161,15 +165,15 @@ test("toggleGroup_noneChecked_checksAll", () => {
 });
 
 test("toggleGroup_allChecked_uncheksAll", () => {
-  const group = groupByLabel("Messages & posts");
-  const allChecked = new Set(kindsOfGroup("Messages & posts"));
+  const group = groupById("messages");
+  const allChecked = new Set(kindsOfGroup("messages"));
   const result = toggleGroup(group, allChecked);
   assert.equal(result.size, 0);
 });
 
 test("toggleGroup_partiallyChecked_checksAll", () => {
-  const group = groupByLabel("Messages & posts");
-  const kinds = kindsOfGroup("Messages & posts");
+  const group = groupById("messages");
+  const kinds = kindsOfGroup("messages");
   // Only one kind checked
   const partial = new Set([kinds[0]]);
   const result = toggleGroup(group, partial);
@@ -179,7 +183,7 @@ test("toggleGroup_partiallyChecked_checksAll", () => {
 });
 
 test("toggleGroup_doesNotAffectOtherKinds", () => {
-  const group = groupByLabel("Messages & posts");
+  const group = groupById("messages");
   const outerKind = 99999;
   const baseSet = new Set([outerKind]);
   const result = toggleGroup(group, baseSet);
@@ -189,31 +193,31 @@ test("toggleGroup_doesNotAffectOtherKinds", () => {
 // ── isGroupFullyChecked / isGroupIndeterminate ────────────────────────────────
 
 test("isGroupFullyChecked_allInGroup_returnsTrue", () => {
-  const group = groupByLabel("Reactions, edits & deletions");
-  const all = new Set(kindsOfGroup("Reactions, edits & deletions"));
+  const group = groupById("aux");
+  const all = new Set(kindsOfGroup("aux"));
   assert.equal(isGroupFullyChecked(group, all), true);
 });
 
 test("isGroupFullyChecked_noneInGroup_returnsFalse", () => {
-  const group = groupByLabel("Reactions, edits & deletions");
+  const group = groupById("aux");
   assert.equal(isGroupFullyChecked(group, new Set()), false);
 });
 
 test("isGroupIndeterminate_someButNotAll_returnsTrue", () => {
-  const group = groupByLabel("Reactions, edits & deletions");
-  const kinds = kindsOfGroup("Reactions, edits & deletions");
+  const group = groupById("aux");
+  const kinds = kindsOfGroup("aux");
   const partial = new Set([kinds[0]]);
   assert.equal(isGroupIndeterminate(group, partial), true);
 });
 
 test("isGroupIndeterminate_noneChecked_returnsFalse", () => {
-  const group = groupByLabel("Reactions, edits & deletions");
+  const group = groupById("aux");
   assert.equal(isGroupIndeterminate(group, new Set()), false);
 });
 
 test("isGroupIndeterminate_allChecked_returnsFalse", () => {
-  const group = groupByLabel("Reactions, edits & deletions");
-  const all = new Set(kindsOfGroup("Reactions, edits & deletions"));
+  const group = groupById("aux");
+  const all = new Set(kindsOfGroup("aux"));
   assert.equal(isGroupIndeterminate(group, all), false);
 });
 
@@ -222,11 +226,11 @@ test("isGroupIndeterminate_allChecked_returnsFalse", () => {
 test("observerSource_fixedKind_is24200", () => {
   // The observer source always produces exactly [24200] — verify the constant
   // used in localArchiveKinds matches KIND_AGENT_OBSERVER_FRAME.
-  // We verify this indirectly: kind 24200 must NOT appear in KIND_GROUPS
+  // We verify this indirectly: kind 24200 must NOT appear in the kind groups
   // (it is not a channel event kind) so it would not be silently filtered
   // out of custom input — but more importantly it is never used in the
   // channel checklist, keeping the two paths cleanly separated.
-  const allGroupedKinds = KIND_GROUPS.flatMap((g) =>
+  const allGroupedKinds = kindGroups(i18n).flatMap((g) =>
     g.items.map((i) => i.kind),
   );
   assert.ok(
@@ -246,7 +250,7 @@ test("buildFinalKinds_emptySelection_producesEmptyArray", () => {
 // ── Group + custom union (deduped / sorted) ───────────────────────────────────
 
 test("buildFinalKinds_groupAndCustom_unioned_sorted_deduped", () => {
-  const messagesKinds = kindsOfGroup("Messages & posts");
+  const messagesKinds = kindsOfGroup("messages");
   const customKinds = [99999, 88888];
   const result = buildFinalKinds(new Set(messagesKinds), customKinds);
   // Must be sorted ascending
@@ -281,10 +285,8 @@ test("parseCustomKinds_malformedInput_onlyValidReturned", () => {
 // ── buildSubscriptionRequest — six acceptance cases ───────────────────────────
 
 // Helper: get all kinds in a named group
-function kindsOfGroupBySR(label) {
-  const g = KIND_GROUPS.find((g) => g.label === label);
-  if (!g) throw new Error(`group not found: ${label}`);
-  return g.items.map((i) => i.kind);
+function kindsOfGroupBySR(id) {
+  return kindsOfGroup(id);
 }
 
 test("buildSubscriptionRequest_singleKindSelection_exactKindsArray", () => {
@@ -301,7 +303,7 @@ test("buildSubscriptionRequest_singleKindSelection_exactKindsArray", () => {
 });
 
 test("buildSubscriptionRequest_groupHeaderToggle_allKindsInGroup", () => {
-  const messagesKinds = kindsOfGroupBySR("Messages & posts");
+  const messagesKinds = kindsOfGroupBySR("messages");
   const req = buildSubscriptionRequest(
     "channel_h",
     "channel-abc",
@@ -316,7 +318,7 @@ test("buildSubscriptionRequest_groupHeaderToggle_allKindsInGroup", () => {
 });
 
 test("buildSubscriptionRequest_groupPlusCustomKind_unionDedupedSorted", () => {
-  const messagesKinds = kindsOfGroupBySR("Messages & posts");
+  const messagesKinds = kindsOfGroupBySR("messages");
   const customKinds = [50000, 50001];
   const req = buildSubscriptionRequest(
     "channel_h",
@@ -366,4 +368,32 @@ test("buildSubscriptionRequest_emptyPubkeyOwnerP_returnsNull", () => {
   // Empty pubkey (identity not yet loaded) blocks owner_p Add
   const req = buildSubscriptionRequest("owner_p", "", new Set(), []);
   assert.equal(req, null);
+});
+
+// ── Labels resolve through the catalogue ──────────────────────────────────────
+
+test("kindGroups_resolvesLabelsThroughI18n_andKeepsIdsStable", () => {
+  const groups = kindGroups(i18n);
+  assert.deepEqual(
+    groups.map((g) => g.id),
+    ["messages", "aux", "huddle", "system"],
+  );
+  // English copy, pinned: the test-loader activates `en`.
+  assert.deepEqual(
+    groups.map((g) => g.label),
+    [
+      "Messages & posts",
+      "Reactions, edits & deletions",
+      "Huddle events",
+      "System messages",
+    ],
+  );
+  // Every item label resolved to a non-empty string — a message that is wired
+  // up wrong (missing descriptor, bad ICU) fails here rather than on screen.
+  for (const group of groups) {
+    for (const item of group.items) {
+      assert.equal(typeof item.label, "string");
+      assert.ok(item.label.length > 0, `empty label for kind ${item.kind}`);
+    }
+  }
 });
