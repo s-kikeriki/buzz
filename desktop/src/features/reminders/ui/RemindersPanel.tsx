@@ -124,7 +124,11 @@ function formatReminderCountdown(
   locale: AppLocale,
   timestamp: number,
 ): string {
-  const until = formatTimeUntil(timestamp, { locale });
+  // `ceiling: "day"`, not the shared default of "week": the ladder this
+  // replaced floored to days without an upper rung, so a reminder three weeks
+  // out read "in 21d". The default would have quietly turned that into
+  // "in 3w" — a change to English copy, which this change is not meant to be.
+  const until = formatTimeUntil(timestamp, { ceiling: "day", locale });
   if (until !== null) return until;
 
   const overdueBy = Math.floor(Date.now() / 1_000) - timestamp;
