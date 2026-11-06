@@ -274,7 +274,7 @@ export function OnboardingFlow({
         if (membershipStatus === "error") {
           setMembershipError({
             kind: "error",
-            message: "Server error — try again",
+            message: t`Server error — try again`,
           });
           return;
         }
@@ -326,6 +326,7 @@ export function OnboardingFlow({
       savedProfile,
       complete,
       showAvatarPage,
+      t,
     ],
   );
 

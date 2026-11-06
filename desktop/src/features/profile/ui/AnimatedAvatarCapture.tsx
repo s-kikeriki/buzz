@@ -924,7 +924,7 @@ export function AnimatedAvatarCapture({
           frameCount={bitmaps.length}
           frames={filmstripFrames}
           helpTestId={`${testIdPrefix}-animated-review-help`}
-          helpText="Pick the still shown before hover."
+          helpText={t`Pick the still shown before hover.`}
           onSelectFrame={(index) =>
             setPosterIndex(clampFrameIndex(index, bitmaps.length))
           }

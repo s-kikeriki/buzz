@@ -1034,6 +1034,26 @@ const OVERRIDES = new Map([
       "`ROUNDED_SQUIRCLE_PATH`. Geometry, not words — the detector sees the " +
       "`A`/`M`/`Z` path commands as letters.",
   ],
+  // Found by the string-shaped rule this change adds, in files earlier
+  // tranches had already converted. The three below are the genuinely
+  // non-copy ones; the other findings in that set were translated.
+  [
+    "src/features/profile/ui/NostrBindConsentDialog.tsx:57",
+    "Fixture name for the dialog's design preview, which " +
+      "`isNostrBindPreviewEnabled` gates behind `import.meta.env.DEV`. It " +
+      "cannot reach a shipped screen.",
+  ],
+  [
+    "src/features/profile/ui/UserProfilePanelFields.tsx:33",
+    "`Claude Code` is the harness's product name. The detector reads it as " +
+      "prose because it is two capitalized words; its siblings in the same " +
+      "table (Goose, Codex, Aider) are single words and pass.",
+  ],
+  [
+    "src/features/profile/ui/UserProfilePopover.tsx:77",
+    "`Claude Code` is the harness's product name — the same table as " +
+      "UserProfilePanelFields.tsx above.",
+  ],
 ]);
 
 async function main() {

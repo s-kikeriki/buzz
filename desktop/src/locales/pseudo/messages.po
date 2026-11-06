@@ -5343,6 +5343,10 @@ msgstr ""
 msgid "Could not read that file."
 msgstr ""
 
+#: src/features/communities/useCommunityInit.ts
+msgid "Could not refresh avatar source permissions. Reload to retry."
+msgstr ""
+
 #: src/features/settings/ui/HostedCommunitiesSettingsCard.tsx
 msgid "Could not release the previously connected {productName} identity."
 msgstr ""
@@ -12130,6 +12134,10 @@ msgstr ""
 msgid "Pick the name people and agents will see in {0}. You can change it anytime."
 msgstr ""
 
+#: src/features/profile/ui/AnimatedAvatarCapture.tsx
+msgid "Pick the still shown before hover."
+msgstr ""
+
 #: src/features/sidebar/ui/ChannelContextMenu.tsx
 msgid "Pin channel"
 msgstr ""
@@ -14571,6 +14579,10 @@ msgstr ""
 #: src/features/onboarding/ui/EncryptedBackupCreator.tsx
 #: src/features/settings/ui/EncryptedBackupCreator.tsx
 msgid "Separator"
+msgstr ""
+
+#: src/features/onboarding/ui/OnboardingFlow.tsx
+msgid "Server error — try again"
 msgstr ""
 
 #: src/features/agents/ui/agentSessionTranscript.ts
