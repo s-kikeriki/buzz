@@ -70,7 +70,8 @@ let React,
   QueryClientProvider,
   SetupStep,
   acpRuntimesQueryKey,
-  TooltipProvider;
+  TooltipProvider,
+  withI18n;
 
 before(async () => {
   ({ default: React, act } = await import("react"));
@@ -83,6 +84,7 @@ before(async () => {
     "@/features/agents/acpRuntimesQuery.ts"
   ));
   ({ TooltipProvider } = await import("@/shared/ui/tooltip.tsx"));
+  ({ withI18n } = await import("@/testing/withI18n.mjs"));
 });
 
 afterEach(() => {
@@ -176,18 +178,25 @@ function setupStepTree(
   onReadyRuntimeIdsChange = NOOP,
   initialMethod = "subscription",
 ) {
-  return React.createElement(
-    QueryClientProvider,
-    { client: queryClient },
+  // `withI18n` is load-bearing: `ConnectionMethodSection`, which this step
+  // renders for the connection-method choice, calls `useLingui()` and throws
+  // without an `I18nProvider` — and the error blames a duplicate
+  // `@lingui/react` install rather than the missing provider, so it reads as a
+  // dependency problem instead of a test-setup one.
+  return withI18n(
     React.createElement(
-      TooltipProvider,
-      null,
-      React.createElement(SetupStep, {
-        actions,
-        direction: "forward",
-        initialMethod,
-        onReadyRuntimeIdsChange,
-      }),
+      QueryClientProvider,
+      { client: queryClient },
+      React.createElement(
+        TooltipProvider,
+        null,
+        React.createElement(SetupStep, {
+          actions,
+          direction: "forward",
+          initialMethod,
+          onReadyRuntimeIdsChange,
+        }),
+      ),
     ),
   );
 }

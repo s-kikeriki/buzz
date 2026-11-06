@@ -1,6 +1,7 @@
 import * as React from "react";
 import { createPortal } from "react-dom";
 import { toast } from "sonner";
+import { Trans, useLingui } from "@lingui/react/macro";
 
 import { SidebarRelayConnectionCompactCard } from "@/features/sidebar/ui/SidebarRelayConnectionCard";
 import { useRelayConnection } from "@/shared/api/useRelayConnection";
@@ -199,6 +200,7 @@ export function ProfileStep({
   state,
   usesExistingIdentity = false,
 }: ProfileStepProps) {
+  const { t } = useLingui();
   const {
     advanceWithoutSaving,
     back,
@@ -232,11 +234,13 @@ export function ProfileStep({
     >
       <div className="w-full max-w-2xl">
         <h1 className="text-title font-normal text-foreground">
-          What should we call you?
+          <Trans>What should we call you?</Trans>
         </h1>
         <p className="mt-5 text-sm leading-6 text-muted-foreground">
-          Pick the name people and agents will see in {BRAND.productName}. You
-          can change it anytime.
+          <Trans>
+            Pick the name people and agents will see in {BRAND.productName}. You
+            can change it anytime.
+          </Trans>
         </p>
       </div>
 
@@ -245,9 +249,11 @@ export function ProfileStep({
           className="mt-8 block w-full text-sm font-medium text-foreground"
           htmlFor="onboarding-display-name"
         >
-          <span className="mb-2 block">Name</span>
+          <span className="mb-2 block">
+            <Trans>Name</Trans>
+          </span>
           <OnboardingInput
-            aria-label="Name"
+            aria-label={t`Name`}
             autoCapitalize="none"
             autoComplete="off"
             autoCorrect="off"
@@ -261,7 +267,7 @@ export function ProfileStep({
                 submit();
               }
             }}
-            placeholder="Enter your name"
+            placeholder={t`Enter your name`}
             ref={inputRef}
             spellCheck={false}
             value={displayNameDraft}
@@ -272,7 +278,9 @@ export function ProfileStep({
           className="mt-12 flex w-full cursor-text flex-col items-center"
           htmlFor="onboarding-display-name"
         >
-          <span className="sr-only">Name</span>
+          <span className="sr-only">
+            <Trans>Name</Trans>
+          </span>
           <div className="relative h-20 w-full max-w-[576px]">
             {!hasDisplayNameDraft ? (
               <div
@@ -284,12 +292,12 @@ export function ProfileStep({
                     aria-hidden="true"
                     className="buzz-onboarding-name-placeholder-caret h-[0.9em] w-0.5 rounded-full bg-primary"
                   />
-                  Enter your name
+                  <Trans>Enter your name</Trans>
                 </span>
               </div>
             ) : null}
             <input
-              aria-label="Name"
+              aria-label={t`Name`}
               autoCapitalize="none"
               autoComplete="off"
               autoCorrect="off"
@@ -328,11 +336,14 @@ export function ProfileStep({
           type="button"
         >
           {isSaving ? (
-            <Spinner aria-label="Saving profile" className="h-4 w-4 border-2" />
+            <Spinner
+              aria-label={t`Saving profile`}
+              className="h-4 w-4 border-2"
+            />
           ) : usesExistingIdentity ? (
-            "Continue"
+            <Trans>Continue</Trans>
           ) : (
-            "Create an identity key"
+            <Trans>Create an identity key</Trans>
           )}
         </Button>
 
@@ -345,7 +356,7 @@ export function ProfileStep({
             type="button"
             variant="ghost"
           >
-            Back
+            <Trans>Back</Trans>
           </Button>
         ) : null}
 
@@ -358,7 +369,7 @@ export function ProfileStep({
             type="button"
             variant="ghost"
           >
-            I already have a key
+            <Trans>I already have a key</Trans>
           </Button>
         ) : null}
 
@@ -373,7 +384,7 @@ export function ProfileStep({
                 type="button"
                 variant="ghost"
               >
-                Skip for now
+                <Trans>Skip for now</Trans>
               </Button>
             ) : null}
             {saveRecovery.canAdvanceWithoutSaving ? (
@@ -384,7 +395,7 @@ export function ProfileStep({
                 type="button"
                 variant="ghost"
               >
-                Continue without saving
+                <Trans>Continue without saving</Trans>
               </Button>
             ) : null}
             <div className="flex-1" />

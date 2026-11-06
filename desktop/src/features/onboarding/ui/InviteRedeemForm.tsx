@@ -1,5 +1,6 @@
 import * as React from "react";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
+import { Trans, useLingui } from "@lingui/react/macro";
 
 import {
   inviteErrorMessage,
@@ -71,6 +72,7 @@ export function InviteRedeemForm({
   placeholder,
   variant = "default",
 }: InviteRedeemFormProps) {
+  const { t } = useLingui();
   const formId = React.useId();
   const [inviteInput, setInviteInput] = React.useState(initialValue);
   const [bareCodeRelayUrl, setBareCodeRelayUrl] = React.useState(
@@ -308,21 +310,21 @@ export function InviteRedeemForm({
     >
       {isRedeeming || isLoadingPolicy ? (
         <Spinner
-          aria-label={isRedeeming ? "Redeeming invite" : "Loading policy"}
+          aria-label={isRedeeming ? t`Redeeming invite` : t`Loading policy`}
           className="h-4 w-4 border-2"
         />
       ) : isOnboardingSpotlight ? (
-        "Next"
+        <Trans>Next</Trans>
       ) : isAddCommunity ? (
         joinPolicy ? (
-          "Accept and join"
+          <Trans>Accept and join</Trans>
         ) : (
-          "Join community"
+          <Trans>Join community</Trans>
         )
       ) : joinPolicy ? (
-        "Accept and redeem invite"
+        <Trans>Accept and redeem invite</Trans>
       ) : (
-        "Redeem invite"
+        <Trans>Redeem invite</Trans>
       )}
     </Button>
   );
@@ -339,7 +341,7 @@ export function InviteRedeemForm({
       type="button"
       variant="ghost"
     >
-      {isOnboardingSpotlight ? "Back" : "Cancel"}
+      {isOnboardingSpotlight ? <Trans>Back</Trans> : <Trans>Cancel</Trans>}
     </Button>
   );
 
@@ -367,7 +369,9 @@ export function InviteRedeemForm({
             style={SPOTLIGHT_OVERFLOW_FADE}
           >
             <label className="block w-full" htmlFor="invite-input">
-              <span className="sr-only">Invite link or code</span>
+              <span className="sr-only">
+                <Trans>Invite link or code</Trans>
+              </span>
               <span className={ONBOARDING_KEY_ROW_CLASS}>
                 <input
                   autoCapitalize="none"
@@ -399,8 +403,8 @@ export function InviteRedeemForm({
             htmlFor="invite-input"
           >
             {isAddCommunity
-              ? "Community URL or invite link"
-              : "Invite link or code"}
+              ? t`Community URL or invite link`
+              : t`Invite link or code`}
           </label>
           <Input
             autoComplete="off"
@@ -437,7 +441,7 @@ export function InviteRedeemForm({
           )}
           data-testid="invalid-invite-tip"
         >
-          Please enter a valid invite link or community URL
+          <Trans>Please enter a valid invite link or community URL</Trans>
         </p>
       ) : null}
 
@@ -452,7 +456,7 @@ export function InviteRedeemForm({
             className="text-sm font-medium text-foreground"
             htmlFor="invite-relay-url"
           >
-            Relay URL
+            <Trans>Relay URL</Trans>
           </label>
           <Input
             className="h-10 bg-background"
