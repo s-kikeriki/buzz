@@ -42,6 +42,13 @@ keypair.
   template's explicit `BUZZ_PUSH_GATEWAY_DELIVERY_URL` and set
   `BUZZ_PUSH_ENABLED=true`. To use another gateway, replace the exact HTTPS
   `/v1/deliveries/apns` URL before enabling push.
+- Device pairing needs the TLS override. A relay that enforces membership
+  advertises NIP-43, and desktop clients read that as "this host serves a
+  pairing sidecar at `<host>/pair`" whenever NIP-11 carries no
+  `pairing_relay_url`. `compose.caddy.yml` therefore runs `buzz-pair-relay`
+  and routes `/pair` to it. Without the override there is no proxy to carry
+  that route, so pairing fails with `404 Not Found` — front the stack with
+  Caddy, or add an equivalent `/pair` route to whatever proxy you run.
 - The bundled Compose stack fixes the relay endpoint to `http://minio:9000` and
   `BUZZ_S3_ADDRESSING_STYLE=path`: Docker DNS resolves `minio`, not
   `<bucket>.minio`. It is not configurable for an external S3 provider through
