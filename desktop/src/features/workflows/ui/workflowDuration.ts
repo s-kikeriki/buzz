@@ -1,3 +1,6 @@
+import type { I18n } from "@lingui/core";
+import { msg, plural } from "@lingui/core/macro";
+
 const DURATION_PARTS_PATTERN =
   /^\s*(?:(\d+)\s*w)?\s*(?:(\d+)\s*d)?\s*(?:(\d+)\s*h)?\s*(?:(\d+)\s*m)?\s*(?:(\d+)\s*s)?\s*$/i;
 
@@ -57,14 +60,44 @@ export function formatDurationSeconds(totalSeconds: number): string {
   return parts.join(" ");
 }
 
-function verboseUnit(value: number, unit: string): string {
-  return `${value} ${unit}${value === 1 ? "" : "s"}`;
+/**
+ * One spelled-out unit of a duration.
+ *
+ * An ICU `plural` per unit rather than one message with a `${unit}` hole: the
+ * English form only needed an "s", but German inflects the noun itself (*eine
+ * Woche* / *zwei Wochen*, *ein Tag* / *zwei Tage*) and has no single plural
+ * suffix, so a shared message with the noun spliced in cannot be translated.
+ */
+function verboseUnit(
+  i18n: I18n,
+  value: number,
+  unit: "week" | "day" | "hour" | "minute" | "second",
+): string {
+  switch (unit) {
+    case "week":
+      return i18n._(msg`${plural(value, { one: "# week", other: "# weeks" })}`);
+    case "day":
+      return i18n._(msg`${plural(value, { one: "# day", other: "# days" })}`);
+    case "hour":
+      return i18n._(msg`${plural(value, { one: "# hour", other: "# hours" })}`);
+    case "minute":
+      return i18n._(
+        msg`${plural(value, { one: "# minute", other: "# minutes" })}`,
+      );
+    case "second":
+      return i18n._(
+        msg`${plural(value, { one: "# second", other: "# seconds" })}`,
+      );
+  }
 }
 
 /** Format whole seconds with fully spelled-out units for summary UI. */
-export function formatDurationSecondsVerbose(totalSeconds: number): string {
+export function formatDurationSecondsVerbose(
+  totalSeconds: number,
+  i18n: I18n,
+): string {
   if (!Number.isSafeInteger(totalSeconds) || totalSeconds < 0) return "";
-  if (totalSeconds === 0) return "0 seconds";
+  if (totalSeconds === 0) return verboseUnit(i18n, 0, "second");
 
   const weeks = Math.floor(totalSeconds / SECONDS_PER_WEEK);
   const days = Math.floor((totalSeconds % SECONDS_PER_WEEK) / SECONDS_PER_DAY);
@@ -75,11 +108,11 @@ export function formatDurationSecondsVerbose(totalSeconds: number): string {
   const seconds = totalSeconds % SECONDS_PER_MINUTE;
   const parts: string[] = [];
 
-  if (weeks > 0) parts.push(verboseUnit(weeks, "week"));
-  if (days > 0) parts.push(verboseUnit(days, "day"));
-  if (hours > 0) parts.push(verboseUnit(hours, "hour"));
-  if (minutes > 0) parts.push(verboseUnit(minutes, "minute"));
-  if (seconds > 0) parts.push(verboseUnit(seconds, "second"));
+  if (weeks > 0) parts.push(verboseUnit(i18n, weeks, "week"));
+  if (days > 0) parts.push(verboseUnit(i18n, days, "day"));
+  if (hours > 0) parts.push(verboseUnit(i18n, hours, "hour"));
+  if (minutes > 0) parts.push(verboseUnit(i18n, minutes, "minute"));
+  if (seconds > 0) parts.push(verboseUnit(i18n, seconds, "second"));
 
   return parts.join(" ");
 }

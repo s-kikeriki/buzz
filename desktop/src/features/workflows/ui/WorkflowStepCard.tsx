@@ -1,5 +1,8 @@
 import { ChevronRight, Trash2 } from "lucide-react";
 import { type ReactNode, useState } from "react";
+import type { I18n } from "@lingui/core";
+import { msg } from "@lingui/core/macro";
+import { Trans, useLingui } from "@lingui/react/macro";
 
 import { cn } from "@/shared/lib/cn";
 import { Button } from "@/shared/ui/button";
@@ -19,6 +22,19 @@ import {
 } from "./workflowFormTypes";
 
 const DEFAULT_STEP_TIMEOUT_SECONDS = 5 * 60;
+
+/**
+ * Template tokens used in example placeholders.
+ *
+ * Hoisted into values rather than written inside the `t` template, for two
+ * reasons. The rendered text is right either way only if the token reaches
+ * the screen verbatim — `{"{{trigger.author}}"}` inside a tagged template is
+ * literal text, braces, quotes and all. And an extracted msgid whose ICU
+ * braces contain a dot (`{{trigger.author}}`) is dropped from every compiled
+ * catalogue, so the message silently renders English under every locale. As a
+ * value it becomes a plain `{AUTHOR_TEMPLATE}` placeholder.
+ */
+const AUTHOR_TEMPLATE = "{{trigger.author}}";
 
 type StepSetting = "run-controls" | "details";
 
@@ -69,13 +85,13 @@ function StepSettingAccordion({
   );
 }
 
-function runControlsSummary(step: StepFormState): string {
+function runControlsSummary(step: StepFormState, i18n: I18n): string {
   const hasCondition = Boolean(step.condition?.trim());
   const timeout = step.timeoutSecs?.trim();
-  if (hasCondition && timeout) return `Conditional · ${timeout}`;
-  if (hasCondition) return "Conditional";
+  if (hasCondition && timeout) return i18n._(msg`Conditional · ${timeout}`);
+  if (hasCondition) return i18n._(msg`Conditional`);
   if (timeout) return timeout;
-  return "Default";
+  return i18n._(msg`Default`);
 }
 
 function BackendSupportHint({ action }: { action: StepFormState["action"] }) {
@@ -83,22 +99,28 @@ function BackendSupportHint({ action }: { action: StepFormState["action"] }) {
     case "send_dm":
       return (
         <p className="rounded-md border border-amber-500/30 bg-amber-500/10 px-2 py-1 text-xs text-amber-700">
-          Backend note: `send_dm` is not executed yet, so runs fail at this
-          step.
+          <Trans>
+            Backend note: `send_dm` is not executed yet, so runs fail at this
+            step.
+          </Trans>
         </p>
       );
     case "set_channel_topic":
       return (
         <p className="rounded-md border border-amber-500/30 bg-amber-500/10 px-2 py-1 text-xs text-amber-700">
-          Backend note: `set_channel_topic` is not executed yet, so runs fail at
-          this step.
+          <Trans>
+            Backend note: `set_channel_topic` is not executed yet, so runs fail
+            at this step.
+          </Trans>
         </p>
       );
     case "request_approval":
       return (
         <p className="rounded-md border border-amber-500/30 bg-amber-500/10 px-2 py-1 text-xs text-amber-700">
-          Backend note: approval gates still stop runs with WF-08; approval
-          records are not persisted yet.
+          <Trans>
+            Backend note: approval gates still stop runs with WF-08; approval
+            records are not persisted yet.
+          </Trans>
         </p>
       );
     default:
@@ -123,11 +145,14 @@ function StepConfigFields({
   workflowChannelId?: string | null;
   onUpdate: (step: StepFormState) => void;
 }) {
+  const { t } = useLingui();
   switch (step.action) {
     case "delay":
       return (
         <div className="space-y-1.5">
-          <FieldLabel htmlFor={`${prefix}-duration`}>Duration</FieldLabel>
+          <FieldLabel htmlFor={`${prefix}-duration`}>
+            <Trans>Duration</Trans>
+          </FieldLabel>
           <Input
             autoCapitalize="off"
             disabled={disabled}
@@ -135,7 +160,7 @@ function StepConfigFields({
             onChange={(event) =>
               onUpdate({ ...step, duration: event.target.value })
             }
-            placeholder="e.g. 5s, 1m, 1h"
+            placeholder={t`e.g. 5s, 1m, 1h`}
             value={step.duration ?? ""}
           />
         </div>
@@ -144,14 +169,16 @@ function StepConfigFields({
       return (
         <div className="space-y-2">
           <div className="space-y-1.5">
-            <FieldLabel htmlFor={`${prefix}-text`}>Message text</FieldLabel>
+            <FieldLabel htmlFor={`${prefix}-text`}>
+              <Trans>Message text</Trans>
+            </FieldLabel>
             <WorkflowTemplateTextarea
               autoCapitalize="off"
               className="min-h-[60px] resize-y text-xs"
               disabled={disabled}
               id={`${prefix}-text`}
               onValueChange={(text) => onUpdate({ ...step, text })}
-              placeholder="e.g. Deployment started by {{trigger.author}}"
+              placeholder={t`e.g. Deployment started by ${AUTHOR_TEMPLATE}`}
               previousSteps={previousSteps}
               triggerType={triggerType}
               value={step.text ?? ""}
@@ -159,12 +186,14 @@ function StepConfigFields({
           </div>
           {workflowChannelId ? (
             <p className="text-xs text-muted-foreground">
-              Messages post to the workflow channel selected above.
+              <Trans>
+                Messages post to the workflow channel selected above.
+              </Trans>
             </p>
           ) : (
             <div className="space-y-1.5">
               <FieldLabel htmlFor={`${prefix}-channel`}>
-                Channel override (optional)
+                <Trans>Channel override (optional)</Trans>
               </FieldLabel>
               <Input
                 autoCapitalize="off"
@@ -173,17 +202,21 @@ function StepConfigFields({
                 onChange={(event) =>
                   onUpdate({ ...step, channel: event.target.value })
                 }
-                placeholder="Channel UUID"
+                placeholder={t`Channel UUID`}
                 value={step.channel ?? ""}
               />
               <p className="text-xs text-muted-foreground">
-                Defaults to the channel that triggered the workflow. Webhook and
-                manual triggers require a channel.
+                <Trans>
+                  Defaults to the channel that triggered the workflow. Webhook
+                  and manual triggers require a channel.
+                </Trans>
               </p>
               {triggerType === "webhook" && !(step.channel ?? "").trim() ? (
                 <p className="text-xs text-amber-700">
-                  This step will fail for webhook-triggered runs until a channel
-                  override is set.
+                  <Trans>
+                    This step will fail for webhook-triggered runs until a
+                    channel override is set.
+                  </Trans>
                 </p>
               ) : null}
             </div>
@@ -199,7 +232,7 @@ function StepConfigFields({
                 }
               />
               <label className="text-xs" htmlFor={`${prefix}-reply-in-thread`}>
-                Reply to triggering message in thread
+                <Trans>Reply to triggering message in thread</Trans>
               </label>
             </div>
           ) : null}
@@ -210,7 +243,9 @@ function StepConfigFields({
         <div className="space-y-2">
           <BackendSupportHint action={step.action} />
           <div className="space-y-1.5">
-            <FieldLabel htmlFor={`${prefix}-to`}>To (pubkey)</FieldLabel>
+            <FieldLabel htmlFor={`${prefix}-to`}>
+              <Trans>To (pubkey)</Trans>
+            </FieldLabel>
             <Input
               autoCapitalize="off"
               disabled={disabled}
@@ -218,12 +253,14 @@ function StepConfigFields({
               onChange={(event) =>
                 onUpdate({ ...step, to: event.target.value })
               }
-              placeholder="e.g. {{trigger.author}}, npub1…, or hex pubkey"
+              placeholder={t`e.g. ${AUTHOR_TEMPLATE}, npub1…, or hex pubkey`}
               value={step.to ?? ""}
             />
           </div>
           <div className="space-y-1.5">
-            <FieldLabel htmlFor={`${prefix}-text`}>Message text</FieldLabel>
+            <FieldLabel htmlFor={`${prefix}-text`}>
+              <Trans>Message text</Trans>
+            </FieldLabel>
             <Textarea
               autoCapitalize="off"
               className="min-h-[60px] resize-y text-xs"
@@ -232,7 +269,7 @@ function StepConfigFields({
               onChange={(event) =>
                 onUpdate({ ...step, text: event.target.value })
               }
-              placeholder="DM content"
+              placeholder={t`DM content`}
               value={step.text ?? ""}
             />
           </div>
@@ -242,7 +279,9 @@ function StepConfigFields({
       return (
         <div className="space-y-4">
           <div className="space-y-1.5">
-            <FieldLabel htmlFor={`${prefix}-url`}>Endpoint URL</FieldLabel>
+            <FieldLabel htmlFor={`${prefix}-url`}>
+              <Trans>Endpoint URL</Trans>
+            </FieldLabel>
             <Input
               autoCapitalize="off"
               disabled={disabled}
@@ -255,12 +294,14 @@ function StepConfigFields({
             />
             {step.url && !step.url.startsWith("https://") ? (
               <p className="text-xs text-destructive">
-                URL must start with https://
+                <Trans>URL must start with https://</Trans>
               </p>
             ) : null}
           </div>
           <div className="space-y-1.5">
-            <FieldLabel htmlFor={`${prefix}-method`}>HTTP method</FieldLabel>
+            <FieldLabel htmlFor={`${prefix}-method`}>
+              <Trans>HTTP method</Trans>
+            </FieldLabel>
             <FormSelect
               disabled={disabled}
               id={`${prefix}-method`}
@@ -282,7 +323,7 @@ function StepConfigFields({
           />
           <div className="space-y-1.5">
             <FieldLabel htmlFor={`${prefix}-body`}>
-              Request body (optional)
+              <Trans>Request body (optional)</Trans>
             </FieldLabel>
             <Textarea
               autoCapitalize="off"
@@ -303,7 +344,9 @@ function StepConfigFields({
         <div className="space-y-2">
           <BackendSupportHint action={step.action} />
           <div className="space-y-1.5">
-            <FieldLabel htmlFor={`${prefix}-from`}>From (approver)</FieldLabel>
+            <FieldLabel htmlFor={`${prefix}-from`}>
+              <Trans>From (approver)</Trans>
+            </FieldLabel>
             <Input
               autoCapitalize="off"
               disabled={disabled}
@@ -311,12 +354,14 @@ function StepConfigFields({
               onChange={(event) =>
                 onUpdate({ ...step, from: event.target.value })
               }
-              placeholder="npub1…, hex pubkey, or role"
+              placeholder={t`npub1…, hex pubkey, or role`}
               value={step.from ?? ""}
             />
           </div>
           <div className="space-y-1.5">
-            <FieldLabel htmlFor={`${prefix}-message`}>Message</FieldLabel>
+            <FieldLabel htmlFor={`${prefix}-message`}>
+              <Trans>Message</Trans>
+            </FieldLabel>
             <Input
               autoCapitalize="off"
               disabled={disabled}
@@ -324,13 +369,13 @@ function StepConfigFields({
               onChange={(event) =>
                 onUpdate({ ...step, message: event.target.value })
               }
-              placeholder="Approval request message"
+              placeholder={t`Approval request message`}
               value={step.message ?? ""}
             />
           </div>
           <div className="space-y-1.5">
             <FieldLabel htmlFor={`${prefix}-timeout`}>
-              Timeout (optional)
+              <Trans>Timeout (optional)</Trans>
             </FieldLabel>
             <Input
               autoCapitalize="off"
@@ -339,7 +384,7 @@ function StepConfigFields({
               onChange={(event) =>
                 onUpdate({ ...step, timeout: event.target.value })
               }
-              placeholder="e.g. 24h"
+              placeholder={t`e.g. 24h`}
               value={step.timeout ?? ""}
             />
           </div>
@@ -348,7 +393,9 @@ function StepConfigFields({
     case "add_reaction":
       return (
         <div className="space-y-1.5">
-          <FieldLabel htmlFor={`${prefix}-emoji`}>Emoji</FieldLabel>
+          <FieldLabel htmlFor={`${prefix}-emoji`}>
+            <Trans>Emoji</Trans>
+          </FieldLabel>
           <Input
             autoCapitalize="off"
             disabled={disabled}
@@ -356,7 +403,7 @@ function StepConfigFields({
             onChange={(event) =>
               onUpdate({ ...step, emoji: event.target.value })
             }
-            placeholder="e.g. thumbsup"
+            placeholder={t`e.g. thumbsup`}
             value={step.emoji ?? ""}
           />
         </div>
@@ -366,7 +413,9 @@ function StepConfigFields({
         <div className="space-y-2">
           <BackendSupportHint action={step.action} />
           <div className="space-y-1.5">
-            <FieldLabel htmlFor={`${prefix}-topic`}>Topic</FieldLabel>
+            <FieldLabel htmlFor={`${prefix}-topic`}>
+              <Trans>Topic</Trans>
+            </FieldLabel>
             <Input
               autoCapitalize="off"
               disabled={disabled}
@@ -374,7 +423,7 @@ function StepConfigFields({
               onChange={(event) =>
                 onUpdate({ ...step, topic: event.target.value })
               }
-              placeholder="New channel topic"
+              placeholder={t`New channel topic`}
               value={step.topic ?? ""}
             />
           </div>
@@ -408,6 +457,8 @@ export function WorkflowStepCard({
   triggerType: TriggerType;
   workflowChannelId?: string | null;
 }) {
+  const { i18n, t } = useLingui();
+  const stepNumber = index + 1;
   const prefix = `wf-step-${index}`;
   const [expandedSetting, setExpandedSetting] = useState<StepSetting | null>(
     null,
@@ -427,10 +478,10 @@ export function WorkflowStepCard({
       {showHeader ? (
         <div className="mb-3 flex items-center justify-between gap-2">
           <span className="text-xs font-medium text-muted-foreground">
-            Step {index + 1}
+            <Trans>Step {stepNumber}</Trans>
           </span>
           <Button
-            aria-label="Remove step"
+            aria-label={t`Remove step`}
             className="h-7 w-7"
             disabled={disabled}
             onClick={onRemove}
@@ -459,9 +510,9 @@ export function WorkflowStepCard({
         <StepSettingAccordion
           disabled={disabled}
           expanded={expandedSetting === "run-controls"}
-          label="Run controls"
+          label={t`Run controls`}
           onToggle={() => toggleSetting("run-controls")}
-          summary={runControlsSummary(step)}
+          summary={runControlsSummary(step, i18n)}
         >
           <div className="space-y-4">
             {supportsMessageTextCondition(triggerType) ? (
@@ -476,7 +527,7 @@ export function WorkflowStepCard({
               disabled={disabled}
               fallbackSeconds={DEFAULT_STEP_TIMEOUT_SECONDS}
               id={`${prefix}-timeout-secs`}
-              label="Timeout"
+              label={t`Timeout`}
               onChange={(timeoutSecs) => onUpdate({ ...step, timeoutSecs })}
               placeholder="5m"
               value={step.timeoutSecs ?? ""}
@@ -487,14 +538,14 @@ export function WorkflowStepCard({
         <StepSettingAccordion
           disabled={disabled}
           expanded={expandedSetting === "details"}
-          label="Step details"
+          label={t`Step details`}
           onToggle={() => toggleSetting("details")}
           summary={step.name?.trim() || step.id}
         >
           <div className="space-y-4">
             <div className="space-y-1.5">
               <FieldLabel htmlFor={`${prefix}-name`}>
-                Name (optional)
+                <Trans>Name (optional)</Trans>
               </FieldLabel>
               <Input
                 autoCapitalize="off"
@@ -503,12 +554,14 @@ export function WorkflowStepCard({
                 onChange={(event) =>
                   onUpdate({ ...step, name: event.target.value })
                 }
-                placeholder="e.g. Notify deployment channel"
+                placeholder={t`e.g. Notify deployment channel`}
                 value={step.name ?? ""}
               />
             </div>
             <div className="space-y-1.5">
-              <FieldLabel htmlFor={`${prefix}-id`}>Step ID</FieldLabel>
+              <FieldLabel htmlFor={`${prefix}-id`}>
+                <Trans>Step ID</Trans>
+              </FieldLabel>
               <Input
                 autoCapitalize="off"
                 disabled={disabled}
@@ -520,7 +573,7 @@ export function WorkflowStepCard({
                 value={step.id}
               />
               <p className="text-xs text-muted-foreground">
-                Used in configuration and run history.
+                <Trans>Used in configuration and run history.</Trans>
               </p>
             </div>
           </div>

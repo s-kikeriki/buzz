@@ -1,3 +1,4 @@
+import { i18n } from "@lingui/core";
 import assert from "node:assert/strict";
 import test from "node:test";
 
@@ -5,12 +6,15 @@ import { workflowStepDescription } from "./workflowStepDescription.ts";
 
 test("describes configured workflow steps on the canvas", () => {
   assert.equal(
-    workflowStepDescription({
-      id: "message",
-      action: "send_message",
-      name: "say hello",
-      text: "hey yourself",
-    }),
+    workflowStepDescription(
+      {
+        id: "message",
+        action: "send_message",
+        name: "say hello",
+        text: "hey yourself",
+      },
+      i18n,
+    ),
     "say hello · “hey yourself”",
   );
   assert.equal(
@@ -21,42 +25,55 @@ test("describes configured workflow steps on the canvas", () => {
         text: "deploying now",
         channel: "channel-id",
       },
+      i18n,
       { channelLabel: "deployments" },
     ),
     "“deploying now” in #deployments",
   );
   assert.equal(
-    workflowStepDescription({
-      id: "delay",
-      action: "delay",
-      duration: "5m",
-    }),
+    workflowStepDescription(
+      {
+        id: "delay",
+        action: "delay",
+        duration: "5m",
+      },
+      i18n,
+    ),
     "5 minutes",
   );
   assert.equal(
-    workflowStepDescription({
-      id: "long-delay",
-      action: "delay",
-      duration: "4w",
-    }),
+    workflowStepDescription(
+      {
+        id: "long-delay",
+        action: "delay",
+        duration: "4w",
+      },
+      i18n,
+    ),
     "4 weeks",
   );
   assert.equal(
-    workflowStepDescription({
-      id: "webhook",
-      action: "call_webhook",
-      method: "PATCH",
-      url: "https://example.com/deploy",
-    }),
+    workflowStepDescription(
+      {
+        id: "webhook",
+        action: "call_webhook",
+        method: "PATCH",
+        url: "https://example.com/deploy",
+      },
+      i18n,
+    ),
     "PATCH https://example.com/deploy",
   );
   assert.equal(
-    workflowStepDescription({
-      id: "dm",
-      action: "send_dm",
-      text: "Build finished",
-      to: "team-on-call",
-    }),
+    workflowStepDescription(
+      {
+        id: "dm",
+        action: "send_dm",
+        text: "Build finished",
+        to: "team-on-call",
+      },
+      i18n,
+    ),
     "“Build finished” to team-on-call",
   );
   // A key destination renders its compact npub (npubEncode of the pinned
@@ -66,62 +83,80 @@ test("describes configured workflow steps on the canvas", () => {
   const brokenNpub =
     "npub1m6kmam774klwlh4dhmhaatd7al02m0h0m6kmam774klwlh4dhmhslezuzy";
   assert.equal(
-    workflowStepDescription({
-      id: "dm",
-      action: "send_dm",
-      text: "Build finished",
-      to: hexKey,
-    }),
+    workflowStepDescription(
+      {
+        id: "dm",
+        action: "send_dm",
+        text: "Build finished",
+        to: hexKey,
+      },
+      i18n,
+    ),
     "“Build finished” to npub1m6k…zuz0",
   );
   assert.equal(
-    workflowStepDescription({
-      id: "dm",
-      action: "send_dm",
-      text: "Build finished",
-      to: brokenNpub,
-    }),
+    workflowStepDescription(
+      {
+        id: "dm",
+        action: "send_dm",
+        text: "Build finished",
+        to: brokenNpub,
+      },
+      i18n,
+    ),
     "“Build finished” to Unavailable",
   );
   assert.equal(
-    workflowStepDescription({
-      id: "approval",
-      action: "request_approval",
-      message: "Ship the release?",
-      from: "release-managers",
-    }),
+    workflowStepDescription(
+      {
+        id: "approval",
+        action: "request_approval",
+        message: "Ship the release?",
+        from: "release-managers",
+      },
+      i18n,
+    ),
     "“Ship the release?” from release-managers",
   );
   assert.equal(
-    workflowStepDescription({
-      id: "approval",
-      action: "request_approval",
-      message: "Ship the release?",
-      from: hexKey,
-    }),
+    workflowStepDescription(
+      {
+        id: "approval",
+        action: "request_approval",
+        message: "Ship the release?",
+        from: hexKey,
+      },
+      i18n,
+    ),
     "“Ship the release?” from npub1m6k…zuz0",
   );
   assert.equal(
-    workflowStepDescription({
-      id: "reaction",
-      action: "add_reaction",
-      emoji: ":buzz:",
-    }),
+    workflowStepDescription(
+      {
+        id: "reaction",
+        action: "add_reaction",
+        emoji: ":buzz:",
+      },
+      i18n,
+    ),
     ":buzz:",
   );
   assert.equal(
-    workflowStepDescription({
-      id: "topic",
-      action: "set_channel_topic",
-      topic: "Shipping this week",
-    }),
+    workflowStepDescription(
+      {
+        id: "topic",
+        action: "set_channel_topic",
+        topic: "Shipping this week",
+      },
+      i18n,
+    ),
     "“Shipping this week”",
   );
 });
 
 test("falls back to the action label until a step is configured", () => {
   assert.equal(
-    workflowStepDescription({ id: "message", action: "send_message" }),
+    workflowStepDescription({ id: "message", action: "send_message" }, i18n),
     "Send Message",
   );
 });
@@ -135,6 +170,7 @@ test("can omit a custom step name when composing an index label", () => {
         name: "say hello",
         text: "hey yourself",
       },
+      i18n,
       { includeName: false },
     ),
     "“hey yourself”",

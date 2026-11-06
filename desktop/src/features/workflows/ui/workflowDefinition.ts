@@ -1,3 +1,5 @@
+import type { I18n } from "@lingui/core";
+
 import type { Workflow } from "@/shared/api/types";
 import {
   scheduleFormFromTrigger,
@@ -290,6 +292,7 @@ function getPresentedTriggerCardClause(description?: string): string | null {
 
 function getActionCardClause(
   step: Record<string, unknown>,
+  i18n: I18n,
   channelLabel?: string,
 ): string | null {
   const action = nonEmptyString(step.action);
@@ -313,7 +316,7 @@ function getActionCardClause(
       }
     : null;
   const detail = parsedStep
-    ? workflowStepDescription(parsedStep, {
+    ? workflowStepDescription(parsedStep, i18n, {
         channelLabel,
         includeName: false,
       })
@@ -373,6 +376,7 @@ export function getWorkflowStepCount(
 /** Build a short plain-language label from the workflow's trigger and steps. */
 export function getWorkflowCardLabel(
   definition: Record<string, unknown>,
+  i18n: I18n,
   options: {
     actionChannelLabel?: string;
     triggerDescription?: string;
@@ -392,7 +396,7 @@ export function getWorkflowCardLabel(
     getTriggerCardClause(definition, options.triggerReaction);
   const steps = getWorkflowSteps(definition);
   const firstAction = steps[0]
-    ? getActionCardClause(steps[0], options.actionChannelLabel)
+    ? getActionCardClause(steps[0], i18n, options.actionChannelLabel)
     : null;
   if (!firstAction) return triggerClause;
 

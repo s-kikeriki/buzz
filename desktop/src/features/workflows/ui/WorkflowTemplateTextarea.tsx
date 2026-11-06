@@ -1,3 +1,4 @@
+import { Trans, useLingui } from "@lingui/react/macro";
 import * as React from "react";
 
 import { cn } from "@/shared/lib/cn";
@@ -7,12 +8,30 @@ import type { StepFormState, TriggerType } from "./workflowFormTypes";
 import {
   activeTemplateToken,
   insertTemplateVariable,
+  TEMPLATE_VARIABLE_GROUP_LABELS,
   workflowTemplateVariables,
 } from "./workflowTemplateVariables";
 import type {
   ActiveTemplateToken,
   WorkflowTemplateVariable,
 } from "./workflowTemplateVariables";
+
+/**
+ * The webhook hint's template token, as a value.
+ *
+ * Inlined into the `<Trans>` children it became part of the msgid, and an ICU
+ * brace pair containing a dot drops the message from every compiled catalogue
+ * — the gate that catches this is `lingui compile --strict`.
+ */
+const FIELD_TEMPLATE = "{{trigger.field_name}}";
+
+/** A suggestion row with its description resolved for the active locale. */
+type ResolvedTemplateVariable = Omit<
+  WorkflowTemplateVariable,
+  "description"
+> & {
+  description: string;
+};
 
 export function WorkflowTemplateTextarea({
   className,
@@ -28,15 +47,23 @@ export function WorkflowTemplateTextarea({
   triggerType: TriggerType;
   value: string;
 }) {
+  const { i18n } = useLingui();
   const textareaRef = React.useRef<HTMLTextAreaElement>(null);
   const generatedId = React.useId();
   const textareaId = props.id ?? `workflow-template-${generatedId}`;
   const listboxId = `${textareaId}-variables`;
   const [token, setToken] = React.useState<ActiveTemplateToken | null>(null);
   const [selectedIndex, setSelectedIndex] = React.useState(0);
-  const variables = React.useMemo(
-    () => workflowTemplateVariables(triggerType, previousSteps),
-    [previousSteps, triggerType],
+  // Resolved here rather than at the render site because the filter below
+  // searches the description: left as a descriptor, typing "Nachricht" would
+  // match nothing while typing "Message" matched a row showing German.
+  const variables = React.useMemo<ResolvedTemplateVariable[]>(
+    () =>
+      workflowTemplateVariables(triggerType, previousSteps).map((variable) => ({
+        ...variable,
+        description: i18n._(variable.description),
+      })),
+    [i18n, previousSteps, triggerType],
   );
   const suggestions = React.useMemo(() => {
     if (!token) return [];
@@ -58,7 +85,7 @@ export function WorkflowTemplateTextarea({
   }, []);
 
   const selectVariable = React.useCallback(
-    (variable: WorkflowTemplateVariable) => {
+    (variable: ResolvedTemplateVariable) => {
       if (!token) return;
       const next = insertTemplateVariable(value, token, variable.value);
       onValueChange(next.value);
@@ -143,7 +170,7 @@ export function WorkflowTemplateTextarea({
                 <React.Fragment key={variable.value}>
                   {variable.group !== previousGroup ? (
                     <p className="px-2 pb-1 pt-1.5 text-2xs font-semibold uppercase tracking-wide text-muted-foreground">
-                      {variable.group}
+                      {i18n._(TEMPLATE_VARIABLE_GROUP_LABELS[variable.group])}
                     </p>
                   ) : null}
                   <button
@@ -173,13 +200,13 @@ export function WorkflowTemplateTextarea({
             })
           ) : (
             <p className="px-2 py-2 text-xs text-muted-foreground">
-              No matching variables
+              <Trans>No matching variables</Trans>
             </p>
           )}
         </div>
         {triggerType === "webhook" ? (
           <p className="border-t border-border/50 px-2 pb-1 pt-2 text-2xs text-muted-foreground">
-            JSON fields are available as {"{{trigger.field_name}}"}.
+            <Trans>JSON fields are available as {FIELD_TEMPLATE}.</Trans>
           </p>
         ) : null}
       </PopoverContent>

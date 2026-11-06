@@ -1,3 +1,5 @@
+import type { I18n } from "@lingui/core";
+import { msg, plural } from "@lingui/core/macro";
 import { parse as yamlParse } from "yaml";
 
 import {
@@ -22,7 +24,10 @@ function nonEmptyString(value: unknown): string | null {
   return typeof value === "string" && value.trim() ? value.trim() : null;
 }
 
-function frequentIntervalDescription(interval: string): string | null {
+function frequentIntervalDescription(
+  interval: string,
+  i18n: I18n,
+): string | null {
   const seconds = parseDurationSeconds(interval);
   if (
     seconds === null ||
@@ -31,7 +36,10 @@ function frequentIntervalDescription(interval: string): string | null {
   ) {
     return null;
   }
-  return `It is scheduled to run every ${formatDurationSecondsVerbose(seconds)}. Review the schedule before turning it on.`;
+  const duration = formatDurationSecondsVerbose(seconds, i18n);
+  return i18n._(
+    msg`It is scheduled to run every ${duration}. Review the schedule before turning it on.`,
+  );
 }
 
 function normalizedCronFields(cron: string): string[] | null {
@@ -94,7 +102,7 @@ function matchesEveryHour(field: string): boolean {
   return selected.size === HOURS;
 }
 
-function frequentCronDescription(cron: string): string | null {
+function frequentCronDescription(cron: string, i18n: I18n): string | null {
   const fields = normalizedCronFields(cron);
   if (!fields) return null;
   const [second, minute, hour] = fields;
@@ -104,27 +112,46 @@ function frequentCronDescription(cron: string): string | null {
   if (!matchesEveryHour(hour)) return null;
 
   if (secondRuns > 1) {
-    return "It is scheduled to run multiple times a minute. Review the schedule before turning it on.";
+    return i18n._(
+      msg`It is scheduled to run multiple times a minute. Review the schedule before turning it on.`,
+    );
   }
   if (minute === "*") {
-    return "It is scheduled to run every minute. Review the schedule before turning it on.";
+    return i18n._(
+      msg`It is scheduled to run every minute. Review the schedule before turning it on.`,
+    );
   }
   const steppedMinute = /^\*\/(\d+)$/.exec(minute);
   if (steppedMinute) {
     const minutes = Number(steppedMinute[1]);
-    return `It is scheduled to run every ${minutes} minute${minutes === 1 ? "" : "s"}. Review the schedule before turning it on.`;
+    // The whole sentence is one ICU plural rather than a `${n} minute(s)`
+    // fragment spliced into it: German puts the cardinal and the inflected
+    // noun inside the clause, and `jede Minute` / `alle 5 Minuten` do not
+    // share a stem to splice into.
+    return i18n._(
+      msg`${plural(minutes, {
+        one: "It is scheduled to run every # minute. Review the schedule before turning it on.",
+        other:
+          "It is scheduled to run every # minutes. Review the schedule before turning it on.",
+      })}`,
+    );
   }
   if (minuteRuns === 1) {
-    return "It is scheduled to run every hour. Review the schedule before turning it on.";
+    return i18n._(
+      msg`It is scheduled to run every hour. Review the schedule before turning it on.`,
+    );
   }
   if (minuteRuns > 1) {
-    return "It is scheduled to run multiple times an hour. Review the schedule before turning it on.";
+    return i18n._(
+      msg`It is scheduled to run multiple times an hour. Review the schedule before turning it on.`,
+    );
   }
   return null;
 }
 
 export function getWorkflowActivationWarning(
   yaml: string,
+  i18n: I18n,
 ): WorkflowActivationWarning | null {
   let definition: Record<string, unknown> | null;
   try {
@@ -137,9 +164,10 @@ export function getWorkflowActivationWarning(
 
   if (triggerType === "message_posted" && !nonEmptyString(trigger?.filter)) {
     return {
-      description:
-        "It will run for every new message in this channel. Review the trigger before turning it on.",
-      title: "This workflow may run often",
+      description: i18n._(
+        msg`It will run for every new message in this channel. Review the trigger before turning it on.`,
+      ),
+      title: i18n._(msg`This workflow may run often`),
     };
   }
 
@@ -147,12 +175,15 @@ export function getWorkflowActivationWarning(
     const interval = nonEmptyString(trigger?.interval);
     const cron = nonEmptyString(trigger?.cron);
     const description = interval
-      ? frequentIntervalDescription(interval)
+      ? frequentIntervalDescription(interval, i18n)
       : cron
-        ? frequentCronDescription(cron)
+        ? frequentCronDescription(cron, i18n)
         : null;
     if (description) {
-      return { description, title: "This workflow may run often" };
+      return {
+        description,
+        title: i18n._(msg`This workflow may run often`),
+      };
     }
   }
 

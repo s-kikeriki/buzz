@@ -1,3 +1,4 @@
+import { i18n } from "@lingui/core";
 import assert from "node:assert/strict";
 import test from "node:test";
 
@@ -31,21 +32,27 @@ test("reads only direct trigger and first-action types for card icons", () => {
 
 test("builds a plain-language workflow card label", () => {
   assert.equal(
-    getWorkflowCardLabel({
-      trigger: { on: "message_posted" },
-      steps: [{ action: "send_message", text: "Deploying now" }],
-    }),
+    getWorkflowCardLabel(
+      {
+        trigger: { on: "message_posted" },
+        steps: [{ action: "send_message", text: "Deploying now" }],
+      },
+      i18n,
+    ),
     "When a message is posted, send “Deploying now”",
   );
 
   assert.equal(
-    getWorkflowCardLabel({
-      trigger: { on: "reaction_added", emoji: "🔥" },
-      steps: [
-        { action: "delay", duration: "5m" },
-        { action: "add_reaction", emoji: "✅" },
-      ],
-    }),
+    getWorkflowCardLabel(
+      {
+        trigger: { on: "reaction_added", emoji: "🔥" },
+        steps: [
+          { action: "delay", duration: "5m" },
+          { action: "add_reaction", emoji: "✅" },
+        ],
+      },
+      i18n,
+    ),
     "When someone reacts with 🔥, wait 5 minutes, then 1 more step",
   );
 
@@ -58,19 +65,23 @@ test("builds a plain-language workflow card label", () => {
         },
         steps: [{ action: "add_reaction", emoji: "👍" }],
       },
+      i18n,
       { triggerReaction: "🫠" },
     ),
     "When someone reacts with 🫠, add a 👍 reaction",
   );
 
   assert.equal(
-    getWorkflowCardLabel({
-      trigger: {
-        on: "reaction_added",
-        filter: 'trigger_emoji == "🫠"',
+    getWorkflowCardLabel(
+      {
+        trigger: {
+          on: "reaction_added",
+          filter: 'trigger_emoji == "🫠"',
+        },
+        steps: [{ action: "add_reaction", emoji: "👍" }],
       },
-      steps: [{ action: "add_reaction", emoji: "👍" }],
-    }),
+      i18n,
+    ),
     "When someone reacts with 🫠, add a 👍 reaction",
   );
 
@@ -80,6 +91,7 @@ test("builds a plain-language workflow card label", () => {
         trigger: { on: "message_posted" },
         steps: [{ action: "send_message", text: "Deploying now" }],
       },
+      i18n,
       { actionChannelLabel: "releases" },
     ),
     "When a message is posted, send “Deploying now” in #releases",
@@ -94,6 +106,7 @@ test("builds a plain-language workflow card label", () => {
         },
         steps: [{ action: "send_message", text: "Deploying now" }],
       },
+      i18n,
       { triggerDescription: "Message posted by Carl" },
     ),
     "When a message is posted by Carl, send “Deploying now”",
@@ -108,30 +121,37 @@ test("builds a plain-language workflow card label", () => {
         },
         steps: [{ action: "call_webhook" }],
       },
+      i18n,
       { triggerDescription: "Message contains “deploy”" },
     ),
     "When a message contains “deploy”, call a webhook",
   );
 
   assert.equal(
-    getWorkflowCardLabel({
-      trigger: {
-        on: "message_posted",
-        filter: 'str_contains(trigger_text, "deploy")',
+    getWorkflowCardLabel(
+      {
+        trigger: {
+          on: "message_posted",
+          filter: 'str_contains(trigger_text, "deploy")',
+        },
+        steps: [{ action: "call_webhook" }],
       },
-      steps: [{ action: "call_webhook" }],
-    }),
+      i18n,
+    ),
     "When a message contains “deploy”, call a webhook",
   );
 
   assert.equal(
-    getWorkflowCardLabel({
-      trigger: {
-        on: "reaction_added",
-        filter: `trigger_message_id == "${"b".repeat(64)}"`,
+    getWorkflowCardLabel(
+      {
+        trigger: {
+          on: "reaction_added",
+          filter: `trigger_message_id == "${"b".repeat(64)}"`,
+        },
+        steps: [{ action: "add_reaction", emoji: "👍" }],
       },
-      steps: [{ action: "add_reaction", emoji: "👍" }],
-    }),
+      i18n,
+    ),
     "When a reaction is added, add a 👍 reaction",
   );
 
@@ -144,6 +164,7 @@ test("builds a plain-language workflow card label", () => {
         },
         steps: [{ action: "send_message", text: "{{trigger.text}} yourself" }],
       },
+      i18n,
       {
         triggerDescription: "Message “FUCK” is posted by Carl",
       },
@@ -289,35 +310,47 @@ test("shows a disabled definition as disabled while preserving other statuses", 
 
 test("summarizes common and custom schedules", () => {
   assert.equal(
-    getWorkflowCardLabel({
-      trigger: { on: "schedule", interval: "15m" },
-      steps: [{ action: "call_webhook" }],
-    }),
+    getWorkflowCardLabel(
+      {
+        trigger: { on: "schedule", interval: "15m" },
+        steps: [{ action: "call_webhook" }],
+      },
+      i18n,
+    ),
     "Every 15 minutes, call a webhook",
   );
   assert.equal(
-    getWorkflowCardLabel({
-      trigger: { on: "schedule", cron: "30 9 * * *" },
-      steps: [{ action: "request_approval" }],
-    }),
+    getWorkflowCardLabel(
+      {
+        trigger: { on: "schedule", cron: "30 9 * * *" },
+        steps: [{ action: "request_approval" }],
+      },
+      i18n,
+    ),
     "Every day at 09:30 UTC, request approval",
   );
   assert.equal(
-    getWorkflowCardLabel({
-      trigger: { on: "schedule", cron: "*/5 8-17 * * 1-5" },
-      steps: [],
-    }),
+    getWorkflowCardLabel(
+      {
+        trigger: { on: "schedule", cron: "*/5 8-17 * * 1-5" },
+        steps: [],
+      },
+      i18n,
+    ),
     "On a custom schedule",
   );
 });
 
 test("gracefully labels definitions with future trigger and action types", () => {
   assert.equal(
-    getWorkflowCardLabel({
-      trigger: { on: "issue_closed" },
-      steps: [{ action: "archive_issue" }],
-    }),
+    getWorkflowCardLabel(
+      {
+        trigger: { on: "issue_closed" },
+        steps: [{ action: "archive_issue" }],
+      },
+      i18n,
+    ),
     "When issue closed happens, archive issue",
   );
-  assert.equal(getWorkflowCardLabel({}), "When this workflow starts");
+  assert.equal(getWorkflowCardLabel({}, i18n), "When this workflow starts");
 });

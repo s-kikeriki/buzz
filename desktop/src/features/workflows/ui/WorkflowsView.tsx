@@ -1,3 +1,4 @@
+import { useLingui } from "@lingui/react/macro";
 import { Plus, RefreshCw } from "lucide-react";
 import * as React from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -118,6 +119,11 @@ export function WorkflowsView({
 
   const editorWorkflowId =
     editor && editor.mode !== "create" ? editor.workflowId : null;
+
+  // Boundary only: this screen's own copy is still English and belongs to the
+  // next workflows tranche. `i18n` is here because the activation warning it
+  // renders became localized copy.
+  const { i18n } = useLingui();
 
   const memberChannels = channels.filter((c) => c.isMember);
   const channelIds = memberChannels.map((c) => c.id).sort();
@@ -252,17 +258,20 @@ export function WorkflowsView({
     (workflow: Workflow) => {
       if (
         !getWorkflowEnabled(workflow.definition) &&
-        getWorkflowActivationWarning(yamlStringify(workflow.definition))
+        getWorkflowActivationWarning(yamlStringify(workflow.definition), i18n)
       ) {
         setActivationTarget(workflow);
         return;
       }
       toggleEnabled(workflow);
     },
-    [toggleEnabled],
+    [i18n, toggleEnabled],
   );
   const activationWarning = activationTarget
-    ? getWorkflowActivationWarning(yamlStringify(activationTarget.definition))
+    ? getWorkflowActivationWarning(
+        yamlStringify(activationTarget.definition),
+        i18n,
+      )
     : null;
 
   const editorWorkflowHint = allWorkflows.find(

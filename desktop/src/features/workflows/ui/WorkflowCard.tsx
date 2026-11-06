@@ -1,3 +1,4 @@
+import { useLingui } from "@lingui/react/macro";
 import {
   ArrowRight,
   CalendarClock,
@@ -208,12 +209,16 @@ export function WorkflowCard({
   onDuplicate,
   onDelete,
 }: WorkflowCardProps) {
+  // Boundary only: this card's own copy is still English and belongs to the
+  // next workflows tranche. `i18n` is here because the step summary inside the
+  // card label can now contain a localized duration.
+  const { i18n } = useLingui();
   const locale = useLocale();
   const [triggerAnimationSequence, setTriggerAnimationSequence] =
     React.useState(0);
   const isEnabled = getWorkflowEnabled(workflow.definition);
   const configuredTrigger = getWorkflowTriggerConfig(workflow.definition);
-  const cardLabel = getWorkflowCardLabel(workflow.definition, {
+  const cardLabel = getWorkflowCardLabel(workflow.definition, i18n, {
     triggerDescription: configuredTrigger
       ? workflowTriggerDescription(configuredTrigger, {
           authorLabel: authorPresentation?.label ?? undefined,

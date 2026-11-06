@@ -210,6 +210,11 @@ msgstr "{0, plural, one {# Projekt} other {# Projekte}}"
 msgid "{0, plural, one {# review} other {# reviews}}"
 msgstr "{0, plural, one {# Review} other {# Reviews}}"
 
+#. placeholder {0}: run.executionTrace.length
+#: src/features/workflows/ui/WorkflowDetailPanel.tsx
+msgid "{0, plural, one {# step} other {# steps}}"
+msgstr "{0, plural, one {# Schritt} other {# Schritte}}"
+
 #. placeholder {0}: row.taskCount
 #. placeholder {0}: summary.issueCount
 #. placeholder {0}: totals.tasks
@@ -889,6 +894,10 @@ msgstr "{minutes, plural, one {# Min. übrig} other {# Min. übrig}}"
 msgid "{minutes, plural, one {#m TTL} other {#m TTL}}"
 msgstr "{minutes, plural, one {# Min. TTL} other {# Min. TTL}}"
 
+#: src/features/workflows/ui/workflowActivationWarning.ts
+msgid "{minutes, plural, one {It is scheduled to run every # minute. Review the schedule before turning it on.} other {It is scheduled to run every # minutes. Review the schedule before turning it on.}}"
+msgstr "{minutes, plural, one {Er ist so geplant, dass er jede Minute läuft. Prüfe den Zeitplan, bevor du ihn einschaltest.} other {Er ist so geplant, dass er alle # Minuten läuft. Prüfe den Zeitplan, bevor du ihn einschaltest.}}"
+
 #: src/features/agents/ui/TeamDialog.tsx
 msgid "{missingInitialPersonaCount, plural, one {This team references # agent that is no longer in My Agents. Save to remove them, or add them back to My Agents first.} other {This team references # agents that are no longer in My Agents. Save to remove them, or add them back to My Agents first.}}"
 msgstr "{missingInitialPersonaCount, plural, one {Dieses Team verweist auf # Agenten, der nicht mehr in „Meine Agenten“ ist. Speichere, um ihn zu entfernen, oder füge ihn zuerst wieder zu „Meine Agenten“ hinzu.} other {Dieses Team verweist auf # Agenten, die nicht mehr in „Meine Agenten“ sind. Speichere, um sie zu entfernen, oder füge sie zuerst wieder zu „Meine Agenten“ hinzu.}}"
@@ -1189,6 +1198,26 @@ msgstr "{triggerLabel}. Aktivität ansehen."
 msgid "{trimmedProvider} (current)"
 msgstr "{trimmedProvider} (aktuell)"
 
+#: src/features/workflows/ui/workflowDuration.ts
+msgid "{value, plural, one {# day} other {# days}}"
+msgstr "{value, plural, one {# Tag} other {# Tage}}"
+
+#: src/features/workflows/ui/workflowDuration.ts
+msgid "{value, plural, one {# hour} other {# hours}}"
+msgstr "{value, plural, one {# Stunde} other {# Stunden}}"
+
+#: src/features/workflows/ui/workflowDuration.ts
+msgid "{value, plural, one {# minute} other {# minutes}}"
+msgstr "{value, plural, one {# Minute} other {# Minuten}}"
+
+#: src/features/workflows/ui/workflowDuration.ts
+msgid "{value, plural, one {# second} other {# seconds}}"
+msgstr "{value, plural, one {# Sekunde} other {# Sekunden}}"
+
+#: src/features/workflows/ui/workflowDuration.ts
+msgid "{value, plural, one {# week} other {# weeks}}"
+msgstr "{value, plural, one {# Woche} other {# Wochen}}"
+
 #: src/features/agents/ui/personaModelDiscoveryStatus.ts
 msgid "{who} requires sign-in before models can load. Sign in with the {cliName} CLI in a terminal, then try again."
 msgstr "{who} braucht eine Anmeldung, bevor Modelle geladen werden können. Melde dich mit der {cliName}-CLI in einem Terminal an und versuch es dann erneut."
@@ -1457,6 +1486,10 @@ msgstr "Aktionen"
 msgid "Actions for {displayName}"
 msgstr "Aktionen für {displayName}"
 
+#: src/features/workflows/ui/WorkflowDetailPanel.tsx
+msgid "active"
+msgstr "aktiv"
+
 #: src/features/projects/ui/ProjectRepositoryActionsPanel.tsx
 #: src/features/projects/ui/projectsOverviewContext.ts
 msgid "Active"
@@ -1668,6 +1701,10 @@ msgstr "Vorhandenes Repository hinzufügen"
 msgid "Add files"
 msgstr "Dateien hinzufügen"
 
+#: src/features/workflows/ui/WorkflowDialog.tsx
+msgid "Add first step"
+msgstr "Ersten Schritt hinzufügen"
+
 #: src/features/projects/ui/ProjectPullRequestFilesChangedPanel.tsx
 msgid "Add line comment"
 msgstr "Zeilenkommentar hinzufügen"
@@ -1731,6 +1768,10 @@ msgstr "Runtimes hinzufügen"
 #: src/features/community-members/ui/CommunityInviteDialog.tsx
 msgid "Add someone directly or share a link they can use to join."
 msgstr "Füg jemanden direkt hinzu oder teil einen Link zum Beitreten."
+
+#: src/features/workflows/ui/WorkflowDialog.tsx
+msgid "Add step"
+msgstr "Schritt hinzufügen"
 
 #: src/features/agents/ui/CommunityCatalogDialog.tsx
 #: src/features/agents/ui/teamLibraryCopy.ts
@@ -2329,9 +2370,17 @@ msgstr "Gilt für Unterhaltungen und Oberflächentexte"
 msgid "Apply"
 msgstr "Übernehmen"
 
+#: src/features/workflows/ui/WorkflowDetailPanel.tsx
+msgid "Approval expired before the workflow could continue."
+msgstr "Die Freigabe ist abgelaufen, bevor der Workflow fortgesetzt werden konnte."
+
 #: src/features/search/ui/SearchResultItem.tsx
 msgid "Approval request"
 msgstr "Freigabeanfrage"
+
+#: src/features/workflows/ui/WorkflowStepCard.tsx
+msgid "Approval request message"
+msgstr "Nachricht der Freigabeanfrage"
 
 #: src/features/home/lib/inbox.ts
 msgid "Approval requested"
@@ -2340,6 +2389,10 @@ msgstr "Freigabe angefragt"
 #: src/features/projects/ui/PullRequestReviewCard.tsx
 msgid "Approval summary"
 msgstr "Freigabe-Zusammenfassung"
+
+#: src/features/workflows/ui/WorkflowDetailPanel.tsx
+msgid "Approval was denied."
+msgstr "Die Freigabe wurde abgelehnt."
 
 #: src/features/projects/ui/ProjectWorkItemContextDetails.tsx
 msgid "Approvals"
@@ -2406,6 +2459,7 @@ msgid "Archive this identity?"
 msgstr "Diese Identität archivieren?"
 
 #: src/features/channels/ui/ChannelBrowserDialog.tsx
+#: src/features/workflows/ui/WorkflowDetailPanel.tsx
 msgid "archived"
 msgstr "archiviert"
 
@@ -2592,6 +2646,10 @@ msgstr "Die Anmeldung öffnet sich in deinem Browser und kehrt sicher zu {produc
 msgid "Author"
 msgstr "Autor"
 
+#: src/features/workflows/ui/workflowTemplateVariables.ts
+msgid "Author pubkey"
+msgstr "Pubkey des Autors"
+
 #: src/features/projects/ui/ProjectPullRequestsPanel.tsx
 msgid "authored"
 msgstr "hat verfasst"
@@ -2612,6 +2670,10 @@ msgstr "Automatischer Neustart bei Konfigurationsänderung"
 #: src/features/profile/ui/UserProfileAgentActions.tsx
 msgid "Auto-start"
 msgstr "Autostart"
+
+#: src/features/workflows/ui/WorkflowDialog.tsx
+msgid "Automate actions when something happens in a channel."
+msgstr "Automatisiere Aktionen, wenn in einem Kanal etwas passiert."
 
 #: src/features/agents/ui/AgentDefinitionDialog.tsx
 msgid "Automatic"
@@ -2695,6 +2757,7 @@ msgstr "Wartet auf Review"
 #: src/features/onboarding/ui/OnboardingFlow.tsx
 #: src/features/onboarding/ui/ProfileStep.tsx
 #: src/features/projects/ui/ProjectWorkspaceTabList.tsx
+#: src/features/workflows/ui/WorkflowDialog.tsx
 msgid "Back"
 msgstr "Zurück"
 
@@ -2742,6 +2805,18 @@ msgstr "Zurück zur Suche"
 #: src/features/profile/ui/UserProfilePanelFields.tsx
 msgid "Backend"
 msgstr "Backend"
+
+#: src/features/workflows/ui/WorkflowStepCard.tsx
+msgid "Backend note: `send_dm` is not executed yet, so runs fail at this step."
+msgstr "Hinweis zum Backend: `send_dm` wird noch nicht ausgeführt, deshalb scheitern Ausführungen an diesem Schritt."
+
+#: src/features/workflows/ui/WorkflowStepCard.tsx
+msgid "Backend note: `set_channel_topic` is not executed yet, so runs fail at this step."
+msgstr "Hinweis zum Backend: `set_channel_topic` wird noch nicht ausgeführt, deshalb scheitern Ausführungen an diesem Schritt."
+
+#: src/features/workflows/ui/WorkflowStepCard.tsx
+msgid "Backend note: approval gates still stop runs with WF-08; approval records are not persisted yet."
+msgstr "Hinweis zum Backend: Freigabe-Gates stoppen Ausführungen weiterhin mit WF-08; Freigaben werden noch nicht gespeichert."
 
 #: src/features/profile/ui/AnimatedAvatarReviewNav.tsx
 msgid "Background"
@@ -2988,6 +3063,7 @@ msgstr "Dieses Relay ist nicht erreichbar — prüf die URL"
 #: src/features/settings/ui/VoiceSettingsCard.tsx
 #: src/features/sidebar/ui/ChannelSectionDialogs.tsx
 #: src/features/sidebar/ui/SidebarProjectsSection.tsx
+#: src/features/workflows/ui/WorkflowDialog.tsx
 #: src/shared/ui/link-preview-list.tsx
 #: src/shared/ui/markdown/FilePreviewDialog.tsx
 msgid "Cancel"
@@ -3004,6 +3080,10 @@ msgstr "Antwort abbrechen"
 #: src/features/messages/ui/ComposerAttachments.tsx
 msgid "Cancel upload"
 msgstr "Upload abbrechen"
+
+#: src/features/workflows/ui/WorkflowDetailPanel.tsx
+msgid "cancelled"
+msgstr "abgebrochen"
 
 #: src/features/home/ui/InboxListPane.tsx
 msgid "Cannot remind without a channel"
@@ -3166,6 +3246,10 @@ msgstr "Kanalmitglieder"
 msgid "Channel messages and composer"
 msgstr "Kanalnachrichten und Eingabefeld"
 
+#: src/features/workflows/ui/WorkflowStepCard.tsx
+msgid "Channel override (optional)"
+msgstr "Kanal überschreiben (optional)"
+
 #: src/features/channels/ui/ChannelManagementSheet.tsx
 #: src/features/channels/ui/ChannelMembersBar.tsx
 msgid "Channel settings"
@@ -3191,6 +3275,11 @@ msgstr "Kanal nicht verfügbar"
 #: src/features/home/lib/inbox.ts
 msgid "Channel update"
 msgstr "Kanal-Update"
+
+#: src/features/workflows/ui/WorkflowStepCard.tsx
+#: src/features/workflows/ui/workflowTemplateVariables.ts
+msgid "Channel UUID"
+msgstr "Kanal-UUID"
 
 #: src/features/profile/ui/UserProfilePanelSections.tsx
 #: src/features/profile/ui/UserProfilePanelUtils.ts
@@ -3724,6 +3813,7 @@ msgstr "Wird geklont…"
 #: src/features/messages/ui/ComposerAttachments.tsx
 #: src/features/projects/ui/ProjectConversationPanel.tsx
 #: src/features/settings/ui/SendFeedbackDialog.tsx
+#: src/features/workflows/ui/WorkflowDialog.tsx
 #: src/shared/ui/dialog.tsx
 #: src/shared/ui/sheet.tsx
 msgid "Close"
@@ -3732,6 +3822,10 @@ msgstr "Schließen"
 #: src/features/projects/ui/ProjectAgentContextStrip.tsx
 msgid "Close agent chat"
 msgstr "Agent-Chat schließen"
+
+#: src/features/workflows/ui/WorkflowDetailPanel.tsx
+msgid "Close detail panel"
+msgstr "Detailbereich schließen"
 
 #: src/shared/lib/keyboard-shortcuts.ts
 msgid "Close dialog"
@@ -4029,6 +4123,10 @@ msgstr "Vergleichen"
 msgid "Complete any prompts opened by the reconnect helper to continue."
 msgstr "Bestätige die Abfragen des Verbindungshelfers, um fortzufahren."
 
+#: src/features/workflows/ui/WorkflowDetailPanel.tsx
+msgid "completed"
+msgstr "abgeschlossen"
+
 #: src/features/projects/ui/ProjectRepositoryActionsPanel.tsx
 #: src/features/projects/ui/projectsOverviewContext.ts
 msgid "Completed"
@@ -4045,6 +4143,14 @@ msgstr "vollständig entfernen?"
 #: src/features/settings/ui/SettingsPanels.tsx
 msgid "Compute"
 msgstr "Rechenleistung"
+
+#: src/features/workflows/ui/WorkflowStepCard.tsx
+msgid "Conditional"
+msgstr "Bedingt"
+
+#: src/features/workflows/ui/WorkflowStepCard.tsx
+msgid "Conditional · {timeout}"
+msgstr "Bedingt · {timeout}"
 
 #: src/features/agents/ui/RestartDiffBadge.tsx
 msgid "Config changed since last start:"
@@ -4214,6 +4320,7 @@ msgstr "Kontextlimit"
 #: src/features/onboarding/ui/DownloadKeyStep.tsx
 #: src/features/onboarding/ui/ProfileStep.tsx
 #: src/features/profile/ui/NostrBindConsentDialog.tsx
+#: src/features/workflows/ui/WorkflowDialog.tsx
 msgid "Continue"
 msgstr "Weiter"
 
@@ -4238,6 +4345,10 @@ msgstr "Mit einem KI-Abo fortfahren"
 #: src/features/onboarding/ui/ProfileStep.tsx
 msgid "Continue without saving"
 msgstr "Ohne Speichern fortfahren"
+
+#: src/features/workflows/ui/WorkflowDialog.tsx
+msgid "Continue without this secret?"
+msgstr "Ohne dieses Secret fortfahren?"
 
 #: src/features/projects/lib/projectDetailAgentContext.ts
 #: src/features/projects/ui/ProjectRepositoryActionsPanel.tsx
@@ -4426,6 +4537,10 @@ msgstr "Kopier die Antwort unten und füg sie auf der {productName}-Website ein,
 msgid "Copy this response and paste it into the pairing page."
 msgstr "Kopier diese Antwort und füg sie auf der Kopplungsseite ein."
 
+#: src/features/workflows/ui/WorkflowDialog.tsx
+msgid "Copy this workflow and adjust its details."
+msgstr "Kopiere diesen Workflow und passe seine Details an."
+
 #: src/features/onboarding/ui/BackupStep.tsx
 msgid "Copy to clipboard"
 msgstr "In die Zwischenablage kopieren"
@@ -4530,6 +4645,10 @@ msgstr "README konnte nicht geladen werden"
 #: src/features/projects/ui/ProjectRepositoryPanel.tsx
 msgid "Could not load the repository file tree."
 msgstr "Der Dateibaum des Repositorys konnte nicht geladen werden."
+
+#: src/features/workflows/ui/WorkflowDialog.tsx
+msgid "Could not load the webhook URL"
+msgstr "Die Webhook-URL konnte nicht geladen werden"
 
 #: src/features/projects/ui/ProjectRepositoryPanel.tsx
 msgid "Could not load this file. Try again after refreshing the repository."
@@ -5003,6 +5122,10 @@ msgstr "Kanal anlegen"
 msgid "Create community"
 msgstr "Community anlegen"
 
+#: src/features/workflows/ui/WorkflowDialog.tsx
+msgid "Create copy"
+msgstr "Kopie erstellen"
+
 #: src/features/onboarding/ui/BackupStep.tsx
 msgid "Create locked backup"
 msgstr "Passwortgeschütztes Backup erstellen"
@@ -5087,6 +5210,10 @@ msgstr "Sammelkarte erstellen"
 msgid "Create with {guideName}"
 msgstr "Mit {guideName} erstellen"
 
+#: src/features/workflows/ui/WorkflowDialog.tsx
+msgid "Create workflow"
+msgstr "Workflow erstellen"
+
 #: src/features/agents/ui/CommunityCatalogDialog.tsx
 msgid "Create, discover, and import agents and teams."
 msgstr "Agenten und Teams anlegen, entdecken und importieren."
@@ -5142,6 +5269,7 @@ msgstr "Wird angelegt …"
 #: src/features/projects/ui/CreateProjectWorkItemDialog.tsx
 #: src/features/projects/ui/ProjectBranchDialogs.tsx
 #: src/features/projects/ui/ProjectChannelRequestDialog.tsx
+#: src/features/workflows/ui/WorkflowDialog.tsx
 msgid "Creating…"
 msgstr "Wird angelegt…"
 
@@ -5158,6 +5286,11 @@ msgstr "Aktuell ({0})"
 #: src/features/sidebar/ui/AppSidebar.tsx
 msgid "Current identity"
 msgstr "Aktuelle Identität"
+
+#. placeholder {0}: run.currentStep + 1
+#: src/features/workflows/ui/WorkflowDetailPanel.tsx
+msgid "Current step {0}"
+msgstr "Aktueller Schritt {0}"
 
 #: src/features/agents/ui/EditAgentAdvancedFields.tsx
 msgid "Current value"
@@ -5282,6 +5415,7 @@ msgstr "Standard"
 
 #: src/features/settings/ui/AppearanceSettingsControls.tsx
 #: src/features/settings/ui/ChannelTemplatesSettingsCard.tsx
+#: src/features/workflows/ui/WorkflowStepCard.tsx
 msgid "Default"
 msgstr "Standard"
 
@@ -5320,9 +5454,17 @@ msgstr "Standardmodell"
 msgid "Default model ({0})"
 msgstr "Standardmodell ({0})"
 
+#: src/features/workflows/ui/WorkflowStepCard.tsx
+msgid "Defaults to the channel that triggered the workflow. Webhook and manual triggers require a channel."
+msgstr "Standard ist der Kanal, der den Workflow ausgelöst hat. Webhook- und manuelle Auslöser brauchen einen Kanal."
+
 #: src/features/channels/ui/AddChannelBotGenericSection.tsx
 msgid "Defaults to the selected runtime name."
 msgstr "Standard ist der Name der ausgewählten Runtime."
+
+#: src/features/workflows/ui/WorkflowDetailPanel.tsx
+msgid "Definition"
+msgstr "Definition"
 
 #: src/features/agents/ui/PersonaActionsMenu.tsx
 #: src/features/agents/ui/PersonaDeleteDialog.tsx
@@ -5599,6 +5741,10 @@ msgstr "Erkannt unter"
 msgid "Devin account"
 msgstr "Devin-Konto"
 
+#: src/features/workflows/ui/workflowTemplateVariables.ts
+msgid "Diff text"
+msgstr "Diff-Text"
+
 #: src/features/messages/ui/DiffMessage.tsx
 msgid "Diff truncated."
 msgstr "Diff gekürzt."
@@ -5621,18 +5767,27 @@ msgstr "Direktnachricht mit {destination}"
 msgid "Direct messages"
 msgstr "Direktnachrichten"
 
+#: src/features/workflows/ui/WorkflowDetailPanel.tsx
+msgid "disabled"
+msgstr "deaktiviert"
+
 #: src/features/agents/ui/CommunityCatalogDialog.tsx
 msgid "Discard agent changes?"
 msgstr "Änderungen am Agenten verwerfen?"
 
 #: src/features/agents/ui/AgentDefaultsDialog.tsx
 #: src/features/agents/ui/CommunityCatalogDialog.tsx
+#: src/features/workflows/ui/WorkflowDialog.tsx
 msgid "Discard changes"
 msgstr "Änderungen verwerfen"
 
 #: src/features/agents/ui/AgentDefaultsDialog.tsx
 msgid "Discard changes to agent defaults?"
 msgstr "Änderungen an den Agent-Standards verwerfen?"
+
+#: src/features/workflows/ui/WorkflowDialog.tsx
+msgid "Discard changes?"
+msgstr "Änderungen verwerfen?"
 
 #: src/features/messages/ui/VoiceNoteRecorder.tsx
 msgid "Discard voice note"
@@ -5702,6 +5857,10 @@ msgstr "Zeigt die mobile Seitenleiste."
 #: src/features/home/lib/inbox.ts
 msgid "DM"
 msgstr "DM"
+
+#: src/features/workflows/ui/WorkflowStepCard.tsx
+msgid "DM content"
+msgstr "DM-Inhalt"
 
 #. placeholder {0}: item.senderLabel
 #: src/features/home/lib/inbox.ts
@@ -5917,13 +6076,45 @@ msgstr "{0} duplizieren"
 msgid "Duplicate agent"
 msgstr "Agent duplizieren"
 
+#: src/features/workflows/ui/WorkflowDialog.tsx
+msgid "Duplicate workflow"
+msgstr "Workflow duplizieren"
+
 #: src/features/settings/ui/ChannelTemplatesSettingsCard.tsx
 msgid "Duplicated as \"{name}\""
 msgstr "Als „{name}“ dupliziert"
 
+#: src/features/workflows/ui/WorkflowStepCard.tsx
+msgid "Duration"
+msgstr "Dauer"
+
+#: src/features/workflows/ui/WorkflowStepCard.tsx
+msgid "e.g. {AUTHOR_TEMPLATE}, npub1…, or hex pubkey"
+msgstr "z. B. {AUTHOR_TEMPLATE}, npub1… oder Hex-Pubkey"
+
+#: src/features/workflows/ui/WorkflowStepCard.tsx
+msgid "e.g. 24h"
+msgstr "z. B. 24h"
+
+#: src/features/workflows/ui/WorkflowStepCard.tsx
+msgid "e.g. 5s, 1m, 1h"
+msgstr "z. B. 5s, 1m, 1h"
+
 #: src/features/agents/ui/AgentCardMintDialog.tsx
 msgid "E.g. art “stormy night, lightning motif” or ability “Verify — scry 2”. Your directions take priority; anything you leave open is designed for you."
 msgstr "Z. B. Motiv „stürmische Nacht, Blitzmotiv“ oder Fähigkeit „Prüfen — Hellsicht 2“. Deine Vorgaben haben Vorrang; was du offenlässt, wird für dich gestaltet."
+
+#: src/features/workflows/ui/WorkflowStepCard.tsx
+msgid "e.g. Deployment started by {AUTHOR_TEMPLATE}"
+msgstr "z. B. Deployment gestartet von {AUTHOR_TEMPLATE}"
+
+#: src/features/workflows/ui/WorkflowStepCard.tsx
+msgid "e.g. Notify deployment channel"
+msgstr "z. B. Deployment-Kanal benachrichtigen"
+
+#: src/features/workflows/ui/WorkflowStepCard.tsx
+msgid "e.g. thumbsup"
+msgstr "z. B. thumbsup"
 
 #: src/features/agents/ui/PersonaAdvancedFields.tsx
 msgid "Each thread"
@@ -5947,6 +6138,7 @@ msgstr "Frühere beobachtete Sitzung"
 #: src/features/settings/ui/ChannelTemplatesSettingsCard.tsx
 #: src/features/settings/ui/HarnessRow.tsx
 #: src/features/settings/ui/ProfileSettingsCard.tsx
+#: src/features/workflows/ui/WorkflowDetailPanel.tsx
 msgid "Edit"
 msgstr "Bearbeiten"
 
@@ -6040,6 +6232,14 @@ msgstr "Team bearbeiten"
 msgid "Edit template"
 msgstr "Vorlage bearbeiten"
 
+#: src/features/workflows/ui/WorkflowDialog.tsx
+msgid "Edit workflow"
+msgstr "Workflow bearbeiten"
+
+#: src/features/workflows/ui/WorkflowDialog.tsx
+msgid "Edit workflow name"
+msgstr "Workflow-Namen bearbeiten"
+
 #: src/features/onboarding/ui/CommunityOnboardingFlow.tsx
 msgid "Edit your avatar"
 msgstr "Avatar bearbeiten"
@@ -6068,6 +6268,7 @@ msgstr "Aufwand"
 #: src/features/agents/ui/AgentCreationPreview.tsx
 #: src/features/messages/ui/ComposerEmojiPicker.tsx
 #: src/features/profile/ui/ProfileAvatarModeTabs.tsx
+#: src/features/workflows/ui/WorkflowStepCard.tsx
 msgid "Emoji"
 msgstr "Emoji"
 
@@ -6109,6 +6310,10 @@ msgstr "Verschlüsselungspasswort"
 #: src/features/huddle/components/HuddleAttachment.tsx
 msgid "Ended"
 msgstr "Beendet"
+
+#: src/features/workflows/ui/WorkflowStepCard.tsx
+msgid "Endpoint URL"
+msgstr "Endpunkt-URL"
 
 #: src/features/agents/ui/TeamDialog.tsx
 msgid "Engineering Squad"
@@ -6237,6 +6442,10 @@ msgstr "allem"
 msgid "Everything in Agent Catalog is already in My Agents."
 msgstr "Alles aus dem Agenten-Katalog ist schon in „Meine Agenten“."
 
+#: src/features/workflows/ui/WorkflowDetailPanel.tsx
+msgid "Execution Trace"
+msgstr "Ausführungsprotokoll"
+
 #: src/features/messages/ui/DiffMessage.tsx
 msgid "Expand diff"
 msgstr "Diff ausklappen"
@@ -6269,6 +6478,10 @@ msgstr "Exportieren"
 #: src/features/profile/ui/UserProfileAgentManagementRows.tsx
 msgid "Export agent"
 msgstr "Agent exportieren"
+
+#: src/features/workflows/ui/WorkflowDetailPanel.tsx
+msgid "failed"
+msgstr "fehlgeschlagen"
 
 #. placeholder {0}: shared ? "share" : "unshare"
 #: src/features/agents/ui/useTeamActions.ts
@@ -6428,6 +6641,14 @@ msgstr "Projekt konnte nicht geladen werden"
 msgid "Failed to load projects"
 msgstr "Projekte konnten nicht geladen werden"
 
+#: src/features/workflows/ui/WorkflowDetailPanel.tsx
+msgid "Failed to load run history"
+msgstr "Ausführungsverlauf konnte nicht geladen werden"
+
+#: src/features/workflows/ui/WorkflowDetailPanel.tsx
+msgid "Failed to load workflow"
+msgstr "Workflow konnte nicht geladen werden"
+
 #: src/features/projects/ui/MergePullRequestButton.tsx
 msgid "Failed to merge review."
 msgstr "Review konnte nicht zusammengeführt werden."
@@ -6561,6 +6782,10 @@ msgstr "Der Agent konnte nicht gestartet werden."
 #: src/features/channels/ui/useMembersSidebarActions.ts
 msgid "Failed to stop agent."
 msgstr "Der Agent konnte nicht gestoppt werden."
+
+#: src/features/workflows/ui/WorkflowDetailPanel.tsx
+msgid "Failed to trigger workflow"
+msgstr "Workflow konnte nicht ausgelöst werden"
 
 #: src/features/projects/ui/IssueAssigneesRow.tsx
 msgid "Failed to unassign task."
@@ -6736,6 +6961,10 @@ msgstr "Folgen fehlgeschlagen: {reason}"
 msgid "Font size"
 msgstr "Schriftgröße"
 
+#: src/features/workflows/ui/WorkflowDialog.tsx
+msgid "Form"
+msgstr "Formular"
+
 #: src/features/messages/ui/MessageComposerToolbar.tsx
 #: src/features/projects/ui/ProjectsAgentPromptPage.tsx
 #: src/shared/lib/keyboard-shortcuts.ts
@@ -6792,6 +7021,10 @@ msgstr "Im PATH gefunden"
 msgid "Frame"
 msgstr "Bild"
 
+#: src/features/workflows/ui/WorkflowStepCard.tsx
+msgid "From (approver)"
+msgstr "Von (Freigeber)"
+
 #: src/features/agents/ui/McpServersSection.tsx
 msgid "From config file ({mcpConfigFilePath})"
 msgstr "Aus Konfigurationsdatei ({mcpConfigFilePath})"
@@ -6828,6 +7061,10 @@ msgstr "Neuen Kopplungscode erzeugen"
 #: src/features/profile/ui/AnimatedAvatarControls.tsx
 msgid "Generating frame thumbnails"
 msgstr "Vorschaubilder werden erzeugt"
+
+#: src/features/workflows/ui/WorkflowDialog.tsx
+msgid "Generating name…"
+msgstr "Name wird erzeugt…"
 
 #: src/features/onboarding/ui/IdentityRecoveryPairing.tsx
 msgid "Generating pairing code..."
@@ -6878,6 +7115,7 @@ msgstr "Deckkraft des Glases"
 msgid "Global defaults not set"
 msgstr "Globale Standards nicht gesetzt"
 
+#: src/features/workflows/ui/WorkflowDialog.tsx
 #: src/shared/lib/keyboard-shortcuts.ts
 msgid "Go back"
 msgstr "Zurück"
@@ -7053,6 +7291,18 @@ msgstr "Gehostete Community"
 #: src/features/profile/ui/AnimatedAvatarCapture.tsx
 msgid "Hover to play"
 msgstr "Zum Abspielen mit der Maus darüber"
+
+#: src/features/workflows/ui/WorkflowStepCard.tsx
+msgid "HTTP method"
+msgstr "HTTP-Methode"
+
+#: src/features/workflows/ui/workflowTemplateVariables.ts
+msgid "HTTP response body"
+msgstr "HTTP-Antwort-Body"
+
+#: src/features/workflows/ui/workflowTemplateVariables.ts
+msgid "HTTP response status"
+msgstr "HTTP-Antwortstatus"
 
 #: src/features/messages/lib/useLinkEditor.tsx
 msgid "https://example.com"
@@ -7535,6 +7785,26 @@ msgstr "Issue"
 msgid "Issue · {0}"
 msgstr "Issue · {0}"
 
+#: src/features/workflows/ui/workflowActivationWarning.ts
+msgid "It is scheduled to run every {duration}. Review the schedule before turning it on."
+msgstr "Er ist so geplant, dass er alle {duration} läuft. Prüfe den Zeitplan, bevor du ihn einschaltest."
+
+#: src/features/workflows/ui/workflowActivationWarning.ts
+msgid "It is scheduled to run every hour. Review the schedule before turning it on."
+msgstr "Er ist so geplant, dass er jede Stunde läuft. Prüfe den Zeitplan, bevor du ihn einschaltest."
+
+#: src/features/workflows/ui/workflowActivationWarning.ts
+msgid "It is scheduled to run every minute. Review the schedule before turning it on."
+msgstr "Er ist so geplant, dass er jede Minute läuft. Prüfe den Zeitplan, bevor du ihn einschaltest."
+
+#: src/features/workflows/ui/workflowActivationWarning.ts
+msgid "It is scheduled to run multiple times a minute. Review the schedule before turning it on."
+msgstr "Er ist so geplant, dass er mehrmals pro Minute läuft. Prüfe den Zeitplan, bevor du ihn einschaltest."
+
+#: src/features/workflows/ui/workflowActivationWarning.ts
+msgid "It is scheduled to run multiple times an hour. Review the schedule before turning it on."
+msgstr "Er ist so geplant, dass er mehrmals pro Stunde läuft. Prüfe den Zeitplan, bevor du ihn einschaltest."
+
 #: src/features/onboarding/ui/BackupTestFlow.tsx
 #: src/features/settings/ui/BackupTestFlow.tsx
 msgid "It restores a different identity than the one signed in here."
@@ -7548,6 +7818,10 @@ msgstr "Es stellt deine aktuelle {0}-Identität wieder her."
 #: src/features/settings/ui/BackupTestFlow.tsx
 msgid "It restores your current {productName} identity."
 msgstr "Es stellt deine aktuelle {productName}-Identität wieder her."
+
+#: src/features/workflows/ui/workflowActivationWarning.ts
+msgid "It will run for every new message in this channel. Review the trigger before turning it on."
+msgstr "Er läuft bei jeder neuen Nachricht in diesem Kanal. Prüfe den Auslöser, bevor du ihn einschaltest."
 
 #: src/features/messages/ui/FormattingToolbar.tsx
 #: src/shared/lib/keyboard-shortcuts.ts
@@ -7598,6 +7872,10 @@ msgstr "Community beitreten"
 msgid "Join huddle"
 msgstr "Huddle beitreten"
 
+#: src/features/workflows/ui/WorkflowDialog.tsx
+msgid "Join or create a channel before adding a workflow."
+msgstr "Tritt einem Kanal bei oder erstelle einen, bevor du einen Workflow anlegst."
+
 #: src/features/communities/ui/WelcomeSetup.tsx
 msgid "Join or create a community"
 msgstr "Community beitreten oder anlegen"
@@ -7645,6 +7923,10 @@ msgstr "Wird beigetreten …"
 msgid "JSON"
 msgstr "JSON"
 
+#: src/features/workflows/ui/WorkflowTemplateTextarea.tsx
+msgid "JSON fields are available as {FIELD_TEMPLATE}."
+msgstr "JSON-Felder stehen als {FIELD_TEMPLATE} zur Verfügung."
+
 #: src/shared/ui/VideoReviewTimecodeButton.tsx
 msgid "Jump to {timecode}"
 msgstr "Zu {timecode} springen"
@@ -7678,8 +7960,13 @@ msgstr "Aktuelles Backup behalten"
 
 #: src/features/agents/ui/AgentDefaultsDialog.tsx
 #: src/features/agents/ui/CommunityCatalogDialog.tsx
+#: src/features/workflows/ui/WorkflowDialog.tsx
 msgid "Keep editing"
 msgstr "Weiter bearbeiten"
+
+#: src/features/workflows/ui/WorkflowDialog.tsx
+msgid "Keep off"
+msgstr "Ausgeschaltet lassen"
 
 #: src/features/settings/ui/EncryptedBackupCreator.tsx
 msgid "Keep the file private and save its password somewhere safe — {productName} cannot reset it. Once ready, the backup remains available to download for 5 minutes."
@@ -8085,6 +8372,10 @@ msgstr "Repository-Dateien werden geladen"
 msgid "Loading reviews"
 msgstr "Reviews werden geladen"
 
+#: src/features/workflows/ui/WorkflowDetailPanel.tsx
+msgid "Loading run history"
+msgstr "Ausführungsverlauf wird geladen"
+
 #: src/features/settings/ui/HarnessCatalogDialog.tsx
 msgid "Loading runtime details"
 msgstr "Runtime-Details werden geladen"
@@ -8460,6 +8751,7 @@ msgstr "Wird zusammengeführt…"
 #: src/features/profile/ui/UserProfilePrimaryActions.tsx
 #: src/features/search/ui/SearchResultItem.tsx
 #: src/features/search/ui/TopbarSearch.tsx
+#: src/features/workflows/ui/WorkflowStepCard.tsx
 msgid "Message"
 msgstr "Nachricht"
 
@@ -8495,6 +8787,10 @@ msgstr "Nachricht in die Zwischenablage kopiert"
 msgid "Message deleted"
 msgstr "Nachricht gelöscht"
 
+#: src/features/workflows/ui/workflowTemplateVariables.ts
+msgid "Message event ID"
+msgstr "Event-ID der Nachricht"
+
 #: src/features/search/ui/TopbarSearch.tsx
 msgid "Message in"
 msgstr "Nachricht in"
@@ -8502,6 +8798,11 @@ msgstr "Nachricht in"
 #: src/shared/ui/markdown/MessageLinkPill.tsx
 msgid "Message in channel {channelLabel}"
 msgstr "Nachricht im Kanal {channelLabel}"
+
+#: src/features/workflows/ui/WorkflowStepCard.tsx
+#: src/features/workflows/ui/workflowTemplateVariables.ts
+msgid "Message text"
+msgstr "Nachrichtentext"
 
 #: src/features/messages/ui/MessageThreadPanel.tsx
 msgid "Message the huddle"
@@ -8518,6 +8819,10 @@ msgstr "Nachrichten"
 #: src/features/channels/ui/ChannelPane.tsx
 msgid "Messages and sub-replies will appear here once the relay has history for this channel."
 msgstr "Nachrichten und Unterantworten erscheinen hier, sobald das Relay einen Verlauf für diesen Kanal hat."
+
+#: src/features/workflows/ui/WorkflowStepCard.tsx
+msgid "Messages post to the workflow channel selected above."
+msgstr "Nachrichten werden im oben gewählten Workflow-Kanal gepostet."
 
 #. placeholder {0}: d.deviceId.slice(0, 8)
 #: src/features/huddle/components/MicControls.tsx
@@ -8740,6 +9045,10 @@ msgstr "Meine Runtime"
 msgid "Name"
 msgstr "Name"
 
+#: src/features/workflows/ui/WorkflowStepCard.tsx
+msgid "Name (optional)"
+msgstr "Name (optional)"
+
 #: src/features/settings/ui/NotificationSettingsCard.tsx
 msgid "Native desktop alerts are enabled for the categories you have armed below."
 msgstr "Native Desktop-Hinweise sind für die unten aktivierten Kategorien eingeschaltet."
@@ -8807,6 +9116,10 @@ msgstr "Neue und bestehende Verbindungen werden beendet und die Adresse bleibt r
 #: src/shared/lib/keyboard-shortcuts.ts
 msgid "New channel"
 msgstr "Neuer Kanal"
+
+#: src/features/workflows/ui/WorkflowStepCard.tsx
+msgid "New channel topic"
+msgstr "Neues Kanalthema"
 
 #: src/features/community-members/lib/joinAlerts.ts
 msgid "New community member"
@@ -9233,6 +9546,10 @@ msgstr "Keine passenden Aufgaben"
 msgid "No matching users."
 msgstr "Keine passenden Nutzer."
 
+#: src/features/workflows/ui/WorkflowTemplateTextarea.tsx
+msgid "No matching variables"
+msgstr "Keine passenden Variablen"
+
 #: src/features/channels/ui/MembersSidebar.tsx
 msgid "No members found."
 msgstr "Keine Mitglieder gefunden."
@@ -9368,6 +9685,10 @@ msgstr "Noch keine Reviews."
 #: src/features/channels/ui/CanvasHistoryPanel.tsx
 msgid "No revisions yet."
 msgstr "Noch keine Versionen."
+
+#: src/features/workflows/ui/WorkflowDetailPanel.tsx
+msgid "No runs yet."
+msgstr "Noch keine Ausführungen."
 
 #: src/features/settings/ui/HarnessCatalogDialog.tsx
 msgid "No runtimes found."
@@ -9561,6 +9882,10 @@ msgstr "jetzt"
 #: src/features/agents/ui/RespondToField.tsx
 msgid "npub1… or abcdef0123…"
 msgstr "npub1… oder abcdef0123…"
+
+#: src/features/workflows/ui/WorkflowStepCard.tsx
+msgid "npub1…, hex pubkey, or role"
+msgstr "npub1…, Hex-Pubkey oder Rolle"
 
 #. placeholder {0}: error.message
 #: src/features/agents/observerRelayStore.ts
@@ -10311,6 +10636,10 @@ msgstr "Video anhalten"
 msgid "Pause voice note"
 msgstr "Sprachnachricht pausieren"
 
+#: src/features/workflows/ui/WorkflowDetailPanel.tsx
+msgid "pending"
+msgstr "ausstehend"
+
 #: src/features/agents/ui/agentSessionToolCatalog.ts
 #: src/features/home/ui/InboxListPane.tsx
 msgid "Pending"
@@ -10555,6 +10884,10 @@ msgstr "Vorherige Anfrage — vor Abschluss unterbrochen"
 #: src/shared/ui/carousel.tsx
 msgid "Previous slide"
 msgstr "Vorherige Folie"
+
+#: src/features/workflows/ui/workflowTemplateVariables.ts
+msgid "Previous steps"
+msgstr "Vorherige Schritte"
 
 #: src/features/channels/ui/ChannelPermissionsSettings.tsx
 #: src/features/sidebar/ui/CreateChannelFormFields.tsx
@@ -10943,6 +11276,10 @@ msgstr "Mit {displayName} reagieren"
 msgid "reacted with"
 msgstr "reagierte mit"
 
+#: src/features/workflows/ui/workflowTemplateVariables.ts
+msgid "Reaction emoji"
+msgstr "Reaktions-Emoji"
+
 #: src/features/huddle/components/HuddleBar.tsx
 msgid "Reaction failed"
 msgstr "Reaktion fehlgeschlagen"
@@ -11121,6 +11458,10 @@ msgstr "Aktualisiere das Repository oder bitte einen Agent, nachzusehen."
 msgid "Refresh the repository or check its access settings."
 msgstr "Aktualisiere das Repository oder prüf die Zugriffseinstellungen."
 
+#: src/features/workflows/ui/WorkflowDetailPanel.tsx
+msgid "Refreshing approvals..."
+msgstr "Freigaben werden aktualisiert..."
+
 #: src/features/settings/ui/HarnessCatalogDialog.tsx
 #: src/features/settings/ui/HostedCommunitiesSettingsCard.tsx
 msgid "Refreshing…"
@@ -11290,6 +11631,10 @@ msgstr "Vorschau entfernen"
 msgid "Remove spoiler"
 msgstr "Spoiler entfernen"
 
+#: src/features/workflows/ui/WorkflowStepCard.tsx
+msgid "Remove step"
+msgstr "Schritt entfernen"
+
 #: src/features/agents/ui/EnvVarsEditor.tsx
 msgid "Remove variable"
 msgstr "Variable entfernen"
@@ -11379,6 +11724,10 @@ msgstr "Im Thread an {threadHeadAuthor} antworten"
 msgid "Reply to {replyAuthor} in #{channelName}"
 msgstr "An {replyAuthor} in #{channelName} antworten"
 
+#: src/features/workflows/ui/WorkflowStepCard.tsx
+msgid "Reply to triggering message in thread"
+msgstr "Im Thread auf die auslösende Nachricht antworten"
+
 #. placeholder {0}: replyTarget.author
 #. placeholder {0}: replyTarget.comment.author
 #: src/features/messages/ui/ComposerReplyEditBanner.tsx
@@ -11464,6 +11813,10 @@ msgstr "Repository nicht initialisiert"
 #: src/features/projects/lib/projectRepoAvailability.ts
 msgid "Repository unavailable"
 msgstr "Repository nicht verfügbar"
+
+#: src/features/workflows/ui/WorkflowStepCard.tsx
+msgid "Request body (optional)"
+msgstr "Request-Body (optional)"
 
 #: src/features/settings/ui/HarnessRow.tsx
 msgid "Request failed."
@@ -11815,10 +12168,38 @@ msgstr "Rolle"
 msgid "Row height and the spacing around section headers"
 msgstr "Zeilenhöhe und Abstände um Abschnittsüberschriften"
 
+#: src/features/workflows/ui/WorkflowStepCard.tsx
+msgid "Run controls"
+msgstr "Ausführungssteuerung"
+
+#: src/features/workflows/ui/WorkflowDetailPanel.tsx
+msgid "Run created"
+msgstr "Ausführung erstellt"
+
+#: src/features/workflows/ui/WorkflowDetailPanel.tsx
+msgid "Run failed ({reason})."
+msgstr "Ausführung fehlgeschlagen ({reason})."
+
+#: src/features/workflows/ui/WorkflowDialog.tsx
+msgid "Run history"
+msgstr "Ausführungsverlauf"
+
+#: src/features/workflows/ui/WorkflowDetailPanel.tsx
+msgid "Run History"
+msgstr "Ausführungsverlauf"
+
+#: src/features/workflows/ui/WorkflowDetailPanel.tsx
+msgid "Run history could not be loaded."
+msgstr "Der Ausführungsverlauf konnte nicht geladen werden."
+
 #: src/features/agents/ui/RunOnSummarySection.tsx
 #: src/features/agents/ui/WhereToRunSection.tsx
 msgid "Run on"
 msgstr "Ausführen auf"
+
+#: src/features/workflows/ui/WorkflowDetailPanel.tsx
+msgid "running"
+msgstr "läuft"
 
 #: src/features/agents/ui/agentSessionToolCatalog.ts
 #: src/features/channels/ui/MembersSidebarMemberCard.tsx
@@ -11885,6 +12266,7 @@ msgstr "Karte speichern"
 #: src/features/agents/ui/useTeamActions.ts
 #: src/features/channels/ui/ChannelManagementSheet.tsx
 #: src/features/communities/ui/CommunityChangeOverlay.tsx
+#: src/features/workflows/ui/WorkflowDialog.tsx
 msgid "Save changes"
 msgstr "Änderungen speichern"
 
@@ -11899,6 +12281,10 @@ msgstr "Standardwerte speichern"
 #: src/features/settings/ui/ChannelTemplatesSettingsCard.tsx
 msgid "Save reusable channel configurations and apply them when creating new channels."
 msgstr "Speichere wiederverwendbare Kanalkonfigurationen und wende sie beim Anlegen neuer Kanäle an."
+
+#: src/features/workflows/ui/WorkflowDialog.tsx
+msgid "Save workflow name"
+msgstr "Workflow-Namen speichern"
 
 #: src/features/agents/ui/AgentCardViewerDialog.tsx
 msgid "Saved {agentName}'s card. Share it — the card IS the agent."
@@ -11963,6 +12349,7 @@ msgid "Saving..."
 msgstr "Wird gespeichert…"
 
 #: src/features/onboarding/ui/DefaultConfigStep.tsx
+#: src/features/workflows/ui/WorkflowDialog.tsx
 msgid "Saving…"
 msgstr "Wird gespeichert …"
 
@@ -12116,6 +12503,10 @@ msgstr "Wird gesucht …"
 #: src/features/projects/ui/PullRequestReviewersRow.tsx
 msgid "Searching…"
 msgstr "Suche läuft…"
+
+#: src/features/workflows/ui/workflowTemplateVariables.ts
+msgid "Seconds elapsed"
+msgstr "Vergangene Sekunden"
 
 #: src/features/sidebar/ui/ChannelSectionDialogs.tsx
 msgid "Section name"
@@ -12358,6 +12749,10 @@ msgstr "Gesendet aus dem Thread:"
 #: src/features/agents/ui/AgentSessionToolItem/SentMessageContextDialog.tsx
 msgid "Sent message context"
 msgstr "Kontext der gesendeten Nachricht"
+
+#: src/features/workflows/ui/workflowTemplateVariables.ts
+msgid "Sent message ID"
+msgstr "ID der gesendeten Nachricht"
 
 #: src/features/projects/ui/ProjectAgentSubmittedContextPill.tsx
 msgid "Sent project context"
@@ -13007,6 +13402,18 @@ msgstr "Status nicht verfügbar"
 msgid "Step {safeCurrentStep} of {safeTotalSteps}"
 msgstr "Schritt {safeCurrentStep} von {safeTotalSteps}"
 
+#: src/features/workflows/ui/WorkflowStepCard.tsx
+msgid "Step {stepNumber}"
+msgstr "Schritt {stepNumber}"
+
+#: src/features/workflows/ui/WorkflowStepCard.tsx
+msgid "Step details"
+msgstr "Schritt-Details"
+
+#: src/features/workflows/ui/WorkflowStepCard.tsx
+msgid "Step ID"
+msgstr "Schritt-ID"
+
 #: src/features/profile/ui/AnimatedAvatarReviewNav.tsx
 msgid "Still frame"
 msgstr "Standbild"
@@ -13460,6 +13867,10 @@ msgstr "Das konfigurierte Modell ist nicht verfügbar — öffne die Agent-Einst
 msgid "The download window will open when it’s ready."
 msgstr "Das Download-Fenster öffnet sich, sobald es fertig ist."
 
+#: src/features/workflows/ui/WorkflowDetailPanel.tsx
+msgid "The external action may have completed, but its outcome could not be confirmed."
+msgstr "Die externe Aktion wurde vielleicht abgeschlossen, ihr Ergebnis ließ sich aber nicht bestätigen."
+
 #: src/features/agents/ui/ManagedAgentSessionPanel.tsx
 msgid "The live feed is available for local agents started after this update."
 msgstr "Der Live-Feed ist für lokale Agenten verfügbar, die nach diesem Update gestartet wurden."
@@ -13491,6 +13902,10 @@ msgstr "Der Projekt-Agent baut es aus diesem Kanal auf."
 #: src/features/projects/lib/projectRepoAvailability.ts
 msgid "The project announcement exists, but its git repository was not found on the {productName} relay."
 msgstr "Die Projektankündigung existiert, aber das Git-Repository wurde auf dem Relay von {productName} nicht gefunden."
+
+#: src/features/workflows/ui/WorkflowDetailPanel.tsx
+msgid "The relay did not create a workflow run."
+msgstr "Das Relay hat keine Workflow-Ausführung erstellt."
 
 #: src/features/home/ui/HomeView.tsx
 msgid "The relay did not return a feed response."
@@ -13525,6 +13940,10 @@ msgstr "Das Review-Update konnte nicht veröffentlicht werden."
 #: src/features/settings/ui/AppearanceSettingsControls.tsx
 msgid "The revised conversation layout is ready to review."
 msgstr "Das überarbeitete Layout für Unterhaltungen kann geprüft werden."
+
+#: src/features/workflows/ui/WorkflowDetailPanel.tsx
+msgid "The run was interrupted before it could finish."
+msgstr "Die Ausführung wurde unterbrochen, bevor sie fertig werden konnte."
 
 #: src/features/settings/ui/AppearanceSettingsControls.tsx
 msgid "The same rhythm carries through channels, threads, DMs, and Inbox."
@@ -13852,6 +14271,10 @@ msgstr "Dieser Kopplungscode ist abgelaufen oder hat die Verbindung verloren. Er
 msgid "This person is already a community member."
 msgstr "Diese Person ist schon Community-Mitglied."
 
+#: src/features/workflows/ui/WorkflowDialog.tsx
+msgid "This private webhook secret cannot be recovered. Copy and store it before continuing, or explicitly leave it behind."
+msgstr "Dieses private Webhook-Secret lässt sich nicht wiederherstellen. Kopiere und speichere es, bevor du fortfährst – oder verzichte bewusst darauf."
+
 #: src/features/projects/ui/ProjectChannelRequestDialog.tsx
 msgid "this project"
 msgstr "diesem Projekt"
@@ -13924,6 +14347,10 @@ msgstr "Dieser Snapshot enthält Pubkey-Zulassungslisten aus der Quellumgebung f
 msgid "This snapshot includes source-environment pubkeys. Review every key before choosing Keep; Clear is safer when you do not recognize them."
 msgstr "Dieser Snapshot enthält Pubkeys aus der Quellumgebung. Prüfe jeden Schlüssel, bevor du Behalten wählst; Leeren ist sicherer, wenn du die Schlüssel nicht erkennst."
 
+#: src/features/workflows/ui/WorkflowStepCard.tsx
+msgid "This step will fail for webhook-triggered runs until a channel override is set."
+msgstr "Dieser Schritt scheitert bei Webhook-Ausführungen, solange kein Kanal überschrieben ist."
+
 #: src/features/agents/ui/personaModelDiscoveryStatus.ts
 msgid "This version of {productName} cannot use shared compute. Update {productName} or choose another provider."
 msgstr "Diese Version von {productName} kann keine geteilte Rechenleistung nutzen. Aktualisiere {productName} oder wähle einen anderen Anbieter."
@@ -13956,6 +14383,10 @@ msgstr "Damit wird diese Nachricht endgültig gelöscht. Das lässt sich nicht r
 #: src/features/onboarding/ui/MembershipDenied.tsx
 msgid "This will use this Nostr identity:"
 msgstr "Damit wird diese Nostr-Identität verwendet:"
+
+#: src/features/workflows/ui/workflowActivationWarning.ts
+msgid "This workflow may run often"
+msgstr "Dieser Workflow läuft möglicherweise häufig"
 
 #: src/features/channels/ui/FocusThreadDrawer.tsx
 #: src/features/home/lib/inbox.ts
@@ -14010,6 +14441,14 @@ msgstr "Threads öffnen sich über dem Kanal"
 msgid "Time out"
 msgstr "Auszeit geben"
 
+#: src/features/workflows/ui/WorkflowStepCard.tsx
+msgid "Timeout"
+msgstr "Zeitlimit"
+
+#: src/features/workflows/ui/WorkflowStepCard.tsx
+msgid "Timeout (optional)"
+msgstr "Zeitlimit (optional)"
+
 #: src/features/channels/ui/useMembersSidebarModeration.ts
 msgid "Timeout lifted"
 msgstr "Auszeit aufgehoben"
@@ -14021,6 +14460,10 @@ msgstr "Titel"
 #: src/features/messages/ui/NewMessageScreen.tsx
 msgid "To"
 msgstr "An"
+
+#: src/features/workflows/ui/WorkflowStepCard.tsx
+msgid "To (pubkey)"
+msgstr "An (Pubkey)"
 
 #: src/features/agents/ui/AddAgentToChannelDialog.tsx
 msgid "to a channel so desktop chat can `@mention` it. Running agents pick up new channels automatically via membership notifications."
@@ -14085,6 +14528,10 @@ msgstr "Tool"
 msgid "Tool call"
 msgstr "Tool-Aufruf"
 
+#: src/features/workflows/ui/WorkflowStepCard.tsx
+msgid "Topic"
+msgstr "Thema"
+
 #: src/features/huddle/components/HuddleBar.tsx
 msgid "Transcript failed: {message}"
 msgstr "Transkript fehlgeschlagen: {message}"
@@ -14116,10 +14563,23 @@ msgstr "translateX({0}%)"
 msgid "Triage task"
 msgstr "Aufgabe triagieren"
 
+#: src/features/workflows/ui/workflowTemplateVariables.ts
+msgid "Trigger"
+msgstr "Auslöser"
+
+#: src/features/workflows/ui/WorkflowDetailPanel.tsx
+msgctxt "button that runs a workflow now"
+msgid "Trigger"
+msgstr "Auslösen"
+
 #. placeholder {0}: ids.length === 1 ? "1 event" : `${ids.length} events`
 #: src/features/agents/ui/agentSessionTranscriptHelpers.ts
 msgid "Triggered by {0}."
 msgstr "Ausgelöst von {0}."
+
+#: src/features/workflows/ui/WorkflowDetailPanel.tsx
+msgid "Triggering..."
+msgstr "Wird ausgelöst..."
 
 #: src/features/channels/ui/ChannelBrowserDialog.tsx
 msgid "Try a different name or keyword."
@@ -14170,6 +14630,10 @@ msgstr "TTS-Modell: {0}"
 msgid "Turn error"
 msgstr "Turn-Fehler"
 
+#: src/features/workflows/ui/WorkflowDialog.tsx
+msgid "Turn it on to let it run immediately, or keep it off until you’re ready."
+msgstr "Schalte ihn ein, damit er sofort läuft, oder lass ihn aus, bis du bereit bist."
+
 #: src/features/messages/ui/ComposerAddressControls.tsx
 msgid "Turn off"
 msgstr "Ausschalten"
@@ -14182,9 +14646,17 @@ msgstr "Push-to-Talk ausschalten"
 msgid "Turn off Show unread only to see read activity."
 msgstr "Schalte „Nur ungelesene anzeigen“ aus, um gelesene Aktivität zu sehen."
 
+#: src/features/workflows/ui/WorkflowDialog.tsx
+msgid "Turn on"
+msgstr "Einschalten"
+
 #: src/features/huddle/components/MicControls.tsx
 msgid "Turn on Push to Talk"
 msgstr "Push-to-Talk einschalten"
+
+#: src/features/workflows/ui/WorkflowDialog.tsx
+msgid "Turn on this workflow?"
+msgstr "Diesen Workflow einschalten?"
 
 #: src/features/profile/ui/AnimatedAvatarControls.tsx
 msgid "Turn outline off"
@@ -14305,6 +14777,10 @@ msgstr "Vereinheitlicht"
 msgid "Uninitialized"
 msgstr "Nicht initialisiert"
 
+#: src/features/workflows/ui/workflowTemplateVariables.ts
+msgid "Unix timestamp"
+msgstr "Unix-Zeitstempel"
+
 #: src/features/agents/ui/UnifiedAgentsSection.tsx
 msgid "Unknown agents"
 msgstr "Unbekannte Agenten"
@@ -14424,6 +14900,10 @@ msgstr "Review ohne Titel"
 msgid "Untitled task"
 msgstr "Aufgabe ohne Titel"
 
+#: src/features/workflows/ui/WorkflowDialog.tsx
+msgid "Untitled workflow"
+msgstr "Workflow ohne Titel"
+
 #: src/features/agents/ui/AgentCardMintDialog.tsx
 #: src/features/settings/ui/HarnessCatalogDialog.tsx
 #: src/features/settings/ui/harnessCatalogLogic.ts
@@ -14497,6 +14977,10 @@ msgstr "Passe diese Kanalvorlage an."
 #: src/features/communities/ui/EditCommunityDialog.tsx
 msgid "Update this community's name or relay URL."
 msgstr "Aktualisier den Namen oder die Relay-URL dieser Community."
+
+#: src/features/workflows/ui/WorkflowDialog.tsx
+msgid "Update when this workflow runs and what it does."
+msgstr "Ändere, wann dieser Workflow läuft und was er tut."
 
 #: src/features/communities/ui/CommunityChangeOverlay.tsx
 msgid "Update your community name or relay URL."
@@ -14594,6 +15078,10 @@ msgstr "Wird hochgeladen…"
 #: src/features/messages/lib/useLinkEditor.tsx
 msgid "URL"
 msgstr "URL"
+
+#: src/features/workflows/ui/WorkflowStepCard.tsx
+msgid "URL must start with https://"
+msgstr "Die URL muss mit https:// beginnen"
 
 #: src/features/settings/ui/ChannelTemplatesSettingsCard.tsx
 msgid "Use {CHANNEL_NAME_TOKEN} and {TEMPLATE_NAME_TOKEN} as placeholders."
@@ -14719,6 +15207,10 @@ msgstr "Deinen bestehenden Schlüssel verwenden"
 #: src/features/agents/ui/agentConfigOptions.tsx
 msgid "Used for minting agent trading cards"
 msgstr "Wird zum Prägen von Agenten-Sammelkarten verwendet"
+
+#: src/features/workflows/ui/WorkflowStepCard.tsx
+msgid "Used in configuration and run history."
+msgstr "Wird in der Konfiguration und im Ausführungsverlauf verwendet."
 
 #: src/features/agents/ui/agentSessionTranscriptPresentation.ts
 msgid "User prompt"
@@ -15055,6 +15547,10 @@ msgstr "Lautstärke"
 msgid "Wait for the video message to finish sending."
 msgstr "Warte, bis die Videonachricht gesendet ist."
 
+#: src/features/workflows/ui/WorkflowDetailPanel.tsx
+msgid "waiting approval"
+msgstr "wartet auf Freigabe"
+
 #: src/features/agents/ui/AgentSessionTranscriptList.tsx
 msgid "Waiting for ACP activity"
 msgstr "Warte auf ACP-Aktivität"
@@ -15062,6 +15558,10 @@ msgstr "Warte auf ACP-Aktivität"
 #: src/features/settings/ui/PreventSleepSettingsCard.tsx
 msgid "Waiting for agents to start"
 msgstr "Warten auf startende Agenten"
+
+#: src/features/workflows/ui/WorkflowDetailPanel.tsx
+msgid "Waiting for its persisted trace…"
+msgstr "Warten auf das gespeicherte Protokoll…"
 
 #: src/features/messages/ui/VoiceNoteRecorder.tsx
 msgid "Waiting for microphone access"
@@ -15197,6 +15697,14 @@ msgstr "Wenn jemand in einem Thread antwortet, dem du folgst oder in dem du gesc
 msgid "When someone tags you in a channel."
 msgstr "Wenn dich jemand in einem Kanal erwähnt."
 
+#: src/features/workflows/ui/workflowTemplateVariables.ts
+msgid "Whether the message was sent"
+msgstr "Ob die Nachricht gesendet wurde"
+
+#: src/features/workflows/ui/workflowTemplateVariables.ts
+msgid "Whether the reaction was added"
+msgstr "Ob die Reaktion hinzugefügt wurde"
+
 #: src/features/projects/ui/ProjectsAgentPromptPage.tsx
 msgid "Which reviews need attention today?"
 msgstr "Welche Reviews brauchen heute Aufmerksamkeit?"
@@ -15251,6 +15759,22 @@ msgstr "mit erhält eine Kopie, die sich hinzufügen und nutzen lässt. Änderun
 #: src/features/settings/ui/EncryptedBackupCreator.tsx
 msgid "Words"
 msgstr "Wörter"
+
+#: src/features/workflows/ui/WorkflowDialog.tsx
+msgid "Workflow"
+msgstr "Workflow"
+
+#: src/features/workflows/ui/workflowTemplateVariables.ts
+msgid "Workflow channel UUID"
+msgstr "UUID des Workflow-Kanals"
+
+#: src/features/workflows/ui/WorkflowDialog.tsx
+msgid "Workflow editor mode"
+msgstr "Modus des Workflow-Editors"
+
+#: src/features/workflows/ui/WorkflowDialog.tsx
+msgid "Workflow name"
+msgstr "Workflow-Name"
 
 #: src/features/channels/ui/ChannelManagementSheet.tsx
 #: src/features/sidebar/ui/AppSidebarPinnedHeader.tsx
@@ -15525,6 +16049,10 @@ msgstr "Deine Runtimes"
 #: src/features/onboarding/ui/BackupStep.tsx
 msgid "Your system keychain wasn’t available, so {0} keeps your identity key in a private file on this device."
 msgstr "Dein Systemschlüsselbund war nicht verfügbar, daher bewahrt {0} deinen Identitätsschlüssel in einer privaten Datei auf diesem Gerät auf."
+
+#: src/features/workflows/ui/WorkflowDialog.tsx
+msgid "Your unsaved workflow changes will be lost."
+msgstr "Deine nicht gespeicherten Workflow-Änderungen gehen verloren."
 
 #: src/features/onboarding/ui/CommunityOnboardingFlow.tsx
 msgid "Your username"
