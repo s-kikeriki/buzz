@@ -75,7 +75,7 @@ export function ToolDetailBlocks({
           />
         ) : (
           <ToolCodeBlock
-            label={isError ? "Error" : "Result"}
+            label={isError ? t`Error` : t`Result`}
             tone={isError ? "error" : "muted"}
             value={result}
           />

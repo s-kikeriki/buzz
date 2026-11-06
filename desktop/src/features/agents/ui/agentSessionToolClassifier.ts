@@ -1,8 +1,7 @@
-import { t } from "@lingui/core/macro";
+import { plural, t } from "@lingui/core/macro";
 import type {
   AgentActivityAction,
   AgentActivityDescriptor,
-  AgentActivityRenderClass,
   AgentActivityTone,
   TranscriptItem,
 } from "./agentSessionTypes";
@@ -85,23 +84,18 @@ const BUZZ_CLI_READ_VERBS = new Set([
   "notes",
 ]);
 
-const TOOL_CLASS_LABELS: Record<AgentActivityRenderClass, string> = {
-  message: "Message",
-  "relay-op": `${BRAND.productName} relay op`,
-  "file-edit": "File edit",
-  "file-read": "File read",
-  "skill-read": "Skill read",
-  image: "Image",
-  shell: "Shell command",
-  status: "Status",
-  thought: "Thought",
-  plan: "Plan",
-  permission: "Permission",
-  error: "Error",
-  generic: "Tool",
-  "raw-rail": "Raw event",
-  suppressed: "Suppressed",
-};
+/**
+ * Mark an activity label as a failure.
+ *
+ * One descriptor can pass through both this file and `labelForStatus`, so the
+ * suffix has to be idempotent. It used to be deduplicated with
+ * `label.endsWith("failed")` — a test against English on an already-translated
+ * label, which never matched, so German rows read "Datei gelesen failed".
+ * `labelIsFailure` records the fact instead of re-reading the copy.
+ */
+export function failureLabel(label: string): string {
+  return t`${label} failed`;
+}
 
 const providers: ToolClassifierProvider[] = [
   classifyLoadSkillTool,
@@ -119,9 +113,10 @@ export function classifyTool(
         ? {
             ...descriptor,
             renderClass: "error",
-            label: descriptor.label.endsWith("failed")
+            label: descriptor.labelIsFailure
               ? descriptor.label
-              : `${descriptor.label} failed`,
+              : failureLabel(descriptor.label),
+            labelIsFailure: true,
           }
         : descriptor;
     }
@@ -141,10 +136,6 @@ export function classifyToolItem(item: ToolItem): AgentActivityDescriptor {
   });
 }
 
-export function renderClassLabel(renderClass: AgentActivityRenderClass) {
-  return TOOL_CLASS_LABELS[renderClass];
-}
-
 function classifyLoadSkillTool(
   input: ToolClassificationInput,
 ): AgentActivityDescriptor | null {
@@ -154,14 +145,14 @@ function classifyLoadSkillTool(
   if (!isLoadSkill) return null;
 
   const skillRef = getToolString(input.args, ["name"]);
-  const object = skillRef ?? "skill";
+  const object = skillRef ?? t`skill`;
   const isSupportingFile = skillRef?.includes("/") ?? false;
 
   return {
     renderClass: "skill-read",
     label: isSupportingFile ? t`Read skill file` : t`Read skill`,
     preview: skillRef,
-    action: { verb: "Read", object },
+    action: { verb: t`Read`, object },
     source: "harness",
     groupKey: isSupportingFile ? "skill:load-file" : "skill:load",
   };
@@ -183,7 +174,7 @@ function classifyDeveloperHarnessTool(
       renderClass: "shell",
       label: t`Ran command`,
       preview: command,
-      action: { verb: "Ran", object: command ?? "command" },
+      action: { verb: t`Ran`, object: command ?? t`command` },
       source: "harness",
       groupKey: "shell:command",
     };
@@ -195,7 +186,7 @@ function classifyDeveloperHarnessTool(
       renderClass: "file-read",
       label: t`Read file`,
       preview: path,
-      action: { verb: "Read", object: path ?? "file" },
+      action: { verb: t`Read`, object: path ?? t`file` },
       source: "harness",
       groupKey: "read_file",
     };
@@ -208,8 +199,8 @@ function classifyDeveloperHarnessTool(
       label: t`Viewed image`,
       preview: source ? basenameOrUrl(source) : null,
       action: {
-        verb: "Viewed",
-        object: source ? basenameOrUrl(source) : "image",
+        verb: t`Viewed`,
+        object: source ? basenameOrUrl(source) : t`image`,
       },
       source: "harness",
       groupKey: "view_image",
@@ -222,7 +213,7 @@ function classifyDeveloperHarnessTool(
       renderClass: "file-edit",
       label: t`Edited file`,
       preview: path,
-      action: { verb: "Edited", object: path ?? "file" },
+      action: { verb: t`Edited`, object: path ?? t`file` },
       source: "harness",
       groupKey: "file-edit:str_replace",
     };
@@ -234,7 +225,7 @@ function classifyDeveloperHarnessTool(
       renderClass: "plan",
       label: t`Updated todos`,
       preview,
-      action: { verb: "Updated", object: preview },
+      action: { verb: t`Updated`, object: preview },
       source: "harness",
       groupKey: "plan:todo",
     };
@@ -245,7 +236,7 @@ function classifyDeveloperHarnessTool(
       renderClass: "suppressed",
       label: t`Checked todos`,
       preview: null,
-      action: { verb: "Checked", object: "todos" },
+      action: { verb: t`Checked`, object: t`todos` },
       source: "harness",
       groupKey: "suppressed:stop-hook",
     };
@@ -256,7 +247,7 @@ function classifyDeveloperHarnessTool(
       renderClass: "status",
       label: t`Context compacted`,
       preview: null,
-      action: { verb: "Compacted", object: "context" },
+      action: { verb: t`Compacted`, object: t`context` },
       source: "harness",
       groupKey: "status:post-compact",
     };
@@ -267,7 +258,7 @@ function classifyDeveloperHarnessTool(
     renderClass: "generic",
     label: t`Ran tool`,
     preview,
-    action: { verb: "Ran", object: preview ?? "tool" },
+    action: { verb: t`Ran`, object: preview ?? t`tool` },
     source: "harness",
     groupKey: "generic:dev-mcp",
   };
@@ -308,7 +299,7 @@ function genericDescriptor(
     renderClass: "generic",
     label: t`Ran tool`,
     preview,
-    action: { verb: "Ran", object: preview ?? "tool" },
+    action: { verb: t`Ran`, object: preview ?? t`tool` },
     source: "fallback",
     groupKey: `generic:${normalizeToolNameText(input.toolName || input.title)}`,
   };
@@ -416,24 +407,31 @@ function buzzOperationVerbToken(operation: string) {
   return operation.split("_")[0] ?? "run";
 }
 
+/**
+ * Past-tense verb for a relay operation, resolved at call time.
+ *
+ * Deliberately a function of `verb` rather than a module-level lookup table:
+ * a `Record<string, string>` built with `t` at import time freezes every verb
+ * in whichever locale happened to be active when the module first loaded.
+ */
 function buzzOperationVerb(verb: string, tone: AgentActivityTone) {
-  if (verb === "add") return "Added";
-  if (verb === "archive") return "Archived";
-  if (verb === "create") return "Created";
-  if (verb === "delete") return "Deleted";
-  if (verb === "get" || verb === "list" || verb === "members") return "Read";
-  if (verb === "remove") return "Removed";
-  if (verb === "runs") return "Read";
-  if (verb === "search") return "Searched";
-  if (verb === "send") return "Sent";
-  if (verb === "thread") return "Read";
-  if (verb === "unarchive") return "Unarchived";
-  if (tone === "read") return "Read";
-  return "Updated";
+  if (verb === "add") return t`Added`;
+  if (verb === "archive") return t`Archived`;
+  if (verb === "create") return t`Created`;
+  if (verb === "delete") return t`Deleted`;
+  if (verb === "get" || verb === "list" || verb === "members") return t`Read`;
+  if (verb === "remove") return t`Removed`;
+  if (verb === "runs") return t`Read`;
+  if (verb === "search") return t`Searched`;
+  if (verb === "send") return t`Sent`;
+  if (verb === "thread") return t`Read`;
+  if (verb === "unarchive") return t`Unarchived`;
+  if (tone === "read") return t`Read`;
+  return t`Updated`;
 }
 
 function buzzOperationObject(operation: string) {
-  if (isBuzzMessageSend(operation)) return "message";
+  if (isBuzzMessageSend(operation)) return t`message`;
   if (operation.includes(".")) {
     const [group] = operation.split(".");
     return group ? group.replace(/[-_]+/g, " ") : BRAND.productName;
@@ -630,8 +628,8 @@ function basenameOrUrl(source: string): string {
 
 function getTodoPreview(args: Record<string, unknown>): string | null {
   const todos = args.todos;
-  if (!Array.isArray(todos)) return "todo list";
-  if (todos.length === 0) return "empty list";
+  if (!Array.isArray(todos)) return t`todo list`;
+  if (todos.length === 0) return t`empty list`;
   const first = todos[0];
   const firstText =
     first && typeof first === "object"
@@ -639,5 +637,6 @@ function getTodoPreview(args: Record<string, unknown>): string | null {
       : null;
   if (firstText)
     return todos.length > 1 ? `${firstText} (+${todos.length - 1})` : firstText;
-  return `${todos.length} item${todos.length === 1 ? "" : "s"}`;
+  const count = todos.length;
+  return plural(count, { one: "# item", other: "# items" });
 }

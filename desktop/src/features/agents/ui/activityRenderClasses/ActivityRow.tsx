@@ -19,6 +19,15 @@ export type ActivityRowToneScope = "none" | "tool" | "summary";
 type ActivityRowProps = {
   children: React.ReactNode;
   className?: string;
+  /**
+   * Which lifecycle branch rendered this row, for tests.
+   *
+   * The branch is chosen from the item's render class, which the transcript
+   * derives from the observer event kind. It used to be derived from the row's
+   * title, so a regression there is invisible in the DOM apart from a Tailwind
+   * colour — this exposes the decision itself.
+   */
+  dataLifecycleTone?: "status" | "error" | "permission";
   openToneScope?: Exclude<ActivityRowToneScope, "none">;
   testId?: string;
   title?: string;
@@ -38,6 +47,7 @@ type ActivityRowContentComponent = React.FC<ActivityRowContentProps> & {
 export function ActivityRow({
   children,
   className,
+  dataLifecycleTone,
   openToneScope = "tool",
   testId,
   title,
@@ -52,6 +62,7 @@ export function ActivityRow({
     return (
       <div
         className={cn("not-prose flex min-h-6 items-center gap-1.5", className)}
+        data-lifecycle-tone={dataLifecycleTone}
         data-testid={testId}
         title={title}
       >
@@ -67,6 +78,7 @@ export function ActivityRow({
         "not-prose w-full",
         className,
       )}
+      data-lifecycle-tone={dataLifecycleTone}
       data-testid={testId}
       title={title}
     >

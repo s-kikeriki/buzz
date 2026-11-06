@@ -110,7 +110,7 @@ function buildSentMessageContextSections({
   }
   if (hasResult) {
     sections.push({
-      title: isError ? "Error" : "Result",
+      title: isError ? t`Error` : t`Result`,
       body: formatCodeValue(result),
     });
   }

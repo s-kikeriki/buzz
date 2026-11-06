@@ -1,5 +1,7 @@
 import * as React from "react";
 import { ChevronDown } from "lucide-react";
+import { t } from "@lingui/core/macro";
+import { useLingui } from "@lingui/react/macro";
 
 import { cn } from "@/shared/lib/cn";
 import { useAgentSessionTranscriptVariant } from "../agentSessionTranscriptContext";
@@ -143,6 +145,9 @@ function CompactFileEditSummaryView({
 }: {
   summary: CompactFileEditSummary;
 }) {
+  // Subscribes the row to locale changes so the verb re-renders on a switch.
+  const { i18n } = useLingui();
+  void i18n;
   return (
     <ActivityRowLabel
       className="max-w-72"
@@ -153,7 +158,7 @@ function CompactFileEditSummaryView({
         deletions: summary.deletions,
       }}
       title={summary.path}
-      verb="Edited"
+      verb={t`Edited`}
     />
   );
 }

@@ -1,4 +1,4 @@
-import { t } from "@lingui/core/macro";
+import { plural, t } from "@lingui/core/macro";
 import { buildTranscriptState } from "./agentSessionTranscript";
 import type { ObserverEvent, TranscriptItem } from "./agentSessionTypes";
 import { classifyToolItem } from "./agentSessionToolClassifier";
@@ -367,16 +367,20 @@ function sameKindKey(item: TranscriptItem): string | null {
 }
 
 function sameKindLabel(item: TranscriptItem, count: number): string {
-  if (item.type !== "tool") return `${count} items`;
+  if (item.type !== "tool") {
+    return plural(count, { one: "# item", other: "# items" });
+  }
   const descriptor = item.descriptor ?? classifyToolItem(item);
   const renderClass = getRenderClass(item);
   const label = descriptor.label;
   if (renderClass === "file-edit") {
-    return `Edited ${count} file${count === 1 ? "" : "s"}`;
+    return plural(count, { one: "Edited # file", other: "Edited # files" });
   }
-  if (renderClass === "file-read") return `Read ${count} files`;
+  if (renderClass === "file-read") {
+    return plural(count, { one: "Read # file", other: "Read # files" });
+  }
   if (renderClass === "skill-read") {
-    return `Read ${count} skill${count === 1 ? "" : "s"}`;
+    return plural(count, { one: "Read # skill", other: "Read # skills" });
   }
   if (renderClass === "shell") return t`Ran ${count} commands`;
   if (renderClass === "relay-op")

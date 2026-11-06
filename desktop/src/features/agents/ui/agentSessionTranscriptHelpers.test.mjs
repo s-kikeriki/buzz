@@ -10,6 +10,8 @@ import {
 
 const HEX = "a".repeat(64);
 const HEX_UPPER = "A".repeat(64);
+const HEX_B = "b".repeat(64);
+const HEX_C = "c".repeat(64);
 
 test("parsePromptText returns the empty/Prompt fallback for whitespace-only input", () => {
   // The early `sections.length === 0` branch only fires when there are no
@@ -185,16 +187,66 @@ test("parsePromptText splits paired top-level turn sections and preserves inner 
 
   assert.equal(parsed.userText, "ship it");
   assert.deepEqual(parsed.sections, [
-    { title: "Context", body: "Scope: thread" },
+    { tag: "context", title: "Context", body: "Scope: thread" },
     {
+      tag: "thread-context",
       title: "Thread Context (1 of 3 messages, truncated)",
       body: "[1] Alice (2026-08-25T12:00:00Z): prior message",
     },
     {
+      tag: "buzz-event",
       title: "Buzz event: @mention",
       body: "Event ID: abc123\nFrom: Alice (hex: AABBCC)\nContent: ship it",
     },
   ]);
+});
+
+test("parsePromptText finds the event section by tag, not by its heading", () => {
+  // The heading is both translated and brand-dependent, so the lookup that
+  // produces `userText` missed under any locale but English and any product
+  // name but "Buzz" — losing the message body, its author and its channel
+  // link. The tag is protocol and carries neither.
+  //
+  // Unit tests run in `en` by `test-loader.mjs`, so this asserts the seam:
+  // the tag is parsed and carried. That a `de` build actually resolves the
+  // event is asserted against a rendered app in
+  // `tests/e2e/agents-transcript-german.spec.ts`.
+  const text = [
+    '<buzz-event type="@mention">',
+    `Event ID: ${HEX_B}`,
+    `From: Alice (hex: ${HEX})`,
+    "Content: ship it",
+    "</buzz-event>",
+  ].join("\n");
+
+  const parsed = parsePromptText(text);
+
+  assert.equal(parsed.sections.length, 1);
+  assert.equal(parsed.sections[0].tag, "buzz-event");
+  assert.equal(parsed.userText, "ship it");
+  assert.equal(parsed.userPubkey, HEX);
+  assert.equal(parsed.userEventId, HEX_B);
+});
+
+test("parsePromptText still finds archived bracket-framed event sections", () => {
+  // Bracket-framed observer history predates paired tags and carries no tag,
+  // so its English `[Buzz Event: …]` header remains the only handle.
+  const text = [
+    "[Buzz Event: @mention]",
+    `Event ID: ${HEX_B}`,
+    `From: Bob (hex: ${HEX_C})`,
+    "Content: on it",
+  ].join("\n");
+
+  const parsed = parsePromptText(text);
+
+  const eventSection = parsed.sections.find(
+    (s) => s.title === "Buzz Event: @mention",
+  );
+  assert.ok(eventSection, "bracket header is still parsed into a section");
+  assert.equal(eventSection.tag, undefined, "bracket framing carries no tag");
+  assert.equal(parsed.userText, "on it");
+  assert.equal(parsed.userPubkey, HEX_C);
 });
 
 test("parsePromptText preserves batched steer and interrupt counts in section titles", () => {

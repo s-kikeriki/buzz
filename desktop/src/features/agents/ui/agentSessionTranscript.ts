@@ -3,6 +3,7 @@ import type {
   AgentActivityDescriptor,
   AgentActivityRenderClass,
   ObserverEvent,
+  PermissionDecision,
   PromptSection,
   ToolStatus,
   TranscriptItem,
@@ -174,11 +175,16 @@ function stringifyPayload(value: unknown) {
 
 function describePermissionRequest(payload: Record<string, unknown>) {
   const params = asRecord(payload.params);
-  const title =
+  // Whether the request carried its own title decides both the heading and
+  // whether that heading is repeated in the body. Comparing the resolved
+  // title against the English fallback cannot answer that once the fallback
+  // is translated — it never matches, so every untitled request duplicated
+  // its heading into the detail block.
+  const payloadTitle =
     asString(params.title) ??
     asString(params.message) ??
-    asString(params.reason) ??
-    t`Permission requested`;
+    asString(params.reason);
+  const title = payloadTitle ?? t`Permission requested`;
   const toolCallId =
     asString(params.toolCallId) ?? asString(params.tool_call_id);
   const options = Array.isArray(params.options)
@@ -194,9 +200,14 @@ function describePermissionRequest(payload: Record<string, unknown>) {
         .filter((option): option is string => Boolean(option))
     : [];
   const detail: string[] = [];
-  if (title !== "Permission requested") detail.push(title);
-  if (toolCallId) detail.push(`Tool call: ${toolCallId}`);
-  if (options.length > 0) detail.push(`Options: ${options.join(", ")}`);
+  if (payloadTitle) detail.push(payloadTitle);
+  if (toolCallId) detail.push(t`Tool call: ${toolCallId}`);
+  // The options line is carried separately rather than appended to `text` and
+  // recovered later with `startsWith("Options: ")`: that prefix is translated
+  // copy, so the split silently stopped finding it outside English and the
+  // options rendered inline with the request instead of as their own row.
+  const optionList = options.length > 0 ? options.join(", ") : null;
+  const optionsText = optionList === null ? null : t`Options: ${optionList}`;
 
   // Build optionId → kind map for outcome labeling on the response.
   const optionNames = new Map<string, string>();
@@ -214,12 +225,13 @@ function describePermissionRequest(payload: Record<string, unknown>) {
   return {
     title,
     text: detail.join("\n"),
+    optionsText,
     optionNames,
     descriptor: {
       renderClass: "permission" as const,
       label: t`Permission requested`,
       preview: title,
-      action: { verb: "Requested", object: title },
+      action: { verb: t`Requested`, object: title },
       tone: "admin" as const,
       operation: "session/request_permission",
       object: title,
@@ -230,25 +242,31 @@ function describePermissionRequest(payload: Record<string, unknown>) {
 }
 
 /**
- * Format a human-readable outcome label from a permission response.
+ * Format a permission response into display copy plus the decision behind it.
  * kind values from ACP: allow_once, allow_always, reject_once, reject_always.
  * "reject_*" kinds are denials; anything else that is selected is an approval.
+ *
+ * The decision is returned rather than recovered from the text so the row's
+ * tone and icon never depend on the display locale. `kind` is an ACP
+ * identifier and stays verbatim inside the parentheses.
  */
 function describePermissionOutcome(
   outcome: string,
   optionId: string | null,
   optionNames: Map<string, string>,
-): string {
+): { text: string; decision: PermissionDecision | undefined } {
   if (outcome === "cancelled") {
-    return "Cancelled";
+    return { text: t`Cancelled`, decision: "cancelled" };
   }
   if (outcome === "selected" && optionId) {
     const kind = optionNames.get(optionId) ?? optionId;
     const isDenial = kind.startsWith("reject");
-    const verb = isDenial ? "Denied" : "Approved";
-    return `${verb} (${kind})`;
+    return {
+      text: isDenial ? t`Denied (${kind})` : t`Approved (${kind})`,
+      decision: isDenial ? "denied" : "approved",
+    };
   }
-  return outcome;
+  return { text: outcome, decision: undefined };
 }
 
 /**
@@ -381,13 +399,30 @@ function upsertTextItem(
   upsertLifecycleItem(
     d,
     id,
-    title.toLowerCase().includes("error") ? "error" : "status",
+    isLifecycleErrorSource(acpSource) ? "error" : "status",
     title,
     text,
     timestamp,
     ctx,
     acpSource,
   );
+}
+
+/**
+ * Observer event kinds whose lifecycle row is an error.
+ *
+ * Keyed on the wire kind rather than on the row's title: the title is display
+ * copy, so `title.includes("error")` classified every non-English error row as
+ * an ordinary status row and dropped its error styling.
+ */
+const LIFECYCLE_ERROR_SOURCES = new Set([
+  "acp_parse_error",
+  "turn_error",
+  "agent_panic",
+]);
+
+export function isLifecycleErrorSource(acpSource: string | undefined): boolean {
+  return acpSource !== undefined && LIFECYCLE_ERROR_SOURCES.has(acpSource);
 }
 
 function joinLifecycleText(existing: string, next: string) {
@@ -409,6 +444,7 @@ function upsertLifecycleItem(
   ctx: TranscriptItemContext,
   acpSource?: string,
   descriptor?: AgentActivityDescriptor,
+  optionsText?: string | null,
 ) {
   const existing = d.itemsById.get(id);
   if (existing?.type === "lifecycle") {
@@ -418,6 +454,7 @@ function upsertLifecycleItem(
       title,
       text: joinLifecycleText(existing.text, text),
       descriptor: descriptor ?? existing.descriptor,
+      optionsText: optionsText ?? existing.optionsText,
       channelId: ctx.channelId,
       turnId: ctx.turnId ?? existing.turnId,
       sessionId: ctx.sessionId ?? existing.sessionId,
@@ -435,6 +472,7 @@ function upsertLifecycleItem(
     text,
     timestamp,
     descriptor,
+    optionsText: optionsText ?? undefined,
     channelId: ctx.channelId,
     turnId: ctx.turnId,
     sessionId: ctx.sessionId,
@@ -720,7 +758,7 @@ export function processTranscriptEvent(
     upsertMetadata(
       d,
       `raw-json-rpc:${ch}:${event.seq}`,
-      "Raw ACP payload",
+      t`Raw ACP payload`,
       [
         {
           title: rawPayloadTitle(event.payload),
@@ -742,7 +780,7 @@ export function processTranscriptEvent(
       d,
       `turn:${ch}:${event.turnId ?? event.seq}`,
       "lifecycle",
-      "Turn started",
+      t`Turn started`,
       describeTurnStarted(event.payload),
       event.timestamp,
       ctx,
@@ -753,7 +791,7 @@ export function processTranscriptEvent(
       d,
       `session:${ch}:${event.turnId ?? event.seq}`,
       "lifecycle",
-      "Session ready",
+      t`Session ready`,
       describeSessionResolved(event.payload),
       event.timestamp,
       ctx,
@@ -764,7 +802,7 @@ export function processTranscriptEvent(
       d,
       `parse-error:${ch}:${event.seq}`,
       "lifecycle",
-      "Wire parse error",
+      t`Wire parse error`,
       extractBlockText(event.payload),
       event.timestamp,
       ctx,
@@ -798,12 +836,13 @@ export function processTranscriptEvent(
         d,
         itemId,
         "permission",
-        "Permission requested",
+        t`Permission requested`,
         request.text,
         event.timestamp,
         ctx,
         "permission_request",
         request.descriptor,
+        request.optionsText,
       );
       // Index by JSON-RPC id so the response (acp_write with result.outcome,
       // no method) can correlate by id rather than by turn/seq.
@@ -823,7 +862,7 @@ export function processTranscriptEvent(
       const pending = responseId ? d.pendingPermissions.get(responseId) : null;
       if (pending && outcomeKind && responseId) {
         const optionId = asString(result.optionId) ?? null;
-        const outcomeText = describePermissionOutcome(
+        const resolved = describePermissionOutcome(
           outcomeKind,
           optionId,
           pending.optionNames,
@@ -832,7 +871,8 @@ export function processTranscriptEvent(
         if (existing?.type === "lifecycle") {
           replaceItem(d, pending.itemId, {
             ...existing,
-            outcome: outcomeText,
+            outcome: resolved.text,
+            outcomeDecision: resolved.decision,
           });
           // Remove from pending map — the outcome is now recorded.
           d.pendingPermissions = new Map(d.pendingPermissions);
@@ -862,7 +902,7 @@ export function processTranscriptEvent(
           upsertMetadata(
             d,
             `prompt-context:${ch}:${event.turnId ?? event.seq}`,
-            "Prompt context",
+            t`Prompt context`,
             parsedPrompt.sections,
             event.timestamp,
             ctx,
@@ -890,7 +930,7 @@ export function processTranscriptEvent(
           upsertMetadata(
             d,
             `system-prompt:${ch}:${event.seq}:${event.timestamp}`,
-            "System prompt",
+            t`System prompt`,
             sections,
             event.timestamp,
             { ...ctx, turnId: null },
@@ -923,7 +963,7 @@ export function processTranscriptEvent(
           upsertMetadata(
             d,
             `steer-context:${ch}:${event.turnId ?? event.seq}`,
-            "Prompt context",
+            t`Prompt context`,
             parsedPrompt.sections,
             event.timestamp,
             ctx,
@@ -943,7 +983,7 @@ export function processTranscriptEvent(
           d,
           `assistant:${ch}:${messageId ?? turnKey}`,
           "assistant",
-          "Assistant",
+          t`Assistant`,
           extractContentText(update.content),
           event.timestamp,
           ctx,
@@ -961,7 +1001,7 @@ export function processTranscriptEvent(
             d,
             `user:${ch}:${messageId ?? turnKey}`,
             "user",
-            "User",
+            t`User`,
             extractContentText(update.content),
             event.timestamp,
             ctx,
@@ -975,7 +1015,7 @@ export function processTranscriptEvent(
           d,
           `thinking:${ch}:${messageId ?? turnKey}`,
           "thought",
-          "Thinking",
+          t`Thinking`,
           extractContentText(update.content),
           event.timestamp,
           ctx,
@@ -1022,7 +1062,7 @@ export function processTranscriptEvent(
         upsertPlan(
           d,
           `plan:${ch}:${turnKey}`,
-          "Plan",
+          t`Plan`,
           extractPlanText(update),
           event.timestamp,
           ctx,
@@ -1036,7 +1076,7 @@ export function processTranscriptEvent(
             d,
             `mode:${ch}:${turnKey}`,
             "status",
-            "Mode",
+            t`Mode`,
             mode,
             event.timestamp,
             ctx,
@@ -1059,7 +1099,7 @@ export function processTranscriptEvent(
             d,
             `usage:${ch}:${turnKey}`,
             "status",
-            "Usage",
+            t`Usage`,
             `Tokens: ${used}/${size}${costStr}`,
             event.timestamp,
             ctx,
@@ -1074,7 +1114,7 @@ export function processTranscriptEvent(
           d,
           `commands:${ch}:${turnKey}`,
           "status",
-          "Commands",
+          t`Commands`,
           t`Commands available: ${cmds.length}`,
           event.timestamp,
           ctx,
@@ -1099,7 +1139,7 @@ export function processTranscriptEvent(
             d,
             `config:${ch}:${turnKey}`,
             "status",
-            "Config",
+            t`Config`,
             optText,
             event.timestamp,
             ctx,

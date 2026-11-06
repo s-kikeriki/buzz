@@ -54,7 +54,7 @@ export function UserMessageBubble({
         fallbackName: item.title,
         profiles,
       })
-    : item.title || "User";
+    : item.title || t`User`;
   const handleBubbleClick = React.useCallback(
     (event: React.MouseEvent<HTMLDivElement>) => {
       if (!messageLink || isNestedInteractiveTarget(event)) return;

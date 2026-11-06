@@ -1,4 +1,4 @@
-import { t } from "@lingui/core/macro";
+import { plural, t } from "@lingui/core/macro";
 import type { ObserverEvent, PromptSection } from "./agentSessionTypes";
 import {
   findBuzzToolName,
@@ -70,15 +70,17 @@ export function parsePromptText(text: string): {
     return {
       sections: [],
       userText: text.trim(),
-      userTitle: "Prompt",
+      userTitle: t`Prompt`,
       userPubkey: null,
       userEventId: null,
     };
   }
 
   const eventSection = sections.find((section) => {
-    const title = section.title.toLowerCase();
-    return title.startsWith("buzz event");
+    // Paired-tag framing carries its wire tag; archived bracket-framed history
+    // has none, so its English `[Buzz Event: …]` header is still matched.
+    if (section.tag) return section.tag === "buzz-event";
+    return section.title.toLowerCase().startsWith("buzz event");
   });
   const eventContent = eventSection
     ? extractEventContent(eventSection.body)
@@ -324,24 +326,64 @@ export function parseSystemPromptSections(
 }
 
 /**
+ * Wire tags for the paired standing-context sections, in producer order.
+ *
+ * The tags are protocol, emitted by `compose_prompt()` in
+ * buzz-persona/src/resolve.rs, and stay verbatim. Only their headings are copy.
+ */
+const SEMANTIC_SECTION_TAGS = [
+  "workspace",
+  "base",
+  "agent-instructions",
+  // Preserve diagnostics for sessions captured before this tag was renamed.
+  "system",
+  "team-instructions",
+  "core-memory",
+  "huddle-instructions",
+  "channel-canvas",
+] as const;
+
+type SemanticSectionTag = (typeof SEMANTIC_SECTION_TAGS)[number];
+
+/**
+ * Heading for a standing-context section.
+ *
+ * A function rather than the two `Record<string, string>` tables this
+ * replaced: those held raw English, and resolving them with `t` where they
+ * stood would have frozen all eight headings in the locale that first ran the
+ * enclosing function.
+ */
+function semanticSectionTitle(tag: string): string {
+  switch (tag as SemanticSectionTag) {
+    case "workspace":
+      return t`Workspace`;
+    case "base":
+      return t`Base`;
+    case "agent-instructions":
+      return t`Agent Instructions`;
+    case "system":
+      return t`System`;
+    case "team-instructions":
+      return t`Team Instructions`;
+    case "core-memory":
+      return t`Core Memory`;
+    case "huddle-instructions":
+      return t`Huddle Instructions`;
+    case "channel-canvas":
+      return t`Channel Canvas`;
+    default:
+      return tag;
+  }
+}
+
+/**
  * Split current paired-tag standing context while retaining the bracket parser
  * below for observer history captured before the framing experiment.
  */
 function parseSemanticStandingSections(
   systemPrompt: string,
 ): PromptSection[] | null {
-  const titles: Record<string, string> = {
-    workspace: "Workspace",
-    base: "Base",
-    "agent-instructions": "Agent Instructions",
-    // Preserve diagnostics for sessions captured before this tag was renamed.
-    system: "System",
-    "team-instructions": "Team Instructions",
-    "core-memory": "Core Memory",
-    "huddle-instructions": "Huddle Instructions",
-    "channel-canvas": "Channel Canvas",
-  };
-  const tags = Object.keys(titles).join("|");
+  const tags = SEMANTIC_SECTION_TAGS.join("|");
   // Archived bracket-framed personas may contain literal balanced tag examples.
   // Only classify a capture as semantic when its framing starts at the input boundary.
   if (!new RegExp(`^\\s*<(${tags})>`).test(systemPrompt)) return null;
@@ -362,28 +404,8 @@ function splitSemanticStandingPrefix(text: string): {
 } {
   const sections: PromptSection[] = [];
   let remainder = text;
-  const tags = [
-    "workspace",
-    "base",
-    "agent-instructions",
-    "system",
-    "team-instructions",
-    "core-memory",
-    "huddle-instructions",
-    "channel-canvas",
-  ].join("|");
-  const titles: Record<string, string> = {
-    workspace: "Workspace",
-    base: "Base",
-    "agent-instructions": "Agent Instructions",
-    // Preserve diagnostics for sessions captured before this tag was renamed.
-    system: "System",
-    "team-instructions": "Team Instructions",
-    "core-memory": "Core Memory",
-    "huddle-instructions": "Huddle Instructions",
-    "channel-canvas": "Channel Canvas",
-  };
-  if (hasAmbiguousSemanticBoundary(text, Object.keys(titles))) {
+  const tags = SEMANTIC_SECTION_TAGS.join("|");
+  if (hasAmbiguousSemanticBoundary(text, [...SEMANTIC_SECTION_TAGS])) {
     return { sections, remainder: text };
   }
   const leadingSection = new RegExp(`^\\s*<(${tags})>([\\s\\S]*?)<\\/\\1>\\s*`);
@@ -392,7 +414,7 @@ function splitSemanticStandingPrefix(text: string): {
     const match = remainder.match(leadingSection);
     if (!match) break;
     sections.push({
-      title: titles[match[1]],
+      title: semanticSectionTitle(match[1]),
       body: stripSemanticBoundaryNewlines(match[2]),
     });
     remainder = remainder.slice(match[0].length);
@@ -438,6 +460,7 @@ function splitSemanticTurnSections(text: string): {
     const match = remainder.match(leadingSection);
     if (!match) break;
     sections.push({
+      tag: match[1],
       title: semanticTurnTitle(match[1], parseSemanticAttributes(match[2])),
       body: stripSemanticBoundaryNewlines(match[3]),
     });
@@ -469,13 +492,18 @@ function semanticTurnTitle(
 ): string {
   switch (tag) {
     case "context":
-      return "Context";
+      return t`Context`;
     case "thread-context":
     case "conversation-context": {
       const label =
         tag === "thread-context" ? t`Thread Context` : t`Conversation Context`;
-      const truncated = attributes.truncated === "true" ? ", truncated" : "";
-      return t`${label} (${attributes.included} of ${attributes.total} messages${truncated})`;
+      const { included, total } = attributes;
+      // Two whole messages rather than one with an interpolated ", truncated":
+      // text spliced into a template is never extracted, so that fragment
+      // stayed English in every translated build.
+      return attributes.truncated === "true"
+        ? t`${label} (${included} of ${total} messages, truncated)`
+        : t`${label} (${included} of ${total} messages)`;
     }
     case "buzz-event":
       return attributes.type
@@ -640,7 +668,7 @@ function formatPlanEntry(entry: Record<string, unknown>): string {
   const content = asString(entry.content);
   if (!content) return "";
   const checkbox = entry.status === "completed" ? "[x]" : "[ ]";
-  const suffix = entry.status === "in_progress" ? " (in progress)" : "";
+  const suffix = entry.status === "in_progress" ? ` ${t`(in progress)`}` : "";
   return `- ${checkbox} ${content}${suffix}`;
 }
 
@@ -734,8 +762,13 @@ export function extractTriggeringEventIds(payload: unknown): string[] {
 
 export function describeTurnStarted(payload: unknown): string {
   const ids = extractTriggeringEventIds(payload);
+  // `plural`, not a ternary interpolated into `t`: the spliced branches were
+  // not extracted, so the event count stayed English in every locale.
   return ids.length > 0
-    ? t`Triggered by ${ids.length === 1 ? "1 event" : `${ids.length} events`}.`
+    ? plural(ids.length, {
+        one: "Triggered by # event.",
+        other: "Triggered by # events.",
+      })
     : "";
 }
 

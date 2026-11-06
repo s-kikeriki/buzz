@@ -25,8 +25,12 @@ import { initializeConversationDensityPreference } from "@/shared/lib/conversati
 import { initializeFontSizePreference } from "@/shared/lib/fontSizePreference";
 import { initializeSidebarDensityPreference } from "@/shared/lib/sidebarDensityPreference";
 import { initializeSidebarChannelOrderPreference } from "@/features/sidebar/lib/sidebarChannelOrderPreference";
-import { initializeLocalePreference } from "@/shared/lib/localePreference";
+import {
+  getLocale,
+  initializeLocalePreference,
+} from "@/shared/lib/localePreference";
 import { AppI18nProvider } from "@/shared/i18n/AppI18nProvider";
+import { activateLocale } from "@/shared/i18n/i18n";
 import { applyBrandFavicon } from "@/shared/branding/applyBrandFavicon";
 
 type E2eWindow = Window & {
@@ -142,6 +146,20 @@ async function bootstrap() {
   initializeSidebarChannelOrderPreference();
   initializeLocalePreference();
   startLocalStorageSweep();
+  // Activate the catalogue before anything can feed a store. `AppI18nProvider`
+  // gates *rendering* on the first activation, which is not the same as gating
+  // every caller: the agent observer store folds each frame into transcript
+  // state eagerly, outside React, and that derivation resolves copy through
+  // `i18n._`. A frame arriving before the first activation therefore calls a
+  // translation function with no active locale, and Lingui throws rather than
+  // degrading. Awaiting it here also removes the provider's null first paint,
+  // because `getActiveLocale()` is already set when it mounts.
+  //
+  // A rejection is not fatal: the provider's own effect retries and owns the
+  // fall-back-to-English recovery, so boot continues either way.
+  await activateLocale(getLocale()).catch((error: unknown) => {
+    console.error("Failed to pre-activate the message catalogue", error);
+  });
   await installE2eBridgeIfConfigured();
   await migrateLegacyCommunityStorageBeforeRender();
   renderApp();

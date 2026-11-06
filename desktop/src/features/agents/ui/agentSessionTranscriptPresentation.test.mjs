@@ -49,6 +49,40 @@ test("getActivityHeadline formats tool titles and assistant text", () => {
   assert.equal(getActivityHeadline(makeMessage({ text: "   " })), "Responding");
 });
 
+/**
+ * A plan thought is recognised by its wire kind, not by `title === "Plan"`.
+ *
+ * The title is display copy. Once translated it stops matching, and the
+ * headline falls through to the raw title instead of "Planning" — so the
+ * German activity bar read "Plan" where English read "Planning".
+ */
+test("getActivityHeadline recognises a plan thought by its wire kind", () => {
+  const planThought = {
+    id: "thinking:1",
+    type: "thought",
+    title: "Plan",
+    text: "- [ ] step one",
+    timestamp: baseTimestamp,
+    acpSource: "plan",
+  };
+
+  assert.equal(getActivityHeadline(planThought), "Planning");
+  assert.equal(
+    getActivityHeadline({ ...planThought, title: "Plan (de)" }),
+    "Planning",
+    "a translated plan title is still a plan",
+  );
+  assert.equal(
+    getActivityHeadline({
+      ...planThought,
+      acpSource: "agent_thought_chunk",
+      title: "Thinking",
+    }),
+    "Thinking",
+    "a non-plan thought keeps its own title",
+  );
+});
+
 test("isMeaningfulItem ignores lifecycle noise and raw JSON-RPC metadata", () => {
   assert.equal(
     isMeaningfulItem({
@@ -57,9 +91,37 @@ test("isMeaningfulItem ignores lifecycle noise and raw JSON-RPC metadata", () =>
       title: "Turn started",
       text: "",
       timestamp: baseTimestamp,
+      acpSource: "turn_started",
     }),
     false,
     "turn started is lifecycle noise → not meaningful",
+  );
+  // The noise gate reads the wire kind, not the row's heading. A German app
+  // renders this row as "Turn gestartet", which the old title-matching gate
+  // let through into the activity-bar headline.
+  assert.equal(
+    isMeaningfulItem({
+      id: "life:1-de",
+      type: "lifecycle",
+      title: "Turn gestartet",
+      text: "",
+      timestamp: baseTimestamp,
+      acpSource: "turn_started",
+    }),
+    false,
+    "a translated lifecycle title is still noise",
+  );
+  assert.equal(
+    isMeaningfulItem({
+      id: "life:2",
+      type: "lifecycle",
+      title: "Mode",
+      text: "chat",
+      timestamp: baseTimestamp,
+      acpSource: "current_mode_update",
+    }),
+    true,
+    "a non-noise lifecycle kind stays meaningful",
   );
   assert.equal(
     isMeaningfulItem({
