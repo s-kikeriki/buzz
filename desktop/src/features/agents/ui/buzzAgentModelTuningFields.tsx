@@ -381,7 +381,7 @@ export function BuzzAgentModelTuningFields({
             effortValid={effortValid}
             htmlFor="ba-thinking-effort"
             inheritedEffort={inheritedEnvVars[BUZZ_AGENT_THINKING_EFFORT]}
-            inheritFallbackLabel="Inherit (agent default)"
+            inheritFallbackLabel={t`Inherit (agent default)`}
             label={t`Thinking / Effort`}
             onChange={(value) =>
               onEnvVarChange(BUZZ_AGENT_THINKING_EFFORT, value)

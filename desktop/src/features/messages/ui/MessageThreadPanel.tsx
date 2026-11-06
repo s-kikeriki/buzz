@@ -681,7 +681,7 @@ export function MessageThreadPanel({
                           channelId={channelId}
                           currentPubkey={currentPubkey}
                           collapseDepthGuideActions={collapseDepthGuideActions}
-                          collapseDescendantsLabel="Collapse replies"
+                          collapseDescendantsLabel={t`Collapse replies`}
                           connectDescendants={
                             shouldShowThreadBranchGuides &&
                             connectsToVisibleChild

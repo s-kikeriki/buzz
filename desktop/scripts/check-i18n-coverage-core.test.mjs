@@ -236,7 +236,7 @@ test("a computed key is not read as a copy field", async () => {
   assert.deepEqual(result, []);
 });
 
-test("a table keyed by ids, not copy fields, is still a copy table", async () => {
+test("a table keyed by ids, not copy fields, is still copy", async () => {
   // The hole this rule was written for. `INBOX_EMPTY_STATE_TITLES` is keyed by
   // filter id, so the copy-field rule read it as clean while all sixteen inbox
   // empty states were hardcoded English.
@@ -252,14 +252,14 @@ test("a table keyed by ids, not copy fields, is still a copy table", async () =>
     result.map((finding) => finding.text),
     ["No activity yet", "No mentions found", "Nothing needs action"],
   );
-  assert.ok(result.every((finding) => finding.kind.startsWith("copy-table:")));
+  assert.ok(result.every((finding) => finding.kind.startsWith("prose-field:")));
 });
 
 test("a half-converted copy table flags only the entries left behind", async () => {
-  // The realistic regression, and the one the first version of this rule
-  // missed: adding a filter to a converted table leaves one plain string, the
-  // object stops being uniformly prose, and "every value is prose" stopped
-  // seeing a table at all. A break test caught that; this holds it.
+  // The realistic regression: adding a filter to a converted table leaves one
+  // plain string behind. Two earlier versions of this rule both missed it,
+  // because both asked a question about the object — "is every value prose?",
+  // "is every value prose or a message?" — instead of about the string.
   const result = await findings(`
     import { msg } from "@lingui/core/macro";
     export const TITLES = {
@@ -270,7 +270,7 @@ test("a half-converted copy table flags only the entries left behind", async () 
   `);
   assert.equal(result.length, 1);
   assert.equal(result[0].text, "No drafts");
-  assert.equal(result[0].kind, "copy-table:drafts");
+  assert.equal(result[0].kind, "prose-field:drafts");
 });
 
 test("a fully converted copy table is clean", async () => {
@@ -284,16 +284,90 @@ test("a fully converted copy table is clean", async () => {
   assert.deepEqual(result, []);
 });
 
-test("a data map is not a copy table", async () => {
-  // One value that is neither prose nor a message and the object is data.
-  // Without this the rule would flag every kind-to-label and id-to-class map
-  // in the codebase, and a gate nobody can keep green gets deleted.
+test("prose in a mixed object is still copy; its neighbours are not", async () => {
+  // The shape that hid 32 strings. The earlier rule asked whether the *object*
+  // was a copy table, so one `compact` or one number anywhere in it made the
+  // whole object data and the sentence invisible. Tokens and numbers stay out
+  // on their own merits: a single word is not prose.
   const result = await findings(`
     export const MODES = {
       compact: "compact",
       roomy: 42,
+      className: "flex gap-2",
       wide: "Wide spacing for big screens",
     };
+  `);
+  assert.equal(result.length, 1);
+  assert.equal(result[0].kind, "prose-field:wide");
+  assert.equal(result[0].text, "Wide spacing for big screens");
+});
+
+test("a multi-line property is reported on the string's own line", async () => {
+  // `personaModelDiscoveryStatus.ts` was in the ratchet and called clean while
+  // it returned five English sentences, each one a property value sitting a
+  // line or two below its key. An override has to name the line a reader can
+  // see the copy on, so the finding comes from the value, not the property.
+  const result = await findings(`
+    export function status() {
+      return {
+        summary:
+          "Databricks sign-in is required before models can be listed.",
+      };
+    }
+  `);
+  assert.equal(result.length, 1);
+  assert.equal(result[0].kind, "prose-field:summary");
+  // Line 4 is `summary:`; line 5 is the sentence.
+  assert.equal(result[0].line, 5);
+});
+
+test("flags prose handed to a prop the copy list has never heard of", async () => {
+  // 21 strings in already-converted files sat behind the closed prop list,
+  // including the sidebar's "Browse channels" and two screen-reader labels.
+  const result = await findings(`
+    export function C() {
+      return (
+        <Section
+          backButtonAriaLabel="Back to channel"
+          quickCreateLabel="Browse channels"
+        />
+      );
+    }
+  `);
+  assert.deepEqual(
+    result.map((finding) => `${finding.kind}=${finding.text}`).sort(),
+    [
+      "prose-prop:backButtonAriaLabel=Back to channel",
+      "prose-prop:quickCreateLabel=Browse channels",
+    ],
+  );
+});
+
+test("structural props are markup, not copy", async () => {
+  // `className` is the reason this list exists: a two-token class list with a
+  // capital in it is indistinguishable from a sentence. `rel` is the other —
+  // "noreferrer noopener" is a link relationship.
+  const result = await findings(`
+    export function C() {
+      return (
+        <a className="flex Items" href="/x" rel="noreferrer noopener" type="button">
+          <Trans>Open</Trans>
+        </a>
+      );
+    }
+  `);
+  assert.deepEqual(result, []);
+});
+
+test("the JSX plural macro's own forms are not hardcoded props", async () => {
+  // `<Plural one="Unread thread" other="Unread threads" />` hands Lingui the
+  // forms of one message. The prop rule reads unknown prop names, so without
+  // the macro fence it would flag the message it is about to translate.
+  const result = await findings(`
+    import { Plural } from "@lingui/react/macro";
+    export function C({ count }) {
+      return <Plural value={count} one="Unread thread" other="Unread threads" />;
+    }
   `);
   assert.deepEqual(result, []);
 });

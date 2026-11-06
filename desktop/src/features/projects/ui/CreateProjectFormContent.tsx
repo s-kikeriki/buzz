@@ -82,7 +82,7 @@ export function CreateProjectFormContent({
       className="max-w-lg"
       contentClassName="pt-3"
       data-testid="create-project-dialog"
-      headerSubtitle="A project starts as a channel with a repository. People in the channel can talk, clone, and open tasks here."
+      headerSubtitle={t`A project starts as a channel with a repository. People in the channel can talk, clone, and open tasks here.`}
       footer={
         <div className="flex w-full items-center justify-end gap-3">
           <Button

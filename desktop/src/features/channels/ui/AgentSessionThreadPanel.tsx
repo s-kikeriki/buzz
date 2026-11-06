@@ -467,7 +467,7 @@ export function AgentSessionThreadPanel({
     <>
       <AuxiliaryPanelHeaderGroup
         align="start"
-        backButtonAriaLabel="Back from activity"
+        backButtonAriaLabel={t`Back from activity`}
         backButtonTestId="agent-session-back"
         onBack={onBack}
       >

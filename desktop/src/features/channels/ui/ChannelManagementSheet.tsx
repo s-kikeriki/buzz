@@ -752,7 +752,7 @@ function ChannelManagementPanelContent({
         transparent={transparentChrome}
       >
         <AuxiliaryPanelHeaderGroup
-          backButtonAriaLabel="Back to channel"
+          backButtonAriaLabel={t`Back to channel`}
           backButtonTestId="channel-management-back"
           mode={mode}
           onBack={
@@ -845,7 +845,7 @@ function ChannelManagementPanelContent({
               <div className="space-y-3">
                 <IngressRow
                   description={canvasPreview}
-                  helpText="Use the canvas as a shared space for notes, plans, and other channel information."
+                  helpText={t`Use the canvas as a shared space for notes, plans, and other channel information.`}
                   icon={BookOpenText}
                   label={t`Canvas`}
                   onClick={() => setActiveView("canvas")}

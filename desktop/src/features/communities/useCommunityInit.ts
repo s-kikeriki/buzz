@@ -161,7 +161,9 @@ export function useCommunityInit(
         isReady: false,
         needsSetup: false,
         appliedKey: null,
-        error: "Could not refresh avatar source permissions. Reload to retry.",
+        error: i18n._(
+          msg`Could not refresh avatar source permissions. Reload to retry.`,
+        ),
       });
     });
   }, [communityRelaysKey]);

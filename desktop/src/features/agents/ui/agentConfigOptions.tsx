@@ -1,4 +1,4 @@
-import { i18n } from "@lingui/core";
+import { i18n, type MessageDescriptor } from "@lingui/core";
 import { msg, t } from "@lingui/core/macro";
 import type {
   AcpRuntimeCatalogEntry,
@@ -97,8 +97,12 @@ export type ProviderCredentialConfig =
       requiredEnvKeys: readonly string[];
       /** The env key holding the user-typed API secret. */
       secretEnvVar: string;
-      /** Display label for the credential input field, e.g. "Anthropic API Key". */
-      apiKeyLabel: string;
+      /**
+       * Display label for the credential input field, e.g. "Anthropic API
+       * Key". A descriptor, not a string: this table is module-level, so a
+       * resolved string would freeze in whichever locale booted.
+       */
+      apiKeyLabel: MessageDescriptor;
     };
 
 /**
@@ -111,17 +115,17 @@ const PROVIDER_CREDENTIAL_CONFIG: Partial<
   anthropic: {
     requiredEnvKeys: ["ANTHROPIC_API_KEY"],
     secretEnvVar: "ANTHROPIC_API_KEY",
-    apiKeyLabel: "Anthropic API Key",
+    apiKeyLabel: msg`Anthropic API Key`,
   },
   openai: {
     requiredEnvKeys: ["OPENAI_COMPAT_API_KEY"],
     secretEnvVar: "OPENAI_COMPAT_API_KEY",
-    apiKeyLabel: "OpenAI Runtime API Key",
+    apiKeyLabel: msg`OpenAI Runtime API Key`,
   },
   "openai-compat": {
     requiredEnvKeys: ["OPENAI_COMPAT_API_KEY"],
     secretEnvVar: "OPENAI_COMPAT_API_KEY",
-    apiKeyLabel: "OpenAI-compatible Runtime API Key",
+    apiKeyLabel: msg`OpenAI-compatible Runtime API Key`,
   },
   databricks: {
     // DATABRICKS_TOKEN is NOT required — OAuth PKCE is the normal path.
@@ -140,7 +144,7 @@ const PROVIDER_CREDENTIAL_CONFIG: Partial<
   openrouter: {
     requiredEnvKeys: ["OPENROUTER_API_KEY"],
     secretEnvVar: "OPENROUTER_API_KEY",
-    apiKeyLabel: "OpenRouter API Key",
+    apiKeyLabel: msg`OpenRouter API Key`,
   },
 };
 
@@ -454,10 +458,9 @@ export function getProviderApiKeyEnvVar(providerId: string): string | null {
  * Databricks, which uses OAuth PKCE).
  */
 export function getProviderApiKeyLabel(providerId: string): string | null {
-  return (
-    PROVIDER_CREDENTIAL_CONFIG[providerId.trim().toLowerCase()]?.apiKeyLabel ??
-    null
-  );
+  const descriptor =
+    PROVIDER_CREDENTIAL_CONFIG[providerId.trim().toLowerCase()]?.apiKeyLabel;
+  return descriptor ? i18n._(descriptor) : null;
 }
 
 /**

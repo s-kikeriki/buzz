@@ -1604,6 +1604,10 @@ msgstr ""
 msgid "A private channel for getting oriented in this community."
 msgstr ""
 
+#: src/features/projects/ui/CreateProjectFormContent.tsx
+msgid "A project starts as a channel with a repository. People in the channel can talk, clone, and open tasks here."
+msgstr ""
+
 #: src/features/home/lib/inbox.ts
 msgid "A reminder is waiting for you."
 msgstr ""
@@ -1943,6 +1947,15 @@ msgstr ""
 #: src/features/communities/ui/AddCommunityDialog.tsx
 #: src/features/sidebar/ui/CommunityRail.tsx
 msgid "Add community"
+msgstr ""
+
+#: src/features/projects/ui/CreatePullRequestDialog.tsx
+msgid "Add context for reviewers"
+msgstr ""
+
+#: src/features/projects/ui/CreateIssueDialog.tsx
+#: src/features/projects/ui/CreateProjectIssueDialog.tsx
+msgid "Add context, expected behavior, or reproduction steps"
 msgstr ""
 
 #: src/features/agents/ui/AddCustomHarnessDialog.tsx
@@ -2604,6 +2617,10 @@ msgstr ""
 msgid "Anthropic"
 msgstr ""
 
+#: src/features/agents/ui/agentConfigOptions.tsx
+msgid "Anthropic API Key"
+msgstr ""
+
 #: src/features/settings/ui/harnessCatalogCopy.ts
 msgid "Anthropic's agentic coding tool that runs in the terminal."
 msgstr ""
@@ -3150,6 +3167,10 @@ msgstr ""
 msgid "Back"
 msgstr ""
 
+#: src/features/channels/ui/AgentSessionThreadPanel.tsx
+msgid "Back from activity"
+msgstr ""
+
 #: src/features/channels/ui/FocusThreadDrawer.tsx
 msgid "Back to #{channelName}"
 msgstr ""
@@ -3162,12 +3183,24 @@ msgstr ""
 msgid "Back to app"
 msgstr ""
 
+#: src/features/channels/ui/ChannelManagementSheet.tsx
+msgid "Back to channel"
+msgstr ""
+
+#: src/features/projects/ui/ProjectHomeWorkspaceSheet.tsx
+msgid "Back to Commits"
+msgstr ""
+
 #: src/features/messages/ui/DraftDetailPane.tsx
 msgid "Back to drafts list"
 msgstr ""
 
 #: src/features/admin-console/AdminConsoleFeedbackTab.tsx
 msgid "Back to feedback"
+msgstr ""
+
+#: src/features/projects/ui/ProjectHomeWorkspaceSheet.tsx
+msgid "Back to Files"
 msgstr ""
 
 #: src/features/home/ui/ProjectInboxDetail.tsx
@@ -3195,8 +3228,16 @@ msgstr ""
 msgid "Back to reports"
 msgstr ""
 
+#: src/features/projects/ui/ProjectHomeWorkspaceSheet.tsx
+msgid "Back to Reviews"
+msgstr ""
+
 #: src/features/channels/ui/ChannelBrowserDialog.tsx
 msgid "Back to search"
+msgstr ""
+
+#: src/features/projects/ui/ProjectHomeWorkspaceSheet.tsx
+msgid "Back to Tasks"
 msgstr ""
 
 #: src/features/profile/ui/UserProfilePanelFields.tsx
@@ -3221,6 +3262,10 @@ msgstr ""
 
 #: src/features/profile/ui/AnimatedAvatarCapture.tsx
 msgid "Background removal model couldn't be loaded, so the background was kept. Retake while online to remove it."
+msgstr ""
+
+#: src/features/projects/projectIssues.mjs
+msgid "Backlog"
 msgstr ""
 
 #: src/features/settings/ui/EncryptedBackupCreator.tsx
@@ -3362,6 +3407,7 @@ msgstr ""
 #: src/features/channels/ui/ChannelBrowserDialog.tsx
 #: src/features/channels/ui/useChannelIntro.tsx
 #: src/features/search/ui/TopbarSearch.tsx
+#: src/features/sidebar/ui/AppSidebar.tsx
 #: src/features/sidebar/ui/CustomChannelSection.tsx
 #: src/shared/lib/keyboard-shortcuts.ts
 msgid "Browse channels"
@@ -4402,6 +4448,7 @@ msgid "Close video review"
 msgstr ""
 
 #: src/features/agents/ui/ManagedAgentSessionPanel.tsx
+#: src/features/projects/projectIssues.mjs
 msgid "Closed"
 msgstr ""
 
@@ -4902,6 +4949,10 @@ msgstr ""
 msgid "Context"
 msgstr ""
 
+#: src/features/projects/ui/ProjectsAgentPromptPage.tsx
+msgid "Context appended to your first message"
+msgstr ""
+
 #: src/features/agents/ui/agentSessionToolClassifier.ts
 msgid "Context compacted"
 msgstr ""
@@ -5292,6 +5343,10 @@ msgstr ""
 msgid "Could not read that file."
 msgstr ""
 
+#: src/features/communities/useCommunityInit.ts
+msgid "Could not refresh avatar source permissions. Reload to retry."
+msgstr ""
+
 #: src/features/settings/ui/HostedCommunitiesSettingsCard.tsx
 msgid "Could not release the previously connected {productName} identity."
 msgstr ""
@@ -5348,6 +5403,10 @@ msgstr ""
 
 #: src/features/settings/ui/HostedCommunitiesSettingsCard.tsx
 msgid "Could not unpair the {productName} identity."
+msgstr ""
+
+#: src/features/channels/ui/ChannelLogoEditor.tsx
+msgid "Could not upload that logo."
 msgstr ""
 
 #: src/features/profile/ui/AnimatedAvatarCapture.tsx
@@ -6373,6 +6432,15 @@ msgstr ""
 msgid "Deploying {agentName}."
 msgstr ""
 
+#: src/features/projects/ui/CreatePullRequestDialog.tsx
+msgid "Describe the change"
+msgstr ""
+
+#: src/features/projects/ui/CreateIssueDialog.tsx
+#: src/features/projects/ui/CreateProjectIssueDialog.tsx
+msgid "Describe the task"
+msgstr ""
+
 #: src/features/agents/ui/AgentDefinitionDialog.tsx
 msgid "Describe what this agent should do."
 msgstr ""
@@ -6668,6 +6736,7 @@ msgstr ""
 
 #: src/features/agents/ui/agentSessionToolCatalog.ts
 #: src/features/profile/ui/ProfileAvatarEditor.tsx
+#: src/features/projects/projectIssues.mjs
 #: src/features/settings/ui/ProfileSettingsCard.tsx
 msgid "Done"
 msgstr ""
@@ -8001,8 +8070,24 @@ msgstr ""
 msgid "From (approver)"
 msgstr ""
 
+#: src/features/agents/ui/ModelPicker.tsx
+msgid "from ACP"
+msgstr ""
+
+#: src/features/agents/ui/ModelPicker.tsx
+msgid "from ACP config"
+msgstr ""
+
+#: src/features/agents/ui/ModelPicker.tsx
+msgid "from config file"
+msgstr ""
+
 #: src/features/agents/ui/McpServersSection.tsx
 msgid "From config file ({mcpConfigFilePath})"
+msgstr ""
+
+#: src/features/agents/ui/ModelPicker.tsx
+msgid "from env"
 msgstr ""
 
 #: src/features/agents/ui/AgentSnapshotImportDialog.tsx
@@ -8540,6 +8625,14 @@ msgstr ""
 msgid "In progress"
 msgstr ""
 
+#: src/features/projects/projectIssues.mjs
+msgid "In Progress"
+msgstr ""
+
+#: src/features/projects/projectIssues.mjs
+msgid "In Review"
+msgstr ""
+
 #: src/features/agents/ui/AgentCardMintDialog.tsx
 msgid "in the card, readable by anyone who has the PNG — and cards are made for sharing. Lock the card or only share it with people you trust."
 msgstr ""
@@ -8597,6 +8690,7 @@ msgid "Info"
 msgstr ""
 
 #: src/features/agents/lib/agentConfigCore.ts
+#: src/features/agents/ui/buzzAgentModelTuningFields.tsx
 msgid "Inherit (agent default)"
 msgstr ""
 
@@ -9274,6 +9368,10 @@ msgstr ""
 
 #: src/features/profile/ui/UserProfilePanelTabs.tsx
 msgid "Live activity will appear here."
+msgstr ""
+
+#: src/features/agents/ui/ModelPicker.tsx
+msgid "live override"
 msgstr ""
 
 #: src/features/agents/ui/agentConfigControls.tsx
@@ -10333,6 +10431,7 @@ msgid "New direct message"
 msgstr ""
 
 #: src/features/channels/ui/ChannelBrowserDialog.tsx
+#: src/features/sidebar/ui/AppSidebar.tsx
 msgid "New forum"
 msgstr ""
 
@@ -11683,6 +11782,10 @@ msgstr ""
 msgid "OpenAI key from persona settings"
 msgstr ""
 
+#: src/features/agents/ui/agentConfigOptions.tsx
+msgid "OpenAI Runtime API Key"
+msgstr ""
+
 #: src/features/agents/ui/AgentCardMintDialog.tsx
 #: src/features/agents/ui/CardMintKeyCue.tsx
 msgid "OPENAI_API_KEY"
@@ -11691,6 +11794,10 @@ msgstr ""
 #: src/features/agents/ui/agentConfigOptions.tsx
 #: src/features/agents/ui/personaModelDiscoveryStatus.ts
 msgid "OpenAI-compatible"
+msgstr ""
+
+#: src/features/agents/ui/agentConfigOptions.tsx
+msgid "OpenAI-compatible Runtime API Key"
 msgstr ""
 
 #: src/features/settings/ui/harnessCatalogCopy.ts
@@ -11711,6 +11818,10 @@ msgstr ""
 
 #: src/features/agents/ui/agentConfigOptions.tsx
 msgid "OpenRouter"
+msgstr ""
+
+#: src/features/agents/ui/agentConfigOptions.tsx
+msgid "OpenRouter API Key"
 msgstr ""
 
 #: src/features/communities/ui/AddCommunityDialog.tsx
@@ -12023,6 +12134,10 @@ msgstr ""
 msgid "Pick the name people and agents will see in {0}. You can change it anytime."
 msgstr ""
 
+#: src/features/profile/ui/AnimatedAvatarCapture.tsx
+msgid "Pick the still shown before hover."
+msgstr ""
+
 #: src/features/sidebar/ui/ChannelContextMenu.tsx
 msgid "Pin channel"
 msgstr ""
@@ -12201,6 +12316,10 @@ msgstr ""
 #. placeholder {0}: preview.imageDomain
 #: src/shared/ui/compact-link-preview-attachment.tsx
 msgid "Preview from {0}"
+msgstr ""
+
+#: src/features/projects/ui/ProjectAgentChatPanel.tsx
+msgid "Preview message context"
 msgstr ""
 
 #: src/features/profile/ui/NostrBindConsentDialog.tsx
@@ -13285,6 +13404,10 @@ msgstr ""
 msgid "Repository access restricted"
 msgstr ""
 
+#: src/features/projects/ui/projectsOverviewContext.ts
+msgid "Repository activity"
+msgstr ""
+
 #. placeholder {0}: files.length
 #: src/features/projects/ui/ProjectRepositoryPanel.tsx
 msgid "Repository files · {0} tracked files"
@@ -13320,6 +13443,11 @@ msgstr ""
 
 #: src/features/workflows/ui/WorkflowStepCard.tsx
 msgid "Request body (optional)"
+msgstr ""
+
+#: src/features/projects/ui/ProjectPullRequestInlineComments.tsx
+#: src/features/projects/ui/ProjectPullRequestsPanel.tsx
+msgid "Request changes"
 msgstr ""
 
 #: src/features/settings/ui/HarnessRow.tsx
@@ -13645,6 +13773,10 @@ msgstr ""
 #: src/features/admin-console/AdminConsoleActionsTab.tsx
 msgctxt "button that opens the confirm step"
 msgid "Review"
+msgstr ""
+
+#: src/features/projects/ui/projectsOverviewContext.ts
+msgid "Review activity"
 msgstr ""
 
 #: src/features/projects/ui/CreatePullRequestDialog.tsx
@@ -14449,6 +14581,10 @@ msgstr ""
 msgid "Separator"
 msgstr ""
 
+#: src/features/onboarding/ui/OnboardingFlow.tsx
+msgid "Server error — try again"
+msgstr ""
+
 #: src/features/agents/ui/agentSessionTranscript.ts
 msgid "Session ready"
 msgstr ""
@@ -14897,6 +15033,10 @@ msgstr ""
 
 #: src/features/home/ui/InboxDetailPane.tsx
 msgid "Some message context could not be loaded."
+msgstr ""
+
+#: src/features/home/ui/ProjectInboxDetail.tsx
+msgid "Some project activity could not be loaded. Actions are unavailable until the item is current."
 msgstr ""
 
 #: src/features/messages/lib/waveMessage.ts
@@ -15467,6 +15607,10 @@ msgstr ""
 
 #: src/features/agents/ui/EditAgentAdvancedFields.tsx
 msgid "template / global defaults"
+msgstr ""
+
+#: src/features/agents/ui/ModelPicker.tsx
+msgid "template default"
 msgstr ""
 
 #: src/features/agents/ui/ManagedAgentRow.tsx
@@ -16467,6 +16611,10 @@ msgstr ""
 msgid "translateX({0}%)"
 msgstr ""
 
+#: src/features/projects/projectIssues.mjs
+msgid "Triage"
+msgstr ""
+
 #: src/features/projects/ui/ProjectsIssuesList.tsx
 msgid "Triage task"
 msgstr ""
@@ -17167,6 +17315,10 @@ msgstr ""
 msgid "Use lowercase letters, numbers, and single hyphens."
 msgstr ""
 
+#: src/features/channels/ui/ChannelManagementSheet.tsx
+msgid "Use the canvas as a shared space for notes, plans, and other channel information."
+msgstr ""
+
 #: src/features/communities/ui/AddCommunityDialog.tsx
 msgid "Use the community URL or invite link you received."
 msgstr ""
@@ -17422,11 +17574,16 @@ msgstr ""
 msgid "View minted cards"
 msgstr ""
 
+#: src/features/projects/ui/ProjectPullRequestsPanel.tsx
+msgid "View review"
+msgstr ""
+
 #. placeholder {0}: pullRequest.title
 #: src/features/projects/ui/ProjectsPullRequestsList.tsx
 msgid "View review {0}"
 msgstr ""
 
+#: src/features/projects/ui/ProjectIssuesPanel.tsx
 #: src/features/projects/ui/ProjectsIssuesList.tsx
 msgid "View task"
 msgstr ""

@@ -244,7 +244,7 @@ export function projectsOverviewContext(
         label: t`Add repository`,
         testId: "projects-overview-add-repository",
       },
-      detailsTitle: "Repository activity",
+      detailsTitle: t`Repository activity`,
       people,
       stats: [
         {
@@ -343,7 +343,7 @@ export function projectsOverviewContext(
         label: t`Create review`,
         testId: "projects-overview-create-pull-request",
       },
-      detailsTitle: "Review activity",
+      detailsTitle: t`Review activity`,
       people,
       stats: [
         {

@@ -333,7 +333,7 @@ export function ProjectAgentChatPanel({
               <AgentContextPayloadPreview
                 iconOnly
                 payload={contextPayload}
-                triggerLabel="Preview message context"
+                triggerLabel={t`Preview message context`}
               />
               {conversation ? (
                 <Button

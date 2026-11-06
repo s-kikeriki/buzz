@@ -67,7 +67,7 @@ export function CreateProjectIssueDialog({
 
   return (
     <CreateProjectWorkItemDialog
-      bodyPlaceholder="Add context, expected behavior, or reproduction steps"
+      bodyPlaceholder={t`Add context, expected behavior, or reproduction steps`}
       description={
         repository
           ? `Create a task in ${repository.name}`
@@ -80,7 +80,7 @@ export function CreateProjectIssueDialog({
       open={open}
       submitDisabled={!repository}
       title={t`Create a task`}
-      titlePlaceholder="Describe the task"
+      titlePlaceholder={t`Describe the task`}
     >
       <label className="block space-y-1.5 text-sm font-medium">
         <span>

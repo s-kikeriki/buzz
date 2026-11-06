@@ -55,7 +55,7 @@ export function ChannelLogoEditor({
     isUploading,
     openPicker,
   } = useAvatarUpload({
-    fallbackErrorMessage: "Could not upload that logo.",
+    fallbackErrorMessage: t`Could not upload that logo.`,
     onUploadSuccess,
   });
 

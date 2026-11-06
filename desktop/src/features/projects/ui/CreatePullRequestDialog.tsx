@@ -166,7 +166,7 @@ export function CreatePullRequestDialog({
 
   return (
     <CreateProjectWorkItemDialog
-      bodyPlaceholder="Add context for reviewers"
+      bodyPlaceholder={t`Add context for reviewers`}
       description={description}
       isCreating={createMutation.isPending}
       itemName="pull-request"
@@ -178,7 +178,7 @@ export function CreatePullRequestDialog({
       open={open}
       submitDisabled={Boolean(selectionError)}
       title={t`Open a review`}
-      titlePlaceholder="Describe the change"
+      titlePlaceholder={t`Describe the change`}
     >
       <div className="grid gap-3 rounded-xl border border-border/60 bg-muted/25 p-3 sm:grid-cols-2">
         <label className="space-y-1.5 text-sm font-medium sm:col-span-2">

@@ -865,7 +865,7 @@ export function AppSidebar({
                       }
                       actionsTestId="section-actions-channels"
                       listTestId="stream-list"
-                      quickCreateLabel="Browse channels"
+                      quickCreateLabel={t`Browse channels`}
                       onQuickCreateClick={() => onBrowseChannels?.()}
                       showQuickCreate
                       onMarkAllRead={onMarkAllChannelsRead}
@@ -893,7 +893,7 @@ export function AppSidebar({
                   </SidebarDndContext>
                   <FeatureGate feature="forum">
                     <ChannelGroupSection
-                      createLabel="New forum"
+                      createLabel={t`New forum`}
                       hasUnread={unreadChannelIds.size > 0}
                       unreadThreadCount={unreadThreadsIn(forumChannels)}
                       isCollapsed={collapsedGroups.forums}

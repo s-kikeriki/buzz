@@ -872,6 +872,30 @@ const OVERRIDES = new Map([
     "src/features/agents/managedAgentRuntimeStatus.ts:13",
     "Status token compared by the sidebar and its tests. The badge translates it at the render site.",
   ],
+  // Task status: the same split. Eight places compare against these tokens
+  // (icon, progress state, colour, group order, the open-work predicate), and
+  // `projectIssueStatusLabel` is what every screen renders.
+  [
+    "src/features/projects/projectIssues.mjs:25",
+    "Machine status token. Translated for display by projectIssueStatusLabel.",
+  ],
+  [
+    "src/features/projects/projectIssues.mjs:26",
+    "Machine status token. Translated for display by projectIssueStatusLabel.",
+  ],
+  // The project agent-context block is an English prompt handed to the
+  // harness, not a screen: `- Repository: <name> (address: <addr>)`. These two
+  // stand in for a repository name when the context is a whole-overview or a
+  // multi-item selection, so they belong to the prompt's language, not the
+  // reader's.
+  [
+    "src/features/projects/lib/projectDetailAgentContext.ts:102",
+    "Agent prompt payload, not UI copy — see projectDetailAgentContextBlock.",
+  ],
+  [
+    "src/features/projects/lib/projectDetailAgentContext.ts:115",
+    "Agent prompt payload, not UI copy — see projectDetailAgentContextBlock.",
+  ],
   // Input placeholders that are examples of a *format*, not prose: a German
   // reader needs the same `my-runtime`, the same shell command and the same
   // `npub1…` prefix, because what they type has to match the format, not the
@@ -1009,6 +1033,26 @@ const OVERRIDES = new Map([
     "An SVG circle path, inlined into the CSS mask next to " +
       "`ROUNDED_SQUIRCLE_PATH`. Geometry, not words — the detector sees the " +
       "`A`/`M`/`Z` path commands as letters.",
+  ],
+  // Found by the string-shaped rule this change adds, in files earlier
+  // tranches had already converted. The three below are the genuinely
+  // non-copy ones; the other findings in that set were translated.
+  [
+    "src/features/profile/ui/NostrBindConsentDialog.tsx:57",
+    "Fixture name for the dialog's design preview, which " +
+      "`isNostrBindPreviewEnabled` gates behind `import.meta.env.DEV`. It " +
+      "cannot reach a shipped screen.",
+  ],
+  [
+    "src/features/profile/ui/UserProfilePanelFields.tsx:33",
+    "`Claude Code` is the harness's product name. The detector reads it as " +
+      "prose because it is two capitalized words; its siblings in the same " +
+      "table (Goose, Codex, Aider) are single words and pass.",
+  ],
+  [
+    "src/features/profile/ui/UserProfilePopover.tsx:77",
+    "`Claude Code` is the harness's product name — the same table as " +
+      "UserProfilePanelFields.tsx above.",
   ],
 ]);
 

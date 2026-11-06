@@ -10,6 +10,7 @@ import {
   type UserProfileLookup,
 } from "@/features/profile/lib/identity";
 import { UserProfilePopover } from "@/features/profile/ui/UserProfilePopover";
+import { projectIssueStatusLabel } from "@/features/projects/projectIssues.mjs";
 import type {
   Project,
   ProjectIssue,
@@ -244,7 +245,7 @@ function buildActivityItems({
       action: "created a task in",
       title: issue.title,
       body: issue.content,
-      detail: issue.status,
+      detail: projectIssueStatusLabel(issue.status),
       target,
     });
     for (const comment of issue.comments) {
