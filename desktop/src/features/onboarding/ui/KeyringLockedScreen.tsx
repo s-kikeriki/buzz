@@ -1,5 +1,6 @@
 import * as React from "react";
 import { useQueryClient } from "@tanstack/react-query";
+import { Trans, useLingui } from "@lingui/react/macro";
 import { relaunch } from "@tauri-apps/plugin-process";
 import { importIdentity } from "@/shared/api/tauriIdentity";
 import {
@@ -15,18 +16,19 @@ import { StartupWindowDragRegion } from "@/shared/ui/StartupWindowDragRegion";
 import { NostrKeyImportForm } from "./NostrKeyImportForm";
 
 export function KeyringLockedScreen() {
+  const { t } = useLingui();
   const queryClient = useQueryClient();
   const systemColorScheme = useSystemColorScheme();
   const [showImport, setShowImport] = React.useState(false);
 
   const handleReimportClick = React.useCallback(() => {
     const confirmed = window.confirm(
-      "Importing a different nsec replaces the identity currently locked in the keyring for this install. The previous identity will no longer be accessible. Continue?",
+      t`Importing a different nsec replaces the identity currently locked in the keyring for this install. The previous identity will no longer be accessible. Continue?`,
     );
     if (confirmed) {
       setShowImport(true);
     }
-  }, []);
+  }, [t]);
 
   const handleImport = React.useCallback(
     async (nsec: string, password?: string) => {
@@ -53,17 +55,19 @@ export function KeyringLockedScreen() {
       <StartupWindowDragRegion />
       <div className="relative flex w-full max-w-[500px] flex-col items-center text-center">
         <h1 className="text-3xl font-semibold tracking-tight">
-          Unlock your system keyring
+          <Trans>Unlock your system keyring</Trans>
         </h1>
         <p className="mt-3 text-sm leading-6 text-muted-foreground">
-          Your identity is safe in the OS keyring, but it's unreachable this
-          session. Unlock your keyring or sign into your desktop session, then
-          relaunch {BRAND.productName}.
+          <Trans>
+            Your identity is safe in the OS keyring, but it's unreachable this
+            session. Unlock your keyring or sign into your desktop session, then
+            relaunch {BRAND.productName}.
+          </Trans>
         </p>
 
         {showImport ? (
           <NostrKeyImportForm
-            backLabel="Cancel"
+            backLabel={t`Cancel`}
             onBack={() => setShowImport(false)}
             onImport={handleImport}
           />
@@ -77,7 +81,7 @@ export function KeyringLockedScreen() {
               }}
               type="button"
             >
-              Relaunch {BRAND.productName}
+              <Trans>Relaunch {BRAND.productName}</Trans>
             </Button>
             <Button
               className="h-10 w-full"
@@ -85,7 +89,7 @@ export function KeyringLockedScreen() {
               type="button"
               variant="secondary"
             >
-              Re-import your key instead
+              <Trans>Re-import your key instead</Trans>
             </Button>
           </div>
         )}

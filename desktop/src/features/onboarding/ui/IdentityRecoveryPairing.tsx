@@ -1,5 +1,8 @@
 import * as React from "react";
 import { listen } from "@tauri-apps/api/event";
+import { i18n } from "@lingui/core";
+import { msg } from "@lingui/core/macro";
+import { Trans, useLingui } from "@lingui/react/macro";
 import {
   Check,
   Copy,
@@ -23,6 +26,14 @@ type Step = "loading" | "qr" | "sas" | "receiving" | "done" | "error";
 // leaves a code on screen after its publishing channel has closed.
 const QR_REFRESH_MS = 90_000;
 
+/**
+ * Resolved per call through `i18n._`, not stored as a string: this runs from a
+ * Tauri event listener, not a React render, so there is no hook to read the
+ * active locale from — and a module-level resolved string would freeze in
+ * whichever locale booted.
+ */
+const PAIRING_EXPIRED_COPY = msg`This pairing code expired or lost its connection. Create a new code and try again.`;
+
 function recoveryErrorMessage(message: string): string {
   const normalized = message.toLowerCase();
   if (
@@ -32,7 +43,7 @@ function recoveryErrorMessage(message: string): string {
     normalized.includes("expired") ||
     normalized.includes("timed out")
   ) {
-    return "This pairing code expired or lost its connection. Create a new code and try again.";
+    return i18n._(PAIRING_EXPIRED_COPY);
   }
   return message;
 }
@@ -44,6 +55,7 @@ export function IdentityRecoveryPairing({
   onRecovered: () => Promise<void>;
   onStepChange?: (step: Step) => void;
 }) {
+  const { t } = useLingui();
   const [step, setStep] = React.useState<Step>("loading");
   const [qrUri, setQrUri] = React.useState<string | null>(null);
   const [sas, setSas] = React.useState<string | null>(null);
@@ -68,11 +80,11 @@ export function IdentityRecoveryPairing({
       setStep("qr");
     } catch (cause) {
       setError(
-        cause instanceof Error ? cause.message : "Could not start recovery.",
+        cause instanceof Error ? cause.message : t`Could not start recovery.`,
       );
       setStep("error");
     }
-  }, []);
+  }, [t]);
 
   React.useEffect(() => {
     void start();
@@ -101,7 +113,7 @@ export function IdentityRecoveryPairing({
     listen<{ reason: string }>("pairing-aborted", ({ payload }) => {
       if (!disposed && active.current) {
         active.current = false;
-        setError(`Recovery stopped: ${payload.reason}`);
+        setError(t`Recovery stopped: ${payload.reason}`);
         setStep("error");
       }
     }).then((unlisten) => (disposed ? unlisten() : unlisteners.push(unlisten)));
@@ -112,7 +124,7 @@ export function IdentityRecoveryPairing({
       if (copyTimer.current !== null) window.clearTimeout(copyTimer.current);
       void cancelPairing();
     };
-  }, [onRecovered, start]);
+  }, [onRecovered, start, t]);
 
   React.useEffect(() => {
     if (step !== "qr") return;
@@ -128,14 +140,14 @@ export function IdentityRecoveryPairing({
       if (copyTimer.current !== null) window.clearTimeout(copyTimer.current);
       copyTimer.current = window.setTimeout(() => setCopied(false), 2_000);
     } catch {
-      setError("Could not copy the pairing code. Try again.");
+      setError(t`Could not copy the pairing code. Try again.`);
     }
   }
 
   async function deny() {
     active.current = false;
     await cancelPairing().catch(() => {});
-    setError("The codes didn't match. Pairing was canceled.");
+    setError(t`The codes didn't match. Pairing was canceled.`);
     setStep("error");
   }
 
@@ -149,7 +161,7 @@ export function IdentityRecoveryPairing({
         recoveryErrorMessage(
           cause instanceof Error
             ? cause.message
-            : "Could not confirm recovery.",
+            : t`Could not confirm recovery.`,
         ),
       );
       setStep("error");
@@ -171,14 +183,14 @@ export function IdentityRecoveryPairing({
             centerImageSrc="/app-icon@2x.png"
             data-testid="identity-recovery-qr"
             size={240}
-            title="Desktop identity recovery QR code"
+            title={t`Desktop identity recovery QR code`}
             value={qrUri}
           />
         ) : step === "sas" && sas ? (
           <div className="flex max-w-60 flex-col items-center gap-3 py-2 text-center text-foreground">
             <ShieldCheck className="h-10 w-10 text-primary" />
             <p className="text-sm font-medium">
-              Does this code match your phone?
+              <Trans>Does this code match your phone?</Trans>
             </p>
             <div className="rounded-xl border-2 border-primary/30 bg-primary/5 px-5 py-3">
               <p
@@ -189,8 +201,10 @@ export function IdentityRecoveryPairing({
               </p>
             </div>
             <p className="text-xs text-muted-foreground">
-              This gives this desktop permanent access to your{" "}
-              {BRAND.productName} identity. Only continue if you trust it.
+              <Trans>
+                This gives this desktop permanent access to your{" "}
+                {BRAND.productName} identity. Only continue if you trust it.
+              </Trans>
             </p>
             <div className="flex w-full flex-col gap-2">
               <Button
@@ -199,7 +213,7 @@ export function IdentityRecoveryPairing({
                 onClick={() => void confirm()}
               >
                 <Check className="mr-1.5 h-4 w-4" />
-                Codes match
+                <Trans>Codes match</Trans>
               </Button>
               <Button
                 className="flex-1"
@@ -208,7 +222,7 @@ export function IdentityRecoveryPairing({
                 variant="outline"
               >
                 <X className="mr-1.5 h-4 w-4" />
-                Cancel
+                <Trans>Cancel</Trans>
               </Button>
             </div>
           </div>
@@ -217,7 +231,9 @@ export function IdentityRecoveryPairing({
             <div className="flex h-12 w-12 items-center justify-center rounded-full bg-green-100 dark:bg-green-900/30">
               <Check className="h-6 w-6 text-green-600 dark:text-green-400" />
             </div>
-            <p className="text-sm font-medium">Identity received securely</p>
+            <p className="text-sm font-medium">
+              <Trans>Identity received securely</Trans>
+            </p>
           </div>
         ) : step === "error" ? (
           <div className="flex max-w-52 flex-col items-center gap-3 text-center text-foreground">
@@ -225,7 +241,7 @@ export function IdentityRecoveryPairing({
             <p className="text-sm text-destructive">{error}</p>
             <Button onClick={() => void start()} size="sm" variant="outline">
               <RefreshCw className="mr-1.5 h-4 w-4" />
-              Try again
+              <Trans>Try again</Trans>
             </Button>
           </div>
         ) : (
@@ -233,8 +249,8 @@ export function IdentityRecoveryPairing({
             <LoaderCircle className="h-6 w-6 animate-spin text-muted-foreground" />
             <p className="text-sm text-muted-foreground">
               {step === "receiving"
-                ? "Receiving identity from mobile device..."
-                : "Starting pairing..."}
+                ? t`Receiving identity from mobile device...`
+                : t`Starting pairing...`}
             </p>
           </div>
         )}
@@ -257,10 +273,10 @@ export function IdentityRecoveryPairing({
             <Copy className="mr-1.5 h-4 w-4" />
           )}
           {step === "loading"
-            ? "Generating pairing code..."
+            ? t`Generating pairing code...`
             : copied
-              ? "Copied"
-              : "Copy pairing code"}
+              ? t`Copied`
+              : t`Copy pairing code`}
         </Button>
       ) : null}
       {step === "qr" && error ? (

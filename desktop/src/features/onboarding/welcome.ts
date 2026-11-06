@@ -1,3 +1,6 @@
+import { i18n } from "@lingui/core";
+import { msg } from "@lingui/core/macro";
+
 import type {
   Channel,
   ChannelMember,
@@ -6,12 +9,39 @@ import type {
 } from "@/shared/api/types";
 
 export const WELCOME_CHANNEL_NAME = "Welcome";
-export const WELCOME_CHANNEL_DESCRIPTION =
-  "A private channel for getting oriented in this community.";
+
+/**
+ * Resolved per call, never at module scope: this runs from a Tauri client
+ * path rather than a React render, and the reconciliation below compares the
+ * channel's stored description against it. A string frozen in the boot locale
+ * would write English into a German community's Welcome channel.
+ *
+ * Switching the app language therefore rewrites this description once, the
+ * next time the welcome channel is reconciled. That is one idempotent update
+ * per language change, not a loop: after the write the stored value equals
+ * the resolved one again.
+ */
+const WELCOME_CHANNEL_DESCRIPTION_COPY = msg`A private channel for getting oriented in this community.`;
+
+export function welcomeChannelDescription(): string {
+  return i18n._(WELCOME_CHANNEL_DESCRIPTION_COPY);
+}
+
 export const STARTER_GENERAL_CHANNEL_NAME = "general";
+export const STARTER_WELCOME_CHANNEL_NAME = "welcome-everyone";
+
+/**
+ * Starter-channel descriptions are *not* translated here, and these two
+ * constants are deliberately left as the English source.
+ *
+ * The values the app actually writes live in `STARTER_CHANNELS` in
+ * `src-tauri/src/commands/channels.rs` as `&'static str`; nothing in
+ * `desktop/src` reads these copies. Translating them would look like
+ * coverage and change nothing on screen — the real fix is Rust-side and is
+ * tracked separately.
+ */
 export const STARTER_GENERAL_CHANNEL_DESCRIPTION =
   "General conversation and community updates.";
-export const STARTER_WELCOME_CHANNEL_NAME = "welcome-everyone";
 export const STARTER_WELCOME_CHANNEL_DESCRIPTION =
   "Say hi, ask a question, or share what brought you here.";
 export const WELCOME_CHANNEL_READY_EVENT =
@@ -56,12 +86,14 @@ type PendingWelcomeChannel = {
   createdAt: number;
 };
 
-const welcomeChannelInput = {
-  name: WELCOME_CHANNEL_NAME,
-  channelType: "stream",
-  visibility: "private",
-  description: WELCOME_CHANNEL_DESCRIPTION,
-} satisfies CreateChannelInput;
+function welcomeChannelInput(): CreateChannelInput {
+  return {
+    name: WELCOME_CHANNEL_NAME,
+    channelType: "stream",
+    visibility: "private",
+    description: welcomeChannelDescription(),
+  };
+}
 
 function normalizeChannelName(name: string) {
   return name.trim().toLowerCase();
@@ -205,8 +237,9 @@ async function ensureCurrentWelcomeChannelMetadata(
     channelId: channel.id,
   };
 
-  if (channel.description !== WELCOME_CHANNEL_DESCRIPTION) {
-    input.description = WELCOME_CHANNEL_DESCRIPTION;
+  const description = welcomeChannelDescription();
+  if (channel.description !== description) {
+    input.description = description;
   }
 
   if (channel.ttlSeconds !== null || channel.ttlDeadline !== null) {
@@ -235,7 +268,7 @@ export async function ensureWelcomeChannel(
       throw new Error("Replacing Welcome requires deleteChannel.");
     }
     await client.deleteChannel(existingWelcome.id);
-    return client.createChannel(welcomeChannelInput);
+    return client.createChannel(welcomeChannelInput());
   }
   if (existingWelcome) {
     return ensureCurrentWelcomeChannelMetadata(client, existingWelcome);
@@ -248,13 +281,13 @@ export async function ensureWelcomeChannel(
           throw new Error("Replacing Welcome requires deleteChannel.");
         }
         await client.deleteChannel(channel.id);
-        return client.createChannel(welcomeChannelInput);
+        return client.createChannel(welcomeChannelInput());
       }
       return ensureCurrentWelcomeChannelMetadata(client, channel);
     }
   }
 
-  return client.createChannel(welcomeChannelInput);
+  return client.createChannel(welcomeChannelInput());
 }
 
 export async function ensureStarterChannels(

@@ -1,6 +1,7 @@
 import * as React from "react";
 import { flushSync } from "react-dom";
 import { useQueryClient } from "@tanstack/react-query";
+import { Trans, useLingui } from "@lingui/react/macro";
 import {
   profileQueryKey,
   useUpdateProfileMutation,
@@ -158,6 +159,7 @@ export function OnboardingFlow({
   initialProfile,
   initialProfileDecisionSettled,
 }: OnboardingFlowProps) {
+  const { t } = useLingui();
   const { complete, skipForNow } = actions;
   const { activeCommunity } = useCommunities();
   const queryClient = useQueryClient();
@@ -418,7 +420,7 @@ export function OnboardingFlow({
   // RelaunchRequiredScreen. No navigation needed here.
   const handleLostModeBack = React.useCallback(async () => {
     const confirmed = window.confirm(
-      "This will create a new identity and abandon your previous key. This cannot be undone. Continue?",
+      t`This will create a new identity and abandon your previous key. This cannot be undone. Continue?`,
     );
     if (!confirmed) {
       return;
@@ -430,10 +432,10 @@ export function OnboardingFlow({
       setPersistError(
         error instanceof Error
           ? error.message
-          : "Failed to create a new identity. Please try again.",
+          : t`Failed to create a new identity. Please try again.`,
       );
     }
-  }, [queryClient]);
+  }, [queryClient, t]);
 
   const handleKeyImportBack = React.useCallback(() => {
     if (keyImportStage === "backup-password") {
@@ -461,10 +463,10 @@ export function OnboardingFlow({
         ? {
             label:
               keyImportStage === "backup-password"
-                ? "Back"
+                ? t`Back`
                 : identityLost
-                  ? "Start new identity"
-                  : "Back",
+                  ? t`Start new identity`
+                  : t`Back`,
             disabled: isKeyImporting,
             onClick: handleKeyImportBack,
           }
@@ -519,10 +521,12 @@ export function OnboardingFlow({
               {membershipError.kind === "unreachable" ? (
                 <>
                   <p className="font-medium text-destructive">
-                    Can't reach this relay
+                    <Trans>Can't reach this relay</Trans>
                   </p>
                   <p className="mt-1 text-muted-foreground">
-                    Check your connection or change your community.
+                    <Trans>
+                      Check your connection or change your community.
+                    </Trans>
                   </p>
                   <Button
                     className="mt-3"
@@ -530,16 +534,16 @@ export function OnboardingFlow({
                     size="sm"
                     variant="outline"
                   >
-                    Change community
+                    <Trans>Change community</Trans>
                   </Button>
                 </>
               ) : (
                 <>
                   <p className="font-medium text-destructive">
-                    {membershipError.message ?? "Something went wrong"}
+                    {membershipError.message ?? t`Something went wrong`}
                   </p>
                   <p className="mt-1 text-muted-foreground">
-                    The relay returned an error. Try again.
+                    <Trans>The relay returned an error. Try again.</Trans>
                   </p>
                 </>
               )}
@@ -574,25 +578,29 @@ export function OnboardingFlow({
                 {identityLost ? (
                   <>
                     <h1 className="text-title font-normal text-foreground">
-                      Re-import your key
+                      <Trans>Re-import your key</Trans>
                     </h1>
                     <p className="mt-5 text-sm leading-6 text-muted-foreground">
-                      Your identity is no longer in the system keyring.
-                      Re-import your nsec to restore it — Buzz will restart to
-                      finish recovery. Or go back to start a new identity with a
-                      fresh key.
+                      <Trans>
+                        Your identity is no longer in the system keyring.
+                        Re-import your nsec to restore it — {BRAND.productName}{" "}
+                        will restart to finish recovery. Or go back to start a
+                        new identity with a fresh key.
+                      </Trans>
                     </p>
                   </>
                 ) : (
                   <>
                     <h1 className="text-title font-normal text-foreground">
-                      Use your existing key
+                      <Trans>Use your existing key</Trans>
                     </h1>
                     <p className="mt-5 text-sm leading-6 text-muted-foreground">
-                      Import your Nostr private key to use that identity with
-                      {BRAND.productName}. If this key already has a profile on
-                      the relay, your name and avatar are restored
-                      automatically.
+                      <Trans>
+                        Import your Nostr private key to use that identity with{" "}
+                        {BRAND.productName}. If this key already has a profile
+                        on the relay, your name and avatar are restored
+                        automatically.
+                      </Trans>
                     </p>
                   </>
                 )}

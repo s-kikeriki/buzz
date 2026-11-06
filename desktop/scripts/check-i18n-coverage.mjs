@@ -483,6 +483,38 @@ const CONVERTED_FILES = [
   "src/features/messages/ui/useComposerVoiceNote.tsx",
   "src/features/messages/ui/useDetachedAgentStart.ts",
   "src/features/messages/ui/useReactionHandler.ts",
+  // Tranche 7 — first run, part one: everything from the create-a-key screen
+  // to recovery. Tranche 3 converted the landing page and the two screens its
+  // visible controls lead to; this is the path a person walks immediately
+  // after, before a profile exists: the key well, the three backup options,
+  // the encrypted-backup creator and its guided test, mobile recovery
+  // pairing, and the keyring-locked / relaunch / reset-failed screens.
+  //
+  // `hooks.ts` and `welcome.ts` are libraries, not UI, and are listed because
+  // they produce copy no JSX node mentions: the starter-channel setup toast
+  // and its retry action, and the Welcome channel's description.
+  //
+  // `NostrKeyImportForm.tsx` is deliberately absent — it is converted on
+  // ClaudeK's PR #39 and must not be touched here.
+  //
+  // `welcomeKickoff.ts` and `welcomeGuide.ts` are also absent, and that is a
+  // decision rather than an omission: both are gated behind
+  // `WELCOME_TEAM_ENABLED === false` in this fork, so none of their copy can
+  // reach a screen. Listing them would claim coverage for ~12 strings in a
+  // dead path (the detector sees only 3 of them).
+  "src/features/onboarding/hooks.ts",
+  "src/features/onboarding/ui/BackupStep.tsx",
+  "src/features/onboarding/ui/BackupTestFlow.tsx",
+  "src/features/onboarding/ui/DownloadKeyStep.tsx",
+  "src/features/onboarding/ui/EncryptedBackupCreator.tsx",
+  "src/features/onboarding/ui/IdentityRecoveryPairing.tsx",
+  "src/features/onboarding/ui/KeyringLockedScreen.tsx",
+  "src/features/onboarding/ui/NsecMaskedDisplay.tsx",
+  "src/features/onboarding/ui/OnboardingFlow.tsx",
+  "src/features/onboarding/ui/RecoveryScreen.tsx",
+  "src/features/onboarding/ui/RelaunchRequiredScreen.tsx",
+  "src/features/onboarding/ui/ResetFailedScreen.tsx",
+  "src/features/onboarding/welcome.ts",
 ];
 
 /**
@@ -538,6 +570,20 @@ const OVERRIDES = new Map([
   [
     "src/features/settings/ui/HarnessesSettingsPanel.tsx:40",
     "Git Bash is a product name, and the row is about that product.",
+  ],
+  // The two starter-channel descriptions in `welcome.ts` are English on
+  // purpose. The values the app actually writes live in `STARTER_CHANNELS` in
+  // `src-tauri/src/commands/channels.rs` as `&'static str`, and nothing in
+  // `desktop/src` reads these copies — `grep` finds no consumer outside the
+  // declaration. Translating them would pass the gate and change nothing on
+  // screen; the starter channels need a Rust-side fix, tracked separately.
+  [
+    "src/features/onboarding/welcome.ts:44",
+    "Dead duplicate of a Rust constant. The live value is STARTER_CHANNELS in src-tauri/src/commands/channels.rs; no TypeScript reads this one.",
+  ],
+  [
+    "src/features/onboarding/welcome.ts:46",
+    "Dead duplicate of a Rust constant. The live value is STARTER_CHANNELS in src-tauri/src/commands/channels.rs; no TypeScript reads this one.",
   ],
   [
     "src/features/channels/ui/WelcomeComposerBanner.tsx:251",

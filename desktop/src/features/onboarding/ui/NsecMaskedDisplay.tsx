@@ -1,5 +1,6 @@
 import { Check, Copy, Eye, EyeOff, MoreHorizontal } from "lucide-react";
 import * as React from "react";
+import { Trans, useLingui } from "@lingui/react/macro";
 import { Button } from "@/shared/ui/button";
 import {
   copyTextToClipboard,
@@ -51,6 +52,7 @@ export function NsecMaskedDisplay({
   onKeyInteraction,
   actions,
 }: NsecMaskedDisplayProps) {
+  const { t } = useLingui();
   const [isRevealed, setIsRevealed] = React.useState(false);
   const [isCopied, setIsCopied] = React.useState(false);
   const copyTimerRef = React.useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -131,7 +133,9 @@ export function NsecMaskedDisplay({
         </div>
         <div className={`flex shrink-0 ${isBare ? "gap-1.5" : "gap-1"}`}>
           <Button
-            aria-label={isRevealed ? "Hide private key" : "Reveal private key"}
+            aria-label={
+              isRevealed ? t`Hide private key` : t`Reveal private key`
+            }
             className={`${isBare ? "h-10 w-10" : "h-7 w-7"} text-muted-foreground hover:text-foreground`}
             data-testid="nsec-reveal-toggle"
             onClick={handleRevealToggle}
@@ -149,7 +153,7 @@ export function NsecMaskedDisplay({
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button
-                  aria-label="Private key actions"
+                  aria-label={t`Private key actions`}
                   className={`${isBare ? "h-10 w-10" : "h-7 w-7"} text-muted-foreground hover:text-foreground`}
                   data-testid="nsec-actions"
                   size="icon"
@@ -165,7 +169,7 @@ export function NsecMaskedDisplay({
                   onSelect={handleMenuCopy}
                 >
                   <Copy aria-hidden="true" />
-                  Copy
+                  <Trans>Copy</Trans>
                 </DropdownMenuItem>
                 {actions.map((action) => (
                   <DropdownMenuItem
@@ -181,7 +185,7 @@ export function NsecMaskedDisplay({
             </DropdownMenu>
           ) : (
             <Button
-              aria-label="Copy private key"
+              aria-label={t`Copy private key`}
               className={`${isBare ? "h-10 w-10" : "h-7 w-7"} text-muted-foreground hover:text-foreground`}
               data-testid="nsec-copy"
               onClick={() => void handleCopy()}

@@ -10,7 +10,7 @@ import {
   isWelcomeExperienceChannel,
   markWelcomeChannelEnsured,
   rememberPendingWelcomeChannel,
-  WELCOME_CHANNEL_DESCRIPTION,
+  welcomeChannelDescription,
   WELCOME_CHANNEL_NAME,
 } from "./welcome.ts";
 
@@ -20,7 +20,7 @@ function makeChannel(overrides = {}) {
     name: WELCOME_CHANNEL_NAME,
     channelType: "stream",
     visibility: "private",
-    description: WELCOME_CHANNEL_DESCRIPTION,
+    description: welcomeChannelDescription(),
     topic: null,
     purpose: null,
     memberCount: 1,
@@ -91,7 +91,7 @@ test("ensureWelcomeChannel creates a private Welcome channel when one is missing
       name: WELCOME_CHANNEL_NAME,
       channelType: "stream",
       visibility: "private",
-      description: WELCOME_CHANNEL_DESCRIPTION,
+      description: welcomeChannelDescription(),
     },
   ]);
 });
@@ -147,7 +147,7 @@ test("ensureWelcomeChannel clears ttl on an existing ephemeral Welcome channel",
   assert.deepEqual(updateInputs, [
     {
       channelId: "existing-welcome",
-      description: WELCOME_CHANNEL_DESCRIPTION,
+      description: welcomeChannelDescription(),
       ttlSeconds: null,
     },
   ]);

@@ -60,6 +60,21 @@ import {
 import { Input } from "@/shared/ui/input";
 import { Textarea } from "@/shared/ui/textarea";
 
+/**
+ * The two substitution tokens a template body may contain, passed into the
+ * hint below as placeholders rather than written inside it.
+ *
+ * Written inline, the extracted msgid read `Use {channel.name} and
+ * {template.name} as placeholders.` — and a dot inside ICU braces is invalid
+ * syntax, so Lingui dropped that message from *every* compiled catalogue
+ * (`en`, `de` and `pseudo` alike) and only logged it. The hint rendered
+ * English in a German app while `pnpm check`, the catalogue gate and the
+ * build all stayed green. Interpolating them keeps the braces out of the
+ * msgid, so the tokens survive translation untouched.
+ */
+const CHANNEL_NAME_TOKEN = "{channel.name}";
+const TEMPLATE_NAME_TOKEN = "{template.name}";
+
 export function ChannelTemplatesSettingsCard() {
   const { t } = useLingui();
   const templatesQuery = useChannelTemplatesQuery();
@@ -563,7 +578,8 @@ export function TemplateFormDialog({
               data-settings-subcopy
             >
               <Trans>
-                Use {"{channel.name}"} and {"{template.name}"} as placeholders.
+                Use {CHANNEL_NAME_TOKEN} and {TEMPLATE_NAME_TOKEN} as
+                placeholders.
               </Trans>
             </p>
           </div>

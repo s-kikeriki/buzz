@@ -1,5 +1,5 @@
 import { execFile } from "node:child_process";
-import { readFile, readdir } from "node:fs/promises";
+import { readFile, readdir, rm } from "node:fs/promises";
 import path from "node:path";
 import { promisify } from "node:util";
 import { fileURLToPath } from "node:url";
@@ -34,7 +34,17 @@ const localesDir = path.join(projectRoot, "src", "locales");
  *      that extracts a string without translating it cannot land. The
  *      fallback stays as the runtime safety net it was meant to be.
  *
- * `pseudo` is exempt. Its `msgstr` entries are committed **empty** on purpose:
+ *   4. **Every message survives compilation.** A message whose ICU syntax is
+ *      invalid is dropped from *every* compiled catalogue — `en`, `de` and
+ *      `pseudo` alike — and Lingui only logs it. Rules 1–3 all pass, so does
+ *      `tsc`, so does the build: the string simply renders its English source
+ *      in a German app. That is what happened to the channel-templates hint in
+ *      #35, where `Use {channel.name} and {template.name} as placeholders.`
+ *      put a dot inside ICU braces; it went unnoticed until a bundle was read
+ *      by hand. `lingui compile --strict` turns that log line into a failure.
+ *
+ * `pseudo` is exempt from rule 3. Its `msgstr` entries are committed **empty**
+ * on purpose:
  * Lingui generates the accented-and-padded text at compile time from the
  * source string, so a filled catalogue there would be a stale copy of `en`.
  * Checking it is what a first version of this rule did, and it reported all
@@ -64,6 +74,34 @@ function emptyTranslations(po) {
     if (strMatch[1].length === 0) empty.push(idMatch[1]);
   }
   return empty;
+}
+
+/**
+ * Compile every catalogue with `--strict` and return the compiler's output if
+ * it refused, else `null`.
+ *
+ * `lingui compile` writes `messages.js` next to each `messages.po`; the app
+ * never reads those (the Vite plugin compiles in memory), so they are build
+ * output and this removes them again. The `.gitignore` entry is the second
+ * half of that: a hand-run `lingui compile` must not be committable either.
+ */
+async function compileStrictError(locales) {
+  try {
+    await run("pnpm", ["exec", "lingui", "compile", "--strict"], {
+      cwd: projectRoot,
+    });
+    return null;
+  } catch (error) {
+    // Both streams, not the first non-empty one: the compiler writes its
+    // progress line to stdout and the message it refused to stderr, so
+    // preferring stdout reports "Done in 354ms" and hides the diagnosis.
+    const output = [error.stdout, error.stderr].filter(Boolean).join("\n");
+    return output || error.message;
+  } finally {
+    for (const locale of locales) {
+      await rm(path.join(localesDir, locale, "messages.js"), { force: true });
+    }
+  }
 }
 
 async function main() {
@@ -109,10 +147,13 @@ async function main() {
     if (mixed.length > 0) registerByLocale.set(locale, mixed);
   }
 
+  const compileError = await compileStrictError(after.keys());
+
   if (
     drifted.length === 0 &&
     emptyByLocale.size === 0 &&
-    registerByLocale.size === 0
+    registerByLocale.size === 0 &&
+    compileError === null
   ) {
     const registers = [...REGISTERS]
       .filter(([locale]) => after.has(locale))
@@ -152,6 +193,29 @@ async function main() {
       locale === "en"
         ? "\nAn empty source translation falls back to the compiled hash id, the\nsame way a missing entry does."
         : `\nTranslate these in src/locales/${locale}/messages.po. A string that is\nextracted but not translated renders English under ${locale}, which is the\nexact failure this gate exists to catch.`,
+    );
+  }
+
+  if (compileError !== null) {
+    console.error("\nA message does not survive catalogue compilation:\n");
+    console.error(compileError.trim());
+    console.error(
+      [
+        "",
+        "Lingui drops an invalid-ICU message from every compiled catalogue —",
+        "en, de and pseudo alike — and otherwise only logs it, so the string",
+        "renders its English source in a translated app while every other",
+        "gate stays green.",
+        "",
+        "The usual cause is a literal brace in the message. ICU reads `{…}` as",
+        "a placeholder, so `{channel.name}` is a syntax error, not text. Pass",
+        "the token in as a placeholder instead of writing it inside the",
+        "message:",
+        "",
+        '  const CHANNEL_NAME_TOKEN = "{channel.name}";',
+        "  <Trans>Use {CHANNEL_NAME_TOKEN} as a placeholder.</Trans>",
+        "",
+      ].join("\n"),
     );
   }
 

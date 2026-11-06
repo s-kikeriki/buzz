@@ -1,6 +1,9 @@
 import * as React from "react";
 import { useQueryClient, type QueryStatus } from "@tanstack/react-query";
 import { toast } from "sonner";
+import { i18n } from "@lingui/core";
+import { msg } from "@lingui/core/macro";
+import { useLingui } from "@lingui/react/macro";
 
 import {
   managedAgentsQueryKey,
@@ -164,7 +167,9 @@ export async function initializeStarterChannels(
       reason:
         error instanceof Error
           ? error.message
-          : "Failed to set up starter channels",
+          : // Module-level path with no render to hang a hook off: resolve the
+            // descriptor per call so it follows the active locale.
+            i18n._(msg`Failed to set up starter channels`),
     };
   }
 }
@@ -469,6 +474,7 @@ export function useFirstRunOnboardingGate({
 }
 
 export function useAppOnboardingState(isSharedIdentity: boolean) {
+  const { t } = useLingui();
   const queryClient = useQueryClient();
   const { activeCommunity } = useCommunities();
   const identityQuery = useIdentityQuery();
@@ -597,10 +603,10 @@ export function useAppOnboardingState(isSharedIdentity: boolean) {
 
   const showStarterRetryToast = React.useCallback(
     (reason: string) => {
-      toast.error("Couldn't set up starter channels", {
+      toast.error(t`Couldn't set up starter channels`, {
         id: STARTER_CHANNEL_SETUP_TOAST_ID,
         action: {
-          label: "Retry",
+          label: t`Retry`,
           onClick: (event) => {
             event.preventDefault();
             void requestStarterChannels(true).then((result) => {
@@ -620,7 +626,7 @@ export function useAppOnboardingState(isSharedIdentity: boolean) {
         description: reason,
       });
     },
-    [requestStarterChannels],
+    [requestStarterChannels, t],
   );
 
   const completeAndShowWelcome = React.useCallback(() => {

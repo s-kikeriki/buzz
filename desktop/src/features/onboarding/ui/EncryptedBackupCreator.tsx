@@ -1,6 +1,9 @@
 import { AlertTriangle, Eye, EyeOff, RefreshCw } from "lucide-react";
 import * as React from "react";
 import { createPortal } from "react-dom";
+import { msg } from "@lingui/core/macro";
+import type { MessageDescriptor } from "@lingui/core";
+import { Trans, useLingui } from "@lingui/react/macro";
 
 import {
   createNcryptsecBackup,
@@ -50,12 +53,20 @@ const MIN_GENERATED_WORDS = 3;
 const MAX_GENERATED_WORDS = 10;
 const DEFAULT_GENERATED_WORDS = 3;
 
-const SEPARATOR_OPTIONS = [
-  { label: "Spaces", value: " " },
-  { label: "Hyphens", value: "-" },
-  { label: "Periods", value: "." },
-  { label: "Commas", value: "," },
-] as const;
+/**
+ * `label` is a descriptor: this table is module-level, so a resolved string
+ * would freeze in whichever locale booted. `value` is the literal separator
+ * character and stays data. Mirrors the Settings copy of this control.
+ */
+const SEPARATOR_OPTIONS: ReadonlyArray<{
+  label: MessageDescriptor;
+  value: string;
+}> = [
+  { label: msg`Spaces`, value: " " },
+  { label: msg`Hyphens`, value: "-" },
+  { label: msg`Periods`, value: "." },
+  { label: msg`Commas`, value: "," },
+];
 
 const DEFAULT_SEPARATOR = SEPARATOR_OPTIONS[0].value;
 
@@ -194,6 +205,7 @@ function PassphraseGeneratorPopover({
   onGenerated: (value: string) => void;
   securityTheme?: boolean;
 }) {
+  const { i18n, t } = useLingui();
   const [open, setOpen] = React.useState(false);
   const [words, setWords] = React.useState(DEFAULT_GENERATED_WORDS);
   const [separator, setSeparator] = React.useState<string>(DEFAULT_SEPARATOR);
@@ -217,21 +229,26 @@ function PassphraseGeneratorPopover({
     };
   }, []);
 
-  const generate = React.useCallback(async (wordCount: number, sep: string) => {
-    setError(null);
-    try {
-      const passphrase = await generateBackupPassphrase({
-        words: wordCount,
-        separator: sep,
-      });
-      if (mountedRef.current) onGeneratedRef.current(passphrase);
-    } catch (err) {
-      if (!mountedRef.current) return;
-      setError(
-        err instanceof Error ? err.message : "Failed to generate a password.",
-      );
-    }
-  }, []);
+  const generate = React.useCallback(
+    async (wordCount: number, sep: string) => {
+      setError(null);
+      try {
+        const passphrase = await generateBackupPassphrase({
+          words: wordCount,
+          separator: sep,
+        });
+        if (mountedRef.current) onGeneratedRef.current(passphrase);
+      } catch (err) {
+        if (!mountedRef.current) return;
+        setError(
+          err instanceof Error
+            ? err.message
+            : t`Failed to generate a password.`,
+        );
+      }
+    },
+    [t],
+  );
 
   // Fill the password field on every open and whenever a control changes.
   React.useEffect(() => {
@@ -245,7 +262,7 @@ function PassphraseGeneratorPopover({
           open. Only click-outside or Esc closes it. */}
       <PopoverAnchor asChild>
         <Button
-          aria-label="Generate a password"
+          aria-label={t`Generate a password`}
           className={cn(
             "absolute right-9 top-1/2 h-8 w-8 -translate-y-1/2 text-muted-foreground hover:text-foreground",
             securityTheme &&
@@ -291,7 +308,7 @@ function PassphraseGeneratorPopover({
             className="text-sm text-muted-foreground"
             htmlFor="backup-passphrase-words"
           >
-            Words
+            <Trans>Words</Trans>
           </label>
           <div className="flex flex-1 items-center justify-end gap-3">
             <input
@@ -315,7 +332,7 @@ function PassphraseGeneratorPopover({
             className="text-sm text-muted-foreground"
             htmlFor="backup-passphrase-separator"
           >
-            Separator
+            <Trans>Separator</Trans>
           </label>
           <select
             className="h-8 rounded-lg border border-border bg-background px-2 text-sm text-foreground outline-hidden focus-visible:ring-1 focus-visible:ring-ring"
@@ -325,8 +342,8 @@ function PassphraseGeneratorPopover({
             value={separator}
           >
             {SEPARATOR_OPTIONS.map((option) => (
-              <option key={option.label} value={option.value}>
-                {option.label}
+              <option key={String(option.label.id)} value={option.value}>
+                {i18n._(option.label)}
               </option>
             ))}
           </select>
@@ -369,6 +386,7 @@ export function EncryptedBackupCreator({
   guidedTest = true,
   onVerified,
 }: EncryptedBackupCreatorProps) {
+  const { t } = useLingui();
   const cardLayout = useOnboardingCardLayout();
   // Hosts without a longer-lived session get a private one (settings card).
   const fallbackSession = useEncryptedBackupSession();
@@ -416,7 +434,7 @@ export function EncryptedBackupCreator({
             message:
               err instanceof Error
                 ? err.message
-                : "Failed to encrypt your key.",
+                : t`Failed to encrypt your key.`,
           }),
         );
     };
@@ -428,7 +446,7 @@ export function EncryptedBackupCreator({
       cancelled = true;
       window.clearTimeout(timer);
     };
-  }, [dispatch, pendingPassphrase, skipDebounce, state.nextRequestId]);
+  }, [dispatch, pendingPassphrase, skipDebounce, state.nextRequestId, t]);
 
   // Download commit: fires once per committed blob, whether the commit was
   // instant (encryption already done) or resolved a queued download. The flow
@@ -460,7 +478,7 @@ export function EncryptedBackupCreator({
         rollBack();
         if (mountedRef.current)
           setSaveError(
-            err instanceof Error ? err.message : "Failed to save your key.",
+            err instanceof Error ? err.message : t`Failed to save your key.`,
           );
       })
       .finally(() => {
@@ -473,6 +491,7 @@ export function EncryptedBackupCreator({
     savedForRef,
     setSavedPath,
     state.ncryptsec,
+    t,
   ]);
 
   const handleSaveCopy = React.useCallback(async () => {
@@ -488,12 +507,12 @@ export function EncryptedBackupCreator({
     } catch (err) {
       if (mountedRef.current)
         setSaveError(
-          err instanceof Error ? err.message : "Failed to save your key.",
+          err instanceof Error ? err.message : t`Failed to save your key.`,
         );
     } finally {
       if (mountedRef.current) setIsSaving(false);
     }
-  }, [isSaving, onSaved, setSavedPath, state.ncryptsec]);
+  }, [isSaving, onSaved, setSavedPath, state.ncryptsec, t]);
 
   const { setVerified, test, setTest } = session;
   const handleVerified = React.useCallback(() => {
@@ -554,12 +573,12 @@ export function EncryptedBackupCreator({
               className="mb-2 block text-sm font-medium text-foreground"
               htmlFor="backup-passphrase-input"
             >
-              Password
+              <Trans>Password</Trans>
             </label>
           ) : null}
           <div className="relative">
             <PasswordInput
-              aria-label="Encryption password"
+              aria-label={t`Encryption password`}
               autoComplete="new-password"
               autoFocus={variant === "spotlight"}
               className={cn(
@@ -627,16 +646,16 @@ export function EncryptedBackupCreator({
             ) : null}
             {state.savedPassword ? (
               <span className="sr-only" id="backup-saved-password-description">
-                Backup password saved; hidden for security.
+                <Trans>Backup password saved; hidden for security.</Trans>
               </span>
             ) : null}
             <Button
               aria-label={
                 state.savedPassword
-                  ? "Change saved backup password"
+                  ? t`Change saved backup password`
                   : isRevealed
-                    ? "Hide password"
-                    : "Reveal password"
+                    ? t`Hide password`
+                    : t`Reveal password`
               }
               className={cn(
                 "absolute right-1 top-1/2 h-8 w-8 -translate-y-1/2 text-muted-foreground hover:text-foreground",
@@ -696,11 +715,13 @@ export function EncryptedBackupCreator({
             className="text-xs text-muted-foreground"
             data-testid="encrypted-backup-saved-path"
           >
-            Backup saved to {savedPath}
+            <Trans>Backup saved to {savedPath}</Trans>
           </p>
           <p className="text-xs leading-5 text-muted-foreground">
-            Your password isn't kept — download another copy anytime, or start
-            over to choose a new password.
+            <Trans>
+              Your password isn't kept — download another copy anytime, or start
+              over to choose a new password.
+            </Trans>
           </p>
         </div>
       ) : null}
@@ -731,7 +752,7 @@ export function EncryptedBackupCreator({
           <div className="relative">
             <Button
               aria-busy={isCreatePending || undefined}
-              aria-label={isCreatePending ? "Encrypting your key" : undefined}
+              aria-label={isCreatePending ? t`Encrypting your key` : undefined}
               className={cn(
                 "h-9 rounded-full px-6",
                 createButtonClassName,
@@ -754,9 +775,9 @@ export function EncryptedBackupCreator({
                   data-testid="encrypted-backup-encrypting"
                 />
               ) : state.savedPassword ? (
-                "Download backup again"
+                <Trans>Download backup again</Trans>
               ) : (
-                "Save backup"
+                <Trans>Save backup</Trans>
               )}
             </Button>
           </div>
@@ -783,11 +804,15 @@ export function EncryptedBackupCreator({
           textureTone={variant === "spotlight" ? "dark" : "light"}
         >
           <AlertDialogHeader>
-            <AlertDialogTitle>Create a new backup password?</AlertDialogTitle>
+            <AlertDialogTitle>
+              <Trans>Create a new backup password?</Trans>
+            </AlertDialogTitle>
             <AlertDialogDescription>
-              Starting over lets you pick a new password and download a fresh
-              backup file. Backups you saved earlier will still work — just use
-              the password you created them with.
+              <Trans>
+                Starting over lets you pick a new password and download a fresh
+                backup file. Backups you saved earlier will still work — just
+                use the password you created them with.
+              </Trans>
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
@@ -798,7 +823,7 @@ export function EncryptedBackupCreator({
                   : undefined
               }
             >
-              Keep current backup
+              <Trans>Keep current backup</Trans>
             </AlertDialogCancel>
             <AlertDialogAction
               className={
@@ -815,7 +840,7 @@ export function EncryptedBackupCreator({
                 setIsRevealed(false);
               }}
             >
-              Start with a new password
+              <Trans>Start with a new password</Trans>
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
