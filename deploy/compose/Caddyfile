@@ -1,5 +1,14 @@
 {$BUZZ_DOMAIN} {
   encode zstd gzip
 
-  reverse_proxy relay:3000
+  # NIP-AB device pairing. When NIP-11 advertises no `pairing_relay_url`,
+  # desktop clients derive the pairing socket from the relay host as
+  # `<host>/pair`, so this path is a client-side constant, not a choice.
+  handle /pair {
+    reverse_proxy pair-relay:5000
+  }
+
+  handle {
+    reverse_proxy relay:3000
+  }
 }

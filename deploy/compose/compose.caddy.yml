@@ -2,11 +2,46 @@ services:
   relay:
     ports: !reset []
 
+  # NIP-AB device pairing. Lives in this overlay rather than compose.yml
+  # because the sidecar is unauthenticated and keeps no history by design: it
+  # must only ever be reachable through Caddy's `/pair` route, so the service
+  # and the route that fronts it stay in the same file. No published port and
+  # no `env_file` — it reads one variable and never needs the relay's secrets.
+  pair-relay:
+    image: ${BUZZ_IMAGE:-ghcr.io/block/buzz:main}
+    # `entrypoint`, not `command`: the image's ENTRYPOINT is buzz-relay, and a
+    # Compose `command` would be passed to it as an argument rather than
+    # replacing it. (The Helm chart's `command:` is Kubernetes semantics.)
+    entrypoint: ["/usr/local/bin/buzz-pair-relay"]
+    environment:
+      BUZZ_PAIR_RELAY_BIND_ADDR: 0.0.0.0:5000
+    # Same /dev/tcp probe as the relay: the runtime image has bash but no
+    # curl/wget. A request without a WebSocket upgrade is answered with 400 by
+    # design, so that status is the liveness signal.
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "bash -ec 'exec 3<>/dev/tcp/127.0.0.1/5000; printf \"GET / HTTP/1.1\\r\\nHost: 127.0.0.1\\r\\nConnection: close\\r\\n\\r\\n\" >&3; grep -q \"400 Bad Request\" <&3'",
+        ]
+      interval: 10s
+      timeout: 3s
+      retries: 12
+      start_period: 10s
+    restart: unless-stopped
+    networks:
+      - buzz-net
+
   caddy:
     image: caddy:2-alpine
     depends_on:
       relay:
         condition: service_healthy
+      # Started, not healthy: pairing is an ancillary surface, and gating the
+      # public endpoint on it would take the whole relay offline with it.
+      # `up -d --wait` still waits on the sidecar's own healthcheck.
+      pair-relay:
+        condition: service_started
     environment:
       BUZZ_DOMAIN: ${BUZZ_DOMAIN:?set BUZZ_DOMAIN}
     ports:
