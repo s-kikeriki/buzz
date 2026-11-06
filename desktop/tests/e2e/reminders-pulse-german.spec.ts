@@ -200,6 +200,27 @@ test.describe("reminders under the German catalogue", () => {
     await expect(row.getByText("in 2h")).toHaveCount(0);
   });
 
+  test("an overdue reminder reads German", async ({ page }) => {
+    await seedGerman(page);
+    await installMockBridge(page);
+    await gotoInboxHome(page);
+    // The overdue rungs are the half that is NOT the shared Intl ladder:
+    // three hand-written plural messages. Without this case the forward
+    // assertion above passes while all three could be missing — which is
+    // exactly what a break test on the hour rung's msgstr proved.
+    await seedReminder(page, {
+      dTag: "de-overdue",
+      notBefore: Math.floor(Date.now() / 1000) - (3 * 3600 + 1800),
+      note: "This one is late",
+    });
+    await openRemindersFilter(page);
+
+    const row = page.getByTestId("home-reminder-item-de-overdue");
+    await expect(row).toBeVisible();
+    await expect(row.getByText("3 Std. überfällig")).toBeVisible();
+    await expect(row.getByText("3h overdue")).toHaveCount(0);
+  });
+
   test("the reminder detail pane reads German", async ({ page }) => {
     await seedGerman(page);
     await installMockBridge(page);
