@@ -242,6 +242,11 @@ msgstr "{0, plural, one {# task} other {# tasks}}"
 msgid "{0, plural, one {# unread} other {# unread}}"
 msgstr "{0, plural, one {# unread} other {# unread}}"
 
+#. placeholder {0}: group.notes.length
+#: src/features/pulse/ui/AgentActivityCard.tsx
+msgid "{0, plural, one {# update} other {# updates}}"
+msgstr "{0, plural, one {# update} other {# updates}}"
+
 #. placeholder {0}: items.length
 #: src/features/projects/lib/projectSelection.ts
 msgid "{0, plural, one {Copy link} other {Copy links}}"
@@ -771,6 +776,10 @@ msgstr "{count, plural, one {unread notification} other {unread notifications}}"
 msgid "{count, plural, one {unread thread} other {unread threads}}"
 msgstr "{count, plural, one {unread thread} other {unread threads}}"
 
+#: src/features/reminders/useReminderNotifications.ts
+msgid "{count} reminders are due"
+msgstr "{count} reminders are due"
+
 #: src/features/agents/ui/agentConfigOptions.tsx
 msgid "{currentRuntime} (current)"
 msgstr "{currentRuntime} (current)"
@@ -786,6 +795,10 @@ msgstr "{days, plural, one {# day} other {# days}}"
 #: src/features/channels/lib/ephemeralChannel.ts
 msgid "{days, plural, one {#d left} other {#d left}}"
 msgstr "{days, plural, one {#d left} other {#d left}}"
+
+#: src/features/reminders/ui/RemindersPanel.tsx
+msgid "{days, plural, one {#d overdue} other {#d overdue}}"
+msgstr "{days, plural, one {#d overdue} other {#d overdue}}"
 
 #: src/features/channels/lib/ephemeralChannel.ts
 msgid "{days, plural, one {#d TTL} other {#d TTL}}"
@@ -913,6 +926,10 @@ msgstr "{hours, plural, one {# hour} other {# hours}}"
 msgid "{hours, plural, one {#h left} other {#h left}}"
 msgstr "{hours, plural, one {#h left} other {#h left}}"
 
+#: src/features/reminders/ui/RemindersPanel.tsx
+msgid "{hours, plural, one {#h overdue} other {#h overdue}}"
+msgstr "{hours, plural, one {#h overdue} other {#h overdue}}"
+
 #: src/features/channels/lib/ephemeralChannel.ts
 msgid "{hours, plural, one {#h TTL} other {#h TTL}}"
 msgstr "{hours, plural, one {#h TTL} other {#h TTL}}"
@@ -1024,6 +1041,10 @@ msgstr "{minutes, plural, one {# minute} other {# minutes}}"
 #: src/features/channels/lib/ephemeralChannel.ts
 msgid "{minutes, plural, one {#m left} other {#m left}}"
 msgstr "{minutes, plural, one {#m left} other {#m left}}"
+
+#: src/features/reminders/ui/RemindersPanel.tsx
+msgid "{minutes, plural, one {#m overdue} other {#m overdue}}"
+msgstr "{minutes, plural, one {#m overdue} other {#m overdue}}"
 
 #: src/features/channels/lib/ephemeralChannel.ts
 msgid "{minutes, plural, one {#m TTL} other {#m TTL}}"
@@ -1493,6 +1514,12 @@ msgstr "+ Add new"
 msgid "<0>{0}</0> <1>“{query}”</1>"
 msgstr "<0>{0}</0> <1>“{query}”</1>"
 
+#. placeholder {0}: source.authorLabel
+#. placeholder {1}: formatReminderSourceLocation(i18n, source)
+#: src/features/reminders/ui/RemindersPanel.tsx
+msgid "<0>{0}</0> in {1}"
+msgstr "<0>{0}</0> in {1}"
+
 #. placeholder {0}: reusableAgent.name
 #: src/features/channels/ui/AddChannelBotReuseGuard.tsx
 msgid "<0>{0}</0> is already {statusLabel}. Reusing adds it to this channel without creating a duplicate keypair."
@@ -1639,6 +1666,10 @@ msgstr "A private channel for getting oriented in this community."
 #: src/features/projects/ui/CreateProjectFormContent.tsx
 msgid "A project starts as a channel with a repository. People in the channel can talk, clone, and open tasks here."
 msgstr "A project starts as a channel with a repository. People in the channel can talk, clone, and open tasks here."
+
+#: src/features/reminders/useReminderNotifications.ts
+msgid "A reminder is waiting"
+msgstr "A reminder is waiting"
 
 #: src/features/home/lib/inbox.ts
 msgid "A reminder is waiting for you."
@@ -1899,6 +1930,10 @@ msgstr "Add a forum"
 #: src/features/onboarding/ui/CommunityOnboardingFlow.tsx
 msgid "Add a name and avatar. They’ll show up on your messages, reactions, and agent handoffs."
 msgstr "Add a name and avatar. They’ll show up on your messages, reactions, and agent handoffs."
+
+#: src/features/reminders/ui/RemindMeLaterDialog.tsx
+msgid "Add a note..."
+msgstr "Add a note..."
 
 #: src/features/community-members/ui/AddMemberDialog.tsx
 msgid "Add a person to this community by their public key."
@@ -2338,6 +2373,10 @@ msgstr "Agent action failed."
 msgid "Agent actions"
 msgstr "Agent actions"
 
+#: src/features/pulse/ui/AgentActivityCard.tsx
+msgid "Agent away"
+msgstr "Agent away"
+
 #: src/features/agents/ui/personaLibraryCopy.ts
 msgid "Agent Catalog"
 msgstr "Agent Catalog"
@@ -2423,6 +2462,14 @@ msgstr "Agent name is required."
 #: src/features/local-archive/ui/LocalArchiveSettingsCard.tsx
 msgid "Agent observer feed"
 msgstr "Agent observer feed"
+
+#: src/features/pulse/ui/AgentActivityCard.tsx
+msgid "Agent offline"
+msgstr "Agent offline"
+
+#: src/features/pulse/ui/AgentActivityCard.tsx
+msgid "Agent online"
+msgstr "Agent online"
 
 #: src/features/agents/ui/AgentCardMintDialog.tsx
 #: src/features/agents/ui/AgentSnapshotExportDialog.tsx
@@ -2526,6 +2573,7 @@ msgstr "agent's"
 #: src/features/agents/ui/CommunityCatalogDialog.tsx
 #: src/features/agents/ui/TeamDialog.tsx
 #: src/features/home/ui/InboxFilterMenu.tsx
+#: src/features/pulse/ui/PulseTabBar.tsx
 #: src/features/search/ui/TopbarSearch.tsx
 #: src/features/settings/ui/AgentsSettingsPanel.tsx
 #: src/features/settings/ui/SettingsPanels.tsx
@@ -3322,6 +3370,10 @@ msgstr "Back to projects"
 msgid "Back to Projects"
 msgstr "Back to Projects"
 
+#: src/features/reminders/ui/RemindersPanel.tsx
+msgid "Back to reminders"
+msgstr "Back to reminders"
+
 #: src/features/admin-console/AdminConsoleReportsTab.tsx
 msgid "Back to reports"
 msgstr "Back to reports"
@@ -3470,6 +3522,7 @@ msgstr "Bold"
 #: src/features/agents/ui/AddAgentToChannelDialog.tsx
 #: src/features/agents/ui/AddTeamToChannelDialog.tsx
 #: src/features/home/ui/RecentNotesSection.tsx
+#: src/features/pulse/ui/NoteCard.tsx
 msgid "bot"
 msgstr "bot"
 
@@ -3645,6 +3698,8 @@ msgstr "Can't reach this relay — check the URL"
 #: src/features/projects/ui/ProjectCards.tsx
 #: src/features/projects/ui/ProjectChannelRequestDialog.tsx
 #: src/features/projects/ui/PullRequestReviewCard.tsx
+#: src/features/reminders/ui/RemindersPanel.tsx
+#: src/features/reminders/ui/RemindMeLaterDialog.tsx
 #: src/features/settings/ui/ChannelTemplatesSettingsCard.tsx
 #: src/features/settings/ui/CustomHarnessForm.tsx
 #: src/features/settings/ui/HarnessCatalogDialog.tsx
@@ -4337,6 +4392,10 @@ msgstr "Choose the highlight color used throughout {productName}."
 msgid "Choose trigger emoji"
 msgstr "Choose trigger emoji"
 
+#: src/features/reminders/ui/RemindMeLaterDialog.tsx
+msgid "Choose when you want to be reminded about this message."
+msgstr "Choose when you want to be reminded about this message."
+
 #: src/features/agents/ui/WhereToRunSection.tsx
 msgid "Choose where to run"
 msgstr "Choose where to run"
@@ -4847,6 +4906,10 @@ msgstr "Compacted"
 msgid "Compare"
 msgstr "Compare"
 
+#: src/features/reminders/ui/RemindersPanel.tsx
+msgid "Complete"
+msgstr "Complete"
+
 #: src/features/sidebar/ui/SidebarRelayConnectionCard.tsx
 msgid "Complete any prompts opened by the reconnect helper to continue."
 msgstr "Complete any prompts opened by the reconnect helper to continue."
@@ -4857,6 +4920,7 @@ msgstr "completed"
 
 #: src/features/projects/ui/ProjectRepositoryActionsPanel.tsx
 #: src/features/projects/ui/projectsOverviewContext.ts
+#: src/features/reminders/lib/reminderFilters.ts
 msgid "Completed"
 msgstr "Completed"
 
@@ -5183,6 +5247,10 @@ msgstr "Copied"
 #: src/shared/ui/markdown/CodeBlock.tsx
 msgid "Copied code to clipboard"
 msgstr "Copied code to clipboard"
+
+#: src/features/pulse/lib/useNoteActions.ts
+msgid "Copied note link"
+msgstr "Copied note link"
 
 #: src/features/onboarding/ui/BackupStep.tsx
 #: src/features/settings/ui/MobilePairingCard.tsx
@@ -6186,6 +6254,10 @@ msgstr "Custom command"
 msgid "Custom cron"
 msgstr "Custom cron"
 
+#: src/features/reminders/ui/RemindMeLaterDialog.tsx
+msgid "Custom date & time"
+msgstr "Custom date & time"
+
 #: src/features/custom-emoji/ui/CustomEmojiSettingsCard.tsx
 #: src/features/settings/ui/SettingsPanels.tsx
 #: src/shared/ui/markdown/InlineEmojiPopover.tsx
@@ -6235,6 +6307,10 @@ msgstr "Custom provider..."
 #: src/features/agents/ui/AgentConfigFields.tsx
 msgid "Custom provider…"
 msgstr "Custom provider…"
+
+#: src/features/reminders/ui/SnoozeMenu.tsx
+msgid "Custom…"
+msgstr "Custom…"
 
 #: src/features/agents/ui/AgentAiConfigurationMode.tsx
 msgid "Customize for this agent"
@@ -6838,6 +6914,10 @@ msgstr "DM content"
 #: src/features/home/lib/inbox.ts
 msgid "DM from {0}"
 msgstr "DM from {0}"
+
+#: src/features/reminders/ui/RemindersPanel.tsx
+msgid "DM with {name}"
+msgstr "DM with {name}"
 
 #: src/features/messages/ui/NewMessageScreen.tsx
 msgid "DMs support up to nine people, including you."
@@ -7599,6 +7679,10 @@ msgstr "Every month at {time} UTC"
 msgid "Every week at {time} UTC"
 msgstr "Every week at {time} UTC"
 
+#: src/features/pulse/ui/PulseTabBar.tsx
+msgid "Everyone"
+msgstr "Everyone"
+
 #: src/features/search/ui/SearchPromptPlaceholder.tsx
 msgid "everything"
 msgstr "everything"
@@ -7713,9 +7797,17 @@ msgstr "Failed to attach image."
 msgid "Failed to attach repository."
 msgstr "Failed to attach repository."
 
+#: src/features/reminders/ui/RemindersPanel.tsx
+msgid "Failed to cancel reminder"
+msgstr "Failed to cancel reminder"
+
 #: src/features/community-members/ui/CommunityMembersCard.tsx
 msgid "Failed to change role"
 msgstr "Failed to change role"
+
+#: src/features/reminders/ui/RemindersPanel.tsx
+msgid "Failed to complete reminder"
+msgstr "Failed to complete reminder"
 
 #: src/features/channels/ui/useMembersSidebarActions.ts
 msgid "Failed to control agent."
@@ -7724,6 +7816,10 @@ msgstr "Failed to control agent."
 #: src/shared/ui/markdown/CodeBlock.tsx
 msgid "Failed to copy code"
 msgstr "Failed to copy code"
+
+#: src/features/pulse/lib/useNoteActions.ts
+msgid "Failed to copy note link"
+msgstr "Failed to copy note link"
 
 #: src/features/settings/ui/ChannelTemplatesSettingsCard.tsx
 msgid "Failed to create"
@@ -7744,6 +7840,10 @@ msgstr "Failed to create agent."
 #: src/features/projects/ui/CreateProjectFormContent.tsx
 msgid "Failed to create project."
 msgstr "Failed to create project."
+
+#: src/features/reminders/ui/RemindMeLaterDialog.tsx
+msgid "Failed to create reminder"
+msgstr "Failed to create reminder"
 
 #: src/features/local-archive/ui/LocalArchiveSettingsCard.tsx
 msgid "Failed to create subscription."
@@ -7855,6 +7955,10 @@ msgstr "Failed to merge review."
 msgid "Failed to open direct message."
 msgstr "Failed to open direct message."
 
+#: src/features/pulse/lib/useNoteActions.ts
+msgid "Failed to open DM"
+msgstr "Failed to open DM"
+
 #: src/features/agents/ui/AgentCardMintDialog.tsx
 #: src/shared/ui/markdown/ExternalLinkAnchor.tsx
 msgid "Failed to open link"
@@ -7870,6 +7974,10 @@ msgstr "Failed to post comment."
 msgid "Failed to post line comment."
 msgstr "Failed to post line comment."
 
+#: src/features/pulse/lib/useNoteActions.ts
+msgid "Failed to post reply"
+msgstr "Failed to post reply"
+
 #: src/features/projects/ui/MergePullRequestButton.tsx
 msgid "Failed to prepare merge recovery."
 msgstr "Failed to prepare merge recovery."
@@ -7877,6 +7985,10 @@ msgstr "Failed to prepare merge recovery."
 #: src/features/projects/ui/MergePullRequestButton.tsx
 msgid "Failed to publish merged review status."
 msgstr "Failed to publish merged review status."
+
+#: src/features/pulse/ui/PulseView.tsx
+msgid "Failed to publish note"
+msgstr "Failed to publish note"
 
 #: src/features/projects/ui/ProjectDetailScreen.tsx
 msgid "Failed to pull repository"
@@ -7979,6 +8091,10 @@ msgstr "Failed to set up starter channels"
 msgid "Failed to sign binding response."
 msgstr "Failed to sign binding response."
 
+#: src/features/reminders/ui/RemindersPanel.tsx
+msgid "Failed to snooze reminder"
+msgstr "Failed to snooze reminder"
+
 #: src/features/agents/ui/useManagedAgentActions.ts
 #: src/features/profile/ui/UserProfilePanel.tsx
 msgid "Failed to start agent."
@@ -8012,6 +8128,10 @@ msgstr "Failed to update catalog sharing."
 #: src/features/local-archive/ui/LocalArchiveSettingsCard.tsx
 msgid "Failed to update observer archive."
 msgstr "Failed to update observer archive."
+
+#: src/features/pulse/lib/useNoteActions.ts
+msgid "Failed to update reaction"
+msgstr "Failed to update reaction"
 
 #: src/features/projects/ui/ProjectRepositoryManagement.tsx
 msgid "Failed to update repository access."
@@ -8199,6 +8319,10 @@ msgstr "Follow thread"
 #: src/features/settings/ui/AppearanceSettingsPanel.tsx
 msgid "Follow your system or choose a light or dark appearance."
 msgstr "Follow your system or choose a light or dark appearance."
+
+#: src/features/pulse/ui/PulseTabBar.tsx
+msgid "Following"
+msgstr "Following"
 
 #: src/features/profile/ui/UserProfilePrimaryActions.tsx
 msgid "Following failed: {reason}"
@@ -8835,6 +8959,18 @@ msgstr "Improvement"
 msgid "In"
 msgstr "In"
 
+#: src/features/reminders/lib/timePresets.ts
+msgid "In 1 hour"
+msgstr "In 1 hour"
+
+#: src/features/reminders/lib/timePresets.ts
+msgid "In 3 hours"
+msgstr "In 3 hours"
+
+#: src/features/reminders/lib/timePresets.ts
+msgid "In 30 minutes"
+msgstr "In 30 minutes"
+
 #: src/features/huddle/components/HuddleProfileControl.tsx
 msgid "In a huddle"
 msgstr "In a huddle"
@@ -9325,6 +9461,7 @@ msgstr "Jump to {timecode}"
 msgid "Jump to latest"
 msgstr "Jump to latest"
 
+#: src/features/reminders/ui/RemindersPanel.tsx
 #: src/shared/lib/relativeTime.ts
 msgid "just now"
 msgstr "just now"
@@ -9533,6 +9670,14 @@ msgstr "Lift timeout"
 #: src/features/settings/ui/AppearanceSettingsPanel.tsx
 msgid "Light"
 msgstr "Light"
+
+#: src/features/pulse/ui/NoteCard.tsx
+msgid "Like"
+msgstr "Like"
+
+#: src/features/pulse/ui/PulseTabBar.tsx
+msgid "Liked"
+msgstr "Liked"
 
 #: src/features/community-members/ui/InviteLinkSection.tsx
 msgid "Limit number of uses"
@@ -9814,6 +9959,14 @@ msgstr "Loading providers…"
 #: src/features/projects/ui/ProjectReadmePanel.tsx
 msgid "Loading README"
 msgstr "Loading README"
+
+#: src/features/reminders/ui/RemindersPanel.tsx
+msgid "Loading reminders..."
+msgstr "Loading reminders..."
+
+#: src/features/pulse/ui/NoteCard.tsx
+msgid "Loading reply context…"
+msgstr "Loading reply context…"
 
 #: src/features/projects/ui/ProjectReadmePanel.tsx
 msgid "Loading repository"
@@ -10383,6 +10536,7 @@ msgid "Migrated notes from ~/.sprout"
 msgstr "Migrated notes from ~/.sprout"
 
 #: src/features/projects/ui/ProjectsOverviewItems.tsx
+#: src/features/pulse/ui/PulseTabBar.tsx
 msgid "Mine"
 msgstr "Mine"
 
@@ -10797,6 +10951,10 @@ msgstr "Next"
 msgid "Next image"
 msgstr "Next image"
 
+#: src/features/reminders/lib/timePresets.ts
+msgid "Next Monday at 9am"
+msgstr "Next Monday at 9am"
+
 #: src/shared/ui/carousel.tsx
 msgid "Next slide"
 msgstr "Next slide"
@@ -10863,6 +11021,10 @@ msgstr "No additional details were attached to this event."
 msgid "No admin API found at this origin. Check the URL matches <0>BUZZ_ADMIN_HOST</0>."
 msgstr "No admin API found at this origin. Check the URL matches <0>BUZZ_ADMIN_HOST</0>."
 
+#: src/features/pulse/ui/PulseView.tsx
+msgid "No agent notes yet. Agents post here when they publish."
+msgstr "No agent notes yet. Agents post here when they publish."
+
 #: src/features/channels/ui/useQuickBotDrop.ts
 msgid "No agent runtime available."
 msgstr "No agent runtime available."
@@ -10899,6 +11061,10 @@ msgstr "No agents available yet — create or start one from the Agents view to 
 #: src/features/agents/ui/personaLibraryCopy.ts
 msgid "No agents in My Agents yet. Create one or choose one from Agent Catalog first."
 msgstr "No agents in My Agents yet. Create one or choose one from Agent Catalog first."
+
+#: src/features/pulse/ui/PulseView.tsx
+msgid "No agents registered yet."
+msgstr "No agents registered yet."
 
 #: src/features/agents/ui/personaLibraryCopy.ts
 msgid "No agents yet"
@@ -11111,6 +11277,10 @@ msgstr "No joined forums"
 msgid "no kinds"
 msgstr "no kinds"
 
+#: src/features/pulse/ui/PulseView.tsx
+msgid "No likes yet — tap the heart on a note to save it here."
+msgstr "No likes yet — tap the heart on a note to save it here."
+
 #: src/features/community-members/ui/InviteLinkSection.tsx
 #: src/features/mesh-compute/ui/MeshComputeSettingsCard.tsx
 msgid "No limit"
@@ -11251,6 +11421,10 @@ msgstr "No models found"
 msgid "No models match"
 msgstr "No models match"
 
+#: src/features/pulse/ui/PulseView.tsx
+msgid "No notes yet. Follow people to see their updates here."
+msgstr "No notes yet. Follow people to see their updates here."
+
 #: src/features/admin-console/AdminConsoleStaffingTab.tsx
 msgid "No operators configured."
 msgstr "No operators configured."
@@ -11300,6 +11474,10 @@ msgstr "No projects found"
 msgid "No projects yet"
 msgstr "No projects yet"
 
+#: src/features/pulse/ui/PulseView.tsx
+msgid "No public notes yet."
+msgstr "No public notes yet."
+
 #: src/features/agents/ui/RawEventRail.tsx
 msgid "No raw events yet."
 msgstr "No raw events yet."
@@ -11317,6 +11495,7 @@ msgid "No recent activity yet."
 msgstr "No recent activity yet."
 
 #: src/features/home/ui/InboxListPane.tsx
+#: src/features/reminders/ui/RemindersPanel.tsx
 msgid "No reminders"
 msgstr "No reminders"
 
@@ -11387,6 +11566,10 @@ msgstr "No teams are being shared"
 #: src/features/settings/ui/ChannelTemplatesSettingsCard.tsx
 msgid "No templates yet. Create one to save a reusable channel configuration."
 msgstr "No templates yet. Create one to save a reusable channel configuration."
+
+#: src/features/pulse/ui/NoteCard.tsx
+msgid "No text"
+msgstr "No text"
 
 #: src/features/projects/ui/ProjectPullRequestFilesChangedPanel.tsx
 msgid "No textual diff is available for this file."
@@ -11533,9 +11716,14 @@ msgid "Not the community you're connected to."
 msgstr "Not the community you're connected to."
 
 #: src/features/admin-console/AdminConsoleReportsTab.tsx
+#: src/features/reminders/ui/RemindersPanel.tsx
 #: src/features/search/ui/SearchResultItem.tsx
 msgid "Note"
 msgstr "Note"
+
+#: src/features/reminders/ui/RemindMeLaterDialog.tsx
+msgid "Note (optional)"
+msgstr "Note (optional)"
 
 #: src/features/home/ui/InboxListPane.tsx
 msgid "Nothing needs action"
@@ -11924,6 +12112,10 @@ msgstr "Open link"
 msgid "Open local repository folder"
 msgstr "Open local repository folder"
 
+#: src/features/reminders/ui/RemindersPanel.tsx
+msgid "Open message"
+msgstr "Open message"
+
 #: src/shared/ui/markdown/MessageLinkPill.tsx
 msgid "Open message in channel {channelLabel}"
 msgstr "Open message in channel {channelLabel}"
@@ -11941,6 +12133,7 @@ msgid "Open or close settings"
 msgstr "Open or close settings"
 
 #: src/features/huddle/components/ParticipantList.tsx
+#: src/features/pulse/ui/AgentActivityCard.tsx
 msgid "Open profile for {displayName}"
 msgstr "Open profile for {displayName}"
 
@@ -12251,6 +12444,10 @@ msgstr "Outline on"
 msgid "Output"
 msgstr "Output"
 
+#: src/features/reminders/lib/reminderFilters.ts
+msgid "Overdue"
+msgstr "Overdue"
+
 #: src/features/agents/ui/EnvVarsEditor.tsx
 msgid "Overrides"
 msgstr "Overrides"
@@ -12326,6 +12523,10 @@ msgstr "Parallelism"
 #: src/features/agents/ui/AgentSessionToolItem/ToolDetailBlocks.tsx
 msgid "Parameters"
 msgstr "Parameters"
+
+#: src/features/pulse/ui/NoteCard.tsx
+msgid "Parent note author"
+msgstr "Parent note author"
 
 #: src/features/local-archive/ui/localArchiveKinds.ts
 msgid "Participant joined"
@@ -12544,6 +12745,10 @@ msgstr "Point the agent's <0>REPOS</0> directory at an existing folder so agents
 #: src/features/profile/ui/AnimatedAvatarReviewNav.tsx
 msgid "Position yourself"
 msgstr "Position yourself"
+
+#: src/features/pulse/ui/NoteCard.tsx
+msgid "Post your reply"
+msgstr "Post your reply"
 
 #: src/shared/ui/VideoPlayer.tsx
 msgid "Posting..."
@@ -12956,6 +13161,10 @@ msgstr "Pull request · {0}"
 msgid "Pulse"
 msgstr "Pulse"
 
+#: src/features/pulse/ui/PulseTabBar.tsx
+msgid "Pulse sections"
+msgstr "Pulse sections"
+
 #: src/features/projects/ui/ProjectRepositoryActionsPanel.tsx
 #: src/features/projects/ui/ProjectRepositorySource.tsx
 msgid "Push"
@@ -13362,12 +13571,14 @@ msgstr "Release check"
 
 #: src/features/home/ui/InboxListPane.tsx
 #: src/features/messages/ui/MessageActionBar.tsx
+#: src/features/reminders/ui/RemindMeLaterDialog.tsx
 #: src/features/sidebar/ui/ChannelActivityPopover.tsx
 msgid "Remind me later"
 msgstr "Remind me later"
 
 #: src/features/home/lib/inbox.ts
 #: src/features/home/ui/InboxListPane.tsx
+#: src/features/reminders/ui/RemindersPanel.tsx
 msgid "Reminder"
 msgstr "Reminder"
 
@@ -13375,13 +13586,35 @@ msgstr "Reminder"
 msgid "Reminder {until}"
 msgstr "Reminder {until}"
 
+#: src/features/reminders/ui/RemindersPanel.tsx
+msgid "Reminder cancelled"
+msgstr "Reminder cancelled"
+
+#: src/features/reminders/ui/RemindersPanel.tsx
+msgid "Reminder completed"
+msgstr "Reminder completed"
+
+#: src/features/reminders/ui/RemindMeLaterDialog.tsx
+msgid "Reminder date"
+msgstr "Reminder date"
+
 #: src/features/home/ui/InboxListPane.tsx
+#: src/features/reminders/useReminderNotifications.ts
 msgid "Reminder due"
 msgstr "Reminder due"
 
 #: src/features/home/ui/InboxListPane.tsx
+#: src/features/reminders/ui/RemindMeLaterDialog.tsx
 msgid "Reminder set"
 msgstr "Reminder set"
+
+#: src/features/reminders/ui/RemindersPanel.tsx
+msgid "Reminder snoozed"
+msgstr "Reminder snoozed"
+
+#: src/features/reminders/ui/RemindMeLaterDialog.tsx
+msgid "Reminder time"
+msgstr "Reminder time"
 
 #: src/features/home/ui/InboxFilterMenu.tsx
 msgid "Reminders"
@@ -13629,6 +13862,7 @@ msgid "Replies are not available for this item."
 msgstr "Replies are not available for this item."
 
 #: src/features/messages/ui/MessageActionBar.tsx
+#: src/features/pulse/ui/NoteCard.tsx
 #: src/shared/ui/VideoPlayer.tsx
 msgid "Reply"
 msgstr "Reply"
@@ -13659,6 +13893,10 @@ msgstr "reply_in_thread is not supported for {triggerType} triggers — use the 
 #: src/shared/ui/VideoPlayer.tsx
 msgid "Replying to {0}"
 msgstr "Replying to {0}"
+
+#: src/features/pulse/ui/NoteCard.tsx
+msgid "Replying to an unavailable note"
+msgstr "Replying to an unavailable note"
 
 #: src/shared/ui/linkPreviewTypeLabel.ts
 msgid "repo"
@@ -14602,6 +14840,15 @@ msgstr "Search people, or paste a public key"
 msgid "Search projects"
 msgstr "Search projects"
 
+#: src/features/pulse/ui/PulseTabBar.tsx
+#: src/features/pulse/ui/PulseView.tsx
+msgid "Search Pulse"
+msgstr "Search Pulse"
+
+#: src/features/pulse/ui/PulseView.tsx
+msgid "Search Pulse notes by author or text."
+msgstr "Search Pulse notes by author or text."
+
 #: src/features/settings/ui/HarnessCatalogDialog.tsx
 msgid "Search runtimes"
 msgstr "Search runtimes"
@@ -14705,6 +14952,10 @@ msgstr "Select a provider"
 #: src/features/agents/ui/agentConfigOptions.tsx
 msgid "Select a provider…"
 msgstr "Select a provider…"
+
+#: src/features/reminders/ui/RemindersPanel.tsx
+msgid "Select a reminder"
+msgstr "Select a reminder"
 
 #: src/features/settings/ui/HarnessCatalogDialog.tsx
 msgid "Select a runtime on the left, or add a custom one."
@@ -14997,6 +15248,10 @@ msgstr "Set in runtime config"
 msgid "Set new community name"
 msgstr "Set new community name"
 
+#: src/features/reminders/ui/RemindMeLaterDialog.tsx
+msgid "Set reminder"
+msgstr "Set reminder"
+
 #. placeholder {0}: requirement.field
 #: src/shared/ui/config-nudge-attachment.tsx
 msgid "Set the <0>{0}</0> field in Edit Agent dropdowns"
@@ -15046,6 +15301,7 @@ msgstr "Setup guide"
 #: src/features/agents/ui/PersonaActionsMenu.tsx
 #: src/features/agents/ui/PersonaShareDialog.tsx
 #: src/features/agents/ui/TeamsSection.tsx
+#: src/features/pulse/ui/NoteCard.tsx
 msgid "Share"
 msgstr "Share"
 
@@ -15425,6 +15681,22 @@ msgstr "Small cards with a thumbnail"
 msgid "Smaller"
 msgstr "Smaller"
 
+#: src/features/reminders/ui/SnoozeMenu.tsx
+msgid "Snooze"
+msgstr "Snooze"
+
+#: src/features/reminders/ui/SnoozeMenu.tsx
+msgid "Snooze date"
+msgstr "Snooze date"
+
+#: src/features/reminders/ui/SnoozeMenu.tsx
+msgid "Snooze time"
+msgstr "Snooze time"
+
+#: src/features/reminders/ui/SnoozeMenu.tsx
+msgid "Snooze until"
+msgstr "Snooze until"
+
 #: src/features/settings/UpdateChecker.tsx
 msgid "Software Updates"
 msgstr "Software Updates"
@@ -15558,6 +15830,10 @@ msgstr "Start agent"
 #: src/features/agents/ui/AgentRuntimeAvatarControl.tsx
 msgid "Start Agent"
 msgstr "Start Agent"
+
+#: src/features/pulse/ui/NoteCard.tsx
+msgid "Start direct message"
+msgstr "Start direct message"
 
 #: src/features/huddle/components/HuddleIndicator.tsx
 #: src/features/messages/ui/WaveMessageAttachment.tsx
@@ -16964,6 +17240,7 @@ msgstr "to the selected channel."
 msgid "To:"
 msgstr "To:"
 
+#: src/features/reminders/lib/reminderFilters.ts
 #: src/shared/lib/datetime.ts
 msgid "Today"
 msgstr "Today"
@@ -17011,6 +17288,10 @@ msgstr "Toggle Sidebar"
 #: src/shared/lib/keyboard-shortcuts.ts
 msgid "Toggle strikethrough formatting"
 msgstr "Toggle strikethrough formatting"
+
+#: src/features/reminders/lib/timePresets.ts
+msgid "Tomorrow at 9am"
+msgstr "Tomorrow at 9am"
 
 #: src/features/mesh-compute/ui/MeshComputeSettingsCard.tsx
 msgid "Too large"
@@ -17339,6 +17620,7 @@ msgstr "Unknown branch"
 
 #: src/features/messages/ui/DraftDetailPane.tsx
 #: src/features/messages/ui/DraftsPanel.tsx
+#: src/features/reminders/ui/RemindersPanel.tsx
 msgid "Unknown channel"
 msgstr "Unknown channel"
 
@@ -17366,6 +17648,10 @@ msgstr "Unknown time"
 #: src/features/profile/ui/UserProfileAgentManagementRows.tsx
 msgid "Unless the agent is known to be Offline, {productName} first requests shutdown through a channel when available. A failed request cancels deletion. The remote process may still be running even after a successful request."
 msgstr "Unless the agent is known to be Offline, {productName} first requests shutdown through a channel when available. A failed request cancels deletion. The remote process may still be running even after a successful request."
+
+#: src/features/pulse/ui/NoteCard.tsx
+msgid "Unlike"
+msgstr "Unlike"
 
 #: src/features/messages/lib/useLinkEditor.tsx
 msgid "Unlink"
@@ -17471,6 +17757,10 @@ msgstr "Untitled task"
 #: src/features/workflows/ui/WorkflowDialog.tsx
 msgid "Untitled workflow"
 msgstr "Untitled workflow"
+
+#: src/features/reminders/lib/reminderFilters.ts
+msgid "Upcoming"
+msgstr "Upcoming"
 
 #: src/features/agents/ui/AgentCardMintDialog.tsx
 #: src/features/settings/ui/HarnessCatalogDialog.tsx
@@ -17673,6 +17963,10 @@ msgstr "URL must start with https://"
 #: src/features/agents/ui/agentSessionTranscript.ts
 msgid "Usage"
 msgstr "Usage"
+
+#: src/features/reminders/ui/RemindersPanel.tsx
+msgid "Use \"Remind me later\" on any message to create one."
+msgstr "Use \"Remind me later\" on any message to create one."
 
 #: src/features/settings/ui/ChannelTemplatesSettingsCard.tsx
 msgid "Use {CHANNEL_NAME_TOKEN} and {TEMPLATE_NAME_TOKEN} as placeholders."
@@ -18297,6 +18591,10 @@ msgstr "Weekly"
 msgid "What archived means"
 msgstr "What archived means"
 
+#: src/features/pulse/ui/PulseView.tsx
+msgid "What are you looking for?"
+msgstr "What are you looking for?"
+
 #: src/features/projects/ui/PullRequestReviewCard.tsx
 msgid "What looks good?"
 msgstr "What looks good?"
@@ -18329,6 +18627,10 @@ msgstr "What this template is for"
 msgid "What to include"
 msgstr "What to include"
 
+#: src/features/pulse/ui/PulseView.tsx
+msgid "What would you like to know?"
+msgstr "What would you like to know?"
+
 #: src/features/agents/ui/agentSessionTranscriptHelpers.ts
 msgid "What you were working on"
 msgstr "What you were working on"
@@ -18340,6 +18642,10 @@ msgstr "What’s an identity key?"
 #: src/features/agents/ui/PersonaShareDialog.tsx
 msgid "What’s included"
 msgstr "What’s included"
+
+#: src/features/pulse/ui/PulseView.tsx
+msgid "What's on your mind?"
+msgstr "What's on your mind?"
 
 #: src/features/workflows/ui/workflowTriggerCardClause.ts
 msgid "When “{value}” is posted"
@@ -18725,6 +19031,8 @@ msgstr "Yesterday"
 #: src/features/community-members/ui/CommunityMembersSettingsCard.tsx
 #: src/features/messages/ui/DraftDetailPane.tsx
 #: src/features/profile/ui/AnimatedAvatarReviewNav.tsx
+#: src/features/pulse/ui/NoteCard.tsx
+#: src/features/pulse/ui/PulseView.tsx
 msgid "You"
 msgstr "You"
 
@@ -18787,6 +19095,10 @@ msgstr "You can’t change this address after creating the community."
 #: src/features/custom-emoji/ui/CustomEmojiSettingsCard.tsx
 msgid "You haven’t added any emoji yet. Add one above."
 msgstr "You haven’t added any emoji yet. Add one above."
+
+#: src/features/pulse/ui/PulseView.tsx
+msgid "You haven't posted any notes yet."
+msgstr "You haven't posted any notes yet."
 
 #: src/features/projects/lib/projectGitError.ts
 msgid "You need access to the repository’s channel before you can clone it."

@@ -1,3 +1,4 @@
+import { Trans, useLingui } from "@lingui/react/macro";
 import {
   Bot,
   Heart,
@@ -75,6 +76,7 @@ function ReplyParentContext({
     cachedProfile?.avatarUrl ?? fetchedProfile?.avatarUrl ?? null;
   const parentIsAgent = cachedProfile?.isAgent === true;
   const parentSnippet = parentNote ? noteSnippet(parentNote.content) : null;
+  const { t } = useLingui();
 
   return (
     <div className="mt-2 truncate rounded-xl border border-border/50 bg-muted/25 px-3 py-2 text-xs text-muted-foreground">
@@ -92,7 +94,7 @@ function ReplyParentContext({
               <UserAvatar
                 avatarUrl={parentAvatarUrl}
                 className="!h-4 !w-4 shrink-0"
-                displayName={parentDisplayName ?? "Parent note author"}
+                displayName={parentDisplayName ?? t`Parent note author`}
                 shape={parentIsAgent ? "squircle" : "circle"}
               />
             </button>
@@ -109,13 +111,13 @@ function ReplyParentContext({
                 {parentDisplayName}
               </button>
             </UserProfilePopover>
-            : {parentSnippet || "No text"}
+            : {parentSnippet || t`No text`}
           </span>
         </div>
       ) : parentNoteQuery.isLoading ? (
-        "Loading reply context…"
+        <Trans>Loading reply context…</Trans>
       ) : (
-        "Replying to an unavailable note"
+        <Trans>Replying to an unavailable note</Trans>
       )}
     </div>
   );
@@ -124,7 +126,7 @@ function ReplyParentContext({
 export function NoteCard({
   note,
   profile,
-  currentUserDisplayName = "You",
+  currentUserDisplayName,
   currentUserProfile,
   composerProfiles = {},
   isAgent,
@@ -136,8 +138,10 @@ export function NoteCard({
   members = [],
   actions,
 }: NoteCardProps) {
+  const { t } = useLingui();
   const locale = useLocale();
   const displayName = profile?.displayName ?? truncateNpub(note.pubkey);
+  const currentUserLabel = currentUserDisplayName ?? t`You`;
   const avatarUrl = profile?.avatarUrl ?? null;
   const [isReplyComposerOpen, setIsReplyComposerOpen] = React.useState(false);
   const actionButtonClass =
@@ -188,7 +192,7 @@ export function NoteCard({
           </UserProfilePopover>
           {isAgent ? (
             <span className="inline-flex h-4 items-center rounded bg-muted px-1 text-2xs font-medium text-muted-foreground">
-              bot
+              <Trans>bot</Trans>
             </span>
           ) : null}
           {profile?.nip05Handle ? (
@@ -217,7 +221,7 @@ export function NoteCard({
             <Tooltip>
               <TooltipTrigger asChild>
                 <button
-                  aria-label={isUpvoted ? "Unlike" : "Like"}
+                  aria-label={isUpvoted ? t`Unlike` : t`Like`}
                   aria-pressed={isUpvoted}
                   className={`${actionButtonClass} ${isUpvoted ? activeActionClass : ""} disabled:opacity-45`}
                   disabled={isUpvotePending}
@@ -234,12 +238,12 @@ export function NoteCard({
                   {reactionCountLabel}
                 </button>
               </TooltipTrigger>
-              <TooltipContent>{isUpvoted ? "Unlike" : "Like"}</TooltipContent>
+              <TooltipContent>{isUpvoted ? t`Unlike` : t`Like`}</TooltipContent>
             </Tooltip>
             <Tooltip>
               <TooltipTrigger asChild>
                 <button
-                  aria-label="Reply"
+                  aria-label={t`Reply`}
                   aria-expanded={isReplyComposerOpen}
                   className={actionButtonClass}
                   onClick={() => setIsReplyComposerOpen((current) => !current)}
@@ -249,12 +253,14 @@ export function NoteCard({
                   {countPlaceholder}
                 </button>
               </TooltipTrigger>
-              <TooltipContent>Reply</TooltipContent>
+              <TooltipContent>
+                <Trans>Reply</Trans>
+              </TooltipContent>
             </Tooltip>
             <Tooltip>
               <TooltipTrigger asChild>
                 <button
-                  aria-label="Share"
+                  aria-label={t`Share`}
                   className={actionButtonClass}
                   onClick={() => actions?.share?.(note)}
                   type="button"
@@ -263,13 +269,15 @@ export function NoteCard({
                   {countPlaceholder}
                 </button>
               </TooltipTrigger>
-              <TooltipContent>Share</TooltipContent>
+              <TooltipContent>
+                <Trans>Share</Trans>
+              </TooltipContent>
             </Tooltip>
             {!isOwnNote ? (
               <Tooltip>
                 <TooltipTrigger asChild>
                   <button
-                    aria-label="Start direct message"
+                    aria-label={t`Start direct message`}
                     className={actionButtonClass}
                     onClick={() => actions?.startDm?.(note.pubkey)}
                     type="button"
@@ -277,7 +285,9 @@ export function NoteCard({
                     <PenSquare className="h-4 w-4" />
                   </button>
                 </TooltipTrigger>
-                <TooltipContent>Start direct message</TooltipContent>
+                <TooltipContent>
+                  <Trans>Start direct message</Trans>
+                </TooltipContent>
               </Tooltip>
             ) : null}
           </div>
@@ -293,11 +303,11 @@ export function NoteCard({
                   <UserAvatar
                     avatarUrl={currentUserAvatarUrl}
                     className="!h-8 !w-8 shrink-0"
-                    displayName={currentUserDisplayName}
+                    displayName={currentUserLabel}
                     shape={currentUserProfile?.isAgent ? "squircle" : "circle"}
                   />
                   <span className="max-w-32 truncate text-sm font-medium text-foreground">
-                    {currentUserDisplayName}
+                    {currentUserLabel}
                   </span>
                 </div>
               }
@@ -311,7 +321,7 @@ export function NoteCard({
                     setIsReplyComposerOpen(false);
                   })
               }
-              placeholder="Post your reply"
+              placeholder={t`Post your reply`}
               profiles={composerProfiles}
             />
           </div>

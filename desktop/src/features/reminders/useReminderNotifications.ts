@@ -1,3 +1,5 @@
+import { msg } from "@lingui/core/macro";
+import { useLingui } from "@lingui/react/macro";
 import * as React from "react";
 import { useQueryClient } from "@tanstack/react-query";
 
@@ -60,6 +62,7 @@ export function useReminderNotifications(
   settings: NotificationSettings,
   channels: ReadonlyArray<{ id: string; name?: string | null }>,
 ): void {
+  const { i18n } = useLingui();
   const reminders = useRemindersQuery(pubkey).data;
   const queryClient = useQueryClient();
   const remindersRef = React.useRef<Reminder[]>([]);
@@ -97,16 +100,20 @@ export function useReminderNotifications(
           )
         : null;
 
+    const count = due.length;
     const body =
-      due.length === 1
+      count === 1
         ? truncateNotificationBody(
             due[0].content.target?.preview ?? due[0].content.note ?? "",
-            "A reminder is waiting",
+            i18n._(msg`A reminder is waiting`),
           )
-        : `${due.length} reminders are due`;
+        : i18n._(msg`${count} reminders are due`);
 
     void sendDesktopNotification({
-      title: formatNotificationTitle({ prefix: "Reminder due", channelLabel }),
+      title: formatNotificationTitle({
+        prefix: i18n._(msg`Reminder due`),
+        channelLabel,
+      }),
       body,
     }).then((didSend) => {
       if (!didSend) return;

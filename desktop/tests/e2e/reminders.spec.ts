@@ -314,12 +314,12 @@ test.describe("reminders phase 2 — author, source, navigation", () => {
     // Scope to the reminders panel to avoid matching the "general" entry in
     // the sidebar channel list.
     const remindersPanel = page.getByTestId("home-inbox-reminders");
-    await expect(
-      remindersPanel.getByText("alice", { exact: true }),
-    ).toBeVisible();
-    await expect(
-      remindersPanel.getByText("#general", { exact: true }),
-    ).toBeVisible();
+    // Asserted as the whole line, not as two separately-exact spans: author,
+    // "in" and location used to be three sibling spans and are now one
+    // translatable sentence, so the location is no longer an element whose
+    // exact text is "#general". The whole line is the stricter assertion
+    // anyway — it pins the order as well as both facts.
+    await expect(remindersPanel.getByText("alice in #general")).toBeVisible();
     await expect(remindersPanel.getByText("Reply to Alice")).toBeVisible();
     await waitForAnimations(page);
   });

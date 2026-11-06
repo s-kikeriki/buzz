@@ -3909,19 +3909,21 @@ test("Inbox reminder rows and detail identify DM context", async ({ page }) => {
 
   await page.getByTestId("inbox-filter-trigger").click();
   await page.getByRole("menuitemradio", { name: "Reminders" }).click();
+  // Author, "in" and the location are one translatable sentence now, not
+  // three sibling spans, so the location is no longer an element whose exact
+  // text is "DM with alice-tyler". Assert the whole line instead — and make
+  // the negative a substring for the same reason: `{ exact: true }` on
+  // "#alice-tyler" would match nothing either way and pass vacuously even if
+  // the component took the wrong branch.
   const reminderRow = page.getByTestId(`home-reminder-item-${reminderId}`);
   await expect(
-    reminderRow.getByText("DM with alice-tyler", { exact: true }),
+    reminderRow.getByText("alice in DM with alice-tyler"),
   ).toBeVisible();
   await reminderRow.getByRole("button").click();
 
   const detail = page.getByTestId("home-reminder-detail");
-  await expect(
-    detail.getByText("DM with alice-tyler", { exact: true }),
-  ).toBeVisible();
-  await expect(detail.getByText("#alice-tyler", { exact: true })).toHaveCount(
-    0,
-  );
+  await expect(detail.getByText("alice in DM with alice-tyler")).toBeVisible();
+  await expect(detail.getByText("in #alice-tyler")).toHaveCount(0);
 });
 
 test("Inbox detail title and source action navigate to the conversation", async ({

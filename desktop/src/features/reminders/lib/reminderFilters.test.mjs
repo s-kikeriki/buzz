@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
+import { i18n } from "@lingui/core";
 
 import {
   countDue,
@@ -122,15 +123,17 @@ test("groupReminders_buckets_overdue_today_upcoming", () => {
     reminder({ id: "today", notBefore: todaySecs }),
     reminder({ id: "soon", notBefore: realEndOfTodaySecs + 86_400 }),
   ]);
-  const labels = groups.map((g) => g.label);
-  assert.deepEqual(labels, ["Overdue", "Today", "Upcoming"]);
+  // Buckets are identified by their locale-independent `id`, never by the
+  // heading the user reads. One test below pins the English headings.
+  const ids = groups.map((g) => g.id);
+  assert.deepEqual(ids, ["overdue", "today", "upcoming"]);
 });
 
 test("groupReminders_omits_empty_buckets", () => {
   const groups = groupReminders([reminder({ notBefore: realNow - 100 })]);
   assert.deepEqual(
-    groups.map((g) => g.label),
-    ["Overdue"],
+    groups.map((g) => g.id),
+    ["overdue"],
   );
 });
 
@@ -150,7 +153,7 @@ test("groupReminders_appends_completed_group_when_includeDone_true", () => {
     ],
     true,
   );
-  const completed = groups.find((g) => g.label === "Completed");
+  const completed = groups.find((g) => g.id === "completed");
   assert.ok(completed);
   // Done reminders are sorted newest-first by createdAt.
   assert.deepEqual(
@@ -175,7 +178,33 @@ test("groupReminders_buckets_epoch_zero_notBefore_as_overdue", () => {
   // Guards on `notBefore !== undefined`, matching isDue/dueSince: 0 is kept.
   const groups = groupReminders([reminder({ notBefore: 0 })]);
   assert.deepEqual(
-    groups.map((g) => g.label),
-    ["Overdue"],
+    groups.map((g) => g.id),
+    ["overdue"],
+  );
+});
+
+// ── Headings resolve through the catalogue ───────────────────────────────────
+
+test("groupReminders_headingsResolveThroughI18n_andIdsStayStable", () => {
+  const todaySecs = Math.floor((realNow + realEndOfTodaySecs) / 2);
+  const groups = groupReminders(
+    [
+      reminder({ id: "over", notBefore: realNow - 100 }),
+      reminder({ id: "today", notBefore: todaySecs }),
+      reminder({ id: "soon", notBefore: realEndOfTodaySecs + 86_400 }),
+      reminder({ id: "done", status: "done" }),
+    ],
+    true,
+  );
+  assert.deepEqual(
+    groups.map((g) => g.id),
+    ["overdue", "today", "upcoming", "completed"],
+  );
+  // English copy, pinned: the test-loader activates `en`. Every heading must
+  // resolve to a non-empty string — a descriptor that is wired up wrong
+  // (missing message, bad ICU) fails here rather than on screen.
+  assert.deepEqual(
+    groups.map((g) => i18n._(g.label)),
+    ["Overdue", "Today", "Upcoming", "Completed"],
   );
 });

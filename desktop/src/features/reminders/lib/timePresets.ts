@@ -1,11 +1,33 @@
+import type { I18n, MessageDescriptor } from "@lingui/core";
+import { msg } from "@lingui/core/macro";
+
+/**
+ * Stable preset identity, independent of the displayed label. React keys and
+ * tests bind this, never `label`: a translated label would otherwise change
+ * every key with the locale, and pin the tests to English copy.
+ */
+export type TimePresetId =
+  | "in30m"
+  | "in1h"
+  | "in3h"
+  | "tomorrow9am"
+  | "nextMonday9am";
+
 /**
  * Shared reminder time presets — the single source of truth for both the
  * create dialog and the snooze dropdown. Each preset returns a Unix timestamp
  * (seconds) strictly in the future.
  */
 export type TimePreset = {
+  /** Locale-independent identity for React keys and tests. */
+  id: TimePresetId;
+  /** Button label in the active locale. */
   label: string;
   getTimestamp: () => number;
+};
+
+type TimePresetSpec = Omit<TimePreset, "label"> & {
+  label: MessageDescriptor;
 };
 
 function nowSeconds(): number {
@@ -28,19 +50,56 @@ function nextDayAt9am(dayOffset: number): number {
   return Math.floor(target.getTime() / 1_000);
 }
 
-export const TIME_PRESETS: TimePreset[] = [
-  { label: "In 30 minutes", getTimestamp: () => nowSeconds() + 30 * 60 },
-  { label: "In 1 hour", getTimestamp: () => nowSeconds() + 60 * 60 },
-  { label: "In 3 hours", getTimestamp: () => nowSeconds() + 3 * 60 * 60 },
-  { label: "Tomorrow at 9am", getTimestamp: () => nextDayAt9am(1) },
+/**
+ * The presets as message descriptors rather than resolved strings. Resolving
+ * at module scope would freeze every label in whichever locale happened to
+ * boot first — the same trap `localArchiveKinds` documents.
+ */
+const TIME_PRESET_SPECS: ReadonlyArray<TimePresetSpec> = [
   {
-    label: "Next Monday at 9am",
+    id: "in30m",
+    label: msg`In 30 minutes`,
+    getTimestamp: () => nowSeconds() + 30 * 60,
+  },
+  {
+    id: "in1h",
+    label: msg`In 1 hour`,
+    getTimestamp: () => nowSeconds() + 60 * 60,
+  },
+  {
+    id: "in3h",
+    label: msg`In 3 hours`,
+    getTimestamp: () => nowSeconds() + 3 * 60 * 60,
+  },
+  {
+    id: "tomorrow9am",
+    label: msg`Tomorrow at 9am`,
+    getTimestamp: () => nextDayAt9am(1),
+  },
+  {
+    id: "nextMonday9am",
+    label: msg`Next Monday at 9am`,
     getTimestamp: () => {
       const daysUntilMonday = (8 - new Date().getDay()) % 7 || 7;
       return nextDayAt9am(daysUntilMonday);
     },
   },
 ];
+
+/**
+ * The presets in the active locale.
+ *
+ * `i18n` is a required parameter rather than a module import, following
+ * `kindGroups`: both call sites are render paths, and a module-level constant
+ * would resolve once and never follow a language change.
+ */
+export function timePresets(i18n: I18n): ReadonlyArray<TimePreset> {
+  return TIME_PRESET_SPECS.map((spec) => ({
+    id: spec.id,
+    label: i18n._(spec.label),
+    getTimestamp: spec.getTimestamp,
+  }));
+}
 
 /** Today as `YYYY-MM-DD` in local time, for the custom date input `min`. */
 export function todayDateString(): string {

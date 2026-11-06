@@ -1,3 +1,4 @@
+import { Trans, useLingui } from "@lingui/react/macro";
 import { Search } from "lucide-react";
 
 import type { PulseTab } from "@/features/pulse/ui/PulseView";
@@ -22,19 +23,20 @@ export function PulseTabBar({
   relayAgents,
   onTabChange,
 }: PulseTabBarProps) {
+  const { t } = useLingui();
   return (
     <div className="relative z-40 shrink-0 px-4 pt-4 sm:px-6">
       <div className="relative mx-auto flex w-full max-w-2xl items-center justify-center">
         <div className="min-w-0 max-w-full">
           <div className="-mx-4 overflow-x-auto px-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
             <div
-              aria-label="Pulse sections"
+              aria-label={t`Pulse sections`}
               className="flex items-center gap-1"
               role="tablist"
             >
               <Button
                 aria-controls={getPanelId("search")}
-                aria-label="Search Pulse"
+                aria-label={t`Search Pulse`}
                 aria-selected={activeTab === "search"}
                 className="h-7 w-7 shrink-0 rounded-full border border-transparent p-0 text-muted-foreground data-[active=true]:border-border/70 data-[active=true]:bg-background/80 data-[active=true]:text-foreground data-[active=true]:shadow-xs data-[active=true]:backdrop-blur-sm"
                 data-active={activeTab === "search"}
@@ -59,7 +61,7 @@ export function PulseTabBar({
                 type="button"
                 variant="ghost"
               >
-                Everyone
+                <Trans>Everyone</Trans>
               </Button>
               <Button
                 aria-controls={getPanelId("people")}
@@ -73,7 +75,7 @@ export function PulseTabBar({
                 type="button"
                 variant="ghost"
               >
-                Following
+                <Trans>Following</Trans>
               </Button>
               <Button
                 aria-controls={getPanelId("liked")}
@@ -87,7 +89,7 @@ export function PulseTabBar({
                 type="button"
                 variant="ghost"
               >
-                Liked
+                <Trans>Liked</Trans>
               </Button>
               <Button
                 aria-controls={getPanelId("agents")}
@@ -101,7 +103,7 @@ export function PulseTabBar({
                 type="button"
                 variant="ghost"
               >
-                Agents
+                <Trans>Agents</Trans>
                 {relayAgents.length > 0 ? (
                   <span className="ml-0.5 inline-flex h-4 min-w-4 items-center justify-center rounded-full bg-muted px-1 text-2xs font-medium text-muted-foreground">
                     {relayAgents.length}
@@ -120,7 +122,7 @@ export function PulseTabBar({
                 type="button"
                 variant="ghost"
               >
-                Mine
+                <Trans>Mine</Trans>
               </Button>
             </div>
           </div>
