@@ -1,3 +1,5 @@
+import { i18n } from "@lingui/core";
+import { msg } from "@lingui/core/macro";
 import { listen } from "@tauri-apps/api/event";
 import { useEffect } from "react";
 import { toast } from "sonner";
@@ -33,8 +35,8 @@ export function useNestNotifications(): void {
         return;
       }
       localStorage.setItem(MIGRATION_TOAST_KEY, "true");
-      toast.success("Migrated notes from ~/.sprout", {
-        description: "You can delete it to reclaim disk space.",
+      toast.success(i18n._(msg`Migrated notes from ~/.sprout`), {
+        description: i18n._(msg`You can delete it to reclaim disk space.`),
       });
     });
 

@@ -590,6 +590,28 @@ const CONVERTED_FILES = [
   "src/features/profile/ui/UserProfileSnapshotExportDialog.tsx",
   "src/features/profile/ui/useAgentLifecycleActions.ts",
   "src/features/profile/ui/useProfileInteractionActions.ts",
+  // Tranche: the communities area — the switcher, the add/edit dialogs, the
+  // first-run community setup and the hosted-community flows.
+  //
+  // `communityStorage.ts`, `hostedCommunityApi.ts`, `useCommunityInit.ts` and
+  // `useNestNotifications.ts` are libraries, not UI, and are listed because
+  // they *produce* copy: the nine hosted-relay error messages, the
+  // leave/switch failures and the migration toast all come from there and
+  // appear in no JSX node.
+  "src/features/communities/communityStorage.ts",
+  "src/features/communities/hostedCommunityApi.ts",
+  "src/features/communities/ui/AddCommunityDialog.tsx",
+  "src/features/communities/ui/CommunityApplyErrorScreen.tsx",
+  "src/features/communities/ui/CommunityChangeOverlay.tsx",
+  "src/features/communities/ui/CommunityEditForm.tsx",
+  "src/features/communities/ui/CommunityIconSettingsCard.tsx",
+  "src/features/communities/ui/CommunitySwitcher.tsx",
+  "src/features/communities/ui/EditCommunityDialog.tsx",
+  "src/features/communities/ui/HostedCommunityCreateFlow.tsx",
+  "src/features/communities/ui/HostedCommunityOnboarding.tsx",
+  "src/features/communities/ui/WelcomeSetup.tsx",
+  "src/features/communities/useCommunityInit.ts",
+  "src/features/communities/useNestNotifications.ts",
 ];
 
 /**
@@ -641,6 +663,41 @@ const OVERRIDES = new Map([
   [
     "src/features/settings/ui/HostedCommunitiesSettingsCard.tsx:1040",
     "`npub1…` is the literal prefix of a Nostr public key.",
+  ],
+  // The communities area: derived community *names* and input placeholders
+  // that are examples of a format.
+  [
+    "src/features/communities/communityStorage.ts:195",
+    "A derived community *name*, persisted as `community.name` by " +
+      "`initFirstCommunity`. Data, not copy — a name that changed with the UI " +
+      "language would rewrite what the user sees as the community's identity.",
+  ],
+  [
+    "src/features/communities/communityStorage.ts:200",
+    "Same: a derived community name, and this one names the upstream staging " +
+      "relay it is detected from.",
+  ],
+  [
+    "src/features/communities/ui/CommunityEditForm.tsx:249",
+    "Example relay URL. `example.com` is reserved for exactly this.",
+  ],
+  [
+    "src/features/communities/ui/EditCommunityDialog.tsx:181",
+    "Example relay URL. `example.com` is reserved for exactly this.",
+  ],
+  [
+    "src/features/communities/ui/EditCommunityDialog.tsx:199",
+    "`buzz_` is the literal prefix of an API token, not a word.",
+  ],
+  [
+    "src/features/communities/ui/EditCommunityDialog.tsx:220",
+    "Example path showing the expected shape of a repos directory.",
+  ],
+  [
+    "src/features/communities/ui/HostedCommunityCreateFlow.tsx:461",
+    "Example community address showing the required " +
+      "lowercase-hyphenated format; what the person types has to match the " +
+      "format, not the sentence.",
   ],
   [
     "src/features/settings/ui/HarnessesSettingsPanel.tsx:40",

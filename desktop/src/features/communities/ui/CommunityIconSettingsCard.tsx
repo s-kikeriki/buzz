@@ -1,3 +1,5 @@
+import { i18n } from "@lingui/core";
+import { msg } from "@lingui/core/macro";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import * as React from "react";
 import { toast } from "sonner";
@@ -72,7 +74,7 @@ export function CommunityIconSettingsCard({
             toast.error(
               error instanceof Error
                 ? error.message
-                : "Couldn’t update the community icon.",
+                : i18n._(msg`Couldn’t update the community icon.`),
             );
           }
         }

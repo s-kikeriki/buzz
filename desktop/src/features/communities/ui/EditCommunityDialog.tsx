@@ -1,3 +1,4 @@
+import { Trans, useLingui } from "@lingui/react/macro";
 import * as React from "react";
 
 import { CommunityIconSettingsCard } from "@/features/communities/ui/CommunityIconSettingsCard";
@@ -38,6 +39,7 @@ export function EditCommunityDialog({
   onSave,
   showIconEditor = false,
 }: EditCommunityDialogProps) {
+  const { t } = useLingui();
   const [name, setName] = React.useState("");
   const [relayUrl, setRelayUrl] = React.useState("");
   const [token, setToken] = React.useState("");
@@ -126,9 +128,11 @@ export function EditCommunityDialog({
     <Dialog onOpenChange={onOpenChange} open={open}>
       <DialogContent className="max-w-md">
         <DialogHeader>
-          <DialogTitle>Edit Community</DialogTitle>
+          <DialogTitle>
+            <Trans>Edit Community</Trans>
+          </DialogTitle>
           <DialogDescription>
-            Update this community's name or relay URL.
+            <Trans>Update this community's name or relay URL.</Trans>
           </DialogDescription>
         </DialogHeader>
         <form
@@ -138,9 +142,11 @@ export function EditCommunityDialog({
           {canEditIcon ? (
             <div className="flex items-center justify-between gap-4 rounded-xl border border-border/70 bg-muted/20 p-3">
               <div className="min-w-0">
-                <p className="text-sm font-medium">Community icon</p>
+                <p className="text-sm font-medium">
+                  <Trans>Community icon</Trans>
+                </p>
                 <p className="text-xs text-muted-foreground">
-                  Shown in the community rail and switcher.
+                  <Trans>Shown in the community rail and switcher.</Trans>
                 </p>
               </div>
               <CommunityIconSettingsCard compact />
@@ -151,13 +157,13 @@ export function EditCommunityDialog({
               className="text-sm font-medium text-foreground"
               htmlFor="edit-ws-name"
             >
-              Name
+              <Trans>Name</Trans>
             </label>
             <Input
               autoFocus
               id="edit-ws-name"
               onChange={(e) => setName(e.target.value)}
-              placeholder="My Community"
+              placeholder={t`My Community`}
               type="text"
               value={name}
             />
@@ -167,7 +173,7 @@ export function EditCommunityDialog({
               className="text-sm font-medium text-foreground"
               htmlFor="edit-ws-relay-url"
             >
-              Relay URL
+              <Trans>Relay URL</Trans>
             </label>
             <Input
               id="edit-ws-relay-url"
@@ -182,9 +188,9 @@ export function EditCommunityDialog({
               className="text-sm font-medium text-foreground"
               htmlFor="edit-ws-token"
             >
-              API Token
+              <Trans>API Token</Trans>
               <span className="ml-1 text-xs font-normal text-muted-foreground">
-                (optional)
+                <Trans>(optional)</Trans>
               </span>
             </label>
             <Input
@@ -200,9 +206,9 @@ export function EditCommunityDialog({
               className="text-sm font-medium text-foreground"
               htmlFor="edit-ws-repos-dir"
             >
-              Repos Directory
+              <Trans>Repos Directory</Trans>
               <span className="ml-1 text-xs font-normal text-muted-foreground">
-                (optional)
+                <Trans>(optional)</Trans>
               </span>
             </label>
             <Input
@@ -219,17 +225,22 @@ export function EditCommunityDialog({
               <p className="text-xs text-destructive">{reposDirError}</p>
             ) : null}
             <p className="text-xs text-muted-foreground">
-              Point the agent's <code>REPOS</code> directory at an existing
-              folder so agents work in your local checkouts. Leave blank to use
-              the default location.
+              {/* One sentence with the folder name as a tag, not three
+                  fragments around a <code> element: German moves the verb and
+                  cannot keep the English word order. */}
+              <Trans>
+                Point the agent's <code>REPOS</code> directory at an existing
+                folder so agents work in your local checkouts. Leave blank to
+                use the default location.
+              </Trans>
             </p>
           </div>
           <div className="flex justify-end gap-2 pt-2">
             <Button onClick={handleClose} type="button" variant="outline">
-              Cancel
+              <Trans>Cancel</Trans>
             </Button>
             <Button disabled={!name.trim() || !relayUrl.trim()} type="submit">
-              Save Changes
+              <Trans>Save Changes</Trans>
             </Button>
           </div>
         </form>

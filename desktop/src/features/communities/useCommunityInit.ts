@@ -1,3 +1,5 @@
+import { i18n } from "@lingui/core";
+import { msg } from "@lingui/core/macro";
 import { useEffect, useRef, useState } from "react";
 import { isTauri } from "@tauri-apps/api/core";
 import { isMacPlatform } from "@/shared/lib/platform";
@@ -202,8 +204,10 @@ export function useCommunityInit(
                 appliedKey: null,
                 error:
                   error instanceof Error
-                    ? `Could not safely leave community: ${error.message}`
-                    : "Could not safely leave community",
+                    ? i18n._(
+                        msg`Could not safely leave community: ${error.message}`,
+                      )
+                    : i18n._(msg`Could not safely leave community`),
               });
             }
             return;
@@ -327,8 +331,10 @@ export function useCommunityInit(
               appliedKey: null,
               error:
                 error instanceof Error
-                  ? `Could not safely switch communities: ${error.message}`
-                  : "Could not safely switch communities",
+                  ? i18n._(
+                      msg`Could not safely switch communities: ${error.message}`,
+                    )
+                  : i18n._(msg`Could not safely switch communities`),
             });
           }
           return;
@@ -382,7 +388,7 @@ export function useCommunityInit(
             error:
               error instanceof Error
                 ? error.message
-                : "Failed to apply community configuration",
+                : i18n._(msg`Failed to apply community configuration`),
           });
         }
         return;

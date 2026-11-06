@@ -1,6 +1,11 @@
+import { i18n } from "@lingui/core";
+import { msg } from "@lingui/core/macro";
 import { invoke } from "@tauri-apps/api/core";
 
+import { BRAND } from "@/shared/branding/brand";
 import { safeNpub } from "@/shared/lib/nostrUtils";
+
+const { productName } = BRAND;
 
 export const HOSTED_COMMUNITY_SUFFIX = "communities.buzz.xyz";
 export const VALID_HOSTED_COMMUNITY_NAME = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
@@ -87,23 +92,35 @@ export function hostedCommunityErrorMessage(
   correlationId: string | undefined,
   fallback: string,
 ) {
+  // Resolved per call, not at module scope: this table would otherwise
+  // freeze every relay error in whatever locale booted first. Five of them
+  // also named the fork's origin rather than the configured product.
   const messages: Record<string, string> = {
-    missing_mapping: "Connect your Buzz identity before creating a community.",
-    invalid_name: "Use lowercase letters, numbers, and hyphens.",
-    taken: "That Buzz address is already taken.",
-    limit_reached: "You’ve reached your hosted community creation limit.",
-    relay_unavailable: "Community provisioning is temporarily unavailable.",
-    identity_already_bound:
-      "This Builderlab account is connected to another Buzz identity.",
-    pubkey_already_bound:
-      "This Buzz identity is connected to another Builderlab account.",
-    not_owner: "Only the community owner can do that.",
-    transferee_not_registered:
-      "That person needs a connected Buzz identity before you can transfer ownership to them.",
+    missing_mapping: i18n._(
+      msg`Connect your ${productName} identity before creating a community.`,
+    ),
+    invalid_name: i18n._(msg`Use lowercase letters, numbers, and hyphens.`),
+    taken: i18n._(msg`That ${productName} address is already taken.`),
+    limit_reached: i18n._(
+      msg`You’ve reached your hosted community creation limit.`,
+    ),
+    relay_unavailable: i18n._(
+      msg`Community provisioning is temporarily unavailable.`,
+    ),
+    identity_already_bound: i18n._(
+      msg`This Builderlab account is connected to another ${productName} identity.`,
+    ),
+    pubkey_already_bound: i18n._(
+      msg`This ${productName} identity is connected to another Builderlab account.`,
+    ),
+    not_owner: i18n._(msg`Only the community owner can do that.`),
+    transferee_not_registered: i18n._(
+      msg`That person needs a connected ${productName} identity before you can transfer ownership to them.`,
+    ),
   };
   const message = messages[error?.code ?? ""] ?? error?.message ?? fallback;
   return correlationId
-    ? `${message} Correlation ID: ${correlationId}`
+    ? i18n._(msg`${message} Correlation ID: ${correlationId}`)
     : message;
 }
 
@@ -191,7 +208,7 @@ export async function loadHostedCommunityAccount(): Promise<HostedCommunityAccou
       hostedCommunityErrorMessage(
         identityResponse.error,
         identityResponse.correlation_id,
-        "Could not load the connected Buzz identity.",
+        i18n._(msg`Could not load the connected ${productName} identity.`),
       ),
     );
   }

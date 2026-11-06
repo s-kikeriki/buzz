@@ -92,6 +92,7 @@ msgstr "(aktuell)"
 msgid "(edited)"
 msgstr "(bearbeitet)"
 
+#: src/features/communities/ui/EditCommunityDialog.tsx
 #: src/features/settings/ui/ChannelTemplatesSettingsCard.tsx
 #: src/features/settings/ui/CustomHarnessForm.tsx
 msgid "(optional)"
@@ -520,6 +521,10 @@ msgstr "Karte von {0} ist fertig"
 msgid "{0}’s card is ready — view it"
 msgstr "Karte von {0} ist fertig — ansehen"
 
+#: src/features/communities/ui/CommunitySwitcher.tsx
+msgid "{activeCommunityName} — {connectionLabel}"
+msgstr "{activeCommunityName} — {connectionLabel}"
+
 #: src/features/home/ui/InboxFilterMenu.tsx
 msgid "{activeDraftCount, plural, one {# active draft} other {# active drafts}}"
 msgstr "{activeDraftCount, plural, one {# aktiver Entwurf} other {# aktive Entwürfe}}"
@@ -790,6 +795,14 @@ msgstr "{label} – Einstellungsbereiche"
 msgid "{mediaLabel} preview"
 msgstr "Vorschau von {mediaLabel}"
 
+#: src/features/communities/hostedCommunityApi.ts
+msgid "{message} Correlation ID: {correlationId}"
+msgstr "{message} Korrelations-ID: {correlationId}"
+
+#: src/features/communities/ui/CommunitySwitcher.tsx
+msgid "{message} If the community no longer exists, use Remove from this device."
+msgstr "{message} Wenn die Community nicht mehr existiert, nutz „Von diesem Gerät entfernen“."
+
 #: src/features/settings/EncryptedBackupProvider.tsx
 msgid "{message} It will be available to download for 5 minutes."
 msgstr "{message} Es steht 5 Minuten lang zum Download bereit."
@@ -909,6 +922,10 @@ msgstr "{productName}-Ereignisse — {0} Ereignisse"
 #: src/features/settings/ui/HostedCommunitiesSettingsCard.tsx
 msgid "{productName} identity connected"
 msgstr "{productName}-Identität verbunden"
+
+#: src/features/communities/ui/HostedCommunityOnboarding.tsx
+msgid "{productName} is open source. Builderlab hosts the relay for this account."
+msgstr "{productName} ist Open Source. Builderlab hostet das Relay für dieses Konto."
 
 #: src/features/agents/ui/personaModelDiscoveryStatus.ts
 msgid "{productName} is waiting for the relay's member roster. Try again shortly; if this persists, check the relay's membership configuration."
@@ -1084,6 +1101,10 @@ msgstr "#{0}"
 #: src/features/projects/ui/DiscussionChannels.tsx
 msgid "#{name}"
 msgstr "#{name}"
+
+#: src/features/communities/ui/HostedCommunityOnboarding.tsx
+msgid "+ Add new"
+msgstr "+ Neu hinzufügen"
 
 #. placeholder {0}: i18n._(copy.newEntity)
 #: src/features/channels/ui/ChannelBrowserDialog.tsx
@@ -1268,6 +1289,11 @@ msgstr "Zugriff fehlgeschlagen"
 msgid "Account uses"
 msgstr "Konto nutzt"
 
+#: src/features/communities/ui/HostedCommunityCreateFlow.tsx
+#: src/features/communities/ui/HostedCommunityOnboarding.tsx
+msgid "Account:"
+msgstr "Konto:"
+
 #: src/features/onboarding/ui/SetupStep.tsx
 msgid "ACP adapter detected but outdated — reinstall required."
 msgstr "ACP-Adapter erkannt, aber veraltet — Neuinstallation erforderlich."
@@ -1383,6 +1409,10 @@ msgstr "{name} hinzufügen"
 msgid "Add a comment…"
 msgstr "Kommentar hinzufügen…"
 
+#: src/features/communities/ui/CommunitySwitcher.tsx
+msgid "Add a community"
+msgstr "Community hinzufügen"
+
 #: src/features/channels/ui/ChannelManagementSheetRows.tsx
 msgid "Add a description"
 msgstr "Beschreibung hinzufügen"
@@ -1465,6 +1495,7 @@ msgstr "Kanal hinzufügen"
 msgid "Add channel to {0}"
 msgstr "Kanal zu {0} hinzufügen"
 
+#: src/features/communities/ui/AddCommunityDialog.tsx
 #: src/features/sidebar/ui/CommunityRail.tsx
 msgid "Add community"
 msgstr "Community hinzufügen"
@@ -1887,6 +1918,10 @@ msgstr "Agenten müssen bereits in einer DM sein, um in deren Threads erwähnt z
 msgid "Agents working"
 msgstr "Agenten arbeiten"
 
+#: src/features/communities/ui/CommunityEditForm.tsx
+msgid "Agree to the Terms of Service and Privacy Policy."
+msgstr "Stimm den Nutzungsbedingungen und der Datenschutzerklärung zu."
+
 #: src/features/agents/ui/AgentAiConfigurationMode.tsx
 msgid "AI configuration"
 msgstr "KI-Konfiguration"
@@ -2055,6 +2090,10 @@ msgstr "API-Schlüssel"
 #: src/features/agents/ui/EditAgentProviderModelFields.tsx
 msgid "API Key"
 msgstr "API-Schlüssel"
+
+#: src/features/communities/ui/EditCommunityDialog.tsx
+msgid "API Token"
+msgstr "API-Token"
 
 #: src/features/settings/ui/SettingsView.tsx
 msgid "App"
@@ -2436,6 +2475,7 @@ msgstr "Avatar-URL"
 msgid "Awaiting review"
 msgstr "Wartet auf Review"
 
+#: src/features/communities/ui/HostedCommunityOnboarding.tsx
 #: src/features/onboarding/ui/AvatarStep.tsx
 #: src/features/onboarding/ui/InviteRedeemForm.tsx
 #: src/features/onboarding/ui/MembershipDenied.tsx
@@ -2448,6 +2488,10 @@ msgstr "Zurück"
 #: src/features/channels/ui/FocusThreadDrawer.tsx
 msgid "Back to #{channelName}"
 msgstr "Zurück zu #{channelName}"
+
+#: src/features/communities/ui/AddCommunityDialog.tsx
+msgid "Back to add community options"
+msgstr "Zurück zu den Optionen zum Hinzufügen"
 
 #: src/features/settings/ui/SettingsView.tsx
 msgid "Back to app"
@@ -2632,6 +2676,10 @@ msgstr "Erstelle dein Profil"
 msgid "Builderlab account"
 msgstr "Builderlab-Konto"
 
+#: src/features/communities/ui/HostedCommunityOnboarding.tsx
+msgid "Builderlab did not return its relay address. Try connecting it again, or contact support if it does not appear in your communities."
+msgstr "Builderlab hat keine Relay-Adresse zurückgegeben. Versuch es nochmal zu verbinden, oder wende dich an den Support, wenn sie nicht in deinen Communitys auftaucht."
+
 #: src/features/settings/ui/ChannelTemplatesSettingsCard.tsx
 msgid "built-in"
 msgstr "integriert"
@@ -2669,6 +2717,10 @@ msgstr "Relay nicht erreichbar"
 msgid "Can't reach this relay"
 msgstr "Dieses Relay ist nicht erreichbar"
 
+#: src/features/communities/ui/CommunityEditForm.tsx
+msgid "Can't reach this relay — check the URL"
+msgstr "Dieses Relay ist nicht erreichbar — prüf die URL"
+
 #: src/features/agents/ui/AddAgentToChannelDialog.tsx
 #: src/features/agents/ui/AddTeamToChannelDialog.tsx
 #: src/features/agents/ui/AgentCardMintDialog.tsx
@@ -2690,6 +2742,9 @@ msgstr "Dieses Relay ist nicht erreichbar"
 #: src/features/channels/ui/ChannelManagementSheet.tsx
 #: src/features/channels/ui/EditRespondToDialog.tsx
 #: src/features/channels/ui/WelcomeAgentCreateDialog.tsx
+#: src/features/communities/ui/CommunityEditForm.tsx
+#: src/features/communities/ui/CommunitySwitcher.tsx
+#: src/features/communities/ui/EditCommunityDialog.tsx
 #: src/features/messages/lib/useLinkEditor.tsx
 #: src/features/messages/ui/ComposerImageEditor.tsx
 #: src/features/messages/ui/DeleteMessageConfirmDialog.tsx
@@ -2783,6 +2838,8 @@ msgstr "Schlüssel für die Kartenprägung"
 msgid "Category"
 msgstr "Kategorie"
 
+#: src/features/communities/ui/CommunityApplyErrorScreen.tsx
+#: src/features/communities/ui/CommunityChangeOverlay.tsx
 #: src/features/onboarding/ui/MembershipDenied.tsx
 #: src/features/onboarding/ui/OnboardingFlow.tsx
 msgid "Change community"
@@ -3009,6 +3066,8 @@ msgstr "Agenten-Runtimes werden geprüft …"
 msgid "Checking API key…"
 msgstr "API-Schlüssel wird geprüft…"
 
+#: src/features/communities/ui/HostedCommunityCreateFlow.tsx
+#: src/features/communities/ui/HostedCommunityOnboarding.tsx
 #: src/features/settings/ui/HostedCommunitiesSettingsCard.tsx
 msgid "Checking availability…"
 msgstr "Verfügbarkeit wird geprüft …"
@@ -3024,6 +3083,15 @@ msgstr "Es wird nach Updates gesucht …"
 #: src/features/settings/ui/SettingsView.tsx
 msgid "Checking invite permissions…"
 msgstr "Einladungsberechtigungen werden geprüft …"
+
+#: src/features/communities/ui/CommunityEditForm.tsx
+msgid "Checking relay"
+msgstr "Relay wird geprüft"
+
+#: src/features/communities/ui/HostedCommunityCreateFlow.tsx
+#: src/features/communities/ui/HostedCommunityOnboarding.tsx
+msgid "Checking sign-in"
+msgstr "Anmeldung wird geprüft"
 
 #: src/features/settings/ui/HostedCommunitiesSettingsCard.tsx
 msgid "Checking sign-in…"
@@ -3058,6 +3126,10 @@ msgstr "Wähl zuerst einen Branch."
 #: src/features/profile/ui/UserProfilePanelFocusedViews.tsx
 msgid "Choose a channel above so it can join the conversation."
 msgstr "Wähl oben einen Kanal, damit der Agent an der Unterhaltung teilnehmen kann."
+
+#: src/features/communities/ui/HostedCommunityOnboarding.tsx
+msgid "Choose a community"
+msgstr "Community auswählen"
 
 #: src/features/projects/ui/CreatePullRequestDialog.tsx
 msgid "Choose a compare branch."
@@ -3273,6 +3345,14 @@ msgstr "Wähle deinen Anbieter und gib einen API-Schlüssel ein, um dich mit dem
 #: src/features/profile/ui/AnimatedAvatarReviewNav.tsx
 msgid "Circle"
 msgstr "Kreis"
+
+#: src/features/communities/ui/AddCommunityDialog.tsx
+msgid "Claim a {productName} address for your team."
+msgstr "Sichere dir eine {productName}-Adresse für dein Team."
+
+#: src/features/communities/ui/HostedCommunityOnboarding.tsx
+msgid "Claim a {productName} address to get started."
+msgstr "Sichere dir eine {productName}-Adresse, um loszulegen."
 
 #: src/features/onboarding/ui/SetupStep.tsx
 msgid "Claude subscription"
@@ -3572,21 +3652,64 @@ msgstr "Committet von {authorLabel} · {0, plural, one {# Commit} other {# Commi
 msgid "Communities"
 msgstr "Communitys"
 
+#: src/features/communities/ui/CommunitySwitcher.tsx
+msgid "Community"
+msgstr "Community"
+
 #: src/features/agents/lib/friendlyAgentLastError.ts
 msgid "Community access denied this agent — check its community membership."
 msgstr "Diesem Agenten wurde der Community-Zugriff verweigert — prüf seine Community-Mitgliedschaft."
 
+#: src/features/communities/ui/CommunitySwitcher.tsx
+msgid "Community actions"
+msgstr "Community-Aktionen"
+
+#: src/features/communities/ui/HostedCommunityCreateFlow.tsx
 #: src/features/settings/ui/HostedCommunitiesSettingsCard.tsx
 msgid "Community address"
 msgstr "Community-Adresse"
+
+#: src/features/communities/ui/HostedCommunityOnboarding.tsx
+msgid "Community address status"
+msgstr "Status der Community-Adresse"
+
+#: src/features/communities/ui/CommunityApplyErrorScreen.tsx
+msgid "Community connection failed"
+msgstr "Verbindung zur Community fehlgeschlagen"
+
+#: src/features/communities/ui/EditCommunityDialog.tsx
+msgid "Community icon"
+msgstr "Community-Symbol"
 
 #: src/features/agents/ui/catalogOwnerLabel.ts
 msgid "Community member"
 msgstr "Community-Mitglied"
 
+#: src/features/communities/ui/CommunityEditForm.tsx
+#: src/features/communities/ui/HostedCommunityOnboarding.tsx
+msgid "Community name"
+msgstr "Community-Name"
+
+#: src/features/communities/ui/HostedCommunityOnboarding.tsx
+msgid "Community name here"
+msgstr "Community-Name hier"
+
+#: src/features/communities/hostedCommunityApi.ts
+msgid "Community provisioning is temporarily unavailable."
+msgstr "Die Community-Bereitstellung ist vorübergehend nicht verfügbar."
+
+#: src/features/communities/ui/CommunitySwitcher.tsx
+msgid "Community removed"
+msgstr "Community entfernt"
+
+#: src/features/communities/ui/CommunitySwitcher.tsx
 #: src/features/sidebar/ui/CommunityRail.tsx
 msgid "Community settings"
 msgstr "Community-Einstellungen"
+
+#: src/features/communities/ui/CommunityEditForm.tsx
+msgid "Community URL"
+msgstr "Community-URL"
 
 #: src/features/onboarding/ui/InviteRedeemForm.tsx
 msgid "Community URL or invite link"
@@ -3675,6 +3798,10 @@ msgstr "Code auf dem Handy bestätigen"
 msgid "Confirm that a backup file and its password can unlock an identity."
 msgstr "Prüfe, ob eine Backup-Datei mit ihrem Passwort eine Identität freischalten kann."
 
+#: src/features/communities/ui/CommunityEditForm.tsx
+msgid "Confirm that you are at least 18 years old."
+msgstr "Bestätige, dass du mindestens 18 Jahre alt bist."
+
 #: src/features/onboarding/ui/MachineOnboardingFlow.tsx
 msgid "Confirm the code before sharing your identity."
 msgstr "Bestätige den Code, bevor du deine Identität weitergibst."
@@ -3683,6 +3810,7 @@ msgstr "Bestätige den Code, bevor du deine Identität weitergibst."
 msgid "Confirmation code {formattedCode}"
 msgstr "Bestätigungscode {formattedCode}"
 
+#: src/features/communities/ui/HostedCommunityOnboarding.tsx
 #: src/features/settings/ui/HostedCommunitiesSettingsCard.tsx
 msgid "Connect"
 msgstr "Verbinden"
@@ -3695,9 +3823,22 @@ msgstr "{label} verbinden"
 msgid "Connect {productName} identity"
 msgstr "{productName}-Identität verbinden"
 
+#: src/features/communities/ui/HostedCommunityCreateFlow.tsx
+#: src/features/communities/ui/HostedCommunityOnboarding.tsx
+msgid "Connect and continue"
+msgstr "Verbinden und weiter"
+
+#: src/features/communities/ui/HostedCommunityOnboarding.tsx
+msgid "Connect one you own, or start something new."
+msgstr "Verbinde eine, die dir gehört, oder fang etwas Neues an."
+
 #: src/features/settings/ui/MobilePairingCard.tsx
 msgid "Connect the Buzz mobile app to this relay by scanning a QR code. The connection is secured with end-to-end encryption and a verification code."
 msgstr "Verbinde die Buzz-App auf dem Handy mit diesem Relay, indem du einen QR-Code scannst. Die Verbindung ist durch Ende-zu-Ende-Verschlüsselung und einen Bestätigungscode gesichert."
+
+#: src/features/communities/ui/HostedCommunityCreateFlow.tsx
+msgid "Connect this device’s {productName} identity to your Builderlab account. Your private key stays on this device."
+msgstr "Verbinde die {productName}-Identität dieses Geräts mit deinem Builderlab-Konto. Dein privater Schlüssel bleibt auf diesem Gerät."
 
 #: src/features/sidebar/ui/SidebarRelayConnectionCard.tsx
 msgid "Connect to relay"
@@ -3711,10 +3852,15 @@ msgstr "Verbinde dich mit dem Relay, um Kanäle zu durchsuchen und Nachrichten z
 msgid "Connect with an API key"
 msgstr "Mit einem API-Schlüssel verbinden"
 
+#: src/features/communities/hostedCommunityApi.ts
+msgid "Connect your {productName} identity before creating a community."
+msgstr "Verbinde deine {productName}-Identität, bevor du eine Community anlegst."
+
 #: src/features/onboarding/ui/ConnectionMethodSection.tsx
 msgid "Connect your AI provider"
 msgstr "Verbinde deinen KI-Anbieter"
 
+#: src/features/communities/ui/CommunitySwitcher.tsx
 #: src/features/sidebar/ui/SidebarRelayConnectionCard.tsx
 msgid "Connected"
 msgstr "Verbunden"
@@ -3728,13 +3874,30 @@ msgstr "Verbindung wird hergestellt"
 msgid "Connecting {productName} identity…"
 msgstr "{productName}-Identität wird verbunden …"
 
+#: src/features/communities/ui/HostedCommunityOnboarding.tsx
+msgid "Connecting community…"
+msgstr "Community wird verbunden…"
+
+#: src/features/communities/ui/HostedCommunityCreateFlow.tsx
+#: src/features/communities/ui/HostedCommunityOnboarding.tsx
+msgid "Connecting identity…"
+msgstr "Identität wird verbunden…"
+
 #: src/features/onboarding/ui/CommunityOnboardingFlow.tsx
 msgid "Connecting securely…"
 msgstr "Sichere Verbindung wird aufgebaut …"
 
+#: src/features/communities/ui/CommunitySwitcher.tsx
+msgid "Connecting…"
+msgstr "Verbindung wird aufgebaut…"
+
 #: src/features/settings/ui/HarnessRow.tsx
 msgid "Connection failed."
 msgstr "Verbindung fehlgeschlagen."
+
+#: src/features/communities/ui/CommunitySwitcher.tsx
+msgid "Connection lost — relay is not responding"
+msgstr "Verbindung verloren — das Relay antwortet nicht"
 
 #: src/features/agents/ui/agentSessionToolClassifier.ts
 msgid "Context compacted"
@@ -3760,6 +3923,10 @@ msgstr "Im Browser fortfahren"
 #: src/features/onboarding/ui/PendingInviteGate.tsx
 msgid "Continue setup"
 msgstr "Einrichtung fortsetzen"
+
+#: src/features/communities/ui/HostedCommunityCreateFlow.tsx
+msgid "Continue to Builderlab"
+msgstr "Weiter zu Builderlab"
 
 #: src/features/onboarding/ui/SetupStep.tsx
 msgid "Continue with an AI subscription"
@@ -3813,6 +3980,7 @@ msgstr "In Entwurf umwandeln"
 msgid "Converted to draft."
 msgstr "In Entwurf umgewandelt."
 
+#: src/features/communities/ui/WelcomeSetup.tsx
 #: src/features/onboarding/ui/IdentityRecoveryPairing.tsx
 #: src/features/profile/ui/NostrBindConsentDialog.tsx
 msgid "Copied"
@@ -3824,6 +3992,7 @@ msgstr "Kopiert"
 msgid "Copied to clipboard"
 msgstr "In die Zwischenablage kopiert"
 
+#: src/features/communities/ui/WelcomeSetup.tsx
 #: src/features/onboarding/ui/NsecMaskedDisplay.tsx
 #: src/features/settings/ui/ProfileSettingsCard.tsx
 #: src/features/sidebar/ui/ChannelContextMenu.tsx
@@ -3861,6 +4030,7 @@ msgstr "Commit-Hash kopieren"
 msgid "Copy commit link"
 msgstr "Commit-Link kopieren"
 
+#: src/features/communities/ui/CommunitySwitcher.tsx
 #: src/features/sidebar/ui/CommunityRail.tsx
 msgid "Copy community URL"
 msgstr "Community-URL kopieren"
@@ -3896,6 +4066,10 @@ msgstr "Privaten Schlüssel kopieren"
 #: src/features/agents/ui/AddAgentToChannelDialog.tsx
 msgid "Copy pubkey"
 msgstr "Pubkey kopieren"
+
+#: src/features/communities/ui/WelcomeSetup.tsx
+msgid "Copy public ID"
+msgstr "Öffentliche ID kopieren"
 
 #: src/features/profile/ui/NostrBindConsentDialog.tsx
 msgid "Copy response"
@@ -3947,10 +4121,14 @@ msgstr "Die Wiederherstellung konnte nicht bestätigt werden."
 msgid "Could not connect"
 msgstr "Konnte keine Verbindung herstellen"
 
+#: src/features/communities/ui/HostedCommunityCreateFlow.tsx
+#: src/features/communities/ui/HostedCommunityOnboarding.tsx
 #: src/features/settings/ui/HostedCommunitiesSettingsCard.tsx
 msgid "Could not connect the {productName} identity."
 msgstr "Die {productName}-Identität konnte nicht verbunden werden."
 
+#: src/features/communities/ui/HostedCommunityCreateFlow.tsx
+#: src/features/communities/ui/HostedCommunityOnboarding.tsx
 #: src/features/settings/ui/HostedCommunitiesSettingsCard.tsx
 msgid "Could not connect this device's {productName} identity."
 msgstr "Die {productName}-Identität dieses Geräts konnte nicht verbunden werden."
@@ -3966,6 +4144,11 @@ msgstr "Agent konnte nicht angelegt werden."
 #: src/features/settings/ui/HostedCommunitiesSettingsCard.tsx
 msgid "Could not create the community."
 msgstr "Die Community konnte nicht angelegt werden."
+
+#: src/features/communities/ui/HostedCommunityCreateFlow.tsx
+#: src/features/communities/ui/HostedCommunityOnboarding.tsx
+msgid "Could not disconnect the account's previous {productName} identity."
+msgstr "Die vorherige {productName}-Identität des Kontos konnte nicht getrennt werden."
 
 #: src/features/forum/ui/useForumMentionPreparation.ts
 #: src/features/messages/ui/useNonMemberInvite.ts
@@ -3994,6 +4177,7 @@ msgstr "Reviews konnten nicht geladen werden"
 msgid "Could not load tasks"
 msgstr "Aufgaben konnten nicht geladen werden"
 
+#: src/features/communities/hostedCommunityApi.ts
 #: src/features/settings/ui/HostedCommunitiesSettingsCard.tsx
 msgid "Could not load the connected {productName} identity."
 msgstr "Die verbundene {productName}-Identität konnte nicht geladen werden."
@@ -4017,6 +4201,10 @@ msgstr "Diese Datei konnte nicht geladen werden. Aktualisiere das Repository und
 #: src/features/home/ui/ProjectInboxDetail.tsx
 msgid "Could not load this project item."
 msgstr "Dieser Projekteintrag konnte nicht geladen werden."
+
+#: src/features/communities/ui/WelcomeSetup.tsx
+msgid "Could not load your public key."
+msgstr "Dein öffentlicher Schlüssel konnte nicht geladen werden."
 
 #: src/features/profile/ui/NostrBindConsentDialog.tsx
 msgid "Could not open the browser. Copy the response below to finish manually."
@@ -4042,6 +4230,24 @@ msgstr "Dein Schlüssel konnte nicht abgerufen werden."
 #: src/features/onboarding/ui/BackupStep.tsx
 msgid "Could not retrieve your private key: {copyError}. You can continue and find it later in Settings > Profile > Identity."
 msgstr "Dein privater Schlüssel konnte nicht abgerufen werden: {copyError}. Du kannst fortfahren und ihn später unter Einstellungen > Profil > Identität finden."
+
+#: src/features/communities/useCommunityInit.ts
+msgid "Could not safely leave community"
+msgstr "Die Community konnte nicht sicher verlassen werden"
+
+#. placeholder {0}: error.message
+#: src/features/communities/useCommunityInit.ts
+msgid "Could not safely leave community: {0}"
+msgstr "Die Community konnte nicht sicher verlassen werden: {0}"
+
+#: src/features/communities/useCommunityInit.ts
+msgid "Could not safely switch communities"
+msgstr "Die Community konnte nicht sicher gewechselt werden"
+
+#. placeholder {0}: error.message
+#: src/features/communities/useCommunityInit.ts
+msgid "Could not safely switch communities: {0}"
+msgstr "Die Community konnte nicht sicher gewechselt werden: {0}"
 
 #: src/features/agents/useAgentManagement.ts
 msgid "Could not save this agent."
@@ -4108,6 +4314,10 @@ msgstr "Backup konnte nicht erstellt werden"
 #: src/features/agents/ui/HarnessCatalogRetryNotice.tsx
 msgid "Couldn't detect agent harnesses."
 msgstr "Agent-Harnesses konnten nicht erkannt werden."
+
+#: src/features/communities/ui/CommunitySwitcher.tsx
+msgid "Couldn't leave the community. Try again."
+msgstr "Die Community konnte nicht verlassen werden. Versuch es nochmal."
 
 #: src/features/agents/ui/AgentConfigPanel.tsx
 msgid "Couldn't load agent configuration."
@@ -4186,6 +4396,10 @@ msgstr "Verlauf konnte nicht aktualisiert werden — die letzten bekannten Versi
 msgid "Couldn't refresh runtimes."
 msgstr "Die Runtimes konnten nicht aktualisiert werden."
 
+#: src/features/communities/ui/CommunitySwitcher.tsx
+msgid "Couldn't remove the community from this device. Try again."
+msgstr "Die Community konnte nicht von diesem Gerät entfernt werden. Versuch es nochmal."
+
 #: src/features/home/ui/InboxDetailPane.tsx
 #: src/features/home/ui/InboxListPane.tsx
 msgid "Couldn’t reopen"
@@ -4251,6 +4465,10 @@ msgstr "Modellwechsel fehlgeschlagen — der Agent behält sein aktuelles Modell
 msgid "Couldn't switch models — the agent wasn't running a turn to switch."
 msgstr "Modellwechsel fehlgeschlagen — der Agent hatte keinen laufenden Zug zum Umstellen."
 
+#: src/features/communities/ui/CommunityIconSettingsCard.tsx
+msgid "Couldn’t update the community icon."
+msgstr "Das Community-Symbol konnte nicht aktualisiert werden."
+
 #: src/features/onboarding/ui/SetupStep.tsx
 msgid "Couldn’t verify authentication."
 msgstr "Die Authentifizierung konnte nicht überprüft werden."
@@ -4276,6 +4494,8 @@ msgstr "Erstelle eine Backup-Datei und wähle ein Passwort, das du dir merken ka
 msgid "Create a channel"
 msgstr "Kanal erstellen"
 
+#: src/features/communities/ui/HostedCommunityOnboarding.tsx
+#: src/features/communities/ui/WelcomeSetup.tsx
 #: src/features/settings/ui/HostedCommunitiesSettingsCard.tsx
 msgid "Create a community"
 msgstr "Community anlegen"
@@ -4302,6 +4522,14 @@ msgstr "Neues Backup-Passwort erstellen?"
 #: src/features/sidebar/ui/CreateChannelDialog.tsx
 msgid "Create a new channel"
 msgstr "Neuen Kanal anlegen"
+
+#: src/features/communities/ui/AddCommunityDialog.tsx
+msgid "Create a new community"
+msgstr "Neue Community anlegen"
+
+#: src/features/communities/ui/AddCommunityDialog.tsx
+msgid "Create a new community or join one you already have."
+msgstr "Leg eine neue Community an oder tritt einer bei, die du schon hast."
 
 #: src/features/channels/ui/ChannelBrowserDialog.tsx
 #: src/features/sidebar/ui/CreateChannelDialog.tsx
@@ -4397,6 +4625,10 @@ msgstr "Canvas erstellen"
 #: src/features/sidebar/ui/CustomChannelSection.tsx
 msgid "Create channel"
 msgstr "Kanal anlegen"
+
+#: src/features/communities/ui/HostedCommunityCreateFlow.tsx
+msgid "Create community"
+msgstr "Community anlegen"
 
 #: src/features/onboarding/ui/BackupStep.tsx
 msgid "Create locked backup"
@@ -4507,6 +4739,8 @@ msgstr "Team „{0}“ angelegt."
 msgid "Creating agent…"
 msgstr "Agent wird angelegt…"
 
+#: src/features/communities/ui/HostedCommunityCreateFlow.tsx
+#: src/features/communities/ui/HostedCommunityOnboarding.tsx
 #: src/features/settings/ui/HostedCommunitiesSettingsCard.tsx
 msgid "Creating community…"
 msgstr "Community wird angelegt …"
@@ -4946,6 +5180,10 @@ msgstr "{displayName} in „Meine Agenten“ abwählen"
 msgid "Deselected {0} from My Agents."
 msgstr "{0} aus „Meine Agenten“ abgewählt."
 
+#: src/features/communities/ui/CommunityEditForm.tsx
+msgid "Design team"
+msgstr "Design-Team"
+
 #: src/features/settings/ui/NotificationSettingsCard.tsx
 msgid "Desktop"
 msgstr "Desktop"
@@ -5021,6 +5259,10 @@ msgstr "Änderungen an den Agent-Standards verwerfen?"
 #: src/features/messages/ui/VoiceNoteRecorder.tsx
 msgid "Discard voice note"
 msgstr "Sprachnachricht verwerfen"
+
+#: src/features/communities/ui/CommunitySwitcher.tsx
+msgid "Disconnected from relay"
+msgstr "Vom Relay getrennt"
 
 #: src/features/settings/ui/ChannelTemplatesSettingsCard.tsx
 msgid "Discovering runtimes..."
@@ -5298,6 +5540,10 @@ msgstr "{0} bearbeiten"
 msgid "Edit {assetLabel}"
 msgstr "{assetLabel} bearbeiten"
 
+#: src/features/communities/ui/CommunitySwitcher.tsx
+msgid "Edit {communityName}"
+msgstr "{communityName} bearbeiten"
+
 #: src/features/profile/ui/UserProfilePanelSections.tsx
 msgid "Edit {displayName}"
 msgstr "{displayName} bearbeiten"
@@ -5324,6 +5570,10 @@ msgstr "Canvas bearbeiten"
 #: src/features/channels/ui/ChannelManagementSheetRows.tsx
 msgid "Edit channel"
 msgstr "Kanal bearbeiten"
+
+#: src/features/communities/ui/EditCommunityDialog.tsx
+msgid "Edit Community"
+msgstr "Community bearbeiten"
 
 #: src/features/agents/ui/agentSessionToolSummary.ts
 msgid "Edit failed"
@@ -5443,6 +5693,10 @@ msgstr "Gib einen gültigen Git-Branch-Namen ein."
 msgid "Enter a valid npub that starts with npub1."
 msgstr "Gib einen gültigen npub ein, der mit npub1 beginnt."
 
+#: src/features/communities/ui/CommunityEditForm.tsx
+msgid "Enter a valid ws:// or wss:// relay URL."
+msgstr "Gib eine gültige ws:// oder wss:// Relay-URL ein."
+
 #: src/features/agents/ui/personaModelDiscoveryStatus.ts
 msgid "Enter an Anthropic API key to load Anthropic models."
 msgstr "Gib einen Anthropic-API-Schlüssel ein, um Anthropic-Modelle zu laden."
@@ -5450,6 +5704,14 @@ msgstr "Gib einen Anthropic-API-Schlüssel ein, um Anthropic-Modelle zu laden."
 #: src/features/settings/ui/MobilePairingCard.tsx
 msgid "Enter code on your phone"
 msgstr "Code auf dem Handy eingeben"
+
+#: src/features/communities/ui/WelcomeSetup.tsx
+msgid "Enter the community URL or an invite link. Your role will be restored when you connect."
+msgstr "Gib die Community-URL oder einen Einladungslink ein. Deine Rolle wird beim Verbinden wiederhergestellt."
+
+#: src/features/communities/ui/WelcomeSetup.tsx
+msgid "Enter the invite link or community URL you received."
+msgstr "Gib den Einladungslink oder die Community-URL ein, die du bekommen hast."
 
 #: src/features/onboarding/ui/BackupTestFlow.tsx
 msgid "Enter the password to prove you can unlock this backup."
@@ -5592,6 +5854,10 @@ msgstr "Repository konnte nicht hinzugefügt werden."
 #: src/features/agents/ui/useTeamActions.ts
 msgid "Failed to add team."
 msgstr "Das Team konnte nicht hinzugefügt werden."
+
+#: src/features/communities/useCommunityInit.ts
+msgid "Failed to apply community configuration"
+msgstr "Die Community-Konfiguration konnte nicht angewendet werden"
 
 #: src/features/projects/ui/IssueAssigneesRow.tsx
 msgid "Failed to assign task."
@@ -5936,6 +6202,14 @@ msgstr "Posteingang filtern: {activeLabel}. {statusLabel}"
 msgid "Find in channel"
 msgstr "Im Kanal suchen"
 
+#: src/features/communities/ui/HostedCommunityOnboarding.tsx
+msgid "Finish connecting {productName}"
+msgstr "{productName} fertig verbinden"
+
+#: src/features/communities/ui/AddCommunityDialog.tsx
+msgid "Finish connecting the community already in progress, then try again."
+msgstr "Schließ die Community ab, die schon verbunden wird, und versuch es dann nochmal."
+
 #: src/features/profile/ui/NostrBindConsentDialog.tsx
 msgid "Finish on the {productName} website"
 msgstr "Auf der {productName}-Website abschließen"
@@ -6266,6 +6540,7 @@ msgstr "Start-Feed nicht verfügbar"
 msgid "Hosted communities"
 msgstr "Gehostete Communitys"
 
+#: src/features/communities/ui/HostedCommunityOnboarding.tsx
 #: src/features/settings/ui/HostedCommunitiesSettingsCard.tsx
 msgid "Hosted community"
 msgstr "Gehostete Community"
@@ -6311,6 +6586,10 @@ msgstr "Ich stimme den <0>Nutzungsbedingungen</0> und der <1>Datenschutzerkläru
 msgid "I agree to the {0} <0>Terms of Service</0>."
 msgstr "Ich stimme den <0>Nutzungsbedingungen</0> von {0} zu."
 
+#: src/features/communities/ui/WelcomeSetup.tsx
+msgid "I already have a community"
+msgstr "Ich habe schon eine Community"
+
 #: src/features/onboarding/ui/ProfileStep.tsx
 msgid "I already have a key"
 msgstr "Ich habe schon einen Schlüssel"
@@ -6322,6 +6601,14 @@ msgstr "Ich bin 18 Jahre oder älter."
 #: src/features/settings/ui/SignOutSection.tsx
 msgid "I have tested a key backup or saved this private key somewhere safe."
 msgstr "Ich habe ein Schlüssel-Backup getestet oder diesen privaten Schlüssel an einem sicheren Ort gespeichert."
+
+#: src/features/communities/ui/WelcomeSetup.tsx
+msgid "I own the community"
+msgstr "Die Community gehört mir"
+
+#: src/features/communities/ui/WelcomeSetup.tsx
+msgid "I’m a member or admin"
+msgstr "Ich bin Mitglied oder Admin"
 
 #: src/features/settings/ui/CustomHarnessForm.tsx
 #: src/features/settings/ui/HarnessCatalogDialog.tsx
@@ -6602,6 +6889,10 @@ msgstr "Einladen"
 msgid "Invite link or code"
 msgstr "Einladungslink oder -code"
 
+#: src/features/communities/ui/WelcomeSetup.tsx
+msgid "Invite link or community URL"
+msgstr "Einladungslink oder Community-URL"
+
 #: src/features/channels/ui/useChannelIntro.tsx
 msgid "Invite members."
 msgstr "Lade Mitglieder ein."
@@ -6622,6 +6913,7 @@ msgstr "Lade sie in den Kanal ein oder brich ab, um deinen Entwurf zu behalten."
 msgid "Invite them to the channel, or send without inviting them."
 msgstr "Lade sie in den Kanal ein oder sende, ohne sie einzuladen."
 
+#: src/features/communities/ui/CommunitySwitcher.tsx
 #: src/features/sidebar/ui/CommunityRail.tsx
 msgid "Invite to community"
 msgstr "Zur Community einladen"
@@ -6685,6 +6977,14 @@ msgstr "Auftrag angefragt"
 msgid "Job result"
 msgstr "Auftragsergebnis"
 
+#: src/features/communities/ui/WelcomeSetup.tsx
+msgid "Join a community"
+msgstr "Einer Community beitreten"
+
+#: src/features/communities/ui/AddCommunityDialog.tsx
+msgid "Join an existing community"
+msgstr "Einer bestehenden Community beitreten"
+
 #: src/features/channels/ui/ChannelManagementSheet.tsx
 msgid "Join channel"
 msgstr "Kanal beitreten"
@@ -6693,9 +6993,17 @@ msgstr "Kanal beitreten"
 msgid "Join community"
 msgstr "Community beitreten"
 
+#: src/features/communities/ui/WelcomeSetup.tsx
+msgid "Join or create a community"
+msgstr "Community beitreten oder anlegen"
+
 #: src/features/channels/ui/ChannelPane.tsx
 msgid "Join to participate"
 msgstr "Beitreten, um mitzumachen"
+
+#: src/features/communities/ui/WelcomeSetup.tsx
+msgid "Join with an invite, create your own community, or reconnect one you already have."
+msgstr "Tritt mit einer Einladung bei, leg deine eigene Community an oder verbinde eine wieder, die du schon hast."
 
 #: src/features/channels/ui/ChannelBrowserDialog.tsx
 msgid "Joined"
@@ -6710,6 +7018,10 @@ msgstr "Beigetreten {0}"
 #: src/features/onboarding/ui/CommunityOnboardingFlow.tsx
 msgid "Joining {0}"
 msgstr "Beitritt zu {0}"
+
+#: src/features/communities/ui/WelcomeSetup.tsx
+msgid "Joining a private community?"
+msgstr "Du trittst einer privaten Community bei?"
 
 #: src/features/channels/ui/ChannelManagementSheet.tsx
 msgid "Joining channel..."
@@ -6864,9 +7176,17 @@ msgstr "Leer lassen, um den App-Standard zu nutzen (aktuell {DEFAULT_AGENT_PARAL
 msgid "Leave channel"
 msgstr "Kanal verlassen"
 
+#: src/features/communities/ui/CommunitySwitcher.tsx
+msgid "Leave community"
+msgstr "Community verlassen"
+
 #: src/features/channels/ui/ChannelManagementSheet.tsx
 msgid "Leaving channel..."
 msgstr "Kanal wird verlassen …"
+
+#: src/features/communities/ui/CommunitySwitcher.tsx
+msgid "Leaving…"
+msgstr "Wird verlassen…"
 
 #: src/features/profile/ui/UserProfilePanelSections.tsx
 msgid "less"
@@ -7128,6 +7448,7 @@ msgid "Loading..."
 msgstr "Wird geladen …"
 
 #: src/features/agents/ui/AgentDefaultsEditor.tsx
+#: src/features/communities/ui/WelcomeSetup.tsx
 #: src/features/onboarding/ui/DefaultConfigStep.tsx
 #: src/features/settings/ui/PrivateKeyBackupRow.tsx
 #: src/features/settings/ui/SignOutSection.tsx
@@ -7476,6 +7797,10 @@ msgstr "Nachrichten"
 msgid "Messages and sub-replies will appear here once the relay has history for this channel."
 msgstr "Nachrichten und Unterantworten erscheinen hier, sobald das Relay einen Verlauf für diesen Kanal hat."
 
+#: src/features/communities/useNestNotifications.ts
+msgid "Migrated notes from ~/.sprout"
+msgstr "Notizen aus ~/.sprout übernommen"
+
 #: src/features/projects/ui/ProjectsOverviewItems.tsx
 msgid "Mine"
 msgstr "Meine"
@@ -7633,6 +7958,10 @@ msgstr "Kanal stummschalten"
 msgid "My agents"
 msgstr "Meine Agenten"
 
+#: src/features/communities/ui/EditCommunityDialog.tsx
+msgid "My Community"
+msgstr "Meine Community"
+
 #: src/features/settings/ui/CustomHarnessForm.tsx
 msgid "My Runtime"
 msgstr "Meine Runtime"
@@ -7640,6 +7969,7 @@ msgstr "Meine Runtime"
 #: src/features/agents/ui/TeamDialog.tsx
 #: src/features/channels/ui/AddChannelBotGenericSection.tsx
 #: src/features/channels/ui/ChannelManagementSheet.tsx
+#: src/features/communities/ui/EditCommunityDialog.tsx
 #: src/features/onboarding/ui/ProfileStep.tsx
 #: src/features/projects/ui/AddProjectRepositoryDialog.tsx
 #: src/features/projects/ui/CreateProjectFormContent.tsx
@@ -7782,6 +8112,7 @@ msgstr "Neuer Workflow"
 msgid "Newest"
 msgstr "Neueste"
 
+#: src/features/communities/ui/HostedCommunityOnboarding.tsx
 #: src/features/onboarding/ui/AvatarStep.tsx
 #: src/features/onboarding/ui/CommunityOnboardingFlow.tsx
 #: src/features/onboarding/ui/DefaultConfigStep.tsx
@@ -7956,6 +8287,7 @@ msgstr "Kein Commit gemeldet"
 msgid "No commits yet"
 msgstr "Noch keine Commits"
 
+#: src/features/communities/ui/CommunitySwitcher.tsx
 #: src/features/sidebar/ui/SidebarProfileCard.tsx
 msgid "No community"
 msgstr "Keine Community"
@@ -8364,6 +8696,10 @@ msgstr "Noch kein Mitglied"
 msgid "Not configured"
 msgstr "Nicht konfiguriert"
 
+#: src/features/communities/ui/CommunitySwitcher.tsx
+msgid "Not connected"
+msgstr "Nicht verbunden"
+
 #: src/features/profile/ui/UserProfilePanelFields.tsx
 msgid "Not deployed"
 msgstr "Nicht bereitgestellt"
@@ -8460,6 +8796,10 @@ msgstr "Ein"
 msgid "on {date}"
 msgstr "am {date}"
 
+#: src/features/communities/ui/HostedCommunityOnboarding.tsx
+msgid "Onboarding is already in progress for another community. Go back and finish or restart that connection, then connect this community from your owned communities list."
+msgstr "Für eine andere Community läuft schon ein Onboarding. Geh zurück und schließ diese Verbindung ab oder starte sie neu, und verbinde dann diese Community aus der Liste deiner eigenen Communitys."
+
 #: src/features/agents/ui/RespondToField.tsx
 msgid "One per line, or comma/space-separated. Each entry is an npub (npub1…) or a 64-char hex public key."
 msgstr "Einer pro Zeile oder durch Komma/Leerzeichen getrennt. Jeder Eintrag ist ein npub (npub1…) oder ein 64-stelliger öffentlicher Hex-Schlüssel."
@@ -8513,6 +8853,10 @@ msgstr "Nur ich (Standard)"
 #: src/features/agents/ui/PersonaShareDialog.tsx
 msgid "Only share with people you trust."
 msgstr "Teil nur mit Leuten, denen du vertraust."
+
+#: src/features/communities/hostedCommunityApi.ts
+msgid "Only the community owner can do that."
+msgstr "Das kann nur der Besitzer der Community."
 
 #: src/features/profile/ui/UserProfilePanelFields.tsx
 msgid "Only the owner"
@@ -8838,6 +9182,10 @@ msgstr "Wird geöffnet …"
 msgid "OpenRouter"
 msgstr "OpenRouter"
 
+#: src/features/communities/ui/AddCommunityDialog.tsx
+msgid "Opens Builderlab in your browser."
+msgstr "Öffnet Builderlab in deinem Browser."
+
 #: src/features/agents/ui/AgentDefinitionDialog.tsx
 #: src/features/agents/ui/AgentDescriptionField.tsx
 #: src/features/agents/ui/EditAgentAdvancedFields.tsx
@@ -9120,6 +9468,10 @@ msgstr "Wiedergabe"
 msgid "Playback speed {0}; next {1}"
 msgstr "Wiedergabegeschwindigkeit {0}; als Nächstes {1}"
 
+#: src/features/communities/ui/CommunityEditForm.tsx
+msgid "Please enter a community name."
+msgstr "Gib bitte einen Community-Namen ein."
+
 #: src/features/onboarding/ui/InviteRedeemForm.tsx
 msgid "Please enter a valid invite link or community URL"
 msgstr "Gib einen gültigen Einladungslink oder eine Community-URL ein"
@@ -9137,6 +9489,10 @@ msgstr "Pocket-TTS-Stimme"
 #: src/features/settings/ui/VoiceSettingsCard.tsx
 msgid "Pocket TTS voice: {0}"
 msgstr "Pocket-TTS-Stimme: {0}"
+
+#: src/features/communities/ui/EditCommunityDialog.tsx
+msgid "Point the agent's <0>REPOS</0> directory at an existing folder so agents work in your local checkouts. Leave blank to use the default location."
+msgstr "Richte das <0>REPOS</0>-Verzeichnis des Agenten auf einen bestehenden Ordner, damit Agenten in deinen lokalen Checkouts arbeiten. Lass es leer, um den Standardort zu verwenden."
 
 #: src/features/profile/ui/AnimatedAvatarReviewNav.tsx
 msgid "Position yourself"
@@ -9682,9 +10038,17 @@ msgstr "npub des Empfängers"
 msgid "Recommended"
 msgstr "Empfohlen"
 
+#: src/features/communities/ui/WelcomeSetup.tsx
+msgid "Reconnect to your community"
+msgstr "Verbinde dich wieder mit deiner Community"
+
 #: src/features/sidebar/ui/SidebarRelayConnectionCard.tsx
 msgid "Reconnecting"
 msgstr "Neuverbindung läuft"
+
+#: src/features/communities/ui/CommunitySwitcher.tsx
+msgid "Reconnecting to relay…"
+msgstr "Verbindung zum Relay wird wiederhergestellt…"
 
 #: src/features/messages/ui/MessageComposerToolbar.tsx
 msgid "Record voice note"
@@ -9784,6 +10148,7 @@ msgstr "Verwandte Unterhaltungen"
 msgid "Relaunch {0}"
 msgstr "{0} neu starten"
 
+#: src/features/communities/ui/EditCommunityDialog.tsx
 #: src/features/onboarding/ui/InviteRedeemForm.tsx
 msgid "Relay URL"
 msgstr "Relay-URL"
@@ -9826,11 +10191,16 @@ msgstr "Entfernte Bereitstellung"
 #: src/features/agents/ui/AgentCreationPreview.tsx
 #: src/features/agents/ui/RemoveMembersConfirmDialog.tsx
 #: src/features/channels/ui/ChannelLogoEditor.tsx
+#: src/features/communities/ui/CommunitySwitcher.tsx
 #: src/features/messages/lib/useLinkEditor.tsx
 #: src/features/messages/ui/AudioMessageAttachment.tsx
 #: src/features/messages/ui/ComposerAttachments.tsx
 msgid "Remove"
 msgstr "Entfernen"
+
+#: src/features/communities/ui/CommunitySwitcher.tsx
+msgid "Remove \"{removingCommunityName}\" from this device? {productName} won't contact the relay, so your membership isn't revoked. You can add the community again later."
+msgstr "„{removingCommunityName}“ von diesem Gerät entfernen? {productName} kontaktiert das Relay nicht, deine Mitgliedschaft wird also nicht widerrufen. Du kannst die Community später wieder hinzufügen."
 
 #. placeholder {0}: formatSearchUserName(invitee)
 #. placeholder {0}: truncateNpub(pubkey)
@@ -9883,6 +10253,10 @@ msgstr "Aus Abschnitt entfernen"
 #: src/features/sidebar/ui/SidebarProjectsSection.tsx
 msgid "Remove from sidebar"
 msgstr "Aus der Seitenleiste entfernen"
+
+#: src/features/communities/ui/CommunitySwitcher.tsx
+msgid "Remove from this device"
+msgstr "Von diesem Gerät entfernen"
 
 #: src/features/profile/ui/AvatarUpload.tsx
 msgid "Remove photo"
@@ -9980,6 +10354,10 @@ msgstr "Antwort an {0}"
 #: src/features/messages/ui/MessageActionBar.tsx
 msgid "Report message"
 msgstr "Nachricht melden"
+
+#: src/features/communities/ui/EditCommunityDialog.tsx
+msgid "Repos Directory"
+msgstr "REPOS-Verzeichnis"
 
 #: src/features/projects/ui/projectsOverviewContext.ts
 #: src/features/projects/ui/ProjectsToolbar.tsx
@@ -10220,6 +10598,7 @@ msgstr "Aufnahme neu machen"
 
 #: src/features/agents/ui/ModelPicker.tsx
 #: src/features/channels/ui/ChannelWorkflowsSection.tsx
+#: src/features/communities/ui/CommunityApplyErrorScreen.tsx
 #: src/features/home/ui/InboxDetailPane.tsx
 #: src/features/home/ui/InboxListPane.tsx
 #: src/features/home/ui/ProjectInboxDetail.tsx
@@ -10442,7 +10821,12 @@ msgstr "Karte speichern"
 #: src/features/agents/ui/personaDialogState.ts
 #: src/features/agents/ui/useTeamActions.ts
 #: src/features/channels/ui/ChannelManagementSheet.tsx
+#: src/features/communities/ui/CommunityChangeOverlay.tsx
 msgid "Save changes"
+msgstr "Änderungen speichern"
+
+#: src/features/communities/ui/EditCommunityDialog.tsx
+msgid "Save Changes"
 msgstr "Änderungen speichern"
 
 #: src/features/agents/ui/AgentDefaultsEditor.tsx
@@ -10484,6 +10868,7 @@ msgstr "Gespeichert. {restartedCount} Agent{0} neu gestartet.{1}"
 msgid "Saved. We couldn't verify against the latest revision just now — check History if a concurrent edit appears."
 msgstr "Gespeichert. Wir konnten gerade nicht gegen die neueste Version prüfen — sieh im Verlauf nach, falls eine parallele Bearbeitung auftaucht."
 
+#: src/features/communities/ui/CommunityEditForm.tsx
 #: src/features/profile/ui/ProfileAvatarEditor.tsx
 msgid "Saving"
 msgstr "Wird gespeichert"
@@ -10927,6 +11312,10 @@ msgstr "In der goose-Konfiguration gesetzt"
 msgid "Set in runtime config"
 msgstr "In der Runtime-Konfiguration gesetzt"
 
+#: src/features/communities/ui/HostedCommunityOnboarding.tsx
+msgid "Set new community name"
+msgstr "Neuen Community-Namen setzen"
+
 #: src/features/onboarding/ui/SetupStep.tsx
 msgid "Set up {label}"
 msgstr "{label} einrichten"
@@ -10942,6 +11331,10 @@ msgstr "Später einrichten"
 #: src/features/agents/managedAgentRuntimeStatus.ts
 msgid "Set up this agent on this device to start it."
 msgstr "Richte diesen Agenten auf diesem Gerät ein, um ihn zu starten."
+
+#: src/features/communities/ui/HostedCommunityOnboarding.tsx
+msgid "Set up your community"
+msgstr "Richte deine Community ein"
 
 #: src/features/channels/ui/WelcomeComposerBanner.tsx
 msgid "Setting up your welcome team…"
@@ -11122,6 +11515,10 @@ msgstr "Erwähnungen aus den 500 neuesten Suchergebnissen."
 msgid "Showing the latest {DISCUSSION_SEARCH_LIMIT} mentions; totals may be higher."
 msgstr "Die letzten {DISCUSSION_SEARCH_LIMIT} Erwähnungen; die Gesamtzahl kann höher sein."
 
+#: src/features/communities/ui/EditCommunityDialog.tsx
+msgid "Shown in the community rail and switcher."
+msgstr "Wird in der Community-Leiste und im Umschalter angezeigt."
+
 #: src/features/channels/ui/ChannelLogoEditor.tsx
 msgid "Shown instead of the channel icon, for everyone in the channel. PNG, JPG, GIF, or WebP."
 msgstr "Wird allen im Kanal anstelle des Kanalsymbols angezeigt. PNG, JPG, GIF oder WebP."
@@ -11164,6 +11561,14 @@ msgstr "Bei {0} anmelden"
 msgid "Sign in to connect {label}. You can change this anytime."
 msgstr "Melde dich an, um {label} zu verbinden. Du kannst das jederzeit ändern."
 
+#: src/features/communities/ui/HostedCommunityOnboarding.tsx
+msgid "Sign in to connect a community you already own or create a new one. We’ll open Builderlab in your browser, then bring you back to {productName}."
+msgstr "Melde dich an, um eine Community zu verbinden, die dir schon gehört, oder eine neue anzulegen. Wir öffnen Builderlab in deinem Browser und bringen dich dann zurück zu {productName}."
+
+#: src/features/communities/ui/HostedCommunityOnboarding.tsx
+msgid "Sign in to continue"
+msgstr "Zum Fortfahren anmelden"
+
 #: src/features/settings/ui/MobilePairingCard.tsx
 msgid "Sign in to generate a mobile pairing code."
 msgstr "Melde dich an, um einen Kopplungscode fürs Handy zu erzeugen."
@@ -11172,9 +11577,17 @@ msgstr "Melde dich an, um einen Kopplungscode fürs Handy zu erzeugen."
 msgid "Sign in to manage hosted communities"
 msgstr "Melde dich an, um gehostete Communitys zu verwalten"
 
+#: src/features/communities/ui/HostedCommunityOnboarding.tsx
+msgid "Sign in with a different email"
+msgstr "Mit einer anderen E-Mail anmelden"
+
 #: src/features/settings/ui/HostedCommunitiesSettingsCard.tsx
 msgid "Sign in with Builderlab"
 msgstr "Mit Builderlab anmelden"
+
+#: src/features/communities/ui/HostedCommunityCreateFlow.tsx
+msgid "Sign in with Builderlab to create and host a community. {productName} will open your browser, then bring you back here."
+msgstr "Melde dich mit Builderlab an, um eine Community anzulegen und zu hosten. {productName} öffnet deinen Browser und bringt dich dann wieder hierher."
 
 #: src/features/settings/ui/HostedCommunitiesSettingsCard.tsx
 #: src/features/settings/ui/SignOutSection.tsx
@@ -11209,6 +11622,8 @@ msgstr "Anmeldung nicht verfügbar"
 msgid "Signed response copied. Paste it into the {productName} admin console."
 msgstr "Signierte Antwort kopiert. Füg sie in die {productName}-Adminkonsole ein."
 
+#: src/features/communities/ui/HostedCommunityCreateFlow.tsx
+#: src/features/communities/ui/HostedCommunityOnboarding.tsx
 #: src/features/settings/ui/HostedCommunitiesSettingsCard.tsx
 msgid "Signing in…"
 msgstr "Anmeldung läuft …"
@@ -11217,6 +11632,7 @@ msgstr "Anmeldung läuft …"
 msgid "Signing out"
 msgstr "Abmeldung läuft"
 
+#: src/features/communities/ui/HostedCommunityOnboarding.tsx
 #: src/features/settings/ui/HostedCommunitiesSettingsCard.tsx
 #: src/features/settings/ui/SignOutSection.tsx
 msgid "Signing out…"
@@ -11253,6 +11669,10 @@ msgstr "Kleiner"
 #: src/features/settings/UpdateChecker.tsx
 msgid "Software Updates"
 msgstr "Software-Updates"
+
+#: src/features/communities/ui/WelcomeSetup.tsx
+msgid "Some communities need the owner to add you before you can join. Copy your public ID and send it to the community owner."
+msgstr "Bei manchen Communitys muss der Besitzer dich erst hinzufügen, bevor du beitreten kannst. Kopier deine öffentliche ID und schick sie dem Besitzer der Community."
 
 #: src/features/home/ui/InboxDetailPane.tsx
 msgid "Some message context could not be loaded."
@@ -11533,6 +11953,10 @@ msgstr "Unterstützung für {selectValue} ist noch nicht bekannt. "
 msgid "Switch back to All to see other activity."
 msgstr "Wechsle zurück zu Alle, um andere Aktivität zu sehen."
 
+#: src/features/communities/ui/CommunitySwitcher.tsx
+msgid "Switch community"
+msgstr "Community wechseln"
+
 #: src/features/projects/ui/ProjectWorkspaceTabs.tsx
 msgid "Switch to the remote source or clone this repository locally."
 msgstr "Wechsle zur Remote-Quelle oder klon dieses Repository lokal."
@@ -11541,6 +11965,8 @@ msgstr "Wechsle zur Remote-Quelle oder klon dieses Repository lokal."
 msgid "Switch to this device's identity"
 msgstr "Zur Identität dieses Geräts wechseln"
 
+#: src/features/communities/ui/HostedCommunityCreateFlow.tsx
+#: src/features/communities/ui/HostedCommunityOnboarding.tsx
 #: src/features/settings/ui/HostedCommunitiesSettingsCard.tsx
 msgid "Switching identity…"
 msgstr "Identität wird gewechselt …"
@@ -11654,6 +12080,10 @@ msgstr "Teams"
 msgid "Tell us what went wrong, or share general feedback."
 msgstr "Schreib uns, was schiefgelaufen ist, oder teile allgemeines Feedback."
 
+#: src/features/communities/ui/WelcomeSetup.tsx
+msgid "Tell us your role so we can find the fastest way back in."
+msgstr "Sag uns deine Rolle, dann finden wir den schnellsten Weg zurück."
+
 #: src/features/projects/ui/CreateProjectFormSettings.tsx
 #: src/features/projects/ui/ProjectChannelRequestDialog.tsx
 #: src/features/sidebar/ui/CreateChannelFormFields.tsx
@@ -11726,10 +12156,20 @@ msgstr "Teste dein Backup, um sicherzugehen, dass es funktioniert, oder fahre oh
 msgid "Text to display"
 msgstr "Anzuzeigender Text"
 
+#: src/features/communities/hostedCommunityApi.ts
+#: src/features/communities/ui/HostedCommunityCreateFlow.tsx
+#: src/features/communities/ui/HostedCommunityOnboarding.tsx
+msgid "That {productName} address is already taken."
+msgstr "Diese {productName}-Adresse ist schon vergeben."
+
+#: src/features/communities/ui/HostedCommunityCreateFlow.tsx
+#: src/features/communities/ui/HostedCommunityOnboarding.tsx
 #: src/features/settings/ui/HostedCommunitiesSettingsCard.tsx
 msgid "That address is already taken."
 msgstr "Diese Adresse ist schon vergeben."
 
+#: src/features/communities/ui/HostedCommunityCreateFlow.tsx
+#: src/features/communities/ui/HostedCommunityOnboarding.tsx
 #: src/features/settings/ui/HostedCommunitiesSettingsCard.tsx
 msgid "That address is available."
 msgstr "Diese Adresse ist frei."
@@ -11754,6 +12194,10 @@ msgstr "Das sieht nicht nach deinem Schlüssel-Backup aus. Wähle die Datei, die
 #: src/features/agents/ui/ModelPicker.tsx
 msgid "That model isn't available for this agent."
 msgstr "Dieses Modell ist für diesen Agenten nicht verfügbar."
+
+#: src/features/communities/hostedCommunityApi.ts
+msgid "That person needs a connected {productName} identity before you can transfer ownership to them."
+msgstr "Diese Person braucht eine verbundene {productName}-Identität, bevor du den Besitz übertragen kannst."
 
 #: src/features/onboarding/ui/BackupTestFlow.tsx
 msgid "That's a key backup, but not the one you just downloaded."
@@ -11811,6 +12255,14 @@ msgstr "Die Codes haben nicht übereingestimmt. Die Kopplung wurde abgebrochen."
 #: src/features/settings/ui/harnessCatalogCopy.ts
 msgid "The coding agent and development environment that runs anywhere and everywhere."
 msgstr "Der Coding-Agent und die Entwicklungsumgebung, die überall laufen."
+
+#: src/features/communities/ui/HostedCommunityOnboarding.tsx
+msgid "The community was created, but Builderlab did not return its relay address. Try connecting it again, or contact support if it does not appear in your communities."
+msgstr "Die Community wurde angelegt, aber Builderlab hat keine Relay-Adresse zurückgegeben. Versuch es nochmal zu verbinden, oder wende dich an den Support, wenn sie nicht in deinen Communitys auftaucht."
+
+#: src/features/communities/ui/HostedCommunityOnboarding.tsx
+msgid "The community was created, but onboarding is already in progress for another community. Go back and finish or restart that connection, then connect this community from your owned communities list."
+msgstr "Die Community wurde angelegt, aber für eine andere Community läuft schon ein Onboarding. Geh zurück und schließ diese Verbindung ab oder starte sie neu, und verbinde dann diese Community aus der Liste deiner eigenen Communitys."
 
 #: src/features/projects/ui/CreatePullRequestDialog.tsx
 msgid "The compare branch must be pushed before opening a review."
@@ -11959,9 +12411,21 @@ msgstr "Denkaufwand"
 msgid "This"
 msgstr "Dieser"
 
+#: src/features/communities/hostedCommunityApi.ts
+msgid "This {productName} identity is connected to another Builderlab account."
+msgstr "Diese {productName}-Identität ist mit einem anderen Builderlab-Konto verbunden."
+
 #: src/features/settings/ui/HostedCommunitiesSettingsCard.tsx
 msgid "This account is connected to a different {productName} identity"
 msgstr "Dieses Konto ist mit einer anderen {productName}-Identität verbunden"
+
+#: src/features/communities/ui/HostedCommunityOnboarding.tsx
+msgid "This account is connected to another {productName} identity. Reconnect this device, or sign out to use a different email."
+msgstr "Dieses Konto ist mit einer anderen {productName}-Identität verbunden. Verbinde dieses Gerät neu, oder melde dich ab, um eine andere E-Mail zu nutzen."
+
+#: src/features/communities/ui/HostedCommunityOnboarding.tsx
+msgid "This account uses a different {productName} identity"
+msgstr "Dieses Konto nutzt eine andere {productName}-Identität"
 
 #: src/features/settings/ui/HostedCommunitiesSettingsCard.tsx
 msgid "This address becomes connectable again. Connections that closed during archival will not reconnect automatically."
@@ -12042,9 +12506,17 @@ msgstr "Dieser Bindungslink ist abgelaufen. Fordere in der anfragenden App einen
 msgid "This build disallows changing this setting."
 msgstr "Dieser Build erlaubt keine Änderung dieser Einstellung."
 
+#: src/features/communities/hostedCommunityApi.ts
+msgid "This Builderlab account is connected to another {productName} identity."
+msgstr "Dieses Builderlab-Konto ist mit einer anderen {productName}-Identität verbunden."
+
 #: src/features/settings/ui/HostedCommunitiesSettingsCard.tsx
 msgid "This Builderlab account isn't linked to a {productName} identity yet. Connect this device's key to create and own communities under it — {productName} signs a one-time challenge locally, so your private key never leaves Desktop."
 msgstr "Dieses Builderlab-Konto ist noch nicht mit einer {productName}-Identität verknüpft. Verbinde den Schlüssel dieses Geräts, um damit Communitys anzulegen und zu besitzen — {productName} signiert eine einmalige Challenge lokal, dein privater Schlüssel verlässt Desktop also nie."
+
+#: src/features/communities/ui/HostedCommunityCreateFlow.tsx
+msgid "This Builderlab account uses a different {productName} identity. Switch it to this device, or sign in with another account."
+msgstr "Dieses Builderlab-Konto nutzt eine andere {productName}-Identität. Stell es auf dieses Gerät um, oder melde dich mit einem anderen Konto an."
 
 #: src/features/channels/canvasConflict.ts
 msgid "This canvas changed since you loaded it — reload to see the latest, then reapply your edit."
@@ -12083,6 +12555,19 @@ msgstr "Das erstellt eine passwortgeschützte Datei mit deinem privaten Schlüss
 #: src/features/settings/ui/HostedCommunitiesSettingsCard.tsx
 msgid "This device"
 msgstr "Dieses Gerät"
+
+#: src/features/communities/ui/HostedCommunityCreateFlow.tsx
+#: src/features/communities/ui/HostedCommunityOnboarding.tsx
+msgid "This device:"
+msgstr "Dieses Gerät:"
+
+#: src/features/communities/ui/HostedCommunityOnboarding.tsx
+msgid "This device's {productName} identity belongs to a different Builderlab account and can't be moved from here. Sign out, then sign in with the account that already owns this identity."
+msgstr "Die {productName}-Identität dieses Geräts gehört zu einem anderen Builderlab-Konto und kann von hier nicht verschoben werden. Melde dich ab und dann mit dem Konto an, dem diese Identität schon gehört."
+
+#: src/features/communities/ui/HostedCommunityCreateFlow.tsx
+msgid "This device's {productName} identity belongs to a different Builderlab account. Sign in with the account that already owns this identity."
+msgstr "Die {productName}-Identität dieses Geräts gehört zu einem anderen Builderlab-Konto. Melde dich mit dem Konto an, dem diese Identität schon gehört."
 
 #: src/features/settings/ui/HostedCommunitiesSettingsCard.tsx
 msgid "This device's {productName} identity is already reserved by another Builderlab account, so it can't be connected here. Sign in with that account, or transfer the identity there first."
@@ -12761,6 +13246,14 @@ msgstr "Update-Status"
 msgid "Update this channel template configuration."
 msgstr "Passe diese Kanalvorlage an."
 
+#: src/features/communities/ui/EditCommunityDialog.tsx
+msgid "Update this community's name or relay URL."
+msgstr "Aktualisier den Namen oder die Relay-URL dieser Community."
+
+#: src/features/communities/ui/CommunityChangeOverlay.tsx
+msgid "Update your community name or relay URL."
+msgstr "Aktualisier deinen Community-Namen oder die Relay-URL."
+
 #: src/features/profile/ui/ProfilePopover.tsx
 msgid "Update your status"
 msgstr "Status aktualisieren"
@@ -12871,6 +13364,14 @@ msgstr "Hintergrund {swatch} verwenden"
 msgid "Use {swatch} background"
 msgstr "{swatch}-Hintergrund verwenden"
 
+#: src/features/communities/ui/AddCommunityDialog.tsx
+msgid "Use a community URL or invite link."
+msgstr "Nutz eine Community-URL oder einen Einladungslink."
+
+#: src/features/communities/ui/HostedCommunityCreateFlow.tsx
+msgid "Use a different account"
+msgstr "Anderes Konto verwenden"
+
 #: src/features/settings/ui/BackupTestFlow.tsx
 msgid "Use a different file"
 msgstr "Andere Datei verwenden"
@@ -12912,6 +13413,10 @@ msgstr "Einen API-Schlüssel verwenden"
 msgid "Use an existing key"
 msgstr "Vorhandenen Schlüssel verwenden"
 
+#: src/features/communities/ui/CommunityEditForm.tsx
+msgid "Use anyway"
+msgstr "Trotzdem verwenden"
+
 #: src/features/agents/ui/AgentDefinitionMetadata.tsx
 #: src/features/agents/ui/CommunityCatalogDialog.tsx
 msgid "Use app default"
@@ -12933,13 +13438,31 @@ msgstr "Harness-Standardwerte verwenden"
 msgid "Use iPhone"
 msgstr "iPhone verwenden"
 
+#: src/features/communities/hostedCommunityApi.ts
+msgid "Use lowercase letters, numbers, and hyphens."
+msgstr "Verwende Kleinbuchstaben, Zahlen und Bindestriche."
+
+#: src/features/communities/ui/HostedCommunityCreateFlow.tsx
+#: src/features/communities/ui/HostedCommunityOnboarding.tsx
 #: src/features/settings/ui/HostedCommunitiesSettingsCard.tsx
 msgid "Use lowercase letters, numbers, and single hyphens."
 msgstr "Nutze Kleinbuchstaben, Zahlen und einzelne Bindestriche."
 
+#: src/features/communities/ui/AddCommunityDialog.tsx
+msgid "Use the community URL or invite link you received."
+msgstr "Nutz die Community-URL oder den Einladungslink, den du bekommen hast."
+
 #: src/features/profile/ui/AnimatedAvatarCameraPicker.tsx
 msgid "Use this computer"
 msgstr "Diesen Computer verwenden"
+
+#: src/features/communities/ui/HostedCommunityCreateFlow.tsx
+msgid "Use this device"
+msgstr "Dieses Gerät verwenden"
+
+#: src/features/communities/ui/HostedCommunityOnboarding.tsx
+msgid "Use this device's identity"
+msgstr "Identität dieses Geräts verwenden"
 
 #: src/features/onboarding/ui/OnboardingFlow.tsx
 msgid "Use your existing key"
@@ -13258,6 +13781,10 @@ msgstr "Warte auf den nächsten Agent-Turn."
 msgid "Waiting for tool details."
 msgstr "Warte auf die Tool-Details."
 
+#: src/features/communities/ui/HostedCommunityOnboarding.tsx
+msgid "Waiting for your browser…"
+msgstr "Warten auf deinen Browser…"
+
 #: src/features/sidebar/ui/SidebarRelayConnectionCard.tsx
 msgid "Waiting to reconnect"
 msgstr "Warten auf Neuverbindung"
@@ -13265,6 +13792,10 @@ msgstr "Warten auf Neuverbindung"
 #: src/features/channels/ui/MembersSidebarMemberCard.tsx
 msgid "Waking"
 msgstr "Wird geweckt"
+
+#: src/features/communities/ui/HostedCommunityOnboarding.tsx
+msgid "Want to create a new community?"
+msgstr "Willst du eine neue Community anlegen?"
 
 #: src/features/agents/ui/TeamSnapshotImportDialog.tsx
 msgid "was created"
@@ -13504,6 +14035,10 @@ msgstr "Du kannst dieses Fenster schließen, während {productName} das Backup i
 msgid "You can close this window while {productName} finishes."
 msgstr "Du kannst dieses Fenster schließen, während {productName} fertig wird."
 
+#: src/features/communities/useNestNotifications.ts
+msgid "You can delete it to reclaim disk space."
+msgstr "Du kannst es löschen, um Speicherplatz freizugeben."
+
 #: src/features/settings/EncryptedBackupProvider.tsx
 msgid "You can download another copy for 5 minutes."
 msgstr "Du kannst 5 Minuten lang eine weitere Kopie herunterladen."
@@ -13516,6 +14051,10 @@ msgstr "Du kannst trotzdem senden, ohne sie einzuladen."
 msgid "You can unarchive them at any time to restore them"
 msgstr "Du kannst sie jederzeit aus dem Archiv holen, um sie wiederherzustellen"
 
+#: src/features/communities/ui/HostedCommunityCreateFlow.tsx
+msgid "You can’t change this address after creating the community."
+msgstr "Diese Adresse kannst du nach dem Anlegen der Community nicht mehr ändern."
+
 #: src/features/projects/lib/projectGitError.ts
 msgid "You need access to the repository’s channel before you can clone it."
 msgstr "Du brauchst Zugriff auf den Kanal des Repositorys, bevor du es klonen kannst."
@@ -13523,6 +14062,10 @@ msgstr "Du brauchst Zugriff auf den Kanal des Repositorys, bevor du es klonen ka
 #: src/features/messages/ui/useDetachedAgentStart.ts
 msgid "You switched community or identity before it could start."
 msgstr "Du hast die Community oder Identität gewechselt, bevor der Start möglich war."
+
+#: src/features/communities/ui/CommunitySwitcher.tsx
+msgid "You were no longer a member, so {productName} removed the community from this device."
+msgstr "Du warst kein Mitglied mehr, also hat {productName} die Community von diesem Gerät entfernt."
 
 #. placeholder {0}: transaction.communityName
 #: src/features/onboarding/ui/PendingInviteGate.tsx
@@ -13544,6 +14087,12 @@ msgstr "Du hast die neueste Version."
 #: src/features/channels/ui/ChannelPane.tsx
 msgid "You're timed out by community moderators."
 msgstr "Du hast eine Auszeit von den Moderatoren der Community."
+
+#: src/features/communities/hostedCommunityApi.ts
+#: src/features/communities/ui/HostedCommunityCreateFlow.tsx
+#: src/features/communities/ui/HostedCommunityOnboarding.tsx
+msgid "You’ve reached your hosted community creation limit."
+msgstr "Du hast dein Limit für gehostete Communitys erreicht."
 
 #: src/features/settings/ui/HostedCommunitiesSettingsCard.tsx
 msgid "You've reached your hosted community creation limit. Transferring a community may free an active slot; deleted community addresses remain reserved."
@@ -13590,10 +14139,15 @@ msgstr "Dein Builderlab-Konto besitzt Communitys unter einem anderen {productNam
 msgid "Your Builderlab account will no longer be connected to this {productName} key. You can reconnect any key later, but community actions stay unavailable until you do."
 msgstr "Dein Builderlab-Konto ist dann nicht mehr mit diesem {productName}-Schlüssel verbunden. Du kannst später jeden Schlüssel wieder verbinden, bis dahin bleiben Community-Aktionen nicht verfügbar."
 
+#: src/features/communities/ui/HostedCommunityOnboarding.tsx
+msgid "Your Builderlab account{accountSuffix} is ready. Connect this device’s {productName} identity to finish setup. Your private key stays on this device."
+msgstr "Dein Builderlab-Konto{accountSuffix} ist bereit. Verbinde die {productName}-Identität dieses Geräts, um die Einrichtung abzuschließen. Dein privater Schlüssel bleibt auf diesem Gerät."
+
 #: src/features/agents/ui/CommunityCatalogDialog.tsx
 msgid "Your changes to this agent will be lost."
 msgstr "Deine Änderungen an diesem Agenten gehen verloren."
 
+#: src/features/communities/ui/HostedCommunityOnboarding.tsx
 #: src/features/settings/ui/HostedCommunitiesSettingsCard.tsx
 msgid "Your communities"
 msgstr "Deine Communitys"

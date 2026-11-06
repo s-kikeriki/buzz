@@ -101,6 +101,16 @@ const CONVERTED_FILES = [
   // dialog said "Buzz first requests shutdown".
   "src/features/profile/ui/NostrBindConsentDialog.tsx",
   "src/features/profile/ui/UserProfileAgentManagementRows.tsx",
+  // Communities: the densest cluster of leaks found so far. The hosted-relay
+  // error table named the fork's origin in five of its nine messages, and the
+  // first-run community setup said "Claim a Buzz address", "Buzz is open
+  // source" and "Finish connecting Buzz" on screens a person reads before
+  // they have an account.
+  "src/features/communities/hostedCommunityApi.ts",
+  "src/features/communities/ui/AddCommunityDialog.tsx",
+  "src/features/communities/ui/CommunitySwitcher.tsx",
+  "src/features/communities/ui/HostedCommunityCreateFlow.tsx",
+  "src/features/communities/ui/HostedCommunityOnboarding.tsx",
 ];
 
 /**

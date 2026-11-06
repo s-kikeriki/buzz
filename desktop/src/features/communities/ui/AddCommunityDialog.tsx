@@ -1,6 +1,8 @@
+import { Trans, useLingui } from "@lingui/react/macro";
 import * as React from "react";
 import { ArrowLeft, ChevronRight, Link2, Plus } from "lucide-react";
 
+import { BRAND } from "@/shared/branding/brand";
 import type { AddCommunityPrefillRequest } from "@/features/communities/addCommunityPrefill";
 import { HostedCommunityCreateFlow } from "@/features/communities/ui/HostedCommunityCreateFlow";
 import { useCommunityOnboarding } from "@/features/onboarding/communityOnboarding";
@@ -12,6 +14,8 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/shared/ui/dialog";
+
+const { productName } = BRAND;
 
 type AddCommunityDialogProps = {
   prefill?: AddCommunityPrefillRequest | null;
@@ -32,6 +36,7 @@ export function AddCommunityDialog({
   open,
   onOpenChange,
 }: AddCommunityDialogProps) {
+  const { t } = useLingui();
   const communityOnboarding = useCommunityOnboarding();
   const [mode, setMode] = React.useState<AddCommunityMode>("choose");
   const [joinError, setJoinError] = React.useState<string | null>(null);
@@ -69,28 +74,28 @@ export function AddCommunityDialog({
       });
       if (!started) {
         setJoinError(
-          "Finish connecting the community already in progress, then try again.",
+          t`Finish connecting the community already in progress, then try again.`,
         );
         return;
       }
       handleClose();
     },
-    [communityOnboarding, handleClose, prefill?.name],
+    [communityOnboarding, handleClose, prefill?.name, t],
   );
 
   const title =
     mode === "create"
-      ? "Create a new community"
+      ? t`Create a new community`
       : mode === "join"
-        ? "Join an existing community"
-        : "Add community";
+        ? t`Join an existing community`
+        : t`Add community`;
 
   const description =
     mode === "create"
-      ? "Opens Builderlab in your browser."
+      ? t`Opens Builderlab in your browser.`
       : mode === "join"
-        ? "Use the community URL or invite link you received."
-        : "Create a new community or join one you already have.";
+        ? t`Use the community URL or invite link you received.`
+        : t`Create a new community or join one you already have.`;
 
   return (
     <Dialog
@@ -108,7 +113,7 @@ export function AddCommunityDialog({
           <div className="flex min-w-0 items-center gap-2">
             {mode !== "choose" ? (
               <button
-                aria-label="Back to add community options"
+                aria-label={t`Back to add community options`}
                 className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md text-muted-foreground transition-colors duration-150 ease-out hover:bg-accent hover:text-accent-foreground focus:outline-hidden focus-visible:ring-1 focus-visible:ring-ring"
                 data-testid="add-community-back"
                 onClick={() => {
@@ -143,10 +148,10 @@ export function AddCommunityDialog({
                 </span>
                 <span className="min-w-0 flex-1">
                   <span className="block text-sm font-medium text-foreground">
-                    Create a new community
+                    <Trans>Create a new community</Trans>
                   </span>
                   <span className="mt-0.5 block text-xs leading-5 text-muted-foreground">
-                    Claim a Buzz address for your team.
+                    <Trans>Claim a {productName} address for your team.</Trans>
                   </span>
                 </span>
                 <ChevronRight className="h-4 w-4 shrink-0 text-muted-foreground/60" />
@@ -163,10 +168,10 @@ export function AddCommunityDialog({
                 </span>
                 <span className="min-w-0 flex-1">
                   <span className="block text-sm font-medium text-foreground">
-                    Join an existing community
+                    <Trans>Join an existing community</Trans>
                   </span>
                   <span className="mt-0.5 block text-xs leading-5 text-muted-foreground">
-                    Use a community URL or invite link.
+                    <Trans>Use a community URL or invite link.</Trans>
                   </span>
                 </span>
                 <ChevronRight className="h-4 w-4 shrink-0 text-muted-foreground/60" />
