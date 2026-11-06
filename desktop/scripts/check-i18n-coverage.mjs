@@ -642,6 +642,71 @@ const CONVERTED_FILES = [
   "src/features/huddle/components/MicControls.tsx",
   "src/features/huddle/components/ParticipantList.tsx",
   "src/features/huddle/lib/huddleError.ts",
+  // Tranche 7 — `src/shared/ui`: the shared primitives and the markdown
+  // renderer every other area draws from. 168 call sites across 38 files,
+  // measured with the coverage detector. The dialog and sheet close buttons
+  // are in here, which is why every converted area still had an English
+  // "Close" on its modals.
+  //
+  // Three files carry no copy at all and are listed only so the area is
+  // covered end to end: their findings are SVG path data, a Tailwind class
+  // string and a CSS box-shadow value, each with an override below.
+  //
+  // `shared/lib/linkPreview.ts` and the new `linkPreviewTypeLabel.ts` are
+  // converted here because the cards in this area render their output: the
+  // `typeLabel` token and the buzz:// `provider` name are both read straight
+  // into a card's `aria-label`, so translating the frame without them left a
+  // German sentence with two English words in the middle of it.
+  "src/shared/lib/linkPreview.ts",
+  "src/shared/ui/PubKey.tsx",
+  "src/shared/ui/SimpleImageLightbox.tsx",
+  "src/shared/ui/UserAvatar.tsx",
+  "src/shared/ui/VideoPlayer.tsx",
+  "src/shared/ui/VideoReviewTimecodeButton.tsx",
+  "src/shared/ui/ViewLoadingFallback.tsx",
+  "src/shared/ui/AvatarClipPaths.tsx",
+  "src/shared/ui/carousel.tsx",
+  "src/shared/ui/compact-link-preview-attachment.tsx",
+  "src/shared/ui/config-nudge-attachment.tsx",
+  "src/shared/ui/dialog.tsx",
+  "src/shared/ui/link-preview-controls.tsx",
+  "src/shared/ui/link-preview-list.tsx",
+  "src/shared/ui/linkPreviewTypeLabel.ts",
+  "src/shared/ui/markdown.tsx",
+  "src/shared/ui/markdown/AgentSnapshotCard.tsx",
+  "src/shared/ui/markdown/BuzzLinkChip.tsx",
+  "src/shared/ui/markdown/ChannelDeepLink.tsx",
+  "src/shared/ui/markdown/CodeBlock.tsx",
+  "src/shared/ui/markdown/ExternalLinkAnchor.tsx",
+  "src/shared/ui/markdown/FileCard.tsx",
+  "src/shared/ui/markdown/FilePreviewDialog.tsx",
+  "src/shared/ui/markdown/ImageGalleryStatus.tsx",
+  "src/shared/ui/markdown/ImageLightboxZoomControls.tsx",
+  "src/shared/ui/markdown/InlineEmojiPopover.tsx",
+  "src/shared/ui/markdown/LinkPreviewImageLightbox.tsx",
+  "src/shared/ui/markdown/MarkdownInput.tsx",
+  "src/shared/ui/markdown/MessageLinkPill.tsx",
+  "src/shared/ui/markdown/PdfPreview.tsx",
+  "src/shared/ui/markdown/SpoilerInline.tsx",
+  "src/shared/ui/markdown/entityLinks.tsx",
+  "src/shared/ui/markdown/imageActions.ts",
+  "src/shared/ui/rich-link-preview-attachment.tsx",
+  "src/shared/ui/sheet.tsx",
+  "src/shared/ui/sidebar.tsx",
+  "src/shared/ui/smoothCorners.ts",
+  "src/shared/ui/sonner.tsx",
+  "src/shared/ui/step-progress.tsx",
+  "src/shared/ui/useVideoContextMenu.tsx",
+  // Four files the detector reported as clean and were not: each held its copy
+  // in a **default parameter value**, a shape it does not read. Two of them
+  // also named the product — the logo's accessible name was "Buzz logo" on
+  // every build. Every current caller passes the prop, so none of the four was
+  // reaching a screen today; they are fixed as traps for the next caller, and
+  // the product-name gate is what found the two brand ones.
+  "src/shared/ui/BuzzLoadingState.tsx",
+  "src/shared/ui/buzz-logo/BuzzLogoAnimation.tsx",
+  "src/shared/ui/buzz-logo/FuzzyLogo.tsx",
+  "src/shared/ui/sidebar-action-card.tsx",
 ];
 
 /**
@@ -757,6 +822,29 @@ const OVERRIDES = new Map([
   [
     "src/features/onboarding/ui/InviteRedeemForm.tsx:466",
     "Example relay URL. `example.com` is reserved for exactly this, and `wss://` is a scheme.",
+  ],
+  // Tranche 7 — `src/shared/ui`. Four shapes the detector reads as copy and
+  // one format prefix: SVG path data, a Tailwind class string, a CSS
+  // box-shadow value, and the literal `npub` prefix.
+  [
+    "src/shared/ui/smoothCorners.ts:401",
+    "SVG path data — the degenerate `d` attribute used while a squircle has no measured size yet. Geometry, not words.",
+  ],
+  [
+    "src/shared/ui/AvatarClipPaths.tsx:43",
+    "SVG path data for the squircle avatar clip path. Geometry, not words.",
+  ],
+  [
+    "src/shared/ui/sonner.tsx:18",
+    "Tailwind class string for the toast description slot, not the description itself. `description` is a copy-bearing prop name on other components, which is why the detector reads it.",
+  ],
+  [
+    "src/shared/ui/markdown/MessageLinkPill.tsx:267",
+    "CSS `box-shadow` value drawing the hover underline. A length and a colour keyword, not copy.",
+  ],
+  [
+    "src/shared/ui/PubKey.tsx:77",
+    "`npub` is the literal prefix of a Nostr public key, and the row it labels shows one. Same reason as the HostedCommunitiesSettingsCard entry above.",
   ],
   [
     "src/features/channels/ui/WelcomeComposerBanner.tsx:251",

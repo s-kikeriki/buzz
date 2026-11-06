@@ -1,4 +1,5 @@
 import * as React from "react";
+import { useLingui } from "@lingui/react/macro";
 
 import { invokeTauri } from "@/shared/api/tauri";
 import { copyTextToClipboard } from "@/shared/lib/clipboard";
@@ -34,6 +35,7 @@ export function useVideoContextMenu(
   downloadUrl?: string,
   filename?: string,
 ): UseVideoContextMenu {
+  const { t } = useLingui();
   const [position, setPosition] =
     React.useState<MediaContextMenuPosition | null>(null);
   const close = React.useCallback(() => setPosition(null), []);
@@ -48,27 +50,32 @@ export function useVideoContextMenu(
     const entries: MediaContextMenuItem[] = [];
     if (downloadUrl) {
       entries.push({
-        label: "Download video",
+        label: t`Download video`,
         onSelect: () => {
           close();
           invokeTauri("download_file", {
             url: downloadUrl,
             filename: resolveVideoDownloadFilename(filename),
           }).catch((err: unknown) => {
-            toast.error(err instanceof Error ? err.message : "Download failed");
+            toast.error(
+              err instanceof Error ? err.message : t`Download failed`,
+            );
           });
         },
       });
     }
     entries.push({
-      label: "Copy link",
+      label: t`Copy link`,
       onSelect: () => {
         close();
-        copyTextToClipboard(downloadUrl ?? src, "Link copied to clipboard");
+        copyTextToClipboard(downloadUrl ?? src, t`Link copied to clipboard`);
       },
     });
     return entries;
-  }, [close, downloadUrl, filename, src]);
+    // `t` is in the deps on purpose: the menu labels are built inside this
+    // memo, so a language switch has to invalidate it or the next right-click
+    // shows the previous locale's labels.
+  }, [close, downloadUrl, filename, src, t]);
 
   return {
     onContextMenu,

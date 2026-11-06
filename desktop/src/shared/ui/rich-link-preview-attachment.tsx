@@ -1,10 +1,12 @@
 import { ChevronDown, ChevronUp, ImageOff } from "lucide-react";
 import type { ComponentType, ReactNode } from "react";
 import { useState } from "react";
+import { useLingui } from "@lingui/react/macro";
 
 import type { ResolvedLinkPreview } from "@/shared/lib/useResolvedLinkPreviews";
 import { cn } from "@/shared/lib/cn";
 import { LinkPreviewControls } from "@/shared/ui/link-preview-controls";
+import { linkPreviewTypeLabel } from "@/shared/ui/linkPreviewTypeLabel";
 
 export type LinkPreviewImageLightboxProps = {
   alt: string;
@@ -164,6 +166,7 @@ function TweetPreview({
   showControls: boolean;
   showExpandControl: boolean;
 }) {
+  const { t } = useLingui();
   const [contentExpanded, setContentExpanded] = useState(true);
   const reserveImage = preview.imageState !== "none";
   const hasExpandableContent = Boolean(preview.description) || reserveImage;
@@ -222,7 +225,7 @@ function TweetPreview({
           ) : (
             <ChevronDown aria-hidden="true" className="size-3" />
           )}
-          {contentExpanded ? "Show less" : "Show more"}
+          {contentExpanded ? t`Show less` : t`Show more`}
         </button>
       ) : null}
       {showControls ? (
@@ -249,6 +252,7 @@ export function RichLinkPreviewAttachment({
   showControls?: boolean;
   showExpandControl?: boolean;
 }) {
+  const { i18n, t } = useLingui();
   const [contentExpanded, setContentExpanded] = useState(true);
 
   if (isTweetPreview(preview)) {
@@ -267,6 +271,7 @@ export function RichLinkPreviewAttachment({
   const reserveImage = preview.imageState !== "none";
   const hasExpandableContent = Boolean(preview.description) || reserveImage;
   const hostname = getHostname(preview);
+  const typeLabel = linkPreviewTypeLabel(preview.typeLabel, i18n);
 
   return (
     <div
@@ -301,7 +306,7 @@ export function RichLinkPreviewAttachment({
           <span className="truncate">{hostname}</span>
         </a>
         <a
-          aria-label={`Open ${preview.provider} ${preview.typeLabel}: ${preview.title}`}
+          aria-label={t`Open ${preview.provider} ${typeLabel}: ${preview.title}`}
           className="mt-0.5 block text-sm font-semibold leading-5 text-foreground hover:underline"
           href={preview.href}
           onClick={
@@ -344,7 +349,7 @@ export function RichLinkPreviewAttachment({
           ) : (
             <ChevronDown aria-hidden="true" className="size-3" />
           )}
-          {contentExpanded ? "Show less" : "Show more"}
+          {contentExpanded ? t`Show less` : t`Show more`}
         </button>
       ) : null}
       {showControls ? (

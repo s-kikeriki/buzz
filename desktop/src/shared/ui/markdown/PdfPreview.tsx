@@ -1,5 +1,6 @@
 import * as React from "react";
 import { Loader2, ZoomIn, ZoomOut } from "lucide-react";
+import { Plural, Trans, useLingui } from "@lingui/react/macro";
 
 import type { PDFDocumentProxy } from "@/shared/ui/markdown/pdfjs";
 
@@ -32,6 +33,7 @@ export function PdfPreview({
   /** Accessible name for the document region — the attachment's filename. */
   label: string;
 }) {
+  const { t } = useLingui();
   const [state, setState] = React.useState<LoadState>({ phase: "loading" });
   const [scale, setScale] = React.useState(1);
 
@@ -79,7 +81,7 @@ export function PdfPreview({
           message:
             error instanceof Error
               ? error.message
-              : "This document could not be opened.",
+              : t`This document could not be opened.`,
         });
       }
     })();
@@ -88,7 +90,7 @@ export function PdfPreview({
       current = false;
       void destroyLoaded?.();
     };
-  }, [bytes]);
+  }, [bytes, t]);
 
   if (state.phase === "loading") {
     return (
@@ -97,7 +99,7 @@ export function PdfPreview({
         data-testid="pdf-preview-loading"
       >
         <Loader2 aria-hidden="true" className="h-4 w-4 animate-spin" />
-        Opening document…
+        <Trans>Opening document…</Trans>
       </div>
     );
   }
@@ -120,7 +122,7 @@ export function PdfPreview({
     <div className="flex min-h-0 flex-1 flex-col" data-testid="pdf-preview">
       <div className="flex shrink-0 items-center justify-center gap-2 border-b border-border/60 px-3 py-1.5">
         <button
-          aria-label="Zoom out"
+          aria-label={t`Zoom out`}
           className={ZOOM_BUTTON_CLASS}
           disabled={scale <= min}
           type="button"
@@ -135,7 +137,7 @@ export function PdfPreview({
           {Math.round(scale * 100)}%
         </span>
         <button
-          aria-label="Zoom in"
+          aria-label={t`Zoom in`}
           className={ZOOM_BUTTON_CLASS}
           disabled={scale >= max}
           type="button"
@@ -144,7 +146,7 @@ export function PdfPreview({
           <ZoomIn aria-hidden="true" className="h-4 w-4" />
         </button>
         <span className="ml-3 text-xs text-muted-foreground">
-          {state.pageCount === 1 ? "1 page" : `${state.pageCount} pages`}
+          <Plural one="# page" other="# pages" value={state.pageCount} />
         </span>
       </div>
 
@@ -194,6 +196,7 @@ function PdfPage({
   pageNumber: number;
   scale: number;
 }) {
+  const { t } = useLingui();
   const canvasRef = React.useRef<HTMLCanvasElement | null>(null);
 
   React.useEffect(() => {
@@ -241,7 +244,7 @@ function PdfPage({
 
   return (
     <canvas
-      aria-label={`Page ${pageNumber}`}
+      aria-label={t`Page ${pageNumber}`}
       className="max-w-full shadow-sm"
       data-testid={`pdf-page-${pageNumber}`}
       ref={canvasRef}

@@ -1,5 +1,6 @@
 import type * as React from "react";
 import * as DialogPrimitive from "@radix-ui/react-dialog";
+import { Trans, useLingui } from "@lingui/react/macro";
 
 import { cn } from "@/shared/lib/cn";
 import { MODAL_BACKDROP_BLUR_CLASS } from "@/shared/ui/modalBackdrop";
@@ -17,6 +18,7 @@ export function SimpleImageLightbox({
   open: boolean;
   src: string;
 }) {
+  const { t } = useLingui();
   return (
     <DialogPrimitive.Root open={open} onOpenChange={onOpenChange}>
       <DialogPrimitive.Portal>
@@ -35,11 +37,13 @@ export function SimpleImageLightbox({
             {alt}
           </DialogPrimitive.Title>
           <DialogPrimitive.Description className="sr-only">
-            Full-size image preview. Press Escape or click outside the image to
-            close.
+            <Trans>
+              Full-size image preview. Press Escape or click outside the image
+              to close.
+            </Trans>
           </DialogPrimitive.Description>
           <DialogPrimitive.Close
-            aria-label="Close lightbox"
+            aria-label={t`Close lightbox`}
             className="absolute inset-0 cursor-default"
           />
           {children ?? (

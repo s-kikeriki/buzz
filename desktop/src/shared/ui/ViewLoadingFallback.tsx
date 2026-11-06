@@ -1,3 +1,5 @@
+import { useLingui } from "@lingui/react/macro";
+
 import { Card } from "@/shared/ui/card";
 import { BuzzLoadingState } from "@/shared/ui/BuzzLoadingState";
 import { Skeleton } from "@/shared/ui/skeleton";
@@ -395,6 +397,7 @@ export function ViewLoadingFallback({
   includeHeader = false,
   kind,
 }: ViewLoadingFallbackProps) {
+  const { t } = useLingui();
   const shouldShowChannelHeader =
     includeHeader && (kind === "channel" || kind === "forum");
 
@@ -404,7 +407,7 @@ export function ViewLoadingFallback({
       {kind === "agents" ? <AgentsLoadingBody /> : null}
       {kind === "workflows" ? <CardListLoadingBody /> : null}
       {kind === "projects" ? (
-        <BuzzLoadingState fill label="Loading projects" />
+        <BuzzLoadingState fill label={t`Loading projects`} />
       ) : null}
       {kind === "channel" ? (
         <ChannelLoadingBody hasHeader={shouldShowChannelHeader} />

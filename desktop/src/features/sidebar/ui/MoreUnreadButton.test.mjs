@@ -3,6 +3,8 @@ import { describe, it } from "node:test";
 
 import { renderToStaticMarkup } from "react-dom/server";
 
+import { withI18n } from "@/testing/withI18n.mjs";
+
 import {
   canPreviewUnreadDm,
   MoreUnreadButton,
@@ -99,21 +101,25 @@ describe("MoreUnreadButton model", () => {
   });
 
   it("renders a decorative right-to-left stack with immediate fallback", () => {
+    // The stack renders `UserAvatar`, whose `alt` now comes from
+    // `useLingui()`, so this render needs the provider.
     const markup = renderToStaticMarkup(
-      MoreUnreadButton({
-        count: 5,
-        dmPreviews: [
-          preview("dm-one", "Alice", "https://example.com/alice.png"),
-          preview("dm-two", "Alice"),
-          preview("dm-three", "Group DM"),
-          preview("dm-four", "Dana"),
-        ],
-        emphasis: "primary",
-        onClick() {},
-        position: "bottom",
-        targetChannelId: "dm-one",
-        testId: "more-unread",
-      }),
+      withI18n(
+        MoreUnreadButton({
+          count: 5,
+          dmPreviews: [
+            preview("dm-one", "Alice", "https://example.com/alice.png"),
+            preview("dm-two", "Alice"),
+            preview("dm-three", "Group DM"),
+            preview("dm-four", "Dana"),
+          ],
+          emphasis: "primary",
+          onClick() {},
+          position: "bottom",
+          targetChannelId: "dm-one",
+          testId: "more-unread",
+        }),
+      ),
     );
 
     assert.match(markup, /class="[^"]*overflow-hidden[^"]*"/);

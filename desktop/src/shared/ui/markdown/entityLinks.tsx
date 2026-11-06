@@ -1,4 +1,5 @@
 import * as React from "react";
+import { t } from "@lingui/core/macro";
 
 import { useAppNavigation } from "@/app/navigation/useAppNavigation";
 import { useProjectsQuery } from "@/features/projects/hooks";
@@ -120,41 +121,49 @@ function EntityMetadataTooltip({
   );
 }
 
+// Resolved per call through the global `t` macro rather than a hook: the only
+// consumer is `renderEntityLinkAnchor`, a plain function kept callable from
+// static-markup tests and non-provider callers, so there is no render path a
+// hook could hang off.
 function entityLinkPresentation(link: ParsedEntityLink) {
   switch (link.type) {
-    case "repo":
+    case "repo": {
+      const commit = link.commitHash?.slice(0, 8);
       return {
-        ariaLabel: link.commitHash
-          ? `Open commit ${link.commitHash.slice(0, 8)} in repository ${link.dtag}`
-          : `Open repository ${link.dtag}`,
+        ariaLabel: commit
+          ? t`Open commit ${commit} in repository ${link.dtag}`
+          : t`Open repository ${link.dtag}`,
         icon: "repo" as const,
-        label: link.commitHash
-          ? `${link.dtag} · ${link.commitHash.slice(0, 8)}`
-          : link.dtag,
-        tooltipFooter: "Repository",
+        label: commit ? `${link.dtag} · ${commit}` : link.dtag,
+        tooltipFooter: t`Repository`,
       };
-    case "pr":
+    }
+    case "pr": {
+      const id = link.id.slice(0, 8);
       return {
-        ariaLabel: `Open pull request ${link.id.slice(0, 8)} in repository ${link.dtag}`,
+        ariaLabel: t`Open pull request ${id} in repository ${link.dtag}`,
         icon: "pr" as const,
-        label: `${link.dtag} · ${link.id.slice(0, 8)}`,
-        tooltipFooter: `Pull request · ${link.dtag}`,
+        label: `${link.dtag} · ${id}`,
+        tooltipFooter: t`Pull request · ${link.dtag}`,
       };
-    case "issue":
+    }
+    case "issue": {
+      const id = link.id.slice(0, 8);
       return {
-        ariaLabel: `Open issue ${link.id.slice(0, 8)} in repository ${link.dtag}`,
+        ariaLabel: t`Open issue ${id} in repository ${link.dtag}`,
         icon: "issue" as const,
         // Tooltip fallback only — the inline chip renders the repository name
         // alone (see `chip` below).
-        label: `${link.dtag} · ${link.id.slice(0, 8)}`,
-        tooltipFooter: `Issue · ${link.dtag}`,
+        label: `${link.dtag} · ${id}`,
+        tooltipFooter: t`Issue · ${link.dtag}`,
       };
+    }
     case "project":
       return {
-        ariaLabel: `Open project ${link.dtag}`,
+        ariaLabel: t`Open project ${link.dtag}`,
         icon: "project" as const,
         label: link.dtag,
-        tooltipFooter: "Project",
+        tooltipFooter: t`Project`,
       };
   }
 }

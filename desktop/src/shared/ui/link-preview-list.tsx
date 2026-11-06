@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Plural, Trans } from "@lingui/react/macro";
 
 import { useLinkPreviewStyle } from "@/shared/lib/linkPreviewStylePreference";
 import type { ResolvedLinkPreview } from "@/shared/lib/useResolvedLinkPreviews";
@@ -33,7 +34,7 @@ export function LinkPreviewList({
   const style = useLinkPreviewStyle();
   if (removed || previews.length === 0) return null;
 
-  const previewNoun = previews.length === 1 ? "preview" : "previews";
+  const previewCount = previews.length;
   const controlsIndex = 0;
   return (
     <>
@@ -64,17 +65,25 @@ export function LinkPreviewList({
         <AlertDialog onOpenChange={setDialogOpen} open={dialogOpen}>
           <AlertDialogContent>
             <AlertDialogHeader>
-              <AlertDialogTitle>Remove {previewNoun}?</AlertDialogTitle>
+              <AlertDialogTitle>
+                <Plural
+                  one="Remove preview?"
+                  other="Remove previews?"
+                  value={previewCount}
+                />
+              </AlertDialogTitle>
               <AlertDialogDescription>
-                This removes{" "}
-                {previews.length === 1 ? "the preview" : "the previews"} for
-                everyone.
+                <Plural
+                  one="This removes the preview for everyone."
+                  other="This removes the previews for everyone."
+                  value={previewCount}
+                />
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
               <AlertDialogCancel asChild>
                 <Button type="button" variant="outline">
-                  Cancel
+                  <Trans>Cancel</Trans>
                 </Button>
               </AlertDialogCancel>
               <AlertDialogAction asChild>
@@ -86,7 +95,11 @@ export function LinkPreviewList({
                   type="button"
                   variant="destructive"
                 >
-                  Remove {previewNoun}
+                  <Plural
+                    one="Remove preview"
+                    other="Remove previews"
+                    value={previewCount}
+                  />
                 </Button>
               </AlertDialogAction>
             </AlertDialogFooter>

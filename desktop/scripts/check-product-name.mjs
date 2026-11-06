@@ -131,6 +131,18 @@ const CONVERTED_FILES = [
   "src/features/huddle/components/MicControls.tsx",
   "src/features/huddle/components/ParticipantList.tsx",
   "src/features/huddle/lib/huddleError.ts",
+  // shared/ui: the primitives every area draws from, and the densest cluster
+  // this gate has found. The file-preview dialog named the product four times
+  // — including in the sentence that asks whether to hand a file to another
+  // application — `config-nudge-attachment` put it in the "restart Buzz"
+  // recovery line, `linkPreview` set it as the `provider` shown on every
+  // buzz:// card, and the logo's own accessible name was "Buzz logo".
+  "src/shared/lib/linkPreview.ts",
+  "src/shared/ui/BuzzLoadingState.tsx",
+  "src/shared/ui/buzz-logo/BuzzLogoAnimation.tsx",
+  "src/shared/ui/buzz-logo/FuzzyLogo.tsx",
+  "src/shared/ui/config-nudge-attachment.tsx",
+  "src/shared/ui/markdown/FilePreviewDialog.tsx",
 ];
 
 /**

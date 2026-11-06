@@ -1,4 +1,5 @@
 import * as React from "react";
+import { useLingui } from "@lingui/react/macro";
 
 import { avatarSourceUrlForShape } from "@/features/profile/ui/ProfileAvatarEditor.utils";
 import { parseAnimatedAvatarUrl } from "@/shared/lib/animatedAvatar";
@@ -68,6 +69,7 @@ export function UserAvatar({
   imageDraggable,
   testId,
 }: UserAvatarProps) {
+  const { t } = useLingui();
   const initials = getInitials(initialsLabel ?? displayName);
   const resolvedShape = shape ?? "circle";
   const shapedAvatarUrl = avatarSourceUrlForShape(avatarUrl, resolvedShape);
@@ -100,7 +102,7 @@ export function UserAvatar({
     >
       {src ? (
         <AvatarImage
-          alt={`${displayName} avatar`}
+          alt={t`${displayName} avatar`}
           className={cn("object-cover", !animated && "bg-secondary")}
           data-testid={testId ? `${testId}-image` : undefined}
           draggable={imageDraggable}

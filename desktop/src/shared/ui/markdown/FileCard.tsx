@@ -1,6 +1,7 @@
 import * as React from "react";
 import { Download, FileText } from "lucide-react";
 import { toast } from "sonner";
+import { useLingui } from "@lingui/react/macro";
 
 import { invokeTauri } from "@/shared/api/tauri";
 import { externalOpenWrittenName } from "@/shared/lib/externalOpenPolicy";
@@ -51,6 +52,7 @@ export function FileCard({
   mime?: string;
   size?: number;
 }) {
+  const { t } = useLingui();
   const [previewOpen, setPreviewOpen] = React.useState(false);
   const sizeLabel = size != null ? formatFileSize(size) : "";
   const kind = filePreviewKind({ filename, mime });
@@ -64,7 +66,7 @@ export function FileCard({
             interactive element: `AttachmentActions` is already stacked above
             this (`z-20`), so each control owns exactly one accessible name. */}
         <button
-          aria-label={`Preview ${writtenName}`}
+          aria-label={t`Preview ${writtenName}`}
           className="absolute inset-0 z-10 cursor-pointer rounded-2xl outline-hidden focus-visible:ring-1 focus-visible:ring-ring"
           data-testid="file-card-open"
           onClick={() => setPreviewOpen(true)}
@@ -81,13 +83,13 @@ export function FileCard({
         </AttachmentContent>
         <AttachmentActions>
           <AttachmentAction
-            aria-label={`Download ${writtenName}`}
+            aria-label={t`Download ${writtenName}`}
             data-testid="file-card-download"
             onClick={() => {
               invokeTauri("download_file", { url: href, filename }).catch(
                 (err: unknown) => {
                   const msg =
-                    err instanceof Error ? err.message : "Download failed";
+                    err instanceof Error ? err.message : t`Download failed`;
                   toast.error(msg);
                 },
               );

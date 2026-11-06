@@ -9,6 +9,11 @@ import {
   X,
 } from "lucide-react";
 import { toast } from "sonner";
+import type { I18n } from "@lingui/core";
+import { msg } from "@lingui/core/macro";
+import { Trans, useLingui } from "@lingui/react/macro";
+
+import { BRAND } from "@/shared/branding/brand";
 
 import {
   fetchPreviewBytes,
@@ -60,13 +65,20 @@ import { PdfPreview } from "@/shared/ui/markdown/PdfPreview";
 /**
  * Why "Open in default app" is missing for a refused type.
  *
- * One string, because it has to appear in both branches — the document dialog's
- * "cannot be previewed" notice and the image lightbox, where the file *is*
- * being shown — and an action that silently disappears in one of them is
+ * One message, because it has to appear in both branches — the document
+ * dialog's "cannot be previewed" notice and the image lightbox, where the file
+ * *is* being shown — and an action that silently disappears in one of them is
  * indistinguishable from a bug.
+ *
+ * It names the product, so it reads it off `BRAND` rather than hardcoding the
+ * fork's own name.
  */
-const EXTERNAL_OPEN_REFUSED_REASON =
-  "Buzz will not pass this file to another application: files of this type are run rather than displayed. Download it if you trust the sender.";
+function externalOpenRefusedReason(i18n: I18n): string {
+  const productName = BRAND.productName;
+  return i18n._(
+    msg`${productName} will not pass this file to another application: files of this type are run rather than displayed. Download it if you trust the sender.`,
+  );
+}
 
 export type FilePreviewTarget = {
   /** Proxy-rewritten URL, as the card already resolved it. */
@@ -89,12 +101,12 @@ function errorMessage(error: unknown, fallback: string): string {
 }
 
 /** Fire the unchanged native download, reporting failure as a toast. */
-function startDownload(target: FilePreviewTarget): void {
+function startDownload(target: FilePreviewTarget, i18n: I18n): void {
   invokeTauri("download_file", {
     url: target.href,
     filename: target.filename,
   }).catch((error: unknown) => {
-    toast.error(errorMessage(error, "Download failed"));
+    toast.error(errorMessage(error, i18n._(msg`Download failed`)));
   });
 }
 
@@ -175,6 +187,8 @@ function PreviewActions({
   /** The sanitized name, from the dialog that also shows it in its header. */
   writtenName: string;
 }) {
+  const { i18n, t } = useLingui();
+  const productName = BRAND.productName;
   const [opening, setOpening] = React.useState(false);
   const [confirming, setConfirming] = React.useState(false);
 
@@ -190,7 +204,7 @@ function PreviewActions({
       userConfirmed,
     })
       .catch((error: unknown) => {
-        toast.error(errorMessage(error, "Could not open the file"));
+        toast.error(errorMessage(error, t`Could not open the file`));
       })
       .finally(() => setOpening(false));
   };
@@ -216,32 +230,37 @@ function PreviewActions({
           ) : (
             <ExternalLink aria-hidden="true" className="h-4 w-4" />
           )}
-          Open in default app
+          <Trans>Open in default app</Trans>
         </Button>
       )}
       <Button
         data-testid="file-preview-download"
-        onClick={() => startDownload(target)}
+        onClick={() => startDownload(target, i18n)}
         size="sm"
         variant={compact ? "secondary" : "default"}
       >
         <Download aria-hidden="true" className="h-4 w-4" />
-        Download
+        <Trans>Download</Trans>
       </Button>
       {externalOpen !== "needsConfirmation" ? null : (
         <AlertDialog onOpenChange={setConfirming} open={confirming}>
           <AlertDialogContent data-testid="file-preview-open-confirm">
             <AlertDialogHeader>
-              <AlertDialogTitle>Open this file outside Buzz?</AlertDialogTitle>
-              {/* Deliberately does not say "Buzz cannot show this": an image
-                  with an unrecognised extension is being shown right now and
-                  still reaches this dialog. What is true in every case is that
-                  the type is unrecognised. */}
+              <AlertDialogTitle>
+                <Trans>Open this file outside {productName}?</Trans>
+              </AlertDialogTitle>
+              {/* Deliberately does not say "<product> cannot show this": an
+                  image with an unrecognised extension is being shown right now
+                  and still reaches this dialog. What is true in every case is
+                  that the type is unrecognised. */}
               <AlertDialogDescription>
-                Buzz does not recognise this file type, so it can only write a
-                temporary copy and hand it to whichever application your system
-                uses for it. What that application then does with the file is up
-                to it. Open it only if you trust whoever sent it.
+                <Trans>
+                  {productName} does not recognise this file type, so it can
+                  only write a temporary copy and hand it to whichever
+                  application your system uses for it. What that application
+                  then does with the file is up to it. Open it only if you trust
+                  whoever sent it.
+                </Trans>
               </AlertDialogDescription>
               {/* The name and the type are stated as separate facts, and the
                   name is the sanitized one. The sender writes this string: the
@@ -254,31 +273,35 @@ function PreviewActions({
                 className="mt-3 grid grid-cols-[auto_1fr] gap-x-3 gap-y-1 text-sm"
                 data-testid="file-preview-open-confirm-details"
               >
-                <dt className="text-muted-foreground">File name:</dt>
+                <dt className="text-muted-foreground">
+                  <Trans>File name:</Trans>
+                </dt>
                 <dd
                   className="break-all font-medium"
                   data-testid="file-preview-open-confirm-name"
                 >
                   {writtenName}
                 </dd>
-                <dt className="text-muted-foreground">File type:</dt>
+                <dt className="text-muted-foreground">
+                  <Trans>File type:</Trans>
+                </dt>
                 <dd
                   className="font-medium"
                   data-testid="file-preview-open-confirm-type"
                 >
-                  {fileType ?? "none"}
+                  {fileType ?? t`none`}
                 </dd>
               </dl>
             </AlertDialogHeader>
             <AlertDialogFooter>
               <AlertDialogCancel data-testid="file-preview-open-cancel">
-                Cancel
+                <Trans>Cancel</Trans>
               </AlertDialogCancel>
               <AlertDialogAction
                 data-testid="file-preview-open-confirmed"
                 onClick={() => handOver(true)}
               >
-                Open anyway
+                <Trans>Open anyway</Trans>
               </AlertDialogAction>
             </AlertDialogFooter>
           </AlertDialogContent>
@@ -318,7 +341,9 @@ export function FilePreviewDialog({
   open: boolean;
   target: FilePreviewTarget;
 }) {
+  const { i18n, t } = useLingui();
   const { retry, state } = usePreviewBytes(target, open);
+  const refusedReason = externalOpenRefusedReason(i18n);
   const sizeLabel = target.size != null ? formatFileSize(target.size) : "";
   // One answer for the whole dialog: the actions row uses it to decide whether
   // to offer the hand-over at all, and the unpreviewable notice has to describe
@@ -357,7 +382,7 @@ export function FilePreviewDialog({
             </div>
           ) : (
             <Loader2
-              aria-label="Loading preview"
+              aria-label={t`Loading preview`}
               className="h-6 w-6 animate-spin text-white/80"
               data-testid="file-preview-loading"
             />
@@ -370,7 +395,7 @@ export function FilePreviewDialog({
               className="max-w-md rounded-lg bg-background/95 px-4 py-3 text-center text-xs text-muted-foreground"
               data-testid="file-preview-external-refused"
             >
-              {EXTERNAL_OPEN_REFUSED_REASON}
+              {refusedReason}
             </p>
           ) : null}
           <PreviewActions
@@ -411,8 +436,8 @@ export function FilePreviewDialog({
               </DialogPrimitive.Title>
               <DialogPrimitive.Description className="text-xs text-muted-foreground">
                 {sizeLabel
-                  ? `${sizeLabel} · shown in the app; nothing is saved unless you download it`
-                  : "Shown in the app; nothing is saved unless you download it"}
+                  ? t`${sizeLabel} · shown in the app; nothing is saved unless you download it`
+                  : t`Shown in the app; nothing is saved unless you download it`}
               </DialogPrimitive.Description>
             </div>
             <div className="flex items-center gap-2">
@@ -422,7 +447,7 @@ export function FilePreviewDialog({
                 writtenName={writtenName}
               />
               <DialogPrimitive.Close
-                aria-label="Close preview"
+                aria-label={t`Close preview`}
                 className="rounded-md p-1.5 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground outline-hidden focus-visible:ring-2 focus-visible:ring-ring/70"
               >
                 <X aria-hidden="true" className="h-4 w-4" />
@@ -438,8 +463,8 @@ export function FilePreviewDialog({
               testId="file-preview-unsupported"
             >
               {externalOpen === "refused"
-                ? `This file type cannot be previewed in the app. ${EXTERNAL_OPEN_REFUSED_REASON}`
-                : "This file type cannot be previewed in the app. Download it, or open it in whichever application your system uses for it."}
+                ? t`This file type cannot be previewed in the app. ${refusedReason}`
+                : t`This file type cannot be previewed in the app. Download it, or open it in whichever application your system uses for it.`}
             </PreviewNotice>
           ) : state.phase === "ready" ? (
             <PdfPreview bytes={state.bytes} label={writtenName} />
@@ -456,7 +481,7 @@ export function FilePreviewDialog({
               {state.message}
               <span className="mt-3 block">
                 <Button onClick={retry} size="sm" variant="outline">
-                  Try again
+                  <Trans>Try again</Trans>
                 </Button>
               </span>
             </PreviewNotice>
@@ -470,7 +495,7 @@ export function FilePreviewDialog({
               }
               testId="file-preview-loading"
             >
-              Loading preview…
+              <Trans>Loading preview…</Trans>
             </PreviewNotice>
           )}
         </DialogPrimitive.Content>

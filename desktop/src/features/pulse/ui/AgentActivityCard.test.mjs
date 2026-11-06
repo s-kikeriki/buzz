@@ -9,6 +9,7 @@ import {
   createMemoryHistory,
 } from "@tanstack/react-router";
 import { renderToStaticMarkup } from "react-dom/server";
+import { withI18n } from "@/testing/withI18n.mjs";
 import { AgentActivityCard } from "./AgentActivityCard.tsx";
 
 function render(status) {
@@ -17,34 +18,38 @@ function render(status) {
     routeTree: createRootRoute(),
     history: createMemoryHistory({ initialEntries: ["/"] }),
   });
+  // The card renders a `UserAvatar`, whose `alt` now comes from
+  // `useLingui()`; static markup needs the provider like any other render.
   return renderToStaticMarkup(
-    React.createElement(
-      RouterContextProvider,
-      { router },
+    withI18n(
       React.createElement(
-        QueryClientProvider,
-        {
-          client: new QueryClient({
-            defaultOptions: { queries: { enabled: false } },
-          }),
-        },
-        React.createElement(AgentActivityCard, {
-          agentStatus: status,
-          profile: { displayName: "Policy-only Scout", avatarUrl: null },
-          group: {
-            pubkey,
-            latestAt: 1700000000,
-            earliestAt: 1700000000,
-            notes: [
-              {
-                id: "note",
-                pubkey,
-                content: "Still discoverable",
-                createdAt: 1700000000,
-              },
-            ],
+        RouterContextProvider,
+        { router },
+        React.createElement(
+          QueryClientProvider,
+          {
+            client: new QueryClient({
+              defaultOptions: { queries: { enabled: false } },
+            }),
           },
-        }),
+          React.createElement(AgentActivityCard, {
+            agentStatus: status,
+            profile: { displayName: "Policy-only Scout", avatarUrl: null },
+            group: {
+              pubkey,
+              latestAt: 1700000000,
+              earliestAt: 1700000000,
+              notes: [
+                {
+                  id: "note",
+                  pubkey,
+                  content: "Still discoverable",
+                  createdAt: 1700000000,
+                },
+              ],
+            },
+          }),
+        ),
       ),
     ),
   );

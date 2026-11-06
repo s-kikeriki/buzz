@@ -50,6 +50,11 @@ if (globalThis.window && globalThis.window !== globalThis) {
 import assert from "node:assert/strict";
 import React from "react";
 import { createRoot } from "react-dom/client";
+
+// The admin console renders `PubKey`, which reads its copy through
+// `useLingui()`. Every mount here goes through the provider so the throw
+// ("multiple instances of @lingui/react are installed") can't happen.
+import { withI18n } from "@/testing/withI18n.mjs";
 import { act } from "react";
 import { fireEvent } from "@testing-library/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -58,7 +63,6 @@ import { toast } from "sonner";
 import { AdminConsoleSettingsCard } from "./AdminConsoleSettingsCard.tsx";
 import { AdminConsolePanel } from "./AdminConsolePanel.tsx";
 import { CommunitiesProvider } from "@/features/communities/useCommunities.tsx";
-import { withI18n } from "@/testing/withI18n.mjs";
 
 // ── Success-toast capture ────────────────────────────────────────────────────
 //
@@ -155,13 +159,15 @@ export function mountCard(qc) {
   const doRender = async () => {
     await act(async () => {
       root.render(
-        React.createElement(
-          QueryClientProvider,
-          { client: qc },
+        withI18n(
           React.createElement(
-            CommunitiesProvider,
-            null,
-            React.createElement(AdminConsoleSettingsCard),
+            QueryClientProvider,
+            { client: qc },
+            React.createElement(
+              CommunitiesProvider,
+              null,
+              React.createElement(AdminConsoleSettingsCard),
+            ),
           ),
         ),
       );

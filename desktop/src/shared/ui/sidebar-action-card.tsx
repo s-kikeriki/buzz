@@ -1,5 +1,6 @@
 import * as React from "react";
 import type { ReactNode } from "react";
+import { useLingui } from "@lingui/react/macro";
 import { X } from "lucide-react";
 import {
   AnimatePresence,
@@ -192,7 +193,7 @@ export function SidebarCompactActionCard({
   className,
   description,
   dismissClassName,
-  dismissLabel = "Dismiss notification",
+  dismissLabel,
   icon,
   iconKey,
   onAction,
@@ -203,6 +204,8 @@ export function SidebarCompactActionCard({
   title,
   tone = "neutral",
 }: SidebarCompactActionCardProps) {
+  const { t } = useLingui();
+  const resolvedDismissLabel = dismissLabel ?? t`Dismiss notification`;
   const shouldReduceMotion = useReducedMotion();
   const isSuccess = tone === "success";
   const [isDismissing, setIsDismissing] = React.useState(false);
@@ -329,7 +332,7 @@ export function SidebarCompactActionCard({
         <SidebarActionDismissButton
           className={dismissClassName}
           isDismissing={isDismissing}
-          label={dismissLabel}
+          label={resolvedDismissLabel}
           onDismiss={onDismiss}
           onDismissStart={() => setIsDismissing(true)}
           testId={dismissTestId(testId)}

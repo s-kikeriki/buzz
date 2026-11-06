@@ -243,7 +243,7 @@ function MessageLinkPillContents({
       type="button"
       data-message-link=""
       data-hovered={isHovered ? "" : undefined}
-      aria-label={`Open thread in ${channelLabel}`}
+      aria-label={t`Open thread in ${channelLabel}`}
       title={label}
       className={cn(
         "max-w-80 cursor-pointer truncate",

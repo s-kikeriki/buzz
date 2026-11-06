@@ -191,6 +191,11 @@ msgstr ""
 msgid "{0, plural, one {# memory entry restored.} other {# memory entries restored.}}"
 msgstr ""
 
+#. placeholder {0}: state.pageCount
+#: src/shared/ui/markdown/PdfPreview.tsx
+msgid "{0, plural, one {# page} other {# pages}}"
+msgstr ""
+
 #. placeholder {0}: projects.length
 #: src/features/projects/lib/projectsActivityDigest.ts
 msgid "{0, plural, one {# project} other {# projects}}"
@@ -454,6 +459,11 @@ msgstr ""
 msgid "{0} more"
 msgstr ""
 
+#. placeholder {0}: nudge.agent_name
+#: src/shared/ui/config-nudge-attachment.tsx
+msgid "{0} needs configuration"
+msgstr ""
+
 #. placeholder {0}: quotaUsed ?? communities.length
 #: src/features/settings/ui/HostedCommunitiesSettingsCard.tsx
 msgid "{0} of {quotaLimit} used"
@@ -608,6 +618,11 @@ msgstr ""
 msgid "{commitCount, plural, one {# new commit} other {# new commits}}"
 msgstr ""
 
+#. placeholder {0}: requirement.diagnostic
+#: src/shared/ui/config-nudge-attachment.tsx
+msgid "{configFile} is invalid: <0>{0}</0> — fix the config and restart the agent"
+msgstr ""
+
 #: src/features/channels/ui/CanvasHistoryPanel.tsx
 msgid "{confirmAuthor}'s revision from {confirmTimestamp}"
 msgstr ""
@@ -722,6 +737,10 @@ msgstr ""
 msgid "{days, plural, one {#d TTL} other {#d TTL}}"
 msgstr ""
 
+#: src/shared/ui/UserAvatar.tsx
+msgid "{displayName} avatar"
+msgstr ""
+
 #: src/features/community-members/lib/joinAlerts.ts
 msgid "{displayName} joined"
 msgstr ""
@@ -757,6 +776,22 @@ msgstr ""
 #. placeholder {0}: globalEnvCount > 1 ? "s" : ""
 #: src/features/agents/ui/bakedEnvHelpers.ts
 msgid "{globalEnvCount} global env var{0}"
+msgstr ""
+
+#: src/shared/ui/config-nudge-attachment.tsx
+msgid "{harness} ACP adapter is outdated — reinstall required"
+msgstr ""
+
+#: src/shared/ui/config-nudge-attachment.tsx
+msgid "{harness} ACP adapter isn't installed"
+msgstr ""
+
+#: src/shared/ui/config-nudge-attachment.tsx
+msgid "{harness} CLI is missing"
+msgstr ""
+
+#: src/shared/ui/config-nudge-attachment.tsx
+msgid "{harness} isn't installed"
 msgstr ""
 
 #. placeholder {0}: cap === 1 ? "" : "s"
@@ -812,6 +847,10 @@ msgstr ""
 
 #: src/features/profile/ui/ProfileAvatar.tsx
 msgid "{label} avatar"
+msgstr ""
+
+#: src/shared/ui/PubKey.tsx
+msgid "{label} copied"
 msgstr ""
 
 #: src/features/agents/ui/AgentRuntimeAvatarControl.tsx
@@ -887,6 +926,18 @@ msgstr ""
 msgid "{personaCount, plural, one {# agent} other {# agents}}"
 msgstr ""
 
+#: src/shared/ui/link-preview-list.tsx
+msgid "{previewCount, plural, one {Remove preview?} other {Remove previews?}}"
+msgstr ""
+
+#: src/shared/ui/link-preview-list.tsx
+msgid "{previewCount, plural, one {Remove preview} other {Remove previews}}"
+msgstr ""
+
+#: src/shared/ui/link-preview-list.tsx
+msgid "{previewCount, plural, one {This removes the preview for everyone.} other {This removes the previews for everyone.}}"
+msgstr ""
+
 #: src/features/onboarding/ui/AvatarStep.tsx
 msgid "{previewName} avatar"
 msgstr ""
@@ -940,6 +991,10 @@ msgstr ""
 msgid "{productName} couldn't check shared compute through the relay. Check your relay connection and try again."
 msgstr ""
 
+#: src/shared/ui/markdown/FilePreviewDialog.tsx
+msgid "{productName} does not recognise this file type, so it can only write a temporary copy and hand it to whichever application your system uses for it. What that application then does with the file is up to it. Open it only if you trust whoever sent it."
+msgstr ""
+
 #: src/features/agents/ui/agentSessionTranscriptHelpers.ts
 msgid "{productName} event"
 msgstr ""
@@ -966,6 +1021,14 @@ msgstr ""
 msgid "{productName} is waiting for the relay's member roster. Try again shortly; if this persists, check the relay's membership configuration."
 msgstr ""
 
+#: src/shared/ui/buzz-logo/FuzzyLogo.tsx
+msgid "{productName} logo"
+msgstr ""
+
+#: src/shared/ui/buzz-logo/BuzzLogoAnimation.tsx
+msgid "{productName} logo animation"
+msgstr ""
+
 #: src/features/profile/ui/NostrBindConsentDialog.tsx
 msgid "{productName} opened your browser to finish verification."
 msgstr ""
@@ -980,6 +1043,10 @@ msgstr ""
 
 #: src/features/projects/ui/ProjectRightPanelControls.tsx
 msgid "{productName} Term (⌘J)"
+msgstr ""
+
+#: src/shared/ui/markdown/FilePreviewDialog.tsx
+msgid "{productName} will not pass this file to another application: files of this type are run rather than displayed. Download it if you trust the sender."
 msgstr ""
 
 #: src/features/settings/ui/HostedCommunitiesSettingsCard.tsx
@@ -1050,6 +1117,10 @@ msgstr ""
 
 #: src/features/sidebar/ui/CreateChannelFormFields.tsx
 msgid "{selectedTemplateTeamCount, plural, one {# team} other {# teams}}"
+msgstr ""
+
+#: src/shared/ui/markdown/FilePreviewDialog.tsx
+msgid "{sizeLabel} · shown in the app; nothing is saved unless you download it"
 msgstr ""
 
 #. placeholder {0}: error instanceof Error ? `: ${error.message}` : "."
@@ -1382,6 +1453,7 @@ msgid "Actions"
 msgstr ""
 
 #: src/features/community-members/ui/CommunityMembersSettingsCard.tsx
+#: src/shared/ui/markdown/AgentSnapshotCard.tsx
 msgid "Actions for {displayName}"
 msgstr ""
 
@@ -1523,6 +1595,7 @@ msgstr ""
 #: src/features/channels/ui/AddChannelBotDialog.tsx
 #: src/features/channels/ui/useChannelIntro.tsx
 #: src/features/huddle/components/HuddleBar.tsx
+#: src/shared/ui/markdown/AgentSnapshotCard.tsx
 msgid "Add agent"
 msgstr ""
 
@@ -1661,6 +1734,7 @@ msgstr ""
 
 #: src/features/agents/ui/CommunityCatalogDialog.tsx
 #: src/features/agents/ui/teamLibraryCopy.ts
+#: src/shared/ui/markdown/AgentSnapshotCard.tsx
 msgid "Add team"
 msgstr ""
 
@@ -2239,6 +2313,7 @@ msgstr ""
 
 #: src/features/settings/ui/AppearanceSettingsPanel.tsx
 #: src/features/settings/ui/SettingsPanels.tsx
+#: src/shared/ui/link-preview-controls.tsx
 msgid "Appearance"
 msgstr ""
 
@@ -2913,6 +2988,8 @@ msgstr ""
 #: src/features/settings/ui/VoiceSettingsCard.tsx
 #: src/features/sidebar/ui/ChannelSectionDialogs.tsx
 #: src/features/sidebar/ui/SidebarProjectsSection.tsx
+#: src/shared/ui/link-preview-list.tsx
+#: src/shared/ui/markdown/FilePreviewDialog.tsx
 msgid "Cancel"
 msgstr ""
 
@@ -2970,6 +3047,10 @@ msgstr ""
 
 #: src/features/agents/ui/CardMintKeyCue.tsx
 msgid "Card-minting key"
+msgstr ""
+
+#: src/shared/ui/carousel.tsx
+msgid "carousel"
 msgstr ""
 
 #: src/features/projects/ui/CreateProjectWorkItemDialog.tsx
@@ -3034,6 +3115,14 @@ msgstr ""
 #: src/features/agents/ui/AddTeamToChannelDialog.tsx
 #: src/features/search/ui/SearchResultItem.tsx
 msgid "Channel"
+msgstr ""
+
+#: src/shared/ui/markdown/ChannelDeepLink.tsx
+msgid "Channel {channelName}"
+msgstr ""
+
+#: src/shared/ui/markdown/ChannelDeepLink.tsx
+msgid "Channel {label}"
 msgstr ""
 
 #: src/features/channels/ui/ChannelMembersBar.tsx
@@ -3635,6 +3724,8 @@ msgstr ""
 #: src/features/messages/ui/ComposerAttachments.tsx
 #: src/features/projects/ui/ProjectConversationPanel.tsx
 #: src/features/settings/ui/SendFeedbackDialog.tsx
+#: src/shared/ui/dialog.tsx
+#: src/shared/ui/sheet.tsx
 msgid "Close"
 msgstr ""
 
@@ -3655,7 +3746,12 @@ msgid "Close formatting"
 msgstr ""
 
 #: src/features/messages/ui/ComposerAttachments.tsx
+#: src/shared/ui/SimpleImageLightbox.tsx
 msgid "Close lightbox"
+msgstr ""
+
+#: src/shared/ui/markdown/FilePreviewDialog.tsx
+msgid "Close preview"
 msgstr ""
 
 #: src/features/projects/ui/ProjectsSectionSearch.tsx
@@ -3676,6 +3772,10 @@ msgstr ""
 
 #: src/shared/lib/keyboard-shortcuts.ts
 msgid "Close the current dialog or settings"
+msgstr ""
+
+#: src/shared/ui/VideoPlayer.tsx
+msgid "Close video review"
 msgstr ""
 
 #: src/features/agents/ui/ManagedAgentSessionPanel.tsx
@@ -3766,6 +3866,10 @@ msgstr ""
 msgid "Commas"
 msgstr ""
 
+#: src/shared/ui/VideoPlayer.tsx
+msgid "Comment at current frame"
+msgstr ""
+
 #. placeholder {0}: anchor.path
 #. placeholder {1}: anchor.side
 #. placeholder {2}: anchor.line
@@ -3781,7 +3885,12 @@ msgstr ""
 msgid "commented on a review in"
 msgstr ""
 
+#: src/shared/ui/VideoPlayer.tsx
+msgid "Commenting is unavailable for this video."
+msgstr ""
+
 #: src/features/projects/ui/ProjectWorkItemContextDetails.tsx
+#: src/shared/ui/VideoPlayer.tsx
 msgid "Comments"
 msgstr ""
 
@@ -3908,6 +4017,7 @@ msgid "Community username"
 msgstr ""
 
 #: src/features/settings/ui/AppearanceSettingsControls.tsx
+#: src/shared/ui/link-preview-controls.tsx
 msgid "Compact"
 msgstr ""
 
@@ -3922,6 +4032,10 @@ msgstr ""
 #: src/features/projects/ui/ProjectRepositoryActionsPanel.tsx
 #: src/features/projects/ui/projectsOverviewContext.ts
 msgid "Completed"
+msgstr ""
+
+#: src/shared/ui/markdown/MarkdownInput.tsx
+msgid "Completed task"
 msgstr ""
 
 #: src/features/agents/ui/RemoveMembersConfirmDialog.tsx
@@ -4175,9 +4289,14 @@ msgstr ""
 msgid "Copied"
 msgstr ""
 
+#: src/shared/ui/markdown/CodeBlock.tsx
+msgid "Copied code to clipboard"
+msgstr ""
+
 #: src/features/onboarding/ui/BackupStep.tsx
 #: src/features/settings/ui/MobilePairingCard.tsx
 #: src/features/settings/ui/ProfileSettingsCard.tsx
+#: src/shared/ui/markdown/imageActions.ts
 msgid "Copied to clipboard"
 msgstr ""
 
@@ -4196,6 +4315,7 @@ msgstr ""
 #: src/features/channels/ui/ChannelManagementSheetRows.tsx
 #: src/features/profile/ui/UserProfilePanelFields.tsx
 #: src/features/settings/ui/ProfileSettingsCard.tsx
+#: src/shared/ui/PubKey.tsx
 msgid "Copy {label}"
 msgstr ""
 
@@ -4205,6 +4325,14 @@ msgstr ""
 
 #: src/features/sidebar/ui/ChannelContextMenu.tsx
 msgid "Copy channel name"
+msgstr ""
+
+#: src/shared/ui/markdown/CodeBlock.tsx
+msgid "Copy code"
+msgstr ""
+
+#: src/shared/ui/markdown/CodeBlock.tsx
+msgid "Copy code block"
 msgstr ""
 
 #: src/features/projects/ui/MergePullRequestButton.tsx
@@ -4224,10 +4352,21 @@ msgstr ""
 msgid "Copy community URL"
 msgstr ""
 
+#: src/shared/ui/markdown/imageActions.ts
+msgid "Copy failed"
+msgstr ""
+
+#: src/shared/ui/markdown.tsx
+msgid "Copy image"
+msgstr ""
+
 #: src/features/agents/ui/PersonaShareDialog.tsx
 #: src/features/community-members/ui/InviteLinkSection.tsx
 #: src/features/messages/ui/MessageActionBar.tsx
 #: src/features/sidebar/ui/SidebarProjectsSection.tsx
+#: src/shared/ui/markdown/BuzzLinkChip.tsx
+#: src/shared/ui/markdown/ExternalLinkAnchor.tsx
+#: src/shared/ui/useVideoContextMenu.tsx
 msgid "Copy link"
 msgstr ""
 
@@ -4259,6 +4398,10 @@ msgstr ""
 
 #: src/features/communities/ui/WelcomeSetup.tsx
 msgid "Copy public ID"
+msgstr ""
+
+#: src/shared/ui/PubKey.tsx
+msgid "Copy public key"
 msgstr ""
 
 #: src/features/profile/ui/NostrBindConsentDialog.tsx
@@ -4402,6 +4545,10 @@ msgstr ""
 
 #: src/features/profile/ui/NostrBindConsentDialog.tsx
 msgid "Could not open the browser. Copy the response below to finish manually."
+msgstr ""
+
+#: src/shared/ui/markdown/FilePreviewDialog.tsx
+msgid "Could not open the file"
 msgstr ""
 
 #: src/features/agents/ui/WhereToRunSection.tsx
@@ -4563,6 +4710,14 @@ msgstr ""
 
 #: src/features/onboarding/ui/SetupStep.tsx
 msgid "Couldn’t load sign-in options."
+msgstr ""
+
+#: src/shared/ui/markdown/AgentSnapshotCard.tsx
+msgid "Couldn’t load this agent. Try again."
+msgstr ""
+
+#: src/shared/ui/markdown/AgentSnapshotCard.tsx
+msgid "Couldn’t load this team. Try again."
 msgstr ""
 
 #: src/features/agents/ui/AgentCardViewerDialog.tsx
@@ -5037,6 +5192,7 @@ msgid "Custom command"
 msgstr ""
 
 #: src/features/settings/ui/SettingsPanels.tsx
+#: src/shared/ui/markdown/InlineEmojiPopover.tsx
 msgid "Custom emoji"
 msgstr ""
 
@@ -5515,6 +5671,10 @@ msgstr ""
 msgid "Dismiss hint"
 msgstr ""
 
+#: src/shared/ui/sidebar-action-card.tsx
+msgid "Dismiss notification"
+msgstr ""
+
 #: src/features/sidebar/ui/SidebarRelayConnectionCard.tsx
 msgid "Dismiss relay notification"
 msgstr ""
@@ -5523,12 +5683,20 @@ msgstr ""
 msgid "Dismiss update notification"
 msgstr ""
 
+#: src/shared/ui/link-preview-controls.tsx
+msgid "Display"
+msgstr ""
+
 #: src/features/settings/ui/ProfileSettingsCard.tsx
 msgid "Display name"
 msgstr ""
 
 #: src/features/messages/lib/useLinkEditor.tsx
 msgid "Display text"
+msgstr ""
+
+#: src/shared/ui/sidebar.tsx
+msgid "Displays the mobile sidebar."
 msgstr ""
 
 #: src/features/home/lib/inbox.ts
@@ -5550,6 +5718,10 @@ msgstr ""
 
 #: src/features/settings/ui/CustomHarnessForm.tsx
 msgid "Docs URL"
+msgstr ""
+
+#: src/shared/ui/linkPreviewTypeLabel.ts
+msgid "document"
 msgstr ""
 
 #: src/features/onboarding/ui/IdentityRecoveryPairing.tsx
@@ -5591,10 +5763,17 @@ msgid "Done editing {label}"
 msgstr ""
 
 #: src/features/messages/ui/AudioMessageAttachment.tsx
+#: src/shared/ui/markdown/AgentSnapshotCard.tsx
+#: src/shared/ui/markdown/FilePreviewDialog.tsx
 msgid "Download"
 msgstr ""
 
+#: src/shared/ui/markdown/AgentSnapshotCard.tsx
+msgid "Download {displayName}"
+msgstr ""
+
 #: src/features/messages/ui/AudioMessageAttachment.tsx
+#: src/shared/ui/markdown/FileCard.tsx
 msgid "Download {writtenName}"
 msgstr ""
 
@@ -5612,7 +5791,15 @@ msgid "Download card"
 msgstr ""
 
 #: src/features/messages/ui/AudioMessageAttachment.tsx
+#: src/shared/ui/markdown/FileCard.tsx
+#: src/shared/ui/markdown/FilePreviewDialog.tsx
+#: src/shared/ui/markdown/imageActions.ts
+#: src/shared/ui/useVideoContextMenu.tsx
 msgid "Download failed"
+msgstr ""
+
+#: src/shared/ui/markdown.tsx
+msgid "Download image"
 msgstr ""
 
 #: src/features/settings/ui/harnessCatalogLogic.ts
@@ -5626,6 +5813,10 @@ msgstr ""
 
 #: src/features/settings/SidebarUpdateCard.tsx
 msgid "Download update from GitHub"
+msgstr ""
+
+#: src/shared/ui/useVideoContextMenu.tsx
+msgid "Download video"
 msgstr ""
 
 #: src/features/settings/UpdateChecker.tsx
@@ -5651,6 +5842,10 @@ msgstr ""
 
 #: src/features/profile/ui/ProfileAvatarEditor.tsx
 msgid "Drag or browse"
+msgstr ""
+
+#: src/shared/ui/sidebar.tsx
+msgid "Drag to resize sidebar"
 msgstr ""
 
 #: src/features/channels/ui/RightAuxiliaryPane.tsx
@@ -5783,6 +5978,10 @@ msgstr ""
 #: src/features/agents/ui/personaDialogState.ts
 #: src/features/profile/ui/UserProfilePanelHeaderContent.tsx
 msgid "Edit agent"
+msgstr ""
+
+#: src/shared/ui/config-nudge-attachment.tsx
+msgid "Edit Agent →"
 msgstr ""
 
 #: src/features/agents/ui/AgentInstanceEditDialog.tsx
@@ -6119,6 +6318,10 @@ msgstr ""
 msgid "Failed to control agent."
 msgstr ""
 
+#: src/shared/ui/markdown/CodeBlock.tsx
+msgid "Failed to copy code"
+msgstr ""
+
 #: src/features/settings/ui/ChannelTemplatesSettingsCard.tsx
 msgid "Failed to create"
 msgstr ""
@@ -6205,6 +6408,10 @@ msgstr ""
 msgid "Failed to import team snapshot."
 msgstr ""
 
+#: src/shared/ui/VideoPlayer.tsx
+msgid "Failed to load — tap to retry"
+msgstr ""
+
 #: src/features/onboarding/ui/MachineOnboardingFlow.tsx
 msgid "Failed to load identity"
 msgstr ""
@@ -6230,11 +6437,13 @@ msgid "Failed to open direct message."
 msgstr ""
 
 #: src/features/agents/ui/AgentCardMintDialog.tsx
+#: src/shared/ui/markdown/ExternalLinkAnchor.tsx
 msgid "Failed to open link"
 msgstr ""
 
 #: src/features/projects/ui/ProjectIssuesPanel.tsx
 #: src/features/projects/ui/ProjectPullRequestsPanel.tsx
+#: src/shared/ui/VideoPlayer.tsx
 msgid "Failed to post comment."
 msgstr ""
 
@@ -6403,6 +6612,10 @@ msgstr ""
 msgid "Fetch"
 msgstr ""
 
+#: src/shared/ui/linkPreviewTypeLabel.ts
+msgid "file"
+msgstr ""
+
 #: src/features/onboarding/ui/BackupTestFlow.tsx
 msgid "File and password verified. Keep them both somewhere safe — that's all you need to restore your identity."
 msgstr ""
@@ -6410,6 +6623,14 @@ msgstr ""
 #: src/features/agents/ui/AgentSnapshotExportDialog.tsx
 #: src/features/agents/ui/TeamSnapshotExportDialog.tsx
 msgid "File format"
+msgstr ""
+
+#: src/shared/ui/markdown/FilePreviewDialog.tsx
+msgid "File name:"
+msgstr ""
+
+#: src/shared/ui/markdown/FilePreviewDialog.tsx
+msgid "File type:"
 msgstr ""
 
 #: src/features/projects/lib/projectDetailAgentContext.ts
@@ -6485,6 +6706,10 @@ msgstr ""
 
 #: src/features/settings/ui/AppearanceSettingsControls.tsx
 msgid "Focus"
+msgstr ""
+
+#: src/shared/ui/linkPreviewTypeLabel.ts
+msgid "folder"
 msgstr ""
 
 #: src/features/profile/ui/UserProfilePrimaryActions.tsx
@@ -6583,6 +6808,14 @@ msgstr ""
 msgid "Full-size attachment preview. Press Escape or click outside to close."
 msgstr ""
 
+#: src/shared/ui/SimpleImageLightbox.tsx
+msgid "Full-size image preview. Press Escape or click outside the image to close."
+msgstr ""
+
+#: src/shared/ui/markdown.tsx
+msgid "Full-size image preview. Press Escape or click outside the image to close. Click the image to zoom."
+msgstr ""
+
 #: src/features/onboarding/ui/EncryptedBackupCreator.tsx
 #: src/features/settings/ui/EncryptedBackupCreator.tsx
 msgid "Generate a password"
@@ -6619,6 +6852,10 @@ msgstr ""
 #. placeholder {0}: host.host
 #: src/features/projects/ui/RepositoryCards.tsx
 msgid "Git data hosted on {0}"
+msgstr ""
+
+#: src/shared/ui/config-nudge-attachment.tsx
+msgid "Git for Windows is required for buzz-agent shell tools"
 msgstr ""
 
 #: src/features/channels/ui/AddChannelBotPersonasSection.tsx
@@ -6729,6 +6966,10 @@ msgstr ""
 msgid "Hide API key"
 msgstr ""
 
+#: src/shared/ui/VideoPlayer.tsx
+msgid "Hide comments"
+msgstr ""
+
 #: src/features/channels/ui/ChannelCanvas.tsx
 msgid "Hide history"
 msgstr ""
@@ -6765,6 +7006,10 @@ msgstr ""
 
 #: src/features/projects/ui/ProjectAgentSubmittedContextPill.tsx
 msgid "Hide sent context"
+msgstr ""
+
+#: src/shared/ui/markdown/SpoilerInline.tsx
+msgid "Hide spoiler"
 msgstr ""
 
 #: src/features/onboarding/ui/BackupTestFlow.tsx
@@ -6919,6 +7164,26 @@ msgstr ""
 msgid "Image"
 msgstr ""
 
+#: src/shared/ui/markdown/ImageGalleryStatus.tsx
+msgid "Image {position} of {itemCount}"
+msgstr ""
+
+#: src/shared/ui/markdown.tsx
+msgid "Image attachment"
+msgstr ""
+
+#: src/shared/ui/markdown.tsx
+msgid "Image controls"
+msgstr ""
+
+#: src/shared/ui/markdown.tsx
+msgid "Image preview"
+msgstr ""
+
+#: src/shared/ui/markdown/ImageLightboxZoomControls.tsx
+msgid "Image zoom"
+msgstr ""
+
 #: src/features/agents/ui/AgentSnapshotImportDialog.tsx
 #: src/features/agents/ui/CommunityCatalogDialog.tsx
 #: src/features/agents/ui/TeamSnapshotImportDialog.tsx
@@ -7037,6 +7302,10 @@ msgstr ""
 
 #: src/features/agents/ui/AgentCardMintDialog.tsx
 msgid "Including memory needs a linked agent instance — start this agent once to enable it."
+msgstr ""
+
+#: src/shared/ui/markdown/MarkdownInput.tsx
+msgid "Incomplete task"
 msgstr ""
 
 #: src/shared/lib/keyboard-shortcuts.ts
@@ -7253,8 +7522,17 @@ msgstr ""
 msgid "is working…"
 msgstr ""
 
+#: src/shared/ui/linkPreviewTypeLabel.ts
+msgid "issue"
+msgstr ""
+
 #: src/features/projects/projectTaskCategories.ts
 msgid "Issue"
+msgstr ""
+
+#. placeholder {0}: link.dtag
+#: src/shared/ui/markdown/entityLinks.tsx
+msgid "Issue · {0}"
 msgstr ""
 
 #: src/features/onboarding/ui/BackupTestFlow.tsx
@@ -7365,6 +7643,10 @@ msgstr ""
 #: src/features/agents/ui/AgentSnapshotExportDialog.tsx
 #: src/features/agents/ui/TeamSnapshotExportDialog.tsx
 msgid "JSON"
+msgstr ""
+
+#: src/shared/ui/VideoReviewTimecodeButton.tsx
+msgid "Jump to {timecode}"
 msgstr ""
 
 #: src/features/messages/ui/MessageThreadPanel.tsx
@@ -7518,6 +7800,10 @@ msgstr ""
 msgid "Leave huddle"
 msgstr ""
 
+#: src/shared/ui/VideoPlayer.tsx
+msgid "Leave your comment..."
+msgstr ""
+
 #: src/features/channels/ui/ChannelManagementSheet.tsx
 msgid "Leaving channel..."
 msgstr ""
@@ -7558,6 +7844,10 @@ msgstr ""
 msgid "Line up your shot."
 msgstr ""
 
+#: src/shared/ui/linkPreviewTypeLabel.ts
+msgid "link"
+msgstr ""
+
 #: src/features/messages/ui/FormattingToolbar.tsx
 msgid "Link"
 msgstr ""
@@ -7570,8 +7860,26 @@ msgstr ""
 msgid "Link copied"
 msgstr ""
 
+#: src/shared/ui/markdown/BuzzLinkChip.tsx
+#: src/shared/ui/markdown/ExternalLinkAnchor.tsx
+#: src/shared/ui/useVideoContextMenu.tsx
+msgid "Link copied to clipboard"
+msgstr ""
+
+#: src/shared/ui/link-preview-controls.tsx
+msgid "Link display settings"
+msgstr ""
+
 #: src/features/settings/ui/AppearanceSettingsControls.tsx
 msgid "Link previews"
+msgstr ""
+
+#: src/shared/ui/link-preview-controls.tsx
+msgid "Link previews set to Compact."
+msgstr ""
+
+#: src/shared/ui/link-preview-controls.tsx
+msgid "Link previews set to Rich."
 msgstr ""
 
 #: src/shared/lib/keyboard-shortcuts.ts
@@ -7623,6 +7931,10 @@ msgstr ""
 
 #: src/features/channels/ui/CanvasHistoryPanel.tsx
 msgid "Load older"
+msgstr ""
+
+#: src/shared/ui/BuzzLoadingState.tsx
+msgid "Loading"
 msgstr ""
 
 #: src/features/projects/ui/ProjectDetailFeedPanels.tsx
@@ -7728,6 +8040,14 @@ msgstr ""
 msgid "Loading policy"
 msgstr ""
 
+#: src/shared/ui/markdown/FilePreviewDialog.tsx
+msgid "Loading preview"
+msgstr ""
+
+#: src/shared/ui/markdown/FilePreviewDialog.tsx
+msgid "Loading preview…"
+msgstr ""
+
 #: src/features/projects/ui/ProjectsActivityFeed.tsx
 msgid "Loading project activity"
 msgstr ""
@@ -7738,6 +8058,10 @@ msgstr ""
 
 #: src/features/home/ui/ProjectInboxDetail.tsx
 msgid "Loading project item…"
+msgstr ""
+
+#: src/shared/ui/ViewLoadingFallback.tsx
+msgid "Loading projects"
 msgstr ""
 
 #: src/features/onboarding/ui/SetupStep.tsx
@@ -7803,6 +8127,7 @@ msgstr ""
 #: src/features/onboarding/ui/DefaultConfigStep.tsx
 #: src/features/settings/ui/PrivateKeyBackupRow.tsx
 #: src/features/settings/ui/SignOutSection.tsx
+#: src/shared/ui/markdown/AgentSnapshotCard.tsx
 msgid "Loading…"
 msgstr ""
 
@@ -8332,6 +8657,10 @@ msgstr ""
 msgid "More options for {0}"
 msgstr ""
 
+#: src/shared/ui/VideoPlayer.tsx
+msgid "More reactions"
+msgstr ""
+
 #: src/features/projects/ui/PullRequestReviewCard.tsx
 msgid "More review actions"
 msgstr ""
@@ -8366,6 +8695,10 @@ msgstr ""
 
 #: src/features/sidebar/ui/CustomChannelSection.tsx
 msgid "Move up"
+msgstr ""
+
+#: src/shared/ui/VideoPlayer.tsx
+msgid "Mute"
 msgstr ""
 
 #: src/features/huddle/components/MicControls.tsx
@@ -8554,6 +8887,14 @@ msgstr ""
 msgid "Next"
 msgstr ""
 
+#: src/shared/ui/markdown.tsx
+msgid "Next image"
+msgstr ""
+
+#: src/shared/ui/carousel.tsx
+msgid "Next slide"
+msgstr ""
+
 #: src/features/onboarding/ui/AvatarStep.tsx
 msgid "Next, add a display image"
 msgstr ""
@@ -8710,6 +9051,10 @@ msgstr ""
 
 #: src/features/projects/ui/ProjectPullRequestsPanel.tsx
 msgid "No checks have been reported for this review yet."
+msgstr ""
+
+#: src/shared/ui/VideoPlayer.tsx
+msgid "No comments yet"
 msgstr ""
 
 #: src/features/projects/ui/PullRequestReviewersRow.tsx
@@ -9124,6 +9469,10 @@ msgstr ""
 msgid "No workflows in this channel yet."
 msgstr ""
 
+#: src/shared/ui/markdown/FilePreviewDialog.tsx
+msgid "none"
+msgstr ""
+
 #: src/features/projects/ui/CreateProjectFormSettings.tsx
 #: src/features/sidebar/ui/CreateChannelFormFields.tsx
 msgid "None"
@@ -9153,6 +9502,10 @@ msgstr ""
 
 #: src/features/profile/ui/UserProfilePanelFields.tsx
 msgid "Not deployed"
+msgstr ""
+
+#: src/shared/ui/config-nudge-attachment.tsx
+msgid "not found in PATH — install it or update PATH, then restart {productName}"
 msgstr ""
 
 #: src/features/settings/ui/CustomHarnessForm.tsx
@@ -9354,6 +9707,13 @@ msgstr ""
 msgid "Open {0} {1} line {2} in Files changed"
 msgstr ""
 
+#. placeholder {0}: preview.provider
+#. placeholder {1}: preview.title
+#: src/shared/ui/compact-link-preview-attachment.tsx
+#: src/shared/ui/rich-link-preview-attachment.tsx
+msgid "Open {0} {typeLabel}: {1}"
+msgstr ""
+
 #. placeholder {0}: item.title
 #. placeholder {1}: item.target.project.name
 #: src/features/projects/ui/ProjectsActivityFeed.tsx
@@ -9417,6 +9777,19 @@ msgstr ""
 msgid "Open activity settings"
 msgstr ""
 
+#: src/shared/ui/config-nudge-attachment.tsx
+msgid "Open Agent runtimes →"
+msgstr ""
+
+#. placeholder {0}: nudge.agent_name
+#: src/shared/ui/config-nudge-attachment.tsx
+msgid "Open Agent runtimes for {0}"
+msgstr ""
+
+#: src/shared/ui/markdown/FilePreviewDialog.tsx
+msgid "Open anyway"
+msgstr ""
+
 #. placeholder {0}: channel.name
 #: src/features/projects/ui/ProjectOriginReference.tsx
 msgid "Open author-claimed origin channel #{0}"
@@ -9430,8 +9803,25 @@ msgstr ""
 msgid "Open channel {channelLabel}; linked message was deleted"
 msgstr ""
 
+#: src/shared/ui/markdown/ChannelDeepLink.tsx
+msgid "Open channel {channelName}"
+msgstr ""
+
+#: src/shared/ui/markdown/ChannelDeepLink.tsx
+msgid "Open channel {label}"
+msgstr ""
+
 #: src/features/messages/lib/composerMessageLinkNode.ts
 msgid "Open channel {resolvedChannelName}"
+msgstr ""
+
+#: src/shared/ui/markdown/ChannelDeepLink.tsx
+msgid "Open channel: {label}"
+msgstr ""
+
+#. placeholder {0}: link.dtag
+#: src/shared/ui/markdown/entityLinks.tsx
+msgid "Open commit {commit} in repository {0}"
 msgstr ""
 
 #: src/features/home/ui/InboxDetailPane.tsx
@@ -9441,6 +9831,11 @@ msgstr ""
 #: src/features/messages/ui/DraftDetailPane.tsx
 #: src/features/messages/ui/DraftsPanel.tsx
 msgid "Open draft"
+msgstr ""
+
+#. placeholder {0}: nudge.agent_name
+#: src/shared/ui/config-nudge-attachment.tsx
+msgid "Open Edit Agent for {0}"
 msgstr ""
 
 #: src/features/profile/ui/UserProfilePanelTabs.tsx
@@ -9473,6 +9868,10 @@ msgstr ""
 msgid "Open in chat"
 msgstr ""
 
+#: src/shared/ui/markdown/FilePreviewDialog.tsx
+msgid "Open in default app"
+msgstr ""
+
 #: src/features/projects/ui/ProjectChannelHome.tsx
 msgid "Open in repository"
 msgstr ""
@@ -9486,12 +9885,26 @@ msgstr ""
 msgid "Open inbox item from {0}"
 msgstr ""
 
+#. placeholder {0}: link.dtag
+#: src/shared/ui/markdown/entityLinks.tsx
+msgid "Open issue {id} in repository {0}"
+msgstr ""
+
+#: src/shared/ui/markdown/BuzzLinkChip.tsx
+#: src/shared/ui/markdown/ExternalLinkAnchor.tsx
+msgid "Open link"
+msgstr ""
+
 #: src/features/projects/ui/ProjectRepositoryActionsPanel.tsx
 msgid "Open local repository folder"
 msgstr ""
 
 #: src/shared/ui/markdown/MessageLinkPill.tsx
 msgid "Open message in channel {channelLabel}"
+msgstr ""
+
+#: src/shared/ui/markdown/ChannelDeepLink.tsx
+msgid "Open message: {label}"
 msgstr ""
 
 #: src/features/projects/ui/ProjectReadmePanel.tsx
@@ -9518,13 +9931,28 @@ msgstr ""
 msgid "Open profile settings"
 msgstr ""
 
+#. placeholder {0}: link.dtag
+#: src/shared/ui/markdown/entityLinks.tsx
+msgid "Open project {0}"
+msgstr ""
+
 #: src/features/projects/ui/ProjectRepositoryActionsPanel.tsx
 msgid "Open project chat to ask for repository access"
+msgstr ""
+
+#. placeholder {0}: link.dtag
+#: src/shared/ui/markdown/entityLinks.tsx
+msgid "Open pull request {id} in repository {0}"
 msgstr ""
 
 #: src/features/messages/ui/MessageActionBar.tsx
 #: src/features/messages/ui/SystemMessageRow.tsx
 msgid "Open reactions"
+msgstr ""
+
+#. placeholder {0}: link.dtag
+#: src/shared/ui/markdown/entityLinks.tsx
+msgid "Open repository {0}"
 msgstr ""
 
 #. placeholder {0}: channel.name
@@ -9584,9 +10012,17 @@ msgstr ""
 msgid "Open the search dialog"
 msgstr ""
 
+#: src/shared/ui/markdown/FilePreviewDialog.tsx
+msgid "Open this file outside {productName}?"
+msgstr ""
+
 #. placeholder {0}: item.senderLabel
 #: src/features/sidebar/ui/ChannelActivityPopover.tsx
 msgid "Open thread from {0}"
+msgstr ""
+
+#: src/shared/ui/markdown/MessageLinkPill.tsx
+msgid "Open thread in {channelLabel}"
 msgstr ""
 
 #: src/shared/ui/markdown/MessageLinkPill.tsx
@@ -9603,6 +10039,10 @@ msgstr ""
 
 #: src/features/projects/ui/ProjectsChannelsList.tsx
 msgid "Open unavailable channel"
+msgstr ""
+
+#: src/shared/ui/VideoPlayer.tsx
+msgid "Open video review"
 msgstr ""
 
 #: src/features/agents/ui/agentConfigOptions.tsx
@@ -9640,6 +10080,10 @@ msgstr ""
 
 #: src/features/onboarding/ui/PendingInviteGate.tsx
 msgid "Opening community link"
+msgstr ""
+
+#: src/shared/ui/markdown/PdfPreview.tsx
+msgid "Opening document…"
 msgstr ""
 
 #: src/features/messages/ui/NewMessageScreen.tsx
@@ -9759,6 +10203,10 @@ msgstr ""
 msgid "owner unavailable"
 msgstr ""
 
+#: src/shared/ui/markdown/PdfPreview.tsx
+msgid "Page {pageNumber}"
+msgstr ""
+
 #: src/features/settings/ui/MobilePairingCard.tsx
 msgid "Pair your mobile app"
 msgstr ""
@@ -9851,6 +10299,14 @@ msgstr ""
 msgid "Pause {value}"
 msgstr ""
 
+#: src/shared/ui/VideoPlayer.tsx
+msgid "Pause review video"
+msgstr ""
+
+#: src/shared/ui/VideoPlayer.tsx
+msgid "Pause video"
+msgstr ""
+
 #: src/features/messages/ui/AudioMessageAttachment.tsx
 msgid "Pause voice note"
 msgstr ""
@@ -9931,6 +10387,14 @@ msgstr ""
 msgid "Plan updated"
 msgstr ""
 
+#: src/shared/ui/VideoPlayer.tsx
+msgid "Play review video"
+msgstr ""
+
+#: src/shared/ui/VideoPlayer.tsx
+msgid "Play video"
+msgstr ""
+
 #: src/features/messages/ui/AudioMessageAttachment.tsx
 msgid "Play voice note"
 msgstr ""
@@ -9943,6 +10407,10 @@ msgstr ""
 #. placeholder {1}: playbackRateLabel(nextPlaybackRate)
 #: src/features/messages/ui/AudioMessageAttachment.tsx
 msgid "Playback speed {0}; next {1}"
+msgstr ""
+
+#: src/shared/ui/VideoPlayer.tsx
+msgid "Playback speed: {label}"
 msgstr ""
 
 #: src/features/communities/ui/CommunityEditForm.tsx
@@ -9973,6 +10441,14 @@ msgstr ""
 
 #: src/features/profile/ui/AnimatedAvatarReviewNav.tsx
 msgid "Position yourself"
+msgstr ""
+
+#: src/shared/ui/VideoPlayer.tsx
+msgid "Posting..."
+msgstr ""
+
+#: src/shared/ui/linkPreviewTypeLabel.ts
+msgid "PR"
 msgstr ""
 
 #: src/features/settings/ui/SendFeedbackDialog.tsx
@@ -10025,6 +10501,10 @@ msgstr ""
 msgid "Presence status"
 msgstr ""
 
+#: src/shared/ui/linkPreviewTypeLabel.ts
+msgid "presentation"
+msgstr ""
+
 #: src/features/settings/ui/PreventSleepSettingsCard.tsx
 msgid "Prevents your computer from sleeping while local agents are running. Automatically releases when all agents stop or after 1 hour without agent activity."
 msgstr ""
@@ -10043,6 +10523,15 @@ msgstr ""
 msgid "Preview {value}"
 msgstr ""
 
+#: src/shared/ui/markdown/FileCard.tsx
+msgid "Preview {writtenName}"
+msgstr ""
+
+#. placeholder {0}: preview.imageDomain
+#: src/shared/ui/compact-link-preview-attachment.tsx
+msgid "Preview from {0}"
+msgstr ""
+
 #: src/features/profile/ui/NostrBindConsentDialog.tsx
 msgid "Preview response copied."
 msgstr ""
@@ -10055,8 +10544,16 @@ msgstr ""
 msgid "Preview unavailable for this file. Large and binary files only show metadata."
 msgstr ""
 
+#: src/shared/ui/markdown.tsx
+msgid "Previous image"
+msgstr ""
+
 #: src/features/agents/ui/agentSessionTranscriptHelpers.ts
 msgid "Previous request — interrupted before completion"
+msgstr ""
+
+#: src/shared/ui/carousel.tsx
+msgid "Previous slide"
 msgstr ""
 
 #: src/features/channels/ui/ChannelPermissionsSettings.tsx
@@ -10142,10 +10639,15 @@ msgstr ""
 msgid "Progress update"
 msgstr ""
 
+#: src/shared/ui/linkPreviewTypeLabel.ts
+msgid "project"
+msgstr ""
+
 #: src/features/channels/lib/channelLifecycle.ts
 #: src/features/channels/ui/ChannelTypePicker.tsx
 #: src/features/projects/ui/AddProjectRepositoryDialog.tsx
 #: src/features/projects/ui/ProjectsCategoryCreateDialogs.tsx
+#: src/shared/ui/markdown/entityLinks.tsx
 msgid "Project"
 msgstr ""
 
@@ -10318,6 +10820,11 @@ msgstr ""
 msgid "Pull remote commits"
 msgstr ""
 
+#. placeholder {0}: link.dtag
+#: src/shared/ui/markdown/entityLinks.tsx
+msgid "Pull request · {0}"
+msgstr ""
+
 #: src/features/sidebar/ui/AppSidebarPinnedHeader.tsx
 msgid "Pulse"
 msgstr ""
@@ -10421,6 +10928,11 @@ msgstr ""
 #: src/features/messages/ui/MessageReactions.tsx
 #: src/features/messages/ui/SystemMessageRow.tsx
 msgid "React"
+msgstr ""
+
+#. placeholder {0}: formatTimecode(currentTime)
+#: src/shared/ui/VideoPlayer.tsx
+msgid "React {emoji} at {0}"
 msgstr ""
 
 #: src/features/messages/ui/MessageActionBar.tsx
@@ -10770,6 +11282,10 @@ msgstr ""
 msgid "Remove photo"
 msgstr ""
 
+#: src/shared/ui/link-preview-controls.tsx
+msgid "Remove preview"
+msgstr ""
+
 #: src/features/messages/ui/ComposerAttachments.tsx
 msgid "Remove spoiler"
 msgstr ""
@@ -10847,6 +11363,7 @@ msgid "Replies are not available for this item."
 msgstr ""
 
 #: src/features/messages/ui/MessageActionBar.tsx
+#: src/shared/ui/VideoPlayer.tsx
 msgid "Reply"
 msgstr ""
 
@@ -10863,8 +11380,14 @@ msgid "Reply to {replyAuthor} in #{channelName}"
 msgstr ""
 
 #. placeholder {0}: replyTarget.author
+#. placeholder {0}: replyTarget.comment.author
 #: src/features/messages/ui/ComposerReplyEditBanner.tsx
+#: src/shared/ui/VideoPlayer.tsx
 msgid "Replying to {0}"
+msgstr ""
+
+#: src/shared/ui/linkPreviewTypeLabel.ts
+msgid "repo"
 msgstr ""
 
 #: src/features/messages/ui/MessageActionBar.tsx
@@ -10882,6 +11405,7 @@ msgstr ""
 
 #: src/features/projects/ui/CreateProjectIssueDialog.tsx
 #: src/features/projects/ui/CreatePullRequestDialog.tsx
+#: src/shared/ui/markdown/entityLinks.tsx
 msgid "Repository"
 msgstr ""
 
@@ -11005,6 +11529,10 @@ msgstr ""
 
 #: src/features/channels/ui/RightAuxiliaryPane.tsx
 msgid "Resize panel"
+msgstr ""
+
+#: src/shared/ui/sidebar.tsx
+msgid "Resize sidebar"
 msgstr ""
 
 #: src/features/projects/ui/MergePullRequestButton.tsx
@@ -11144,6 +11672,10 @@ msgstr ""
 msgid "Retry installing {0}"
 msgstr ""
 
+#: src/shared/ui/VideoPlayer.tsx
+msgid "Retry loading video"
+msgstr ""
+
 #: src/features/messages/ui/AudioMessageAttachment.tsx
 msgid "Retry voice note"
 msgstr ""
@@ -11183,6 +11715,10 @@ msgstr ""
 msgid "Reveal private key"
 msgstr ""
 
+#: src/shared/ui/markdown/SpoilerInline.tsx
+msgid "Reveal spoiler"
+msgstr ""
+
 #: src/features/onboarding/ui/BackupTestFlow.tsx
 msgid "Reveal unlocked private key"
 msgstr ""
@@ -11201,6 +11737,7 @@ msgstr ""
 
 #: src/features/home/lib/inbox.ts
 #: src/features/projects/ui/ProjectWorkspaceTabList.tsx
+#: src/shared/ui/linkPreviewTypeLabel.ts
 msgid "Review"
 msgstr ""
 
@@ -11240,6 +11777,10 @@ msgstr ""
 msgid "Review updated."
 msgstr ""
 
+#: src/shared/ui/VideoPlayer.tsx
+msgid "Review video comments and timecoded replies."
+msgstr ""
+
 #: src/features/projects/ui/ProjectWorkItemContextDetails.tsx
 #: src/features/projects/ui/PullRequestReviewersRow.tsx
 msgid "Reviewers"
@@ -11260,6 +11801,7 @@ msgid "Reviews opened for this repository will appear here."
 msgstr ""
 
 #: src/features/settings/ui/AppearanceSettingsControls.tsx
+#: src/shared/ui/link-preview-controls.tsx
 msgid "Rich"
 msgstr ""
 
@@ -11583,6 +12125,11 @@ msgstr ""
 msgid "Sections let you group related channels in the sidebar."
 msgstr ""
 
+#. placeholder {0}: item.timecode
+#: src/shared/ui/VideoPlayer.tsx
+msgid "Seek to {0}"
+msgstr ""
+
 #: src/features/agents/ui/agentConfigControls.tsx
 msgid "Select"
 msgstr ""
@@ -11829,6 +12376,11 @@ msgstr ""
 msgid "Set"
 msgstr ""
 
+#. placeholder {0}: requirement.key
+#: src/shared/ui/config-nudge-attachment.tsx
+msgid "Set <0>{0}</0> in Edit Agent → Environment variables"
+msgstr ""
+
 #: src/features/agents/ui/AgentsView.tsx
 msgid "Set agent defaults"
 msgstr ""
@@ -11844,6 +12396,11 @@ msgstr ""
 
 #: src/features/communities/ui/HostedCommunityOnboarding.tsx
 msgid "Set new community name"
+msgstr ""
+
+#. placeholder {0}: requirement.field
+#: src/shared/ui/config-nudge-attachment.tsx
+msgid "Set the <0>{0}</0> field in Edit Agent dropdowns"
 msgstr ""
 
 #: src/features/onboarding/ui/SetupStep.tsx
@@ -11923,6 +12480,10 @@ msgstr ""
 msgid "Shared agents will appear here."
 msgstr ""
 
+#: src/shared/ui/markdown/AgentSnapshotCard.tsx
+msgid "Shared by {sharedBy}"
+msgstr ""
+
 #: src/features/agents/ui/teamLibraryCopy.ts
 msgid "Shared teams will appear here."
 msgstr ""
@@ -11972,8 +12533,21 @@ msgstr ""
 msgid "Show API key"
 msgstr ""
 
+#: src/shared/ui/VideoPlayer.tsx
+msgid "Show comments"
+msgstr ""
+
+#: src/shared/ui/PubKey.tsx
+msgid "Show full public key"
+msgstr ""
+
 #: src/features/settings/ui/NotificationSettingsCard.tsx
+#: src/shared/ui/rich-link-preview-attachment.tsx
 msgid "Show less"
+msgstr ""
+
+#: src/shared/ui/rich-link-preview-attachment.tsx
+msgid "Show more"
 msgstr ""
 
 #: src/features/projects/ui/ProjectRepositoryPanel.tsx
@@ -12049,6 +12623,10 @@ msgstr ""
 msgid "Showing the latest {DISCUSSION_SEARCH_LIMIT} mentions; totals may be higher."
 msgstr ""
 
+#: src/shared/ui/markdown/FilePreviewDialog.tsx
+msgid "Shown in the app; nothing is saved unless you download it"
+msgstr ""
+
 #: src/features/communities/ui/EditCommunityDialog.tsx
 msgid "Shown in the community rail and switcher."
 msgstr ""
@@ -12068,6 +12646,10 @@ msgstr ""
 
 #: src/features/agents/lib/managedAgentControlActions.ts
 msgid "Shutdown requested. This does not confirm the agent has stopped."
+msgstr ""
+
+#: src/shared/ui/sidebar.tsx
+msgid "Sidebar"
 msgstr ""
 
 #: src/features/settings/ui/AppearanceSettingsControls.tsx
@@ -12192,6 +12774,10 @@ msgstr ""
 msgid "Sleep prevention expired after 1 hour without agent activity. It will resume on the next agent activity, or toggle off and on to re-enable now."
 msgstr ""
 
+#: src/shared/ui/carousel.tsx
+msgid "slide"
+msgstr ""
+
 #: src/features/settings/ui/AppearanceSettingsControls.tsx
 msgid "Small cards with a thumbnail"
 msgstr ""
@@ -12283,6 +12869,10 @@ msgstr ""
 msgid "Speaking"
 msgstr ""
 
+#: src/shared/ui/VideoPlayer.tsx
+msgid "Speed"
+msgstr ""
+
 #: src/features/messages/ui/DiffMessageExpanded.tsx
 #: src/features/settings/ui/AppearanceSettingsControls.tsx
 msgid "Split"
@@ -12290,6 +12880,10 @@ msgstr ""
 
 #: src/features/messages/ui/FormattingToolbar.tsx
 msgid "Spoiler"
+msgstr ""
+
+#: src/shared/ui/linkPreviewTypeLabel.ts
+msgid "spreadsheet"
 msgstr ""
 
 #: src/features/settings/ui/ChannelTemplatesSettingsCard.tsx
@@ -12407,6 +13001,10 @@ msgstr ""
 
 #: src/features/onboarding/ui/SetupStep.tsx
 msgid "Status unavailable"
+msgstr ""
+
+#: src/shared/ui/step-progress.tsx
+msgid "Step {safeCurrentStep} of {safeTotalSteps}"
 msgstr ""
 
 #: src/features/profile/ui/AnimatedAvatarReviewNav.tsx
@@ -12583,6 +13181,7 @@ msgid "task"
 msgstr ""
 
 #: src/features/home/lib/inbox.ts
+#: src/shared/ui/linkPreviewTypeLabel.ts
 msgid "Task"
 msgstr ""
 
@@ -12823,6 +13422,14 @@ msgstr ""
 
 #: src/features/messages/ui/MessageTimelineErrorCard.tsx
 msgid "The channel history didn't load. Check your connection and try again."
+msgstr ""
+
+#: src/shared/ui/config-nudge-attachment.tsx
+msgid "the CLI"
+msgstr ""
+
+#: src/shared/ui/config-nudge-attachment.tsx
+msgid "the CLI tool"
 msgstr ""
 
 #: src/features/onboarding/ui/IdentityRecoveryPairing.tsx
@@ -13150,8 +13757,20 @@ msgstr ""
 msgid "This device's {productName} identity is already reserved by another Builderlab account, so it can't be connected here. Sign in with that account, or transfer the identity there first."
 msgstr ""
 
+#: src/shared/ui/markdown/PdfPreview.tsx
+msgid "This document could not be opened."
+msgstr ""
+
 #: src/features/projects/ui/AgentContextPayloadPreview.tsx
 msgid "This exact text is appended to your message before it is signed and sent. Quoted values are untrusted workspace metadata —{productName} does not verify or rewrite them."
+msgstr ""
+
+#: src/shared/ui/markdown/FilePreviewDialog.tsx
+msgid "This file type cannot be previewed in the app. {refusedReason}"
+msgstr ""
+
+#: src/shared/ui/markdown/FilePreviewDialog.tsx
+msgid "This file type cannot be previewed in the app. Download it, or open it in whichever application your system uses for it."
 msgstr ""
 
 #. placeholder {0}: BRAND.productName
@@ -13425,6 +14044,7 @@ msgstr ""
 
 #. placeholder {0}: reaction.emoji
 #: src/features/messages/ui/MessageReactions.tsx
+#: src/shared/ui/VideoPlayer.tsx
 msgid "Toggle {0} reaction"
 msgstr ""
 
@@ -13447,6 +14067,10 @@ msgstr ""
 
 #: src/shared/lib/keyboard-shortcuts.ts
 msgid "Toggle sidebar"
+msgstr ""
+
+#: src/shared/ui/sidebar.tsx
+msgid "Toggle Sidebar"
 msgstr ""
 
 #: src/shared/lib/keyboard-shortcuts.ts
@@ -13513,6 +14137,7 @@ msgstr ""
 #: src/features/onboarding/ui/MembershipDenied.tsx
 #: src/features/settings/ui/MobilePairingCard.tsx
 #: src/features/settings/ui/SettingsView.tsx
+#: src/shared/ui/markdown/FilePreviewDialog.tsx
 msgid "Try again"
 msgstr ""
 
@@ -13740,6 +14365,10 @@ msgstr ""
 
 #: src/features/onboarding/ui/KeyringLockedScreen.tsx
 msgid "Unlock your system keyring"
+msgstr ""
+
+#: src/shared/ui/VideoPlayer.tsx
+msgid "Unmute"
 msgstr ""
 
 #: src/features/huddle/components/MicControls.tsx
@@ -14192,6 +14821,22 @@ msgstr ""
 msgid "Verify your backup"
 msgstr ""
 
+#: src/shared/ui/markdown.tsx
+msgid "Video attachment"
+msgstr ""
+
+#: src/shared/ui/VideoPlayer.tsx
+msgid "Video progress"
+msgstr ""
+
+#: src/shared/ui/VideoPlayer.tsx
+msgid "Video review"
+msgstr ""
+
+#: src/shared/ui/VideoPlayer.tsx
+msgid "Video timeline"
+msgstr ""
+
 #: src/features/huddle/components/HuddleAttachment.tsx
 msgid "View"
 msgstr ""
@@ -14400,6 +15045,14 @@ msgstr ""
 
 #: src/features/huddle/components/AgentVoiceMenu.tsx
 msgid "Voice settings for {displayName}"
+msgstr ""
+
+#: src/shared/ui/VideoPlayer.tsx
+msgid "Volume"
+msgstr ""
+
+#: src/shared/ui/VideoPlayer.tsx
+msgid "Wait for the video message to finish sending."
 msgstr ""
 
 #: src/features/agents/ui/AgentSessionTranscriptList.tsx
@@ -14666,6 +15319,10 @@ msgstr ""
 msgid "You can also delete this agent from the profile settings menu if you want to remove the agent instead of hiding it."
 msgstr ""
 
+#: src/shared/ui/link-preview-controls.tsx
+msgid "You can always modify this and other settings in Appearance."
+msgstr ""
+
 #: src/features/agents/ui/RespondToField.tsx
 msgid "You can always use this agent."
 msgstr ""
@@ -14877,10 +15534,23 @@ msgstr ""
 msgid "Zoom"
 msgstr ""
 
+#: src/shared/ui/markdown.tsx
+msgid "Zoom image"
+msgstr ""
+
+#: src/shared/ui/markdown.tsx
+#: src/shared/ui/markdown/LinkPreviewImageLightbox.tsx
+msgid "Zoom image: {alt}"
+msgstr ""
+
 #: src/shared/lib/keyboard-shortcuts.ts
+#: src/shared/ui/markdown/ImageLightboxZoomControls.tsx
+#: src/shared/ui/markdown/PdfPreview.tsx
 msgid "Zoom in"
 msgstr ""
 
 #: src/shared/lib/keyboard-shortcuts.ts
+#: src/shared/ui/markdown/ImageLightboxZoomControls.tsx
+#: src/shared/ui/markdown/PdfPreview.tsx
 msgid "Zoom out"
 msgstr ""
