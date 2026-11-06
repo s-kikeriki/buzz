@@ -1,3 +1,5 @@
+import { i18n } from "@lingui/core";
+import { msg } from "@lingui/core/macro";
 import * as React from "react";
 import { toast } from "sonner";
 
@@ -48,7 +50,10 @@ export function useAgentLifecycleActions({
         if (managedAgent.backend.type === "local") {
           clearActiveTurnsForAgentOnStop(managedAgent.pubkey);
         }
-        toast.success(result.noticeMessage ?? `Stopped ${managedAgent.name}.`);
+        const stoppedName = managedAgent.name;
+        toast.success(
+          result.noticeMessage ?? i18n._(msg`Stopped ${stoppedName}.`),
+        );
         return;
       }
 
@@ -58,14 +63,17 @@ export function useAgentLifecycleActions({
         agent: managedAgent,
         startManagedAgent,
       });
+      const agentName = managedAgent.name;
       toast.success(
         managedAgent.backend.type === "provider"
-          ? `Deploying ${managedAgent.name}.`
-          : `Started ${managedAgent.name}.`,
+          ? i18n._(msg`Deploying ${agentName}.`)
+          : i18n._(msg`Started ${agentName}.`),
       );
     } catch (error) {
       toast.error(
-        error instanceof Error ? error.message : "Agent action failed.",
+        error instanceof Error
+          ? error.message
+          : i18n._(msg`Agent action failed.`),
       );
     }
   }, [
@@ -93,11 +101,14 @@ export function useAgentLifecycleActions({
         stopManagedAgent,
         onStopped: () => clearActiveTurnsForAgentOnStop(managedAgent.pubkey),
       });
-      toast.success(`Restarted ${managedAgent.name}.`);
+      const restartedName = managedAgent.name;
+      toast.success(i18n._(msg`Restarted ${restartedName}.`));
     } catch (error) {
       if (isRelayRemovedError(error)) return;
       toast.error(
-        error instanceof Error ? error.message : "Agent restart failed.",
+        error instanceof Error
+          ? error.message
+          : i18n._(msg`Agent restart failed.`),
       );
     }
   }, [

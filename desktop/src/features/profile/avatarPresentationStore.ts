@@ -1,3 +1,5 @@
+import { i18n } from "@lingui/core";
+import { msg } from "@lingui/core/macro";
 import * as React from "react";
 import { toast } from "sonner";
 
@@ -148,12 +150,12 @@ async function verifyPresentation(
     state: "failed",
   };
   emitChange();
-  toast.error("Avatar couldn’t finish uploading", {
+  toast.error(i18n._(msg`Avatar couldn’t finish uploading`), {
     action: {
-      label: "Retry",
+      label: i18n._(msg`Retry`),
       onClick: () => retryAvatarPresentation(entry.remoteUrl),
     },
-    description: "Your default avatar is showing instead.",
+    description: i18n._(msg`Your default avatar is showing instead.`),
     id: toastId(entry.remoteUrl),
   });
 }

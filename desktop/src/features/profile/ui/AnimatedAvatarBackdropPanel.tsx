@@ -1,3 +1,5 @@
+import { useLingui } from "@lingui/react/macro";
+
 import { cn } from "@/shared/lib/cn";
 
 import {
@@ -27,6 +29,7 @@ export function AnimatedAvatarBackdropPanel({
   onSelectColor,
   testIdPrefix,
 }: AnimatedAvatarBackdropPanelProps) {
+  const { t } = useLingui();
   return (
     <div
       className={cn(
@@ -46,8 +49,8 @@ export function AnimatedAvatarBackdropPanel({
           <button
             aria-label={
               isCustomSwatch
-                ? "Choose custom backdrop color"
-                : `Use ${swatch} backdrop`
+                ? t`Choose custom backdrop color`
+                : t`Use ${swatch} backdrop`
             }
             aria-pressed={isSelected}
             className={cn(

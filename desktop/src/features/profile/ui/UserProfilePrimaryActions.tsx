@@ -1,3 +1,6 @@
+import { i18n } from "@lingui/core";
+import { msg } from "@lingui/core/macro";
+import { useLingui } from "@lingui/react/macro";
 import type { LucideIcon } from "lucide-react";
 import type { ReactNode, Ref } from "react";
 import {
@@ -63,15 +66,22 @@ export function ProfilePrimaryActions({
   unfollowMutation: ReturnType<typeof useUnfollowMutation>;
   wavePending?: boolean;
 }) {
+  const { t } = useLingui();
   const showFollowAction = useFeatureEnabled("pulse");
   const followToggleMutation = isFollowing ? unfollowMutation : followMutation;
 
   const handleFollowClick = () => {
     followToggleMutation.mutate(pubkey, {
-      onError: (error) =>
+      onError: (error) => {
+        // Whole sentences, not an action name glued to " failed": German puts
+        // the verb last, so the two halves cannot be composed.
+        const reason = error.message;
         toast.error(
-          `${isFollowing ? "Unfollow" : "Follow"} failed: ${error.message}`,
-        ),
+          isFollowing
+            ? i18n._(msg`Unfollowing failed: ${reason}`)
+            : i18n._(msg`Following failed: ${reason}`),
+        );
+      },
     });
   };
 
@@ -108,7 +118,7 @@ export function ProfilePrimaryActions({
         <ProfileActionTile
           disabled={agentActionDisabled}
           icon={RefreshCw}
-          label="Restart agent"
+          label={t`Restart agent`}
           onClick={onAgentRestart}
           testId="user-profile-agent-restart"
         />
@@ -118,7 +128,7 @@ export function ProfilePrimaryActions({
           disabled={messagePending}
           icon={MessageSquare}
           isLoading={messagePending}
-          label="Message"
+          label={t`Message`}
           onClick={onMessage}
           testId="user-profile-message"
         />
@@ -128,7 +138,7 @@ export function ProfilePrimaryActions({
           disabled={huddlePending}
           icon={Headphones}
           isLoading={huddlePending}
-          label="Huddle"
+          label={t`Huddle`}
           onClick={onHuddle}
           testId="user-profile-huddle"
         />
@@ -138,7 +148,7 @@ export function ProfilePrimaryActions({
           disabled={wavePending}
           icon={Hand}
           isLoading={wavePending}
-          label="Wave"
+          label={t`Wave`}
           onClick={onWave}
           testId="user-profile-wave"
         />
@@ -148,7 +158,7 @@ export function ProfilePrimaryActions({
           active={isFollowing}
           disabled={followToggleMutation.isPending}
           icon={isFollowing ? UserMinus : UserPlus}
-          label={isFollowing ? "Unfollow" : "Follow"}
+          label={isFollowing ? t`Unfollow` : t`Follow`}
           onClick={handleFollowClick}
         />
       ) : null}
@@ -169,6 +179,7 @@ export function ProfilePersonaPrimaryActions({
   disabled: boolean;
   onStartAgent: () => void;
 }) {
+  const { t } = useLingui();
   return (
     <ProfileActionGroup
       className={className}
@@ -179,7 +190,7 @@ export function ProfilePersonaPrimaryActions({
         active
         disabled={disabled}
         icon={Play}
-        label="Start agent"
+        label={t`Start agent`}
         onClick={onStartAgent}
         testId="user-profile-start-agent"
       />

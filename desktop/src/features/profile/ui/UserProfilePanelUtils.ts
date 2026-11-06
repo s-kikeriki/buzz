@@ -1,3 +1,6 @@
+import type { MessageDescriptor } from "@lingui/core";
+import { msg } from "@lingui/core/macro";
+
 import * as React from "react";
 import type {
   AcpRuntimeCatalogEntry,
@@ -29,15 +32,24 @@ export type ProfilePanelView =
 
 export type ProfilePanelTab = "info" | "runtime" | "channels" | "memories";
 
-export const PROFILE_PANEL_VIEW_TITLES: Record<ProfilePanelView, string> = {
-  summary: "Profile",
-  instructions: "Agent instructions",
-  info: "Agent info",
-  configuration: "Runtime",
-  diagnostics: "Harness log",
-  memories: "Memories",
-  channels: "Channels",
-  logs: "Harness log",
+/**
+ * Descriptors, not strings: this table is built at module import, so a plain
+ * string would freeze every panel title in the locale that booted first.
+ * `PROFILE_PANEL_VIEWS` below reads its *keys*, so translating the values
+ * cannot affect view routing.
+ */
+export const PROFILE_PANEL_VIEW_TITLES: Record<
+  ProfilePanelView,
+  MessageDescriptor
+> = {
+  summary: msg`Profile`,
+  instructions: msg`Agent instructions`,
+  info: msg`Agent info`,
+  configuration: msg`Runtime`,
+  diagnostics: msg`Harness log`,
+  memories: msg`Memories`,
+  channels: msg`Channels`,
+  logs: msg`Harness log`,
 };
 
 const PROFILE_PANEL_VIEWS = new Set<ProfilePanelView>(

@@ -1,15 +1,21 @@
+import { Trans } from "@lingui/react/macro";
 import { ChevronRight, MessageSquare } from "lucide-react";
 
 import { Markdown } from "@/shared/ui/markdown";
 import {
   type ProfileField,
+  type ProfileFieldKey,
   ProfileFieldRows,
 } from "@/features/profile/ui/UserProfilePanelFields";
 
-export const AGENT_DETAILS_FIELD_LABELS = new Set([
-  "Runtime",
-  "ACP command",
-  "MCP command",
+/**
+ * Keys, not labels: this set partitions the runtime rows, so matching on the
+ * rendered English would put every row in the wrong half once translated.
+ */
+export const AGENT_DETAILS_FIELD_KEYS = new Set<ProfileFieldKey>([
+  "runtime",
+  "acp-command",
+  "mcp-command",
 ]);
 
 export function AgentConfigurationFocusedView({
@@ -18,7 +24,7 @@ export function AgentConfigurationFocusedView({
   fields: ProfileField[];
 }) {
   const runtimeConfigurationFields = fields.filter((field) =>
-    AGENT_DETAILS_FIELD_LABELS.has(field.label),
+    AGENT_DETAILS_FIELD_KEYS.has(field.key),
   );
 
   return (
@@ -119,7 +125,7 @@ export function AgentInstructionRow({
       <MessageSquare className="h-4 w-4 shrink-0 text-muted-foreground" />
       <div className="min-w-0 flex-1 text-left">
         <div className="text-xs font-medium text-foreground">
-          Agent instructions
+          <Trans>Agent instructions</Trans>
         </div>
         {trimmedInstruction ? (
           canOpenInstructions ? (
@@ -146,7 +152,7 @@ export function AgentInstructionRow({
             className="mt-0.5 text-sm leading-6 text-muted-foreground"
             data-testid="user-profile-agent-instruction-empty"
           >
-            No instruction set.
+            <Trans>No instruction set.</Trans>
           </p>
         )}
       </div>
@@ -193,7 +199,7 @@ export function AgentInstructionsFocusedView({
           />
         ) : (
           <p className="text-sm leading-6 text-muted-foreground">
-            No instruction set.
+            <Trans>No instruction set.</Trans>
           </p>
         )}
       </div>

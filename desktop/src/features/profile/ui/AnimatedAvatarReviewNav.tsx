@@ -1,3 +1,6 @@
+import type { MessageDescriptor } from "@lingui/core";
+import { msg } from "@lingui/core/macro";
+import { Trans, useLingui } from "@lingui/react/macro";
 import {
   Camera,
   Circle,
@@ -10,32 +13,42 @@ import { cn } from "@/shared/lib/cn";
 
 export type ReviewSection = "person" | "shape" | "color" | "poster";
 
+/**
+ * Descriptors, not strings: this table is built once at module import, so a
+ * plain string would freeze every section label in the locale that booted
+ * first. The component resolves each one per render.
+ */
 const REVIEW_SECTIONS: {
   key: ReviewSection;
-  label: string;
-  caption: string;
+  label: MessageDescriptor;
+  caption: MessageDescriptor;
   hidden?: boolean;
   icon: typeof UserRound;
 }[] = [
   {
-    caption: "You",
+    caption: msg`You`,
     icon: UserRound,
     key: "person",
-    label: "Position yourself",
+    label: msg`Position yourself`,
   },
   {
-    caption: "Circle",
+    caption: msg`Circle`,
     hidden: true,
     icon: Circle,
     key: "shape",
-    label: "Adjust the circle",
+    label: msg`Adjust the circle`,
   },
-  { caption: "Background", icon: Palette, key: "color", label: "Background" },
   {
-    caption: "Frame",
+    caption: msg`Background`,
+    icon: Palette,
+    key: "color",
+    label: msg`Background`,
+  },
+  {
+    caption: msg`Frame`,
     icon: GalleryThumbnails,
     key: "poster",
-    label: "Still frame",
+    label: msg`Still frame`,
   },
 ];
 
@@ -56,6 +69,7 @@ export function AnimatedAvatarReviewNav({
   onSectionChange,
   testIdPrefix,
 }: AnimatedAvatarReviewNavProps) {
+  const { i18n, t } = useLingui();
   const controlsDisabled = disabled || isSaving;
 
   return (
@@ -67,14 +81,14 @@ export function AnimatedAvatarReviewNav({
         const Icon = section.icon;
         return (
           <button
-            aria-label={section.label}
+            aria-label={i18n._(section.label)}
             aria-pressed={activeSection === section.key}
             className="group flex flex-col items-center gap-1.5 rounded-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
             data-testid={`${testIdPrefix}-animated-section-${section.key}`}
             disabled={controlsDisabled}
             key={section.key}
             onClick={() => onSectionChange(section.key)}
-            title={section.label}
+            title={i18n._(section.label)}
             type="button"
           >
             <span
@@ -98,7 +112,7 @@ export function AnimatedAvatarReviewNav({
                   : "text-muted-foreground",
               )}
             >
-              {section.caption}
+              {i18n._(section.caption)}
             </span>
           </button>
         );
@@ -108,13 +122,13 @@ export function AnimatedAvatarReviewNav({
         className="h-12 w-px shrink-0 rounded-full bg-border/70"
       />
       <button
-        aria-label="Retake the recording"
+        aria-label={t`Retake the recording`}
         className="group flex flex-col items-center gap-1.5 rounded-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
         data-testid={`${testIdPrefix}-animated-retake`}
         disabled={controlsDisabled}
         key="retake"
         onClick={onRetake}
-        title="Retake the recording"
+        title={t`Retake the recording`}
         type="button"
       >
         <span className="grid h-12 w-12 place-items-center rounded-full bg-muted text-muted-foreground/70 transition-[background-color,color,transform] duration-150 ease-[cubic-bezier(0.23,1,0.32,1)] motion-reduce:transition-none group-hover:bg-muted/80 group-hover:text-muted-foreground motion-safe:group-hover:scale-[1.04] motion-safe:group-active:scale-[0.98] group-disabled:bg-muted group-disabled:text-muted-foreground/70 group-disabled:scale-100">
@@ -123,7 +137,9 @@ export function AnimatedAvatarReviewNav({
             className="h-5 w-5 transition-transform duration-150 ease-[cubic-bezier(0.23,1,0.32,1)] motion-reduce:transition-none motion-safe:group-hover:rotate-[5deg] motion-safe:group-hover:scale-[1.12] motion-safe:group-active:scale-[0.98]"
           />
         </span>
-        <span className="text-sm text-muted-foreground">Retake</span>
+        <span className="text-sm text-muted-foreground">
+          <Trans>Retake</Trans>
+        </span>
       </button>
     </div>
   );

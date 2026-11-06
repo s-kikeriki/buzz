@@ -95,6 +95,12 @@ const CONVERTED_FILES = [
   // named the product in both of its microphone errors.
   "src/features/messages/lib/composerMessageLinkNode.ts",
   "src/features/messages/lib/useVoiceNoteRecorder.ts",
+  // Profile: three more leaks found while translating. The identity-binding
+  // page named the fork's origin in four strings and in its app-icon `alt` —
+  // on a screen a person reaches from another app — and the agent-delete
+  // dialog said "Buzz first requests shutdown".
+  "src/features/profile/ui/NostrBindConsentDialog.tsx",
+  "src/features/profile/ui/UserProfileAgentManagementRows.tsx",
 ];
 
 /**

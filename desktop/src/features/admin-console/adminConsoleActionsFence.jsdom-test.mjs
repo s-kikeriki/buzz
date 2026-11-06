@@ -21,6 +21,7 @@ import {
   setIpcHandler,
   settle,
   TEST_COMMUNITY,
+  withI18n,
 } from "./adminConsolePanelTestHelpers.jsdom.mjs";
 import {
   ActionsSection,
@@ -76,22 +77,26 @@ function mountSection(child) {
   }
   const render = (community) =>
     root.render(
-      React.createElement(
-        QueryClientProvider,
-        { client: qc },
+      // `withI18n`, because the member picker mounts `ProfileAvatar`, which
+      // reads its copy through `useLingui()`.
+      withI18n(
         React.createElement(
-          CommunitiesProvider,
-          null,
+          QueryClientProvider,
+          { client: qc },
           React.createElement(
-            DirectActionsProvider,
-            {
-              canMutate: true,
-              origin: CM_ORIGIN,
-              pubkey: CM_PUBKEY,
-              generation: 0,
-            },
-            React.createElement(Grab),
-            child(community),
+            CommunitiesProvider,
+            null,
+            React.createElement(
+              DirectActionsProvider,
+              {
+                canMutate: true,
+                origin: CM_ORIGIN,
+                pubkey: CM_PUBKEY,
+                generation: 0,
+              },
+              React.createElement(Grab),
+              child(community),
+            ),
           ),
         ),
       ),

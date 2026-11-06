@@ -1,3 +1,4 @@
+import { Trans, useLingui } from "@lingui/react/macro";
 import * as React from "react";
 import { ChevronDown, ChevronUp, Pencil } from "lucide-react";
 
@@ -21,7 +22,7 @@ import type {
   useUserProfileQuery,
 } from "@/features/profile/hooks";
 import type { ProfileField } from "@/features/profile/ui/UserProfilePanelFields";
-import { AGENT_DETAILS_FIELD_LABELS } from "@/features/profile/ui/UserProfilePanelAgentDetails";
+import { AGENT_DETAILS_FIELD_KEYS } from "@/features/profile/ui/UserProfilePanelAgentDetails";
 import {
   ProfileInfoTabContent,
   ProfileRuntimeTabContent,
@@ -191,6 +192,7 @@ export function ProfileSummaryView({
   unfollowMutation,
   userStatus,
 }: ProfileSummaryViewProps) {
+  const { t } = useLingui();
   const notManagedOnDevice = useIsOtherSetupAgent(pubkey, profile?.ownerPubkey);
   const activeTurns = useAgentWorking(isBot ? pubkey : null).channels;
   const stickyLayoutRef = React.useRef<HTMLDivElement>(null);
@@ -215,10 +217,10 @@ export function ProfileSummaryView({
   const showChannelsTab =
     channelsLoading || channelCount > 0 || isBot || relayAgent !== undefined;
   const runtimeConfigurationFields = agentSettingsFields.filter((field) =>
-    AGENT_DETAILS_FIELD_LABELS.has(field.label),
+    AGENT_DETAILS_FIELD_KEYS.has(field.key),
   );
   const runtimeSettingsFields = agentSettingsFields.filter(
-    (field) => !AGENT_DETAILS_FIELD_LABELS.has(field.label),
+    (field) => !AGENT_DETAILS_FIELD_KEYS.has(field.key),
   );
   const runtimeFields = [
     ...runtimeConfigurationFields,
@@ -235,7 +237,7 @@ export function ProfileSummaryView({
       diagnosticsFields.length > 0 ||
       canOpenAgentLogs);
   const showDiagnosticsIngress =
-    diagnosticsFields.some((field) => field.label !== "Status") ||
+    diagnosticsFields.some((field) => field.key !== "status") ||
     canOpenAgentLogs;
   const showActivityIngress = canViewActivity;
   const showInfoTab =
@@ -248,7 +250,7 @@ export function ProfileSummaryView({
     !showRuntimeTab;
 
   const diagnosticsErrorField = diagnosticsFields.find(
-    (field) => field.label === "Last error",
+    (field) => field.key === "last-error",
   );
   const diagnosticsTrailing =
     diagnosticsErrorField !== undefined ? (
@@ -257,7 +259,7 @@ export function ProfileSummaryView({
         title={diagnosticsErrorField.displayValue}
         variant="destructive"
       >
-        Error
+        <Trans>Error</Trans>
       </Badge>
     ) : null;
   const tabs = React.useMemo(() => {
@@ -267,22 +269,22 @@ export function ProfileSummaryView({
       trailing?: React.ReactNode;
     }> = [];
     if (showInfoTab) {
-      items.push({ id: "info", label: "Info" });
+      items.push({ id: "info", label: t`Info` });
     }
     if (showRuntimeTab) {
-      items.push({ id: "runtime", label: "Runtime" });
+      items.push({ id: "runtime", label: t`Runtime` });
     }
     if (showChannelsTab) {
-      items.push({ id: "channels", label: "Channels" });
+      items.push({ id: "channels", label: t`Channels` });
     }
     if (showMemoriesTab) {
       items.push({
         id: "memories",
-        label: "Memories",
+        label: t`Memories`,
       });
     }
     return items;
-  }, [showChannelsTab, showInfoTab, showMemoriesTab, showRuntimeTab]);
+  }, [showChannelsTab, showInfoTab, showMemoriesTab, showRuntimeTab, t]);
 
   const showTabSection = tabs.length > 0;
   const showTabBar = !(tabs.length === 1 && tabs[0]?.id === "info");
@@ -620,6 +622,7 @@ function ProfileHero({
   profile: ProfileSummaryViewProps["profile"];
   userStatus: ProfileSummaryViewProps["userStatus"];
 }) {
+  const { t } = useLingui();
   const presenceDotClassName = isBot ? "h-4.5 w-4.5" : "h-3.5 w-3.5";
   const botIndicator = isBot ? (
     <BotIdenticon
@@ -670,7 +673,7 @@ function ProfileHero({
         {onEditAgent ? (
           <h3 className="max-w-full" data-testid="user-profile-name-row">
             <button
-              aria-label={`Edit ${displayName}`}
+              aria-label={t`Edit ${displayName}`}
               className="group relative flex max-w-full items-center justify-center gap-2 rounded-lg px-1 focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-ring"
               data-testid="user-profile-edit-agent"
               onClick={onEditAgent}
@@ -782,7 +785,7 @@ function ProfileHeroDescription({ about }: { about: string }) {
           onClick={() => setExpanded(true)}
           type="button"
         >
-          more
+          <Trans>more</Trans>
           <ChevronDown className="h-4 w-4" />
         </button>
       ) : null}
@@ -793,7 +796,7 @@ function ProfileHeroDescription({ about }: { about: string }) {
           onClick={() => setExpanded(false)}
           type="button"
         >
-          less
+          <Trans>less</Trans>
           <ChevronUp className="h-4 w-4" />
         </button>
       ) : null}

@@ -1,3 +1,5 @@
+import { plural } from "@lingui/core/macro";
+import { Trans, useLingui } from "@lingui/react/macro";
 import * as React from "react";
 import { ChevronRight } from "lucide-react";
 
@@ -16,6 +18,7 @@ function ProfileInstanceRow({
   instance: ManagedAgent;
   onOpenInstance: (pubkey: string) => void;
 }) {
+  const { t } = useLingui();
   const isCurrent = instance.pubkey === currentPubkey;
   return (
     <button
@@ -29,9 +32,9 @@ function ProfileInstanceRow({
       </span>
       <span className="text-xs capitalize text-muted-foreground">
         {archived
-          ? "Archived"
+          ? t`Archived`
           : isCurrent
-            ? "Current"
+            ? t`Current`
             : instance.status.replace("_", " ")}
       </span>
       <ChevronRight className="h-4 w-4 shrink-0 text-muted-foreground" />
@@ -58,15 +61,20 @@ export function ProfileInstancesSection({
   instances: ManagedAgent[];
   onOpenInstance: (pubkey: string) => void;
 }) {
+  const { i18n, t } = useLingui();
   const [expanded, setExpanded] = React.useState(false);
   const totalCount = instances.length + archivedInstances.length;
   if (totalCount === 0) return null;
-  const instanceCountLabel = `${totalCount} instance${totalCount === 1 ? "" : "s"}`;
+  // A plural message rather than a count glued to a noun with an "s": the
+  // concatenated form has no message for a catalogue to hold at all.
+  const instanceCountLabel = i18n._(
+    plural(totalCount, { one: "# instance", other: "# instances" }),
+  );
 
   return (
     <ProfileSectionGroup
       testId="user-profile-instances-section"
-      title="Instances"
+      title={t`Instances`}
     >
       <button
         aria-expanded={expanded}
@@ -101,7 +109,7 @@ export function ProfileInstancesSection({
                 className="px-4 pb-1 pt-3 text-xs font-semibold uppercase tracking-wide text-muted-foreground"
                 data-testid="user-profile-instances-archived-header"
               >
-                Archived
+                <Trans>Archived</Trans>
               </p>
               {archivedInstances.map((instance) => (
                 <ProfileInstanceRow

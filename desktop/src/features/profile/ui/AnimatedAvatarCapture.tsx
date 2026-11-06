@@ -1,3 +1,6 @@
+import { i18n } from "@lingui/core";
+import { msg } from "@lingui/core/macro";
+import { Trans, useLingui } from "@lingui/react/macro";
 import { Camera } from "lucide-react";
 import * as React from "react";
 import { createPortal } from "react-dom";
@@ -84,6 +87,7 @@ export function AnimatedAvatarCapture({
   compactColorPicker = false,
   stackCameraOptions = false,
 }: AnimatedAvatarCaptureProps) {
+  const { t } = useLingui();
   const [phase, setPhase] = React.useState<CapturePhase>("idle");
   const [errorMessage, setErrorMessage] = React.useState<string | null>(null);
   const [cameraDevices, setCameraDevices] = React.useState<
@@ -469,7 +473,9 @@ export function AnimatedAvatarCapture({
         return;
       }
       setErrorMessage(
-        error instanceof Error ? error.message : "Recording failed. Try again.",
+        error instanceof Error
+          ? error.message
+          : i18n._(msg`Recording failed. Try again.`),
       );
       releaseCamera();
       setPhase("idle");
@@ -529,7 +535,7 @@ export function AnimatedAvatarCapture({
       setErrorMessage(
         error instanceof Error
           ? error.message
-          : "Could not upload the animated avatar.",
+          : i18n._(msg`Could not upload the animated avatar.`),
       );
       return false;
     } finally {
@@ -578,7 +584,7 @@ export function AnimatedAvatarCapture({
   const usePortal = previewContainer !== null;
   const reviewWarning =
     phase === "review" && recording && !recording.backgroundRemoved
-      ? "Background removal model couldn't be loaded, so the background was kept. Retake while online to remove it."
+      ? t`Background removal model couldn't be loaded, so the background was kept. Retake while online to remove it.`
       : null;
   const captureHelpText =
     phase === "idle"
@@ -586,17 +592,17 @@ export function AnimatedAvatarCapture({
       : phase === "starting"
         ? null
         : phase === "live"
-          ? "Line up your shot."
+          ? t`Line up your shot.`
           : phase === "recording"
-            ? "Recording... hold still-ish."
+            ? t`Recording... hold still-ish.`
             : phase === "processing"
-              ? "Cutting you out of the background..."
+              ? t`Cutting you out of the background...`
               : null;
   const previewCaption =
     usePortal && (phase === "live" || phase === "recording")
       ? captureHelpText
       : usePortal && phase === "review"
-        ? "Hover to play"
+        ? t`Hover to play`
         : null;
   const inlineCaptureHelpText =
     usePortal && (phase === "live" || phase === "recording")
@@ -690,7 +696,7 @@ export function AnimatedAvatarCapture({
               animation on hover — exactly how the avatar behaves in the app.
               Dragging repositions the active framing target. */}
       <div
-        aria-label="Avatar preview — drag or use arrow keys to position"
+        aria-label={t`Avatar preview — drag or use arrow keys to position`}
         className={cn(
           // Transparent like the real avatar container — only a faint
           // ring marks the circular crop boundary. pointer-events-auto
@@ -782,15 +788,15 @@ export function AnimatedAvatarCapture({
       ) : phase === "starting" ? (
         <div className="absolute inset-0 grid place-items-center rounded-full bg-background/70 text-center shadow-inner">
           <div className="grid justify-items-center gap-2 px-4">
-            <Spinner aria-label="Starting camera" className="h-4 w-4" />
+            <Spinner aria-label={t`Starting camera`} className="h-4 w-4" />
             <span className="text-xs font-medium text-muted-foreground">
-              Starting camera
+              <Trans>Starting camera</Trans>
             </span>
           </div>
         </div>
       ) : phase === "processing" ? (
         <div className="grid h-full w-full place-items-center rounded-full bg-background/60 shadow-inner">
-          <Spinner aria-label="Processing recording" className="h-6 w-6" />
+          <Spinner aria-label={t`Processing recording`} className="h-6 w-6" />
         </div>
       ) : null}
     </div>
@@ -883,7 +889,9 @@ export function AnimatedAvatarCapture({
             resetValue={Math.round(activeScaleReset * 100)}
             resetTestId={`${testIdPrefix}-animated-reset-framing`}
             testId={`${testIdPrefix}-animated-size`}
-            tipText={activeSection === "person" ? PERSON_SIZE_TIP : null}
+            tipText={
+              activeSection === "person" ? i18n._(PERSON_SIZE_TIP) : null
+            }
             value={Math.round(activeScale * 100)}
           />
           {activeSection === "person" ? (
@@ -964,11 +972,11 @@ export function AnimatedAvatarCapture({
         >
           {isSaving ? (
             <Spinner
-              aria-label="Uploading animated avatar"
+              aria-label={t`Uploading animated avatar`}
               className="h-4 w-4 border-2"
             />
           ) : (
-            "Use as avatar"
+            <Trans>Use as avatar</Trans>
           )}
         </Button>
       ) : null}

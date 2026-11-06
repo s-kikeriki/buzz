@@ -1,5 +1,6 @@
 import emojiData from "@emoji-mart/data";
 import Picker from "@emoji-mart/react";
+import { Trans, useLingui } from "@lingui/react/macro";
 import { Link2, UploadCloud } from "lucide-react";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import * as React from "react";
@@ -89,6 +90,7 @@ export function ProfileAvatarEditor({
   compactCustomColorPicker = false,
   stackAnimatedCameraOptions = false,
 }: ProfileAvatarEditorProps) {
+  const { t } = useLingui();
   const { burstEmoji } = useEmojiBurst();
   const shouldReduceMotion = useReducedMotion();
   const initialEmojiAvatar = React.useMemo(
@@ -584,7 +586,9 @@ export function ProfileAvatarEditor({
         void handleFiles(event.dataTransfer.files);
       }}
     >
-      <legend className="sr-only">Avatar image picker</legend>
+      <legend className="sr-only">
+        <Trans>Avatar image picker</Trans>
+      </legend>
       <div
         className="relative"
         style={
@@ -695,18 +699,18 @@ export function ProfileAvatarEditor({
                       )}
                     >
                       {isUploading ? (
-                        "Uploading..."
+                        <Trans>Uploading...</Trans>
                       ) : isImageDropActive ? (
-                        "Drop image here"
+                        <Trans>Drop image here</Trans>
                       ) : isOnboardingModal ? (
-                        "Drag or browse"
+                        <Trans>Drag or browse</Trans>
                       ) : (
-                        <>
+                        <Trans>
                           Drop or{" "}
                           <span className="underline underline-offset-2">
                             browse
                           </span>
-                        </>
+                        </Trans>
                       )}
                     </span>
                   </button>
@@ -755,8 +759,8 @@ export function ProfileAvatarEditor({
                       }}
                       placeholder={
                         isOnboardingModal
-                          ? "Paste a URL"
-                          : "Paste a URL (Slack profile, etc.)"
+                          ? t`Paste a URL`
+                          : t`Paste a URL (Slack profile, etc.)`
                       }
                       spellCheck={false}
                       type="url"
@@ -903,9 +907,9 @@ export function ProfileAvatarEditor({
                             aria-label={
                               isCustomSwatch
                                 ? selectedEmoji
-                                  ? "Choose custom avatar color"
-                                  : "Choose an emoji before custom avatar color"
-                                : `Use ${swatch} background`
+                                  ? t`Choose custom avatar color`
+                                  : t`Choose an emoji before custom avatar color`
+                                : t`Use ${swatch} background`
                             }
                             aria-pressed={isSelected}
                             className={cn(
@@ -1026,10 +1030,12 @@ export function ProfileAvatarEditor({
                           transition={DONE_BUTTON_CONTENT_TRANSITION}
                         >
                           <Spinner
-                            aria-label="Saving avatar"
+                            aria-label={t`Saving avatar`}
                             className="h-4 w-4 border-2"
                           />
-                          <span>Saving</span>
+                          <span>
+                            <Trans>Saving</Trans>
+                          </span>
                         </motion.span>
                       ) : (
                         <motion.span
@@ -1048,7 +1054,7 @@ export function ProfileAvatarEditor({
                           key="ready"
                           transition={DONE_BUTTON_CONTENT_TRANSITION}
                         >
-                          {isOnboardingModal ? "Save" : "Done"}
+                          {isOnboardingModal ? t`Save` : t`Done`}
                         </motion.span>
                       )}
                     </AnimatePresence>

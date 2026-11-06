@@ -1,3 +1,4 @@
+import { Trans, useLingui } from "@lingui/react/macro";
 import * as React from "react";
 import {
   Archive,
@@ -9,6 +10,7 @@ import {
   type LucideIcon,
 } from "lucide-react";
 
+import { BRAND } from "@/shared/branding/brand";
 import type { IdentityArchiveActions } from "@/features/identity-archive/hooks";
 import { ArchiveConfirmDialog } from "@/features/profile/ui/ArchiveConfirmDialog";
 import type { ManagedAgent } from "@/shared/api/types";
@@ -24,6 +26,8 @@ import {
 } from "@/shared/ui/alert-dialog";
 import { Button, buttonVariants } from "@/shared/ui/button";
 import { PanelSectionGroup } from "@/shared/ui/PanelSectionGroup";
+
+const { productName } = BRAND;
 
 export function UserProfileAgentManagementRows({
   archiveActions,
@@ -49,6 +53,7 @@ export function UserProfileAgentManagementRows({
   onDuplicateAgent?: () => void;
   onExportAgent?: () => void;
 }) {
+  const { t } = useLingui();
   if (
     !onCreateCard &&
     !onDuplicateAgent &&
@@ -66,7 +71,7 @@ export function UserProfileAgentManagementRows({
         <ProfileAgentActionRow
           disabled={isDeletePending}
           icon={CopyPlus}
-          label="Duplicate agent"
+          label={t`Duplicate agent`}
           onClick={onDuplicateAgent}
           testId="user-profile-duplicate-agent-row"
         />
@@ -75,7 +80,7 @@ export function UserProfileAgentManagementRows({
         <ProfileAgentActionRow
           disabled={isDeletePending}
           icon={Download}
-          label="Export agent"
+          label={t`Export agent`}
           onClick={onExportAgent}
           testId="user-profile-export-agent-row"
         />
@@ -84,7 +89,7 @@ export function UserProfileAgentManagementRows({
         <ProfileAgentActionRow
           disabled={isDeletePending}
           icon={Sparkles}
-          label="Create trading card"
+          label={t`Create trading card`}
           onClick={onCreateCard}
           testId="user-profile-create-card-row"
         />
@@ -156,16 +161,17 @@ function ProfileArchiveAgentRow({
 }: {
   archiveActions: IdentityArchiveActions;
 }) {
+  const { t } = useLingui();
   const [confirmOpen, setConfirmOpen] = React.useState(false);
   const isArchived = archiveActions.isArchived === true;
   const Icon = isArchived ? ArchiveRestore : Archive;
   const label = archiveActions.isPending
     ? isArchived
-      ? "Unarchiving…"
-      : "Archiving…"
+      ? t`Unarchiving…`
+      : t`Archiving…`
     : isArchived
-      ? "Unarchive agent"
-      : "Archive agent";
+      ? t`Unarchive agent`
+      : t`Archive agent`;
 
   return (
     <>
@@ -209,6 +215,7 @@ function ProfileDeleteAgentRow({
   managedAgent?: ManagedAgent;
   onDelete: () => void;
 }) {
+  const { t } = useLingui();
   const [confirmOpen, setConfirmOpen] = React.useState(false);
 
   return (
@@ -217,7 +224,7 @@ function ProfileDeleteAgentRow({
         destructive
         disabled={isPending}
         icon={Trash2}
-        label="Delete agent"
+        label={t`Delete agent`}
         onClick={() => {
           if (managedAgent) {
             setConfirmOpen(true);
@@ -256,39 +263,69 @@ function AgentDeleteConfirmDialog({
   onOpenChange: (open: boolean) => void;
   open: boolean;
 }) {
+  const { t } = useLingui();
   const isProviderAgent = agent.backend.type === "provider";
 
   return (
     <AlertDialog onOpenChange={onOpenChange} open={open}>
       <AlertDialogContent data-testid="agent-delete-confirm-dialog">
         <AlertDialogHeader>
-          <AlertDialogTitle>Delete this agent?</AlertDialogTitle>
+          <AlertDialogTitle>
+            <Trans>Delete this agent?</Trans>
+          </AlertDialogTitle>
           <AlertDialogDescription>
-            {isProviderAgent
-              ? "Deleting removes this agent’s local management record, not its remote deployment."
-              : "Deleting this agent stops and removes the agent from this community."}
+            {isProviderAgent ? (
+              <Trans>
+                Deleting removes this agent’s local management record, not its
+                remote deployment.
+              </Trans>
+            ) : (
+              <Trans>
+                Deleting this agent stops and removes the agent from this
+                community.
+              </Trans>
+            )}
           </AlertDialogDescription>
         </AlertDialogHeader>
         <ul className="list-disc space-y-1.5 pl-5 text-sm text-muted-foreground">
-          <li>Removes the local management record and saved agent key</li>
-          <li>Removes the agent from every channel it belongs to</li>
           <li>
-            Archives the agent&apos;s identity on the relay so it no longer
-            appears in member lists or mention suggestions
+            <Trans>
+              Removes the local management record and saved agent key
+            </Trans>
           </li>
           <li>
-            {isProviderAgent
-              ? "Unless the agent is known to be Offline, Buzz first requests shutdown through a channel when available. A failed request cancels deletion. The remote process may still be running even after a successful request."
-              : "Stops any local agent process before deleting the record"}
+            <Trans>Removes the agent from every channel it belongs to</Trans>
+          </li>
+          <li>
+            <Trans>
+              Archives the agent&apos;s identity on the relay so it no longer
+              appears in member lists or mention suggestions
+            </Trans>
+          </li>
+          <li>
+            {isProviderAgent ? (
+              <Trans>
+                Unless the agent is known to be Offline, {productName} first
+                requests shutdown through a channel when available. A failed
+                request cancels deletion. The remote process may still be
+                running even after a successful request.
+              </Trans>
+            ) : (
+              <Trans>
+                Stops any local agent process before deleting the record
+              </Trans>
+            )}
           </li>
         </ul>
         <p className="text-sm text-muted-foreground">
-          Archive this agent if you want to hide it instead of removing it.
+          <Trans>
+            Archive this agent if you want to hide it instead of removing it.
+          </Trans>
         </p>
         <AlertDialogFooter>
           <AlertDialogCancel asChild>
             <Button type="button" variant="outline">
-              Cancel
+              <Trans>Cancel</Trans>
             </Button>
           </AlertDialogCancel>
           <AlertDialogAction
@@ -297,7 +334,7 @@ function AgentDeleteConfirmDialog({
             disabled={isPending}
             onClick={onConfirm}
           >
-            {isPending ? "Deleting…" : "Delete agent"}
+            {isPending ? t`Deleting…` : t`Delete agent`}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

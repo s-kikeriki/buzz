@@ -41,6 +41,7 @@ export default defineConfig({
         "**/onboarding-german.spec.ts",
         "**/channels-german.spec.ts",
         "**/messages-german.spec.ts",
+        "**/profile-german.spec.ts",
         "**/institutional-chrome.spec.ts",
         "**/kikeriki-theme.spec.ts",
         "**/onboarding-brand.spec.ts",

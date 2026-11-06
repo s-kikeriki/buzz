@@ -1,3 +1,4 @@
+import { useLingui } from "@lingui/react/macro";
 import { Smartphone, Webcam } from "lucide-react";
 
 import type { CameraSource } from "@/features/profile/ui/AnimatedAvatarCapture.helpers";
@@ -22,6 +23,7 @@ export function AnimatedAvatarCameraPicker({
   stacked = false,
   testIdPrefix,
 }: AnimatedAvatarCameraPickerProps) {
+  const { t } = useLingui();
   return (
     <div
       className={cn(
@@ -33,13 +35,13 @@ export function AnimatedAvatarCameraPicker({
         {
           disabled: iphoneDisabled,
           icon: Smartphone,
-          label: "Use iPhone",
+          label: t`Use iPhone`,
           source: "iphone" as const,
         },
         {
           disabled: computerDisabled,
           icon: Webcam,
-          label: "Use this computer",
+          label: t`Use this computer`,
           source: "computer" as const,
         },
       ].map((option) => {
