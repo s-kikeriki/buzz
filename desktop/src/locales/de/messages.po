@@ -897,6 +897,10 @@ msgstr "{harness} ist nicht installiert"
 msgid "{harnessLabel} runs at most {cap} parallel conversation{0} — this agent will run {cap}."
 msgstr "{harnessLabel} führt höchstens {cap} parallele Unterhaltung{0} aus — dieser Agent führt {cap} aus."
 
+#: src/features/local-archive/ui/LocalArchiveSettingsCard.tsx
+msgid "{head} +{rest} more"
+msgstr "{head} +{rest} weitere"
+
 #: src/features/projects/ui/DiscussionChannels.tsx
 msgid "{hiddenCount, plural, one {Show # more conversation} other {Show # more conversations}}"
 msgstr "{hiddenCount, plural, one {# weitere Unterhaltung anzeigen} other {# weitere Unterhaltungen anzeigen}}"
@@ -1041,6 +1045,10 @@ msgstr "{missingPersonaCount, plural, one {# Agent in diesem Team ist nicht mehr
 msgid "{missingPersonaCount, plural, one {This team references # agent that is no longer in My Agents. Add them back or edit the team before deploying.} other {This team references # agents that are no longer in My Agents. Add them back or edit the team before deploying.}}"
 msgstr "{missingPersonaCount, plural, one {Dieses Team verweist auf # Agenten, der nicht mehr in „Meine Agenten“ ist. Füge ihn wieder hinzu oder bearbeite das Team, bevor du es bereitstellst.} other {Dieses Team verweist auf # Agenten, die nicht mehr in „Meine Agenten“ sind. Füge sie wieder hinzu oder bearbeite das Team, bevor du es bereitstellst.}}"
 
+#: src/features/mesh-compute/ui/MeshComputeSettingsCard.tsx
+msgid "{modelLabel} with relay members."
+msgstr "{modelLabel} mit den Relay-Mitgliedern geteilt."
+
 #: src/features/messages/ui/NewMessageResultRow.tsx
 msgid "{name} already added"
 msgstr "{name} ist bereits hinzugefügt"
@@ -1061,6 +1069,10 @@ msgstr "{participantCount, plural, one {Aktivem Huddle beitreten (# Teilnehmer)}
 #: src/features/agents/ui/RespondToField.tsx
 msgid "{pasteValidCount} valid pubkey{0} ready."
 msgstr "{pasteValidCount} gültige Pubkey{0} bereit."
+
+#: src/features/mesh-compute/servingUsage.ts
+msgid "{peers, plural, one {# peer on the mesh · {tokensPerSecond} tok/s} other {# peers on the mesh · {tokensPerSecond} tok/s}}"
+msgstr "{peers, plural, one {# Peer im Mesh · {tokensPerSecond} tok/s} other {# Peers im Mesh · {tokensPerSecond} tok/s}}"
 
 #: src/features/settings/ui/ChannelTemplatesSettingsCard.tsx
 msgid "{personaCount, plural, one {# agent} other {# agents}}"
@@ -1135,6 +1147,10 @@ msgstr "{productName} konnte die geteilte Rechenleistung nicht über das Relay p
 msgid "{productName} does not recognise this file type, so it can only write a temporary copy and hand it to whichever application your system uses for it. What that application then does with the file is up to it. Open it only if you trust whoever sent it."
 msgstr "{productName} erkennt diesen Dateityp nicht und kann daher nur eine temporäre Kopie schreiben und sie an die Anwendung übergeben, die dein System dafür nutzt. Was diese Anwendung dann mit der Datei macht, liegt bei ihr. Öffne sie nur, wenn du der Absenderin oder dem Absender vertraust."
 
+#: src/features/mesh-compute/ui/MeshComputeSettingsCard.tsx
+msgid "{productName} downloads remote models when sharing starts."
+msgstr "{productName} lädt entfernte Modelle herunter, sobald das Teilen startet."
+
 #: src/features/agents/ui/agentSessionTranscriptHelpers.ts
 msgid "{productName} event"
 msgstr "{productName}-Ereignis"
@@ -1197,6 +1213,10 @@ msgstr "{productName} funktioniert mit jedem Relay. Diese Seite betrifft nur das
 msgid "{productName}-hosted repository"
 msgstr "Repository auf {productName}"
 
+#: src/features/local-archive/ui/localArchiveKinds.ts
+msgid "{productName}-native deletions (kind 9005)"
+msgstr "{productName}-eigene Löschungen (Kind 9005)"
+
 #: src/features/settings/ui/harnessCatalogCopy.ts
 msgid "{productName}'s built-in agent runtime, bundled with the app."
 msgstr "Die in {productName} integrierte Agenten-Runtime, mit der App ausgeliefert."
@@ -1214,6 +1234,10 @@ msgstr "{recipientAudience}—und jeder mit dem Datei-Link—kann es ansehen."
 #: src/features/settings/ui/harnessGalleryLogic.ts
 msgid "{referencingAgents, plural, one {# agent uses this harness and will stop launching.} other {# agents use this harness and will stop launching.}} Delete {label}?"
 msgstr "{referencingAgents, plural, one {# Agent nutzt dieses Harness und wird nicht mehr starten.} other {# Agenten nutzen dieses Harness und werden nicht mehr starten.}} {label} löschen?"
+
+#: src/features/mesh-compute/servingUsage.ts
+msgid "{remote, plural, one {Used by another member · # request} other {Used by another member · # requests}}"
+msgstr "{remote, plural, one {Von einem anderen Mitglied genutzt · # Anfrage} other {Von einem anderen Mitglied genutzt · # Anfragen}}"
 
 #: src/features/messages/ui/MessageThreadSummaryRow.tsx
 msgid "{replyCount, plural, one {# reply} other {# replies}}"
@@ -1258,6 +1282,10 @@ msgstr "{selectedTemplatePersonaCount, plural, one {# Agent} other {# Agenten}}"
 #: src/features/sidebar/ui/CreateChannelFormFields.tsx
 msgid "{selectedTemplateTeamCount, plural, one {# team} other {# teams}}"
 msgstr "{selectedTemplateTeamCount, plural, one {# Team} other {# Teams}}"
+
+#: src/features/mesh-compute/servingUsage.ts
+msgid "{served, plural, one {# request served this session} other {# requests served this session}}"
+msgstr "{served, plural, one {# Anfrage in dieser Sitzung bedient} other {# Anfragen in dieser Sitzung bedient}}"
 
 #: src/shared/ui/markdown/FilePreviewDialog.tsx
 msgid "{sizeLabel} · shown in the app; nothing is saved unless you download it"
@@ -1376,6 +1404,10 @@ msgstr "{text} an {recipient}"
 #: src/features/agents/ui/UnifiedAgentsSection.tsx
 msgid "{title} agent profile"
 msgstr "Agentenprofil von {title}"
+
+#: src/features/mesh-compute/servingUsage.ts
+msgid "{tokensPerSecond} tok/s"
+msgstr "{tokensPerSecond} tok/s"
 
 #: src/features/profile/ui/ProfileInstancesSection.tsx
 msgid "{totalCount, plural, one {# instance} other {# instances}}"
@@ -1747,6 +1779,10 @@ msgstr "aktiv"
 msgid "Active"
 msgstr "Aktiv"
 
+#: src/features/mesh-compute/ui/MeshComputeSettingsCard.tsx
+msgid "Active — {modelLabel}. {reason}"
+msgstr "Aktiv — {modelLabel}. {reason}"
+
 #: src/features/agents/ui/AgentConfigPanel.tsx
 msgid "active — config is read from that directory. Claude Code keys its login to the config-dir path, so a custom dir creates a new Keychain namespace. The agent will need to re-authenticate unless you also set"
 msgstr "aktiv — die Konfiguration wird aus diesem Verzeichnis gelesen. Claude Code koppelt die Anmeldung an den Config-Dir-Pfad, ein eigenes Verzeichnis erzeugt also einen neuen Keychain-Namespace. Der Agent muss sich neu anmelden, außer du setzt auch"
@@ -1763,6 +1799,10 @@ msgstr "Aktive Einschränkungen"
 #: src/features/projects/ui/projectsOverviewContext.ts
 msgid "Active tasks"
 msgstr "Aktive Aufgaben"
+
+#: src/features/mesh-compute/ui/MeshComputeSettingsCard.tsx
+msgid "Active. {reason}"
+msgstr "Aktiv. {reason}"
 
 #: src/features/channels/ui/AgentSessionThreadPanel.tsx
 #: src/features/home/lib/inbox.ts
@@ -1801,6 +1841,7 @@ msgstr "Adapter nötig"
 #: src/features/agents/ui/RespondToField.tsx
 #: src/features/channels/ui/AddMemberSearchResultRow.tsx
 #: src/features/channels/ui/ChannelMemberInviteCard.tsx
+#: src/features/local-archive/ui/LocalArchiveSettingsCard.tsx
 msgid "Add"
 msgstr "Hinzufügen"
 
@@ -1939,6 +1980,10 @@ msgstr "Argument hinzufügen"
 msgid "Add channel"
 msgstr "Kanal hinzufügen"
 
+#: src/features/local-archive/ui/LocalArchiveSettingsCard.tsx
+msgid "Add channel subscription"
+msgstr "Kanal-Abo hinzufügen"
+
 #. placeholder {0}: section.name
 #: src/features/sidebar/ui/CustomChannelSection.tsx
 msgid "Add channel to {0}"
@@ -1966,6 +2011,10 @@ msgstr "Eigenes Harness hinzufügen"
 #: src/features/agents/ui/addCustomHarness.ts
 msgid "Add custom harness…"
 msgstr "Eigenes Harness hinzufügen…"
+
+#: src/features/custom-emoji/ui/CustomEmojiSettingsCard.tsx
+msgid "Add emoji"
+msgstr "Emoji hinzufügen"
 
 #: src/features/settings/ui/CustomHarnessForm.tsx
 msgid "Add env var"
@@ -2091,6 +2140,10 @@ msgstr "Variable hinzufügen"
 msgid "Add voice"
 msgstr "Stimme hinzufügen"
 
+#: src/features/custom-emoji/ui/CustomEmojiSettingsCard.tsx
+msgid "Add your own custom emoji for everyone on this relay to use. Type <0>:name:</0> in messages and reactions."
+msgstr "Füge eigene Emoji hinzu, die alle in diesem Relay verwenden können. Tippe <0>:name:</0> in Nachrichten und Reaktionen."
+
 #: src/features/agents/ui/RestartDiffBadge.tsx
 msgid "added"
 msgstr "hinzugefügt"
@@ -2100,6 +2153,10 @@ msgstr "hinzugefügt"
 #: src/features/sidebar/ui/SidebarProjectsSection.tsx
 msgid "Added"
 msgstr "Hinzugefügt"
+
+#: src/features/custom-emoji/ui/CustomEmojiSettingsCard.tsx
+msgid "Added :{stored}:"
+msgstr ":{stored}: hinzugefügt"
 
 #. placeholder {0}: result.agent.name
 #. placeholder {1}: channel.name
@@ -2129,6 +2186,10 @@ msgstr "{agentName} zu {channelName} hinzugefügt."
 #: src/features/agents/ui/PersonaAddedBy.tsx
 msgid "Added by"
 msgstr "Hinzugefügt von"
+
+#: src/features/custom-emoji/ui/CustomEmojiSettingsCard.tsx
+msgid "Added by other members. You can use these, but only their owner can remove them."
+msgstr "Von anderen Mitgliedern hinzugefügt. Du kannst sie verwenden, aber nur ihre Besitzer können sie entfernen."
 
 #: src/features/huddle/components/AddAgentDialog.tsx
 msgid "Added to huddle, but could not start agent: {msg}"
@@ -2216,6 +2277,7 @@ msgstr "Admins hinzugefügt"
 #: src/features/agents/ui/AgentConfigPanel.tsx
 #: src/features/agents/ui/AgentDefinitionDialog.tsx
 #: src/features/agents/ui/AgentInstanceEditDialog.tsx
+#: src/features/mesh-compute/ui/MeshComputeSettingsCard.tsx
 #: src/features/workflows/ui/WorkflowMessageTextConditionEditor.tsx
 #: src/features/workflows/ui/WorkflowTriggerConditions.tsx
 msgid "Advanced"
@@ -2233,6 +2295,10 @@ msgstr "Erweiterter Ausdruck"
 #: src/features/admin-console/AdminConsoleSettingsCard.tsx
 msgid "Advanced: admin origin"
 msgstr "Erweitert: Admin-Origin"
+
+#: src/features/local-archive/ui/LocalArchiveSettingsCard.tsx
+msgid "Advanced: custom kinds"
+msgstr "Erweitert: eigene Kinds"
 
 #: src/features/channels/ui/AddMemberSearchResultRow.tsx
 #: src/features/channels/ui/ChannelMemberInviteCard.tsx
@@ -2354,6 +2420,10 @@ msgstr "Agentenname"
 msgid "Agent name is required."
 msgstr "Der Agentenname ist erforderlich."
 
+#: src/features/local-archive/ui/LocalArchiveSettingsCard.tsx
+msgid "Agent observer feed"
+msgstr "Agenten-Beobachter-Feed"
+
 #: src/features/agents/ui/AgentCardMintDialog.tsx
 #: src/features/agents/ui/AgentSnapshotExportDialog.tsx
 msgid "Agent only"
@@ -2394,6 +2464,18 @@ msgstr "Sprachausgabe für Agenten"
 #: src/features/agents/ui/TurnLivenessIndicator.tsx
 msgid "Agent turn in progress"
 msgstr "Agent-Zug läuft"
+
+#: src/features/local-archive/ui/LocalArchiveSettingsCard.tsx
+msgid "Agent turn metric archive disabled."
+msgstr "Archivierung der Agenten-Turn-Metriken deaktiviert."
+
+#: src/features/local-archive/ui/LocalArchiveSettingsCard.tsx
+msgid "Agent turn metric archive enabled."
+msgstr "Archivierung der Agenten-Turn-Metriken aktiviert."
+
+#: src/features/local-archive/ui/LocalArchiveSettingsCard.tsx
+msgid "Agent turn metrics"
+msgstr "Agenten-Turn-Metriken"
 
 #: src/features/profile/ui/UserProfilePanelFields.tsx
 msgid "Agent type"
@@ -2811,6 +2893,22 @@ msgstr "Kanal archivieren"
 #: src/features/profile/ui/UserProfileAgentActions.tsx
 msgid "Archive identity"
 msgstr "Identität archivieren"
+
+#: src/features/local-archive/ui/LocalArchiveSettingsCard.tsx
+msgid "Archive my agents’ observer frames"
+msgstr "Beobachter-Frames meiner Agenten archivieren"
+
+#: src/features/local-archive/ui/LocalArchiveSettingsCard.tsx
+msgid "Archive my agents’ turn metrics"
+msgstr "Turn-Metriken meiner Agenten archivieren"
+
+#: src/features/local-archive/ui/LocalArchiveSettingsCard.tsx
+msgid "Archive subscription created."
+msgstr "Archiv-Abo erstellt."
+
+#: src/features/local-archive/ui/LocalArchiveSettingsCard.tsx
+msgid "Archive subscription removed."
+msgstr "Archiv-Abo entfernt."
 
 #: src/features/profile/ui/UserProfileAgentManagementRows.tsx
 msgid "Archive this agent if you want to hide it instead of removing it."
@@ -3528,6 +3626,7 @@ msgstr "Dieses Relay ist nicht erreichbar — prüf die URL"
 #: src/features/communities/ui/CommunitySwitcher.tsx
 #: src/features/communities/ui/EditCommunityDialog.tsx
 #: src/features/community-members/ui/ConfirmRemoveDialog.tsx
+#: src/features/local-archive/ui/LocalArchiveSettingsCard.tsx
 #: src/features/messages/lib/useLinkEditor.tsx
 #: src/features/messages/ui/ComposerImageEditor.tsx
 #: src/features/messages/ui/DeleteMessageConfirmDialog.tsx
@@ -3714,6 +3813,7 @@ msgstr "Kanal"
 #: src/features/admin-console/AdminConsoleReportsTab.tsx
 #: src/features/agents/ui/AddAgentToChannelDialog.tsx
 #: src/features/agents/ui/AddTeamToChannelDialog.tsx
+#: src/features/local-archive/ui/LocalArchiveSettingsCard.tsx
 #: src/features/search/ui/SearchResultItem.tsx
 #: src/features/workflows/ui/ChannelCombobox.tsx
 msgid "Channel"
@@ -3780,6 +3880,14 @@ msgstr "Kanaleinstellungen"
 #: src/features/channels/ui/ChannelManagementSheet.tsx
 msgid "Channel Settings"
 msgstr "Kanaleinstellungen"
+
+#: src/features/local-archive/ui/LocalArchiveSettingsCard.tsx
+msgid "Channel subscriptions"
+msgstr "Kanal-Abos"
+
+#: src/features/local-archive/ui/LocalArchiveSettingsCard.tsx
+msgid "Channel subscriptions ({channelSubCount})"
+msgstr "Kanal-Abos ({channelSubCount})"
 
 #: src/features/settings/ui/ChannelTemplatesSettingsCard.tsx
 #: src/features/settings/ui/SettingsPanels.tsx
@@ -3953,6 +4061,10 @@ msgstr "Anmeldung wird geprüft"
 msgid "Checking sign-in…"
 msgstr "Anmeldung wird geprüft …"
 
+#: src/features/mesh-compute/ui/MeshComputeSettingsCard.tsx
+msgid "Checking status…"
+msgstr "Status wird geprüft…"
+
 #: src/features/settings/ui/harnessGalleryLogic.ts
 msgid "Checking which agents use this harness…"
 msgstr "Es wird geprüft, welche Agenten dieses Harness nutzen …"
@@ -3986,6 +4098,10 @@ msgstr "Kanal wählen"
 #: src/features/profile/ui/UserProfilePanelFocusedViews.tsx
 msgid "Choose a channel above so it can join the conversation."
 msgstr "Wähl oben einen Kanal, damit der Agent an der Unterhaltung teilnehmen kann."
+
+#: src/features/local-archive/ui/LocalArchiveSettingsCard.tsx
+msgid "Choose a channel and select which event types to archive."
+msgstr "Wähle einen Kanal und lege fest, welche Ereignistypen archiviert werden."
 
 #: src/features/workflows/ui/WorkflowMessagePicker.tsx
 msgid "Choose a channel first"
@@ -4111,6 +4227,14 @@ msgstr "Wähl zuerst ein Emoji"
 msgid "Choose an existing repository to add to {0}."
 msgstr "Wähl ein vorhandenes Repository, das du zu {0} hinzufügst."
 
+#: src/features/custom-emoji/ui/CustomEmojiSettingsCard.tsx
+msgid "Choose an image file for custom emoji."
+msgstr "Wähle eine Bilddatei für eigene Emoji."
+
+#: src/features/custom-emoji/ui/CustomEmojiSettingsCard.tsx
+msgid "Choose an image first; {productName} will suggest a name from the filename."
+msgstr "Wähle zuerst ein Bild; {productName} schlägt dann einen Namen aus dem Dateinamen vor."
+
 #: src/features/onboarding/ui/AvatarStep.tsx
 msgid "Choose an image or emoji as your avatar"
 msgstr "Wähle ein Bild oder Emoji als Avatar"
@@ -4134,6 +4258,10 @@ msgstr "Eigene Hintergrundfarbe wählen"
 #: src/features/agents/ui/AgentCreationPreview.tsx
 msgid "Choose custom color"
 msgstr "Eigene Farbe wählen"
+
+#: src/features/custom-emoji/ui/CustomEmojiSettingsCard.tsx
+msgid "Choose different image"
+msgstr "Anderes Bild wählen"
 
 #: src/features/agents/ui/CommunityCatalogDialog.tsx
 msgid "Choose file"
@@ -4272,6 +4400,7 @@ msgstr "Aufräumen fällig"
 
 #: src/features/agents/ui/AgentSnapshotImportDialog.tsx
 #: src/features/agents/ui/TeamSnapshotImportDialog.tsx
+#: src/features/custom-emoji/ui/CustomEmojiSettingsCard.tsx
 msgid "Clear"
 msgstr "Leeren"
 
@@ -4642,6 +4771,10 @@ msgstr "Status der Community-Adresse"
 #: src/features/communities/ui/CommunityApplyErrorScreen.tsx
 msgid "Community connection failed"
 msgstr "Verbindung zur Community fehlgeschlagen"
+
+#: src/features/custom-emoji/ui/CustomEmojiSettingsCard.tsx
+msgid "Community emoji ({othersCount})"
+msgstr "Community-Emoji ({othersCount})"
 
 #: src/features/communities/ui/EditCommunityDialog.tsx
 msgid "Community icon"
@@ -5426,6 +5559,10 @@ msgstr "Dieses Backup konnte nicht geprüft werden."
 msgid "Couldn’t change workflow status"
 msgstr "Workflow-Status konnte nicht geändert werden"
 
+#: src/features/mesh-compute/ui/MeshComputeSettingsCard.tsx
+msgid "Couldn’t check shared compute: {error}"
+msgstr "Geteilte Rechenleistung konnte nicht geprüft werden: {error}"
+
 #: src/features/settings/ui/harnessGalleryLogic.ts
 msgid "Couldn't check which agents use this harness — some agents may stop launching. Delete {label}?"
 msgstr "Es ließ sich nicht prüfen, welche Agenten dieses Harness nutzen — einige Agenten starten danach möglicherweise nicht mehr. {label} löschen?"
@@ -5539,6 +5676,10 @@ msgstr "Dieses Team konnte nicht geladen werden. Versuch es noch einmal."
 msgid "Couldn’t load your minted cards:"
 msgstr "Deine geprägten Karten konnten nicht geladen werden:"
 
+#: src/features/mesh-compute/ui/MeshComputeSettingsCard.tsx
+msgid "Couldn’t load: {reason}"
+msgstr "Konnte nicht geladen werden: {reason}"
+
 #: src/features/projects/ui/useOpenProjectTerminal.ts
 msgid "Couldn’t open terminal"
 msgstr "Terminal konnte nicht geöffnet werden"
@@ -5628,6 +5769,10 @@ msgstr "Die Anmeldung konnte nicht gestartet werden. Versuche es noch einmal."
 #: src/features/huddle/lib/huddleError.ts
 msgid "Couldn’t start the huddle."
 msgstr "Das Huddle konnte nicht gestartet werden."
+
+#: src/features/mesh-compute/ui/MeshComputeSettingsCard.tsx
+msgid "Couldn’t start."
+msgstr "Konnte nicht gestartet werden."
 
 #: src/features/agents/lib/usePersonaCatalogRelay.ts
 msgid "Couldn’t subscribe to the community agent catalog"
@@ -6041,6 +6186,7 @@ msgstr "Eigener Befehl"
 msgid "Custom cron"
 msgstr "Eigener Cron"
 
+#: src/features/custom-emoji/ui/CustomEmojiSettingsCard.tsx
 #: src/features/settings/ui/SettingsPanels.tsx
 #: src/shared/ui/markdown/InlineEmojiPopover.tsx
 msgid "Custom emoji"
@@ -6060,10 +6206,18 @@ msgstr "Eigenes Harness"
 msgid "Custom model ID"
 msgstr "Eigene Modell-ID"
 
+#: src/features/mesh-compute/ui/MeshComputeSettingsCard.tsx
+msgid "Custom model reference"
+msgstr "Eigene Modellreferenz"
+
 #: src/features/agents/ui/agentConfigControls.tsx
 #: src/features/agents/ui/relayMeshModelPicker.ts
 msgid "Custom model..."
 msgstr "Eigenes Modell..."
+
+#: src/features/mesh-compute/ui/MeshComputeSettingsCard.tsx
+msgid "Custom model…"
+msgstr "Eigenes Modell…"
 
 #: src/features/agents/ui/agentConfigControls.tsx
 #: src/features/agents/ui/AgentConfigFields.tsx
@@ -6129,6 +6283,10 @@ msgstr "Tag des Monats"
 #: src/features/admin-console/adminConsoleLabels.ts
 msgid "db"
 msgstr "Datenbank"
+
+#: src/features/mesh-compute/ui/MeshComputeSettingsCard.tsx
+msgid "Debug console:"
+msgstr "Debug-Konsole:"
 
 #: src/features/profile/ui/UserProfilePanelFields.tsx
 msgid "Declared owner verified"
@@ -6802,6 +6960,10 @@ msgstr "Update von GitHub herunterladen"
 msgid "Download video"
 msgstr "Video herunterladen"
 
+#: src/features/mesh-compute/ui/MeshComputeSettingsCard.tsx
+msgid "Downloading {label}"
+msgstr "{label} wird heruntergeladen"
+
 #: src/features/settings/UpdateChecker.tsx
 msgid "Downloading update..."
 msgstr "Update wird heruntergeladen …"
@@ -6933,6 +7095,10 @@ msgstr "z. B. {AUTHOR_TEMPLATE}, npub1… oder Hex-Pubkey"
 #: src/features/workflows/ui/WorkflowStepCard.tsx
 msgid "e.g. 24h"
 msgstr "z. B. 24h"
+
+#: src/features/local-archive/ui/LocalArchiveSettingsCard.tsx
+msgid "e.g. 30023 1337"
+msgstr "z. B. 30023 1337"
 
 #: src/features/admin-console/AdminConsoleReportsTab.tsx
 msgid "e.g. 3600"
@@ -7380,6 +7546,10 @@ msgstr "Eskaliert"
 msgid "Event created"
 msgstr "Event erstellt"
 
+#: src/features/local-archive/ui/localArchiveKinds.ts
+msgid "Event deletions (kind 5)"
+msgstr "Ereignis-Löschungen (Kind 5)"
+
 #: src/features/admin-console/AdminConsoleFeedbackTab.tsx
 #: src/features/admin-console/AdminConsoleReportsTab.tsx
 msgid "Event ID"
@@ -7388,6 +7558,10 @@ msgstr "Event-ID"
 #: src/features/admin-console/AdminConsoleActionsTab.tsx
 msgid "Event id (hex), note1… or nevent1…"
 msgstr "Event-ID (Hex), note1… oder nevent1…"
+
+#: src/features/local-archive/ui/LocalArchiveSettingsCard.tsx
+msgid "Event types"
+msgstr "Ereignistypen"
 
 #: src/features/workflows/ui/workflowDefinition.ts
 msgid "Every {interval}"
@@ -7511,6 +7685,10 @@ msgstr "Der Agent konnte nicht hinzugefügt werden: {msg}"
 msgid "Failed to add agent."
 msgstr "Der Agent konnte nicht hinzugefügt werden."
 
+#: src/features/custom-emoji/ui/CustomEmojiSettingsCard.tsx
+msgid "Failed to add emoji."
+msgstr "Emoji konnte nicht hinzugefügt werden."
+
 #: src/features/projects/ui/AddProjectRepositoryDialog.tsx
 msgid "Failed to add repository."
 msgstr "Repository konnte nicht hinzugefügt werden."
@@ -7566,6 +7744,10 @@ msgstr "Agent konnte nicht erstellt werden."
 #: src/features/projects/ui/CreateProjectFormContent.tsx
 msgid "Failed to create project."
 msgstr "Projekt konnte nicht angelegt werden."
+
+#: src/features/local-archive/ui/LocalArchiveSettingsCard.tsx
+msgid "Failed to create subscription."
+msgstr "Abo konnte nicht erstellt werden."
 
 #: src/features/projects/useProjectChannelRequests.ts
 msgid "Failed to create the project channel."
@@ -7721,6 +7903,10 @@ msgstr "Die Team-Snapshot-Datei konnte nicht gelesen werden."
 msgid "Failed to remove bot from channel."
 msgstr "Bot konnte nicht aus dem Kanal entfernt werden."
 
+#: src/features/custom-emoji/ui/CustomEmojiSettingsCard.tsx
+msgid "Failed to remove emoji."
+msgstr "Emoji konnte nicht entfernt werden."
+
 #: src/features/community-members/ui/ConfirmRemoveDialog.tsx
 msgid "Failed to remove member"
 msgstr "Mitglied konnte nicht entfernt werden"
@@ -7728,6 +7914,10 @@ msgstr "Mitglied konnte nicht entfernt werden"
 #: src/features/channels/ui/useMembersSidebarActions.ts
 msgid "Failed to remove member."
 msgstr "Mitglied konnte nicht entfernt werden."
+
+#: src/features/local-archive/ui/LocalArchiveSettingsCard.tsx
+msgid "Failed to remove subscription."
+msgstr "Abo konnte nicht entfernt werden."
 
 #: src/features/projects/ui/PullRequestReviewersRow.tsx
 msgid "Failed to request review."
@@ -7811,9 +8001,17 @@ msgstr "Aufgabenzuweisung konnte nicht aufgehoben werden."
 msgid "Failed to update"
 msgstr "Aktualisieren fehlgeschlagen"
 
+#: src/features/local-archive/ui/LocalArchiveSettingsCard.tsx
+msgid "Failed to update agent metric archive."
+msgstr "Metrik-Archiv der Agenten konnte nicht aktualisiert werden."
+
 #: src/features/agents/ui/usePersonaActions.ts
 msgid "Failed to update catalog sharing."
 msgstr "Die Katalogfreigabe konnte nicht aktualisiert werden."
+
+#: src/features/local-archive/ui/LocalArchiveSettingsCard.tsx
+msgid "Failed to update observer archive."
+msgstr "Beobachter-Archiv konnte nicht aktualisiert werden."
 
 #: src/features/projects/ui/ProjectRepositoryManagement.tsx
 msgid "Failed to update repository access."
@@ -7835,6 +8033,10 @@ msgstr "Status konnte nicht aktualisiert werden."
 #: src/features/messages/ui/useReactionHandler.ts
 msgid "Failed to update the reaction."
 msgstr "Reaktion konnte nicht aktualisiert werden."
+
+#: src/features/custom-emoji/ui/CustomEmojiSettingsCard.tsx
+msgid "Failed to upload emoji image."
+msgstr "Emoji-Bild konnte nicht hochgeladen werden."
 
 #: src/features/projects/ui/ProjectBranchDialogs.tsx
 msgid "feature/my-change"
@@ -7966,6 +8168,10 @@ msgstr "Melde dich im Terminal-Fenster fertig an und klicke dann auf „Erneut p
 msgid "Finish voice note"
 msgstr "Sprachnachricht beenden"
 
+#: src/features/mesh-compute/ui/MeshComputeSettingsCard.tsx
+msgid "Fits well"
+msgstr "Passt gut"
+
 #: src/features/agents/ui/AgentDescriptionField.tsx
 msgid "Fizz"
 msgstr "Fizz"
@@ -8020,6 +8226,10 @@ msgstr "Forum"
 msgid "Forum channels are next"
 msgstr "Forumkanäle kommen als Nächstes"
 
+#: src/features/local-archive/ui/localArchiveKinds.ts
+msgid "Forum comments (kind 45003)"
+msgstr "Forum-Kommentare (Kind 45003)"
+
 #: src/features/home/lib/inbox.ts
 #: src/features/search/ui/SearchResultItem.tsx
 msgid "Forum post"
@@ -8036,6 +8246,10 @@ msgstr "Das Posten im Forum ist in diesem Schritt noch nicht angebunden."
 #: src/features/channels/ui/ForumChannelContent.tsx
 msgid "Forum posts"
 msgstr "Forumbeiträge"
+
+#: src/features/local-archive/ui/localArchiveKinds.ts
+msgid "Forum posts (kind 45001)"
+msgstr "Forum-Beiträge (Kind 45001)"
 
 #: src/features/home/lib/inbox.ts
 #: src/features/search/ui/SearchResultItem.tsx
@@ -8155,6 +8369,10 @@ msgstr "Git-Daten auf {0}"
 #: src/shared/ui/config-nudge-attachment.tsx
 msgid "Git for Windows is required for buzz-agent shell tools"
 msgstr "Für die Shell-Tools von buzz-agent ist Git for Windows nötig"
+
+#: src/features/custom-emoji/ui/CustomEmojiSettingsCard.tsx
+msgid "Give it a name"
+msgstr "Gib ihm einen Namen"
 
 #: src/features/channels/ui/AddChannelBotPersonasSection.tsx
 msgid "Give it a name, purpose, and instructions."
@@ -8426,9 +8644,21 @@ msgstr "Huddle-Audio ist auf diesem Server nicht verfügbar. Bitte eine Administ
 msgid "Huddle chat"
 msgstr "Huddle-Chat"
 
+#: src/features/local-archive/ui/localArchiveKinds.ts
+msgid "Huddle ended"
+msgstr "Huddle beendet"
+
+#: src/features/local-archive/ui/localArchiveKinds.ts
+msgid "Huddle events"
+msgstr "Huddle-Ereignisse"
+
 #: src/features/agents/ui/agentSessionTranscriptHelpers.ts
 msgid "Huddle Instructions"
 msgstr "Huddle-Anweisungen"
+
+#: src/features/local-archive/ui/localArchiveKinds.ts
+msgid "Huddle started"
+msgstr "Huddle gestartet"
 
 #: src/features/huddle/components/HuddleAttachment.tsx
 msgid "Huddle unavailable"
@@ -8508,6 +8738,14 @@ msgstr "Identität sicher empfangen"
 #: src/features/agents/ui/ManagedAgentSessionPanel.tsx
 msgid "Idle"
 msgstr "Untätig"
+
+#: src/features/mesh-compute/servingUsage.ts
+msgid "Idle · no one using it right now"
+msgstr "Inaktiv · gerade nutzt es niemand"
+
+#: src/features/mesh-compute/servingUsage.ts
+msgid "Idle · no one using it yet"
+msgstr "Inaktiv · noch nutzt es niemand"
 
 #: src/features/huddle/components/MicControls.tsx
 msgid "If people are nearby, speakers can feed back into your mic. Headphones keep huddles clearer."
@@ -8646,6 +8884,10 @@ msgstr "im Snapshot. Teil ihn nur mit Leuten, denen du vertraust."
 #: src/features/channels/ui/AddChannelBotPersonasSection.tsx
 msgid "In this channel"
 msgstr "In diesem Kanal"
+
+#: src/features/mesh-compute/servingUsage.ts
+msgid "In use now by another member · {inflight} live"
+msgstr "Gerade von einem anderen Mitglied genutzt · {inflight} live"
 
 #: src/features/agents/ui/AgentCardMintDialog.tsx
 msgid "in your agent defaults env — that's the row to update in Settings if you ever need to change it there."
@@ -8792,6 +9034,7 @@ msgstr "Node.js installieren"
 msgid "Installation failed"
 msgstr "Installation fehlgeschlagen"
 
+#: src/features/mesh-compute/ui/MeshComputeSettingsCard.tsx
 #: src/features/settings/ui/HarnessCatalogDialog.tsx
 msgid "Installed"
 msgstr "Installiert"
@@ -8828,6 +9071,10 @@ msgstr "Instanzen"
 #: src/features/channels/ui/AgentSessionThreadPanel.tsx
 msgid "Interrupt the current ACP turn without stopping the agent process."
 msgstr "Den aktuellen ACP-Zug unterbrechen, ohne den Agentenprozess zu stoppen."
+
+#: src/features/local-archive/ui/LocalArchiveSettingsCard.tsx
+msgid "Invalid tokens (ignored):"
+msgstr "Ungültige Angaben (ignoriert):"
 
 #: src/features/workflows/ui/workflowFormTypes.ts
 msgid "Invalid YAML"
@@ -9134,6 +9381,14 @@ msgstr "Tastaturkürzel"
 #: src/features/admin-console/adminConsoleLabels.ts
 msgid "Kick"
 msgstr "Rauswerfen"
+
+#: src/features/local-archive/ui/localArchiveKinds.ts
+msgid "Kind {kind}"
+msgstr "Kind {kind}"
+
+#: src/features/local-archive/ui/LocalArchiveSettingsCard.tsx
+msgid "kinds: {kindsLabel}"
+msgstr "Kinds: {kindsLabel}"
 
 #: src/features/projects/ui/ProjectIssuesPanel.tsx
 #: src/features/projects/ui/PullRequestMetaRail.tsx
@@ -9630,6 +9885,8 @@ msgstr "Wird geladen …"
 #: src/features/admin-console/AdminConsolePanelHelpers.tsx
 #: src/features/agents/ui/AgentDefaultsEditor.tsx
 #: src/features/communities/ui/WelcomeSetup.tsx
+#: src/features/custom-emoji/ui/CustomEmojiSettingsCard.tsx
+#: src/features/local-archive/ui/LocalArchiveSettingsCard.tsx
 #: src/features/onboarding/ui/DefaultConfigStep.tsx
 #: src/features/settings/ui/PrivateKeyBackupRow.tsx
 #: src/features/settings/ui/SignOutSection.tsx
@@ -9637,6 +9894,7 @@ msgstr "Wird geladen …"
 msgid "Loading…"
 msgstr "Wird geladen…"
 
+#: src/features/local-archive/ui/LocalArchiveSettingsCard.tsx
 #: src/features/settings/ui/SettingsPanels.tsx
 msgid "Local archive"
 msgstr "Lokales Archiv"
@@ -9825,6 +10083,10 @@ msgstr "Max. Ausgabe-Tokens"
 #: src/features/agents/ui/buzzAgentModelTuningFields.tsx
 msgid "Max rounds"
 msgstr "Max. Runden"
+
+#: src/features/mesh-compute/ui/MeshComputeSettingsCard.tsx
+msgid "Max VRAM (GB)"
+msgstr "Max. VRAM (GB)"
 
 #: src/features/agents/ui/buzzAgentModelTuningFields.tsx
 msgid "Maximum context window tokens tracked before a handoff. Leave blank to inherit."
@@ -10031,6 +10293,14 @@ msgstr "Nachricht in die Zwischenablage kopiert"
 msgid "Message deleted"
 msgstr "Nachricht gelöscht"
 
+#: src/features/local-archive/ui/localArchiveKinds.ts
+msgid "Message diffs (kind 40008)"
+msgstr "Nachrichten-Diffs (Kind 40008)"
+
+#: src/features/local-archive/ui/localArchiveKinds.ts
+msgid "Message edits (kind 40003)"
+msgstr "Nachrichten-Bearbeitungen (Kind 40003)"
+
 #: src/features/workflows/ui/workflowTemplateVariables.ts
 msgid "Message event ID"
 msgstr "Event-ID der Nachricht"
@@ -10074,6 +10344,10 @@ msgstr "Nachricht nicht verfügbar"
 #: src/shared/lib/keyboard-shortcuts.ts
 msgid "Messages"
 msgstr "Nachrichten"
+
+#: src/features/local-archive/ui/localArchiveKinds.ts
+msgid "Messages & posts"
+msgstr "Nachrichten & Beiträge"
 
 #: src/features/channels/ui/ChannelPane.tsx
 msgid "Messages and sub-replies will appear here once the relay has history for this channel."
@@ -10179,6 +10453,7 @@ msgstr "Modus"
 #: src/features/agents/ui/AgentConfigPanel.tsx
 #: src/features/agents/ui/EditAgentProviderModelFields.tsx
 #: src/features/agents/ui/PersonaModelField.tsx
+#: src/features/mesh-compute/ui/MeshComputeSettingsCard.tsx
 msgid "Model"
 msgstr "Modell"
 
@@ -10310,13 +10585,29 @@ msgstr "Kanal stummschalten"
 msgid "Mute microphone"
 msgstr "Mikrofon stummschalten"
 
+#: src/features/local-archive/ui/LocalArchiveSettingsCard.tsx
+msgid "My agent session frames"
+msgstr "Meine Agenten-Sitzungs-Frames"
+
 #: src/features/agents/ui/personaLibraryCopy.ts
 msgid "My agents"
 msgstr "Meine Agenten"
 
+#: src/features/local-archive/ui/LocalArchiveSettingsCard.tsx
+msgid "My agents’ turn metrics"
+msgstr "Turn-Metriken meiner Agenten"
+
 #: src/features/communities/ui/EditCommunityDialog.tsx
 msgid "My Community"
 msgstr "Meine Community"
+
+#: src/features/custom-emoji/ui/CustomEmojiSettingsCard.tsx
+msgid "My emoji"
+msgstr "Meine Emoji"
+
+#: src/features/custom-emoji/ui/CustomEmojiSettingsCard.tsx
+msgid "My emoji ({ownCount})"
+msgstr "Meine Emoji ({ownCount})"
 
 #: src/features/settings/ui/CustomHarnessForm.tsx
 msgid "My Runtime"
@@ -10667,6 +10958,10 @@ msgstr "Kein Kanal ausgewählt"
 msgid "No channel selected."
 msgstr "Kein Kanal ausgewählt."
 
+#: src/features/local-archive/ui/LocalArchiveSettingsCard.tsx
+msgid "No channel subscriptions yet. Add one below."
+msgstr "Noch keine Kanal-Abos. Füge unten eines hinzu."
+
 #: src/features/agents/ui/AddAgentToChannelDialog.tsx
 #: src/features/agents/ui/AddTeamToChannelDialog.tsx
 msgid "No channels available"
@@ -10812,7 +11107,12 @@ msgstr "Keine beigetretenen Kanäle"
 msgid "No joined forums"
 msgstr "Keine beigetretenen Foren"
 
+#: src/features/local-archive/ui/LocalArchiveSettingsCard.tsx
+msgid "no kinds"
+msgstr "keine Kinds"
+
 #: src/features/community-members/ui/InviteLinkSection.tsx
+#: src/features/mesh-compute/ui/MeshComputeSettingsCard.tsx
 msgid "No limit"
 msgstr "Kein Limit"
 
@@ -11283,6 +11583,14 @@ msgstr "Verarbeitung des Beobachter-Ereignisses fehlgeschlagen: {0}"
 #: src/features/agents/observerRelayStore.ts
 msgid "Observer event handling failed."
 msgstr "Verarbeitung des Beobachter-Ereignisses fehlgeschlagen."
+
+#: src/features/local-archive/ui/LocalArchiveSettingsCard.tsx
+msgid "Observer feed archive disabled."
+msgstr "Archivierung des Beobachter-Feeds deaktiviert."
+
+#: src/features/local-archive/ui/LocalArchiveSettingsCard.tsx
+msgid "Observer feed archive enabled."
+msgstr "Archivierung des Beobachter-Feeds aktiviert."
 
 #: src/features/agents/ui/ManagedAgentSessionPanel.tsx
 msgid "Observer not attached"
@@ -12019,6 +12327,14 @@ msgstr "Parallelität"
 msgid "Parameters"
 msgstr "Parameter"
 
+#: src/features/local-archive/ui/localArchiveKinds.ts
+msgid "Participant joined"
+msgstr "Teilnehmer beigetreten"
+
+#: src/features/local-archive/ui/localArchiveKinds.ts
+msgid "Participant left"
+msgstr "Teilnehmer gegangen"
+
 #: src/features/huddle/components/ParticipantList.tsx
 msgid "Participants"
 msgstr "Teilnehmer"
@@ -12262,6 +12578,10 @@ msgstr "Bevorzugte Runtime"
 #: src/features/projects/ui/MergePullRequestButton.tsx
 msgid "Prepare the local checkout, then switch to {0} with the commands shown. After resolving and committing, push the target branch and retry the merge."
 msgstr "Bereite den lokalen Checkout vor und wechsle dann mit den gezeigten Befehlen zu {0}. Nach dem Auflösen und Committen push den Ziel-Branch und versuch den Merge erneut."
+
+#: src/features/mesh-compute/ui/MeshComputeSettingsCard.tsx
+msgid "Preparing {label}"
+msgstr "{label} wird vorbereitet"
 
 #: src/features/settings/EncryptedBackupProvider.tsx
 msgid "Preparing backup…"
@@ -12783,6 +13103,14 @@ msgstr "Reaktions-Emoji"
 msgid "Reaction failed"
 msgstr "Reaktion fehlgeschlagen"
 
+#: src/features/local-archive/ui/localArchiveKinds.ts
+msgid "Reactions (kind 7)"
+msgstr "Reaktionen (Kind 7)"
+
+#: src/features/local-archive/ui/localArchiveKinds.ts
+msgid "Reactions, edits & deletions"
+msgstr "Reaktionen, Bearbeitungen & Löschungen"
+
 #: src/features/agents/ui/agentSessionToolClassifier.ts
 msgid "Read"
 msgstr "Gelesen"
@@ -12892,6 +13220,7 @@ msgstr "Empfängerlimit erreicht"
 msgid "Recipient npub"
 msgstr "npub des Empfängers"
 
+#: src/features/mesh-compute/ui/MeshComputeSettingsCard.tsx
 #: src/features/onboarding/ui/SetupStep.tsx
 msgid "Recommended"
 msgstr "Empfohlen"
@@ -13075,6 +13404,11 @@ msgstr "Entfernte Bereitstellung"
 msgid "Remove"
 msgstr "Entfernen"
 
+#. placeholder {0}: e.shortcode
+#: src/features/custom-emoji/ui/CustomEmojiSettingsCard.tsx
+msgid "Remove :{0}:"
+msgstr ":{0}: entfernen"
+
 #: src/features/communities/ui/CommunitySwitcher.tsx
 msgid "Remove \"{removingCommunityName}\" from this device? {productName} won't contact the relay, so your membership isn't revoked. You can add the community again later."
 msgstr "„{removingCommunityName}“ von diesem Gerät entfernen? {productName} kontaktiert das Relay nicht, deine Mitgliedschaft wird also nicht widerrufen. Du kannst die Community später wieder hinzufügen."
@@ -13119,6 +13453,10 @@ msgstr "{title} entfernen"
 #: src/features/channels/ui/MembersSidebarAgentControls.tsx
 msgid "Remove all from channel"
 msgstr "Alle aus dem Kanal entfernen"
+
+#: src/features/local-archive/ui/LocalArchiveSettingsCard.tsx
+msgid "Remove archive subscription for {subLabel}"
+msgstr "Archiv-Abo für {subLabel} entfernen"
 
 #: src/features/settings/ui/CustomHarnessForm.tsx
 msgid "Remove argument"
@@ -13202,6 +13540,10 @@ msgstr "entfernt"
 #: src/features/agents/ui/agentSessionToolClassifier.ts
 msgid "Removed"
 msgstr "Entfernt"
+
+#: src/features/custom-emoji/ui/CustomEmojiSettingsCard.tsx
+msgid "Removed :{shortcode}:"
+msgstr ":{shortcode}: entfernt"
 
 #: src/features/profile/ui/UserProfilePanel.tsx
 msgid "Removed {agentName} from My Agents."
@@ -13940,6 +14282,7 @@ msgid "Saturday"
 msgstr "Samstag"
 
 #: src/features/admin-console/AdminConsoleSettingsCard.tsx
+#: src/features/local-archive/ui/LocalArchiveSettingsCard.tsx
 #: src/features/messages/lib/useLinkEditor.tsx
 #: src/features/messages/ui/ComposerImageEditor.tsx
 #: src/features/profile/ui/ProfileAvatarEditor.tsx
@@ -13991,9 +14334,17 @@ msgstr "Änderungen speichern"
 msgid "Save Changes"
 msgstr "Änderungen speichern"
 
+#: src/features/local-archive/ui/LocalArchiveSettingsCard.tsx
+msgid "Save copies of relay messages to a local SQLite database in your {productName} nest. Events are re-verified against the relay at archive time."
+msgstr "Speichere Kopien von Relay-Nachrichten in einer lokalen SQLite-Datenbank in deinem {productName}-Nest. Ereignisse werden beim Archivieren erneut gegen das Relay geprüft."
+
 #: src/features/agents/ui/AgentDefaultsEditor.tsx
 msgid "Save defaults"
 msgstr "Standardwerte speichern"
+
+#: src/features/custom-emoji/ui/CustomEmojiSettingsCard.tsx
+msgid "Save emoji"
+msgstr "Emoji speichern"
 
 #: src/features/settings/ui/ChannelTemplatesSettingsCard.tsx
 msgid "Save reusable channel configurations and apply them when creating new channels."
@@ -14034,6 +14385,14 @@ msgstr "Gespeichert. {restartedCount} Agent{0} neu gestartet.{1}"
 msgid "Saved. We couldn't verify against the latest revision just now — check History if a concurrent edit appears."
 msgstr "Gespeichert. Wir konnten gerade nicht gegen die neueste Version prüfen — sieh im Verlauf nach, falls eine parallele Bearbeitung auftaucht."
 
+#: src/features/local-archive/ui/LocalArchiveSettingsCard.tsx
+msgid "Saves kind {KIND_AGENT_OBSERVER_FRAME} observer frames addressed to your pubkey. These are ephemeral — not stored by the relay — so local archiving is the only way to retain them."
+msgstr "Speichert Beobachter-Frames vom Kind {KIND_AGENT_OBSERVER_FRAME}, die an deinen Pubkey adressiert sind. Diese Frames sind temporär — das Relay speichert sie nicht — deshalb ist das lokale Archiv die einzige Möglichkeit, sie zu behalten."
+
+#: src/features/local-archive/ui/LocalArchiveSettingsCard.tsx
+msgid "Saves kind {KIND_AGENT_TURN_METRIC} turn-metric events addressed to your pubkey. Stored as plaintext in your local archive so token-usage calculators can read them directly."
+msgstr "Speichert Turn-Metrik-Ereignisse vom Kind {KIND_AGENT_TURN_METRIC}, die an deinen Pubkey adressiert sind. Diese Ereignisse liegen als Klartext in deinem lokalen Archiv, damit Token-Rechner sie direkt lesen können."
+
 #: src/features/communities/ui/CommunityEditForm.tsx
 #: src/features/profile/ui/ProfileAvatarEditor.tsx
 msgid "Saving"
@@ -14065,6 +14424,8 @@ msgstr "Profilbild wird gespeichert"
 msgid "Saving..."
 msgstr "Wird gespeichert…"
 
+#: src/features/custom-emoji/ui/CustomEmojiSettingsCard.tsx
+#: src/features/local-archive/ui/LocalArchiveSettingsCard.tsx
 #: src/features/onboarding/ui/DefaultConfigStep.tsx
 #: src/features/workflows/ui/WorkflowDialog.tsx
 msgid "Saving…"
@@ -14311,6 +14672,10 @@ msgstr "Kanal auswählen"
 msgid "Select a channel to view messages."
 msgstr "Wähle einen Kanal, um Nachrichten zu sehen."
 
+#: src/features/local-archive/ui/LocalArchiveSettingsCard.tsx
+msgid "Select a channel…"
+msgstr "Kanal wählen…"
+
 #: src/features/messages/ui/DraftDetailPane.tsx
 msgid "Select a draft"
 msgstr "Wähle einen Entwurf"
@@ -14329,6 +14694,7 @@ msgid "Select a message"
 msgstr "Wähle eine Nachricht"
 
 #: src/features/agents/ui/AgentConfigFields.tsx
+#: src/features/mesh-compute/ui/MeshComputeSettingsCard.tsx
 msgid "Select a model"
 msgstr "Wähle ein Modell"
 
@@ -14409,6 +14775,10 @@ msgstr "{0} für Meine Agenten ausgewählt."
 #: src/features/workflows/ui/WorkflowTriggerConditions.tsx
 msgid "Selected author: {label}"
 msgstr "Ausgewählter Autor: {label}"
+
+#: src/features/custom-emoji/ui/CustomEmojiSettingsCard.tsx
+msgid "Selected custom emoji preview"
+msgstr "Vorschau des gewählten eigenen Emoji"
 
 #: src/features/agents/ui/personaLibraryCopy.ts
 msgid "Selected for My Agents"
@@ -14585,6 +14955,10 @@ msgstr "Trennzeichen"
 msgid "Server error — try again"
 msgstr "Serverfehler — versuch es erneut"
 
+#: src/features/mesh-compute/servingUsage.ts
+msgid "Serving your agent · {inflight} live"
+msgstr "Bedient deinen Agenten · {inflight} live"
+
 #: src/features/agents/ui/agentSessionTranscript.ts
 msgid "Session ready"
 msgstr "Sitzung bereit"
@@ -14675,6 +15049,10 @@ msgstr "Einrichtungsanleitung"
 msgid "Share"
 msgstr "Teilen"
 
+#: src/features/mesh-compute/ui/MeshComputeSettingsCard.tsx
+msgid "Share compute"
+msgstr "Rechenleistung teilen"
+
 #: src/features/agents/ui/PersonaShareDialog.tsx
 msgid "Share memories?"
 msgstr "Gedächtnis teilen?"
@@ -14682,6 +15060,14 @@ msgstr "Gedächtnis teilen?"
 #: src/features/agents/ui/PersonaShareDialog.tsx
 msgid "Share settings"
 msgstr "Freigabeeinstellungen"
+
+#: src/features/mesh-compute/ui/MeshComputeSettingsCard.tsx
+msgid "Share this machine"
+msgstr "Diesen Rechner teilen"
+
+#: src/features/mesh-compute/ui/MeshComputeSettingsCard.tsx
+msgid "Share this machine with members of this relay so they can run agents here."
+msgstr "Teile diesen Rechner mit den Mitgliedern dieses Relays, damit sie hier Agenten ausführen können."
 
 #: src/features/agents/ui/PersonaShareDialog.tsx
 #: src/features/agents/ui/teamLibraryCopy.ts
@@ -14717,18 +15103,34 @@ msgstr "Geteilt von {sharedBy}"
 msgid "Shared teams will appear here."
 msgstr "Geteilte Teams erscheinen hier."
 
+#: src/features/mesh-compute/ui/MeshComputeSettingsCard.tsx
+msgid "Shared with relay members."
+msgstr "Mit den Relay-Mitgliedern geteilt."
+
 #: src/features/agents/ui/PersonaAdvancedFields.tsx
 msgid "Shares one conversation across every thread in a channel."
 msgstr "Teilt ein Gespräch über alle Threads in einem Kanal."
+
+#: src/features/mesh-compute/ui/MeshComputeSettingsCard.tsx
+msgid "Sharing"
+msgstr "Teilen"
 
 #. placeholder {0}: persona.displayName
 #: src/features/agents/ui/usePersonaActions.ts
 msgid "Sharing {0} is queued. It will appear after the relay accepts the update."
 msgstr "Das Teilen von {0} ist in der Warteschlange. Es erscheint, nachdem das Relay das Update annimmt."
 
+#: src/features/mesh-compute/ui/MeshComputeSettingsCard.tsx
+msgid "Sharing {modelLabel} with relay members."
+msgstr "{modelLabel} wird mit den Relay-Mitgliedern geteilt."
+
 #: src/features/agents/ui/teamLibraryCopy.ts
 msgid "Sharing {teamName} is queued. It will appear after the relay accepts the update."
 msgstr "Das Teilen von {teamName} ist in der Warteschlange. Es erscheint, nachdem das Relay das Update annimmt."
+
+#: src/features/mesh-compute/ui/MeshComputeSettingsCard.tsx
+msgid "Sharing with relay members."
+msgstr "Wird mit den Relay-Mitgliedern geteilt."
 
 #: src/features/settings/ui/SettingsPanels.tsx
 msgid "Shortcuts"
@@ -15076,6 +15478,10 @@ msgstr "Ton"
 msgid "Source"
 msgstr "Quelle"
 
+#: src/features/local-archive/ui/LocalArchiveSettingsCard.tsx
+msgid "Space- or comma-separated non-negative integers. Kinds already in the checklist above are ignored."
+msgstr "Nicht-negative ganze Zahlen, durch Leerzeichen oder Kommas getrennt. Kinds, die oben schon in der Liste stehen, werden ignoriert."
+
 #: src/features/onboarding/ui/EncryptedBackupCreator.tsx
 #: src/features/settings/ui/EncryptedBackupCreator.tsx
 msgid "Spaces"
@@ -15130,6 +15536,10 @@ msgstr "Tabelle"
 #: src/features/settings/ui/ChannelTemplatesSettingsCard.tsx
 msgid "Sprint Planning"
 msgstr "Sprint-Planung"
+
+#: src/features/custom-emoji/ui/CustomEmojiSettingsCard.tsx
+msgid "Square images work best. GIF, PNG, JPEG, and WebP files are supported."
+msgstr "Quadratische Bilder funktionieren am besten. GIF-, PNG-, JPEG- und WebP-Dateien werden unterstützt."
 
 #: src/features/projects/ui/ProjectAgentChatPanel.tsx
 msgid "Start a conversation with the project agent."
@@ -15231,6 +15641,7 @@ msgid "Starting pairing..."
 msgstr "Kopplung wird gestartet …"
 
 #: src/features/agents/ui/AgentStatusBadge.tsx
+#: src/features/mesh-compute/ui/MeshComputeSettingsCard.tsx
 msgid "Starting…"
 msgstr "Startet…"
 
@@ -15242,6 +15653,7 @@ msgstr "beginnt mit"
 #: src/features/admin-console/AdminConsoleFeedbackTab.tsx
 #: src/features/agents/ui/AgentSessionToolItem/SentMessageContextDialog.tsx
 #: src/features/agents/ui/ManagedAgentRow.tsx
+#: src/features/mesh-compute/ui/MeshComputeSettingsCard.tsx
 #: src/features/profile/ui/UserProfilePanelFields.tsx
 #: src/features/projects/ui/ProjectIssuesPanel.tsx
 #: src/features/projects/ui/ProjectsWorkItemTable.tsx
@@ -15374,6 +15786,10 @@ msgstr "{stoppedName} gestoppt."
 msgid "Stopped by you"
 msgstr "Von dir gestoppt"
 
+#: src/features/mesh-compute/ui/MeshComputeSettingsCard.tsx
+msgid "Stopping…"
+msgstr "Wird gestoppt…"
+
 #: src/features/profile/ui/UserProfileAgentManagementRows.tsx
 msgid "Stops any local agent process before deleting the record"
 msgstr "Stoppt alle lokalen Agent-Prozesse, bevor der Eintrag gelöscht wird"
@@ -15385,6 +15801,14 @@ msgstr "Im privaten Gerätespeicher abgelegt"
 #: src/features/onboarding/ui/IdentityKeyIntroduction.tsx
 msgid "Stored securely on this device"
 msgstr "Sicher auf diesem Gerät gespeichert"
+
+#: src/features/local-archive/ui/localArchiveKinds.ts
+msgid "Stream messages (kind 9)"
+msgstr "Stream-Nachrichten (Kind 9)"
+
+#: src/features/local-archive/ui/localArchiveKinds.ts
+msgid "Stream messages v2 (kind 40002)"
+msgstr "Stream-Nachrichten v2 (Kind 40002)"
 
 #: src/features/messages/ui/FormattingToolbar.tsx
 #: src/shared/lib/keyboard-shortcuts.ts
@@ -15407,6 +15831,10 @@ msgstr "STT-Modell: {0}"
 #: src/features/admin-console/AdminConsoleFeedbackTab.tsx
 msgid "Submitter"
 msgstr "Eingereicht von"
+
+#: src/features/local-archive/ui/LocalArchiveSettingsCard.tsx
+msgid "Subscribe to a channel"
+msgstr "Einen Kanal abonnieren"
 
 #: src/features/onboarding/ui/SetupStep.tsx
 msgid "Subscriptions connect through a compatible harness, like Claude Code or Codex. Choose yours to sign in."
@@ -15466,6 +15894,14 @@ msgstr "System"
 #: src/features/huddle/components/MicControls.tsx
 msgid "System default"
 msgstr "Systemstandard"
+
+#: src/features/local-archive/ui/localArchiveKinds.ts
+msgid "System messages"
+msgstr "Systemnachrichten"
+
+#: src/features/local-archive/ui/localArchiveKinds.ts
+msgid "System messages (kind 40099)"
+msgstr "Systemnachrichten (Kind 40099)"
 
 #: src/features/settings/ui/HarnessesSettingsPanel.tsx
 msgid "System prerequisites"
@@ -16202,6 +16638,10 @@ msgstr "Das ist der Anfang deiner Direktnachricht mit <0>{0}</0>."
 msgid "This is the complete portable payload decoded from the file. Secrets, credentials, and source identity are not part of the snapshot format."
 msgstr "Das ist die vollständige portable Nutzlast, die aus der Datei dekodiert wurde. Geheimnisse, Zugangsdaten und die Quellidentität gehören nicht zum Snapshot-Format."
 
+#: src/features/custom-emoji/ui/CustomEmojiSettingsCard.tsx
+msgid "This is what you’ll type to add this emoji to messages and reactions."
+msgstr "Das tippst du, um dieses Emoji in Nachrichten und Reaktionen einzufügen."
+
 #: src/features/onboarding/ui/MembershipDenied.tsx
 msgid "This is your public identity — it's safe to share. Send it to the relay admin so they can invite you."
 msgstr "Das ist deine öffentliche Identität — du kannst sie gefahrlos weitergeben. Schick sie der Relay-Administration, damit sie dich einladen kann."
@@ -16215,6 +16655,10 @@ msgstr "Dieser Eintrag unterstützt noch keine direkten Antworten."
 #: src/features/onboarding/ui/IdentityKeyIntroduction.tsx
 msgid "This key will be how you log into {0}. You can use it across {1} communities and other platforms."
 msgstr "Mit diesem Schlüssel meldest du dich bei {0} an. Du kannst ihn in allen {1}-Communities und auf anderen Plattformen verwenden."
+
+#: src/features/mesh-compute/ui/MeshComputeSettingsCard.tsx
+msgid "This machine is currently using another member’s shared compute. Turn on sharing to switch to the selected local model; {productName} may briefly restart."
+msgstr "Dieser Rechner nutzt gerade die geteilte Rechenleistung eines anderen Mitglieds. Aktiviere das Teilen, um auf das ausgewählte lokale Modell zu wechseln; {productName} startet dabei vielleicht kurz neu."
 
 #: src/features/messages/ui/MessageRow.tsx
 msgid "This message has been edited"
@@ -16446,6 +16890,10 @@ msgstr "Threads öffnen sich über dem Kanal"
 msgid "Thursday"
 msgstr "Donnerstag"
 
+#: src/features/mesh-compute/ui/MeshComputeSettingsCard.tsx
+msgid "Tight fit"
+msgstr "Knapp"
+
 #: src/features/admin-console/AdminConsoleActionsTab.tsx
 #: src/features/channels/ui/MembersSidebarMemberCard.tsx
 msgid "Time out"
@@ -16564,6 +17012,10 @@ msgstr "Seitenleiste ein-/ausblenden"
 msgid "Toggle strikethrough formatting"
 msgstr "Durchstreichen ein-/ausschalten"
 
+#: src/features/mesh-compute/ui/MeshComputeSettingsCard.tsx
+msgid "Too large"
+msgstr "Zu groß"
+
 #: src/features/agents/ui/agentSessionToolClassifier.ts
 msgid "tool"
 msgstr "Tool"
@@ -16583,6 +17035,10 @@ msgstr "Tool-Aufruf: {toolCallId}"
 #: src/features/workflows/ui/WorkflowStepCard.tsx
 msgid "Topic"
 msgstr "Thema"
+
+#: src/features/mesh-compute/ui/MeshComputeSettingsCard.tsx
+msgid "Trade-off"
+msgstr "Kompromiss"
 
 #: src/features/huddle/components/HuddleBar.tsx
 msgid "Transcript failed: {message}"
@@ -17155,6 +17611,10 @@ msgstr "Aktualisiert den Workflow-Status in {productName}."
 msgid "Updating"
 msgstr "Wird aktualisiert"
 
+#: src/features/custom-emoji/ui/CustomEmojiSettingsCard.tsx
+msgid "Upload an image"
+msgstr "Ein Bild hochladen"
+
 #. placeholder {0}: err.message
 #. placeholder {0}: media.uploadState.message
 #: src/features/agents/ui/useSnapshotSendController.ts
@@ -17165,6 +17625,10 @@ msgstr "Hochladen fehlgeschlagen: {0}"
 #: src/features/agents/ui/useSnapshotSendController.ts
 msgid "Upload failed."
 msgstr "Hochladen fehlgeschlagen."
+
+#: src/features/custom-emoji/ui/CustomEmojiSettingsCard.tsx
+msgid "Upload image"
+msgstr "Bild hochladen"
 
 #: src/features/channels/ui/ChannelLogoEditor.tsx
 msgid "Upload logo"
@@ -17192,6 +17656,10 @@ msgstr "Avatar wird hochgeladen"
 #: src/features/profile/ui/AvatarUpload.tsx
 #: src/features/profile/ui/ProfileAvatarEditor.tsx
 msgid "Uploading..."
+msgstr "Wird hochgeladen…"
+
+#: src/features/custom-emoji/ui/CustomEmojiSettingsCard.tsx
+msgid "Uploading…"
 msgstr "Wird hochgeladen…"
 
 #: src/features/messages/lib/useLinkEditor.tsx
@@ -17314,6 +17782,10 @@ msgstr "Verwende Kleinbuchstaben, Zahlen und Bindestriche."
 #: src/features/settings/ui/HostedCommunitiesSettingsCard.tsx
 msgid "Use lowercase letters, numbers, and single hyphens."
 msgstr "Nutze Kleinbuchstaben, Zahlen und einzelne Bindestriche."
+
+#: src/features/custom-emoji/ui/CustomEmojiSettingsCard.tsx
+msgid "Use only letters, numbers, hyphen, or underscore."
+msgstr "Verwende nur Buchstaben, Zahlen, Bindestrich oder Unterstrich."
 
 #: src/features/channels/ui/ChannelManagementSheet.tsx
 msgid "Use the canvas as a shared space for notes, plans, and other channel information."
@@ -18260,6 +18732,10 @@ msgstr "Du"
 msgid "You ("
 msgstr "Du ("
 
+#: src/features/custom-emoji/ui/CustomEmojiSettingsCard.tsx
+msgid "You already have :{normalized}: — saving will replace its image."
+msgstr "Du hast :{normalized}: schon — beim Speichern wird das Bild ersetzt."
+
 #: src/features/agents/ui/useSnapshotSendController.ts
 msgid "You are currently timed out and cannot send messages."
 msgstr "Du bist gerade im Timeout und kannst keine Nachrichten senden."
@@ -18307,6 +18783,10 @@ msgstr "Du kannst sie jederzeit aus dem Archiv holen, um sie wiederherzustellen"
 #: src/features/communities/ui/HostedCommunityCreateFlow.tsx
 msgid "You can’t change this address after creating the community."
 msgstr "Diese Adresse kannst du nach dem Anlegen der Community nicht mehr ändern."
+
+#: src/features/custom-emoji/ui/CustomEmojiSettingsCard.tsx
+msgid "You haven’t added any emoji yet. Add one above."
+msgstr "Du hast noch keine Emoji hinzugefügt. Füge oben eines hinzu."
 
 #: src/features/projects/lib/projectGitError.ts
 msgid "You need access to the repository’s channel before you can clone it."

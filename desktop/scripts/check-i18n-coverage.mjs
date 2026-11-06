@@ -791,6 +791,18 @@ const CONVERTED_FILES = [
   "src/features/agents/ui/activityRenderClasses/ToolActivity.tsx",
   "src/features/agents/ui/activityRenderClasses/TranscriptActivityItem.tsx",
   "src/features/agents/ui/agentSessionTypes.ts",
+  // Tranche 8 — the three Settings cards the earlier tranches never reached:
+  // Settings → Shared compute, Custom emoji, Local archive. None of them was
+  // in this list, so the detector was never asked about them and the gate
+  // reported the whole app clean while 122 English strings rendered here.
+  // The two libraries are listed with their cards because they *produce*
+  // copy: the serving-usage indicator and the archive kind checklist both
+  // return display strings that no JSX node mentions.
+  "src/features/custom-emoji/ui/CustomEmojiSettingsCard.tsx",
+  "src/features/local-archive/ui/LocalArchiveSettingsCard.tsx",
+  "src/features/local-archive/ui/localArchiveKinds.ts",
+  "src/features/mesh-compute/servingUsage.ts",
+  "src/features/mesh-compute/ui/MeshComputeSettingsCard.tsx",
 ];
 
 /**
@@ -798,6 +810,14 @@ const CONVERTED_FILES = [
  * is not copy, the comment is how a reviewer checks that claim.
  */
 const OVERRIDES = new Map([
+  [
+    "src/features/custom-emoji/ui/CustomEmojiSettingsCard.tsx:234",
+    "Example shortcode. A shortcode is restricted to letters, digits, hyphen and underscore, so it is the same characters in every language.",
+  ],
+  [
+    "src/features/mesh-compute/ui/MeshComputeSettingsCard.tsx:604",
+    "Example model references in the exact syntax the mesh backend parses.",
+  ],
   [
     "src/features/workflows/ui/WorkflowWebhookSecretDialog.tsx:82",
     "The HTTP header name a caller has to send; the same characters in every language.",

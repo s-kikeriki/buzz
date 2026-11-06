@@ -85,6 +85,28 @@ const PANELS: Array<{
     german: ["funktioniert mit jedem Relay"],
   },
   {
+    section: "compute",
+    panelTestId: "settings-mesh-share-compute",
+    german: ["Rechenleistung teilen", "Diesen Rechner teilen"],
+  },
+  {
+    // Gated on `custom-emoji`, which is not in preview-features.json — the
+    // gate check fails open for an unknown id, so the section always renders.
+    // Asserted rather than assumed: a skip here would read green.
+    section: "custom-emoji",
+    panelTestId: "settings-custom-emoji",
+    german: ["Emoji hinzufügen", "Quadratische Bilder", "Gib ihm einen Namen"],
+  },
+  {
+    section: "local-archive",
+    panelTestId: "settings-local-archive",
+    german: [
+      "Agenten-Beobachter-Feed",
+      "Turn-Metriken meiner Agenten",
+      "Kanal-Abos",
+    ],
+  },
+  {
     section: "mobile",
     panelTestId: "settings-mobile",
     german: ["QR-Code scannen", "Mobile App koppeln"],
