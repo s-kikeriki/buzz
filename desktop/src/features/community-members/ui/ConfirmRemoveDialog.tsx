@@ -1,3 +1,4 @@
+import { Trans, useLingui } from "@lingui/react/macro";
 import { toast } from "sonner";
 
 import { truncateNpub } from "@/shared/lib/pubkey";
@@ -24,6 +25,7 @@ export function ConfirmRemoveDialog({
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }) {
+  const { t } = useLingui();
   const removeMutation = useRemoveRelayMemberMutation();
   const label = displayName || (member ? truncateNpub(member.pubkey) : "");
 
@@ -41,9 +43,13 @@ export function ConfirmRemoveDialog({
         data-testid="confirm-remove-member-dialog"
       >
         <DialogHeader>
-          <DialogTitle>Remove {label}?</DialogTitle>
+          <DialogTitle>
+            <Trans>Remove {label}?</Trans>
+          </DialogTitle>
           <DialogDescription>
-            This will immediately revoke their access to the relay.
+            <Trans>
+              This will immediately revoke their access to the relay.
+            </Trans>
           </DialogDescription>
           {member ? (
             <PubKey
@@ -59,7 +65,7 @@ export function ConfirmRemoveDialog({
             size="sm"
             variant="outline"
           >
-            Cancel
+            <Trans>Cancel</Trans>
           </Button>
           <Button
             data-testid="confirm-remove-member"
@@ -68,14 +74,14 @@ export function ConfirmRemoveDialog({
               if (!member) return;
               removeMutation.mutate(member.pubkey, {
                 onSuccess: () => {
-                  toast.success("Member removed");
+                  toast.success(t`Member removed`);
                   handleOpenChange(false);
                 },
                 onError: (error) => {
                   toast.error(
                     error instanceof Error
                       ? error.message
-                      : "Failed to remove member",
+                      : t`Failed to remove member`,
                   );
                 },
               });
@@ -83,7 +89,7 @@ export function ConfirmRemoveDialog({
             size="sm"
             variant="destructive"
           >
-            {removeMutation.isPending ? "Removing..." : "Remove"}
+            {removeMutation.isPending ? t`Removing...` : t`Remove`}
           </Button>
         </div>
       </DialogContent>

@@ -1,7 +1,7 @@
+import { Trans, useLingui } from "@lingui/react/macro";
 import * as React from "react";
 import { MoreHorizontal, Plus, Shield, ShieldCheck, User } from "lucide-react";
 import { toast } from "sonner";
-import { Trans } from "@lingui/react/macro";
 
 import { useUsersBatchQuery } from "@/features/profile/hooks";
 import { truncateNpub } from "@/shared/lib/pubkey";
@@ -122,7 +122,9 @@ function MemberRow({
             </span>
             <RoleBadge role={member.role} />
             {isSelf ? (
-              <span className="text-xs text-muted-foreground">(you)</span>
+              <span className="text-xs text-muted-foreground">
+                <Trans>(you)</Trans>
+              </span>
             ) : null}
           </div>
           <p className="flex items-center gap-2 text-xs text-muted-foreground">
@@ -145,7 +147,9 @@ function MemberRow({
               variant="ghost"
             >
               <MoreHorizontal className="h-4 w-4" />
-              <span className="sr-only">Actions</span>
+              <span className="sr-only">
+                <Trans>Actions</Trans>
+              </span>
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
@@ -155,14 +159,14 @@ function MemberRow({
                   <DropdownMenuItem
                     onClick={() => onChangeRole(member.pubkey, "admin")}
                   >
-                    Make Admin
+                    <Trans>Make Admin</Trans>
                   </DropdownMenuItem>
                 ) : null}
                 {member.role === "admin" ? (
                   <DropdownMenuItem
                     onClick={() => onChangeRole(member.pubkey, "member")}
                   >
-                    Make Member
+                    <Trans>Make Member</Trans>
                   </DropdownMenuItem>
                 ) : null}
               </>
@@ -173,7 +177,7 @@ function MemberRow({
                 className="text-destructive focus:text-destructive"
                 onClick={() => onRemove(member)}
               >
-                Remove
+                <Trans>Remove</Trans>
               </DropdownMenuItem>
             ) : null}
           </DropdownMenuContent>
@@ -190,6 +194,7 @@ export function CommunityMembersCard({
 }: {
   currentPubkey?: string;
 }) {
+  const { t } = useLingui();
   const membersQuery = useRelayMembersQuery();
   const myMembershipQuery = useMyRelayMembershipQuery();
   const changeRoleMutation = useChangeRelayMemberRoleMutation();
@@ -226,7 +231,7 @@ export function CommunityMembersCard({
         },
         onError: (error) => {
           toast.error(
-            error instanceof Error ? error.message : "Failed to change role",
+            error instanceof Error ? error.message : t`Failed to change role`,
           );
         },
       },
@@ -240,11 +245,11 @@ export function CommunityMembersCard({
           <div className="flex items-center gap-2">
             <Shield className="h-4 w-4 text-muted-foreground" />
             <h2 className="text-sm font-semibold tracking-tight">
-              Community Members
+              <Trans>Community Members</Trans>
             </h2>
           </div>
           <p className="mt-1 text-sm text-muted-foreground">
-            Manage who has access to this relay.
+            <Trans>Manage who has access to this relay.</Trans>
           </p>
         </div>
 
@@ -255,7 +260,7 @@ export function CommunityMembersCard({
             size="sm"
           >
             <Plus className="h-4 w-4" />
-            Add Member
+            <Trans>Add Member</Trans>
           </Button>
         ) : null}
       </div>
@@ -267,7 +272,9 @@ export function CommunityMembersCard({
       ) : null}
 
       {membersQuery.isLoading ? (
-        <p className="mt-4 text-sm text-muted-foreground">Loading members...</p>
+        <p className="mt-4 text-sm text-muted-foreground">
+          <Trans>Loading members...</Trans>
+        </p>
       ) : members.length > 0 ? (
         <div className="mt-4 space-y-2">
           {members.map((member) => (
@@ -285,7 +292,9 @@ export function CommunityMembersCard({
           ))}
         </div>
       ) : membersQuery.isSuccess ? (
-        <p className="mt-4 text-sm text-muted-foreground">No members yet.</p>
+        <p className="mt-4 text-sm text-muted-foreground">
+          <Trans>No members yet.</Trans>
+        </p>
       ) : null}
 
       <AddMemberDialog

@@ -106,6 +106,10 @@ msgstr "(override at spawn time; {productName}-managed vars always win)"
 msgid "(per community)"
 msgstr "(per community)"
 
+#: src/features/community-members/ui/CommunityMembersCard.tsx
+msgid "(you)"
+msgstr "(you)"
+
 #: src/features/agents/ui/RespondToField.tsx
 msgid ") can always use this agent. You don't need to add yourself."
 msgstr ") can always use this agent. You don't need to add yourself."
@@ -695,6 +699,10 @@ msgstr "{days, plural, one {#d left} other {#d left}}"
 msgid "{days, plural, one {#d TTL} other {#d TTL}}"
 msgstr "{days, plural, one {#d TTL} other {#d TTL}}"
 
+#: src/features/community-members/lib/joinAlerts.ts
+msgid "{displayName} joined"
+msgstr "{displayName} joined"
+
 #: src/features/messages/ui/useAutoPinMentionedAgents.ts
 msgid "{displayName} will be mentioned automatically"
 msgstr "{displayName} will be mentioned automatically"
@@ -1125,6 +1133,7 @@ msgid "1 channel"
 msgstr "1 channel"
 
 #: src/features/channels/ui/ChannelTypeSettings.tsx
+#: src/features/community-members/ui/InviteLinkSection.tsx
 msgid "1 day"
 msgstr "1 day"
 
@@ -1133,9 +1142,17 @@ msgstr "1 day"
 msgid "1 hour"
 msgstr "1 hour"
 
+#: src/features/community-members/ui/InviteLinkSection.tsx
+msgid "1 use"
+msgstr "1 use"
+
 #: src/features/settings/ui/SignOutSection.tsx
 msgid "1. Confirm you can restore your identity"
 msgstr "1. Confirm you can restore your identity"
+
+#: src/features/community-members/ui/InviteLinkSection.tsx
+msgid "10 uses"
+msgstr "10 uses"
 
 #: src/features/channels/ui/ChannelTypeSettings.tsx
 msgid "12 hours"
@@ -1153,11 +1170,21 @@ msgstr "2. Type <0>\"{SIGNOUT_CONFIRM_PHRASE}\"</0> to confirm"
 msgid "24 hours"
 msgstr "24 hours"
 
+#: src/features/community-members/ui/InviteLinkSection.tsx
+msgid "25 uses"
+msgstr "25 uses"
+
 #: src/features/channels/ui/ChannelTypeSettings.tsx
+#: src/features/community-members/ui/InviteLinkSection.tsx
 msgid "3 days"
 msgstr "3 days"
 
+#: src/features/community-members/ui/InviteLinkSection.tsx
+msgid "3 uses"
+msgstr "3 uses"
+
 #: src/features/channels/ui/ChannelTypeSettings.tsx
+#: src/features/community-members/ui/InviteLinkSection.tsx
 msgid "30 days"
 msgstr "30 days"
 
@@ -1165,12 +1192,17 @@ msgstr "30 days"
 msgid "30 minutes"
 msgstr "30 minutes"
 
+#: src/features/community-members/ui/InviteLinkSection.tsx
+msgid "5 uses"
+msgstr "5 uses"
+
 #: src/features/channels/ui/ChannelTypeSettings.tsx
 msgid "6 hours"
 msgstr "6 hours"
 
 #: src/features/channels/ui/ChannelTypeSettings.tsx
 #: src/features/channels/ui/MembersSidebarMemberCard.tsx
+#: src/features/community-members/ui/InviteLinkSection.tsx
 msgid "7 days"
 msgstr "7 days"
 
@@ -1316,10 +1348,15 @@ msgstr "ACP:"
 msgid "Action needed"
 msgstr "Action needed"
 
+#: src/features/community-members/ui/CommunityMembersCard.tsx
 #: src/features/projects/ui/ProjectsWorkItemTable.tsx
 #: src/features/search/ui/TopbarSearch.tsx
 msgid "Actions"
 msgstr "Actions"
+
+#: src/features/community-members/ui/CommunityMembersSettingsCard.tsx
+msgid "Actions for {displayName}"
+msgstr "Actions for {displayName}"
 
 #: src/features/projects/ui/ProjectRepositoryActionsPanel.tsx
 #: src/features/projects/ui/projectsOverviewContext.ts
@@ -1429,6 +1466,10 @@ msgstr "Add a forum"
 msgid "Add a name and avatar. They’ll show up on your messages, reactions, and agent handoffs."
 msgstr "Add a name and avatar. They’ll show up on your messages, reactions, and agent handoffs."
 
+#: src/features/community-members/ui/AddMemberDialog.tsx
+msgid "Add a person to this community by their public key."
+msgstr "Add a person to this community by their public key."
+
 #: src/features/profile/ui/AvatarUpload.tsx
 msgid "Add a profile photo"
 msgstr "Add a profile photo"
@@ -1529,6 +1570,14 @@ msgstr "Add line comment"
 msgid "Add link"
 msgstr "Add link"
 
+#: src/features/community-members/ui/AddMemberDialog.tsx
+msgid "Add member"
+msgstr "Add member"
+
+#: src/features/community-members/ui/CommunityMembersCard.tsx
+msgid "Add Member"
+msgstr "Add Member"
+
 #: src/features/channels/ui/ChannelMemberInviteCard.tsx
 msgid "Add members"
 msgstr "Add members"
@@ -1572,6 +1621,10 @@ msgstr "Add reviewer"
 #: src/features/settings/ui/HarnessesSettingsPanel.tsx
 msgid "Add runtimes"
 msgstr "Add runtimes"
+
+#: src/features/community-members/ui/CommunityInviteDialog.tsx
+msgid "Add someone directly or share a link they can use to join."
+msgstr "Add someone directly or share a link they can use to join."
 
 #: src/features/agents/ui/CommunityCatalogDialog.tsx
 #: src/features/agents/ui/teamLibraryCopy.ts
@@ -1624,6 +1677,10 @@ msgstr "Added {0} to #{1}"
 #: src/features/agents/ui/useTeamActions.ts
 msgid "Added {0} to your teams."
 msgstr "Added {0} to your teams."
+
+#: src/features/community-members/ui/CommunityMembersSettingsCard.tsx
+msgid "Added {addedAt}"
+msgstr "Added {addedAt}"
 
 #: src/features/profile/ui/UserProfilePanel.tsx
 msgid "Added {agentName} to {channelName}."
@@ -1683,9 +1740,22 @@ msgid "admin"
 msgstr "admin"
 
 #: src/features/channels/ui/MembersSidebarMemberCard.tsx
-#: src/features/settings/ui/SettingsPanels.tsx
+#: src/features/community-members/ui/AddMemberDialog.tsx
 msgid "Admin"
 msgstr "Admin"
+
+#: src/features/settings/ui/SettingsPanels.tsx
+msgctxt "settings section"
+msgid "Admin"
+msgstr "Admin"
+
+#: src/features/community-members/ui/AddMemberDialog.tsx
+msgid "Admin added"
+msgstr "Admin added"
+
+#: src/features/community-members/ui/AddMemberDialog.tsx
+msgid "Admins added"
+msgstr "Admins added"
 
 #: src/features/agents/ui/AgentConfigFields.tsx
 #: src/features/agents/ui/AgentConfigPanel.tsx
@@ -2745,6 +2815,7 @@ msgstr "Can't reach this relay — check the URL"
 #: src/features/communities/ui/CommunityEditForm.tsx
 #: src/features/communities/ui/CommunitySwitcher.tsx
 #: src/features/communities/ui/EditCommunityDialog.tsx
+#: src/features/community-members/ui/ConfirmRemoveDialog.tsx
 #: src/features/messages/lib/useLinkEditor.tsx
 #: src/features/messages/ui/ComposerImageEditor.tsx
 #: src/features/messages/ui/DeleteMessageConfirmDialog.tsx
@@ -3080,6 +3151,7 @@ msgstr "Checking conversation members. Try again in a moment."
 msgid "Checking for updates..."
 msgstr "Checking for updates..."
 
+#: src/features/community-members/ui/CommunityMembersSettingsCard.tsx
 #: src/features/settings/ui/SettingsView.tsx
 msgid "Checking invite permissions…"
 msgstr "Checking invite permissions…"
@@ -3283,6 +3355,18 @@ msgstr "Choose how your agents will access AI. You can change this later."
 #: src/features/onboarding/ui/SetupStep.tsx
 msgid "Choose how your agents will connect to AI providers. You can change this at any time."
 msgstr "Choose how your agents will connect to AI providers. You can change this at any time."
+
+#: src/features/community-members/ui/InviteLinkSection.tsx
+msgid "Choose invite expiry"
+msgstr "Choose invite expiry"
+
+#: src/features/community-members/ui/InviteLinkSection.tsx
+msgid "Choose maximum invite uses"
+msgstr "Choose maximum invite uses"
+
+#: src/features/community-members/ui/AddMemberDialog.tsx
+msgid "Choose member role"
+msgstr "Choose member role"
 
 #: src/features/agents/ui/personaLibraryCopy.ts
 msgid "Choose one from Agent Catalog, create your own, or import one to get started."
@@ -3681,9 +3765,17 @@ msgstr "Community connection failed"
 msgid "Community icon"
 msgstr "Community icon"
 
+#: src/features/community-members/ui/InviteLinkSection.tsx
+msgid "Community invite link"
+msgstr "Community invite link"
+
 #: src/features/agents/ui/catalogOwnerLabel.ts
 msgid "Community member"
 msgstr "Community member"
+
+#: src/features/community-members/ui/CommunityMembersCard.tsx
+msgid "Community Members"
+msgstr "Community Members"
 
 #: src/features/communities/ui/CommunityEditForm.tsx
 #: src/features/communities/ui/HostedCommunityOnboarding.tsx
@@ -3693,6 +3785,10 @@ msgstr "Community name"
 #: src/features/communities/ui/HostedCommunityOnboarding.tsx
 msgid "Community name here"
 msgstr "Community name here"
+
+#: src/features/community-members/ui/CommunityMembersSettingsCard.tsx
+msgid "Community owner"
+msgstr "Community owner"
 
 #: src/features/communities/hostedCommunityApi.ts
 msgid "Community provisioning is temporarily unavailable."
@@ -3981,6 +4077,7 @@ msgid "Converted to draft."
 msgstr "Converted to draft."
 
 #: src/features/communities/ui/WelcomeSetup.tsx
+#: src/features/community-members/ui/InviteLinkSection.tsx
 #: src/features/onboarding/ui/IdentityRecoveryPairing.tsx
 #: src/features/profile/ui/NostrBindConsentDialog.tsx
 msgid "Copied"
@@ -4036,6 +4133,7 @@ msgid "Copy community URL"
 msgstr "Copy community URL"
 
 #: src/features/agents/ui/PersonaShareDialog.tsx
+#: src/features/community-members/ui/InviteLinkSection.tsx
 #: src/features/messages/ui/MessageActionBar.tsx
 #: src/features/sidebar/ui/SidebarProjectsSection.tsx
 msgid "Copy link"
@@ -4307,9 +4405,21 @@ msgstr "Couldn't connect {0}: {reason}"
 msgid "Couldn’t copy link. Try again."
 msgstr "Couldn’t copy link. Try again."
 
+#: src/features/community-members/ui/InviteLinkSection.tsx
+msgid "Couldn’t copy the invite link. Try again."
+msgstr "Couldn’t copy the invite link. Try again."
+
+#: src/features/community-members/ui/InviteLinkSection.tsx
+msgid "Couldn’t create an invite link."
+msgstr "Couldn’t create an invite link."
+
 #: src/features/settings/EncryptedBackupProvider.tsx
 msgid "Couldn’t create backup"
 msgstr "Couldn’t create backup"
+
+#: src/features/community-members/ui/InviteLinkSection.tsx
+msgid "Couldn’t create invite link"
+msgstr "Couldn’t create invite link"
 
 #: src/features/agents/ui/HarnessCatalogRetryNotice.tsx
 msgid "Couldn't detect agent harnesses."
@@ -4468,6 +4578,10 @@ msgstr "Couldn't switch models — the agent wasn't running a turn to switch."
 #: src/features/communities/ui/CommunityIconSettingsCard.tsx
 msgid "Couldn’t update the community icon."
 msgstr "Couldn’t update the community icon."
+
+#: src/features/community-members/ui/CommunityMembersSettingsCard.tsx
+msgid "Couldn’t update this community member."
+msgstr "Couldn’t update this community member."
 
 #: src/features/onboarding/ui/SetupStep.tsx
 msgid "Couldn’t verify authentication."
@@ -4744,6 +4858,10 @@ msgstr "Creating agent…"
 #: src/features/settings/ui/HostedCommunitiesSettingsCard.tsx
 msgid "Creating community…"
 msgstr "Creating community…"
+
+#: src/features/community-members/ui/InviteLinkSection.tsx
+msgid "Creating invite link…"
+msgstr "Creating invite link…"
 
 #: src/features/onboarding/ui/IdentityKeyIntroduction.tsx
 msgid "Creating key…"
@@ -5818,6 +5936,7 @@ msgid "Experiments"
 msgstr "Experiments"
 
 #: src/features/channels/ui/ChannelTypeSettings.tsx
+#: src/features/community-members/ui/InviteLinkSection.tsx
 msgid "Expires after"
 msgstr "Expires after"
 
@@ -5870,6 +5989,10 @@ msgstr "Failed to attach image."
 #: src/features/projects/ui/AttachProjectRepositoryDialog.tsx
 msgid "Failed to attach repository."
 msgstr "Failed to attach repository."
+
+#: src/features/community-members/ui/CommunityMembersCard.tsx
+msgid "Failed to change role"
+msgstr "Failed to change role"
 
 #: src/features/channels/ui/useMembersSidebarActions.ts
 msgid "Failed to control agent."
@@ -6030,6 +6153,10 @@ msgstr "Failed to read team snapshot file."
 #: src/features/channels/ui/useMembersSidebarActions.ts
 msgid "Failed to remove bot from channel."
 msgstr "Failed to remove bot from channel."
+
+#: src/features/community-members/ui/ConfirmRemoveDialog.tsx
+msgid "Failed to remove member"
+msgstr "Failed to remove member"
 
 #: src/features/channels/ui/useMembersSidebarActions.ts
 msgid "Failed to remove member."
@@ -6881,9 +7008,14 @@ msgstr "Instances"
 msgid "Interrupt the current ACP turn without stopping the agent process."
 msgstr "Interrupt the current ACP turn without stopping the agent process."
 
+#: src/features/community-members/ui/CommunityInviteDialog.tsx
 #: src/features/messages/ui/NonMemberMentionDialog.tsx
 msgid "Invite"
 msgstr "Invite"
+
+#: src/features/community-members/ui/InviteLinkSection.tsx
+msgid "Invite link copied"
+msgstr "Invite link copied"
 
 #: src/features/onboarding/ui/InviteRedeemForm.tsx
 msgid "Invite link or code"
@@ -6914,10 +7046,13 @@ msgid "Invite them to the channel, or send without inviting them."
 msgstr "Invite them to the channel, or send without inviting them."
 
 #: src/features/communities/ui/CommunitySwitcher.tsx
+#: src/features/community-members/ui/CommunityInviteDialog.tsx
+#: src/features/community-members/ui/CommunityMembersSettingsCard.tsx
 #: src/features/sidebar/ui/CommunityRail.tsx
 msgid "Invite to community"
 msgstr "Invite to community"
 
+#: src/features/community-members/ui/CommunityMembersSettingsCard.tsx
 #: src/features/settings/ui/SettingsPanels.tsx
 msgid "Invites"
 msgstr "Invites"
@@ -6925,6 +7060,10 @@ msgstr "Invites"
 #: src/features/messages/ui/NonMemberMentionDialog.tsx
 msgid "Inviting..."
 msgstr "Inviting..."
+
+#: src/features/community-members/ui/AddMemberDialog.tsx
+msgid "Inviting…"
+msgstr "Inviting…"
 
 #: src/features/agents/ui/CardMintKeyCue.tsx
 msgid "is set under Advanced → Environment variables."
@@ -7208,6 +7347,10 @@ msgstr "Lift timeout"
 msgid "Light"
 msgstr "Light"
 
+#: src/features/community-members/ui/InviteLinkSection.tsx
+msgid "Limit number of uses"
+msgstr "Limit number of uses"
+
 #: src/features/projects/ui/ProjectPullRequestFilesChangedPanel.tsx
 msgid "Line comment posted."
 msgstr "Line comment posted."
@@ -7315,6 +7458,10 @@ msgstr "Loading channels…"
 msgid "Loading commits"
 msgstr "Loading commits"
 
+#: src/features/community-members/ui/CommunityMembersSettingsCard.tsx
+msgid "Loading community members…"
+msgstr "Loading community members…"
+
 #: src/features/agents/ui/AgentConfigPanel.tsx
 msgid "Loading configuration…"
 msgstr "Loading configuration…"
@@ -7356,6 +7503,7 @@ msgid "Loading link preview details"
 msgstr "Loading link preview details"
 
 #: src/features/channels/ui/MembersSidebar.tsx
+#: src/features/community-members/ui/CommunityMembersCard.tsx
 msgid "Loading members..."
 msgstr "Loading members..."
 
@@ -7495,6 +7643,30 @@ msgstr "Log in with a subscription"
 msgid "Lower values reveal more of the desktop blur."
 msgstr "Lower values reveal more of the desktop blur."
 
+#: src/features/community-members/ui/CommunityMembersSettingsCard.tsx
+msgid "Made community admin"
+msgstr "Made community admin"
+
+#: src/features/community-members/ui/CommunityMembersSettingsCard.tsx
+msgid "Made community member"
+msgstr "Made community member"
+
+#: src/features/community-members/ui/CommunityMembersSettingsCard.tsx
+msgid "Make admin"
+msgstr "Make admin"
+
+#: src/features/community-members/ui/CommunityMembersCard.tsx
+msgid "Make Admin"
+msgstr "Make Admin"
+
+#: src/features/community-members/ui/CommunityMembersSettingsCard.tsx
+msgid "Make member"
+msgstr "Make member"
+
+#: src/features/community-members/ui/CommunityMembersCard.tsx
+msgid "Make Member"
+msgstr "Make Member"
+
 #: src/features/agents/ui/ManagedAgentRow.tsx
 msgid "Manage"
 msgstr "Manage"
@@ -7511,6 +7683,10 @@ msgstr "Manage agent access..."
 msgid "Manage channel"
 msgstr "Manage channel"
 
+#: src/features/community-members/ui/CommunityMembersSettingsCard.tsx
+msgid "Manage members and community access."
+msgstr "Manage members and community access."
+
 #: src/features/messages/ui/ComposerAddressControls.tsx
 msgid "Manage mentions"
 msgstr "Manage mentions"
@@ -7518,6 +7694,10 @@ msgstr "Manage mentions"
 #: src/features/projects/ui/ProjectRepositoryManagement.tsx
 msgid "Manage repository access"
 msgstr "Manage repository access"
+
+#: src/features/community-members/ui/CommunityMembersCard.tsx
+msgid "Manage who has access to this relay."
+msgstr "Manage who has access to this relay."
 
 #: src/features/messages/ui/MessageAgentOwner.tsx
 msgid "managed by"
@@ -7630,12 +7810,21 @@ msgid "member"
 msgstr "member"
 
 #: src/features/channels/ui/MembersSidebarMemberCard.tsx
+#: src/features/community-members/ui/AddMemberDialog.tsx
 msgid "Member"
 msgstr "Member"
+
+#: src/features/community-members/ui/AddMemberDialog.tsx
+msgid "Member added"
+msgstr "Member added"
 
 #: src/features/channels/ui/useMembersSidebarModeration.ts
 msgid "Member banned"
 msgstr "Member banned"
+
+#: src/features/community-members/ui/ConfirmRemoveDialog.tsx
+msgid "Member removed"
+msgstr "Member removed"
 
 #: src/features/channels/ui/useMembersSidebarModeration.ts
 msgid "Member timed out"
@@ -7644,12 +7833,17 @@ msgstr "Member timed out"
 #: src/features/channels/ui/ChannelManagementSheet.tsx
 #: src/features/channels/ui/ChannelMembersBar.tsx
 #: src/features/channels/ui/MembersSidebar.tsx
+#: src/features/community-members/ui/CommunityMembersSettingsCard.tsx
 msgid "Members"
 msgstr "Members"
 
 #: src/features/agents/ui/TeamSnapshotImportDialog.tsx
 msgid "Members ("
 msgstr "Members ("
+
+#: src/features/community-members/ui/AddMemberDialog.tsx
+msgid "Members added"
+msgstr "Members added"
 
 #: src/features/projects/ui/AddProjectRepositoryDialog.tsx
 msgid "Members of this channel can access the repository."
@@ -8049,6 +8243,10 @@ msgstr "New and existing connections stop and the address stays reserved. Archiv
 msgid "New channel"
 msgstr "New channel"
 
+#: src/features/community-members/lib/joinAlerts.ts
+msgid "New community member"
+msgstr "New community member"
+
 #: src/shared/lib/keyboard-shortcuts.ts
 msgid "New direct message"
 msgstr "New direct message"
@@ -8060,6 +8258,10 @@ msgstr "New forum"
 #: src/shared/lib/keyboard-shortcuts.ts
 msgid "New line"
 msgstr "New line"
+
+#: src/features/community-members/lib/joinAlerts.ts
+msgid "New member in {trimmed}"
+msgstr "New member in {trimmed}"
 
 #: src/features/sidebar/ui/AppSidebar.tsx
 #: src/features/sidebar/ui/CustomChannelSection.tsx
@@ -8292,6 +8494,10 @@ msgstr "No commits yet"
 msgid "No community"
 msgstr "No community"
 
+#: src/features/community-members/ui/CommunityMembersSettingsCard.tsx
+msgid "No community members yet."
+msgstr "No community members yet."
+
 #: src/features/agents/ui/AgentConfigPanel.tsx
 msgid "No config fields available."
 msgstr "No config fields available."
@@ -8382,6 +8588,10 @@ msgstr "No joined channels"
 msgid "No joined forums"
 msgstr "No joined forums"
 
+#: src/features/community-members/ui/InviteLinkSection.tsx
+msgid "No limit"
+msgstr "No limit"
+
 #: src/features/projects/ui/DiscussionChannels.tsx
 msgid "No linked channels yet"
 msgstr "No linked channels yet"
@@ -8451,8 +8661,13 @@ msgid "No members found."
 msgstr "No members found."
 
 #: src/features/channels/ui/MembersSidebar.tsx
+#: src/features/community-members/ui/CommunityMembersSettingsCard.tsx
 msgid "No members match your search."
 msgstr "No members match your search."
+
+#: src/features/community-members/ui/CommunityMembersCard.tsx
+msgid "No members yet."
+msgstr "No members yet."
 
 #: src/features/agents/ui/AgentSnapshotImportDialog.tsx
 msgid "No memory included — config only."
@@ -8499,6 +8714,10 @@ msgstr "No options available"
 #: src/features/agents/ui/PersonaShareRecipients.tsx
 msgid "No people found."
 msgstr "No people found."
+
+#: src/features/community-members/ui/AddMemberDialog.tsx
+msgid "No people found. Paste a full npub or hex public key to add someone directly."
+msgstr "No people found. Paste a full npub or hex public key to add someone directly."
 
 #: src/features/messages/ui/NewMessageScreen.tsx
 msgid "No people or agents available to message."
@@ -9225,6 +9444,10 @@ msgstr "Or drop an .agent.json or .agent.png snapshot here to import."
 msgid "Or paste a direct image URL."
 msgstr "Or paste a direct image URL."
 
+#: src/features/community-members/ui/CommunityInviteDialog.tsx
+msgid "Or, copy a link"
+msgstr "Or, copy a link"
+
 #: src/features/messages/ui/FormattingToolbar.tsx
 msgid "Ordered list"
 msgstr "Ordered list"
@@ -9402,6 +9625,7 @@ msgstr "Periods"
 msgid "Permission requested"
 msgstr "Permission requested"
 
+#: src/features/community-members/ui/AddMemberDialog.tsx
 #: src/features/projects/ui/ProjectAuthorIdentity.tsx
 msgid "Person"
 msgstr "Person"
@@ -10192,6 +10416,8 @@ msgstr "Remote deployment"
 #: src/features/agents/ui/RemoveMembersConfirmDialog.tsx
 #: src/features/channels/ui/ChannelLogoEditor.tsx
 #: src/features/communities/ui/CommunitySwitcher.tsx
+#: src/features/community-members/ui/CommunityMembersCard.tsx
+#: src/features/community-members/ui/ConfirmRemoveDialog.tsx
 #: src/features/messages/lib/useLinkEditor.tsx
 #: src/features/messages/ui/AudioMessageAttachment.tsx
 #: src/features/messages/ui/ComposerAttachments.tsx
@@ -10216,6 +10442,10 @@ msgstr "Remove {displayName}"
 #: src/features/profile/ui/SelectedRecipientChip.tsx
 msgid "Remove {label}"
 msgstr "Remove {label}"
+
+#: src/features/community-members/ui/ConfirmRemoveDialog.tsx
+msgid "Remove {label}?"
+msgstr "Remove {label}?"
 
 #: src/features/messages/ui/ComposerAttachments.tsx
 msgid "Remove {mediaLabel}"
@@ -10245,6 +10475,10 @@ msgstr "Remove env var"
 #: src/features/channels/ui/MembersSidebarMemberCard.tsx
 msgid "Remove from channel"
 msgstr "Remove from channel"
+
+#: src/features/community-members/ui/CommunityMembersSettingsCard.tsx
+msgid "Remove from community"
+msgstr "Remove from community"
 
 #: src/features/sidebar/ui/ChannelContextMenu.tsx
 msgid "Remove from section"
@@ -10283,6 +10517,10 @@ msgstr "removed"
 msgid "Removed {agentName} from My Agents."
 msgstr "Removed {agentName} from My Agents."
 
+#: src/features/community-members/ui/CommunityMembersSettingsCard.tsx
+msgid "Removed community member"
+msgstr "Removed community member"
+
 #: src/features/profile/ui/UserProfileAgentManagementRows.tsx
 msgid "Removes the agent from every channel it belongs to"
 msgstr "Removes the agent from every channel it belongs to"
@@ -10303,6 +10541,10 @@ msgstr "Removing {0} is queued. It may remain discoverable until the relay accep
 #: src/features/agents/ui/teamLibraryCopy.ts
 msgid "Removing {teamName} is queued. It may remain discoverable until the relay accepts the update."
 msgstr "Removing {teamName} is queued. It may remain discoverable until the relay accepts the update."
+
+#: src/features/community-members/ui/ConfirmRemoveDialog.tsx
+msgid "Removing..."
+msgstr "Removing..."
 
 #: src/features/sidebar/ui/ChannelSectionDialogs.tsx
 #: src/features/sidebar/ui/CustomChannelSection.tsx
@@ -10599,6 +10841,7 @@ msgstr "Retake the recording"
 #: src/features/agents/ui/ModelPicker.tsx
 #: src/features/channels/ui/ChannelWorkflowsSection.tsx
 #: src/features/communities/ui/CommunityApplyErrorScreen.tsx
+#: src/features/community-members/ui/InviteLinkSection.tsx
 #: src/features/home/ui/InboxDetailPane.tsx
 #: src/features/home/ui/InboxListPane.tsx
 #: src/features/home/ui/ProjectInboxDetail.tsx
@@ -10964,6 +11207,10 @@ msgstr "Search forums by name or description"
 msgid "Search in {scopeLabel}"
 msgstr "Search in {scopeLabel}"
 
+#: src/features/community-members/ui/CommunityMembersSettingsCard.tsx
+msgid "Search members"
+msgstr "Search members"
+
 #: src/features/search/ui/SearchScopeControls.tsx
 msgid "Search messages"
 msgstr "Search messages"
@@ -11014,6 +11261,10 @@ msgstr "Search people"
 msgid "Search people and agents"
 msgstr "Search people and agents"
 
+#: src/features/community-members/ui/AddMemberDialog.tsx
+msgid "Search people or paste an npub"
+msgstr "Search people or paste an npub"
+
 #: src/features/channels/ui/ChannelMemberInviteCard.tsx
 msgid "Search people, or paste a public key"
 msgstr "Search people, or paste a public key"
@@ -11040,6 +11291,7 @@ msgstr "Searching..."
 
 #: src/features/agents/ui/RespondToField.tsx
 #: src/features/channels/ui/ChannelMemberInviteCard.tsx
+#: src/features/community-members/ui/AddMemberDialog.tsx
 #: src/features/projects/ui/IssueAssigneesRow.tsx
 #: src/features/projects/ui/PullRequestReviewersRow.tsx
 msgid "Searching…"
@@ -12648,6 +12900,10 @@ msgstr "This only affects <0>this space</0> — not their account anywhere else"
 msgid "This pairing code expired or lost its connection. Create a new code and try again."
 msgstr "This pairing code expired or lost its connection. Create a new code and try again."
 
+#: src/features/community-members/ui/AddMemberDialog.tsx
+msgid "This person is already a community member."
+msgstr "This person is already a community member."
+
 #: src/features/projects/ui/ProjectChannelRequestDialog.tsx
 msgid "this project"
 msgstr "this project"
@@ -12740,6 +12996,10 @@ msgstr "This will create a new identity and abandon your previous key. This cann
 #: src/features/settings/ui/SignOutSection.tsx
 msgid "This will delete your identity key, all agent settings, and cached data from this device, then relaunch {productName} into first-run setup. This cannot be undone."
 msgstr "This will delete your identity key, all agent settings, and cached data from this device, then relaunch {productName} into first-run setup. This cannot be undone."
+
+#: src/features/community-members/ui/ConfirmRemoveDialog.tsx
+msgid "This will immediately revoke their access to the relay."
+msgstr "This will immediately revoke their access to the relay."
 
 #: src/features/messages/ui/DeleteMessageConfirmDialog.tsx
 msgid "This will permanently delete this message and cannot be undone."
@@ -13138,6 +13398,10 @@ msgstr "Unlock your system keyring"
 #: src/features/sidebar/ui/ChannelContextMenu.tsx
 msgid "Unmute channel"
 msgstr "Unmute channel"
+
+#: src/features/community-members/ui/CommunityMembersSettingsCard.tsx
+msgid "Unnamed member"
+msgstr "Unnamed member"
 
 #: src/features/settings/ui/HostedCommunitiesSettingsCard.tsx
 msgid "Unpair identity"
@@ -14006,6 +14270,7 @@ msgstr "Yes"
 msgid "Yesterday"
 msgstr "Yesterday"
 
+#: src/features/community-members/ui/CommunityMembersSettingsCard.tsx
 #: src/features/messages/ui/DraftDetailPane.tsx
 #: src/features/profile/ui/AnimatedAvatarReviewNav.tsx
 msgid "You"
