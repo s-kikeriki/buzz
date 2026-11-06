@@ -6044,15 +6044,11 @@ msgid "Databricks"
 msgstr ""
 
 #: src/features/agents/ui/personaModelDiscoveryStatus.ts
-msgid "Databricks sign-in failed"
+msgid "Databricks sign-in didn't complete. Open the model picker to retry, or run `buzz-agent auth databricks` in a terminal."
 msgstr ""
 
 #: src/features/agents/ui/personaModelDiscoveryStatus.ts
-msgid "Databricks sign-in is required"
-msgstr ""
-
-#: src/features/agents/ui/personaModelDiscoveryStatus.ts
-msgid "Databricks sign-in timed out"
+msgid "Databricks sign-in is required. Open the model picker to sign in, or run `buzz-agent auth databricks` in a terminal."
 msgstr ""
 
 #: src/features/agents/ui/agentConfigOptions.tsx
@@ -7195,6 +7191,10 @@ msgstr ""
 
 #: src/features/agents/ui/personaModelDiscoveryStatus.ts
 msgid "Enter an Anthropic API key to load Anthropic models."
+msgstr ""
+
+#: src/features/agents/ui/personaModelDiscoveryStatus.ts
+msgid "Enter an OpenAI runtime API key (OPENAI_COMPAT_API_KEY) to load OpenAI models."
 msgstr ""
 
 #: src/features/settings/ui/MobilePairingCard.tsx
@@ -10785,6 +10785,10 @@ msgstr ""
 msgid "No matching variables"
 msgstr ""
 
+#: src/features/agents/ui/personaModelDiscoveryStatus.ts
+msgid "No members are sharing compute right now. On a member machine, open Settings > Compute, choose a model, and turn on Share this machine."
+msgstr ""
+
 #: src/features/channels/ui/MembersSidebar.tsx
 msgid "No members found."
 msgstr ""
@@ -11685,6 +11689,7 @@ msgid "OPENAI_API_KEY"
 msgstr ""
 
 #: src/features/agents/ui/agentConfigOptions.tsx
+#: src/features/agents/ui/personaModelDiscoveryStatus.ts
 msgid "OpenAI-compatible"
 msgstr ""
 
@@ -14465,6 +14470,10 @@ msgstr ""
 msgid "Set Channel Topic"
 msgstr ""
 
+#: src/features/agents/ui/personaModelDiscoveryStatus.ts
+msgid "Set DATABRICKS_HOST to your Databricks workspace URL under Advanced to load Databricks models."
+msgstr ""
+
 #: src/features/agents/ui/EnvVarsEditor.tsx
 msgid "Set in goose config"
 msgstr ""
@@ -16109,6 +16118,10 @@ msgstr ""
 
 #: src/features/projects/ui/ProjectChannelHome.tsx
 msgid "This project's channel could not be found."
+msgstr ""
+
+#: src/features/agents/ui/personaModelDiscoveryStatus.ts
+msgid "this provider"
 msgstr ""
 
 #: src/features/profile/ui/UserProfilePanelPersonaSubmit.ts

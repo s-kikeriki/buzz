@@ -6044,16 +6044,12 @@ msgid "Databricks"
 msgstr "Databricks"
 
 #: src/features/agents/ui/personaModelDiscoveryStatus.ts
-msgid "Databricks sign-in failed"
-msgstr "Databricks-Anmeldung fehlgeschlagen"
+msgid "Databricks sign-in didn't complete. Open the model picker to retry, or run `buzz-agent auth databricks` in a terminal."
+msgstr "Die Databricks-Anmeldung wurde nicht abgeschlossen. Öffne die Modellauswahl, um es erneut zu versuchen, oder führe `buzz-agent auth databricks` im Terminal aus."
 
 #: src/features/agents/ui/personaModelDiscoveryStatus.ts
-msgid "Databricks sign-in is required"
-msgstr "Databricks-Anmeldung erforderlich"
-
-#: src/features/agents/ui/personaModelDiscoveryStatus.ts
-msgid "Databricks sign-in timed out"
-msgstr "Zeitüberschreitung bei der Databricks-Anmeldung"
+msgid "Databricks sign-in is required. Open the model picker to sign in, or run `buzz-agent auth databricks` in a terminal."
+msgstr "Eine Databricks-Anmeldung ist erforderlich. Öffne die Modellauswahl, um dich anzumelden, oder führe `buzz-agent auth databricks` im Terminal aus."
 
 #: src/features/agents/ui/agentConfigOptions.tsx
 msgid "Databricks v2"
@@ -7196,6 +7192,10 @@ msgstr "Gib eine gültige ws:// oder wss:// Relay-URL ein."
 #: src/features/agents/ui/personaModelDiscoveryStatus.ts
 msgid "Enter an Anthropic API key to load Anthropic models."
 msgstr "Gib einen Anthropic-API-Schlüssel ein, um Anthropic-Modelle zu laden."
+
+#: src/features/agents/ui/personaModelDiscoveryStatus.ts
+msgid "Enter an OpenAI runtime API key (OPENAI_COMPAT_API_KEY) to load OpenAI models."
+msgstr "Gib einen OpenAI-Runtime-API-Schlüssel (OPENAI_COMPAT_API_KEY) ein, um OpenAI-Modelle zu laden."
 
 #: src/features/settings/ui/MobilePairingCard.tsx
 msgid "Enter code on your phone"
@@ -10785,6 +10785,10 @@ msgstr "Keine passenden Nutzer."
 msgid "No matching variables"
 msgstr "Keine passenden Variablen"
 
+#: src/features/agents/ui/personaModelDiscoveryStatus.ts
+msgid "No members are sharing compute right now. On a member machine, open Settings > Compute, choose a model, and turn on Share this machine."
+msgstr "Gerade teilt kein Mitglied Rechenleistung. Öffne auf dem Rechner eines Mitglieds Einstellungen > Rechenleistung, wähle ein Modell und aktiviere „Share this machine“."
+
 #: src/features/channels/ui/MembersSidebar.tsx
 msgid "No members found."
 msgstr "Keine Mitglieder gefunden."
@@ -11685,6 +11689,7 @@ msgid "OPENAI_API_KEY"
 msgstr "OPENAI_API_KEY"
 
 #: src/features/agents/ui/agentConfigOptions.tsx
+#: src/features/agents/ui/personaModelDiscoveryStatus.ts
 msgid "OpenAI-compatible"
 msgstr "OpenAI-kompatibel"
 
@@ -14465,6 +14470,10 @@ msgstr "Agent-Standardwerte festlegen"
 msgid "Set Channel Topic"
 msgstr "Kanalthema setzen"
 
+#: src/features/agents/ui/personaModelDiscoveryStatus.ts
+msgid "Set DATABRICKS_HOST to your Databricks workspace URL under Advanced to load Databricks models."
+msgstr "Setze DATABRICKS_HOST unter „Erweitert“ auf die URL deines Databricks-Workspace, um Databricks-Modelle zu laden."
+
 #: src/features/agents/ui/EnvVarsEditor.tsx
 msgid "Set in goose config"
 msgstr "In der goose-Konfiguration gesetzt"
@@ -16110,6 +16119,10 @@ msgstr "Dieser Projekteintrag wurde nicht gefunden."
 #: src/features/projects/ui/ProjectChannelHome.tsx
 msgid "This project's channel could not be found."
 msgstr "Der Kanal dieses Projekts wurde nicht gefunden."
+
+#: src/features/agents/ui/personaModelDiscoveryStatus.ts
+msgid "this provider"
+msgstr "diesen Anbieter"
 
 #: src/features/profile/ui/UserProfilePanelPersonaSubmit.ts
 msgid "This provider"

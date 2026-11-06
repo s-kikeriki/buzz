@@ -857,6 +857,18 @@ const OVERRIDES = new Map([
     "JSON-RPC machine token. The function compares the harness message to this exact English string before choosing the translated hint.",
   ],
   [
+    "src/features/agents/ui/personaModelDiscoveryStatus.ts:49",
+    "Backend error text from agent_models_databricks.rs, which has no i18n and always emits English. Matched verbatim; the status it selects is translated at the return site.",
+  ],
+  [
+    "src/features/agents/ui/personaModelDiscoveryStatus.ts:50",
+    "Backend error text from agent_models_databricks.rs, which has no i18n and always emits English. Matched verbatim; the status it selects is translated at the return site.",
+  ],
+  [
+    "src/features/agents/ui/personaModelDiscoveryStatus.ts:51",
+    "Backend error text from agent_models_databricks.rs, which has no i18n and always emits English. Matched verbatim; the status it selects is translated at the return site.",
+  ],
+  [
     "src/features/agents/managedAgentRuntimeStatus.ts:13",
     "Status token compared by the sidebar and its tests. The badge translates it at the render site.",
   ],

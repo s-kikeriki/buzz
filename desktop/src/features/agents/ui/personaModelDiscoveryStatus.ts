@@ -24,16 +24,31 @@ function errorMessage(error: unknown): string {
 
 function providerObjectLabel(provider: string): string {
   switch (provider.trim()) {
+    // Product names, deliberately untranslated.
     case "anthropic":
       return "Anthropic";
     case "openai":
       return "OpenAI";
     case "openai-compat":
-      return "OpenAI-compatible";
+      return t`OpenAI-compatible`;
     default:
-      return provider.trim() || "this provider";
+      return provider.trim() || t`this provider`;
   }
 }
+
+/**
+ * Error text emitted by the Rust backend, matched verbatim.
+ *
+ * `agent_models_databricks.rs` has no i18n and always emits English, so these
+ * are protocol strings, not copy. They were wrapped in the `t` macro, which
+ * made the match compare the backend's English against the *translated*
+ * string: outside English none of the three ever matched, so every Databricks
+ * sign-in outcome fell through to the generic "could not load live models"
+ * message instead of the guidance that tells the user how to sign in.
+ */
+const DATABRICKS_AUTH_REQUIRED = "Databricks sign-in is required";
+const DATABRICKS_AUTH_FAILED = "Databricks sign-in failed";
+const DATABRICKS_AUTH_TIMED_OUT = "Databricks sign-in timed out";
 
 function isEmptySharedComputeError(message: string): boolean {
   const normalized = message.toLowerCase();
@@ -63,8 +78,7 @@ export function formatModelDiscoveryErrorStatus(
 
     if (isEmptySharedComputeError(message)) {
       return {
-        message:
-          "No members are sharing compute right now. On a member machine, open Settings > Compute, choose a model, and turn on Share this machine.",
+        message: t`No members are sharing compute right now. On a member machine, open Settings > Compute, choose a model, and turn on Share this machine.`,
         tone: "warning",
       };
     }
@@ -113,8 +127,7 @@ export function formatModelDiscoveryErrorStatus(
 
   if (message.includes("OPENAI_COMPAT_API_KEY required")) {
     return {
-      message:
-        "Enter an OpenAI runtime API key (OPENAI_COMPAT_API_KEY) to load OpenAI models.",
+      message: t`Enter an OpenAI runtime API key (OPENAI_COMPAT_API_KEY) to load OpenAI models.`,
       tone: "warning",
     };
   }
@@ -126,8 +139,7 @@ export function formatModelDiscoveryErrorStatus(
     message.includes("DATABRICKS_MODEL required")
   ) {
     return {
-      message:
-        "Set DATABRICKS_HOST to your Databricks workspace URL under Advanced to load Databricks models.",
+      message: t`Set DATABRICKS_HOST to your Databricks workspace URL under Advanced to load Databricks models.`,
       tone: "warning",
     };
   }
@@ -164,21 +176,19 @@ export function formatModelDiscoveryErrorStatus(
 function formatDatabricksAuthStatus(
   message: string,
 ): PersonaModelDiscoveryStatus | null {
-  if (message.includes(t`Databricks sign-in is required`)) {
+  if (message.includes(DATABRICKS_AUTH_REQUIRED)) {
     return {
-      message:
-        "Databricks sign-in is required. Open the model picker to sign in, or run `buzz-agent auth databricks` in a terminal.",
+      message: t`Databricks sign-in is required. Open the model picker to sign in, or run \`buzz-agent auth databricks\` in a terminal.`,
       tone: "muted",
     };
   }
 
   if (
-    message.includes(t`Databricks sign-in failed`) ||
-    message.includes(t`Databricks sign-in timed out`)
+    message.includes(DATABRICKS_AUTH_FAILED) ||
+    message.includes(DATABRICKS_AUTH_TIMED_OUT)
   ) {
     return {
-      message:
-        "Databricks sign-in didn't complete. Open the model picker to retry, or run `buzz-agent auth databricks` in a terminal.",
+      message: t`Databricks sign-in didn't complete. Open the model picker to retry, or run \`buzz-agent auth databricks\` in a terminal.`,
       tone: "warning",
     };
   }
