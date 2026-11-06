@@ -13,6 +13,8 @@ import {
   fireEvent,
   createRoot,
   QueryClient,
+  i18n,
+  I18nProvider,
   QueryClientProvider,
   AdminConsoleSettingsCard,
   CommunitiesProvider,
@@ -678,12 +680,16 @@ test("strict-mode-save: probe fires after save under React.StrictMode double-mou
         React.StrictMode,
         null,
         React.createElement(
-          QueryClientProvider,
-          { client: qc },
+          I18nProvider,
+          { i18n },
           React.createElement(
-            CommunitiesProvider,
-            null,
-            React.createElement(AdminConsoleSettingsCard),
+            QueryClientProvider,
+            { client: qc },
+            React.createElement(
+              CommunitiesProvider,
+              null,
+              React.createElement(AdminConsoleSettingsCard),
+            ),
           ),
         ),
       ),
@@ -1199,7 +1205,8 @@ test("settings-card-self-demotion-reruns-probe: self-demotion through SettingsCa
   // Role badge must now reflect moderator.
   const text = container.textContent ?? "";
   assert.ok(
-    text.includes("moderator"),
+    // "Moderator" — the translated role label, not the relay's `moderator`.
+    text.includes("Moderator"),
     `role badge must show "moderator" after self-demotion re-probe; got: ${text.slice(0, 300)}`,
   );
 

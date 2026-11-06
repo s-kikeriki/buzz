@@ -316,7 +316,8 @@ test("feedback-status-honest: a reviewed detail reports reviewed, never defaulti
   // List row shows the "reviewed" badge (status !== "new").
   const listText = container.textContent ?? "";
   assert.ok(
-    listText.includes("reviewed"),
+    // "Reviewed" — the translated status label, not the relay's `reviewed`.
+    listText.includes("Reviewed"),
     `list row must show the reviewed badge; got: ${listText.slice(0, 400)}`,
   );
 
@@ -555,7 +556,8 @@ test("feedback-list-refetches-on-back-after-mutation: changing status then navig
     `the feedback list must refetch after back-nav following a status change; listCalls=${listCalls}`,
   );
   assert.ok(
-    (container.textContent ?? "").includes("reviewed"),
+    // "Reviewed" — the translated status label, not the relay's `reviewed`.
+    (container.textContent ?? "").includes("Reviewed"),
     `the refetched feedback list must show the updated status; got: ${(container.textContent ?? "").slice(0, 400)}`,
   );
 
@@ -703,7 +705,8 @@ test("feedback-status-readonly: read-only detail shows status badge, no status-c
       "feedback-status-readonly must be present in read-only detail",
     );
     assert.ok(
-      readonlyBadge.textContent.includes("reviewed"),
+      // "Reviewed" — the translated status label, not the relay's `reviewed`.
+      readonlyBadge.textContent.includes("Reviewed"),
       `feedback-status-readonly must show server status "reviewed"; got: ${readonlyBadge.textContent}`,
     );
 

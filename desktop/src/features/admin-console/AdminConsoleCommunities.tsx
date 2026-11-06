@@ -10,6 +10,7 @@
  */
 
 import { useDeferredValue, useMemo, useRef, useState } from "react";
+import { Trans, useLingui } from "@lingui/react/macro";
 import { ArrowLeft, LoaderCircle } from "lucide-react";
 import { containsSecretKey } from "@/features/onboarding/lib/keyImportInput";
 import { Button } from "@/shared/ui/button";
@@ -31,6 +32,10 @@ import {
 } from "./AdminConsolePanelHelpers";
 import { ReportsTab } from "./AdminConsoleReportsTab";
 import { RestrictionsSection } from "./AdminConsoleStaffingTab";
+import {
+  type CommunitySection,
+  communitySectionLabel,
+} from "./adminConsoleLabels";
 
 // ── Communities tab ───────────────────────────────────────────────────────
 
@@ -42,6 +47,7 @@ export function CommunitiesTab({
   generation: number;
 }) {
   const { open, connectedHost } = useCommunityNav();
+  const { i18n, t } = useLingui();
   const [query, setQuery] = useState("");
   const q = useDeferredValue(query.trim().toLowerCase());
   // A pasted secret key never leaves the device.
@@ -93,7 +99,7 @@ export function CommunitiesTab({
         className="text-sm text-muted-foreground"
         data-testid="communities-unsupported"
       >
-        {UNSUPPORTED_BROWSING}
+        {i18n._(UNSUPPORTED_BROWSING)}
       </p>
     );
   }
@@ -146,7 +152,9 @@ export function CommunitiesTab({
       >
         <span className="flex-1 truncate">{c.host}</span>
         {connected && (
-          <span className="text-xs text-muted-foreground">Connected</span>
+          <span className="text-xs text-muted-foreground">
+            <Trans>Connected</Trans>
+          </span>
         )}
       </button>
     </li>
@@ -158,7 +166,7 @@ export function CommunitiesTab({
         className="w-full rounded-md border border-border/60 bg-background px-2 py-1 text-xs"
         data-testid="communities-search-input"
         onChange={(e) => setQuery(e.target.value)}
-        placeholder="Search by host (e.g. team.example.com)"
+        placeholder={t`Search by host (e.g. team.example.com)`}
         value={query}
       />
       {pinnedRow && (
@@ -169,13 +177,15 @@ export function CommunitiesTab({
           className="text-xs text-destructive"
           data-testid="communities-search-secret"
         >
-          That's a secret key. Never paste it here.
+          <Trans>That's a secret key. Never paste it here.</Trans>
         </p>
       )}
       {first.status === "loading" && <LoadingSpinner />}
       {first.status === "error" && <ErrorMessage message={first.message} />}
       {first.status === "ok" && items.length === 0 && !pinnedRow && !secret && (
-        <p className="text-sm text-muted-foreground">No communities found.</p>
+        <p className="text-sm text-muted-foreground">
+          <Trans>No communities found.</Trans>
+        </p>
       )}
       <ul className="space-y-1">{items.map((c) => row(c, false))}</ul>
       {moreStatus?.error && <ErrorMessage message={moreStatus.error} />}
@@ -191,7 +201,7 @@ export function CommunitiesTab({
           {moreStatus?.busy ? (
             <LoaderCircle className="h-3.5 w-3.5 animate-spin" />
           ) : (
-            "Load more"
+            <Trans>Load more</Trans>
           )}
         </Button>
       )}
@@ -202,7 +212,8 @@ export function CommunitiesTab({
 // ── Community page ────────────────────────────────────────────────────────
 
 const SECTIONS = ["reports", "restrictions", "members", "actions"] as const;
-type Section = (typeof SECTIONS)[number];
+/** One source of truth with the label table, so the two cannot drift. */
+type Section = CommunitySection;
 
 export function CommunityPage({
   community,
@@ -219,6 +230,7 @@ export function CommunityPage({
   generation: number;
   onBack: () => void;
 }) {
+  const { i18n } = useLingui();
   const [section, setSection] = useState<Section>("reports");
   return (
     <div className="space-y-3" data-testid="community-page">
@@ -253,7 +265,7 @@ export function CommunityPage({
             type="button"
             variant={s === section ? "default" : "outline"}
           >
-            {s[0].toUpperCase() + s.slice(1)}
+            {communitySectionLabel(i18n, s)}
           </Button>
         ))}
       </div>

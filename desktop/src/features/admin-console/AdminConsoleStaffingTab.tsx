@@ -15,6 +15,7 @@
  */
 
 import { useEffect, useRef, useState } from "react";
+import { Trans, useLingui } from "@lingui/react/macro";
 import { nip19 } from "nostr-tools";
 import { LoaderCircle, Trash2 } from "lucide-react";
 import { Button } from "@/shared/ui/button";
@@ -51,6 +52,12 @@ import {
   LoadingSpinner,
   useAsyncLoad,
 } from "./AdminConsolePanelHelpers";
+import {
+  principalRoleLabel,
+  principalSourceLabel,
+  restrictionBannedLabel,
+  restrictionTimeoutLabel,
+} from "./adminConsoleLabels";
 
 // ── Display-name helpers (mirrors CommunityMembersSettingsCard) ───────────
 
@@ -111,11 +118,7 @@ function SourceBadge({
 }: {
   source: "config" | "owner_fallback" | "db";
 }) {
-  const label: Record<string, string> = {
-    config: "config",
-    owner_fallback: "owner (fallback)",
-    db: "db",
-  };
+  const { i18n } = useLingui();
   const variant: Record<string, "secondary" | "outline"> = {
     config: "secondary",
     owner_fallback: "secondary",
@@ -123,7 +126,7 @@ function SourceBadge({
   };
   return (
     <Badge variant={variant[source] ?? "outline"}>
-      {label[source] ?? source}
+      {principalSourceLabel(i18n, source)}
     </Badge>
   );
 }
@@ -138,6 +141,7 @@ function RestrictionTypeBadge({
 }: {
   record: AdminMemberRestrictionDto;
 }) {
+  const { i18n } = useLingui();
   const now = new Date();
   const isBanned =
     record.banned &&
@@ -146,8 +150,12 @@ function RestrictionTypeBadge({
     record.mutedUntil !== null && new Date(record.mutedUntil) > now;
   return (
     <span className="flex flex-wrap gap-1">
-      {isBanned && <Badge variant="destructive">banned</Badge>}
-      {isTimedOut && <Badge variant="secondary">timeout</Badge>}
+      {isBanned && (
+        <Badge variant="destructive">{restrictionBannedLabel(i18n)}</Badge>
+      )}
+      {isTimedOut && (
+        <Badge variant="secondary">{restrictionTimeoutLabel(i18n)}</Badge>
+      )}
     </span>
   );
 }
@@ -289,6 +297,11 @@ export function RestrictionsSection({
     }
   };
 
+  // Bound to locals so the extracted placeholders are plain names: a member
+  // expression inside ICU braces is dropped from every compiled catalogue.
+  const liftTargetLabel = pendingLift ? truncatePubkey(pendingLift.pubkey) : "";
+  const liftHostLabel = pendingLift?.communityHost ?? "";
+
   return (
     <div className="space-y-2" data-testid="restrictions-section">
       <AlertDialog
@@ -302,26 +315,37 @@ export function RestrictionsSection({
         >
           <AlertDialogHeader>
             <AlertDialogTitle>
-              {pendingLift?.kind === "ban" ? "Lift ban?" : "Clear timeout?"}
+              {pendingLift?.kind === "ban" ? (
+                <Trans>Lift ban?</Trans>
+              ) : (
+                <Trans>Clear timeout?</Trans>
+              )}
             </AlertDialogTitle>
             <AlertDialogDescription>
-              This will{" "}
-              {pendingLift?.kind === "ban"
-                ? "remove the active ban"
-                : "clear the active timeout"}{" "}
-              for{" "}
-              <span className="font-mono">
-                {pendingLift ? truncatePubkey(pendingLift.pubkey) : ""}
-              </span>{" "}
-              in <code>{pendingLift?.communityHost}</code>. They will be able to
-              post again.
+              {/* One whole sentence per kind rather than a verb phrase
+                  substituted into a shared frame: German sends the verb to
+                  the end of the clause ("… wird die aktive Sperre … aufgehoben"),
+                  so "remove the active ban" has no slot to sit in. */}
+              {pendingLift?.kind === "ban" ? (
+                <Trans>
+                  This will remove the active ban for{" "}
+                  <span className="font-mono">{liftTargetLabel}</span> in{" "}
+                  <code>{liftHostLabel}</code>. They will be able to post again.
+                </Trans>
+              ) : (
+                <Trans>
+                  This will clear the active timeout for{" "}
+                  <span className="font-mono">{liftTargetLabel}</span> in{" "}
+                  <code>{liftHostLabel}</code>. They will be able to post again.
+                </Trans>
+              )}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel
               data-testid={`restrictions-lift-${pendingLift?.kind}-cancel`}
             >
-              Cancel
+              <Trans>Cancel</Trans>
             </AlertDialogCancel>
             <AlertDialogAction
               asChild
@@ -331,7 +355,11 @@ export function RestrictionsSection({
                 onClick={() => void handleConfirmLift()}
                 variant="default"
               >
-                {pendingLift?.kind === "ban" ? "Lift ban" : "Clear timeout"}
+                {pendingLift?.kind === "ban" ? (
+                  <Trans>Lift ban</Trans>
+                ) : (
+                  <Trans>Clear timeout</Trans>
+                )}
               </Button>
             </AlertDialogAction>
           </AlertDialogFooter>
@@ -339,7 +367,7 @@ export function RestrictionsSection({
       </AlertDialog>
 
       <p className="text-xs font-medium text-muted-foreground">
-        Active restrictions
+        <Trans>Active restrictions</Trans>
       </p>
 
       {listState.status === "loading" && <LoadingSpinner />}
@@ -352,7 +380,7 @@ export function RestrictionsSection({
           className="text-sm text-muted-foreground"
           data-testid="restrictions-empty"
         >
-          No active bans or timeouts.
+          <Trans>No active bans or timeouts.</Trans>
         </p>
       )}
       {listState.status === "ok" && items.length > 0 && (
@@ -391,7 +419,7 @@ export function RestrictionsSection({
                     {isWorking ? (
                       <LoaderCircle className="h-3.5 w-3.5 animate-spin" />
                     ) : (
-                      "Lift ban"
+                      <Trans>Lift ban</Trans>
                     )}
                   </Button>
                 )}
@@ -407,7 +435,7 @@ export function RestrictionsSection({
                     {isWorking ? (
                       <LoaderCircle className="h-3.5 w-3.5 animate-spin" />
                     ) : (
-                      "Clear timeout"
+                      <Trans>Clear timeout</Trans>
                     )}
                   </Button>
                 )}
@@ -429,7 +457,7 @@ export function RestrictionsSection({
           {moreStatus?.busy ? (
             <LoaderCircle className="h-3.5 w-3.5 animate-spin" />
           ) : (
-            "Load more"
+            <Trans>Load more</Trans>
           )}
         </Button>
       )}
@@ -456,6 +484,7 @@ export function StaffingTab({
    */
   onSelfMutation?: () => void;
 }) {
+  const { i18n, t } = useLingui();
   const [listGen, setListGen] = useState(0);
   const [addPubkey, setAddPubkey] = useState("");
   const [addRole, setAddRole] = useState<"operator" | "moderator">("moderator");
@@ -496,8 +525,9 @@ export function StaffingTab({
     // Reject any pubkey already present in the authoritative roster.
     const existing = listState.data.find((op) => op.pubkey === trimmed);
     if (existing) {
+      const role = principalRoleLabel(i18n, existing.effectiveRole);
       setAddError(
-        `Already an operator: ${existing.effectiveRole}. Change role with the edit control on their row.`,
+        t`Already an operator: ${role}. Change role with the edit control on their row.`,
       );
       return;
     }
@@ -561,6 +591,13 @@ export function StaffingTab({
   };
 
   const isSelf = pendingRemove?.pubkey === pubkey;
+  // Bound to locals so the extracted placeholders are plain names.
+  const removeTargetLabel = pendingRemove
+    ? truncatePubkey(pendingRemove.pubkey)
+    : "";
+  const removeRoleLabel = pendingRemove
+    ? principalRoleLabel(i18n, pendingRemove.effectiveRole)
+    : "";
 
   return (
     <div className="space-y-4" data-testid="staffing-tab">
@@ -573,23 +610,27 @@ export function StaffingTab({
       >
         <AlertDialogContent data-testid="staffing-remove-dialog">
           <AlertDialogHeader>
-            <AlertDialogTitle>Remove operator?</AlertDialogTitle>
+            <AlertDialogTitle>
+              <Trans>Remove operator?</Trans>
+            </AlertDialogTitle>
             <AlertDialogDescription asChild>
               <div className="space-y-2">
                 <p>
-                  This will remove{" "}
-                  <span className="font-mono">
-                    {pendingRemove ? truncatePubkey(pendingRemove.pubkey) : ""}
-                  </span>{" "}
-                  ({pendingRemove?.effectiveRole}) from the operator list.
+                  <Trans>
+                    This will remove{" "}
+                    <span className="font-mono">{removeTargetLabel}</span> (
+                    {removeRoleLabel}) from the operator list.
+                  </Trans>
                 </p>
                 {isSelf && (
                   <p
                     className="text-destructive"
                     data-testid="staffing-remove-self-warning"
                   >
-                    You are removing your own operator access. Once removed, you
-                    may lose the ability to undo this action.
+                    <Trans>
+                      You are removing your own operator access. Once removed,
+                      you may lose the ability to undo this action.
+                    </Trans>
                   </p>
                 )}
               </div>
@@ -597,14 +638,14 @@ export function StaffingTab({
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel data-testid="staffing-remove-cancel">
-              Cancel
+              <Trans>Cancel</Trans>
             </AlertDialogCancel>
             <AlertDialogAction asChild data-testid="staffing-remove-confirm">
               <Button
                 onClick={() => void handleConfirmRemove()}
                 variant="destructive"
               >
-                Remove
+                <Trans>Remove</Trans>
               </Button>
             </AlertDialogAction>
           </AlertDialogFooter>
@@ -614,7 +655,7 @@ export function StaffingTab({
       {/* Add operator form */}
       <div className="rounded-md border border-border/60 px-3 py-2.5 space-y-2">
         <p className="text-xs font-medium text-muted-foreground">
-          Add operator
+          <Trans>Add operator</Trans>
         </p>
         <div className="flex gap-2">
           <input
@@ -622,7 +663,7 @@ export function StaffingTab({
             data-testid="staffing-add-pubkey-input"
             disabled={isAdding}
             onChange={(e) => setAddPubkey(e.target.value)}
-            placeholder="64-hex pubkey"
+            placeholder={t`64-hex pubkey`}
             type="text"
             value={addPubkey}
           />
@@ -635,8 +676,14 @@ export function StaffingTab({
             }
             value={addRole}
           >
-            <option value="moderator">moderator</option>
-            <option value="operator">operator</option>
+            {/* `value` stays the relay's identifier; only the visible option
+                text is translated. */}
+            <option value="moderator">
+              {principalRoleLabel(i18n, "moderator")}
+            </option>
+            <option value="operator">
+              {principalRoleLabel(i18n, "operator")}
+            </option>
           </select>
           <Button
             data-testid="staffing-add-btn"
@@ -650,7 +697,7 @@ export function StaffingTab({
             {isAdding ? (
               <LoaderCircle className="h-3.5 w-3.5 animate-spin" />
             ) : (
-              "Add"
+              <Trans>Add</Trans>
             )}
           </Button>
         </div>
@@ -667,7 +714,7 @@ export function StaffingTab({
         <ul className="space-y-1">
           {listState.data.length === 0 && (
             <p className="text-sm text-muted-foreground">
-              No operators configured.
+              <Trans>No operators configured.</Trans>
             </p>
           )}
           {listState.data.map((op: AdminOperatorDto) => {
@@ -699,7 +746,7 @@ export function StaffingTab({
                 {/* In-place role selector — hidden for config-backed rows */}
                 {!isConfigBacked && (
                   <select
-                    aria-label={`Change role for ${displayName}`}
+                    aria-label={t`Change role for ${displayName}`}
                     className="rounded-md border border-border/60 bg-background px-1.5 py-0.5 text-xs"
                     data-testid={`staffing-role-select-${op.pubkey}`}
                     disabled={isWorking}
@@ -711,25 +758,31 @@ export function StaffingTab({
                     }
                     value={op.effectiveRole}
                   >
-                    <option value="moderator">moderator</option>
-                    <option value="operator">operator</option>
+                    <option value="moderator">
+                      {principalRoleLabel(i18n, "moderator")}
+                    </option>
+                    <option value="operator">
+                      {principalRoleLabel(i18n, "operator")}
+                    </option>
                   </select>
                 )}
                 {/* Config-backed: show role as badge (not editable) */}
                 {isConfigBacked && (
-                  <Badge variant="outline">{op.effectiveRole}</Badge>
+                  <Badge variant="outline">
+                    {principalRoleLabel(i18n, op.effectiveRole)}
+                  </Badge>
                 )}
                 {/* Remove button */}
                 <Button
-                  aria-label={`Remove ${displayName}`}
+                  aria-label={t`Remove ${displayName}`}
                   data-testid={`staffing-remove-btn-${op.pubkey}`}
                   disabled={isConfigBacked || isWorking}
                   onClick={() => setPendingRemove(op)}
                   size="icon-xs"
                   title={
                     isConfigBacked
-                      ? "Config-backed — cannot be removed via API"
-                      : "Remove operator"
+                      ? t`Config-backed — cannot be removed via API`
+                      : t`Remove operator`
                   }
                   type="button"
                   variant="ghost"

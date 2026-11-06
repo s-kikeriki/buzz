@@ -87,8 +87,9 @@ const REPORT_DTO_ROWS = [
     // Mutation: revert ReportFields → <pre>{JSON.stringify(...)}</pre> → red.
     check: (text) => {
       assert.ok(
-        text.includes("open"),
-        `status 'open' must appear in structured layout; text: ${text.slice(0, 400)}`,
+        // "Open" — the translated status label, not the relay's `open`.
+        text.includes("Open"),
+        `status 'Open' must appear in structured layout; text: ${text.slice(0, 400)}`,
       );
       assert.ok(
         !text.includes('"status": "open"'),
@@ -1320,7 +1321,8 @@ test("reports-list-refetches-on-back-after-mutation: resolving a report then nav
     `the list must refetch after back-nav following a mutation; before=${callsBeforeBack} after=${listCalls}`,
   );
   assert.ok(
-    (container.textContent ?? "").includes("dismissed"),
+    // "Dismissed" — the translated status label, not the relay's `dismissed`.
+    (container.textContent ?? "").includes("Dismissed"),
     `the refetched list must show the updated status; got: ${(container.textContent ?? "").slice(0, 400)}`,
   );
 

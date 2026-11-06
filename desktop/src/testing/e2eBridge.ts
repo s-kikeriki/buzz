@@ -30,6 +30,10 @@ import {
   handleSaveCustomHarness,
   handleDeleteCustomHarness,
 } from "./e2eBridgeCustomHarnesses.ts";
+import {
+  handleMockAdminConsoleCommand,
+  MOCK_ADMIN_CONSOLE_COMMANDS,
+} from "./e2eBridgeAdminConsole.ts";
 
 import type {
   ObservedUnreadProjection,
@@ -12151,6 +12155,14 @@ export function maybeInstallE2eTauriMocks() {
       payload: loggedPayload,
     });
     window.__BUZZ_E2E_COMMAND_LOG__?.push({ command, payload });
+
+    // Admin-console reads, answered from `e2eBridgeAdminConsole.ts`. Checked
+    // against an explicit command set, so every admin command this mock does
+    // not model (all of the mutations) still reaches the unknown-command
+    // error below rather than resolving with `undefined`.
+    if (MOCK_ADMIN_CONSOLE_COMMANDS.has(command)) {
+      return handleMockAdminConsoleCommand(command, payload);
+    }
 
     switch (command) {
       case "get_huddle_state": {

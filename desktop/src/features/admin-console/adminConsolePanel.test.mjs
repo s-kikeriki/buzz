@@ -458,14 +458,22 @@ import React from "react";
 import { createRoot } from "react-dom/client";
 import { act } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { I18nProvider } from "@lingui/react";
 import { CommunitiesProvider } from "@/features/communities/useCommunities.tsx";
 
+import { i18n } from "@/shared/i18n/i18n";
 import { AdminConsoleSettingsCard } from "./AdminConsoleSettingsCard.tsx";
 import {
   AdminConsolePanel,
   parseImetaAttachments,
 } from "./AdminConsolePanel.tsx";
 import { applyAttachmentBudget } from "./AdminConsoleFeedbackTab.tsx";
+
+// The console calls `useLingui`, which throws outside an `I18nProvider`.
+// Activate an empty English catalogue: with no catalogue Lingui renders the
+// message id — the English source string — so the assertions below read the
+// same words they did before the strings were wrapped.
+i18n.loadAndActivate({ locale: "en", messages: {} });
 
 // ── Deferred promise helper ───────────────────────────────────────────────────
 
@@ -508,12 +516,16 @@ function mountCard(qc) {
     await act(async () => {
       root.render(
         React.createElement(
-          QueryClientProvider,
-          { client: qc },
+          I18nProvider,
+          { i18n },
           React.createElement(
-            CommunitiesProvider,
-            null,
-            React.createElement(AdminConsoleSettingsCard),
+            QueryClientProvider,
+            { client: qc },
+            React.createElement(
+              CommunitiesProvider,
+              null,
+              React.createElement(AdminConsoleSettingsCard),
+            ),
           ),
         ),
       );
@@ -555,17 +567,21 @@ function mountPanel({
     await act(async () => {
       root.render(
         React.createElement(
-          QueryClientProvider,
-          { client: qc },
+          I18nProvider,
+          { i18n },
           React.createElement(
-            CommunitiesProvider,
-            null,
-            React.createElement(AdminConsolePanel, {
-              canMutate,
-              origin: o,
-              pubkey: p,
-              ...(initialTab !== undefined ? { initialTab } : {}),
-            }),
+            QueryClientProvider,
+            { client: qc },
+            React.createElement(
+              CommunitiesProvider,
+              null,
+              React.createElement(AdminConsolePanel, {
+                canMutate,
+                origin: o,
+                pubkey: p,
+                ...(initialTab !== undefined ? { initialTab } : {}),
+              }),
+            ),
           ),
         ),
       );
@@ -1011,8 +1027,9 @@ const PROBE_ROLE_ROWS = [
     check: (container) => {
       const text = container.textContent ?? "";
       assert.ok(
-        text.includes("moderator"),
-        `role "moderator" must render; got: ${text.slice(0, 300)}`,
+        // "Moderator" — the translated role label, not the relay's `moderator`.
+        text.includes("Moderator"),
+        `role "Moderator" must render; got: ${text.slice(0, 300)}`,
       );
       assert.equal(
         container.querySelector("[data-testid='admin-tab-operators']"),

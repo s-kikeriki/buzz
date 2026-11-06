@@ -110,6 +110,10 @@ msgstr "(automatisch abgeleitet)"
 msgid "(current)"
 msgstr "(aktuell)"
 
+#: src/features/admin-console/AdminConsoleReportsTab.tsx
+msgid "(deleted)"
+msgstr "(gelöscht)"
+
 #: src/features/messages/ui/MessageRow.tsx
 msgid "(edited)"
 msgstr "(bearbeitet)"
@@ -561,6 +565,22 @@ msgstr "Karte von {0} ist fertig"
 #: src/features/agents/ui/CardMintComposerChip.tsx
 msgid "{0}’s card is ready — view it"
 msgstr "Karte von {0} ist fertig — ansehen"
+
+#: src/features/admin-console/AdminConsoleActionsTab.tsx
+msgid "{action} {target} for {secs}s?"
+msgstr "{action} {target} für {secs}s?"
+
+#: src/features/admin-console/AdminConsoleActionsTab.tsx
+msgid "{action} {target}?"
+msgstr "{action} {target}?"
+
+#: src/features/admin-console/AdminConsoleActionsTab.tsx
+msgid "{action} in {host} failed: {message}"
+msgstr "{action} in {host} fehlgeschlagen: {message}"
+
+#: src/features/admin-console/AdminConsoleActionsTab.tsx
+msgid "{action}: done"
+msgstr "{action}: erledigt"
 
 #: src/features/communities/ui/CommunitySwitcher.tsx
 msgid "{activeCommunityName} — {connectionLabel}"
@@ -1362,6 +1382,10 @@ msgstr "{triggerLabel}. Aktivität ansehen."
 msgid "{trimmedProvider} (current)"
 msgstr "{trimmedProvider} (aktuell)"
 
+#: src/features/admin-console/AdminConsoleFeedbackTab.tsx
+msgid "{truncatedCount, plural, one {# attachment not shown (display limit reached).} other {# attachments not shown (display limit reached).}}"
+msgstr "{truncatedCount, plural, one {# Anhang nicht angezeigt (Anzeigelimit erreicht).} other {# Anhänge nicht angezeigt (Anzeigelimit erreicht).}}"
+
 #: src/features/workflows/ui/workflowDuration.ts
 msgid "{value, plural, one {# day} other {# days}}"
 msgstr "{value, plural, one {# Tag} other {# Tage}}"
@@ -1499,6 +1523,10 @@ msgstr "64-stellige Hex-Event-ID"
 msgid "64-character hex pubkey"
 msgstr "64-stelliger Hex-Pubkey"
 
+#: src/features/admin-console/AdminConsoleStaffingTab.tsx
+msgid "64-hex pubkey"
+msgstr "64-stelliger Hex-Pubkey"
+
 #: src/features/channels/ui/ChannelTypeSettings.tsx
 #: src/features/channels/ui/MembersSidebarMemberCard.tsx
 #: src/features/community-members/ui/InviteLinkSection.tsx
@@ -1608,6 +1636,10 @@ msgstr "Annehmen und beitreten"
 msgid "Accept and redeem invite"
 msgstr "Annehmen und Einladung einlösen"
 
+#: src/features/admin-console/AdminConsoleActionsTab.tsx
+msgid "Accepted; the relay is still applying it. Retry to check."
+msgstr "Angenommen; das Relay wendet es noch an. Versuch es erneut, um den Stand zu prüfen."
+
 #: src/features/onboarding/ui/CommunityOnboardingFlow.tsx
 msgid "Accepting your invite…"
 msgstr "Deine Einladung wird angenommen …"
@@ -1615,6 +1647,10 @@ msgstr "Deine Einladung wird angenommen …"
 #: src/features/projects/ui/AddProjectRepositoryDialog.tsx
 msgid "Access channel"
 msgstr "Zugriffskanal"
+
+#: src/features/admin-console/AdminConsoleSettingsCard.tsx
+msgid "Access denied"
+msgstr "Zugriff verweigert"
 
 #: src/features/projects/ui/ProjectCards.tsx
 msgid "Access failed"
@@ -1651,10 +1687,15 @@ msgstr "ACP:"
 msgid "Action"
 msgstr "Aktion"
 
+#: src/features/admin-console/AdminConsoleReportsTab.tsx
+msgid "Action ID"
+msgstr "Aktions-ID"
+
 #: src/features/settings/ui/HarnessesSettingsPanel.tsx
 msgid "Action needed"
 msgstr "Aktion nötig"
 
+#: src/features/admin-console/adminConsoleLabels.ts
 #: src/features/community-members/ui/CommunityMembersCard.tsx
 #: src/features/projects/ui/ProjectsWorkItemTable.tsx
 #: src/features/search/ui/TopbarSearch.tsx
@@ -1682,6 +1723,10 @@ msgstr "aktiv — die Konfiguration wird aus diesem Verzeichnis gelesen. Claude 
 #: src/shared/ui/markdown/ChannelDeepLink.tsx
 msgid "Active {when}"
 msgstr "Aktiv {when}"
+
+#: src/features/admin-console/AdminConsoleStaffingTab.tsx
+msgid "Active restrictions"
+msgstr "Aktive Einschränkungen"
 
 #: src/features/projects/ui/ProjectRepositoryActionsPanel.tsx
 #: src/features/projects/ui/projectsOverviewContext.ts
@@ -1720,6 +1765,7 @@ msgstr "Installationsanleitung für den Adapter"
 msgid "Adapter needed"
 msgstr "Adapter nötig"
 
+#: src/features/admin-console/AdminConsoleStaffingTab.tsx
 #: src/features/agents/ui/AddAgentToChannelDialog.tsx
 #: src/features/agents/ui/RespondToField.tsx
 #: src/features/channels/ui/AddMemberSearchResultRow.tsx
@@ -1925,6 +1971,10 @@ msgstr "Mitglieder hinzufügen"
 msgid "Add one custom agent alongside any selected agents."
 msgstr "Füge zusätzlich zu den ausgewählten Agenten einen eigenen Agenten hinzu."
 
+#: src/features/admin-console/AdminConsoleStaffingTab.tsx
+msgid "Add operator"
+msgstr "Operator hinzufügen"
+
 #: src/features/agents/ui/RespondToField.tsx
 #: src/features/channels/ui/useChannelIntro.tsx
 msgid "Add people"
@@ -2102,6 +2152,7 @@ msgstr "Kreis anpassen"
 msgid "admin"
 msgstr "Admin"
 
+#: src/features/admin-console/AdminConsoleSettingsCard.tsx
 #: src/features/channels/ui/MembersSidebarMemberCard.tsx
 #: src/features/community-members/ui/AddMemberDialog.tsx
 msgid "Admin"
@@ -2137,6 +2188,10 @@ msgstr "Erweitert ("
 #: src/features/workflows/ui/WorkflowTriggerConditions.tsx
 msgid "Advanced expression"
 msgstr "Erweiterter Ausdruck"
+
+#: src/features/admin-console/AdminConsoleSettingsCard.tsx
+msgid "Advanced: admin origin"
+msgstr "Erweitert: Admin-Origin"
 
 #: src/features/channels/ui/AddMemberSearchResultRow.tsx
 #: src/features/channels/ui/ChannelMemberInviteCard.tsx
@@ -2437,6 +2492,14 @@ msgstr "Alphabetisch"
 msgid "Already a member of this channel"
 msgstr "Schon Mitglied dieses Kanals"
 
+#: src/features/admin-console/AdminConsoleStaffingTab.tsx
+msgid "Already an operator: {role}. Change role with the edit control on their row."
+msgstr "Schon Operator: {role}. Ändere die Rolle über das Bearbeiten-Element in der Zeile."
+
+#: src/features/admin-console/AdminConsoleActionsTab.tsx
+msgid "Already deleted {deletedAt}."
+msgstr "Bereits gelöscht {deletedAt}."
+
 #: src/features/settings/ui/HarnessCatalogDialog.tsx
 msgid "Already set up"
 msgstr "Schon eingerichtet"
@@ -2717,6 +2780,7 @@ msgstr "Diese Identität archivieren?"
 msgid "archived"
 msgstr "archiviert"
 
+#: src/features/admin-console/adminConsoleLabels.ts
 #: src/features/channels/ui/ChannelBrowserDialog.tsx
 #: src/features/channels/ui/MembersSidebar.tsx
 #: src/features/profile/ui/ProfileInstancesSection.tsx
@@ -2884,6 +2948,26 @@ msgstr "Angehängtes Bild"
 msgid "Attaching…"
 msgstr "Wird angehängt …"
 
+#: src/features/admin-console/AdminConsoleFeedbackTab.tsx
+msgid "Attachment byte count does not match the imeta record."
+msgstr "Die Byte-Anzahl des Anhangs passt nicht zum imeta-Eintrag."
+
+#: src/features/admin-console/AdminConsoleFeedbackTab.tsx
+msgid "Attachment exceeds the 10 MiB desktop cap."
+msgstr "Der Anhang überschreitet das Desktop-Limit von 10 MiB."
+
+#: src/features/admin-console/AdminConsoleFeedbackTab.tsx
+msgid "Attachment MIME type does not match the imeta record."
+msgstr "Der MIME-Typ des Anhangs passt nicht zum imeta-Eintrag."
+
+#: src/features/admin-console/AdminConsoleFeedbackTab.tsx
+msgid "Attachment saved"
+msgstr "Anhang gespeichert"
+
+#: src/features/admin-console/AdminConsoleFeedbackTab.tsx
+msgid "Attachments"
+msgstr "Anhänge"
+
 #: src/features/huddle/components/MicControls.tsx
 msgid "Audio settings"
 msgstr "Audioeinstellungen"
@@ -2892,10 +2976,15 @@ msgstr "Audioeinstellungen"
 msgid "Audio unavailable. Retry playback."
 msgstr "Audio nicht verfügbar. Wiedergabe erneut versuchen."
 
+#: src/features/admin-console/AdminConsoleSettingsCard.tsx
+msgid "Auth is disabled on this relay. The admin console is read-only; taking action requires BUZZ_ADMIN_AUTH=nip98."
+msgstr "Die Authentifizierung ist auf diesem Relay deaktiviert. Die Admin-Konsole ist nur lesbar; für Aktionen brauchst du BUZZ_ADMIN_AUTH=nip98."
+
 #: src/features/settings/ui/HostedCommunitiesSettingsCard.tsx
 msgid "Authentication opens in your browser and returns securely to {productName}. You can use every other part of the app without signing in."
 msgstr "Die Anmeldung öffnet sich in deinem Browser und kehrt sicher zu {productName} zurück. Jeden anderen Teil der App kannst du ohne Anmeldung nutzen."
 
+#: src/features/admin-console/AdminConsoleReportsTab.tsx
 #: src/features/projects/ui/ProjectCommitDetailPanel.tsx
 #: src/features/workflows/ui/workflowConditionExpression.ts
 msgid "Author"
@@ -3040,6 +3129,10 @@ msgstr "Zurück zur App"
 msgid "Back to drafts list"
 msgstr "Zurück zur Entwurfsliste"
 
+#: src/features/admin-console/AdminConsoleFeedbackTab.tsx
+msgid "Back to feedback"
+msgstr "Zurück zum Feedback"
+
 #: src/features/home/ui/ProjectInboxDetail.tsx
 #: src/features/home/ui/ProjectInboxDetailPane.tsx
 msgid "Back to Inbox"
@@ -3060,6 +3153,10 @@ msgstr "Zurück zu den Projekten"
 #: src/features/projects/ui/ProjectDetailUnavailableState.tsx
 msgid "Back to Projects"
 msgstr "Zurück zu den Projekten"
+
+#: src/features/admin-console/AdminConsoleReportsTab.tsx
+msgid "Back to reports"
+msgstr "Zurück zu den Meldungen"
 
 #: src/features/channels/ui/ChannelBrowserDialog.tsx
 msgid "Back to search"
@@ -3122,6 +3219,11 @@ msgstr "Backups nutzen das Standardformat NIP-49, deshalb funktioniert das auch 
 msgid "Badges"
 msgstr "Zähler"
 
+#: src/features/admin-console/AdminConsoleActionsTab.tsx
+#: src/features/admin-console/adminConsoleLabels.ts
+msgid "Ban"
+msgstr "Sperren"
+
 #: src/features/channels/ui/MembersSidebarMemberCard.tsx
 msgid "Ban from community"
 msgstr "Von der Community sperren"
@@ -3129,6 +3231,14 @@ msgstr "Von der Community sperren"
 #: src/features/channels/ui/useMembersSidebarModeration.ts
 msgid "Ban lifted"
 msgstr "Sperre aufgehoben"
+
+#: src/features/admin-console/adminConsoleLabels.ts
+msgid "Ban member"
+msgstr "Mitglied sperren"
+
+#: src/features/admin-console/adminConsoleLabels.ts
+msgid "banned"
+msgstr "gesperrt"
 
 #: src/features/agents/ui/agentSessionTranscriptHelpers.ts
 #: src/features/projects/ui/CreatePullRequestDialog.tsx
@@ -3167,6 +3277,10 @@ msgstr "Blau"
 #: src/features/settings/ui/AppearanceSettingsControls.tsx
 msgid "Blur the desktop behind navigation while keeping content solid."
 msgstr "Den Schreibtisch hinter der Navigation weichzeichnen, Inhalte bleiben deckend."
+
+#: src/features/admin-console/AdminConsoleFeedbackTab.tsx
+msgid "Body"
+msgstr "Text"
 
 #: src/features/messages/ui/FormattingToolbar.tsx
 #: src/shared/lib/keyboard-shortcuts.ts
@@ -3305,6 +3419,7 @@ msgstr "Dieses Relay ist nicht erreichbar"
 msgid "Can't reach this relay — check the URL"
 msgstr "Dieses Relay ist nicht erreichbar — prüf die URL"
 
+#: src/features/admin-console/AdminConsoleStaffingTab.tsx
 #: src/features/agents/ui/AddAgentToChannelDialog.tsx
 #: src/features/agents/ui/AddTeamToChannelDialog.tsx
 #: src/features/agents/ui/AgentCardMintDialog.tsx
@@ -3366,9 +3481,17 @@ msgstr "Dieses Relay ist nicht erreichbar — prüf die URL"
 msgid "Cancel"
 msgstr "Abbrechen"
 
+#: src/features/admin-console/AdminConsoleReportsTab.tsx
+msgid "Cancel & reopen"
+msgstr "Abbrechen & wieder öffnen"
+
 #: src/features/messages/ui/ComposerReplyEditBanner.tsx
 msgid "Cancel edit"
 msgstr "Bearbeiten abbrechen"
+
+#: src/features/admin-console/AdminConsoleReportsTab.tsx
+msgid "Cancel rejected: {reason}"
+msgstr "Abbruch abgelehnt: {reason}"
 
 #: src/features/messages/ui/ComposerReplyEditBanner.tsx
 msgid "Cancel reply"
@@ -3434,10 +3557,15 @@ msgstr "Schlüssel für die Kartenprägung"
 msgid "carousel"
 msgstr "Karussell"
 
+#: src/features/admin-console/AdminConsoleFeedbackTab.tsx
 #: src/features/projects/ui/CreateProjectWorkItemDialog.tsx
 #: src/features/projects/ui/ProjectIssuesPanel.tsx
 msgid "Category"
 msgstr "Kategorie"
+
+#: src/features/admin-console/AdminConsoleActionsTab.tsx
+msgid "Change"
+msgstr "Ändern"
 
 #: src/features/communities/ui/CommunityApplyErrorScreen.tsx
 #: src/features/communities/ui/CommunityChangeOverlay.tsx
@@ -3453,6 +3581,10 @@ msgstr "Änderungswunsch"
 #: src/features/channels/ui/MembersSidebarMemberCard.tsx
 msgid "Change role"
 msgstr "Rolle ändern"
+
+#: src/features/admin-console/AdminConsoleStaffingTab.tsx
+msgid "Change role for {displayName}"
+msgstr "Rolle für {displayName} ändern"
 
 #: src/features/onboarding/ui/EncryptedBackupCreator.tsx
 msgid "Change saved backup password"
@@ -3492,6 +3624,7 @@ msgstr "Ein Wechsel des Anbieters aktualisiert die Modellliste sofort."
 msgid "channel"
 msgstr "Kanal"
 
+#: src/features/admin-console/AdminConsoleReportsTab.tsx
 #: src/features/agents/ui/AddAgentToChannelDialog.tsx
 #: src/features/agents/ui/AddTeamToChannelDialog.tsx
 #: src/features/search/ui/SearchResultItem.tsx
@@ -3784,6 +3917,10 @@ msgstr "Wähl ein anderes Repository-Verzeichnis oder entfern den vorhandenen Ch
 msgid "Choose a harness"
 msgstr "Wähl ein Harness"
 
+#: src/features/admin-console/AdminConsoleActionsTab.tsx
+msgid "Choose a member: search by name, or paste an npub or hex key."
+msgstr "Wähl ein Mitglied: such nach Namen oder füg einen npub oder Hex-Schlüssel ein."
+
 #: src/features/agents/ui/PersonaModelField.tsx
 msgid "Choose a model"
 msgstr "Wähl ein Modell"
@@ -4071,6 +4208,14 @@ msgstr "Bereichssymbol entfernen"
 #: src/features/projects/ui/ProjectsSelectionCountMenu.tsx
 msgid "Clear selection"
 msgstr "Auswahl aufheben"
+
+#: src/features/admin-console/AdminConsoleStaffingTab.tsx
+msgid "Clear timeout"
+msgstr "Auszeit aufheben"
+
+#: src/features/admin-console/AdminConsoleStaffingTab.tsx
+msgid "Clear timeout?"
+msgstr "Auszeit aufheben?"
 
 #: src/features/workflows/ui/WorkflowTriggerConditions.tsx
 msgid "Clear trigger emoji"
@@ -4365,11 +4510,14 @@ msgstr "Committet von {authorLabel}"
 msgid "Committed by {authorLabel} · {0, plural, one {# commit} other {# commits}}"
 msgstr "Committet von {authorLabel} · {0, plural, one {# Commit} other {# Commits}}"
 
+#: src/features/admin-console/adminConsoleLabels.ts
 #: src/features/settings/ui/SettingsView.tsx
 #: src/features/sidebar/ui/CommunityRail.tsx
 msgid "Communities"
 msgstr "Communitys"
 
+#: src/features/admin-console/AdminConsoleFeedbackTab.tsx
+#: src/features/admin-console/AdminConsoleReportsTab.tsx
 #: src/features/communities/ui/CommunitySwitcher.tsx
 msgid "Community"
 msgstr "Community"
@@ -4427,6 +4575,10 @@ msgstr "Community-Besitzer"
 #: src/features/communities/hostedCommunityApi.ts
 msgid "Community provisioning is temporarily unavailable."
 msgstr "Die Community-Bereitstellung ist vorübergehend nicht verfügbar."
+
+#: src/features/admin-console/AdminConsoleCommunityBadge.tsx
+msgid "community removed"
+msgstr "Community entfernt"
 
 #: src/features/communities/ui/CommunitySwitcher.tsx
 msgid "Community removed"
@@ -4496,6 +4648,10 @@ msgstr "Bedingt"
 msgid "Conditional · {timeout}"
 msgstr "Bedingt · {timeout}"
 
+#: src/features/admin-console/adminConsoleLabels.ts
+msgid "config"
+msgstr "Konfiguration"
+
 #: src/features/agents/ui/RestartDiffBadge.tsx
 msgid "Config changed since last start:"
 msgstr "Konfiguration seit dem letzten Start geändert:"
@@ -4508,6 +4664,10 @@ msgstr "Konfigurationsfehler"
 #: src/features/settings/ui/HarnessRow.tsx
 msgid "Config error: {0}"
 msgstr "Konfigurationsfehler: {0}"
+
+#: src/features/admin-console/AdminConsoleStaffingTab.tsx
+msgid "Config-backed — cannot be removed via API"
+msgstr "Aus der Konfiguration — nicht über die API entfernbar"
 
 #: src/features/agents/ui/ManagedAgentRow.tsx
 msgid "Configuration"
@@ -4542,6 +4702,10 @@ msgstr "Konfiguration fehlt"
 msgid "Configure its repository and access options"
 msgstr "Repository und Zugriffsoptionen einrichten"
 
+#: src/features/admin-console/AdminConsoleActionsTab.tsx
+msgid "Confirm"
+msgstr "Bestätigen"
+
 #: src/features/settings/ui/MobilePairingCard.tsx
 msgid "Confirm mobile code"
 msgstr "Code auf dem Handy bestätigen"
@@ -4557,6 +4721,10 @@ msgstr "Bestätige, dass du mindestens 18 Jahre alt bist."
 #: src/features/onboarding/ui/MachineOnboardingFlow.tsx
 msgid "Confirm the code before sharing your identity."
 msgstr "Bestätige den Code, bevor du deine Identität weitergibst."
+
+#: src/features/admin-console/AdminConsoleReportsTab.tsx
+msgid "Confirm: {confirmActionLabel} in {confirmHost}"
+msgstr "Bestätigen: {confirmActionLabel} in {confirmHost}"
 
 #: src/features/settings/ui/MobilePairingCard.tsx
 msgid "Confirmation code {formattedCode}"
@@ -4612,10 +4780,15 @@ msgstr "Verbinde deine {productName}-Identität, bevor du eine Community anlegst
 msgid "Connect your AI provider"
 msgstr "Verbinde deinen KI-Anbieter"
 
+#: src/features/admin-console/AdminConsoleCommunities.tsx
 #: src/features/communities/ui/CommunitySwitcher.tsx
 #: src/features/sidebar/ui/SidebarRelayConnectionCard.tsx
 msgid "Connected"
 msgstr "Verbunden"
+
+#: src/features/admin-console/AdminConsoleSettingsCard.tsx
+msgid "Connected as {roleLabel}"
+msgstr "Verbunden als {roleLabel}"
 
 #: src/features/agents/ui/ManagedAgentSessionPanel.tsx
 #: src/features/sidebar/ui/SidebarRelayConnectionCard.tsx
@@ -4655,6 +4828,10 @@ msgstr "Verbindung verloren — das Relay antwortet nicht"
 #: src/features/workflows/ui/WorkflowTriggerConditions.tsx
 msgid "contains"
 msgstr "enthält"
+
+#: src/features/admin-console/AdminConsoleReportsTab.tsx
+msgid "Content"
+msgstr "Inhalt"
 
 #: src/features/agents/ui/agentSessionToolClassifier.ts
 msgid "Context compacted"
@@ -4813,6 +4990,10 @@ msgstr "Commit-Link kopieren"
 msgid "Copy community URL"
 msgstr "Community-URL kopieren"
 
+#: src/features/admin-console/AdminConsoleReportsTab.tsx
+msgid "Copy event ID"
+msgstr "Event-ID kopieren"
+
 #: src/shared/ui/markdown/imageActions.ts
 msgid "Copy failed"
 msgstr "Kopieren fehlgeschlagen"
@@ -4853,6 +5034,7 @@ msgstr "Kopplungscode kopieren"
 msgid "Copy private key"
 msgstr "Privaten Schlüssel kopieren"
 
+#: src/features/admin-console/AdminConsoleSettingsCard.tsx
 #: src/features/agents/ui/AddAgentToChannelDialog.tsx
 msgid "Copy pubkey"
 msgstr "Pubkey kopieren"
@@ -5031,6 +5213,10 @@ msgstr "Die Datei konnte nicht geöffnet werden"
 #: src/features/agents/ui/WhereToRunSection.tsx
 msgid "Could not probe provider:"
 msgstr "Anbieter konnte nicht geprüft werden:"
+
+#: src/features/admin-console/AdminConsoleSettingsCard.tsx
+msgid "Could not reach the relay. Check: network, TLS certificate, DNS, or whether a VPN/SSO layer (e.g. Cloudflare Access) intercepts this host."
+msgstr "Das Relay war nicht erreichbar. Prüf: Netzwerk, TLS-Zertifikat, DNS, oder ob eine VPN-/SSO-Schicht (z. B. Cloudflare Access) diesen Host abfängt."
 
 #: src/features/onboarding/ui/BackupTestFlow.tsx
 #: src/features/settings/ui/BackupTestFlow.tsx
@@ -5604,6 +5790,10 @@ msgstr "Workflow erstellen"
 msgid "Create, discover, and import agents and teams."
 msgstr "Agenten und Teams anlegen, entdecken und importieren."
 
+#: src/features/admin-console/AdminConsoleReportsTab.tsx
+msgid "Created"
+msgstr "Erstellt"
+
 #: src/features/settings/ui/ChannelTemplatesSettingsCard.tsx
 msgid "Created \"{trimmedName}\""
 msgstr "„{trimmedName}“ angelegt"
@@ -5689,6 +5879,10 @@ msgstr "Aktueller Wert"
 #: src/features/agents/lib/agentParallelism.ts
 msgid "Current value for this agent. Custom values may be 1–32."
 msgstr "Aktueller Wert für diesen Agenten. Eigene Werte dürfen 1–32 sein."
+
+#: src/features/admin-console/AdminConsoleActionsTab.tsx
+msgid "Currently banned"
+msgstr "Derzeit gesperrt"
 
 #: src/features/projects/lib/projectsActivityDigest.ts
 msgid "Currently tracking"
@@ -5807,6 +6001,10 @@ msgstr "Tag"
 msgid "Day of month"
 msgstr "Tag des Monats"
 
+#: src/features/admin-console/adminConsoleLabels.ts
+msgid "db"
+msgstr "Datenbank"
+
 #: src/features/profile/ui/UserProfilePanelFields.tsx
 msgid "Declared owner verified"
 msgstr "Angegebener Besitzer verifiziert"
@@ -5876,6 +6074,7 @@ msgstr "Definition"
 msgid "Delay"
 msgstr "Verzögerung"
 
+#: src/features/admin-console/adminConsoleLabels.ts
 #: src/features/agents/ui/PersonaActionsMenu.tsx
 #: src/features/agents/ui/PersonaDeleteDialog.tsx
 #: src/features/agents/ui/TeamDeleteDialog.tsx
@@ -5957,6 +6156,7 @@ msgstr "Entwurf löschen"
 msgid "Delete imported voice?"
 msgstr "Importierte Stimme löschen?"
 
+#: src/features/admin-console/adminConsoleLabels.ts
 #: src/features/home/ui/InboxDetailPane.tsx
 #: src/features/messages/ui/MessageActionBar.tsx
 msgid "Delete message"
@@ -6226,6 +6426,10 @@ msgstr "Workflow deaktivieren"
 msgid "disabled"
 msgstr "deaktiviert"
 
+#: src/features/admin-console/AdminConsoleActionsTab.tsx
+msgid "Discard"
+msgstr "Verwerfen"
+
 #: src/features/agents/ui/CommunityCatalogDialog.tsx
 msgid "Discard agent changes?"
 msgstr "Änderungen am Agenten verwerfen?"
@@ -6269,6 +6473,11 @@ msgstr "Diskussion verknüpft"
 msgid "Dismiss"
 msgstr "Schließen"
 
+#: src/features/admin-console/adminConsoleLabels.ts
+msgctxt "report resolution action"
+msgid "Dismiss"
+msgstr "Abweisen"
+
 #: src/features/huddle/components/HuddleBar.tsx
 msgid "Dismiss error"
 msgstr "Fehler ausblenden"
@@ -6292,6 +6501,10 @@ msgstr "Relay-Hinweis schließen"
 #: src/features/settings/SidebarUpdateCard.tsx
 msgid "Dismiss update notification"
 msgstr "Update-Hinweis schließen"
+
+#: src/features/admin-console/adminConsoleLabels.ts
+msgid "Dismissed"
+msgstr "Abgewiesen"
 
 #: src/shared/ui/link-preview-controls.tsx
 msgid "Display"
@@ -6557,6 +6770,15 @@ msgstr "Als „{name}“ dupliziert"
 msgid "Duration"
 msgstr "Dauer"
 
+#: src/features/admin-console/AdminConsoleActionsTab.tsx
+#: src/features/admin-console/AdminConsoleReportsTab.tsx
+msgid "Duration (seconds)"
+msgstr "Dauer (Sekunden)"
+
+#: src/features/admin-console/AdminConsoleActionsTab.tsx
+msgid "Duration must be a whole number of seconds above zero."
+msgstr "Die Dauer muss eine ganze Zahl von Sekunden über null sein."
+
 #: src/features/workflows/ui/WorkflowStepCard.tsx
 msgid "e.g. {AUTHOR_TEMPLATE}, npub1…, or hex pubkey"
 msgstr "z. B. {AUTHOR_TEMPLATE}, npub1… oder Hex-Pubkey"
@@ -6564,6 +6786,10 @@ msgstr "z. B. {AUTHOR_TEMPLATE}, npub1… oder Hex-Pubkey"
 #: src/features/workflows/ui/WorkflowStepCard.tsx
 msgid "e.g. 24h"
 msgstr "z. B. 24h"
+
+#: src/features/admin-console/AdminConsoleReportsTab.tsx
+msgid "e.g. 3600"
+msgstr "z. B. 3600"
 
 #: src/features/workflows/ui/WorkflowStepCard.tsx
 msgid "e.g. 5s, 1m, 1h"
@@ -6820,6 +7046,30 @@ msgstr "Endpunkt-URL"
 msgid "ends with"
 msgstr "endet mit"
 
+#: src/features/admin-console/adminConsoleLabels.ts
+msgid "Enforcement cancelled"
+msgstr "Durchsetzung abgebrochen"
+
+#: src/features/admin-console/AdminConsoleReportsTab.tsx
+msgid "Enforcement cancelled — report reopened"
+msgstr "Durchsetzung abgebrochen — Meldung wieder geöffnet"
+
+#: src/features/admin-console/adminConsoleLabels.ts
+msgid "Enforcement failed"
+msgstr "Durchsetzung fehlgeschlagen"
+
+#: src/features/admin-console/adminConsoleLabels.ts
+msgid "Enforcement pending…"
+msgstr "Durchsetzung steht aus…"
+
+#: src/features/admin-console/adminConsoleLabels.ts
+msgid "Enforcement succeeded"
+msgstr "Durchsetzung erfolgreich"
+
+#: src/features/admin-console/adminConsoleLabels.ts
+msgid "Enforcing…"
+msgstr "Wird durchgesetzt…"
+
 #: src/features/agents/ui/TeamDialog.tsx
 msgid "Engineering Squad"
 msgstr "Entwicklerteam"
@@ -6831,6 +7081,10 @@ msgstr "Gib eine 64-stellige Hex-Event-ID ein."
 #: src/features/workflows/ui/workflowConditionExpression.ts
 msgid "Enter a 64-character hex pubkey."
 msgstr "Gib einen 64-stelligen Hex-Pubkey ein."
+
+#: src/features/admin-console/AdminConsoleActionsTab.tsx
+msgid "Enter a 64-hex event id, or a note1… or nevent1… link."
+msgstr "Gib eine 64-stellige Hex-Event-ID oder einen note1…- oder nevent1…-Link ein."
 
 #: src/features/sidebar/ui/ChannelSectionDialogs.tsx
 msgid "Enter a new name for this section."
@@ -6947,6 +7201,31 @@ msgstr "Fehler"
 #: src/features/workflows/ui/WorkflowRunTrace.tsx
 msgid "Error"
 msgstr "Fehler"
+
+#: src/features/admin-console/AdminConsoleFeedbackTab.tsx
+msgid "Error: {code}"
+msgstr "Fehler: {code}"
+
+#: src/features/admin-console/adminConsoleLabels.ts
+msgid "Escalate"
+msgstr "Eskalieren"
+
+#: src/features/admin-console/adminConsoleLabels.ts
+msgid "Escalated"
+msgstr "Eskaliert"
+
+#: src/features/admin-console/AdminConsoleFeedbackTab.tsx
+msgid "Event created"
+msgstr "Event erstellt"
+
+#: src/features/admin-console/AdminConsoleFeedbackTab.tsx
+#: src/features/admin-console/AdminConsoleReportsTab.tsx
+msgid "Event ID"
+msgstr "Event-ID"
+
+#: src/features/admin-console/AdminConsoleActionsTab.tsx
+msgid "Event id (hex), note1… or nevent1…"
+msgstr "Event-ID (Hex), note1… oder nevent1…"
 
 #: src/features/workflows/ui/workflowDefinition.ts
 msgid "Every {interval}"
@@ -7403,9 +7682,29 @@ msgstr "feature/my-change"
 msgid "Features"
 msgstr "Funktionen"
 
+#: src/features/admin-console/adminConsoleLabels.ts
+msgid "Feedback"
+msgstr "Feedback"
+
+#: src/features/admin-console/AdminConsoleFeedbackTab.tsx
+msgid "Feedback attachment"
+msgstr "Feedback-Anhang"
+
 #: src/features/settings/ui/SendFeedbackDialog.tsx
 msgid "Feedback is sent privately to this {productName} deployment and is not posted to a channel. Attachments are uploaded before you send."
 msgstr "Feedback geht privat an diese {productName}-Installation und wird nicht in einem Kanal gepostet. Anhänge werden vor dem Senden hochgeladen."
+
+#: src/features/admin-console/AdminConsoleFeedbackTab.tsx
+msgid "Feedback marked archived"
+msgstr "Feedback als archiviert markiert"
+
+#: src/features/admin-console/AdminConsoleFeedbackTab.tsx
+msgid "Feedback marked new"
+msgstr "Feedback als neu markiert"
+
+#: src/features/admin-console/AdminConsoleFeedbackTab.tsx
+msgid "Feedback marked reviewed"
+msgstr "Feedback als geprüft markiert"
 
 #: src/features/projects/ui/ProjectRepositoryActionsPanel.tsx
 #: src/features/projects/ui/ProjectRepositorySource.tsx
@@ -7482,6 +7781,10 @@ msgstr "Schließ die Community ab, die schon verbunden wird, und versuch es dann
 #: src/features/profile/ui/NostrBindConsentDialog.tsx
 msgid "Finish on the {productName} website"
 msgstr "Auf der {productName}-Website abschließen"
+
+#: src/features/admin-console/AdminConsoleActionsTab.tsx
+msgid "Finish or discard the pending action in <0>{pendingHost}</0>."
+msgstr "Schließ die ausstehende Aktion in <0>{pendingHost}</0> ab oder verwirf sie."
 
 #: src/features/messages/ui/useComposerVoiceNote.tsx
 msgid "Finish or discard the voice note before attaching a file."
@@ -7881,6 +8184,11 @@ msgstr "Start-Zähler"
 msgid "Home feed unavailable"
 msgstr "Start-Feed nicht verfügbar"
 
+#: src/features/admin-console/AdminConsoleFeedbackTab.tsx
+#: src/features/admin-console/AdminConsoleReportsTab.tsx
+msgid "Host"
+msgstr "Host"
+
 #: src/features/settings/ui/HostedCommunitiesSettingsCard.tsx
 #: src/features/settings/ui/SettingsPanels.tsx
 msgid "Hosted communities"
@@ -7987,6 +8295,8 @@ msgstr "Die Community gehört mir"
 msgid "I’m a member or admin"
 msgstr "Ich bin Mitglied oder Admin"
 
+#: src/features/admin-console/AdminConsoleFeedbackTab.tsx
+#: src/features/admin-console/AdminConsoleReportsTab.tsx
 #: src/features/settings/ui/CustomHarnessForm.tsx
 #: src/features/settings/ui/HarnessCatalogDialog.tsx
 msgid "ID"
@@ -8090,6 +8400,11 @@ msgstr "Schlüssel wird importiert"
 #: src/features/projects/projectTaskCategories.ts
 msgid "Improvement"
 msgstr "Verbesserung"
+
+#: src/features/admin-console/AdminConsoleActionsTab.tsx
+#: src/features/admin-console/AdminConsoleReportsTab.tsx
+msgid "In"
+msgstr "In"
 
 #: src/features/huddle/components/HuddleProfileControl.tsx
 msgid "In a huddle"
@@ -8616,6 +8931,10 @@ msgstr "Für jeden Kanal-Thread eine eigene Unterhaltung. Direktnachrichten blei
 msgid "Keyboard shortcuts"
 msgstr "Tastaturkürzel"
 
+#: src/features/admin-console/adminConsoleLabels.ts
+msgid "Kick"
+msgstr "Rauswerfen"
+
 #: src/features/projects/ui/ProjectIssuesPanel.tsx
 #: src/features/projects/ui/PullRequestMetaRail.tsx
 msgid "Labels"
@@ -8743,9 +9062,14 @@ msgstr "weniger"
 msgid "Lifetime"
 msgstr "Lebensdauer"
 
+#: src/features/admin-console/AdminConsoleStaffingTab.tsx
 #: src/features/channels/ui/MembersSidebarMemberCard.tsx
 msgid "Lift ban"
 msgstr "Sperre aufheben"
+
+#: src/features/admin-console/AdminConsoleStaffingTab.tsx
+msgid "Lift ban?"
+msgstr "Sperre aufheben?"
 
 #: src/features/channels/ui/MembersSidebarMemberCard.tsx
 msgid "Lift timeout"
@@ -8851,6 +9175,11 @@ msgstr "Live-Aktivität erscheint hier."
 #: src/features/agents/ui/EditAgentProviderModelFields.tsx
 msgid "LLM provider"
 msgstr "LLM-Anbieter"
+
+#: src/features/admin-console/AdminConsoleCommunities.tsx
+#: src/features/admin-console/AdminConsoleStaffingTab.tsx
+msgid "Load more"
+msgstr "Mehr laden"
 
 #: src/features/workflows/ui/WorkflowAuthorPicker.tsx
 msgid "Load more authors"
@@ -9093,6 +9422,8 @@ msgstr "Deine Agenten werden geladen …"
 msgid "Loading..."
 msgstr "Wird geladen …"
 
+#: src/features/admin-console/AdminConsoleFeedbackTab.tsx
+#: src/features/admin-console/AdminConsolePanelHelpers.tsx
 #: src/features/agents/ui/AgentDefaultsEditor.tsx
 #: src/features/communities/ui/WelcomeSetup.tsx
 #: src/features/onboarding/ui/DefaultConfigStep.tsx
@@ -9202,6 +9533,10 @@ msgstr "Repository-Zugriff verwalten"
 #: src/features/community-members/ui/CommunityMembersCard.tsx
 msgid "Manage who has access to this relay."
 msgstr "Verwalte, wer Zugang zu diesem Relay hat."
+
+#: src/features/admin-console/AdminConsoleSettingsCard.tsx
+msgid "Manage your relay's platform layer: triage cross-community reports, review product feedback, and configure the relay operator roster."
+msgstr "Verwalte die Plattformebene deines Relays: triagiere Community-übergreifende Meldungen, sieh Produkt-Feedback durch und konfiguriere die Operator-Liste des Relays."
 
 #: src/features/messages/ui/MessageAgentOwner.tsx
 msgid "managed by"
@@ -9339,6 +9674,7 @@ msgstr "Mitglied entfernt"
 msgid "Member timed out"
 msgstr "Mitglied hat eine Auszeit"
 
+#: src/features/admin-console/adminConsoleLabels.ts
 #: src/features/channels/ui/ChannelManagementSheet.tsx
 #: src/features/channels/ui/ChannelMembersBar.tsx
 #: src/features/channels/ui/MembersSidebar.tsx
@@ -9454,6 +9790,10 @@ msgstr "Nachricht"
 msgid "Message {0}"
 msgstr "Nachricht an {0}"
 
+#: src/features/admin-console/AdminConsoleReportsTab.tsx
+msgid "message {id}"
+msgstr "Nachricht {id}"
+
 #: src/features/messages/ui/NewMessageScreen.tsx
 msgid "Message {singleRecipientName}"
 msgstr "Nachricht an {singleRecipientName}"
@@ -9466,6 +9806,10 @@ msgstr "Nachricht an #{0}"
 #: src/features/messages/ui/MessageComposer.tsx
 msgid "Message #{channelName}"
 msgstr "Nachricht an #{channelName}"
+
+#: src/features/admin-console/AdminConsoleReportsTab.tsx
+msgid "message by {name}"
+msgstr "Nachricht von {name}"
 
 #: src/features/agents/ui/AgentSessionToolItem/CompactMessageSummary.tsx
 msgid "Message content unavailable."
@@ -9645,6 +9989,10 @@ msgstr "Modell für diese Sitzung gewechselt."
 msgid "Moderation action failed"
 msgstr "Moderationsaktion fehlgeschlagen"
 
+#: src/features/admin-console/adminConsoleLabels.ts
+msgid "Moderator"
+msgstr "Moderator"
+
 #: src/features/workflows/ui/WorkflowScheduleFields.tsx
 msgid "Monday"
 msgstr "Montag"
@@ -9724,6 +10072,18 @@ msgstr "In Abschnitt verschieben"
 #: src/features/sidebar/ui/CustomChannelSection.tsx
 msgid "Move up"
 msgstr "Nach oben"
+
+#: src/features/admin-console/AdminConsoleReportsTab.tsx
+msgid "Moves this report back to the open queue for re-triage. Reopening does not reverse any enforcement action."
+msgstr "Verschiebt diese Meldung zurück in die offene Warteschlange für eine neue Triage. Das Wiederöffnen macht keine Durchsetzungsmaßnahme rückgängig."
+
+#: src/features/admin-console/AdminConsoleReportsTab.tsx
+msgid "Moves this report back to the open queue for re-triage. The enforcement action already taken is not reversed — reopening does not un-ban, un-timeout, or restore a deleted message."
+msgstr "Verschiebt diese Meldung zurück in die offene Warteschlange für eine neue Triage. Die bereits ergriffene Durchsetzungsmaßnahme wird nicht rückgängig gemacht — das Wiederöffnen hebt keine Sperre und keine Auszeit auf und stellt keine gelöschte Nachricht wieder her."
+
+#: src/features/admin-console/AdminConsoleReportsTab.tsx
+msgid "Msg created"
+msgstr "Nachricht erstellt"
 
 #: src/shared/ui/VideoPlayer.tsx
 msgid "Mute"
@@ -9818,10 +10178,15 @@ msgstr "Einrichtung auf diesem Gerät nötig"
 msgid "Needs work"
 msgstr "Verbesserungswürdig"
 
+#: src/features/admin-console/AdminConsoleFeedbackTab.tsx
+msgid "Network error fetching attachment."
+msgstr "Netzwerkfehler beim Laden des Anhangs."
+
 #: src/features/onboarding/ui/IdentityKeyIntroduction.tsx
 msgid "Never share it—anyone with this key can sign in as you"
 msgstr "Gib ihn niemals weiter – wer diesen Schlüssel hat, kann sich als du anmelden"
 
+#: src/features/admin-console/adminConsoleLabels.ts
 #: src/features/messages/ui/UnreadDivider.tsx
 msgid "New"
 msgstr "Neu"
@@ -9979,6 +10344,10 @@ msgstr "Keine ACP-Runtimes erkannt. Installiere eine, um Runtimes zuzuweisen."
 msgid "No ACP runtimes found. Make sure an agent runtime (e.g. Goose) is installed."
 msgstr "Keine ACP-Laufzeiten gefunden. Stell sicher, dass eine Agent-Laufzeit (z. B. Goose) installiert ist."
 
+#: src/features/admin-console/AdminConsoleStaffingTab.tsx
+msgid "No active bans or timeouts."
+msgstr "Keine aktiven Sperren oder Auszeiten."
+
 #: src/features/home/ui/InboxListPane.tsx
 #: src/features/profile/ui/UserProfilePanelTabs.tsx
 #: src/features/projects/lib/projectsViewHelpers.ts
@@ -9988,6 +10357,10 @@ msgstr "Noch keine Aktivität"
 #: src/features/home/lib/inbox.ts
 msgid "No additional details were attached to this event."
 msgstr "Zu diesem Ereignis wurden keine weiteren Details hinterlegt."
+
+#: src/features/admin-console/AdminConsoleSettingsCard.tsx
+msgid "No admin API found at this origin. Check the URL matches <0>BUZZ_ADMIN_HOST</0>."
+msgstr "Unter diesem Origin wurde keine Admin-API gefunden. Prüf, ob die URL zu <0>BUZZ_ADMIN_HOST</0> passt."
 
 #: src/features/channels/ui/useQuickBotDrop.ts
 msgid "No agent runtime available."
@@ -10071,6 +10444,10 @@ msgstr "Noch kein Kanal mit diesem Namen – lege ihn an, um loszulegen."
 msgid "No channel link"
 msgstr "Keine Kanalverknüpfung"
 
+#: src/features/admin-console/AdminConsoleReportsTab.tsx
+msgid "No channel membership to remove — use Timeout or Ban for open channels."
+msgstr "Keine Kanalmitgliedschaft zum Entfernen — nutz für offene Kanäle Auszeit oder Sperren."
+
 #: src/features/channels/ui/ChannelPane.tsx
 msgid "No channel selected"
 msgstr "Kein Kanal ausgewählt"
@@ -10114,6 +10491,10 @@ msgstr "Kein Commit gemeldet"
 msgid "No commits yet"
 msgstr "Noch keine Commits"
 
+#: src/features/admin-console/AdminConsoleCommunities.tsx
+msgid "No communities found."
+msgstr "Keine Communitys gefunden."
+
 #: src/features/communities/ui/CommunitySwitcher.tsx
 #: src/features/sidebar/ui/SidebarProfileCard.tsx
 msgid "No community"
@@ -10156,6 +10537,10 @@ msgstr "Keine Diskussion"
 #: src/features/messages/ui/DraftsPanel.tsx
 msgid "No drafts"
 msgstr "Keine Entwürfe"
+
+#: src/features/admin-console/AdminConsoleFeedbackTab.tsx
+msgid "No feedback found."
+msgstr "Kein Feedback gefunden."
 
 #: src/features/agents/ui/agentSessionFileRead.ts
 msgid "No file content returned."
@@ -10352,6 +10737,10 @@ msgstr "Keine Modelle gefunden"
 msgid "No models match"
 msgstr "Keine passenden Modelle"
 
+#: src/features/admin-console/AdminConsoleStaffingTab.tsx
+msgid "No operators configured."
+msgstr "Keine Operatoren konfiguriert."
+
 #: src/features/agents/ui/agentConfigControls.tsx
 msgid "No options available"
 msgstr "Keine Optionen verfügbar"
@@ -10420,6 +10809,10 @@ msgstr "Keine Erinnerungen"
 #: src/features/messages/ui/MessageThreadReplyState.tsx
 msgid "No replies in this branch yet"
 msgstr "In diesem Zweig gibt es noch keine Antworten"
+
+#: src/features/admin-console/AdminConsoleReportsTab.tsx
+msgid "No reports found."
+msgstr "Keine Meldungen gefunden."
 
 #: src/features/projects/ui/PullRequestReviewersRow.tsx
 msgid "No reviewers"
@@ -10584,6 +10977,10 @@ msgstr "Nicht bereitgestellt"
 msgid "not found in PATH — install it or update PATH, then restart {productName}"
 msgstr "nicht im PATH gefunden – installier es oder aktualisier den PATH und starte dann {productName} neu"
 
+#: src/features/admin-console/AdminConsoleActionsTab.tsx
+msgid "Not found in this community."
+msgstr "In dieser Community nicht gefunden."
+
 #: src/features/settings/ui/CustomHarnessForm.tsx
 msgid "Not found on PATH"
 msgstr "Nicht im PATH gefunden"
@@ -10604,11 +11001,20 @@ msgstr "Nicht auf diesem Gerät verwaltet"
 msgid "Not mirrored on {productName}. Repository files are hosted on {externalHost}."
 msgstr "Nicht auf {productName} gespiegelt. Die Repository-Dateien liegen auf {externalHost}."
 
+#: src/features/admin-console/AdminConsoleActionsTab.tsx
+msgid "Not on the community roster"
+msgstr "Nicht in der Mitgliederliste der Community"
+
 #: src/features/agents/ui/runOnSummary.ts
 #: src/features/settings/ui/ProfileSettingsCard.tsx
 msgid "Not set"
 msgstr "Nicht gesetzt"
 
+#: src/features/admin-console/AdminConsoleCommunityBadge.tsx
+msgid "Not the community you're connected to."
+msgstr "Nicht die Community, mit der du verbunden bist."
+
+#: src/features/admin-console/AdminConsoleReportsTab.tsx
 #: src/features/search/ui/SearchResultItem.tsx
 msgid "Note"
 msgstr "Notiz"
@@ -10766,6 +11172,7 @@ msgstr "Nur die Projektinhaberin oder der Projektinhaber kann Repositories hinzu
 msgid "Only you and your agents can send instructions."
 msgstr "Nur du und deine Agenten können Anweisungen senden."
 
+#: src/features/admin-console/adminConsoleLabels.ts
 #: src/features/projects/ui/ProjectRepositoryActionsPanel.tsx
 #: src/features/projects/ui/ProjectRepositorySource.tsx
 #: src/features/projects/ui/projectsOverviewContext.ts
@@ -10825,6 +11232,10 @@ msgstr "Profil von {authorLabel} öffnen"
 #: src/features/agents/ui/AgentSessionToolItem/CompactMessageSummary.tsx
 msgid "Open {displayName} profile"
 msgstr "Profil von {displayName} öffnen"
+
+#: src/features/admin-console/AdminConsoleCommunityBadge.tsx
+msgid "Open {host}"
+msgstr "{host} öffnen"
 
 #: src/features/profile/ui/UserProfilePanelFields.tsx
 msgid "Open {label}"
@@ -11186,6 +11597,14 @@ msgstr "OpenRouter"
 msgid "Opens Builderlab in your browser."
 msgstr "Öffnet Builderlab in deinem Browser."
 
+#: src/features/admin-console/adminConsoleLabels.ts
+msgid "Operator"
+msgstr "Operator"
+
+#: src/features/admin-console/adminConsoleLabels.ts
+msgid "Operators"
+msgstr "Operatoren"
+
 #: src/features/agents/ui/AgentDefinitionDialog.tsx
 #: src/features/agents/ui/AgentDescriptionField.tsx
 #: src/features/agents/ui/EditAgentAdvancedFields.tsx
@@ -11245,6 +11664,22 @@ msgstr "Der Ursprungskanal {channelId} ist für dich nicht sichtbar. Die Herkunf
 msgid "Origin is claimed by the event author and is not relay-verified."
 msgstr "Die Herkunft gibt die Autorin oder der Autor an, das Relay hat sie nicht geprüft."
 
+#: src/features/admin-console/AdminConsoleSettingsCard.tsx
+msgid "Origin resolved from relay config (owner fallback)."
+msgstr "Origin aus der Relay-Konfiguration aufgelöst (Eigentümer-Fallback)."
+
+#: src/features/admin-console/AdminConsoleSettingsCard.tsx
+msgid "Origin resolved from relay config."
+msgstr "Origin aus der Relay-Konfiguration aufgelöst."
+
+#: src/features/admin-console/AdminConsoleSettingsCard.tsx
+msgid "Origin resolved from the database."
+msgstr "Origin aus der Datenbank aufgelöst."
+
+#: src/features/admin-console/AdminConsoleSettingsCard.tsx
+msgid "Other possible causes: clock skew > 60 s or a relay config mismatch."
+msgstr "Andere mögliche Ursachen: Zeitabweichung > 60 s oder eine abweichende Relay-Konfiguration."
+
 #: src/features/projects/ui/ProjectsOverviewItems.tsx
 msgid "Other projects"
 msgstr "Andere Projekte"
@@ -11290,6 +11725,10 @@ msgstr "Meine Projekte"
 #: src/features/channels/ui/MembersSidebarMemberCard.tsx
 msgid "owner"
 msgstr "Inhaber"
+
+#: src/features/admin-console/adminConsoleLabels.ts
+msgid "owner (fallback)"
+msgstr "Eigentümer (Fallback)"
 
 #: src/features/messages/ui/MessageAgentOwner.tsx
 msgid "owner unavailable"
@@ -11693,6 +12132,14 @@ msgstr "Aktionen für den privaten Schlüssel"
 msgid "private welcome channel"
 msgstr "privaten Willkommenskanals"
 
+#: src/features/admin-console/AdminConsoleSettingsCard.tsx
+msgid "Probing…"
+msgstr "Wird geprüft…"
+
+#: src/features/admin-console/adminConsoleLabels.ts
+msgid "Processing"
+msgstr "In Bearbeitung"
+
 #: src/features/profile/ui/AnimatedAvatarCapture.tsx
 msgid "Processing recording"
 msgstr "Aufnahme wird verarbeitet"
@@ -11864,6 +12311,10 @@ msgstr "Anbieter"
 msgid "Provider, model, effort, and environment settings inherited by local agents. Agent-specific settings always take priority."
 msgstr "Einstellungen für Anbieter, Modell, Aufwand und Umgebung, die lokale Agenten erben. Agentenspezifische Einstellungen haben immer Vorrang."
 
+#: src/features/admin-console/AdminConsoleSettingsCard.tsx
+msgid "Pubkey copied"
+msgstr "Pubkey kopiert"
+
 #: src/features/channels/ui/ChannelPermissionsSettings.tsx
 msgid "Public"
 msgstr "Öffentlich"
@@ -12024,6 +12475,10 @@ msgstr "Schlüssel erneut importieren"
 msgid "Re-import your key instead"
 msgstr "Stattdessen Schlüssel erneut importieren"
 
+#: src/features/admin-console/AdminConsoleSettingsCard.tsx
+msgid "Re-probe"
+msgstr "Erneut prüfen"
+
 #: src/features/projects/ui/PullRequestReviewersRow.tsx
 msgid "Re-review needed"
 msgstr "Erneuter Review nötig"
@@ -12125,9 +12580,26 @@ msgstr "Bereit zum Aktualisieren!"
 msgid "Ready to use, or one click from installed."
 msgstr "Einsatzbereit oder einen Klick von der Installation entfernt."
 
+#: src/features/admin-console/AdminConsoleActionsTab.tsx
+#: src/features/admin-console/AdminConsoleReportsTab.tsx
+msgid "Reason (optional)"
+msgstr "Grund (optional)"
+
+#: src/features/admin-console/AdminConsoleActionsTab.tsx
+msgid "Reason: (none)"
+msgstr "Grund: (keiner)"
+
+#: src/features/admin-console/AdminConsoleActionsTab.tsx
+msgid "Reason: {reason}"
+msgstr "Grund: {reason}"
+
 #: src/features/settings/ui/SoundPicker.tsx
 msgid "rec."
 msgstr "empf."
+
+#: src/features/admin-console/AdminConsoleFeedbackTab.tsx
+msgid "Received"
+msgstr "Empfangen"
 
 #: src/features/onboarding/ui/IdentityRecoveryPairing.tsx
 msgid "Receiving identity from mobile device..."
@@ -12278,6 +12750,14 @@ msgstr "Verwandte Unterhaltungen"
 msgid "Relaunch {0}"
 msgstr "{0} neu starten"
 
+#: src/features/admin-console/AdminConsoleActionsTab.tsx
+msgid "Relay staff"
+msgstr "Relay-Team"
+
+#: src/features/admin-console/AdminConsoleActionsTab.tsx
+msgid "Relay staff can't be banned or timed out. Remove their staff role first."
+msgstr "Mitglieder des Relay-Teams können nicht gesperrt oder in Auszeit geschickt werden. Entferne zuerst ihre Team-Rolle."
+
 #: src/features/communities/ui/EditCommunityDialog.tsx
 #: src/features/onboarding/ui/InviteRedeemForm.tsx
 msgid "Relay URL"
@@ -12318,6 +12798,7 @@ msgstr "Erinnerungen"
 msgid "Remote deployment"
 msgstr "Entfernte Bereitstellung"
 
+#: src/features/admin-console/AdminConsoleStaffingTab.tsx
 #: src/features/agents/ui/AgentCreationPreview.tsx
 #: src/features/agents/ui/RemoveMembersConfirmDialog.tsx
 #: src/features/channels/ui/ChannelLogoEditor.tsx
@@ -12341,6 +12822,7 @@ msgstr "„{removingCommunityName}“ von diesem Gerät entfernen? {productName}
 msgid "Remove {0}"
 msgstr "{0} entfernen"
 
+#: src/features/admin-console/AdminConsoleStaffingTab.tsx
 #: src/features/messages/ui/ComposerAttachments.tsx
 msgid "Remove {displayName}"
 msgstr "{displayName} entfernen"
@@ -12415,6 +12897,14 @@ msgstr "Von diesem Gerät entfernen"
 msgid "Remove header"
 msgstr "Header entfernen"
 
+#: src/features/admin-console/AdminConsoleStaffingTab.tsx
+msgid "Remove operator"
+msgstr "Operator entfernen"
+
+#: src/features/admin-console/AdminConsoleStaffingTab.tsx
+msgid "Remove operator?"
+msgstr "Operator entfernen?"
+
 #: src/features/profile/ui/AvatarUpload.tsx
 msgid "Remove photo"
 msgstr "Foto entfernen"
@@ -12482,6 +12972,10 @@ msgstr "Wird entfernt…"
 #: src/features/sidebar/ui/CustomChannelSection.tsx
 msgid "Rename section"
 msgstr "Bereich umbenennen"
+
+#: src/features/admin-console/AdminConsoleReportsTab.tsx
+msgid "Reopen report"
+msgstr "Meldung wieder öffnen"
 
 #: src/features/projects/ui/PullRequestReviewCard.tsx
 msgid "Reopen review"
@@ -12560,9 +13054,37 @@ msgstr "Antwort an {0}"
 msgid "repo"
 msgstr "Repo"
 
+#: src/features/admin-console/AdminConsoleReportsTab.tsx
+msgid "Report"
+msgstr "Meldung"
+
 #: src/features/messages/ui/MessageActionBar.tsx
 msgid "Report message"
 msgstr "Nachricht melden"
+
+#: src/features/admin-console/AdminConsoleReportsTab.tsx
+msgid "Report reopened"
+msgstr "Meldung wieder geöffnet"
+
+#: src/features/admin-console/AdminConsoleReportsTab.tsx
+msgid "Report resolved: {outcome}"
+msgstr "Meldung erledigt: {outcome}"
+
+#: src/features/admin-console/AdminConsoleReportsTab.tsx
+msgid "Reported message"
+msgstr "Gemeldete Nachricht"
+
+#: src/features/admin-console/AdminConsoleReportsTab.tsx
+msgid "Reporter"
+msgstr "Melder"
+
+#: src/features/admin-console/AdminConsoleReportsTab.tsx
+msgid "reporter: {reporterName}"
+msgstr "Melder: {reporterName}"
+
+#: src/features/admin-console/adminConsoleLabels.ts
+msgid "Reports"
+msgstr "Meldungen"
 
 #: src/features/communities/ui/EditCommunityDialog.tsx
 msgid "Repos Directory"
@@ -12733,6 +13255,22 @@ msgstr "Im Terminal lösen"
 msgid "Resolve in Terminal securely fetches the target and review commits before showing copyable commands."
 msgstr "„Im Terminal lösen“ holt Ziel- und Review-Commits sicher, bevor kopierbare Befehle erscheinen."
 
+#: src/features/admin-console/AdminConsoleReportsTab.tsx
+msgid "Resolve report"
+msgstr "Meldung erledigen"
+
+#: src/features/admin-console/adminConsoleLabels.ts
+msgid "Resolved"
+msgstr "Erledigt"
+
+#: src/features/admin-console/AdminConsoleReportsTab.tsx
+msgid "Resolved at"
+msgstr "Erledigt am"
+
+#: src/features/admin-console/AdminConsoleReportsTab.tsx
+msgid "Resolved by"
+msgstr "Erledigt von"
+
 #: src/features/workflows/ui/WorkflowUnavailableDialog.tsx
 msgid "Resolving workflow details."
 msgstr "Workflow-Details werden ermittelt."
@@ -12822,6 +13360,10 @@ msgstr "Kanal wird wiederhergestellt …"
 msgid "Restoring..."
 msgstr "Wird wiederhergestellt …"
 
+#: src/features/admin-console/adminConsoleLabels.ts
+msgid "Restrictions"
+msgstr "Einschränkungen"
+
 #: src/features/profile/ui/AnimatedAvatarReviewNav.tsx
 msgid "Retake"
 msgstr "Neu aufnehmen"
@@ -12830,6 +13372,7 @@ msgstr "Neu aufnehmen"
 msgid "Retake the recording"
 msgstr "Aufnahme neu machen"
 
+#: src/features/admin-console/AdminConsoleActionsTab.tsx
 #: src/features/agents/ui/ModelPicker.tsx
 #: src/features/channels/ui/ChannelWorkflowsSection.tsx
 #: src/features/communities/ui/CommunityApplyErrorScreen.tsx
@@ -12937,6 +13480,11 @@ msgstr "Review"
 msgid "Review"
 msgstr "Review"
 
+#: src/features/admin-console/AdminConsoleActionsTab.tsx
+msgctxt "button that opens the confirm step"
+msgid "Review"
+msgstr "Prüfen"
+
 #: src/features/projects/ui/CreatePullRequestDialog.tsx
 msgid "Review branches are incomplete."
 msgstr "Die Review-Branches sind unvollständig."
@@ -12977,6 +13525,10 @@ msgstr "Review aktualisiert."
 msgid "Review video comments and timecoded replies."
 msgstr "Video-Kommentare und Antworten mit Zeitstempel ansehen."
 
+#: src/features/admin-console/adminConsoleLabels.ts
+msgid "Reviewed"
+msgstr "Geprüft"
+
 #: src/features/projects/ui/ProjectWorkItemContextDetails.tsx
 #: src/features/projects/ui/PullRequestReviewersRow.tsx
 msgid "Reviewers"
@@ -13006,6 +13558,10 @@ msgstr "Ausführlich"
 #: src/features/channels/ui/ChannelMemberInviteCard.tsx
 msgid "Role"
 msgstr "Rolle"
+
+#: src/features/admin-console/AdminConsoleActionsTab.tsx
+msgid "Role: {role}"
+msgstr "Rolle: {role}"
 
 #: src/features/settings/ui/AppearanceSettingsControls.tsx
 msgid "Row height and the spacing around section headers"
@@ -13088,6 +13644,7 @@ msgstr "So"
 msgid "Saturday"
 msgstr "Samstag"
 
+#: src/features/admin-console/AdminConsoleSettingsCard.tsx
 #: src/features/messages/lib/useLinkEditor.tsx
 #: src/features/messages/ui/ComposerImageEditor.tsx
 #: src/features/profile/ui/ProfileAvatarEditor.tsx
@@ -13108,6 +13665,10 @@ msgstr "Zugriff speichern"
 #: src/features/agents/ui/AgentDefinitionDialogFooter.tsx
 msgid "Save and publish"
 msgstr "Speichern und veröffentlichen"
+
+#: src/features/admin-console/AdminConsoleFeedbackTab.tsx
+msgid "Save attachment ({mime})"
+msgstr "Anhang speichern ({mime})"
 
 #: src/features/onboarding/ui/EncryptedBackupCreator.tsx
 msgid "Save backup"
@@ -13253,9 +13814,17 @@ msgstr "{0} durchsuchen"
 msgid "Search authors or paste a public key"
 msgstr "Autoren suchen oder öffentlichen Schlüssel einfügen"
 
+#: src/features/admin-console/AdminConsoleCommunities.tsx
+msgid "Search by host (e.g. team.example.com)"
+msgstr "Nach Host suchen (z. B. team.example.com)"
+
 #: src/features/agents/ui/RespondToField.tsx
 msgid "Search by name or NIP-05."
 msgstr "Nach Name oder NIP-05 suchen."
+
+#: src/features/admin-console/AdminConsoleActionsTab.tsx
+msgid "Search by name, or paste an npub or hex key"
+msgstr "Nach Namen suchen oder npub bzw. Hex-Schlüssel einfügen"
 
 #: src/features/workflows/ui/ChannelCombobox.tsx
 msgid "Search channels"
@@ -13691,6 +14260,18 @@ msgstr "Gesendeter Projektkontext"
 #: src/features/messages/ui/MessageActionBar.tsx
 msgid "Sent to channel"
 msgstr "An den Kanal gesendet"
+
+#: src/features/admin-console/AdminConsoleReportsTab.tsx
+msgid "Sent verbatim to the affected user and posted publicly in the room."
+msgstr "Wird wörtlich an die betroffene Person gesendet und öffentlich im Raum gepostet."
+
+#: src/features/admin-console/AdminConsoleReportsTab.tsx
+msgid "Sent verbatim to the affected user."
+msgstr "Wird wörtlich an die betroffene Person gesendet."
+
+#: src/features/admin-console/AdminConsoleReportsTab.tsx
+msgid "Sent verbatim to the reporter."
+msgstr "Wird wörtlich an den Melder gesendet."
 
 #: src/features/onboarding/ui/EncryptedBackupCreator.tsx
 #: src/features/settings/ui/EncryptedBackupCreator.tsx
@@ -14331,6 +14912,7 @@ msgstr "Kopplung wird gestartet …"
 msgid "starts with"
 msgstr "beginnt mit"
 
+#: src/features/admin-console/AdminConsoleFeedbackTab.tsx
 #: src/features/agents/ui/AgentSessionToolItem/SentMessageContextDialog.tsx
 #: src/features/agents/ui/ManagedAgentRow.tsx
 #: src/features/profile/ui/UserProfilePanelFields.tsx
@@ -14491,6 +15073,10 @@ msgstr "Strukturierter Wert"
 msgid "STT model: {0}"
 msgstr "STT-Modell: {0}"
 
+#: src/features/admin-console/AdminConsoleFeedbackTab.tsx
+msgid "Submitter"
+msgstr "Eingereicht von"
+
 #: src/features/onboarding/ui/SetupStep.tsx
 msgid "Subscriptions connect through a compatible harness, like Claude Code or Codex. Choose yours to sign in."
 msgstr "Abos verbinden sich über ein kompatibles Harness, etwa Claude Code oder Codex. Wähle dein Harness, um dich anzumelden."
@@ -14584,6 +15170,18 @@ msgstr "Los geht’s mit {0}"
 #: src/features/channels/ui/WelcomeAgentCreateDialog.tsx
 msgid "Talk through what you need. {guideName} will prepare a draft you can review and edit."
 msgstr "Beschreibe im Gespräch, was du brauchst. {guideName} erstellt dann einen Entwurf, den du prüfen und bearbeiten kannst."
+
+#: src/features/admin-console/AdminConsoleReportsTab.tsx
+msgid "Target"
+msgstr "Ziel"
+
+#: src/features/admin-console/AdminConsoleReportsTab.tsx
+msgid "Target kind"
+msgstr "Zielart"
+
+#: src/features/admin-console/AdminConsoleReportsTab.tsx
+msgid "target: {targetName}"
+msgstr "Ziel: {targetName}"
 
 #: src/features/projects/ui/CreateProjectWorkItemDialog.tsx
 msgid "task"
@@ -14795,6 +15393,11 @@ msgstr "Diese Person braucht eine verbundene {productName}-Identität, bevor du 
 #: src/features/onboarding/ui/BackupTestFlow.tsx
 msgid "That's a key backup, but not the one you just downloaded."
 msgstr "Das ist ein Schlüssel-Backup, aber nicht das, das du gerade heruntergeladen hast."
+
+#: src/features/admin-console/AdminConsoleActionsTab.tsx
+#: src/features/admin-console/AdminConsoleCommunities.tsx
+msgid "That's a secret key. Never paste it here."
+msgstr "Das ist ein geheimer Schlüssel. Füg ihn hier niemals ein."
 
 #: src/features/settings/ui/BackupTestFlow.tsx
 msgid "That's the one. Now enter your password to prove you can unlock it."
@@ -15333,6 +15936,14 @@ msgstr "Dieser Anbieter unter"
 msgid "This publishes {revisionLabel} as the current canvas for everyone in this channel. History is preserved."
 msgstr "Damit wird {revisionLabel} für alle in diesem Kanal zum aktuellen Canvas. Der Verlauf bleibt erhalten."
 
+#: src/features/admin-console/AdminConsolePanelHelpers.tsx
+msgid "This relay doesn't support community browsing yet."
+msgstr "Dieses Relay unterstützt das Durchsuchen von Communitys noch nicht."
+
+#: src/features/admin-console/AdminConsoleActionsTab.tsx
+msgid "This relay doesn't support direct actions yet."
+msgstr "Dieses Relay unterstützt Direktaktionen noch nicht."
+
 #: src/features/onboarding/ui/MembershipDenied.tsx
 msgid "This relay requires an invitation. Ask a relay admin to add you as a member, then come back and try again."
 msgstr "Dieses Relay erfordert eine Einladung. Bitte die Relay-Administration, dich als Mitglied hinzuzufügen, und versuche es dann noch einmal."
@@ -15352,6 +15963,10 @@ msgstr "Dieses Repository hat keine Zugriffskanal-Bindung, deshalb kann das Rela
 #: src/features/projects/lib/projectGitError.ts
 msgid "This repository requires GitHub authentication. {productName} currently clones public GitHub repositories without credentials."
 msgstr "Dieses Repository verlangt eine GitHub-Authentifizierung. {productName} klont öffentliche GitHub-Repositories derzeit ohne Zugangsdaten."
+
+#: src/features/admin-console/AdminConsoleActionsTab.tsx
+msgid "This request id was already used for a different action. Review again to send it with a new id."
+msgstr "Diese Request-ID wurde schon für eine andere Aktion verwendet. Prüf erneut, um sie mit einer neuen ID zu senden."
 
 #: src/features/projects/projectPullRequests.mjs
 msgid "This review is still a work in progress."
@@ -15393,6 +16008,10 @@ msgstr "Diese Woche"
 msgid "This week:"
 msgstr "Diese Woche:"
 
+#: src/features/admin-console/AdminConsoleStaffingTab.tsx
+msgid "This will clear the active timeout for <0>{liftTargetLabel}</0> in <1>{liftHostLabel}</1>. They will be able to post again."
+msgstr "Damit wird die aktive Auszeit für <0>{liftTargetLabel}</0> in <1>{liftHostLabel}</1> aufgehoben. Die Person kann dann wieder posten."
+
 #: src/features/onboarding/ui/MachineOnboardingFlow.tsx
 #: src/features/onboarding/ui/OnboardingFlow.tsx
 msgid "This will create a new identity and abandon your previous key. This cannot be undone. Continue?"
@@ -15409,6 +16028,14 @@ msgstr "Damit wird der Zugang zum Relay sofort entzogen."
 #: src/features/messages/ui/DeleteMessageConfirmDialog.tsx
 msgid "This will permanently delete this message and cannot be undone."
 msgstr "Damit wird diese Nachricht endgültig gelöscht. Das lässt sich nicht rückgängig machen."
+
+#: src/features/admin-console/AdminConsoleStaffingTab.tsx
+msgid "This will remove <0>{removeTargetLabel}</0> ({removeRoleLabel}) from the operator list."
+msgstr "Damit wird <0>{removeTargetLabel}</0> ({removeRoleLabel}) von der Operator-Liste entfernt."
+
+#: src/features/admin-console/AdminConsoleStaffingTab.tsx
+msgid "This will remove the active ban for <0>{liftTargetLabel}</0> in <1>{liftHostLabel}</1>. They will be able to post again."
+msgstr "Damit wird die aktive Sperre für <0>{liftTargetLabel}</0> in <1>{liftHostLabel}</1> aufgehoben. Die Person kann dann wieder posten."
 
 #: src/features/onboarding/ui/MembershipDenied.tsx
 msgid "This will use this Nostr identity:"
@@ -15475,10 +16102,24 @@ msgstr "Threads öffnen sich über dem Kanal"
 msgid "Thursday"
 msgstr "Donnerstag"
 
+#: src/features/admin-console/AdminConsoleActionsTab.tsx
 #: src/features/channels/ui/MembersSidebarMemberCard.tsx
 msgid "Time out"
 msgstr "Auszeit geben"
 
+#: src/features/admin-console/adminConsoleLabels.ts
+msgid "Time out member"
+msgstr "Mitglied in Auszeit schicken"
+
+#: src/features/admin-console/AdminConsoleActionsTab.tsx
+msgid "Timed out until {mutedUntil}"
+msgstr "In Auszeit bis {mutedUntil}"
+
+#: src/features/admin-console/adminConsoleLabels.ts
+msgid "timeout"
+msgstr "Auszeit"
+
+#: src/features/admin-console/adminConsoleLabels.ts
 #: src/features/workflows/ui/WorkflowStepCard.tsx
 msgid "Timeout"
 msgstr "Zeitlimit"
@@ -17225,6 +17866,10 @@ msgstr "Du ("
 msgid "You are currently timed out and cannot send messages."
 msgstr "Du bist gerade im Timeout und kannst keine Nachrichten senden."
 
+#: src/features/admin-console/AdminConsoleStaffingTab.tsx
+msgid "You are removing your own operator access. Once removed, you may lose the ability to undo this action."
+msgstr "Du entfernst deinen eigenen Operator-Zugang. Nach dem Entfernen kannst du diese Aktion möglicherweise nicht mehr rückgängig machen."
+
 #: src/features/profile/ui/ArchiveConfirmDialog.tsx
 msgid "You can also delete this agent from the profile settings menu if you want to remove the agent instead of hiding it."
 msgstr "Du kannst diesen Agenten auch über das Profileinstellungsmenü löschen, wenn du ihn entfernen statt ausblenden willst."
@@ -17422,6 +18067,10 @@ msgstr "Dein privater Identitätsschlüssel"
 #: src/features/settings/ui/ProfileSettingsCard.tsx
 msgid "Your profile"
 msgstr "Dein Profil"
+
+#: src/features/admin-console/AdminConsoleSettingsCard.tsx
+msgid "Your pubkey is not authorized as an operator on this relay. Ask a relay operator to add:"
+msgstr "Dein Pubkey ist auf diesem Relay nicht als Operator zugelassen. Bitte einen Relay-Operator, diesen hinzuzufügen:"
 
 #: src/features/onboarding/ui/MembershipDenied.tsx
 msgid "Your public key (npub)"
