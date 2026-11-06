@@ -1,48 +1,75 @@
 import assert from "node:assert/strict";
 import test from "node:test";
+import { i18n } from "@lingui/core";
 
 import {
-  TIME_PRESETS,
   parseCustomDateTime,
+  timePresets,
   todayDateString,
 } from "./timePresets.ts";
 
 const nowSeconds = () => Math.floor(Date.now() / 1_000);
 
+// Presets are looked up by their locale-independent `id`, never by the label
+// the user reads. One test below pins the English labels so a copy change is
+// still visible here.
+function presetById(id) {
+  const preset = timePresets(i18n).find((p) => p.id === id);
+  if (!preset) throw new Error(`preset not found: ${id}`);
+  return preset;
+}
+
 test("TIME_PRESETS_every_preset_returns_strictly_future_timestamp", () => {
   const now = nowSeconds();
-  for (const preset of TIME_PRESETS) {
+  for (const preset of timePresets(i18n)) {
     assert.ok(
       preset.getTimestamp() > now,
-      `${preset.label} must be strictly in the future`,
+      `${preset.id} must be strictly in the future`,
     );
   }
 });
 
-test("TIME_PRESETS_relative_offsets_match_their_labels", () => {
+test("TIME_PRESETS_relative_offsets_match_their_ids", () => {
   const before = nowSeconds();
-  const byLabel = Object.fromEntries(
-    TIME_PRESETS.map((p) => [p.label, p.getTimestamp()]),
+  const byId = Object.fromEntries(
+    timePresets(i18n).map((p) => [p.id, p.getTimestamp()]),
   );
   // Allow a 2s window for clock drift across the getTimestamp calls.
-  assert.ok(Math.abs(byLabel["In 30 minutes"] - (before + 30 * 60)) <= 2);
-  assert.ok(Math.abs(byLabel["In 1 hour"] - (before + 60 * 60)) <= 2);
-  assert.ok(Math.abs(byLabel["In 3 hours"] - (before + 3 * 60 * 60)) <= 2);
+  assert.ok(Math.abs(byId.in30m - (before + 30 * 60)) <= 2);
+  assert.ok(Math.abs(byId.in1h - (before + 60 * 60)) <= 2);
+  assert.ok(Math.abs(byId.in3h - (before + 3 * 60 * 60)) <= 2);
 });
 
 test("TIME_PRESETS_9am_presets_land_on_a_9am_boundary", () => {
-  for (const label of ["Tomorrow at 9am", "Next Monday at 9am"]) {
-    const preset = TIME_PRESETS.find((p) => p.label === label);
-    const d = new Date(preset.getTimestamp() * 1_000);
+  for (const id of ["tomorrow9am", "nextMonday9am"]) {
+    const d = new Date(presetById(id).getTimestamp() * 1_000);
     assert.equal(d.getHours(), 9);
     assert.equal(d.getMinutes(), 0);
   }
 });
 
 test("TIME_PRESETS_next_monday_lands_on_a_monday", () => {
-  const preset = TIME_PRESETS.find((p) => p.label === "Next Monday at 9am");
-  const d = new Date(preset.getTimestamp() * 1_000);
+  const d = new Date(presetById("nextMonday9am").getTimestamp() * 1_000);
   assert.equal(d.getDay(), 1); // Monday
+});
+
+test("timePresets_resolvesLabelsThroughI18n_andKeepsIdsStable", () => {
+  const presets = timePresets(i18n);
+  assert.deepEqual(
+    presets.map((p) => p.id),
+    ["in30m", "in1h", "in3h", "tomorrow9am", "nextMonday9am"],
+  );
+  // English copy, pinned: the test-loader activates `en`.
+  assert.deepEqual(
+    presets.map((p) => p.label),
+    [
+      "In 30 minutes",
+      "In 1 hour",
+      "In 3 hours",
+      "Tomorrow at 9am",
+      "Next Monday at 9am",
+    ],
+  );
 });
 
 test("parseCustomDateTime_future_datetime_returns_timestamp", () => {

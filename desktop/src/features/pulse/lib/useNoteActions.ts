@@ -1,3 +1,4 @@
+import { useLingui } from "@lingui/react/macro";
 import * as React from "react";
 import { useNavigate } from "@tanstack/react-router";
 import { useQueryClient } from "@tanstack/react-query";
@@ -44,6 +45,7 @@ export function usePulseNoteActions({
   reactionQueryKey: ReturnType<typeof pulseQueryKeys.reactions>;
   reactions: Map<string, PulseReactionState>;
 }): PulseNoteActions {
+  const { t } = useLingui();
   const [pendingUpvoteNoteIds, setPendingUpvoteNoteIds] = React.useState<
     ReadonlySet<string>
   >(() => new Set());
@@ -98,7 +100,7 @@ export function usePulseNoteActions({
 
         queryClient.setQueryData(reactionQueryKey, previousReactions);
         toast.error(
-          error instanceof Error ? error.message : "Failed to update reaction",
+          error instanceof Error ? error.message : t`Failed to update reaction`,
         );
       } finally {
         setPendingUpvoteNoteIds((current) =>
@@ -111,6 +113,7 @@ export function usePulseNoteActions({
       pendingUpvoteNoteIds,
       queryClient,
       reactionQueryKey,
+      t,
       toggleReactionMutation,
     ],
   );
@@ -135,22 +138,25 @@ export function usePulseNoteActions({
         });
       } catch (error) {
         toast.error(
-          error instanceof Error ? error.message : "Failed to post reply",
+          error instanceof Error ? error.message : t`Failed to post reply`,
         );
         throw error;
       }
     },
-    [replyMutation],
+    [replyMutation, t],
   );
 
-  const share = React.useCallback(async (note: UserNote) => {
-    try {
-      await writeTextToClipboard(buildNoteShareUri(note));
-      toast.success("Copied note link");
-    } catch {
-      toast.error("Failed to copy note link");
-    }
-  }, []);
+  const share = React.useCallback(
+    async (note: UserNote) => {
+      try {
+        await writeTextToClipboard(buildNoteShareUri(note));
+        toast.success(t`Copied note link`);
+      } catch {
+        toast.error(t`Failed to copy note link`);
+      }
+    },
+    [t],
+  );
 
   const startDm = React.useCallback(
     async (pubkey: string) => {
@@ -164,11 +170,11 @@ export function usePulseNoteActions({
         });
       } catch (error) {
         toast.error(
-          error instanceof Error ? error.message : "Failed to open DM",
+          error instanceof Error ? error.message : t`Failed to open DM`,
         );
       }
     },
-    [navigate, openDmMutation],
+    [navigate, openDmMutation, t],
   );
 
   return {

@@ -1,3 +1,4 @@
+import { Plural, useLingui } from "@lingui/react/macro";
 import { Bot, ChevronDown, ChevronRight } from "lucide-react";
 import * as React from "react";
 
@@ -36,15 +37,28 @@ function formatActivityTime(unixSeconds: number, locale: AppLocale): string {
 }
 
 function StatusDot({ status }: { status: "online" | "away" | "offline" }) {
+  const { t } = useLingui();
   const color =
     status === "online"
       ? "bg-emerald-500"
       : status === "away"
         ? "bg-amber-500"
         : "bg-zinc-400";
+  // One whole sentence per status, not "Agent" + the raw machine status: the
+  // status word is an enum value, and interpolating it leaves half the label
+  // in English under any other locale.
+  const label =
+    status === "online"
+      ? t`Agent online`
+      : status === "away"
+        ? t`Agent away`
+        : t`Agent offline`;
   return (
     <span
-      aria-label={`Agent ${status}`}
+      aria-label={label}
+      // Locale-independent liveness evidence. Tests and any other read-back
+      // bind this, never `aria-label` — that string changes with the locale.
+      data-agent-status={status}
       role="img"
       className={`inline-block h-2 w-2 rounded-full ${color}`}
     />
@@ -56,6 +70,7 @@ export function AgentActivityCard({
   profile,
   agentStatus,
 }: AgentActivityCardProps) {
+  const { t } = useLingui();
   const locale = useLocale();
   const [expanded, setExpanded] = React.useState(false);
   const displayName = profile?.displayName ?? truncateNpub(group.pubkey);
@@ -75,7 +90,7 @@ export function AgentActivityCard({
           role={"bot" as const}
         >
           <button
-            aria-label={`Open profile for ${displayName}`}
+            aria-label={t`Open profile for ${displayName}`}
             className="relative flex shrink-0 rounded-xl pt-1 focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-ring"
             type="button"
           >
@@ -111,7 +126,11 @@ export function AgentActivityCard({
             ) : (
               <ChevronRight className="h-4 w-4" />
             )}
-            {group.notes.length} updates
+            <Plural
+              value={group.notes.length}
+              one="# update"
+              other="# updates"
+            />
           </button>
         ) : null}
       </div>

@@ -1,3 +1,6 @@
+import type { MessageDescriptor } from "@lingui/core";
+import { msg } from "@lingui/core/macro";
+
 import type { Reminder } from "@/features/reminders/lib/reminderTypes";
 
 const nowSeconds = () => Math.floor(Date.now() / 1_000);
@@ -43,8 +46,21 @@ export function dueSince(
   );
 }
 
+/**
+ * Stable bucket identity, independent of the displayed heading. React keys and
+ * tests bind this, never `label`.
+ */
+export type ReminderGroupId = "overdue" | "today" | "upcoming" | "completed";
+
 export type ReminderGroup = {
-  label: string;
+  /** Locale-independent identity for React keys and tests. */
+  id: ReminderGroupId;
+  /**
+   * Section heading as a message descriptor, not a resolved string: this is a
+   * pure bucketing function with no `i18n` of its own, and the render site
+   * resolves through `useLingui()` so a language change re-renders it.
+   */
+  label: MessageDescriptor;
   reminders: Reminder[];
 };
 
@@ -86,10 +102,13 @@ export function groupReminders(
   done.sort((a, b) => b.createdAt - a.createdAt);
 
   const groups: ReminderGroup[] = [];
-  if (overdue.length > 0) groups.push({ label: "Overdue", reminders: overdue });
-  if (today.length > 0) groups.push({ label: "Today", reminders: today });
+  if (overdue.length > 0)
+    groups.push({ id: "overdue", label: msg`Overdue`, reminders: overdue });
+  if (today.length > 0)
+    groups.push({ id: "today", label: msg`Today`, reminders: today });
   if (upcoming.length > 0)
-    groups.push({ label: "Upcoming", reminders: upcoming });
-  if (done.length > 0) groups.push({ label: "Completed", reminders: done });
+    groups.push({ id: "upcoming", label: msg`Upcoming`, reminders: upcoming });
+  if (done.length > 0)
+    groups.push({ id: "completed", label: msg`Completed`, reminders: done });
   return groups;
 }

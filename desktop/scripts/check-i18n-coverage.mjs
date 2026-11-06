@@ -803,6 +803,26 @@ const CONVERTED_FILES = [
   "src/features/local-archive/ui/localArchiveKinds.ts",
   "src/features/mesh-compute/servingUsage.ts",
   "src/features/mesh-compute/ui/MeshComputeSettingsCard.tsx",
+  // Tranche 9 — reminders and Pulse. The reminders half is the inbox
+  // "Reminders" filter plus the "Remind me later" dialog and the snooze
+  // dropdown every message row can open; the Pulse half is the notes feed,
+  // its tab bar, the note card and the agent activity card.
+  //
+  // The three libraries are listed with their screens because they *produce*
+  // copy: the five snooze/create presets, the four Overdue/Today/Upcoming/
+  // Completed bucket headings and the four Pulse action toasts all come from
+  // there, and no JSX node mentions any of them.
+  "src/features/pulse/lib/useNoteActions.ts",
+  "src/features/pulse/ui/AgentActivityCard.tsx",
+  "src/features/pulse/ui/NoteCard.tsx",
+  "src/features/pulse/ui/PulseTabBar.tsx",
+  "src/features/pulse/ui/PulseView.tsx",
+  "src/features/reminders/lib/reminderFilters.ts",
+  "src/features/reminders/lib/timePresets.ts",
+  "src/features/reminders/ui/RemindMeLaterDialog.tsx",
+  "src/features/reminders/ui/RemindersPanel.tsx",
+  "src/features/reminders/ui/SnoozeMenu.tsx",
+  "src/features/reminders/useReminderNotifications.ts",
 ];
 
 /**
