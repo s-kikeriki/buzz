@@ -1,3 +1,6 @@
+import type { I18n } from "@lingui/core";
+import { plural } from "@lingui/core/macro";
+import { Trans, useLingui } from "@lingui/react/macro";
 import { useQueryClient } from "@tanstack/react-query";
 import { Headphones, MessageSquareText } from "lucide-react";
 import * as React from "react";
@@ -109,8 +112,15 @@ function reconstructHuddleLifecycle(
   return { ended, participants };
 }
 
-function participantLabel(count: number) {
-  return `${count} participant${count === 1 ? "" : "s"}`;
+/**
+ * Takes `i18n` rather than reading a module-level instance: this is called
+ * during render, and the plural forms have to come from the locale active
+ * then. Same shape as `channelLifecycleLabel`.
+ */
+function participantLabel(i18n: I18n, count: number) {
+  return i18n._(
+    plural(count, { one: "# participant", other: "# participants" }),
+  );
 }
 
 export function HuddleAttachment({
@@ -118,6 +128,7 @@ export function HuddleAttachment({
   className,
   message,
 }: HuddleAttachmentProps) {
+  const { i18n, t } = useLingui();
   const ephemeralChannelId = React.useMemo(
     () => parseEphemeralChannelId(message.body),
     [message.body],
@@ -243,9 +254,11 @@ export function HuddleAttachment({
           <Headphones />
         </AttachmentMedia>
         <AttachmentContent>
-          <AttachmentTitle>Huddle unavailable</AttachmentTitle>
+          <AttachmentTitle>
+            <Trans>Huddle unavailable</Trans>
+          </AttachmentTitle>
           <AttachmentDescription>
-            This huddle card is missing session details.
+            <Trans>This huddle card is missing session details.</Trans>
           </AttachmentDescription>
         </AttachmentContent>
       </Attachment>
@@ -268,12 +281,12 @@ export function HuddleAttachment({
       </AttachmentMedia>
       <AttachmentContent>
         <AttachmentTitle>
-          Huddle
+          <Trans>Huddle</Trans>
           <span aria-hidden="true"> · </span>
-          {displayEnded ? "Ended" : "In progress"}
+          {displayEnded ? t`Ended` : t`In progress`}
         </AttachmentTitle>
         <AttachmentDescription>
-          {participantLabel(participantCount)}
+          {participantLabel(i18n, participantCount)}
         </AttachmentDescription>
       </AttachmentContent>
       <AttachmentActions>
@@ -286,11 +299,11 @@ export function HuddleAttachment({
             variant="secondary"
           >
             <Headphones className="h-4 w-4" />
-            {isJoining || isStarting ? "Joining" : "Join"}
+            {isJoining || isStarting ? t`Joining` : t`Join`}
           </AttachmentAction>
         ) : isCurrentHuddle || displayEnded ? (
           <AttachmentAction
-            aria-label="View huddle"
+            aria-label={t`View huddle`}
             onClick={() => {
               if (isCurrentHuddle) {
                 showHuddleInMainApp(ephemeralChannelId);
@@ -303,7 +316,7 @@ export function HuddleAttachment({
             variant="ghost"
           >
             <MessageSquareText className="h-4 w-4" />
-            View
+            <Trans>View</Trans>
           </AttachmentAction>
         ) : null}
       </AttachmentActions>

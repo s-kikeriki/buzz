@@ -1,3 +1,4 @@
+import { Trans, useLingui } from "@lingui/react/macro";
 import { openUrl } from "@tauri-apps/plugin-opener";
 import { Check, ChevronUp, Mic, MicOff, Volume2, VolumeX } from "lucide-react";
 import * as React from "react";
@@ -105,6 +106,7 @@ export function MicControls({
   micGain,
   onGainChange,
 }: MicControlsProps) {
+  const { t } = useLingui();
   const micUnavailable = !micConnected;
   const isMac = isMacPlatform();
   const prefersReducedMotion = usePrefersReducedMotion();
@@ -117,12 +119,12 @@ export function MicControls({
   const [leftBarHeight, centerBarHeight, rightBarHeight] = barHeights;
 
   const micButtonLabel = micUnavailable
-    ? "Microphone unavailable"
+    ? t`Microphone unavailable`
     : isEffectivelyMuted
-      ? "Unmute microphone"
-      : "Mute microphone";
+      ? t`Unmute microphone`
+      : t`Mute microphone`;
   const micTooltip = micUnavailable
-    ? "Microphone unavailable. Check app permissions or input device."
+    ? t`Microphone unavailable. Check app permissions or input device.`
     : micButtonLabel;
   const iconButtonClass = compact
     ? "h-8 w-8 shrink-0 rounded-l-md rounded-r-none px-0 py-0 text-sidebar-foreground/70 !shadow-none hover:bg-sidebar-foreground/5 hover:text-sidebar-foreground/70"
@@ -180,7 +182,9 @@ export function MicControls({
           <TooltipContent className="buzz-huddle-tooltip" side="top">
             {isPttMode && !micUnavailable && isEffectivelyMuted ? (
               <span className="flex items-center gap-1.5">
-                <span>Click to unmute or hold</span>
+                <span>
+                  <Trans>Click to unmute or hold</Trans>
+                </span>
                 <kbd className="rounded border border-border/70 bg-muted/70 px-1.5 py-0.5 text-2xs text-muted-foreground">
                   {pushToTalkShortcut}
                 </kbd>
@@ -192,7 +196,7 @@ export function MicControls({
         </Tooltip>
         <PopoverTrigger asChild>
           <Button
-            aria-label="Audio settings"
+            aria-label={t`Audio settings`}
             className={chevronButtonClass}
             size="icon"
             variant={compact ? "ghost" : "secondary"}
@@ -225,15 +229,18 @@ export function MicControls({
         </PopoverTrigger>
       </div>
       <PopoverContent
+        data-testid="huddle-mic-settings"
         side="top"
         className="buzz-huddle-drawer buzz-huddle-popover w-64 text-foreground"
       >
         <div className="flex flex-col gap-3">
           <div>
-            <span className="mb-1 block text-xs font-medium">Input Mode</span>
+            <span className="mb-1 block text-xs font-medium">
+              <Trans>Input Mode</Trans>
+            </span>
             <button
               aria-label={
-                isPttMode ? "Turn off Push to Talk" : "Turn on Push to Talk"
+                isPttMode ? t`Turn off Push to Talk` : t`Turn on Push to Talk`
               }
               aria-pressed={isPttMode}
               className="flex w-full items-center gap-2 rounded-lg px-2 py-1.5 text-left text-xs transition-colors hover:bg-accent"
@@ -247,22 +254,24 @@ export function MicControls({
               <Check
                 className={cn("h-3 w-3 shrink-0", !isPttMode && "invisible")}
               />
-              <span className="font-medium">Push to Talk</span>
+              <span className="font-medium">
+                <Trans>Push to Talk</Trans>
+              </span>
               <kbd className="ml-auto rounded border border-border/70 bg-muted/70 px-1.5 py-0.5 text-2xs font-medium text-muted-foreground">
                 {pushToTalkShortcut}
               </kbd>
             </button>
             <span className="sr-only" aria-live="polite">
               {isPttMode
-                ? "Push to Talk is enabled."
-                : "Microphone is continuous."}
+                ? t`Push to Talk is enabled.`
+                : t`Microphone is continuous.`}
             </span>
           </div>
           <DeviceList
-            label="Microphone"
+            label={t`Microphone`}
             devices={audioDevices.map((d) => ({
               id: d.deviceId,
-              label: d.label || `Mic ${d.deviceId.slice(0, 8)}`,
+              label: d.label || t`Mic ${d.deviceId.slice(0, 8)}`,
             }))}
             selectedId={selectedDeviceId}
             onSelect={onSelectDevice}
@@ -273,7 +282,7 @@ export function MicControls({
               htmlFor="mic-volume"
               className="mb-1 block text-xs font-medium"
             >
-              Input Volume
+              <Trans>Input Volume</Trans>
             </label>
             <div className="flex items-center gap-2">
               <input
@@ -292,10 +301,14 @@ export function MicControls({
             </div>
             {micUnavailable && (
               <div className="mt-3 rounded-md border border-foreground/10 bg-foreground/8 px-2 py-2 text-xs text-foreground">
-                <p className="font-medium">Microphone unavailable</p>
+                <p className="font-medium">
+                  <Trans>Microphone unavailable</Trans>
+                </p>
                 <p className="mt-1 leading-snug text-foreground/70">
-                  Check app microphone permission or select another input
-                  device.
+                  <Trans>
+                    Check app microphone permission or select another input
+                    device.
+                  </Trans>
                 </p>
                 {isMac && (
                   <Button
@@ -314,7 +327,7 @@ export function MicControls({
                     type="button"
                     variant="secondary"
                   >
-                    Open Settings
+                    <Trans>Open Settings</Trans>
                   </Button>
                 )}
               </div>
@@ -345,6 +358,7 @@ export function SpeakerControls({
   selectedOutputDevice,
   onSelectOutputDevice,
 }: SpeakerControlsProps) {
+  const { t } = useLingui();
   return (
     <Popover>
       <div className="relative flex items-center">
@@ -362,7 +376,7 @@ export function SpeakerControls({
           </PopoverAnchor>
           <PopoverContent
             align="center"
-            aria-label="Headphones recommended"
+            aria-label={t`Headphones recommended`}
             className="buzz-huddle-drawer buzz-huddle-popover buzz-huddle-headphones-hint w-64 p-3 text-foreground"
             onCloseAutoFocus={(event) => event.preventDefault()}
             onOpenAutoFocus={(event) => event.preventDefault()}
@@ -372,11 +386,13 @@ export function SpeakerControls({
             <div className="flex flex-col gap-2">
               <div>
                 <p className="text-xs font-medium">
-                  Headphones help prevent echo
+                  <Trans>Headphones help prevent echo</Trans>
                 </p>
                 <p className="mt-1 text-xs leading-snug text-foreground/75">
-                  If people are nearby, speakers can feed back into your mic.
-                  Headphones keep huddles clearer.
+                  <Trans>
+                    If people are nearby, speakers can feed back into your mic.
+                    Headphones keep huddles clearer.
+                  </Trans>
                 </p>
               </div>
               <div className="flex justify-end">
@@ -387,14 +403,16 @@ export function SpeakerControls({
                   type="button"
                   variant="ghost"
                 >
-                  Got it
+                  <Trans>Got it</Trans>
                 </Button>
               </div>
             </div>
           </PopoverContent>
         </Popover>
         <Button
-          aria-label={ttsEnabled ? "Mute agent speech" : "Unmute agent speech"}
+          aria-label={
+            ttsEnabled ? t`Mute agent speech` : t`Unmute agent speech`
+          }
           aria-pressed={!ttsEnabled}
           className={cn(
             splitIconButtonClass,
@@ -412,7 +430,7 @@ export function SpeakerControls({
         </Button>
         <PopoverTrigger asChild>
           <Button
-            aria-label="Speaker settings"
+            aria-label={t`Speaker settings`}
             className={splitChevronButtonClass}
             size="icon"
             variant="secondary"
@@ -422,11 +440,12 @@ export function SpeakerControls({
         </PopoverTrigger>
       </div>
       <PopoverContent
+        data-testid="huddle-speaker-settings"
         side="top"
         className="buzz-huddle-drawer buzz-huddle-popover w-64 text-foreground"
       >
         <DeviceList
-          label="Speaker"
+          label={t`Speaker`}
           devices={outputDevices.map((d) => ({ id: d.name, label: d.name }))}
           selectedId={selectedOutputDevice}
           onSelect={onSelectOutputDevice}
@@ -463,7 +482,12 @@ export function DeviceList({
 
   return (
     <div>
-      <span className="mb-1 block text-xs font-medium">{label}</span>
+      <span
+        className="mb-1 block text-xs font-medium"
+        data-testid="device-list-label"
+      >
+        {label}
+      </span>
       <ul className="flex flex-col">
         <li>
           <button
@@ -474,7 +498,7 @@ export function DeviceList({
             <Check
               className={cn("h-4 w-4 shrink-0", selectedId && "invisible")}
             />
-            System default
+            <Trans>System default</Trans>
           </button>
         </li>
         {keyedDevices.map((d) => {
@@ -497,7 +521,7 @@ export function DeviceList({
       </ul>
       {showChangeHint && (
         <p className="mt-1 text-2xs text-muted-foreground">
-          Change takes effect on next huddle
+          <Trans>Change takes effect on next huddle</Trans>
         </p>
       )}
     </div>

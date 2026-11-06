@@ -1,3 +1,4 @@
+import { Trans } from "@lingui/react/macro";
 import { MessageCircle } from "lucide-react";
 
 /** Orientation content shown at the top of the companion huddle transcript. */
@@ -11,10 +12,14 @@ export function HuddleTranscriptIntro() {
         <MessageCircle aria-hidden className="h-4 w-4" />
       </span>
       <div className="min-w-0">
-        <p className="text-base font-semibold text-foreground">Huddle chat</p>
+        <p className="text-base font-semibold text-foreground">
+          <Trans>Huddle chat</Trans>
+        </p>
         <p className="mt-0.5 max-w-xl text-sm leading-5 text-muted-foreground">
-          Chat with huddle participants and agents. The transcript appears here
-          too.
+          <Trans>
+            Chat with huddle participants and agents. The transcript appears
+            here too.
+          </Trans>
         </p>
       </div>
     </div>
