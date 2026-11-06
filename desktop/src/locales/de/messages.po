@@ -1742,7 +1742,7 @@ msgstr "Admin"
 #: src/features/channels/ui/MembersSidebarMemberCard.tsx
 #: src/features/community-members/ui/AddMemberDialog.tsx
 msgid "Admin"
-msgstr "Administration"
+msgstr "Admin"
 
 #: src/features/settings/ui/SettingsPanels.tsx
 msgctxt "settings section"
