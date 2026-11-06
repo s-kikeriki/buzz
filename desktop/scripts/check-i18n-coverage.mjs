@@ -823,6 +823,24 @@ const CONVERTED_FILES = [
   "src/features/reminders/ui/RemindersPanel.tsx",
   "src/features/reminders/ui/SnoozeMenu.tsx",
   "src/features/reminders/useReminderNotifications.ts",
+  // Tranche 10 — the key-import form and moderation. The form is every screen
+  // where someone pastes or drops an existing Nostr key: first run, the
+  // onboarding profile flow and the keyring-locked screen all render it. The
+  // moderation half is the reporter's dialog, the per-message author menu and
+  // the composer's timeout banner.
+  //
+  // `lib/timeout.ts` is listed with the screens because it *produces* copy:
+  // the 1h/24h/7d durations and the countdown rungs come from there. It is
+  // also where three copies of that duration list collapsed into one — the
+  // member sidebar's private copy had been translated and the message menu's
+  // had not, so the same submenu read German in one place and English in the
+  // other.
+  "src/features/moderation/lib/timeout.ts",
+  "src/features/moderation/ui/ComposerTimeoutBanner.tsx",
+  "src/features/moderation/ui/MessageModerationMenuItems.tsx",
+  "src/features/moderation/ui/ReportMessageDialog.tsx",
+  "src/features/moderation/ui/TimeoutDurationSubmenu.tsx",
+  "src/features/onboarding/ui/NostrKeyImportForm.tsx",
 ];
 
 /**

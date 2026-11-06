@@ -228,6 +228,71 @@ test.describe("the first-run screens read German", () => {
     await waitForAnimations(page);
     await page.screenshot({ path: `${SHOTS}/04-existing-key.png` });
   });
+
+  test("the key-import form itself", async ({ page }) => {
+    await page
+      .getByRole("button", { name: "Vorhandenen Schlüssel verwenden" })
+      .click();
+
+    // The form, not the step chrome around it. Its label is `sr-only` in this
+    // treatment, so it is asserted through the accessible name rather than
+    // visible text — which is also the thing a screen reader announces.
+    await expect(
+      page.getByLabel("Privater Schlüssel", { exact: true }),
+    ).toBeVisible();
+    await expect(page.getByLabel("Private key", { exact: true })).toHaveCount(
+      0,
+    );
+
+    const input = page.getByTestId("nostr-import-nsec-input");
+    await expect(input).toHaveAttribute(
+      "placeholder",
+      "Gib hier deinen Schlüssel ein",
+    );
+
+    // Typing something that is not a key: the hint and the reveal toggle are
+    // both copy the detector never saw, and the toggle's is an aria-label.
+    await input.fill("definitiv kein schlüssel");
+    await expect(page.getByTestId("nostr-import-feedback")).toContainText(
+      "Warte auf einen gültigen nsec1-Schlüssel",
+    );
+    await expect(page.getByTestId("nostr-import-feedback")).not.toContainText(
+      "Waiting for a valid nsec1 key",
+    );
+    await expect(
+      page.getByTestId("nostr-import-reveal-toggle"),
+    ).toHaveAttribute("aria-label", "Privaten Schlüssel anzeigen");
+
+    await waitForAnimations(page);
+    await page.screenshot({ path: `${SHOTS}/04b-import-form.png` });
+  });
+});
+
+/**
+ * The English counterpart of the key-import test above.
+ *
+ * Its own `describe` because the German block seeds `de` and navigates in
+ * `beforeEach`, and a locale has to be seeded before the bridge mounts. Paired
+ * on purpose: a catalogue that leaked German into the English build would pass
+ * every assertion in the German test and fail here.
+ */
+test.describe("the key-import form still reads English under en", () => {
+  test("the label and the invalid hint", async ({ page }) => {
+    await seedStoredLocale(page, "en");
+    await openFirstRun(page);
+    await page.getByRole("button", { name: "Use an existing key" }).click();
+
+    await expect(page.getByLabel("Private key", { exact: true })).toBeVisible();
+    await page
+      .getByTestId("nostr-import-nsec-input")
+      .fill("definitely not a key");
+    await expect(page.getByTestId("nostr-import-feedback")).toContainText(
+      "Waiting for a valid nsec1 key",
+    );
+    await expect(page.getByTestId("nostr-import-feedback")).not.toContainText(
+      "Warte auf einen gültigen nsec1-Schlüssel",
+    );
+  });
 });
 
 /**
