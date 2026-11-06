@@ -52,7 +52,7 @@ export function WorkflowDetailPanel({
     ? getWorkflowDescription(workflow.definition)
     : null;
   const triggerSummary = workflow
-    ? getWorkflowTriggerSummary(workflow.definition)
+    ? getWorkflowTriggerSummary(workflow.definition, i18n)
     : null;
   const workflowStatus = workflow ? getWorkflowDisplayStatus(workflow) : null;
   const triggerError = errorMessage(

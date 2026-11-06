@@ -1,3 +1,4 @@
+import { Trans, useLingui } from "@lingui/react/macro";
 import * as React from "react";
 
 import { cn } from "@/shared/lib/cn";
@@ -20,13 +21,14 @@ export function CronExpressionInput({
   onChange: (value: string) => void;
   value: string;
 }) {
+  const { i18n, t } = useLingui();
   const [fields, setFields] = React.useState<CronFields>(() =>
     cronFieldsFromExpression(value),
   );
   const [pasteError, setPasteError] = React.useState<string | null>(null);
   const inputRefs = React.useRef<Array<HTMLInputElement | null>>([]);
   const localValue = React.useRef(normalizeCronExpression(value));
-  const validationErrors = validateCronFields(fields);
+  const validationErrors = validateCronFields(fields, i18n);
   const firstError = pasteError ?? validationErrors.find(Boolean) ?? null;
   const messageId = "wf-trigger-cron-message";
 
@@ -55,7 +57,7 @@ export function CronExpressionInput({
   return (
     <fieldset className="space-y-1.5">
       <legend className="text-xs font-medium text-muted-foreground">
-        Cron expression
+        <Trans>Cron expression</Trans>
       </legend>
       <div aria-describedby={messageId} className="space-y-1">
         <div className="grid grid-cols-5 gap-px px-px">
@@ -65,10 +67,10 @@ export function CronExpressionInput({
                 "min-w-0 truncate px-1 text-center text-2xs text-muted-foreground",
                 validationErrors[index] && "text-destructive",
               )}
-              htmlFor={`wf-trigger-cron-${definition.label.toLowerCase()}`}
-              key={definition.label}
+              htmlFor={`wf-trigger-cron-${definition.key}`}
+              key={definition.key}
             >
-              {definition.label}
+              {i18n._(definition.label)}
             </label>
           ))}
         </div>
@@ -83,7 +85,7 @@ export function CronExpressionInput({
             <input
               aria-describedby={messageId}
               aria-invalid={Boolean(validationErrors[index])}
-              aria-label={definition.label}
+              aria-label={i18n._(definition.label)}
               autoCapitalize="characters"
               autoCorrect="off"
               className={cn(
@@ -94,8 +96,8 @@ export function CronExpressionInput({
                   "bg-destructive/5 text-destructive focus:bg-destructive/10",
               )}
               disabled={disabled}
-              id={`wf-trigger-cron-${definition.label.toLowerCase()}`}
-              key={definition.label}
+              id={`wf-trigger-cron-${definition.key}`}
+              key={definition.key}
               onChange={(event) => {
                 const nextFields = [...fields] as CronFields;
                 nextFields[index] = event.target.value.replace(/\s/g, "");
@@ -136,7 +138,7 @@ export function CronExpressionInput({
                 if (!/\s/.test(pastedValue.trim())) return;
 
                 event.preventDefault();
-                const result = cronFieldsFromPaste(pastedValue);
+                const result = cronFieldsFromPaste(pastedValue, i18n);
                 if (!result.ok) {
                   setPasteError(result.error);
                   return;
@@ -162,7 +164,7 @@ export function CronExpressionInput({
         role={firstError ? "alert" : undefined}
       >
         {firstError ??
-          "UTC · Paste all 5 fields, or use wildcards, lists, ranges, and steps."}
+          t`UTC · Paste all 5 fields, or use wildcards, lists, ranges, and steps.`}
       </p>
     </fieldset>
   );

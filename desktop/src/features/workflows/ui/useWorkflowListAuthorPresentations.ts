@@ -10,7 +10,7 @@ import {
 
 export type WorkflowCardAuthorPresentation = Omit<
   WorkflowAuthorPresentation,
-  "description"
+  "descriptor" | "description"
 >;
 
 type WorkflowAuthorLookup = {

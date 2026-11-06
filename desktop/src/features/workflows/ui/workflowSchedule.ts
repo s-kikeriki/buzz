@@ -1,3 +1,6 @@
+import type { MessageDescriptor } from "@lingui/core";
+import { msg } from "@lingui/core/macro";
+
 import type { TriggerConfig } from "./workflowFormTypes";
 
 export const SCHEDULE_FREQUENCIES = [
@@ -22,14 +25,17 @@ export type ScheduleFormState = {
   weekday: string;
 };
 
-export const SCHEDULE_FREQUENCY_LABELS: Record<ScheduleFrequency, string> = {
-  every_15_minutes: "Every 15 minutes",
-  every_30_minutes: "Every 30 minutes",
-  hourly: "Every hour",
-  daily: "Daily",
-  weekly: "Weekly",
-  monthly: "Monthly",
-  custom_cron: "Custom cron",
+export const SCHEDULE_FREQUENCY_LABELS: Record<
+  ScheduleFrequency,
+  MessageDescriptor
+> = {
+  every_15_minutes: msg`Every 15 minutes`,
+  every_30_minutes: msg`Every 30 minutes`,
+  hourly: msg`Every hour`,
+  daily: msg`Daily`,
+  weekly: msg`Weekly`,
+  monthly: msg`Monthly`,
+  custom_cron: msg`Custom cron`,
 };
 
 const INTERVAL_FREQUENCIES = {

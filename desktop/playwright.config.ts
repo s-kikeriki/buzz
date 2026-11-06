@@ -53,6 +53,7 @@ export default defineConfig({
         "**/settings-german.spec.ts",
         "**/community-members-german.spec.ts",
         "**/workflows-german.spec.ts",
+        "**/workflow-triggers-german.spec.ts",
         "**/boot-splash-brand.spec.ts",
         "**/flavor-preview.spec.ts",
         "**/mock-subscription-readiness.spec.ts",

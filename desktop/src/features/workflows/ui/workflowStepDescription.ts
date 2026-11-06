@@ -1,4 +1,5 @@
 import type { I18n } from "@lingui/core";
+import { msg } from "@lingui/core/macro";
 
 import { truncateNpub } from "@/shared/lib/pubkey";
 import {
@@ -36,7 +37,17 @@ function destination(value: string | undefined): string | null {
     : compact(normalized);
 }
 
-function configuredStepDetail(
+/**
+ * The configured detail a step node shows, or `null` when the step carries no
+ * configuration yet.
+ *
+ * Exported because the workflow card needs to know *whether* there is a detail.
+ * It used to decide that by comparing the finished description against the
+ * action label and a sentence-cased copy of it — two pieces of translated copy
+ * compared as if they were tokens, which stops matching in every language but
+ * the one the labels were written in.
+ */
+export function workflowStepDetail(
   step: StepFormState,
   i18n: I18n,
   channelLabel?: string,
@@ -55,13 +66,17 @@ function configuredStepDetail(
     case "send_message": {
       const text = quoted(step.text);
       const channel = channelLabel ? `#${channelLabel}` : null;
-      if (text && channel) return `${text} in ${channel}`;
+      if (text && channel) {
+        return i18n._(msg`${text} in ${channel}`);
+      }
       return text ?? channel;
     }
     case "send_dm": {
       const text = quoted(step.text);
       const recipient = destination(step.to);
-      if (text && recipient) return `${text} to ${recipient}`;
+      if (text && recipient) {
+        return i18n._(msg`${text} to ${recipient}`);
+      }
       return text ?? recipient;
     }
     case "call_webhook": {
@@ -72,7 +87,9 @@ function configuredStepDetail(
     case "request_approval": {
       const message = quoted(step.message);
       const approver = destination(step.from);
-      if (message && approver) return `${message} from ${approver}`;
+      if (message && approver) {
+        return i18n._(msg`${message} from ${approver}`);
+      }
       return message ?? approver;
     }
     case "add_reaction":
@@ -89,7 +106,7 @@ export function workflowStepDescription(
   options: { channelLabel?: string; includeName?: boolean } = {},
 ): string {
   const name = options.includeName === false ? undefined : step.name?.trim();
-  const detail = configuredStepDetail(step, i18n, options.channelLabel);
+  const detail = workflowStepDetail(step, i18n, options.channelLabel);
   if (name && detail) return `${name} · ${detail}`;
-  return name || detail || ACTION_LABELS[step.action];
+  return name || detail || i18n._(ACTION_LABELS[step.action]);
 }
