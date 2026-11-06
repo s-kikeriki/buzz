@@ -734,6 +734,28 @@ const CONVERTED_FILES = [
   "src/features/workflows/ui/workflowTriggerCardClause.ts",
   "src/features/workflows/ui/workflowTriggerDescription.ts",
   "src/features/workflows/ui/workflowTriggerDescriptor.ts",
+  // Tranche 7c — the condition editors, the pickers, the webhook dialogs, the
+  // run trace, and the cards and menus. `workflowStatusLabel.ts` is new: the
+  // run trace had its own untranslated copy of the detail panel's function.
+  "src/features/workflows/ui/ChannelCombobox.tsx",
+  "src/features/workflows/ui/WorkflowActionsMenu.tsx",
+  "src/features/workflows/ui/WorkflowApprovalCard.tsx",
+  "src/features/workflows/ui/WorkflowAuthorPicker.tsx",
+  "src/features/workflows/ui/WorkflowCard.tsx",
+  "src/features/workflows/ui/WorkflowDeleteDialog.tsx",
+  "src/features/workflows/ui/WorkflowDurationField.tsx",
+  "src/features/workflows/ui/WorkflowEmojiField.tsx",
+  "src/features/workflows/ui/WorkflowMessagePicker.tsx",
+  "src/features/workflows/ui/WorkflowMessageTextConditionEditor.tsx",
+  "src/features/workflows/ui/WorkflowRunTrace.tsx",
+  "src/features/workflows/ui/WorkflowTriggerConditions.tsx",
+  "src/features/workflows/ui/WorkflowUnavailableDialog.tsx",
+  "src/features/workflows/ui/WorkflowWebhookHeadersEditor.tsx",
+  "src/features/workflows/ui/WorkflowWebhookSecretDialog.tsx",
+  "src/features/workflows/ui/WorkflowsView.tsx",
+  "src/features/workflows/ui/workflowConditionExpression.ts",
+  "src/features/workflows/ui/workflowMessageTextCondition.ts",
+  "src/features/workflows/ui/workflowStatusLabel.ts",
 ];
 
 /**
@@ -741,6 +763,10 @@ const CONVERTED_FILES = [
  * is not copy, the comment is how a reviewer checks that claim.
  */
 const OVERRIDES = new Map([
+  [
+    "src/features/workflows/ui/WorkflowWebhookSecretDialog.tsx:82",
+    "The HTTP header name a caller has to send; the same characters in every language.",
+  ],
   // Workflow step fields: every one of these is the literal shape of a value
   // the relay parses, so a German reader has to type the same characters.
   [

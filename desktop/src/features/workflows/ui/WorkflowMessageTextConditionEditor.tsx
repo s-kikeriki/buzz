@@ -1,3 +1,6 @@
+import type { I18n } from "@lingui/core";
+import { msg } from "@lingui/core/macro";
+import { Trans, useLingui } from "@lingui/react/macro";
 import { ChevronRight } from "lucide-react";
 import * as React from "react";
 
@@ -31,11 +34,13 @@ const DEFAULT_CONDITION: MessageTextCondition = {
 
 type EditorMode = "basic" | "advanced";
 
-function conditionSummary(condition: MessageTextCondition): string {
-  const label = MESSAGE_TEXT_CONDITION_LABELS[condition.operator].toLowerCase();
+function conditionSummary(condition: MessageTextCondition, i18n: I18n): string {
+  const label = i18n._(MESSAGE_TEXT_CONDITION_LABELS[condition.operator]);
   if (!messageTextConditionNeedsValue(condition.operator)) return label;
   const value = condition.value.trim();
-  return value ? `${label} “${value}”` : "Any";
+  if (!value) return i18n._(msg`Any`);
+  // The quotes are in the message so German can use its own.
+  return i18n._(msg`${label} “${value}”`);
 }
 
 export function WorkflowMessageTextCondition({
@@ -49,6 +54,7 @@ export function WorkflowMessageTextCondition({
   onChange: (value: string) => void;
   value: string;
 }) {
+  const { i18n, t } = useLingui();
   const initialParsed = React.useRef(parseMessageTextCondition(value));
   const [mode, setMode] = React.useState<EditorMode>(() =>
     value && !initialParsed.current ? "advanced" : "basic",
@@ -117,14 +123,14 @@ export function WorkflowMessageTextCondition({
       >
         {allowAdvanced ? (
           <TabsList
-            aria-label="Condition editor mode"
+            aria-label={t`Condition editor mode`}
             className="grid h-9 w-full grid-cols-2 p-0.5"
           >
             <TabsTrigger className="h-8" disabled={disabled} value="basic">
-              Basic
+              <Trans>Basic</Trans>
             </TabsTrigger>
             <TabsTrigger className="h-8" disabled={disabled} value="advanced">
-              Advanced
+              <Trans>Advanced</Trans>
             </TabsTrigger>
           </TabsList>
         ) : null}
@@ -133,8 +139,10 @@ export function WorkflowMessageTextCondition({
           <div>
             {hasUnsupportedExpression ? (
               <p className="border-b border-border/50 pb-3 text-xs text-muted-foreground">
-                An advanced expression is active. Choosing a basic filter will
-                replace it.
+                <Trans>
+                  An advanced expression is active. Choosing a basic filter will
+                  replace it.
+                </Trans>
               </p>
             ) : null}
             <div className="divide-y divide-border/50">
@@ -147,12 +155,12 @@ export function WorkflowMessageTextCondition({
                   type="button"
                 >
                   <span className="min-w-0 flex-1 truncate text-base font-medium">
-                    Message text
+                    <Trans>Message text</Trans>
                   </span>
                   <span className="max-w-40 truncate text-sm text-muted-foreground">
                     {hasUnsupportedExpression
-                      ? "Any"
-                      : conditionSummary(condition)}
+                      ? i18n._(msg`Any`)
+                      : conditionSummary(condition, i18n)}
                   </span>
                   <ChevronRight
                     className={cn(
@@ -165,7 +173,9 @@ export function WorkflowMessageTextCondition({
                 {expanded && !hasUnsupportedExpression ? (
                   <div className="animate-in space-y-4 pt-1 fade-in slide-in-from-top-1 duration-150 motion-reduce:animate-none">
                     <fieldset>
-                      <legend className="sr-only">Match</legend>
+                      <legend className="sr-only">
+                        <Trans>Match</Trans>
+                      </legend>
                       <div className="grid grid-cols-2 gap-2.5">
                         {MESSAGE_TEXT_CONDITION_OPERATORS.map((operator) => {
                           const id = `wf-trigger-filter-trigger-text-operator-${operator}`;
@@ -195,9 +205,9 @@ export function WorkflowMessageTextCondition({
                                 )}
                                 htmlFor={id}
                               >
-                                {MESSAGE_TEXT_CONDITION_LABELS[
-                                  operator
-                                ].toLowerCase()}
+                                {i18n._(
+                                  MESSAGE_TEXT_CONDITION_LABELS[operator],
+                                )}
                               </label>
                             </div>
                           );
@@ -207,7 +217,7 @@ export function WorkflowMessageTextCondition({
 
                     {messageTextConditionNeedsValue(condition.operator) ? (
                       <Input
-                        aria-label="Text to match"
+                        aria-label={t`Text to match`}
                         autoCapitalize="off"
                         autoCorrect="off"
                         disabled={disabled}
@@ -218,7 +228,7 @@ export function WorkflowMessageTextCondition({
                             value: event.target.value,
                           })
                         }
-                        placeholder="e.g. deploy"
+                        placeholder={t`e.g. deploy`}
                         value={condition.value}
                       />
                     ) : null}
@@ -230,7 +240,7 @@ export function WorkflowMessageTextCondition({
         ) : (
           <div className="animate-in space-y-2 fade-in duration-150 motion-reduce:animate-none">
             <Input
-              aria-label="Advanced expression"
+              aria-label={t`Advanced expression`}
               autoCapitalize="off"
               autoCorrect="off"
               disabled={disabled}
@@ -240,11 +250,13 @@ export function WorkflowMessageTextCondition({
                 setAdvancedDraft(expression);
                 emit(expression.trim());
               }}
-              placeholder='e.g. str_contains(trigger_text, "deploy")'
+              placeholder={t`e.g. str_contains(trigger_text, "deploy")`}
               value={advancedDraft}
             />
             <p className="text-xs text-muted-foreground">
-              Use an evalexpr expression with <code>trigger_text</code>.
+              <Trans>
+                Use an evalexpr expression with <code>trigger_text</code>.
+              </Trans>
             </p>
           </div>
         )}
@@ -256,16 +268,20 @@ export function WorkflowMessageTextCondition({
       >
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Replace advanced expression?</AlertDialogTitle>
+            <AlertDialogTitle>
+              <Trans>Replace advanced expression?</Trans>
+            </AlertDialogTitle>
             <AlertDialogDescription>
-              Choosing a basic filter will replace the entire advanced
-              expression. This cannot be undone.
+              <Trans>
+                Choosing a basic filter will replace the entire advanced
+                expression. This cannot be undone.
+              </Trans>
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel asChild>
               <Button type="button" variant="outline">
-                Keep advanced expression
+                <Trans>Keep advanced expression</Trans>
               </Button>
             </AlertDialogCancel>
             <AlertDialogAction asChild>
@@ -279,7 +295,7 @@ export function WorkflowMessageTextCondition({
                 type="button"
                 variant="destructive"
               >
-                Replace expression
+                <Trans>Replace expression</Trans>
               </Button>
             </AlertDialogAction>
           </AlertDialogFooter>

@@ -58,7 +58,9 @@ async function openWorkflowsIn(page: Page, locale: "en" | "de") {
 
 /** Open the create dialog and pick a channel, by its English affordances. */
 async function openCreateDialog(page: Page): Promise<Locator> {
-  await page.getByRole("button", { name: "Create Workflow" }).click();
+  // By testid: this button's label is German now, and naming it here would
+  // make the helper assert copy while meaning to click.
+  await page.getByTestId("new-workflow-card").click();
   // Not by accessible name: the dialog's name *is* its title, which is one of
   // the strings under test, so naming it here would make the helper assert
   // the thing the tests are supposed to assert. And not a bare

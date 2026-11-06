@@ -1,3 +1,4 @@
+import { Trans, useLingui } from "@lingui/react/macro";
 import { Check, LoaderCircle, Search } from "lucide-react";
 import * as React from "react";
 
@@ -39,6 +40,7 @@ export function WorkflowAuthorPicker({
   onEscape?: () => void;
   value: string;
 }) {
+  const { t } = useLingui();
   const pickerRef = React.useRef<HTMLDivElement>(null);
   const optionRefs = React.useRef(new Map<string, HTMLButtonElement>());
   const [query, setQuery] = React.useState("");
@@ -153,7 +155,7 @@ export function WorkflowAuthorPicker({
               : undefined
           }
           aria-controls={listId}
-          aria-label="Search authors or paste a public key"
+          aria-label={t`Search authors or paste a public key`}
           aria-expanded="true"
           autoCapitalize="none"
           autoComplete="off"
@@ -202,7 +204,7 @@ export function WorkflowAuthorPicker({
               }
             }
           }}
-          placeholder="Search people or paste a public key…"
+          placeholder={t`Search people or paste a public key…`}
           role="combobox"
           spellCheck={false}
           value={query}
@@ -210,7 +212,7 @@ export function WorkflowAuthorPicker({
       </div>
 
       <div
-        aria-label="Authors"
+        aria-label={t`Authors`}
         className={cn(
           "grid min-h-0 flex-1 gap-2 overflow-y-auto overscroll-contain p-2",
           columnCount === 3 ? "grid-cols-3" : "grid-cols-2",
@@ -254,11 +256,12 @@ export function WorkflowAuthorPicker({
             className="col-span-full flex items-center justify-center gap-2 px-3 py-8 text-sm text-muted-foreground"
             role="status"
           >
-            <LoaderCircle className="h-4 w-4 animate-spin" /> Loading authors…
+            <LoaderCircle className="h-4 w-4 animate-spin" />{" "}
+            <Trans>Loading authors…</Trans>
           </p>
         ) : visibleCandidates.length === 0 ? (
           <p className="col-span-full px-3 py-8 text-center text-sm text-muted-foreground">
-            {failed ? "Couldn’t load authors." : "No authors found."}
+            {failed ? t`Couldn’t load authors.` : t`No authors found.`}
           </p>
         ) : null}
         {failed ? (
@@ -271,7 +274,7 @@ export function WorkflowAuthorPicker({
             }}
             type="button"
           >
-            Couldn’t load all authors. Retry
+            <Trans>Couldn’t load all authors. Retry</Trans>
           </button>
         ) : null}
         {directoryQuery.hasNextPage ? (
@@ -282,8 +285,8 @@ export function WorkflowAuthorPicker({
             type="button"
           >
             {directoryQuery.isFetchingNextPage
-              ? "Loading more…"
-              : "Load more authors"}
+              ? t`Loading more…`
+              : t`Load more authors`}
           </button>
         ) : null}
       </div>

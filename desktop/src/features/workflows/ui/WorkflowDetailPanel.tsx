@@ -13,6 +13,7 @@ import {
   useWorkflowRunsQuery,
 } from "@/features/workflows/hooks";
 import { WorkflowRunTrace } from "@/features/workflows/ui/WorkflowRunTrace";
+import { workflowStatusLabel } from "./workflowStatusLabel";
 import type { Workflow } from "@/shared/api/types";
 import { Badge, type BadgeProps } from "@/shared/ui/badge";
 import { Button } from "@/shared/ui/button";
@@ -417,39 +418,6 @@ function formatRunDuration(
   return `${seconds.toFixed(1)}s`;
 }
 
-/**
- * The run/workflow status, as copy.
- *
- * The status itself stays an English token — the relay sends it, `variants`
- * below switches on it — so this is the render site where it becomes a word.
- * An unknown status falls back to the underscore-stripped token rather than
- * rendering nothing, which is what the function did for every status before.
- */
-function formatStatusLabel(status: string, i18n: I18n) {
-  switch (status) {
-    case "active":
-      return i18n._(msg`active`);
-    case "disabled":
-      return i18n._(msg`disabled`);
-    case "archived":
-      return i18n._(msg`archived`);
-    case "completed":
-      return i18n._(msg`completed`);
-    case "failed":
-      return i18n._(msg`failed`);
-    case "running":
-      return i18n._(msg`running`);
-    case "pending":
-      return i18n._(msg`pending`);
-    case "cancelled":
-      return i18n._(msg`cancelled`);
-    case "waiting_approval":
-      return i18n._(msg`waiting approval`);
-    default:
-      return status.replace(/_/g, " ");
-  }
-}
-
 function RunStatusBadge({ status }: { status: string }) {
   const { i18n } = useLingui();
   const variants: Record<string, BadgeProps["variant"]> = {
@@ -466,7 +434,7 @@ function RunStatusBadge({ status }: { status: string }) {
 
   return (
     <Badge variant={variants[status] ?? "secondary"}>
-      {formatStatusLabel(status, i18n)}
+      {workflowStatusLabel(status, i18n)}
     </Badge>
   );
 }

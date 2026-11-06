@@ -1,3 +1,4 @@
+import { Trans, useLingui } from "@lingui/react/macro";
 import { X } from "lucide-react";
 
 import { Button } from "@/shared/ui/button";
@@ -25,22 +26,23 @@ export function WorkflowUnavailableDialog({
   onRetry,
   open,
 }: WorkflowUnavailableDialogProps) {
+  const { t } = useLingui();
   return (
     <Dialog onOpenChange={onOpenChange} open={open}>
       <DialogContent className="sm:max-w-lg" showCloseButton={false}>
         <DialogHeader>
           <DialogTitle>
-            {loading ? "Loading workflow…" : "Workflow unavailable"}
+            {loading ? t`Loading workflow…` : t`Workflow unavailable`}
           </DialogTitle>
           <DialogDescription>
             {loading
-              ? "Resolving workflow details."
-              : "This workflow could not be loaded. It may no longer be available to you."}
+              ? t`Resolving workflow details.`
+              : t`This workflow could not be loaded. It may no longer be available to you.`}
           </DialogDescription>
         </DialogHeader>
         {loading ? (
           <div
-            aria-label="Loading workflow"
+            aria-label={t`Loading workflow`}
             className="space-y-3"
             role="status"
           >
@@ -52,11 +54,11 @@ export function WorkflowUnavailableDialog({
             <DialogClose asChild>
               <Button type="button" variant="outline">
                 <X className="h-4 w-4" />
-                Close
+                <Trans>Close</Trans>
               </Button>
             </DialogClose>
             <Button onClick={onRetry} type="button">
-              Retry
+              <Trans>Retry</Trans>
             </Button>
           </DialogFooter>
         )}

@@ -1,3 +1,6 @@
+import type { I18n, MessageDescriptor } from "@lingui/core";
+import { msg } from "@lingui/core/macro";
+
 import type { TriggerType } from "./workflowFormTypes";
 
 export const CONDITION_OPERATORS = [
@@ -18,7 +21,11 @@ const EXACT_MATCH_OPERATORS = [
 ] as const satisfies readonly ConditionOperator[];
 const HEX_ID_PATTERN = /^[0-9a-fA-F]{64}$/;
 
-export type ConditionField = { label: string; value: string };
+/**
+ * A filterable trigger field. `value` is the evalexpr variable name and the
+ * routing key everywhere; `label` is only ever rendered.
+ */
+export type ConditionField = { label: MessageDescriptor; value: string };
 export type ParsedConditionExpression = {
   field: string;
   operator: ConditionOperator;
@@ -27,19 +34,19 @@ export type ParsedConditionExpression = {
 };
 
 const AUTHOR_FIELD: ConditionField = {
-  label: "Author",
+  label: msg`Author`,
   value: "trigger_author",
 };
 const FIELDS_BY_TRIGGER: Record<TriggerType, ConditionField[]> = {
   message_posted: [
-    { label: "Message text", value: "trigger_text" },
+    { label: msg`Message text`, value: "trigger_text" },
     AUTHOR_FIELD,
   ],
-  diff_posted: [{ label: "Diff text", value: "trigger_text" }, AUTHOR_FIELD],
+  diff_posted: [{ label: msg`Diff text`, value: "trigger_text" }, AUTHOR_FIELD],
   reaction_added: [
-    { label: "Reaction emoji", value: "trigger_emoji" },
+    { label: msg`Reaction emoji`, value: "trigger_emoji" },
     AUTHOR_FIELD,
-    { label: "Message", value: "trigger_message_id" },
+    { label: msg`Message`, value: "trigger_message_id" },
   ],
   webhook: [],
   schedule: [],
@@ -73,19 +80,32 @@ export function conditionOperatorNeedsValue(
   return operator !== "is_not_empty" && operator !== "is_empty";
 }
 
+/**
+ * Whether a value is unusable for this field, with no copy involved.
+ *
+ * The parser and the form's submit gate only ask the question; the editor is
+ * the only caller that needs the sentence. They were one function returning a
+ * string, so making that string translatable would have threaded `i18n` through
+ * `parseConditionExpression` — a pure parser — purely to throw the result away.
+ */
+export function conditionValueIsInvalid(field: string, value: string): boolean {
+  const trimmed = value.trim();
+  if (!trimmed) return false;
+  if (field === "trigger_author") return !HEX_ID_PATTERN.test(trimmed);
+  if (field.endsWith("_id")) return !HEX_ID_PATTERN.test(trimmed);
+  return false;
+}
+
+/** The message shown under a field whose value cannot be used. */
 export function conditionValueError(
   field: string,
   value: string,
+  i18n: I18n,
 ): string | null {
-  const trimmed = value.trim();
-  if (!trimmed) return null;
-  if (field === "trigger_author" && !HEX_ID_PATTERN.test(trimmed)) {
-    return "Enter a 64-character hex pubkey.";
-  }
-  if (field.endsWith("_id") && !HEX_ID_PATTERN.test(trimmed)) {
-    return "Enter a 64-character hex event ID.";
-  }
-  return null;
+  if (!conditionValueIsInvalid(field, value)) return null;
+  return field === "trigger_author"
+    ? i18n._(msg`Enter a 64-character hex pubkey.`)
+    : i18n._(msg`Enter a 64-character hex event ID.`);
 }
 
 function escapeEvalexprString(value: string): string {
@@ -99,7 +119,7 @@ export function buildConditionExpression(
   if (operator === "is_not_empty") return `str_len(${field}) > 0`;
   if (operator === "is_empty") return `str_len(${field}) == 0`;
   const value = condition.value.trim();
-  if (!value || conditionValueError(field, value)) return null;
+  if (!value || conditionValueIsInvalid(field, value)) return null;
   const normalizedValue =
     field === "trigger_author" || field.endsWith("_id")
       ? value.toLowerCase()
@@ -194,7 +214,7 @@ export function parseConditionExpression(
       value: unescapeEvalexprString(equality[3]),
       webhookField: "",
     };
-    return conditionValueError(result.field, result.value) ? null : result;
+    return conditionValueIsInvalid(result.field, result.value) ? null : result;
   }
   return null;
 }

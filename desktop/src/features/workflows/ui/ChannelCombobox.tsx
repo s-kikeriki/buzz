@@ -1,3 +1,7 @@
+import { msg } from "@lingui/core/macro";
+import { Trans, useLingui } from "@lingui/react/macro";
+
+import { resolveDescriptor } from "@/shared/i18n/resolveDescriptor";
 import {
   Asterisk,
   Check,
@@ -33,6 +37,7 @@ function ChannelPrivacyIcon({ channel }: { channel: Channel }) {
 
 type ChannelComboboxProps = {
   allowEmpty?: boolean;
+  /** Defaults to "Channel", resolved per render rather than at import. */
   ariaLabel?: string;
   channels: Channel[];
   defaultOpen?: boolean;
@@ -44,6 +49,13 @@ type ChannelComboboxProps = {
   onChange: (value: string) => void;
   readOnly?: boolean;
   readOnlyTooltip?: string;
+  /**
+   * The search field's own label. It used to be derived as
+   * `Search ${ariaLabel.toLowerCase()}s` — a translated noun lowercased and
+   * then pluralised by appending an "s", which is an English rule and produces
+   * a genitive singular in German.
+   */
+  searchAriaLabel?: string;
   required?: boolean;
   variant?: "header" | "field";
   value: string;
@@ -51,21 +63,31 @@ type ChannelComboboxProps = {
 
 export function ChannelCombobox({
   allowEmpty = false,
-  ariaLabel = "Channel",
+  ariaLabel,
   channels,
   defaultOpen = false,
   disabled,
-  emptyLabel = "Choose a channel",
+  emptyLabel,
   id,
   isChannelDisabled,
   onAutoOpen,
   onChange,
   readOnly = false,
-  readOnlyTooltip = "The channel can't be changed after a workflow is created.",
+  readOnlyTooltip,
   required = false,
+  searchAriaLabel,
   variant = "header",
   value,
 }: ChannelComboboxProps) {
+  const { i18n, t } = useLingui();
+  // Defaults resolved here, not in the parameter list: a default parameter
+  // value is evaluated with whatever locale is active, and the detector does
+  // not read that position at all.
+  const label = ariaLabel ?? t`Channel`;
+  const resolvedEmptyLabel = emptyLabel ?? t`Choose a channel`;
+  const resolvedReadOnlyTooltip =
+    readOnlyTooltip ??
+    t`The channel can't be changed after a workflow is created.`;
   const [open, setOpen] = React.useState(false);
   const [query, setQuery] = React.useState("");
   const [highlightedIndex, setHighlightedIndex] = React.useState(0);
@@ -179,8 +201,8 @@ export function ChannelCombobox({
   const selectedLabel = selected
     ? (channelLabels.get(selected.id) ?? selected.name)
     : value
-      ? "Unavailable channel"
-      : emptyLabel;
+      ? t`Unavailable channel`
+      : resolvedEmptyLabel;
 
   if (readOnly) {
     return (
@@ -188,7 +210,11 @@ export function ChannelCombobox({
         <TooltipTrigger asChild>
           <button
             aria-disabled="true"
-            aria-label={`${ariaLabel}: ${selectedLabel}. Read only.`}
+            aria-label={resolveDescriptor(
+              i18n,
+              msg`{label}: {selectedLabel}. Read only.`,
+              { label, selectedLabel },
+            )}
             className={cn(
               "flex w-full cursor-default items-center rounded-lg px-3 py-2 text-foreground focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-ring",
               variant === "header" &&
@@ -204,7 +230,7 @@ export function ChannelCombobox({
             </span>
           </button>
         </TooltipTrigger>
-        <TooltipContent side="top">{readOnlyTooltip}</TooltipContent>
+        <TooltipContent side="top">{resolvedReadOnlyTooltip}</TooltipContent>
       </Tooltip>
     );
   }
@@ -216,7 +242,7 @@ export function ChannelCombobox({
           aria-controls={listboxId}
           aria-expanded={open}
           aria-haspopup="listbox"
-          aria-label={ariaLabel}
+          aria-label={label}
           aria-required={required}
           className={cn(
             "group flex w-full items-center rounded-lg px-3 py-2 focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50",
@@ -259,7 +285,7 @@ export function ChannelCombobox({
             aria-autocomplete="list"
             aria-controls={listboxId}
             aria-expanded={open}
-            aria-label={`Search ${ariaLabel.toLowerCase()}s`}
+            aria-label={searchAriaLabel ?? t`Search channels`}
             autoCapitalize="none"
             autoComplete="off"
             autoCorrect="off"
@@ -270,14 +296,16 @@ export function ChannelCombobox({
               setHighlightedIndex(0);
             }}
             onKeyDown={handleKeyDown}
-            placeholder="Search channels..."
+            placeholder={t`Search channels...`}
             role="combobox"
             spellCheck={false}
             value={query}
           />
         </div>
         <PortalledScrollArea
-          aria-label={`${ariaLabel} options`}
+          aria-label={resolveDescriptor(i18n, msg`{label} options`, {
+            label,
+          })}
           className="max-h-60 overflow-y-auto p-1"
           data-testid="channel-combobox-list"
           id={listboxId}
@@ -295,7 +323,7 @@ export function ChannelCombobox({
               type="button"
             >
               <span className="h-5 w-5 shrink-0" />
-              <span className="truncate">{emptyLabel}</span>
+              <span className="truncate">{resolvedEmptyLabel}</span>
               <Check
                 className={cn(
                   "ml-auto h-4 w-4 shrink-0",
@@ -306,7 +334,7 @@ export function ChannelCombobox({
           ) : null}
           {filtered.length === 0 ? (
             <p className="px-3 py-4 text-center text-xs text-muted-foreground">
-              No channels found.
+              <Trans>No channels found.</Trans>
             </p>
           ) : (
             filtered.map((channel) => {
@@ -332,7 +360,10 @@ export function ChannelCombobox({
                   <span className="truncate">
                     {channelLabels.get(channel.id) ?? channel.name}
                     {channel.channelType === "dm" ? (
-                      <span className="text-muted-foreground"> · dm</span>
+                      <span className="text-muted-foreground">
+                        {" "}
+                        <Trans>· dm</Trans>
+                      </span>
                     ) : null}
                   </span>
                   <Check

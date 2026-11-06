@@ -1,3 +1,6 @@
+import type { MessageDescriptor } from "@lingui/core";
+import { msg } from "@lingui/core/macro";
+
 export const MESSAGE_TEXT_CONDITION_OPERATORS = [
   "contains",
   "not_contains",
@@ -17,18 +20,27 @@ export type MessageTextCondition = {
   value: string;
 };
 
+/**
+ * The operator labels, in the lower case both call sites render them in.
+ *
+ * They were title case and every consumer called `.toLowerCase()` on the way
+ * out — a locale-sensitive transform over copy, with no locale passed, to
+ * recover a form the table could just hold. German's capitalization rules are
+ * not English's, and `toLowerCase()` on a translated string is wrong in at
+ * least one locale (Turkish dotless i) whatever the copy says.
+ */
 export const MESSAGE_TEXT_CONDITION_LABELS: Record<
   MessageTextConditionOperator,
-  string
+  MessageDescriptor
 > = {
-  contains: "Contains",
-  not_contains: "Does not contain",
-  starts_with: "Starts with",
-  ends_with: "Ends with",
-  equals: "Equals",
-  not_equals: "Does not equal",
-  is_not_empty: "Has text",
-  is_empty: "Has no text",
+  contains: msg`contains`,
+  not_contains: msg`does not contain`,
+  starts_with: msg`starts with`,
+  ends_with: msg`ends with`,
+  equals: msg`equals`,
+  not_equals: msg`does not equal`,
+  is_not_empty: msg`has text`,
+  is_empty: msg`has no text`,
 };
 
 export function messageTextConditionNeedsValue(
