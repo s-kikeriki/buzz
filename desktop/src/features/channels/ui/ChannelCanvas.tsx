@@ -134,7 +134,7 @@ export function ChannelCanvas({
         role="alert"
       >
         {isRelayUnreachableError(canvasQuery.error)
-          ? RELAY_UNREACHABLE_SHORT
+          ? i18n._(RELAY_UNREACHABLE_SHORT)
           : canvasQuery.error.message}
       </p>
     );
@@ -199,7 +199,7 @@ export function ChannelCanvas({
           role="status"
         >
           {isRelayUnreachableError(canvasQuery.error)
-            ? RELAY_UNREACHABLE_SHORT
+            ? i18n._(RELAY_UNREACHABLE_SHORT)
             : t`Couldn't refresh canvas — showing last known content.`}
         </p>
       ) : null}

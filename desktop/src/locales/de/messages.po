@@ -1175,6 +1175,10 @@ msgstr "{productName} konnte diesen Checkout nicht in deinem konfigurierten Term
 msgid "{productName} could not open this checkout in your file browser."
 msgstr "{productName} konnte diesen Checkout nicht in deinem Dateibrowser öffnen."
 
+#: src/shared/lib/localStorageQuota.ts
+msgid "{productName} could not save some local data — read positions may not persist across restarts."
+msgstr "{productName} konnte einige lokale Daten nicht speichern — Lesepositionen bleiben nach einem Neustart möglicherweise nicht erhalten."
+
 #: src/features/projects/useAddProjectChannel.ts
 msgid "{productName} could not verify the project after creating the channel, and could not remove the unlinked channel. Delete it manually, then refresh and try again."
 msgstr "{productName} konnte das Projekt nach dem Anlegen des Kanals nicht prüfen und den unverbundenen Kanal nicht entfernen. Lösch ihn manuell, aktualisiere dann und versuch es erneut."
@@ -1569,6 +1573,7 @@ msgstr "1 Tag"
 
 #: src/features/channels/ui/ChannelTypeSettings.tsx
 #: src/features/moderation/lib/timeout.ts
+#: src/features/user-status/ui/SetStatusDialog.tsx
 msgid "1 hour"
 msgstr "1 Stunde"
 
@@ -1647,6 +1652,10 @@ msgstr "64-stelliger Hex-Pubkey"
 #: src/features/moderation/lib/timeout.ts
 msgid "7 days"
 msgstr "7 Tage"
+
+#: src/features/user-status/ui/SetStatusDialog.tsx
+msgid "8 hours"
+msgstr "8 Stunden"
 
 #: src/features/projects/lib/projectBranches.ts
 msgid "A branch with this name already exists."
@@ -3395,6 +3404,10 @@ msgstr "Zurück zum Kanal"
 msgid "Back to Commits"
 msgstr "Zurück zu Commits"
 
+#: src/features/messages/ui/MessageThreadPanelSkeleton.tsx
+msgid "Back to conversation"
+msgstr "Zurück zur Unterhaltung"
+
 #: src/features/messages/ui/DraftDetailPane.tsx
 msgid "Back to drafts list"
 msgstr "Zurück zur Entwurfsliste"
@@ -3712,6 +3725,14 @@ msgstr "Webhook aufrufen"
 #: src/features/sidebar/ui/SidebarRelayConnectionCard.tsx
 msgid "Can't reach the relay"
 msgstr "Relay nicht erreichbar"
+
+#: src/shared/lib/relayError.ts
+msgid "Can't reach the relay — check your VPN or network connection."
+msgstr "Relay nicht erreichbar — prüfe dein VPN oder deine Netzwerkverbindung."
+
+#: src/shared/lib/relayError.ts
+msgid "Can't reach the relay."
+msgstr "Relay nicht erreichbar."
 
 #: src/features/onboarding/ui/OnboardingFlow.tsx
 msgid "Can't reach this relay"
@@ -4250,6 +4271,10 @@ msgstr "Wähl einen Vergleichs-Branch."
 msgid "Choose a different repositories directory or remove the existing checkout."
 msgstr "Wähl ein anderes Repository-Verzeichnis oder entfern den vorhandenen Checkout."
 
+#: src/features/user-status/ui/SetStatusDialog.tsx
+msgid "Choose a duration in the future."
+msgstr "Wähle einen Zeitpunkt in der Zukunft."
+
 #: src/features/agents/ui/agentConfigOptions.tsx
 #: src/features/onboarding/ui/SetupStep.tsx
 msgid "Choose a harness"
@@ -4323,6 +4348,10 @@ msgstr "Wähl ein Repository."
 #: src/protectedFeatures/bestie/BestiePopover.tsx
 msgid "Choose a Sidekick"
 msgstr "Sidekick auswählen"
+
+#: src/features/user-status/ui/SetStatusDialog.tsx
+msgid "Choose a status emoji"
+msgstr "Status-Emoji auswählen"
 
 #: src/features/profile/ui/UserProfilePanelTabs.tsx
 msgid "Choose active channel feed"
@@ -4568,6 +4597,10 @@ msgstr "Bereichssymbol entfernen"
 msgid "Clear selection"
 msgstr "Auswahl aufheben"
 
+#: src/features/user-status/ui/SetStatusDialog.tsx
+msgid "Clear status"
+msgstr "Status löschen"
+
 #: src/features/admin-console/AdminConsoleStaffingTab.tsx
 msgid "Clear timeout"
 msgstr "Auszeit aufheben"
@@ -4686,6 +4719,10 @@ msgstr "Inspektor-Overlay schließen"
 #: src/shared/ui/SimpleImageLightbox.tsx
 msgid "Close lightbox"
 msgstr "Lightbox schließen"
+
+#: src/shared/layout/AuxiliaryPanelHeader.tsx
+msgid "Close panel"
+msgstr "Bereich schließen"
 
 #: src/shared/ui/markdown/FilePreviewDialog.tsx
 msgid "Close preview"
@@ -4980,6 +5017,10 @@ msgstr "Community-URL oder Einladungslink"
 #: src/features/onboarding/ui/CommunityOnboardingFlow.tsx
 msgid "Community username"
 msgstr "Community-Benutzername"
+
+#: src/features/user-status/ui/SetStatusDialog.tsx
+msgid "Commuting"
+msgstr "Auf dem Weg"
 
 #: src/features/settings/ui/AppearanceSettingsControls.tsx
 #: src/shared/ui/link-preview-controls.tsx
@@ -5347,6 +5388,7 @@ msgstr "Notiz-Link kopiert"
 #: src/features/onboarding/ui/BackupStep.tsx
 #: src/features/settings/ui/MobilePairingCard.tsx
 #: src/features/settings/ui/ProfileSettingsCard.tsx
+#: src/shared/lib/clipboard.ts
 #: src/shared/ui/markdown/imageActions.ts
 msgid "Copied to clipboard"
 msgstr "In die Zwischenablage kopiert"
@@ -6350,6 +6392,10 @@ msgstr "Cursor-Abo"
 msgid "Cursor's coding agent, connected to {productName} through its ACP server."
 msgstr "Der Coding-Agent von Cursor, über seinen ACP-Server mit {productName} verbunden."
 
+#: src/features/user-status/ui/SetStatusDialog.tsx
+msgid "Custom"
+msgstr "Benutzerdefiniert"
+
 #: src/features/agents/ui/AgentDefinitionMetadata.tsx
 msgid "Custom agent"
 msgstr "Eigener Agent"
@@ -7206,11 +7252,13 @@ msgstr "Ziehen, um die Breite der Seitenleiste zu ändern"
 
 #: src/features/channels/ui/RightAuxiliaryPane.tsx
 #: src/features/home/ui/HomeView.tsx
+#: src/shared/layout/AuxiliaryPanelShell.tsx
 msgid "Drag to resize."
 msgstr "Zum Ändern der Breite ziehen."
 
 #: src/features/channels/ui/RightAuxiliaryPane.tsx
 #: src/features/home/ui/HomeView.tsx
+#: src/shared/layout/AuxiliaryPanelShell.tsx
 msgid "Drag to resize. Double-click to reset width."
 msgstr "Zum Ändern der Breite ziehen. Doppelklick setzt die Breite zurück."
 
@@ -7291,6 +7339,7 @@ msgstr "Workflow duplizieren"
 msgid "Duplicated as \"{name}\""
 msgstr "Als „{name}“ dupliziert"
 
+#: src/features/user-status/ui/SetStatusDialog.tsx
 #: src/features/workflows/ui/WorkflowStepCard.tsx
 msgid "Duration"
 msgstr "Dauer"
@@ -7964,6 +8013,10 @@ msgstr "Code konnte nicht kopiert werden"
 #: src/features/pulse/lib/useNoteActions.ts
 msgid "Failed to copy note link"
 msgstr "Notiz-Link konnte nicht kopiert werden"
+
+#: src/shared/lib/clipboard.ts
+msgid "Failed to copy to clipboard"
+msgstr "Kopieren in die Zwischenablage fehlgeschlagen"
 
 #: src/features/settings/ui/ChannelTemplatesSettingsCard.tsx
 msgid "Failed to create"
@@ -9135,8 +9188,13 @@ msgid "In 30 minutes"
 msgstr "In 30 Minuten"
 
 #: src/features/huddle/components/HuddleProfileControl.tsx
+#: src/features/user-status/ui/UserNameIndicators.tsx
 msgid "In a huddle"
 msgstr "In einem Huddle"
+
+#: src/features/user-status/ui/SetStatusDialog.tsx
+msgid "In a meeting"
+msgstr "In einem Meeting"
 
 #: src/features/channels/ui/AddChannelBotPersonasSection.tsx
 msgid "In channel"
@@ -9229,6 +9287,14 @@ msgstr "Die Zoomstufe erhöhen"
 #: src/features/profile/ui/UserProfilePanelTabs.tsx
 msgid "Info"
 msgstr "Infos"
+
+#: src/features/agents/ui/buzzAgentModelTuningFields.tsx
+msgid "Inherit"
+msgstr "Übernehmen"
+
+#: src/features/agents/ui/buzzAgentModelTuningFields.tsx
+msgid "Inherit ({inheritedEffort})"
+msgstr "Übernehmen ({inheritedEffort})"
 
 #: src/features/agents/lib/agentConfigCore.ts
 #: src/features/agents/ui/buzzAgentModelTuningFields.tsx
@@ -9825,6 +9891,10 @@ msgstr "Wird verlassen…"
 msgid "less"
 msgstr "weniger"
 
+#: src/features/user-status/ui/SetStatusDialog.tsx
+msgid "Let others know what you're up to."
+msgstr "Lass andere wissen, was du gerade machst."
+
 #: src/features/projects/ui/ProjectChannelRequestDialog.tsx
 msgid "Lifetime"
 msgstr "Lebensdauer"
@@ -10244,6 +10314,10 @@ msgstr "Lokaler Ordner existiert schon"
 #: src/features/projects/ui/ProjectDetailScreen.tsx
 msgid "Local missing"
 msgstr "Lokal fehlt"
+
+#: src/shared/lib/localStorageQuota.ts
+msgid "Local storage is full"
+msgstr "Lokaler Speicher ist voll"
 
 #: src/features/agents/ui/AgentCardMintDialog.tsx
 msgid "Lock card"
@@ -12178,6 +12252,10 @@ msgstr "{label} öffnen"
 msgid "Open {productName} Term"
 msgstr "{productName}-Terminal öffnen"
 
+#: src/features/messages/ui/MessageThreadPanelSkeleton.tsx
+msgid "Open {resolvedHeaderTitle}"
+msgstr "{resolvedHeaderTitle} öffnen"
+
 #: src/features/profile/ui/UserProfilePanelFocusedViews.tsx
 msgid "Open #{channelName}"
 msgstr "#{channelName} öffnen"
@@ -12658,6 +12736,10 @@ msgstr "Andere Repositories"
 #: src/features/agents/ui/ManagedAgentRow.tsx
 msgid "Out of date"
 msgstr "Veraltet"
+
+#: src/features/user-status/ui/SetStatusDialog.tsx
+msgid "Out sick"
+msgstr "Krank gemeldet"
 
 #: src/features/projects/ui/ProjectPullRequestsPanel.tsx
 msgid "Outdated"
@@ -13427,6 +13509,10 @@ msgstr "Push-to-Talk"
 msgid "Push to Talk is enabled."
 msgstr "Push-to-Talk ist aktiviert."
 
+#: src/shared/ui/styled-qr-code.tsx
+msgid "QR code"
+msgstr "QR-Code"
+
 #: src/features/messages/ui/ComposerAttachments.tsx
 msgid "Queued attachment"
 msgstr "Anhang in der Warteschlange"
@@ -13438,6 +13524,10 @@ msgstr "Bots schnell hinzufügen"
 #: src/shared/lib/keyboard-shortcuts.ts
 msgid "Quick search"
 msgstr "Schnellsuche"
+
+#: src/features/user-status/ui/SetStatusDialog.tsx
+msgid "Quick statuses"
+msgstr "Statusvorschläge"
 
 #: src/features/messages/ui/FormattingToolbar.tsx
 msgid "Quote"
@@ -14350,8 +14440,13 @@ msgid "Resize inbox list"
 msgstr "Breite der Posteingangsliste ändern"
 
 #: src/features/channels/ui/RightAuxiliaryPane.tsx
+#: src/shared/layout/AuxiliaryPanelShell.tsx
 msgid "Resize panel"
 msgstr "Bereichsgröße ändern"
+
+#: src/features/profile/ui/UserProfilePanelFrame.tsx
+msgid "Resize profile panel"
+msgstr "Größe des Profilbereichs ändern"
 
 #: src/shared/ui/sidebar.tsx
 msgid "Resize sidebar"
@@ -14842,6 +14937,10 @@ msgstr "Emoji speichern"
 #: src/features/settings/ui/ChannelTemplatesSettingsCard.tsx
 msgid "Save reusable channel configurations and apply them when creating new channels."
 msgstr "Speichere wiederverwendbare Kanalkonfigurationen und wende sie beim Anlegen neuer Kanäle an."
+
+#: src/features/user-status/ui/SetStatusDialog.tsx
+msgid "Save status"
+msgstr "Status speichern"
 
 #: src/features/workflows/ui/WorkflowDialog.tsx
 msgid "Save workflow name"
@@ -15484,6 +15583,10 @@ msgstr "Festlegen"
 #: src/shared/ui/config-nudge-attachment.tsx
 msgid "Set <0>{0}</0> in Edit Agent → Environment variables"
 msgstr "Setz <0>{0}</0> unter „Agent bearbeiten“ → Umgebungsvariablen"
+
+#: src/features/user-status/ui/SetStatusDialog.tsx
+msgid "Set a status"
+msgstr "Status festlegen"
 
 #: src/features/agents/ui/AgentsView.tsx
 msgid "Set agent defaults"
@@ -16218,6 +16321,18 @@ msgstr "beginnt mit"
 msgid "Status"
 msgstr "Status"
 
+#: src/features/user-status/ui/SetStatusDialog.tsx
+msgid "Status expiration date"
+msgstr "Ablaufdatum des Status"
+
+#: src/features/user-status/ui/SetStatusDialog.tsx
+msgid "Status expiration time"
+msgstr "Ablaufzeit des Status"
+
+#: src/features/user-status/ui/UserNameIndicators.tsx
+msgid "Status set"
+msgstr "Status gesetzt"
+
 #: src/features/onboarding/ui/SetupStep.tsx
 msgid "Status unavailable"
 msgstr "Status nicht verfügbar"
@@ -16282,6 +16397,10 @@ msgstr "steps muss eine Liste sein"
 #: src/features/profile/ui/AnimatedAvatarReviewNav.tsx
 msgid "Still frame"
 msgstr "Standbild"
+
+#: src/shared/api/useReconnectRelay.ts
+msgid "Still trying to reconnect — check your network."
+msgstr "Verbindung wird weiter versucht — prüfe dein Netzwerk."
 
 #: src/features/huddle/components/ParticipantList.tsx
 msgid "Stop"
@@ -17365,6 +17484,7 @@ msgid "This version of {productName} cannot use shared compute. Update {productN
 msgstr "Diese Version von {productName} kann keine geteilte Rechenleistung nutzen. Aktualisiere {productName} oder wähle einen anderen Anbieter."
 
 #: src/features/projects/ui/ProjectsActivityFeed.tsx
+#: src/features/user-status/ui/SetStatusDialog.tsx
 msgid "This week"
 msgstr "Diese Woche"
 
@@ -17424,6 +17544,7 @@ msgstr "Dieser Workflow läuft möglicherweise häufig"
 
 #: src/features/channels/ui/FocusThreadDrawer.tsx
 #: src/features/home/lib/inbox.ts
+#: src/features/messages/ui/MessageThreadPanelSkeleton.tsx
 #: src/features/search/ui/TopbarSearch.tsx
 #: src/features/sidebar/ui/ChannelActivityPopover.tsx
 msgid "Thread"
@@ -17556,6 +17677,7 @@ msgid "To:"
 msgstr "An:"
 
 #: src/features/reminders/lib/reminderFilters.ts
+#: src/features/user-status/ui/SetStatusDialog.tsx
 #: src/shared/lib/datetime.ts
 msgid "Today"
 msgstr "Heute"
@@ -18061,6 +18183,10 @@ msgstr "Nicht unterstützte Webhook-Methode „{method}“ – nutze den YAML-Ed
 msgid "Unsupported workflow field \"{field}\" — use the YAML editor"
 msgstr "Nicht unterstütztes Workflow-Feld „{field}“ – nutze den YAML-Editor"
 
+#: src/features/user-status/ui/SetStatusDialog.tsx
+msgid "Until"
+msgstr "Bis"
+
 #: src/features/projects/projectPullRequests.mjs
 msgid "Untitled review"
 msgstr "Review ohne Titel"
@@ -18438,6 +18564,10 @@ msgstr "Nutzer"
 msgid "User prompt"
 msgstr "Nutzer-Prompt"
 
+#: src/features/user-status/ui/UserNameIndicators.tsx
+msgid "User status"
+msgstr "Nutzerstatus"
+
 #. placeholder {0}: linkedPersona.displayName
 #. placeholder {1}: linkedPersona.runtime ? ` (${linkedPersona.runtime})` : ""
 #: src/features/agents/ui/EditAgentAdvancedFields.tsx
@@ -18483,6 +18613,10 @@ msgstr "v{appVersion}"
 #: src/features/settings/SidebarUpdateCard.tsx
 msgid "v{version} available — download from GitHub. Switch to AppImage for automatic updates."
 msgstr "v{version} verfügbar — von GitHub herunterladen. Für automatische Updates zum AppImage wechseln."
+
+#: src/features/user-status/ui/SetStatusDialog.tsx
+msgid "Vacationing"
+msgstr "Im Urlaub"
 
 #: src/features/agents/ui/EnvVarsEditor.tsx
 #: src/features/settings/ui/CustomHarnessForm.tsx
@@ -18971,6 +19105,10 @@ msgstr "Was enthalten ist"
 msgid "What's on your mind?"
 msgstr "Was beschäftigt dich?"
 
+#: src/features/user-status/ui/SetStatusDialog.tsx
+msgid "What’s your status?"
+msgstr "Was ist dein Status?"
+
 #: src/features/workflows/ui/workflowTriggerCardClause.ts
 msgid "When “{value}” is posted"
 msgstr "Wenn „{value}“ gepostet wird"
@@ -19315,6 +19453,10 @@ msgstr "Arbeitet in #"
 #: src/features/profile/ui/UserProfilePopover.tsx
 msgid "Working in #{name} · {elapsed}"
 msgstr "Arbeitet in #{name} · {elapsed}"
+
+#: src/features/user-status/ui/SetStatusDialog.tsx
+msgid "Working remotely"
+msgstr "Im Homeoffice"
 
 #: src/features/profile/ui/UserProfilePanelFocusedViews.tsx
 msgid "Working…"

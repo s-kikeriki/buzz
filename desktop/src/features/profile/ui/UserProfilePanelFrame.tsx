@@ -1,3 +1,4 @@
+import { useLingui } from "@lingui/react/macro";
 import type * as React from "react";
 
 import {
@@ -50,6 +51,7 @@ export function UserProfilePanelFrame({
   widthPx,
   transparentChrome = false,
 }: UserProfilePanelFrameProps) {
+  const { t } = useLingui();
   return (
     <AuxiliaryPanel
       canResetWidth={canResetWidth}
@@ -59,7 +61,7 @@ export function UserProfilePanelFrame({
       onClose={onClose}
       onResetWidth={onResetWidth}
       onResizeStart={onResizeStart}
-      resizeHandleAriaLabel="Resize profile panel"
+      resizeHandleAriaLabel={t`Resize profile panel`}
       resizeHandleTestId="user-profile-resize-handle"
       siblings={
         <>

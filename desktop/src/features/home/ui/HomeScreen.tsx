@@ -1,3 +1,4 @@
+import { useLingui } from "@lingui/react/macro";
 import * as React from "react";
 
 import { useAppShell } from "@/app/AppShellContext";
@@ -26,6 +27,7 @@ export function HomeScreen({
   currentPubkey,
   onOpenContext,
 }: HomeScreenProps) {
+  const { i18n } = useLingui();
   const homeFeedQuery = useHomeFeedQuery();
   const { threadActivityFeedItems } = useAppShell();
   const hiddenDmIds = useHiddenDmIds(currentPubkey);
@@ -56,7 +58,7 @@ export function HomeScreen({
         errorMessage={
           homeFeedQuery.error !== null && homeFeedQuery.error !== undefined
             ? isRelayUnreachableError(homeFeedQuery.error)
-              ? RELAY_UNREACHABLE_MESSAGE
+              ? i18n._(RELAY_UNREACHABLE_MESSAGE)
               : homeFeedQuery.error instanceof Error
                 ? homeFeedQuery.error.message
                 : undefined

@@ -52,7 +52,6 @@ export function IdleAuxiliaryPanel({
       onClose={onClose}
       onResetWidth={onResetWidth}
       onResizeStart={onResizeStart}
-      resizeHandleAriaLabel="Resize panel"
       resizeHandleTestId="idle-auxiliary-resize-handle"
       testId="idle-auxiliary-panel"
       transparentChrome={split}

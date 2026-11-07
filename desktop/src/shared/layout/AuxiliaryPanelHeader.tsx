@@ -1,3 +1,5 @@
+import { msg } from "@lingui/core/macro";
+import { useLingui } from "@lingui/react/macro";
 import * as React from "react";
 import { ArrowLeft, X } from "lucide-react";
 
@@ -57,7 +59,13 @@ type AuxiliaryPanelSurface = "default" | "soft" | "transparent";
 const AUXILIARY_PANEL_HEADER_HEIGHT_CLASS = "pt-13";
 export const AUXILIARY_PANEL_DEFAULT_SURFACE_CLASS =
   "bg-background/80 backdrop-blur-md supports-[backdrop-filter]:bg-background/70 dark:bg-background/70 dark:backdrop-blur-xl dark:supports-[backdrop-filter]:bg-background/55";
-const AUXILIARY_PANEL_CLOSE_LABEL = "Close panel";
+/**
+ * Descriptor, not a string: this is module scope, so a resolved label would
+ * freeze in whatever locale was active the first time the module was imported
+ * — and this header is imported by the thread panel, the profile drawer and
+ * the project workspace, i.e. on the boot path.
+ */
+const AUXILIARY_PANEL_CLOSE_LABEL = msg`Close panel`;
 const AUXILIARY_PANEL_CLOSE_TEST_ID = "auxiliary-panel-close";
 const AUXILIARY_PANEL_RESIZE_BORDER_CLASS =
   "after:absolute after:bottom-0 after:-left-px after:top-0 after:w-px after:bg-border/45 after:transition-colors peer-hover/auxiliary-panel-resize:after:bg-border/80 peer-focus-visible/auxiliary-panel-resize:after:bg-border/80";
@@ -329,6 +337,7 @@ export function AuxiliaryPanelHeaderActions({
 }
 
 function AuxiliaryPanelHeaderCloseAction() {
+  const { i18n } = useLingui();
   const panelContext = React.useContext(AuxiliaryPanelContext);
 
   if (!panelContext?.onClose) {
@@ -337,7 +346,7 @@ function AuxiliaryPanelHeaderCloseAction() {
 
   return (
     <Button
-      aria-label={AUXILIARY_PANEL_CLOSE_LABEL}
+      aria-label={i18n._(AUXILIARY_PANEL_CLOSE_LABEL)}
       className="shrink-0"
       data-testid={AUXILIARY_PANEL_CLOSE_TEST_ID}
       onClick={panelContext.onClose}

@@ -4,6 +4,8 @@ import test from "node:test";
 import React from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 
+import { withI18n } from "@/testing/withI18n.mjs";
+
 import { AuxiliaryPanel } from "./AuxiliaryPanel/index.ts";
 import { AuxiliaryPanelBody } from "./AuxiliaryPanel/index.ts";
 import {
@@ -15,8 +17,12 @@ import {
   useAuxiliaryPanel,
 } from "./AuxiliaryPanel/index.ts";
 
+// `AuxiliaryPanel` and the header's close action read `useLingui()` now, which
+// throws without a provider and blames a duplicate `@lingui/react` install
+// rather than the missing one. Every case here renders through this helper, so
+// the provider belongs here rather than at each call site.
 function render(element) {
-  return renderToStaticMarkup(element);
+  return renderToStaticMarkup(withI18n(element));
 }
 
 test("AuxiliaryPanel provides layout mode through context", () => {
@@ -175,6 +181,59 @@ test("AuxiliaryPanelHeader renders a generic close action from context", () => {
 
   assert.match(html, /aria-label="Close panel"/);
   assert.match(html, /data-testid="auxiliary-panel-close"/);
+});
+
+/**
+ * The resize handle's own copy.
+ *
+ * `resizeHandleAriaLabel` used to carry a prose default in its destructured
+ * parameter (`= "Resize panel"`) and the `title` was two bare literals — all
+ * three shapes the coverage detector skips, which is why they stayed English
+ * while the gate called this file clean. The handle only renders for a
+ * standalone, non-overlay, resizable panel, and every surface the e2e harness
+ * can reach nests it inside `RightAuxiliaryPane`, which renders its own — so
+ * this is the only gate that sees these three strings at all.
+ */
+test("AuxiliaryPanel labels its resize handle from the catalogue", () => {
+  const html = render(
+    React.createElement(
+      AuxiliaryPanel,
+      {
+        canResetWidth: true,
+        onClose: () => {},
+        onResetWidth: () => {},
+        onResizeStart: () => {},
+        resizeHandleTestId: "test-resize-handle",
+        widthPx: 420,
+      },
+      "Panel",
+    ),
+  );
+
+  assert.match(html, /data-testid="test-resize-handle"/);
+  assert.match(html, /aria-label="Resize panel"/);
+  assert.match(html, /title="Drag to resize\. Double-click to reset width\."/);
+});
+
+test("AuxiliaryPanel takes a caller's own resize handle name", () => {
+  const html = render(
+    React.createElement(
+      AuxiliaryPanel,
+      {
+        onClose: () => {},
+        onResizeStart: () => {},
+        resizeHandleAriaLabel: "Resize profile panel",
+        resizeHandleTestId: "test-resize-handle",
+        widthPx: 420,
+      },
+      "Panel",
+    ),
+  );
+
+  assert.match(html, /aria-label="Resize profile panel"/);
+  assert.doesNotMatch(html, /aria-label="Resize panel"/);
+  // `canResetWidth` is false here, so the shorter of the two titles renders.
+  assert.match(html, /title="Drag to resize\."/);
 });
 
 test("AuxiliaryPanelHeader adds its requested backdrop in docked mode", () => {
