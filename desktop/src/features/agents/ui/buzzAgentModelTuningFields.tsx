@@ -115,11 +115,15 @@ export function EffortSelectField({
 }) {
   const { i18n } = useLingui();
   void i18n;
+  // Neither of the two literals this used to carry was visible to the coverage
+  // detector: a template literal and a `??` fallback are both shapes it skips,
+  // so this row read English in a German app while the gate called the file
+  // clean. `useLingui()` is read for the re-render, not for the strings.
   const inheritLabel = inheritedEffort
-    ? `Inherit (${inheritedEffort})`
+    ? t`Inherit (${inheritedEffort})`
     : effortDefault === null
       ? t`Inherit (default)`
-      : (inheritFallbackLabel ?? "Inherit");
+      : (inheritFallbackLabel ?? t`Inherit`);
   // Build the option set as the union of the runtime's valid values and the
   // buzz-agent master list. This ensures runtime-native values like Goose's
   // "off" appear as options even though they are not in the buzz-agent list.

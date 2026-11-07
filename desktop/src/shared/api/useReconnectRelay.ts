@@ -10,6 +10,7 @@
  * See `relayReconnectController.ts` for the three-phase strategy details.
  */
 
+import { useLingui } from "@lingui/react/macro";
 import * as React from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { invoke } from "@tauri-apps/api/core";
@@ -38,6 +39,7 @@ export function useReconnectRelay(): {
   isPending: boolean;
   isWaitingOnReconnectHook: boolean;
 } {
+  const { t } = useLingui();
   const queryClient = useQueryClient();
 
   const [controllerState, setControllerState] = React.useState(() =>
@@ -70,8 +72,8 @@ export function useReconnectRelay(): {
   }, [queryClient]);
 
   onBackstopRef.current = React.useCallback(() => {
-    toast("Still trying to reconnect — check your network.");
-  }, []);
+    toast(t`Still trying to reconnect — check your network.`);
+  }, [t]);
 
   const reconnect = React.useCallback(async () => {
     const deps = buildDeps(

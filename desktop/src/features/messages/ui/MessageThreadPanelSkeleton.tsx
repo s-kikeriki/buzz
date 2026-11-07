@@ -1,3 +1,4 @@
+import { useLingui } from "@lingui/react/macro";
 import type * as React from "react";
 import type { ThreadPanelLayoutProps } from "@/features/channels/lib/threadPanelLayout";
 import {
@@ -20,7 +21,7 @@ import { Skeleton } from "@/shared/ui/skeleton";
 /** Shared title row so the skeleton and loaded panel keep the same chrome. */
 export function MessageThreadPanelHeader({
   headerLeading,
-  headerTitle = "Thread",
+  headerTitle,
   headerTitleAriaLabel,
   isFocusMode,
   isSinglePanelView,
@@ -37,25 +38,31 @@ export function MessageThreadPanelHeader({
   onHeaderTitleClick?: () => void;
   showBackButton?: boolean;
 }) {
+  const { t } = useLingui();
+  // Both of these were hardcoded English the coverage detector cannot see:
+  // a prose default in a destructured parameter, and an `aria-label` prop
+  // whose value is a plain literal on a component it does not treat as copy.
+  const resolvedHeaderTitle = headerTitle ?? t`Thread`;
+  const openLabel = headerTitleAriaLabel ?? t`Open ${resolvedHeaderTitle}`;
   const title = onHeaderTitleClick ? (
     <button
-      aria-label={headerTitleAriaLabel ?? `Open ${headerTitle}`}
+      aria-label={openLabel}
       className="min-w-0 max-w-full truncate text-left hover:underline"
       data-testid="message-thread-open-channel"
       onClick={onHeaderTitleClick}
-      title={headerTitleAriaLabel ?? `Open ${headerTitle}`}
+      title={openLabel}
       type="button"
     >
-      {headerTitle}
+      {resolvedHeaderTitle}
     </button>
   ) : (
-    headerTitle
+    resolvedHeaderTitle
   );
 
   return (
     <AuxiliaryPanelHeader backdrop>
       <AuxiliaryPanelHeaderGroup
-        backButtonAriaLabel="Back to conversation"
+        backButtonAriaLabel={t`Back to conversation`}
         backButtonTestId="message-thread-back"
         leading={headerLeading}
         // Focus drawers fill width via isSinglePanelView but use the scrim to go

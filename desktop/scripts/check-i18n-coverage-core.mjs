@@ -83,6 +83,12 @@ const STRUCTURAL_PROPS = new Set([
   "key",
   "name",
   "pattern",
+  // SVG geometry, not language. `preserveAspectRatio` takes two tokens from a
+  // closed grammar (`xMinYMin slice`, `xMidYMid meet`), which `isProse` reads
+  // as a capitalised two-word sentence. Named here rather than exempted by
+  // `path:line`, because every future `<svg>` would need its own override and
+  // those drift the moment anything above them moves.
+  "preserveAspectRatio",
   "ref",
   "rel",
   "src",

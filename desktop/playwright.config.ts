@@ -61,6 +61,7 @@ export default defineConfig({
         "**/admin-console-german.spec.ts",
         "**/agents-transcript-german.spec.ts",
         "**/reminders-pulse-german.spec.ts",
+        "**/user-status-german.spec.ts",
         "**/boot-splash-brand.spec.ts",
         "**/flavor-preview.spec.ts",
         "**/mock-subscription-readiness.spec.ts",

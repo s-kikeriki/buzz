@@ -862,6 +862,25 @@ const CONVERTED_FILES = [
   "src/protectedFeatures/bestie/BestiePopover.tsx",
   "src/protectedFeatures/bestie/BestieProfileSection.tsx",
   "src/protectedFeatures/bestie/BestieSidebarEntry.tsx",
+  // User status: the set-status dialog and the name-row indicators.
+  "src/features/user-status/ui/SetStatusDialog.tsx",
+  "src/features/user-status/ui/UserNameIndicators.tsx",
+  // Shared chrome and feedback surfaces reached from every screen: the
+  // auxiliary panel's close button and resize handle, the relay-unreachable
+  // sentences, the clipboard and storage toasts, the QR code's accessible
+  // name, and the thread panel's header.
+  "src/features/channels/ui/IdleAuxiliaryPanel.tsx",
+  "src/features/home/ui/HomeScreen.tsx",
+  "src/features/messages/ui/MessageThreadPanelSkeleton.tsx",
+  "src/features/profile/ui/UserProfilePanelFrame.tsx",
+  "src/shared/api/useReconnectRelay.ts",
+  "src/shared/layout/AuxiliaryPanelHeader.tsx",
+  "src/shared/layout/AuxiliaryPanelShell.tsx",
+  "src/shared/lib/clipboard.ts",
+  "src/shared/lib/localStorageQuota.ts",
+  "src/shared/lib/relayError.ts",
+  "src/shared/theme/ThemePreviewFrame.tsx",
+  "src/shared/ui/styled-qr-code.tsx",
 ];
 
 /**

@@ -175,7 +175,7 @@ export function CanvasHistoryPanel({
         role="alert"
       >
         {isRelayUnreachableError(historyQuery.error)
-          ? RELAY_UNREACHABLE_SHORT
+          ? i18n._(RELAY_UNREACHABLE_SHORT)
           : historyQuery.error.message}
       </p>
     );
@@ -199,7 +199,7 @@ export function CanvasHistoryPanel({
           role="status"
         >
           {isRelayUnreachableError(historyQuery.error)
-            ? RELAY_UNREACHABLE_SHORT
+            ? i18n._(RELAY_UNREACHABLE_SHORT)
             : t`Couldn't refresh history — showing last known revisions.`}
         </p>
       ) : null}

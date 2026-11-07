@@ -1,3 +1,4 @@
+import { useLingui } from "@lingui/react/macro";
 import * as React from "react";
 
 import { useIsAuxiliaryPanelOverlay } from "@/shared/hooks/use-mobile";
@@ -39,6 +40,14 @@ type AuxiliaryPanelProps = {
   onClose: () => void;
   onResetWidth?: () => void;
   onResizeStart?: React.PointerEventHandler<HTMLButtonElement>;
+  /**
+   * Screen-reader name for the drag handle.
+   *
+   * The fallback is resolved in the body rather than written as a default
+   * here: a prose default in a destructured parameter is a hardcoded string
+   * the coverage detector cannot see, and this one stayed English through
+   * twelve tranches because of exactly that.
+   */
   resizeHandleAriaLabel?: string;
   resizeHandleTestId?: string;
   siblings?: React.ReactNode;
@@ -62,7 +71,7 @@ export function AuxiliaryPanel({
   onClose,
   onResetWidth,
   onResizeStart,
-  resizeHandleAriaLabel = "Resize panel",
+  resizeHandleAriaLabel,
   resizeHandleTestId,
   siblings,
   splitPaneClamp = true,
@@ -70,6 +79,7 @@ export function AuxiliaryPanel({
   transparentChrome = false,
   widthPx,
 }: AuxiliaryPanelProps) {
+  const { t } = useLingui();
   const isOverlay = useIsAuxiliaryPanelOverlay();
   const isFloatingOverlay = isOverlay && !isSinglePanelView;
   const isSplitLayout = layout === "split";
@@ -112,15 +122,15 @@ export function AuxiliaryPanel({
     !isSinglePanelView &&
     onResizeStart != null ? (
       <button
-        aria-label={resizeHandleAriaLabel}
+        aria-label={resizeHandleAriaLabel ?? t`Resize panel`}
         className="peer/auxiliary-panel-resize group/auxiliary-panel-resize absolute inset-y-0 left-0 z-40 w-3 -translate-x-1/2 cursor-col-resize"
         data-testid={resizeHandleTestId}
         onDoubleClick={canResetWidth ? onResetWidth : undefined}
         onPointerDown={onResizeStart}
         title={
           canResetWidth
-            ? "Drag to resize. Double-click to reset width."
-            : "Drag to resize."
+            ? t`Drag to resize. Double-click to reset width.`
+            : t`Drag to resize.`
         }
         type="button"
       >

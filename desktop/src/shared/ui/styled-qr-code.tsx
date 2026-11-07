@@ -1,3 +1,4 @@
+import { useLingui } from "@lingui/react/macro";
 import {
   useId,
   useMemo,
@@ -26,6 +27,7 @@ type StyledQrCodeProps = Omit<
   centerImageSrc?: string;
   foregroundColor?: string;
   size?: number;
+  /** Accessible name. Defaults to a translated "QR code" when omitted. */
   title?: string;
   value: string;
 };
@@ -92,10 +94,12 @@ export function StyledQrCode({
   centerImageSrc,
   foregroundColor = "#000000",
   size = 240,
-  title = "QR code",
+  title,
   value,
   ...svgProps
 }: StyledQrCodeProps) {
+  const { t } = useLingui();
+  const resolvedTitle = title ?? t`QR code`;
   const clipId = `styled-qr-logo-${useId().replace(/[^a-zA-Z0-9_-]/g, "")}`;
   const matrix = useMemo(
     () => create(value, { errorCorrectionLevel: "M" }).modules,
@@ -154,7 +158,7 @@ export function StyledQrCode({
   return (
     <svg
       {...svgProps}
-      aria-label={title}
+      aria-label={resolvedTitle}
       data-qr-matrix-size={matrix.size}
       height={size}
       role="img"
@@ -162,7 +166,7 @@ export function StyledQrCode({
       width={size}
       xmlns="http://www.w3.org/2000/svg"
     >
-      <title>{title}</title>
+      <title>{resolvedTitle}</title>
       <rect
         fill={backgroundColor}
         height={viewBoxSize}

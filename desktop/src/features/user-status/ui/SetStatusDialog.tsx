@@ -1,3 +1,6 @@
+import type { I18n, MessageDescriptor } from "@lingui/core";
+import { msg } from "@lingui/core/macro";
+import { Trans, useLingui } from "@lingui/react/macro";
 import * as React from "react";
 import { localeDateTimeFormat } from "@/shared/lib/intlLocale";
 import type { AppLocale } from "@/shared/lib/localePreference";
@@ -29,34 +32,102 @@ import {
 } from "@/shared/ui/dropdown-menu";
 import { Popover, PopoverContent, PopoverTrigger } from "@/shared/ui/popover";
 
-const PRESETS = [
-  { text: "In a meeting", emoji: "\uD83D\uDDE3\uFE0F" },
-  { text: "Commuting", emoji: "\uD83D\uDE8C" },
-  { text: "Out sick", emoji: "\uD83E\uDD12" },
-  { text: "Vacationing", emoji: "\uD83C\uDFD6\uFE0F" },
-  { text: "Working remotely", emoji: "\uD83C\uDFE0" },
-] as const;
+/**
+ * Quick-status suggestions.
+ *
+ * `id` is the slug the row's `data-testid` is built from. It used to be derived
+ * from the displayed text (`preset.text.toLowerCase().replace(/\s+/g, "-")`),
+ * which makes the DOM change with the locale: a German app would have rendered
+ * `set-status-preset-im-meeting` and every selector binding the English slug
+ * would have gone looking for an element that no longer exists. The slugs here
+ * are exactly the ones that derivation produced in English, so the ids are now
+ * locale-independent without moving any existing selector.
+ *
+ * `label` is a descriptor rather than a string because this table lives at
+ * module scope: resolving it here would freeze the English copy into the
+ * module the first time it is imported, before any catalogue is active.
+ *
+ * Clicking a preset puts its label in the status *text*, which is free-form
+ * copy the user then publishes, so a German user publishes German words.
+ */
+export const PRESETS: readonly {
+  id: string;
+  label: MessageDescriptor;
+  emoji: string;
+}[] = [
+  { id: "in-a-meeting", label: msg`In a meeting`, emoji: "\uD83D\uDDE3\uFE0F" },
+  { id: "commuting", label: msg`Commuting`, emoji: "\uD83D\uDE8C" },
+  { id: "out-sick", label: msg`Out sick`, emoji: "\uD83E\uDD12" },
+  { id: "vacationing", label: msg`Vacationing`, emoji: "\uD83C\uDFD6\uFE0F" },
+  {
+    id: "working-remotely",
+    label: msg`Working remotely`,
+    emoji: "\uD83C\uDFE0",
+  },
+];
 
-const DURATIONS = [
-  "1 hour",
-  "8 hours",
-  "Today",
-  "This week",
-  "Custom",
-] as const;
+/**
+ * Expiry choices.
+ *
+ * The displayed label used to *be* the state value: `DurationLabel` was
+ * `"1 hour" | "8 hours" | \u2026`, `expirationUnixSeconds` switched on it and
+ * `inferredDuration` returned one. Translating those literals would have
+ * changed the discriminator with the locale and left the switch with no
+ * matching case, so the id and the label are separate now \u2014 the id is what the
+ * component compares, the label is only ever rendered.
+ */
+export const DURATION_OPTIONS: readonly {
+  id: DurationId;
+  label: MessageDescriptor;
+}[] = [
+  { id: "1-hour", label: msg`1 hour` },
+  { id: "8-hours", label: msg`8 hours` },
+  { id: "today", label: msg`Today` },
+  { id: "this-week", label: msg`This week` },
+  { id: "custom", label: msg`Custom` },
+];
 
-type DurationLabel = (typeof DURATIONS)[number];
+export type DurationId =
+  | "1-hour"
+  | "8-hours"
+  | "today"
+  | "this-week"
+  | "custom";
 
-const HALF_HOUR_TIMES = Array.from({ length: 48 }, (_, index) => {
+export function durationLabel(i18n: I18n, id: DurationId): string {
+  const option = DURATION_OPTIONS.find((candidate) => candidate.id === id);
+  return option ? i18n._(option.label) : id;
+}
+
+/** Half-hour marks of a day, as `HH:mm` values with no display copy attached. */
+const HALF_HOUR_SLOTS = Array.from({ length: 48 }, (_, index) => {
   const hour = Math.floor(index / 2);
   const minute = index % 2 === 0 ? 0 : 30;
-  const period = hour < 12 ? "AM" : "PM";
-  const displayHour = hour % 12 || 12;
   return {
-    label: `${displayHour}:${minute.toString().padStart(2, "0")} ${period}`,
+    hour,
+    minute,
     value: `${hour.toString().padStart(2, "0")}:${minute.toString().padStart(2, "0")}`,
   };
 });
+
+/**
+ * Labels the half-hour marks in the app's locale.
+ *
+ * These labels were a hand-rolled 12-hour clock (`${hour % 12 || 12}:${minute}
+ * ${hour < 12 ? "AM" : "PM"}`), so a German app offered "1:30 PM" in a menu
+ * whose own trigger already fell back to `formattedTime` \u2014 the same two
+ * formats in one control. Both sides go through `formattedTime` now, which is
+ * 24-hour in German. For `en-US` the output is identical to the hand-rolled
+ * string at all 48 marks, midnight and noon included.
+ */
+export function halfHourTimes(locale: AppLocale) {
+  const atHalfHour = new Date();
+  return HALF_HOUR_SLOTS.map((slot) => {
+    const at = new Date(atHalfHour);
+    at.setHours(slot.hour, slot.minute, 0, 0);
+    return { value: slot.value, label: formattedTime(at, locale) };
+  });
+}
 
 type SetStatusDialogProps = {
   open: boolean;
@@ -106,24 +177,24 @@ function endOfWeek(from: Date) {
   return end;
 }
 
-function inferredDuration(
+export function inferredDuration(
   expiresAt: number | undefined,
   updatedAt: number | undefined,
-): DurationLabel {
-  if (!expiresAt || expiresAt * 1_000 <= Date.now()) return "Today";
-  if (!updatedAt) return "Custom";
+): DurationId {
+  if (!expiresAt || expiresAt * 1_000 <= Date.now()) return "today";
+  if (!updatedAt) return "custom";
 
   const expiration = expiresAt * 1_000;
   const updated = updatedAt * 1_000;
   const withinTwoMinutes = (expected: number) =>
     Math.abs(expiration - expected) <= 2 * 60_000;
-  if (withinTwoMinutes(updated + 60 * 60_000)) return "1 hour";
-  if (withinTwoMinutes(updated + 8 * 60 * 60_000)) return "8 hours";
-  if (withinTwoMinutes(endOfToday(new Date(updated)).getTime())) return "Today";
+  if (withinTwoMinutes(updated + 60 * 60_000)) return "1-hour";
+  if (withinTwoMinutes(updated + 8 * 60 * 60_000)) return "8-hours";
+  if (withinTwoMinutes(endOfToday(new Date(updated)).getTime())) return "today";
   if (withinTwoMinutes(endOfWeek(new Date(updated)).getTime())) {
-    return "This week";
+    return "this-week";
   }
-  return "Custom";
+  return "custom";
 }
 
 function withCustomDate(current: Date, selected: Date) {
@@ -195,12 +266,14 @@ export function SetStatusDialog({
   onClear,
   hasExistingStatus,
 }: SetStatusDialogProps) {
+  const { i18n, t } = useLingui();
   const locale = useLocale();
+  const timeOptions = React.useMemo(() => halfHourTimes(locale), [locale]);
   const [text, setText] = React.useState(initialText);
   const [emoji, setEmoji] = React.useState(initialEmoji);
   const [pickerOpen, setPickerOpen] = React.useState(false);
   const [calendarOpen, setCalendarOpen] = React.useState(false);
-  const [duration, setDuration] = React.useState<DurationLabel>("Today");
+  const [duration, setDuration] = React.useState<DurationId>("today");
   const [customUntil, setCustomUntil] = React.useState(defaultCustomDate);
   const [durationTouched, setDurationTouched] = React.useState(false);
   const [saveError, setSaveError] = React.useState("");
@@ -208,7 +281,7 @@ export function SetStatusDialog({
     text: initialText,
     emoji: initialEmoji,
     expiresAt: initialExpiresAt,
-    duration: null as DurationLabel | null,
+    duration: null as DurationId | null,
     customUntil: null as Date | null,
     hasExistingStatus,
   }));
@@ -239,7 +312,7 @@ export function SetStatusDialog({
         hasExistingStatus,
       });
     } else {
-      setDuration("Today");
+      setDuration("today");
       const nextCustomUntil = defaultCustomDate();
       setCustomUntil(nextCustomUntil);
       setBaseline({
@@ -271,8 +344,8 @@ export function SetStatusDialog({
     text.trim() !== baseline.text.trim() ||
     effectiveEmoji !== initialEffectiveEmoji ||
     durationTouched ||
-    (duration === "Custom" &&
-      baseline.duration === "Custom" &&
+    (duration === "custom" &&
+      baseline.duration === "custom" &&
       baseline.customUntil !== null &&
       customUntil.getTime() !== baseline.customUntil.getTime());
   function expirationUnixSeconds(now = new Date()): number | undefined {
@@ -285,15 +358,15 @@ export function SetStatusDialog({
     }
     const expiresAt = (() => {
       switch (duration) {
-        case "1 hour":
+        case "1-hour":
           return new Date(now.getTime() + 60 * 60_000);
-        case "8 hours":
+        case "8-hours":
           return new Date(now.getTime() + 8 * 60 * 60_000);
-        case "Today":
+        case "today":
           return endOfToday(now);
-        case "This week":
+        case "this-week":
           return endOfWeek(now);
-        case "Custom":
+        case "custom":
           return customUntil;
       }
     })();
@@ -306,8 +379,11 @@ export function SetStatusDialog({
     displayedExpiration > Math.floor(Date.now() / 1_000);
   const canSave = hasContent && isDirty && expirationIsFuture;
 
-  function handlePresetClick(preset: { text: string; emoji: string }) {
-    setText(preset.text);
+  function handlePresetClick(preset: {
+    label: MessageDescriptor;
+    emoji: string;
+  }) {
+    setText(i18n._(preset.label));
     setEmoji(preset.emoji);
   }
 
@@ -323,7 +399,7 @@ export function SetStatusDialog({
       expiresAt !== undefined &&
       expiresAt <= Math.floor(Date.now() / 1_000)
     ) {
-      setSaveError("Choose a duration in the future.");
+      setSaveError(t`Choose a duration in the future.`);
       return;
     }
     onSave({
@@ -362,33 +438,33 @@ export function SetStatusDialog({
                 type="button"
                 variant="ghost"
               >
-                Clear status
+                <Trans>Clear status</Trans>
               </Button>
             ) : (
               <span />
             )}
             <Button
-              aria-label="Save status"
+              aria-label={t`Save status`}
               data-testid="set-status-save"
               disabled={!canSave}
               onClick={handleSave}
               type="button"
             >
-              Save status
+              <Trans>Save status</Trans>
             </Button>
           </div>
         }
         footerClassName="border-t-0 pt-0"
         headerClassName="pb-2"
-        headerSubtitle="Let others know what you're up to."
-        title="Set a status"
+        headerSubtitle={t`Let others know what you're up to.`}
+        title={t`Set a status`}
       >
         <div className="flex min-h-12 items-stretch rounded-xl border border-input focus-within:ring-1 focus-within:ring-ring">
           <Popover onOpenChange={setPickerOpen} open={pickerOpen}>
             <div className="shrink-0">
               <PopoverTrigger asChild>
                 <button
-                  aria-label="Choose a status emoji"
+                  aria-label={t`Choose a status emoji`}
                   className="flex h-12 w-12 items-center justify-center rounded-xl transition-colors hover:bg-accent"
                   type="button"
                 >
@@ -413,12 +489,12 @@ export function SetStatusDialog({
             data-testid="set-status-input"
             onChange={(event) => setText(event.target.value)}
             onKeyDown={handleKeyDown}
-            placeholder="What’s your status?"
+            placeholder={t`What’s your status?`}
             value={text}
           />
         </div>
 
-        <StatusSection label="Duration">
+        <StatusSection label={t`Duration`}>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <button
@@ -427,36 +503,44 @@ export function SetStatusDialog({
                 type="button"
               >
                 <Clock3 className="h-5 w-5 text-muted-foreground" />
-                <span className="flex-1">Duration</span>
-                <span className="text-muted-foreground">{duration}</span>
+                <span className="flex-1">
+                  <Trans>Duration</Trans>
+                </span>
+                <span className="text-muted-foreground">
+                  {durationLabel(i18n, duration)}
+                </span>
                 <ChevronDown className="h-4 w-4 text-muted-foreground" />
               </button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="min-w-52">
-              {DURATIONS.map((option) => (
+              {DURATION_OPTIONS.map((option) => (
                 <DropdownMenuItem
                   className="justify-between"
-                  key={option}
+                  key={option.id}
                   onSelect={() => {
-                    setDuration(option);
+                    setDuration(option.id);
                     setDurationTouched(true);
                     setSaveError("");
                   }}
                 >
-                  {option}
-                  {duration === option ? <Check className="h-4 w-4" /> : null}
+                  {i18n._(option.label)}
+                  {duration === option.id ? (
+                    <Check className="h-4 w-4" />
+                  ) : null}
                 </DropdownMenuItem>
               ))}
             </DropdownMenuContent>
           </DropdownMenu>
-          {duration === "Custom" ? (
+          {duration === "custom" ? (
             <div className={ROW_CLASS}>
               <CalendarClock className="h-5 w-5 text-muted-foreground" />
-              <span>Until</span>
+              <span>
+                <Trans>Until</Trans>
+              </span>
               <Popover onOpenChange={setCalendarOpen} open={calendarOpen}>
                 <PopoverTrigger asChild>
                   <button
-                    aria-label="Status expiration date"
+                    aria-label={t`Status expiration date`}
                     className="flex h-9 min-w-0 flex-1 items-center rounded-md border border-input bg-background px-2 text-sm outline-none focus:ring-1 focus:ring-ring"
                     type="button"
                   >
@@ -486,12 +570,12 @@ export function SetStatusDialog({
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <button
-                    aria-label="Status expiration time"
+                    aria-label={t`Status expiration time`}
                     className="flex h-9 w-28 shrink-0 items-center rounded-md border border-input bg-background px-2 text-sm outline-none focus:ring-1 focus:ring-ring"
                     type="button"
                   >
                     <span>
-                      {HALF_HOUR_TIMES.find(
+                      {timeOptions.find(
                         (time) => time.value === toLocalTimeValue(customUntil),
                       )?.label ?? formattedTime(customUntil, locale)}
                     </span>
@@ -506,7 +590,7 @@ export function SetStatusDialog({
                     minWidth: "var(--radix-dropdown-menu-trigger-width)",
                   }}
                 >
-                  {HALF_HOUR_TIMES.map((time) => (
+                  {timeOptions.map((time) => (
                     <DropdownMenuItem
                       className="justify-between"
                       key={time.value}
@@ -530,18 +614,18 @@ export function SetStatusDialog({
           ) : null}
           {saveError || (!expirationIsFuture && isDirty) ? (
             <p className="px-3 py-2 text-xs text-destructive" role="alert">
-              {saveError || "Choose a duration in the future."}
+              {saveError || t`Choose a duration in the future.`}
             </p>
           ) : null}
         </StatusSection>
 
         {!baseline.hasExistingStatus ? (
-          <StatusSection label="Quick statuses">
+          <StatusSection label={t`Quick statuses`}>
             {PRESETS.map((preset) => (
               <button
                 className={ROW_CLASS}
-                data-testid={`set-status-preset-${preset.text.toLowerCase().replace(/\s+/g, "-")}`}
-                key={preset.text}
+                data-testid={`set-status-preset-${preset.id}`}
+                key={preset.id}
                 onClick={() => handlePresetClick(preset)}
                 type="button"
               >
@@ -551,7 +635,7 @@ export function SetStatusDialog({
                 >
                   {preset.emoji}
                 </span>
-                <span>{preset.text}</span>
+                <span>{i18n._(preset.label)}</span>
               </button>
             ))}
           </StatusSection>

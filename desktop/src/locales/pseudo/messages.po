@@ -1175,6 +1175,10 @@ msgstr ""
 msgid "{productName} could not open this checkout in your file browser."
 msgstr ""
 
+#: src/shared/lib/localStorageQuota.ts
+msgid "{productName} could not save some local data — read positions may not persist across restarts."
+msgstr ""
+
 #: src/features/projects/useAddProjectChannel.ts
 msgid "{productName} could not verify the project after creating the channel, and could not remove the unlinked channel. Delete it manually, then refresh and try again."
 msgstr ""
@@ -1569,6 +1573,7 @@ msgstr ""
 
 #: src/features/channels/ui/ChannelTypeSettings.tsx
 #: src/features/moderation/lib/timeout.ts
+#: src/features/user-status/ui/SetStatusDialog.tsx
 msgid "1 hour"
 msgstr ""
 
@@ -1646,6 +1651,10 @@ msgstr ""
 #: src/features/community-members/ui/InviteLinkSection.tsx
 #: src/features/moderation/lib/timeout.ts
 msgid "7 days"
+msgstr ""
+
+#: src/features/user-status/ui/SetStatusDialog.tsx
+msgid "8 hours"
 msgstr ""
 
 #: src/features/projects/lib/projectBranches.ts
@@ -3395,6 +3404,10 @@ msgstr ""
 msgid "Back to Commits"
 msgstr ""
 
+#: src/features/messages/ui/MessageThreadPanelSkeleton.tsx
+msgid "Back to conversation"
+msgstr ""
+
 #: src/features/messages/ui/DraftDetailPane.tsx
 msgid "Back to drafts list"
 msgstr ""
@@ -3711,6 +3724,14 @@ msgstr ""
 
 #: src/features/sidebar/ui/SidebarRelayConnectionCard.tsx
 msgid "Can't reach the relay"
+msgstr ""
+
+#: src/shared/lib/relayError.ts
+msgid "Can't reach the relay — check your VPN or network connection."
+msgstr ""
+
+#: src/shared/lib/relayError.ts
+msgid "Can't reach the relay."
 msgstr ""
 
 #: src/features/onboarding/ui/OnboardingFlow.tsx
@@ -4250,6 +4271,10 @@ msgstr ""
 msgid "Choose a different repositories directory or remove the existing checkout."
 msgstr ""
 
+#: src/features/user-status/ui/SetStatusDialog.tsx
+msgid "Choose a duration in the future."
+msgstr ""
+
 #: src/features/agents/ui/agentConfigOptions.tsx
 #: src/features/onboarding/ui/SetupStep.tsx
 msgid "Choose a harness"
@@ -4322,6 +4347,10 @@ msgstr ""
 
 #: src/protectedFeatures/bestie/BestiePopover.tsx
 msgid "Choose a Sidekick"
+msgstr ""
+
+#: src/features/user-status/ui/SetStatusDialog.tsx
+msgid "Choose a status emoji"
 msgstr ""
 
 #: src/features/profile/ui/UserProfilePanelTabs.tsx
@@ -4568,6 +4597,10 @@ msgstr ""
 msgid "Clear selection"
 msgstr ""
 
+#: src/features/user-status/ui/SetStatusDialog.tsx
+msgid "Clear status"
+msgstr ""
+
 #: src/features/admin-console/AdminConsoleStaffingTab.tsx
 msgid "Clear timeout"
 msgstr ""
@@ -4685,6 +4718,10 @@ msgstr ""
 #: src/features/messages/ui/ComposerAttachments.tsx
 #: src/shared/ui/SimpleImageLightbox.tsx
 msgid "Close lightbox"
+msgstr ""
+
+#: src/shared/layout/AuxiliaryPanelHeader.tsx
+msgid "Close panel"
 msgstr ""
 
 #: src/shared/ui/markdown/FilePreviewDialog.tsx
@@ -4979,6 +5016,10 @@ msgstr ""
 
 #: src/features/onboarding/ui/CommunityOnboardingFlow.tsx
 msgid "Community username"
+msgstr ""
+
+#: src/features/user-status/ui/SetStatusDialog.tsx
+msgid "Commuting"
 msgstr ""
 
 #: src/features/settings/ui/AppearanceSettingsControls.tsx
@@ -5347,6 +5388,7 @@ msgstr ""
 #: src/features/onboarding/ui/BackupStep.tsx
 #: src/features/settings/ui/MobilePairingCard.tsx
 #: src/features/settings/ui/ProfileSettingsCard.tsx
+#: src/shared/lib/clipboard.ts
 #: src/shared/ui/markdown/imageActions.ts
 msgid "Copied to clipboard"
 msgstr ""
@@ -6350,6 +6392,10 @@ msgstr ""
 msgid "Cursor's coding agent, connected to {productName} through its ACP server."
 msgstr ""
 
+#: src/features/user-status/ui/SetStatusDialog.tsx
+msgid "Custom"
+msgstr ""
+
 #: src/features/agents/ui/AgentDefinitionMetadata.tsx
 msgid "Custom agent"
 msgstr ""
@@ -7206,11 +7252,13 @@ msgstr ""
 
 #: src/features/channels/ui/RightAuxiliaryPane.tsx
 #: src/features/home/ui/HomeView.tsx
+#: src/shared/layout/AuxiliaryPanelShell.tsx
 msgid "Drag to resize."
 msgstr ""
 
 #: src/features/channels/ui/RightAuxiliaryPane.tsx
 #: src/features/home/ui/HomeView.tsx
+#: src/shared/layout/AuxiliaryPanelShell.tsx
 msgid "Drag to resize. Double-click to reset width."
 msgstr ""
 
@@ -7291,6 +7339,7 @@ msgstr ""
 msgid "Duplicated as \"{name}\""
 msgstr ""
 
+#: src/features/user-status/ui/SetStatusDialog.tsx
 #: src/features/workflows/ui/WorkflowStepCard.tsx
 msgid "Duration"
 msgstr ""
@@ -7963,6 +8012,10 @@ msgstr ""
 
 #: src/features/pulse/lib/useNoteActions.ts
 msgid "Failed to copy note link"
+msgstr ""
+
+#: src/shared/lib/clipboard.ts
+msgid "Failed to copy to clipboard"
 msgstr ""
 
 #: src/features/settings/ui/ChannelTemplatesSettingsCard.tsx
@@ -9135,7 +9188,12 @@ msgid "In 30 minutes"
 msgstr ""
 
 #: src/features/huddle/components/HuddleProfileControl.tsx
+#: src/features/user-status/ui/UserNameIndicators.tsx
 msgid "In a huddle"
+msgstr ""
+
+#: src/features/user-status/ui/SetStatusDialog.tsx
+msgid "In a meeting"
 msgstr ""
 
 #: src/features/channels/ui/AddChannelBotPersonasSection.tsx
@@ -9228,6 +9286,14 @@ msgstr ""
 #: src/features/profile/ui/UserProfilePanelSections.tsx
 #: src/features/profile/ui/UserProfilePanelTabs.tsx
 msgid "Info"
+msgstr ""
+
+#: src/features/agents/ui/buzzAgentModelTuningFields.tsx
+msgid "Inherit"
+msgstr ""
+
+#: src/features/agents/ui/buzzAgentModelTuningFields.tsx
+msgid "Inherit ({inheritedEffort})"
 msgstr ""
 
 #: src/features/agents/lib/agentConfigCore.ts
@@ -9825,6 +9891,10 @@ msgstr ""
 msgid "less"
 msgstr ""
 
+#: src/features/user-status/ui/SetStatusDialog.tsx
+msgid "Let others know what you're up to."
+msgstr ""
+
 #: src/features/projects/ui/ProjectChannelRequestDialog.tsx
 msgid "Lifetime"
 msgstr ""
@@ -10243,6 +10313,10 @@ msgstr ""
 
 #: src/features/projects/ui/ProjectDetailScreen.tsx
 msgid "Local missing"
+msgstr ""
+
+#: src/shared/lib/localStorageQuota.ts
+msgid "Local storage is full"
 msgstr ""
 
 #: src/features/agents/ui/AgentCardMintDialog.tsx
@@ -12178,6 +12252,10 @@ msgstr ""
 msgid "Open {productName} Term"
 msgstr ""
 
+#: src/features/messages/ui/MessageThreadPanelSkeleton.tsx
+msgid "Open {resolvedHeaderTitle}"
+msgstr ""
+
 #: src/features/profile/ui/UserProfilePanelFocusedViews.tsx
 msgid "Open #{channelName}"
 msgstr ""
@@ -12657,6 +12735,10 @@ msgstr ""
 
 #: src/features/agents/ui/ManagedAgentRow.tsx
 msgid "Out of date"
+msgstr ""
+
+#: src/features/user-status/ui/SetStatusDialog.tsx
+msgid "Out sick"
 msgstr ""
 
 #: src/features/projects/ui/ProjectPullRequestsPanel.tsx
@@ -13427,6 +13509,10 @@ msgstr ""
 msgid "Push to Talk is enabled."
 msgstr ""
 
+#: src/shared/ui/styled-qr-code.tsx
+msgid "QR code"
+msgstr ""
+
 #: src/features/messages/ui/ComposerAttachments.tsx
 msgid "Queued attachment"
 msgstr ""
@@ -13437,6 +13523,10 @@ msgstr ""
 
 #: src/shared/lib/keyboard-shortcuts.ts
 msgid "Quick search"
+msgstr ""
+
+#: src/features/user-status/ui/SetStatusDialog.tsx
+msgid "Quick statuses"
 msgstr ""
 
 #: src/features/messages/ui/FormattingToolbar.tsx
@@ -14350,7 +14440,12 @@ msgid "Resize inbox list"
 msgstr ""
 
 #: src/features/channels/ui/RightAuxiliaryPane.tsx
+#: src/shared/layout/AuxiliaryPanelShell.tsx
 msgid "Resize panel"
+msgstr ""
+
+#: src/features/profile/ui/UserProfilePanelFrame.tsx
+msgid "Resize profile panel"
 msgstr ""
 
 #: src/shared/ui/sidebar.tsx
@@ -14841,6 +14936,10 @@ msgstr ""
 
 #: src/features/settings/ui/ChannelTemplatesSettingsCard.tsx
 msgid "Save reusable channel configurations and apply them when creating new channels."
+msgstr ""
+
+#: src/features/user-status/ui/SetStatusDialog.tsx
+msgid "Save status"
 msgstr ""
 
 #: src/features/workflows/ui/WorkflowDialog.tsx
@@ -15483,6 +15582,10 @@ msgstr ""
 #. placeholder {0}: requirement.key
 #: src/shared/ui/config-nudge-attachment.tsx
 msgid "Set <0>{0}</0> in Edit Agent → Environment variables"
+msgstr ""
+
+#: src/features/user-status/ui/SetStatusDialog.tsx
+msgid "Set a status"
 msgstr ""
 
 #: src/features/agents/ui/AgentsView.tsx
@@ -16218,6 +16321,18 @@ msgstr ""
 msgid "Status"
 msgstr ""
 
+#: src/features/user-status/ui/SetStatusDialog.tsx
+msgid "Status expiration date"
+msgstr ""
+
+#: src/features/user-status/ui/SetStatusDialog.tsx
+msgid "Status expiration time"
+msgstr ""
+
+#: src/features/user-status/ui/UserNameIndicators.tsx
+msgid "Status set"
+msgstr ""
+
 #: src/features/onboarding/ui/SetupStep.tsx
 msgid "Status unavailable"
 msgstr ""
@@ -16281,6 +16396,10 @@ msgstr ""
 
 #: src/features/profile/ui/AnimatedAvatarReviewNav.tsx
 msgid "Still frame"
+msgstr ""
+
+#: src/shared/api/useReconnectRelay.ts
+msgid "Still trying to reconnect — check your network."
 msgstr ""
 
 #: src/features/huddle/components/ParticipantList.tsx
@@ -17365,6 +17484,7 @@ msgid "This version of {productName} cannot use shared compute. Update {productN
 msgstr ""
 
 #: src/features/projects/ui/ProjectsActivityFeed.tsx
+#: src/features/user-status/ui/SetStatusDialog.tsx
 msgid "This week"
 msgstr ""
 
@@ -17424,6 +17544,7 @@ msgstr ""
 
 #: src/features/channels/ui/FocusThreadDrawer.tsx
 #: src/features/home/lib/inbox.ts
+#: src/features/messages/ui/MessageThreadPanelSkeleton.tsx
 #: src/features/search/ui/TopbarSearch.tsx
 #: src/features/sidebar/ui/ChannelActivityPopover.tsx
 msgid "Thread"
@@ -17556,6 +17677,7 @@ msgid "To:"
 msgstr ""
 
 #: src/features/reminders/lib/reminderFilters.ts
+#: src/features/user-status/ui/SetStatusDialog.tsx
 #: src/shared/lib/datetime.ts
 msgid "Today"
 msgstr ""
@@ -18061,6 +18183,10 @@ msgstr ""
 msgid "Unsupported workflow field \"{field}\" — use the YAML editor"
 msgstr ""
 
+#: src/features/user-status/ui/SetStatusDialog.tsx
+msgid "Until"
+msgstr ""
+
 #: src/features/projects/projectPullRequests.mjs
 msgid "Untitled review"
 msgstr ""
@@ -18438,6 +18564,10 @@ msgstr ""
 msgid "User prompt"
 msgstr ""
 
+#: src/features/user-status/ui/UserNameIndicators.tsx
+msgid "User status"
+msgstr ""
+
 #. placeholder {0}: linkedPersona.displayName
 #. placeholder {1}: linkedPersona.runtime ? ` (${linkedPersona.runtime})` : ""
 #: src/features/agents/ui/EditAgentAdvancedFields.tsx
@@ -18482,6 +18612,10 @@ msgstr ""
 
 #: src/features/settings/SidebarUpdateCard.tsx
 msgid "v{version} available — download from GitHub. Switch to AppImage for automatic updates."
+msgstr ""
+
+#: src/features/user-status/ui/SetStatusDialog.tsx
+msgid "Vacationing"
 msgstr ""
 
 #: src/features/agents/ui/EnvVarsEditor.tsx
@@ -18971,6 +19105,10 @@ msgstr ""
 msgid "What's on your mind?"
 msgstr ""
 
+#: src/features/user-status/ui/SetStatusDialog.tsx
+msgid "What’s your status?"
+msgstr ""
+
 #: src/features/workflows/ui/workflowTriggerCardClause.ts
 msgid "When “{value}” is posted"
 msgstr ""
@@ -19314,6 +19452,10 @@ msgstr ""
 
 #: src/features/profile/ui/UserProfilePopover.tsx
 msgid "Working in #{name} · {elapsed}"
+msgstr ""
+
+#: src/features/user-status/ui/SetStatusDialog.tsx
+msgid "Working remotely"
 msgstr ""
 
 #: src/features/profile/ui/UserProfilePanelFocusedViews.tsx

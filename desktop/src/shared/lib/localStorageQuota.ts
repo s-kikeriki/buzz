@@ -7,6 +7,11 @@
  * — safe to drop, they repaint from the relay — and retries the write once.
  */
 
+import { i18n } from "@lingui/core";
+import { msg } from "@lingui/core/macro";
+
+import { BRAND } from "@/shared/branding/brand";
+
 const PURE_CACHE_KEY_PREFIXES = [
   "buzz-channel-messages.v1:",
   "buzz-channels.v1:",
@@ -128,12 +133,16 @@ let warnedPersistentFailure = false;
 function notifyStorageFull(): void {
   if (warnedPersistentFailure) return;
   warnedPersistentFailure = true;
-  // Dynamic import keeps this module usable from node unit tests.
+  // Dynamic import keeps this module usable from node unit tests. Resolving the
+  // copy inside the callback keeps it off module load, and off the startup
+  // recovery path, which runs before the catalogue is active.
   import("sonner")
     .then(({ toast }) => {
-      toast.error("Local storage is full", {
-        description:
-          "Buzz could not save some local data — read positions may not persist across restarts.",
+      const productName = BRAND.productName;
+      toast.error(i18n._(msg`Local storage is full`), {
+        description: i18n._(
+          msg`${productName} could not save some local data — read positions may not persist across restarts.`,
+        ),
       });
     })
     .catch(() => {});
