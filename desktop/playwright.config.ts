@@ -43,6 +43,7 @@ export default defineConfig({
         "**/messages-german.spec.ts",
         "**/moderation-german.spec.ts",
         "**/forum-german.spec.ts",
+        "**/sidekick-german.spec.ts",
         "**/profile-german.spec.ts",
         "**/communities-german.spec.ts",
         "**/shared-ui-german.spec.ts",

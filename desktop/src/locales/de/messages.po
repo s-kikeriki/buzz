@@ -459,6 +459,11 @@ msgstr "{0} ist nicht installiert."
 msgid "{0} is ready"
 msgstr "{0} ist bereit"
 
+#. placeholder {0}: agent.name
+#: src/protectedFeatures/bestie/BestieCardBadge.tsx
+msgid "{0} is your Sidekick"
+msgstr "{0} ist dein Sidekick"
+
 #. placeholder {0}: BRAND.productName
 #. placeholder {1}: BRAND.productName
 #: src/features/onboarding/ui/BackupStep.tsx
@@ -549,6 +554,11 @@ msgstr "{0} wurde angelegt, aber die Agent-Instanz konnte nicht angelegt werden.
 msgid "{0} was unable to fully clear your local data. Try relaunching — the reset will resume automatically. If this persists, contact support."
 msgstr "{0} konnte deine lokalen Daten nicht vollständig löschen. Starte die App neu — das Zurücksetzen wird automatisch fortgesetzt. Wenn das Problem bleibt, wende dich an den Support."
 
+#. placeholder {0}: agent.name
+#: src/protectedFeatures/bestie/BestieProfileSection.tsx
+msgid "{0} will appear in the floating shortcut and message actions."
+msgstr "{0} erscheint im schwebenden Schnellzugriff und in den Nachrichtenaktionen."
+
 #. placeholder {0}: BRAND.productName
 #. placeholder {1}: BRAND.productName
 #: src/features/onboarding/ui/IdentityKeyHelpDialog.tsx
@@ -559,6 +569,11 @@ msgstr "{0} erstellt eine Nostr-Identität aus zwei Teilen: einem privaten Schl�
 #: src/features/onboarding/ui/SetupStep.tsx
 msgid "{0} will open a sign-in window for {label}."
 msgstr "{0} öffnet ein Anmeldefenster für {label}."
+
+#. placeholder {0}: agent.name
+#: src/protectedFeatures/bestie/BestieProfileSection.tsx
+msgid "{0} will replace {previousName} in the floating shortcut and message actions."
+msgstr "{0} ersetzt {previousName} im schwebenden Schnellzugriff und in den Nachrichtenaktionen."
 
 #. placeholder {0}: updated.name
 #: src/features/agents/ui/useManagedAgentActions.ts
@@ -3113,6 +3128,14 @@ msgstr "Bitte einen Agent, die erste Codebasis anzulegen oder ein vorhandenes Re
 msgid "Ask for access"
 msgstr "Um Zugriff bitten"
 
+#: src/protectedFeatures/bestie/BestieMessageAction.tsx
+msgid "Ask Sidekick"
+msgstr "Sidekick fragen"
+
+#: src/protectedFeatures/bestie/BestieMessageAction.tsx
+msgid "Ask Sidekick about this message"
+msgstr "Sidekick zu dieser Nachricht fragen"
+
 #: src/features/projects/ui/IssueAssigneesRow.tsx
 msgid "Assign"
 msgstr "Zuweisen"
@@ -3761,6 +3784,7 @@ msgstr "Dieses Relay ist nicht erreichbar — prüf die URL"
 #: src/features/sidebar/ui/SidebarProjectsSection.tsx
 #: src/features/workflows/ui/WorkflowDeleteDialog.tsx
 #: src/features/workflows/ui/WorkflowDialog.tsx
+#: src/protectedFeatures/bestie/BestieProfileSection.tsx
 #: src/shared/ui/link-preview-list.tsx
 #: src/shared/ui/markdown/FilePreviewDialog.tsx
 msgid "Cancel"
@@ -4296,6 +4320,10 @@ msgstr "Wähl ein Repository für diese Aufgabe."
 msgid "Choose a repository."
 msgstr "Wähl ein Repository."
 
+#: src/protectedFeatures/bestie/BestiePopover.tsx
+msgid "Choose a Sidekick"
+msgstr "Sidekick auswählen"
+
 #: src/features/profile/ui/UserProfilePanelTabs.tsx
 msgid "Choose active channel feed"
 msgstr "Aktiven Kanal-Feed wählen"
@@ -4674,6 +4702,10 @@ msgstr "Review schließen"
 #: src/features/projects/ui/ProjectsSectionSearch.tsx
 msgid "Close search"
 msgstr "Suche schließen"
+
+#: src/protectedFeatures/bestie/BestiePopover.tsx
+msgid "Close Sidekick"
+msgstr "Sidekick schließen"
 
 #: src/features/projects/lib/projectBranches.ts
 msgid "Close the branch's review before deleting it."
@@ -5812,6 +5844,14 @@ msgstr "Deine geprägten Karten konnten nicht geladen werden:"
 msgid "Couldn’t load: {reason}"
 msgstr "Konnte nicht geladen werden: {reason}"
 
+#: src/protectedFeatures/bestie/BestiePopover.tsx
+msgid "Couldn’t message Sidekick"
+msgstr "Nachricht an Sidekick fehlgeschlagen"
+
+#: src/protectedFeatures/bestie/BestieSidebarEntry.tsx
+msgid "Couldn’t open Sidekick conversation"
+msgstr "Sidekick-Unterhaltung konnte nicht geöffnet werden"
+
 #: src/features/projects/ui/useOpenProjectTerminal.ts
 msgid "Couldn’t open terminal"
 msgstr "Terminal konnte nicht geöffnet werden"
@@ -5929,6 +5969,10 @@ msgstr "Modellwechsel fehlgeschlagen — der Agent behält sein aktuelles Modell
 #: src/features/agents/ui/ModelPicker.tsx
 msgid "Couldn't switch models — the agent wasn't running a turn to switch."
 msgstr "Modellwechsel fehlgeschlagen — der Agent hatte keinen laufenden Zug zum Umstellen."
+
+#: src/protectedFeatures/bestie/BestieProfileSection.tsx
+msgid "Couldn’t update Sidekick"
+msgstr "Sidekick konnte nicht aktualisiert werden"
 
 #: src/features/communities/ui/CommunityIconSettingsCard.tsx
 msgid "Couldn’t update the community icon."
@@ -8838,6 +8882,10 @@ msgstr "Stunde"
 msgid "Hover to play"
 msgstr "Zum Abspielen mit der Maus darüber"
 
+#: src/protectedFeatures/bestie/BestiePopover.tsx
+msgid "How can I help?"
+msgstr "Wie kann ich helfen?"
+
 #: src/features/workflows/ui/WorkflowStepCard.tsx
 msgid "HTTP method"
 msgstr "HTTP-Methode"
@@ -10122,6 +10170,10 @@ msgstr "Runtime-Details werden geladen"
 msgid "Loading runtimes"
 msgstr "Runtimes werden geladen"
 
+#: src/protectedFeatures/bestie/BestiePopover.tsx
+msgid "Loading Sidekick…"
+msgstr "Sidekick wird geladen …"
+
 #: src/features/home/ui/InboxDetailPane.tsx
 msgid "Loading surrounding context..."
 msgstr "Umgebender Kontext wird geladen …"
@@ -10230,6 +10282,11 @@ msgstr "Zum Community-Admin gemacht"
 msgid "Made community member"
 msgstr "Zum Community-Mitglied gemacht"
 
+#. placeholder {0}: agent.name
+#: src/protectedFeatures/bestie/BestieProfileSection.tsx
+msgid "Make {0} your Sidekick?"
+msgstr "{0} als Sidekick festlegen?"
+
 #: src/features/community-members/ui/CommunityMembersSettingsCard.tsx
 msgid "Make admin"
 msgstr "Zum Admin machen"
@@ -10245,6 +10302,10 @@ msgstr "Zum Mitglied machen"
 #: src/features/community-members/ui/CommunityMembersCard.tsx
 msgid "Make Member"
 msgstr "Zum Mitglied machen"
+
+#: src/protectedFeatures/bestie/BestieProfileSection.tsx
+msgid "Make Sidekick"
+msgstr "Als Sidekick festlegen"
 
 #: src/features/moderation/ui/ReportMessageDialog.tsx
 msgid "Malware or scam"
@@ -10539,10 +10600,12 @@ msgstr "Nachricht"
 msgid "Message"
 msgstr "Nachricht"
 
+#. placeholder {0}: agent.name
 #. placeholder {0}: directMessageIntro.displayName
 #. placeholder {0}: item.senderLabel
 #: src/features/channels/ui/ChannelPane.tsx
 #: src/features/home/ui/InboxDetailPane.tsx
+#: src/protectedFeatures/bestie/BestiePopover.tsx
 msgid "Message {0}"
 msgstr "Nachricht an {0}"
 
@@ -12284,6 +12347,10 @@ msgstr "Nachricht öffnen: {label}"
 msgid "Open on {externalHost}"
 msgstr "Auf {externalHost} öffnen"
 
+#: src/protectedFeatures/bestie/BestiePopover.tsx
+msgid "Open one of your local agents and turn on Sidekick."
+msgstr "Öffne einen deiner lokalen Agenten und aktiviere Sidekick."
+
 #: src/shared/lib/keyboard-shortcuts.ts
 msgid "Open or close settings"
 msgstr "Einstellungen öffnen oder schließen"
@@ -12356,6 +12423,10 @@ msgstr "Einstellungen öffnen"
 #: src/features/huddle/components/MicControls.tsx
 msgid "Open Settings"
 msgstr "Einstellungen öffnen"
+
+#: src/protectedFeatures/bestie/BestieGlobalOverlay.tsx
+msgid "Open Sidekick"
+msgstr "Sidekick öffnen"
 
 #: src/features/home/ui/ProjectInboxDetailPane.tsx
 #: src/features/projects/ui/ProjectsIssuesList.tsx
@@ -13913,6 +13984,10 @@ msgstr "Foto entfernen"
 msgid "Remove preview"
 msgstr "Vorschau entfernen"
 
+#: src/protectedFeatures/bestie/BestieProfileSection.tsx
+msgid "Remove Sidekick"
+msgstr "Als Sidekick entfernen"
+
 #: src/features/messages/ui/ComposerAttachments.tsx
 msgid "Remove spoiler"
 msgstr "Spoiler entfernen"
@@ -14846,6 +14921,7 @@ msgstr "Wird gespeichert…"
 #: src/features/local-archive/ui/LocalArchiveSettingsCard.tsx
 #: src/features/onboarding/ui/DefaultConfigStep.tsx
 #: src/features/workflows/ui/WorkflowDialog.tsx
+#: src/protectedFeatures/bestie/BestieProfileSection.tsx
 msgid "Saving…"
 msgstr "Wird gespeichert …"
 
@@ -15288,6 +15364,10 @@ msgstr "Senden fehlgeschlagen."
 msgid "Send feedback"
 msgstr "Feedback senden"
 
+#: src/protectedFeatures/bestie/BestiePopover.tsx
+msgid "Send in Sidekick conversation"
+msgstr "In der Sidekick-Unterhaltung senden"
+
 #: src/features/forum/ui/ForumComposerCompactLayout.tsx
 #: src/features/messages/ui/ComposerAddressControls.tsx
 #: src/features/messages/ui/DraftsPanel.tsx
@@ -15728,6 +15808,12 @@ msgstr "Dichte der Seitenleiste"
 #: src/features/settings/ui/AppearanceSettingsControls.tsx
 msgid "Sidebar order"
 msgstr "Sortierung der Seitenleiste"
+
+#: src/protectedFeatures/bestie/BestieCardBadge.tsx
+#: src/protectedFeatures/bestie/BestieGlobalOverlay.tsx
+#: src/protectedFeatures/bestie/BestieSidebarEntry.tsx
+msgid "Sidekick"
+msgstr "Sidekick"
 
 #: src/features/onboarding/ui/SetupStep.tsx
 msgid "Sign in"

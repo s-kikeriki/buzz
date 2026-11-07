@@ -70,7 +70,7 @@ test("assigns from an agent profile, reopens, drags, and offers the message acti
   await expect(floatingAvatar.getByTestId("bestie-empty-mark")).toBeVisible();
   await floatingAvatar.click();
   await expect(
-    page.getByText("Choose a Bestie", { exact: true }),
+    page.getByText("Choose a Sidekick", { exact: true }),
   ).toBeVisible();
   await expect(page.getByText(/Open one of your local agents/)).toBeVisible();
   await waitForAnimations(page);
@@ -82,16 +82,16 @@ test("assigns from an agent profile, reopens, drags, and offers the message acti
   await page.getByTestId("open-agents-view").click();
   await page.getByRole("button", { name: "Mochi agent profile" }).click();
   const bestieAction = page.getByTestId("user-profile-bestie-action");
-  await expect(bestieAction).toContainText("Make Bestie");
+  await expect(bestieAction).toContainText("Make Sidekick");
   await bestieAction.click();
   const confirmation = page.getByTestId("bestie-confirm-dialog");
-  await expect(confirmation).toContainText("Make Mochi your Bestie?");
+  await expect(confirmation).toContainText("Make Mochi your Sidekick?");
   await waitForAnimations(page);
   await confirmation.screenshot({
     path: "test-results/bestie/01-confirm-bestie.png",
   });
-  await confirmation.getByRole("button", { name: "Make Bestie" }).click();
-  await expect(bestieAction).toContainText("Remove Bestie");
+  await confirmation.getByRole("button", { name: "Make Sidekick" }).click();
+  await expect(bestieAction).toContainText("Remove Sidekick");
   await expect(
     floatingAvatar.getByTestId("bestie-trigger-avatar"),
   ).toBeVisible();
@@ -177,7 +177,7 @@ test("assigns from an agent profile, reopens, drags, and offers the message acti
   expect(Math.abs(panelDelta.x - avatarDelta.x)).toBeLessThan(1);
   expect(Math.abs(panelDelta.y - avatarDelta.y)).toBeLessThan(1);
 
-  await bloomContent.getByRole("button", { name: "Close Bestie" }).click();
+  await bloomContent.getByRole("button", { name: "Close Sidekick" }).click();
   await expect(bloomContent).toHaveCount(0);
   await waitForAnimations(page);
   const closeAnchor = await floatingAvatar.boundingBox();
@@ -191,7 +191,7 @@ test("assigns from an agent profile, reopens, drags, and offers the message acti
   ).toBeLessThan(1);
 
   const floatingTrigger = floatingAvatar.getByRole("button", {
-    name: "Open Bestie",
+    name: "Open Sidekick",
   });
   await expect(floatingTrigger).toHaveAttribute("aria-haspopup", "dialog");
   await floatingTrigger.focus();
@@ -221,7 +221,7 @@ test("assigns from an agent profile, reopens, drags, and offers the message acti
 
   await floatingAvatar.click();
   await expect(page.getByTestId("bestie-activity-dot").last()).toBeVisible();
-  await page.getByRole("button", { name: "Close Bestie" }).click();
+  await page.getByRole("button", { name: "Close Sidekick" }).click();
   await waitForAnimations(page);
   // The Motion close morph can outlive the CSS/Web animations above. Wait for
   // the closed, untranslated shell before measuring the drag's starting point.
@@ -363,7 +363,7 @@ test("assigns from an agent profile, reopens, drags, and offers the message acti
   await messagePopover.screenshot({
     path: "test-results/bestie/07-message-conversation.png",
   });
-  await messagePopover.getByRole("button", { name: "Close Bestie" }).click();
+  await messagePopover.getByRole("button", { name: "Close Sidekick" }).click();
   await expect(page.getByLabel("Message Mochi")).toHaveCount(0);
 
   await floatingAvatar.click();
@@ -374,7 +374,7 @@ test("assigns from an agent profile, reopens, drags, and offers the message acti
   ).toHaveCount(0);
   await expect(freshFloatingPopover).not.toContainText("One more thought");
   await freshFloatingPopover
-    .getByRole("button", { name: "Close Bestie" })
+    .getByRole("button", { name: "Close Sidekick" })
     .click();
 
   await messageRow.hover();
