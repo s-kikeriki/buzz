@@ -853,6 +853,15 @@ const CONVERTED_FILES = [
   "src/features/forum/ui/ForumPostCard.tsx",
   "src/features/forum/ui/ForumThreadPanel.tsx",
   "src/features/forum/ui/ForumView.tsx",
+  // Sidekick (the protected-build feature whose directory is still named
+  // `bestie`): the overlay, popover, sidebar entry, message action, card
+  // badge and the profile assign/remove flow.
+  "src/protectedFeatures/bestie/BestieCardBadge.tsx",
+  "src/protectedFeatures/bestie/BestieGlobalOverlay.tsx",
+  "src/protectedFeatures/bestie/BestieMessageAction.tsx",
+  "src/protectedFeatures/bestie/BestiePopover.tsx",
+  "src/protectedFeatures/bestie/BestieProfileSection.tsx",
+  "src/protectedFeatures/bestie/BestieSidebarEntry.tsx",
 ];
 
 /**

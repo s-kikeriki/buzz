@@ -1,3 +1,4 @@
+import { Trans, useLingui } from "@lingui/react/macro";
 import { Plus } from "lucide-react";
 import { toast } from "sonner";
 
@@ -7,6 +8,7 @@ import { BestieAgentLockup } from "./BestiePopover";
 import { useBestie } from "./useBestie";
 
 export function BestieSidebarEntry() {
+  const { t } = useLingui();
   const bestie = useBestie();
   const { goAgents } = useAppNavigation();
 
@@ -19,7 +21,7 @@ export function BestieSidebarEntry() {
       toast.error(
         error instanceof Error
           ? error.message
-          : "Couldn’t open Bestie conversation",
+          : t`Couldn’t open Sidekick conversation`,
       );
     });
   };
@@ -29,7 +31,7 @@ export function BestieSidebarEntry() {
       <SidebarMenuButton
         disabled={bestie.isOpening}
         onClick={handleClick}
-        tooltip="Bestie"
+        tooltip={t`Sidekick`}
         type="button"
       >
         {bestie.assignedAgent ? (
@@ -41,7 +43,9 @@ export function BestieSidebarEntry() {
         ) : (
           <>
             <Plus className="h-4 w-4" />
-            <span>Bestie</span>
+            <span>
+              <Trans>Sidekick</Trans>
+            </span>
           </>
         )}
       </SidebarMenuButton>

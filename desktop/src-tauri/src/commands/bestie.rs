@@ -59,7 +59,7 @@ fn require_eligible_local_agent(
         .find(|record| record.pubkey.eq_ignore_ascii_case(pubkey))
         .ok_or_else(|| "assigned Bestie agent no longer exists on this device".to_string())?;
     if record.backend != BackendKind::Local {
-        return Err("only a local managed agent can be your Bestie".to_string());
+        return Err("only a local managed agent can be your Sidekick".to_string());
     }
     Ok(())
 }
@@ -167,7 +167,7 @@ pub async fn resolve_bestie_conversation(
         recover_pending_cleanup(&app, &records)?;
         let conn = open_retention_db(&scope.db_path)?;
         let assignment = get_assignment(&conn)?
-            .ok_or_else(|| "choose an agent before opening Bestie".to_string())?;
+            .ok_or_else(|| "choose an agent before opening Sidekick".to_string())?;
         require_eligible_local_agent(&records, &assignment.agent_pubkey)?;
         assignment
     };

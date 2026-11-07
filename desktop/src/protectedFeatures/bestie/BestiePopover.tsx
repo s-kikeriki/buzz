@@ -1,3 +1,4 @@
+import { Trans, useLingui } from "@lingui/react/macro";
 import { ArrowUp, Plus, X } from "lucide-react";
 import { motion } from "motion/react";
 import * as React from "react";
@@ -120,9 +121,11 @@ function EmptyBestie() {
         <Plus aria-hidden="true" className="h-5 w-5" />
       </div>
       <div>
-        <h2 className="text-sm font-semibold">Choose a Bestie</h2>
+        <h2 className="text-sm font-semibold">
+          <Trans>Choose a Sidekick</Trans>
+        </h2>
         <p className="mt-1 text-xs text-muted-foreground">
-          Open one of your local agents and turn on Bestie.
+          <Trans>Open one of your local agents and turn on Sidekick.</Trans>
         </p>
       </div>
     </div>
@@ -203,6 +206,7 @@ export function BestiePopover({
   contextMessage?: TimelineMessage;
   onRequestClose?: () => void;
 }) {
+  const { t } = useLingui();
   const bestie = useBestie();
   const [draft, setDraft] = React.useState("");
   const [contextSent, setContextSent] = React.useState(false);
@@ -346,7 +350,11 @@ export function BestiePopover({
     [],
   );
   if (bestie.isLoading) {
-    return <p className="text-sm text-muted-foreground">Loading Bestie…</p>;
+    return (
+      <p className="text-sm text-muted-foreground">
+        <Trans>Loading Sidekick…</Trans>
+      </p>
+    );
   }
   if (!agent) return <EmptyBestie />;
 
@@ -387,7 +395,7 @@ export function BestiePopover({
       if (startError) throw startError;
     })().catch((error) => {
       toast.error(
-        error instanceof Error ? error.message : "Couldn’t message Bestie",
+        error instanceof Error ? error.message : t`Couldn’t message Sidekick`,
       );
     });
   };
@@ -405,7 +413,7 @@ export function BestiePopover({
         />
         <div className="flex-1" />
         <Button
-          aria-label="Close Bestie"
+          aria-label={t`Close Sidekick`}
           onClick={onRequestClose}
           size="icon-xs"
           variant="ghost"
@@ -452,14 +460,14 @@ export function BestiePopover({
             </p>
           </div>
           <div className="w-fit rounded-2xl bg-muted px-3 py-2 text-sm">
-            How can I help?
+            <Trans>How can I help?</Trans>
           </div>
         </div>
       ) : null}
 
       <div className="relative shrink-0">
         <Textarea
-          aria-label={`Message ${agent.name}`}
+          aria-label={t`Message ${agent.name}`}
           className="min-h-24 resize-none rounded-2xl pb-11"
           data-bloom-autofocus
           data-testid="bestie-composer"
@@ -478,11 +486,11 @@ export function BestiePopover({
             event.preventDefault();
             sendMessage();
           }}
-          placeholder={`Message ${agent.name}`}
+          placeholder={t`Message ${agent.name}`}
           value={draft}
         />
         <Button
-          aria-label="Send in Bestie conversation"
+          aria-label={t`Send in Sidekick conversation`}
           className="absolute bottom-2 right-2 rounded-full"
           disabled={!draft.trim() || bestie.isOpening || sendMutation.isPending}
           onClick={sendMessage}

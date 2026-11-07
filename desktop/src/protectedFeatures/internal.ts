@@ -4,7 +4,7 @@ import type { FeatureDefinition } from "@/shared/features/types";
 export const protectedFeatureDefinitions: FeatureDefinition[] = [
   {
     id: "bestie",
-    name: "Bestie",
+    name: "Sidekick",
     description: "Try a personal agent that is always close at hand",
     platforms: ["desktop"],
   },

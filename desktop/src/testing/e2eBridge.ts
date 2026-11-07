@@ -14235,7 +14235,7 @@ export function maybeInstallE2eTauriMocks() {
         const agentPubkey = (payload as { agentPubkey: string }).agentPubkey;
         const agent = getMockManagedAgent(agentPubkey);
         if (agent.backend.type !== "local") {
-          throw new Error("only a local managed agent can be your Bestie");
+          throw new Error("only a local managed agent can be your Sidekick");
         }
         mockBestieAssignment = {
           agent_pubkey: agent.pubkey,
@@ -14247,7 +14247,7 @@ export function maybeInstallE2eTauriMocks() {
         return undefined;
       case "resolve_bestie_conversation": {
         if (!mockBestieAssignment) {
-          throw new Error("choose an agent before opening Bestie");
+          throw new Error("choose an agent before opening Sidekick");
         }
         const channel = await handleOpenDm(
           { pubkeys: [mockBestieAssignment.agent_pubkey] },
