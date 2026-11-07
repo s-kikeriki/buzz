@@ -1,3 +1,4 @@
+import { Plural, Trans, useLingui } from "@lingui/react/macro";
 import { ArrowLeft, MessageSquare } from "lucide-react";
 import * as React from "react";
 
@@ -121,7 +122,7 @@ function ReplyRow({
         {showDelete ? (
           <DeleteActionMenu
             iconSize="sm"
-            label="reply"
+            kind="reply"
             onConfirm={() => onDelete(reply.eventId)}
           />
         ) : null}
@@ -164,6 +165,7 @@ export function ForumThreadPanel({
   targetSearchQuery,
 }: ForumThreadPanelProps) {
   const locale = useLocale();
+  const { t } = useLingui();
   const scrollRef = React.useRef<HTMLDivElement>(null);
   const { channels } = useChannelNavigation();
   const channelNames = React.useMemo(
@@ -199,7 +201,7 @@ export function ForumThreadPanel({
             variant="ghost"
           >
             <ArrowLeft className="h-4 w-4" />
-            Back to posts
+            <Trans>Back to posts</Trans>
           </Button>
         </div>
         <div className="flex-1 space-y-4 p-4">
@@ -212,6 +214,9 @@ export function ForumThreadPanel({
   }
 
   const { post, replies } = thread;
+  // Named local so the extracted plural keys on `replyCount`, reusing the
+  // msgid MessageThreadSummaryRow already ships a German translation for.
+  const replyCount = replies.length;
   const {
     mentionNames: postMentionNames,
     mentionPubkeysByName: postMentionPubkeysByName,
@@ -237,7 +242,7 @@ export function ForumThreadPanel({
           variant="ghost"
         >
           <ArrowLeft className="h-4 w-4" />
-          Back to posts
+          <Trans>Back to posts</Trans>
         </Button>
       </div>
 
@@ -280,7 +285,7 @@ export function ForumThreadPanel({
 
             {canDeletePost && onDeletePost ? (
               <DeleteActionMenu
-                label="post"
+                kind="post"
                 onConfirm={() => onDeletePost(post.eventId)}
               />
             ) : null}
@@ -307,7 +312,7 @@ export function ForumThreadPanel({
 
         <div className="flex items-center gap-1.5 border-b border-border/60 px-4 py-2.5 text-sm font-medium text-muted-foreground">
           <MessageSquare className="h-4 w-4" />
-          {replies.length} {replies.length === 1 ? "reply" : "replies"}
+          <Plural one="# reply" other="# replies" value={replyCount} />
         </div>
 
         <div className="divide-y divide-border/40">
@@ -327,9 +332,9 @@ export function ForumThreadPanel({
             />
           ))}
 
-          {replies.length === 0 ? (
+          {replyCount === 0 ? (
             <div className="px-4 py-6 text-center text-sm text-muted-foreground">
-              No replies yet. Be the first to respond.
+              <Trans>No replies yet. Be the first to respond.</Trans>
             </div>
           ) : null}
         </div>
@@ -342,7 +347,7 @@ export function ForumThreadPanel({
           draftKey={`thread:${postId}`}
           isSending={isSendingReply}
           onSubmit={onReply}
-          placeholder="Reply to this post..."
+          placeholder={t`Reply to this post...`}
           profiles={profiles}
         />
       </div>

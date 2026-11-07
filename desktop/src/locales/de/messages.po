@@ -1268,6 +1268,8 @@ msgstr "{referencingAgents, plural, one {# Agent nutzt dieses Harness und wird n
 msgid "{remote, plural, one {Used by another member · # request} other {Used by another member · # requests}}"
 msgstr "{remote, plural, one {Von einem anderen Mitglied genutzt · # Anfrage} other {Von einem anderen Mitglied genutzt · # Anfragen}}"
 
+#: src/features/forum/ui/ForumPostCard.tsx
+#: src/features/forum/ui/ForumThreadPanel.tsx
 #: src/features/messages/ui/MessageThreadSummaryRow.tsx
 msgid "{replyCount, plural, one {# reply} other {# replies}}"
 msgstr "{replyCount, plural, one {# Antwort} other {# Antworten}}"
@@ -3391,6 +3393,10 @@ msgstr "Zurück zum Posteingang"
 msgid "Back to inbox list"
 msgstr "Zurück zur Posteingangsliste"
 
+#: src/features/forum/ui/ForumThreadPanel.tsx
+msgid "Back to posts"
+msgstr "Zurück zu den Beiträgen"
+
 #: src/features/profile/ui/UserProfilePanelHeaderContent.tsx
 msgid "Back to profile"
 msgstr "Zurück zum Profil"
@@ -3718,6 +3724,8 @@ msgstr "Dieses Relay ist nicht erreichbar — prüf die URL"
 #: src/features/communities/ui/CommunitySwitcher.tsx
 #: src/features/communities/ui/EditCommunityDialog.tsx
 #: src/features/community-members/ui/ConfirmRemoveDialog.tsx
+#: src/features/forum/ui/DeleteConfirmDialog.tsx
+#: src/features/forum/ui/ForumComposer.tsx
 #: src/features/local-archive/ui/LocalArchiveSettingsCard.tsx
 #: src/features/messages/lib/useLinkEditor.tsx
 #: src/features/messages/ui/ComposerImageEditor.tsx
@@ -4775,6 +4783,10 @@ msgstr "Verfügbare Befehle: {0}"
 #: src/features/settings/ui/EncryptedBackupCreator.tsx
 msgid "Commas"
 msgstr "Kommas"
+
+#: src/features/forum/ui/ForumComposer.tsx
+msgid "Comment"
+msgstr "Kommentieren"
 
 #: src/shared/ui/VideoPlayer.tsx
 msgid "Comment at current frame"
@@ -6585,6 +6597,15 @@ msgstr "Nachricht löschen?"
 msgid "Delete my data"
 msgstr "Meine Daten löschen"
 
+#: src/features/forum/ui/DeleteActionMenu.tsx
+#: src/features/forum/ui/DeleteConfirmDialog.tsx
+msgid "Delete post"
+msgstr "Beitrag löschen"
+
+#: src/features/forum/ui/DeleteConfirmDialog.tsx
+msgid "Delete post?"
+msgstr "Beitrag löschen?"
+
 #: src/features/projects/ui/ProjectCards.tsx
 #: src/features/sidebar/ui/SidebarProjectsSection.tsx
 msgid "Delete project"
@@ -6594,6 +6615,15 @@ msgstr "Projekt löschen"
 #: src/features/sidebar/ui/SidebarProjectsSection.tsx
 msgid "Delete project?"
 msgstr "Projekt löschen?"
+
+#: src/features/forum/ui/DeleteActionMenu.tsx
+#: src/features/forum/ui/DeleteConfirmDialog.tsx
+msgid "Delete reply"
+msgstr "Antwort löschen"
+
+#: src/features/forum/ui/DeleteConfirmDialog.tsx
+msgid "Delete reply?"
+msgstr "Antwort löschen?"
 
 #: src/features/sidebar/ui/ChannelSectionDialogs.tsx
 #: src/features/sidebar/ui/CustomChannelSection.tsx
@@ -6905,6 +6935,7 @@ msgstr "In einem Kanal besprechen"
 msgid "Discussion linked"
 msgstr "Diskussion verknüpft"
 
+#: src/features/forum/ui/ForumComposerMediaStatus.tsx
 #: src/features/messages/ui/MessageComposer.tsx
 msgid "Dismiss"
 msgstr "Schließen"
@@ -9489,6 +9520,10 @@ msgstr "Tritt einem Kanal bei oder erstelle einen, bevor du einen Workflow anleg
 msgid "Join or create a community"
 msgstr "Community beitreten oder anlegen"
 
+#: src/features/forum/ui/ForumView.tsx
+msgid "Join this forum to create posts."
+msgstr "Tritt diesem Forum bei, um Beiträge zu erstellen."
+
 #: src/features/channels/ui/ChannelPane.tsx
 msgid "Join to participate"
 msgstr "Beitreten, um mitzumachen"
@@ -9640,6 +9675,10 @@ msgstr "Große Vorschauen mit Bildern und Beschreibungen"
 #: src/features/settings/ui/AppearanceSettingsControls.tsx
 msgid "Larger"
 msgstr "Größer"
+
+#: src/features/forum/ui/ForumPostCard.tsx
+msgid "last {lastReply}"
+msgstr "zuletzt {lastReply}"
 
 #. placeholder {0}: formatLastChangedAt(file.lastChangedAt, locale)
 #: src/features/projects/ui/ProjectReadmePanel.tsx
@@ -11217,6 +11256,7 @@ msgstr "Kein Kanal ausgewählt"
 
 #: src/features/channels/ui/MembersSidebar.tsx
 #: src/features/channels/ui/useMembersSidebarActions.ts
+#: src/features/forum/hooks.ts
 msgid "No channel selected."
 msgstr "Kein Kanal ausgewählt."
 
@@ -11545,6 +11585,10 @@ msgstr "Keine Personen oder Agenten zum Anschreiben verfügbar."
 msgid "No plan details."
 msgstr "Keine Plandetails."
 
+#: src/features/forum/ui/ForumView.tsx
+msgid "No posts yet"
+msgstr "Noch keine Beiträge"
+
 #: src/features/agents/ui/agentConfigOptions.tsx
 msgid "No preference (use app default)"
 msgstr "Keine Präferenz (App-Standard nutzen)"
@@ -11598,6 +11642,10 @@ msgstr "Keine Erinnerungen"
 #: src/features/messages/ui/MessageThreadReplyState.tsx
 msgid "No replies in this branch yet"
 msgstr "In diesem Zweig gibt es noch keine Antworten"
+
+#: src/features/forum/ui/ForumThreadPanel.tsx
+msgid "No replies yet. Be the first to respond."
+msgstr "Noch keine Antworten. Schreib die erste."
 
 #: src/features/admin-console/AdminConsoleReportsTab.tsx
 msgid "No reports found."
@@ -13996,6 +14044,10 @@ msgstr "Im Thread an {threadHeadAuthor} antworten"
 msgid "Reply to {replyAuthor} in #{channelName}"
 msgstr "An {replyAuthor} in #{channelName} antworten"
 
+#: src/features/forum/ui/ForumThreadPanel.tsx
+msgid "Reply to this post..."
+msgstr "Auf diesen Beitrag antworten..."
+
 #: src/features/workflows/ui/WorkflowStepCard.tsx
 msgid "Reply to triggering message in thread"
 msgstr "Im Thread auf die auslösende Nachricht antworten"
@@ -15236,6 +15288,7 @@ msgstr "Senden fehlgeschlagen."
 msgid "Send feedback"
 msgstr "Feedback senden"
 
+#: src/features/forum/ui/ForumComposerCompactLayout.tsx
 #: src/features/messages/ui/ComposerAddressControls.tsx
 #: src/features/messages/ui/DraftsPanel.tsx
 #: src/shared/lib/keyboard-shortcuts.ts
@@ -15268,6 +15321,7 @@ msgstr "An den Kanal senden"
 msgid "Send without link previews"
 msgstr "Ohne Linkvorschauen senden"
 
+#: src/features/forum/ui/ForumComposerCompactLayout.tsx
 #: src/features/messages/ui/ComposerAddressControls.tsx
 msgid "Sending"
 msgstr "Wird gesendet"
@@ -15949,9 +16003,17 @@ msgstr "Quadratische Bilder funktionieren am besten. GIF-, PNG-, JPEG- und WebP-
 msgid "Start a conversation with the project agent."
 msgstr "Start eine Unterhaltung mit dem Projekt-Agent."
 
+#: src/features/forum/ui/ForumView.tsx
+msgid "Start a discussion by creating the first post."
+msgstr "Starte eine Diskussion mit dem ersten Beitrag."
+
 #: src/features/messages/ui/WaveMessageAttachment.tsx
 msgid "Start a huddle to talk to them."
 msgstr "Starte ein Huddle, um mit ihnen zu sprechen."
+
+#: src/features/forum/ui/ForumView.tsx
+msgid "Start a new post..."
+msgstr "Neuen Beitrag schreiben..."
 
 #: src/features/agents/lib/managedAgentControlActions.ts
 #: src/features/profile/ui/UserProfilePrimaryActions.tsx
@@ -17017,6 +17079,10 @@ msgstr "Für diesen Dateityp gibt es keine Vorschau in der App. {refusedReason}"
 msgid "This file type cannot be previewed in the app. Download it, or open it in whichever application your system uses for it."
 msgstr "Für diesen Dateityp gibt es keine Vorschau in der App. Lade die Datei herunter oder öffne sie in der Anwendung, die dein System dafür nutzt."
 
+#: src/features/forum/ui/ForumView.tsx
+msgid "This forum is archived."
+msgstr "Dieses Forum ist archiviert."
+
 #. placeholder {0}: BRAND.productName
 #: src/features/onboarding/ui/IdentityRecoveryPairing.tsx
 msgid "This gives this desktop permanent access to your {0} identity. Only continue if you trust it."
@@ -17240,6 +17306,14 @@ msgstr "Damit wird der Zugang zum Relay sofort entzogen."
 #: src/features/messages/ui/DeleteMessageConfirmDialog.tsx
 msgid "This will permanently delete this message and cannot be undone."
 msgstr "Damit wird diese Nachricht endgültig gelöscht. Das lässt sich nicht rückgängig machen."
+
+#: src/features/forum/ui/DeleteConfirmDialog.tsx
+msgid "This will permanently delete this post and cannot be undone."
+msgstr "Dieser Beitrag wird dauerhaft gelöscht und kann nicht wiederhergestellt werden."
+
+#: src/features/forum/ui/DeleteConfirmDialog.tsx
+msgid "This will permanently delete this reply and cannot be undone."
+msgstr "Diese Antwort wird dauerhaft gelöscht und kann nicht wiederhergestellt werden."
 
 #: src/features/admin-console/AdminConsoleStaffingTab.tsx
 msgid "This will remove <0>{removeTargetLabel}</0> ({removeRoleLabel}) from the operator list."
@@ -18063,6 +18137,7 @@ msgstr "Ein Bild hochladen"
 #. placeholder {0}: err.message
 #. placeholder {0}: media.uploadState.message
 #: src/features/agents/ui/useSnapshotSendController.ts
+#: src/features/forum/ui/ForumComposerMediaStatus.tsx
 #: src/features/messages/ui/MessageComposer.tsx
 msgid "Upload failed: {0}"
 msgstr "Hochladen fehlgeschlagen: {0}"
@@ -19166,6 +19241,10 @@ msgstr "Arbeitsbereich"
 #: src/features/channels/ui/ChannelCanvas.tsx
 msgid "Write your canvas content in Markdown..."
 msgstr "Schreibe deinen Canvas-Inhalt in Markdown …"
+
+#: src/features/forum/ui/ForumView.tsx
+msgid "Write your post..."
+msgstr "Schreib deinen Beitrag..."
 
 #: src/features/agents/ui/agentSessionToolCatalog.ts
 msgid "Writes to {productName}."
