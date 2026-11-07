@@ -1,4 +1,4 @@
-import type { I18n, MessageDescriptor } from "@lingui/core";
+import type { I18n } from "@lingui/core";
 import { msg } from "@lingui/core/macro";
 import { Trans, useLingui } from "@lingui/react/macro";
 import { agentPresenceStartBlockReason } from "@/features/agents/lib/useAgentAvailability";
@@ -23,6 +23,7 @@ import {
   isManagedAgentActive,
 } from "@/features/agents/lib/managedAgentControlActions";
 import { AgentManagementMarker } from "@/features/agents/ui/OtherSetupAgentMarker";
+import { TIMEOUT_PRESETS } from "@/features/moderation/lib/timeout";
 import { ProfileAvatar } from "@/features/profile/ui/ProfileAvatar";
 import { PresenceDot } from "@/features/presence/ui/PresenceBadge";
 import {
@@ -87,20 +88,6 @@ export type MemberModerationState = {
   banned: boolean;
   timedOut: boolean;
 };
-
-/**
- * Timeout durations offered in the member menu, in seconds.
- *
- * `msg` descriptors: the table is built at module load, before a catalogue is
- * active, and the component resolves each label with `i18n._()` on render.
- * Whole labels per value rather than a count plus a unit — German inflects the
- * unit and this is a fixed set of three.
- */
-const TIMEOUT_PRESETS: { label: MessageDescriptor; seconds: number }[] = [
-  { label: msg`1 hour`, seconds: 60 * 60 },
-  { label: msg`24 hours`, seconds: 24 * 60 * 60 },
-  { label: msg`7 days`, seconds: 7 * 24 * 60 * 60 },
-];
 
 const MEMBER_ROW_INSET_DIVIDER_CLASS =
   "after:pointer-events-none after:absolute after:bottom-0 after:left-[3.75rem] after:right-0 after:h-px after:bg-border/60 after:content-[''] last:after:hidden";

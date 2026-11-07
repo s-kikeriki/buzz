@@ -41,6 +41,7 @@ export default defineConfig({
         "**/onboarding-german.spec.ts",
         "**/channels-german.spec.ts",
         "**/messages-german.spec.ts",
+        "**/moderation-german.spec.ts",
         "**/profile-german.spec.ts",
         "**/communities-german.spec.ts",
         "**/shared-ui-german.spec.ts",

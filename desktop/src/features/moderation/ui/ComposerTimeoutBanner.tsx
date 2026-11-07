@@ -1,3 +1,4 @@
+import { Trans, useLingui } from "@lingui/react/macro";
 import { Clock } from "lucide-react";
 
 import { formatTimeoutRemaining } from "@/features/moderation/lib/timeout";
@@ -15,8 +16,9 @@ import { useTimeoutState } from "@/features/moderation/lib/timeoutStore";
  * the hook's effect clears the store — flipping the flag and unmounting this.
  */
 export function ComposerTimeoutBanner() {
+  const { i18n } = useLingui();
   const { expiresAtMs } = useTimeoutState();
-  const remaining = formatTimeoutRemaining(expiresAtMs);
+  const remaining = formatTimeoutRemaining(i18n, expiresAtMs);
 
   return (
     <div
@@ -24,10 +26,17 @@ export function ComposerTimeoutBanner() {
       data-testid="composer-timeout-banner"
     >
       <Clock aria-hidden className="h-4 w-4 shrink-0 text-amber-600" />
+      {/* One whole sentence per case rather than a suffix spliced onto a
+          shared stem: German puts the countdown and the verb in places the
+          English word order cannot express as one template. */}
       <span className="min-w-0">
-        {remaining
-          ? `You're timed out by community moderators — ${remaining} left.`
-          : "You're timed out by community moderators."}
+        {remaining ? (
+          <Trans>
+            You're timed out by community moderators — {remaining} left.
+          </Trans>
+        ) : (
+          <Trans>You're timed out by community moderators.</Trans>
+        )}
       </span>
     </div>
   );

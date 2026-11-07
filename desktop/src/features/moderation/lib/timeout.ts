@@ -1,3 +1,6 @@
+import { msg } from "@lingui/core/macro";
+import type { I18n, MessageDescriptor } from "@lingui/core";
+
 /**
  * Reactive detection of a community timeout from a send rejection.
  *
@@ -15,16 +18,27 @@ const TIMEOUT_PREFIX = "restricted: you are timed out until";
 
 /**
  * The community-timeout durations offered wherever a moderator picks one — the
- * per-message author cluster (U2) and the report-queue timeout resolution.
- * Kept here as the single source of truth so the two surfaces can never drift.
+ * per-message author cluster (U2), the member sidebar card and the report-queue
+ * timeout resolution. Kept here as the single source of truth so the surfaces
+ * can never drift; `MessageModerationMenuItems` and `MembersSidebarMemberCard`
+ * each carried a private copy of this list, and the sidebar's was the only one
+ * that had been translated — so the same submenu read German in one place and
+ * English in the other.
+ *
+ * `msg` descriptors, not resolved strings: the table is built at module load,
+ * before a catalogue is active, so a resolved label would freeze in whichever
+ * locale booted first. Each consumer resolves with `i18n._()` on render.
+ *
+ * Whole labels per value rather than a count plus a unit, because German
+ * inflects the unit and this is a fixed set of three.
  */
 export const TIMEOUT_PRESETS: ReadonlyArray<{
-  label: string;
+  label: MessageDescriptor;
   seconds: number;
 }> = [
-  { label: "1 hour", seconds: 60 * 60 },
-  { label: "24 hours", seconds: 24 * 60 * 60 },
-  { label: "7 days", seconds: 7 * 24 * 60 * 60 },
+  { label: msg`1 hour`, seconds: 60 * 60 },
+  { label: msg`24 hours`, seconds: 24 * 60 * 60 },
+  { label: msg`7 days`, seconds: 7 * 24 * 60 * 60 },
 ];
 
 /**
@@ -95,8 +109,25 @@ export function isTimeoutActive(
  * Format the time left until `expiresAtMs` as a short human string for the
  * composer chip: `"2h 5m"`, `"3m 20s"`, `"12s"`. Returns `null` when there is
  * no countdown to show — either the expiry is unknown or already elapsed.
+ *
+ * Deliberately not `formatTimeUntil` from `shared/lib/relativeTime`: that
+ * ladder is single-unit and stops at a minute ("in less than a minute"), while
+ * this is a per-second countdown whose whole job is the seconds. Swapping it
+ * would change all three rungs and lose the tick. What it does take from there
+ * is the rule the `Intl` ladder encodes: a number with a unit glued onto it
+ * cannot be translated, so each rung is a whole message with the count as a
+ * placeholder. German abbreviates to "Std."/"Min."/"Sek." rather than the bare
+ * `m` that reads as metres.
+ *
+ * `i18n` is a required parameter rather than the global instance, for the same
+ * reason `adminConsoleLabels` takes one: it is the only way a test can prove
+ * the units are translated at all. With the global macro, deleting the
+ * translation and gluing the units back on returns the same English string,
+ * every unit test still passes, and the coverage detector does not look inside
+ * a `return` — so nothing anywhere went red.
  */
 export function formatTimeoutRemaining(
+  i18n: I18n,
   expiresAtMs: number | null,
   nowMs: number = Date.now(),
 ): string | null {
@@ -111,10 +142,10 @@ export function formatTimeoutRemaining(
   const minutes = Math.floor((totalSeconds % 3600) / 60);
   const seconds = totalSeconds % 60;
   if (hours > 0) {
-    return `${hours}h ${minutes}m`;
+    return i18n._(msg`${hours}h ${minutes}m`);
   }
   if (minutes > 0) {
-    return `${minutes}m ${seconds}s`;
+    return i18n._(msg`${minutes}m ${seconds}s`);
   }
-  return `${seconds}s`;
+  return i18n._(msg`${seconds}s`);
 }

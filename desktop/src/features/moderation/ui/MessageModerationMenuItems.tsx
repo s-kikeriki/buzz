@@ -1,3 +1,4 @@
+import { Trans, useLingui } from "@lingui/react/macro";
 import { Ban, CircleSlash, Clock, ShieldCheck, UserMinus } from "lucide-react";
 import * as React from "react";
 import { toast } from "sonner";
@@ -13,6 +14,10 @@ import {
 import { useMyRelayMembershipQuery } from "@/features/community-members/hooks";
 import type { TimelineMessage } from "@/features/messages/types";
 import { isTimedOut } from "@/features/moderation/lib/restrictionState";
+import {
+  TIMEOUT_PRESETS,
+  timeoutExpiresAt,
+} from "@/features/moderation/lib/timeout";
 import { useIdentityQuery } from "@/shared/api/hooks";
 import { normalizePubkey } from "@/shared/lib/pubkey";
 import {
@@ -22,12 +27,6 @@ import {
   DropdownMenuSubContent,
   DropdownMenuSubTrigger,
 } from "@/shared/ui/dropdown-menu";
-
-const TIMEOUT_PRESETS: { label: string; seconds: number }[] = [
-  { label: "1 hour", seconds: 60 * 60 },
-  { label: "24 hours", seconds: 24 * 60 * 60 },
-  { label: "7 days", seconds: 7 * 24 * 60 * 60 },
-];
 
 /**
  * Mod-only per-message actions against the message *author*: time out, ban, and
@@ -46,6 +45,7 @@ export function MessageModerationMenuItems({
   channelId?: string | null;
   message: TimelineMessage;
 }) {
+  const { i18n, t } = useLingui();
   const relayMembershipQuery = useMyRelayMembershipQuery();
   const relayRole = relayMembershipQuery.data?.role;
   const canModerate = relayRole === "owner" || relayRole === "admin";
@@ -94,11 +94,11 @@ export function MessageModerationMenuItems({
         toast.success(success);
       } catch (error) {
         toast.error(
-          error instanceof Error ? error.message : "Moderation action failed",
+          error instanceof Error ? error.message : t`Moderation action failed`,
         );
       }
     },
-    [],
+    [t],
   );
 
   if (!enabled || targetPubkey == null) return null;
@@ -113,12 +113,12 @@ export function MessageModerationMenuItems({
           onClick={() =>
             void run(
               () => untimeoutMutation.mutateAsync(targetPubkey),
-              "Timeout lifted",
+              t`Timeout lifted`,
             )
           }
         >
           <ShieldCheck className="h-4 w-4" />
-          Lift timeout
+          <Trans>Lift timeout</Trans>
         </DropdownMenuItem>
       ) : (
         <DropdownMenuSub>
@@ -127,7 +127,7 @@ export function MessageModerationMenuItems({
             disabled={isPending}
           >
             <Clock className="h-4 w-4" />
-            Time out author
+            <Trans>Time out author</Trans>
           </DropdownMenuSubTrigger>
           <DropdownMenuSubContent>
             {TIMEOUT_PRESETS.map((preset) => (
@@ -140,14 +140,13 @@ export function MessageModerationMenuItems({
                     () =>
                       timeoutMutation.mutateAsync({
                         pubkey: targetPubkey,
-                        expiresAt:
-                          Math.floor(Date.now() / 1000) + preset.seconds,
+                        expiresAt: timeoutExpiresAt(preset.seconds),
                       }),
-                    "Author timed out",
+                    t`Author timed out`,
                   )
                 }
               >
-                {preset.label}
+                {i18n._(preset.label)}
               </DropdownMenuItem>
             ))}
           </DropdownMenuSubContent>
@@ -162,12 +161,12 @@ export function MessageModerationMenuItems({
           onClick={() =>
             void run(
               () => removeMutation.mutateAsync(targetPubkey),
-              "Author removed from channel",
+              t`Author removed from channel`,
             )
           }
         >
           <UserMinus className="h-4 w-4" />
-          Kick from channel
+          <Trans>Kick from channel</Trans>
         </DropdownMenuItem>
       ) : null}
 
@@ -178,12 +177,12 @@ export function MessageModerationMenuItems({
           onClick={() =>
             void run(
               () => unbanMutation.mutateAsync(targetPubkey),
-              "Ban lifted",
+              t`Ban lifted`,
             )
           }
         >
           <CircleSlash className="h-4 w-4" />
-          Lift ban
+          <Trans>Lift ban</Trans>
         </DropdownMenuItem>
       ) : (
         <DropdownMenuItem
@@ -193,12 +192,12 @@ export function MessageModerationMenuItems({
           onClick={() =>
             void run(
               () => banMutation.mutateAsync({ pubkey: targetPubkey }),
-              "Author banned",
+              t`Author banned`,
             )
           }
         >
           <Ban className="h-4 w-4" />
-          Ban author from community
+          <Trans>Ban author from community</Trans>
         </DropdownMenuItem>
       )}
     </>

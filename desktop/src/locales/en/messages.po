@@ -934,6 +934,10 @@ msgstr "{hours, plural, one {#h overdue} other {#h overdue}}"
 msgid "{hours, plural, one {#h TTL} other {#h TTL}}"
 msgstr "{hours, plural, one {#h TTL} other {#h TTL}}"
 
+#: src/features/moderation/lib/timeout.ts
+msgid "{hours}h {minutes}m"
+msgstr "{hours}h {minutes}m"
+
 #: src/features/channels/ui/AddChannelBotTeamsSection.tsx
 msgid "{inChannelCount} in channel"
 msgstr "{inChannelCount} in channel"
@@ -1053,6 +1057,10 @@ msgstr "{minutes, plural, one {#m TTL} other {#m TTL}}"
 #: src/features/workflows/ui/workflowActivationWarning.ts
 msgid "{minutes, plural, one {It is scheduled to run every # minute. Review the schedule before turning it on.} other {It is scheduled to run every # minutes. Review the schedule before turning it on.}}"
 msgstr "{minutes, plural, one {It is scheduled to run every # minute. Review the schedule before turning it on.} other {It is scheduled to run every # minutes. Review the schedule before turning it on.}}"
+
+#: src/features/moderation/lib/timeout.ts
+msgid "{minutes}m {seconds}s"
+msgstr "{minutes}m {seconds}s"
 
 #: src/features/agents/ui/TeamDialog.tsx
 msgid "{missingInitialPersonaCount, plural, one {This team references # agent that is no longer in My Agents. Save to remove them, or add them back to My Agents first.} other {This team references # agents that are no longer in My Agents. Save to remove them, or add them back to My Agents first.}}"
@@ -1287,6 +1295,10 @@ msgstr "{seconds, plural, one {# second} other {# seconds}}"
 #: src/features/channels/lib/ephemeralChannel.ts
 msgid "{seconds, plural, one {#s TTL} other {#s TTL}}"
 msgstr "{seconds, plural, one {#s TTL} other {#s TTL}}"
+
+#: src/features/moderation/lib/timeout.ts
+msgid "{seconds}s"
+msgstr "{seconds}s"
 
 #: src/features/channels/ui/AddChannelBotDialog.tsx
 msgid "{selectedCount, plural, one {Add 1 agent} other {Add # agents}}"
@@ -1539,7 +1551,7 @@ msgid "1 day"
 msgstr "1 day"
 
 #: src/features/channels/ui/ChannelTypeSettings.tsx
-#: src/features/channels/ui/MembersSidebarMemberCard.tsx
+#: src/features/moderation/lib/timeout.ts
 msgid "1 hour"
 msgstr "1 hour"
 
@@ -1567,7 +1579,7 @@ msgstr "14 days"
 msgid "2. Type <0>\"{SIGNOUT_CONFIRM_PHRASE}\"</0> to confirm"
 msgstr "2. Type <0>\"{SIGNOUT_CONFIRM_PHRASE}\"</0> to confirm"
 
-#: src/features/channels/ui/MembersSidebarMemberCard.tsx
+#: src/features/moderation/lib/timeout.ts
 msgid "24 hours"
 msgstr "24 hours"
 
@@ -1614,8 +1626,8 @@ msgid "64-hex pubkey"
 msgstr "64-hex pubkey"
 
 #: src/features/channels/ui/ChannelTypeSettings.tsx
-#: src/features/channels/ui/MembersSidebarMemberCard.tsx
 #: src/features/community-members/ui/InviteLinkSection.tsx
+#: src/features/moderation/lib/timeout.ts
 msgid "7 days"
 msgstr "7 days"
 
@@ -2006,6 +2018,10 @@ msgstr "Add an optional summary for the author and other reviewers."
 msgid "Add another stream to this project. A template can keep the same canvas and agents."
 msgstr "Add another stream to this project. A template can keep the same canvas and agents."
 
+#: src/features/moderation/ui/ReportMessageDialog.tsx
+msgid "Add anything that helps moderators..."
+msgstr "Add anything that helps moderators..."
+
 #: src/features/settings/ui/CustomHarnessForm.tsx
 msgid "Add argument"
 msgstr "Add argument"
@@ -2269,6 +2285,10 @@ msgstr "Adding..."
 #: src/features/projects/ui/AddProjectRepositoryDialog.tsx
 msgid "Adding…"
 msgstr "Adding…"
+
+#: src/features/moderation/ui/ReportMessageDialog.tsx
+msgid "Additional context (optional)"
+msgstr "Additional context (optional)"
 
 #: src/features/messages/ui/MentionAutocomplete.tsx
 #: src/features/settings/ui/AgentsSettingsPanel.tsx
@@ -3190,9 +3210,21 @@ msgstr "Authentication opens in your browser and returns securely to {productNam
 msgid "Author"
 msgstr "Author"
 
+#: src/features/moderation/ui/MessageModerationMenuItems.tsx
+msgid "Author banned"
+msgstr "Author banned"
+
 #: src/features/workflows/ui/workflowTemplateVariables.ts
 msgid "Author pubkey"
 msgstr "Author pubkey"
+
+#: src/features/moderation/ui/MessageModerationMenuItems.tsx
+msgid "Author removed from channel"
+msgstr "Author removed from channel"
+
+#: src/features/moderation/ui/MessageModerationMenuItems.tsx
+msgid "Author timed out"
+msgstr "Author timed out"
 
 #: src/features/projects/ui/ProjectPullRequestsPanel.tsx
 msgid "authored"
@@ -3306,6 +3338,7 @@ msgstr "Awaiting review"
 #: src/features/onboarding/ui/AvatarStep.tsx
 #: src/features/onboarding/ui/InviteRedeemForm.tsx
 #: src/features/onboarding/ui/MembershipDenied.tsx
+#: src/features/onboarding/ui/NostrKeyImportForm.tsx
 #: src/features/onboarding/ui/OnboardingFlow.tsx
 #: src/features/onboarding/ui/ProfileStep.tsx
 #: src/features/projects/ui/ProjectWorkspaceTabList.tsx
@@ -3427,6 +3460,7 @@ msgid "Backup options"
 msgstr "Backup options"
 
 #: src/features/onboarding/ui/BackupTestFlow.tsx
+#: src/features/onboarding/ui/NostrKeyImportForm.tsx
 #: src/features/settings/ui/BackupTestFlow.tsx
 msgid "Backup password"
 msgstr "Backup password"
@@ -3456,11 +3490,16 @@ msgstr "Badges"
 msgid "Ban"
 msgstr "Ban"
 
+#: src/features/moderation/ui/MessageModerationMenuItems.tsx
+msgid "Ban author from community"
+msgstr "Ban author from community"
+
 #: src/features/channels/ui/MembersSidebarMemberCard.tsx
 msgid "Ban from community"
 msgstr "Ban from community"
 
 #: src/features/channels/ui/useMembersSidebarModeration.ts
+#: src/features/moderation/ui/MessageModerationMenuItems.tsx
 msgid "Ban lifted"
 msgstr "Ban lifted"
 
@@ -3685,6 +3724,7 @@ msgstr "Can't reach this relay — check the URL"
 #: src/features/messages/ui/DeleteMessageConfirmDialog.tsx
 #: src/features/messages/ui/DraftsPanel.tsx
 #: src/features/messages/ui/NonMemberMentionDialog.tsx
+#: src/features/moderation/ui/ReportMessageDialog.tsx
 #: src/features/onboarding/ui/CommunityOnboardingFlow.tsx
 #: src/features/onboarding/ui/IdentityRecoveryPairing.tsx
 #: src/features/onboarding/ui/InviteRedeemForm.tsx
@@ -4137,6 +4177,10 @@ msgstr "Checks"
 #: src/features/agents/ui/personaLibraryCopy.ts
 msgid "Choose"
 msgstr "Choose"
+
+#: src/features/onboarding/ui/NostrKeyImportForm.tsx
+msgid "Choose a backup file"
+msgstr "Choose a backup file"
 
 #: src/features/projects/ui/CreatePullRequestDialog.tsx
 msgid "Choose a base branch."
@@ -5185,6 +5229,10 @@ msgstr "Continue to Builderlab"
 msgid "Continue with an AI subscription"
 msgstr "Continue with an AI subscription"
 
+#: src/features/onboarding/ui/NostrKeyImportForm.tsx
+msgid "Continue with this key"
+msgstr "Continue with this key"
+
 #: src/features/onboarding/ui/AvatarStep.tsx
 #: src/features/onboarding/ui/ProfileStep.tsx
 msgid "Continue without saving"
@@ -5672,6 +5720,10 @@ msgstr "Couldn’t delete workflow. {error} Try again or cancel to keep editing.
 msgid "Couldn't detect agent harnesses."
 msgstr "Couldn't detect agent harnesses."
 
+#: src/features/onboarding/ui/NostrKeyImportForm.tsx
+msgid "Couldn't import this key."
+msgstr "Couldn't import this key."
+
 #: src/features/huddle/lib/huddleError.ts
 msgid "Couldn’t join the huddle."
 msgstr "Couldn’t join the huddle."
@@ -5772,6 +5824,10 @@ msgstr "Couldn’t reach repository"
 #: src/features/projects/lib/projectGitError.ts
 msgid "Couldn’t reach the repository"
 msgstr "Couldn’t reach the repository"
+
+#: src/features/onboarding/ui/NostrKeyImportForm.tsx
+msgid "Couldn't read that file."
+msgstr "Couldn't read that file."
 
 #: src/features/channels/ui/ChannelCanvas.tsx
 msgid "Couldn't refresh canvas — showing last known content."
@@ -7095,6 +7151,10 @@ msgstr "Drawing canvas"
 msgid "Drop .agent.json or .agent.png to import"
 msgstr "Drop .agent.json or .agent.png to import"
 
+#: src/features/onboarding/ui/NostrKeyImportForm.tsx
+msgid "Drop a key here"
+msgstr "Drop a key here"
+
 #: src/features/agents/ui/CommunityCatalogDialog.tsx
 msgid "Drop an .agent.json or .agent.png file anywhere in this window, or choose a file."
 msgstr "Drop an .agent.json or .agent.png file anywhere in this window, or choose a file."
@@ -7120,6 +7180,7 @@ msgid "Drop or browse"
 msgstr "Drop or browse"
 
 #: src/features/onboarding/ui/BackupTestFlow.tsx
+#: src/features/onboarding/ui/NostrKeyImportForm.tsx
 #: src/features/settings/ui/BackupTestFlow.tsx
 msgid "Drop your backup file here"
 msgstr "Drop your backup file here"
@@ -7524,6 +7585,10 @@ msgstr "Enter the community URL or an invite link. Your role will be restored wh
 msgid "Enter the invite link or community URL you received."
 msgstr "Enter the invite link or community URL you received."
 
+#: src/features/onboarding/ui/NostrKeyImportForm.tsx
+msgid "Enter the password for this key backup."
+msgstr "Enter the password for this key backup."
+
 #: src/features/onboarding/ui/BackupTestFlow.tsx
 msgid "Enter the password to prove you can unlock this backup."
 msgstr "Enter the password to prove you can unlock this backup."
@@ -7539,6 +7604,10 @@ msgstr "Enter verification code"
 #: src/features/onboarding/ui/MachineOnboardingFlow.tsx
 msgid "Enter your backup password to restore your identity."
 msgstr "Enter your backup password to restore your identity."
+
+#: src/features/onboarding/ui/NostrKeyImportForm.tsx
+msgid "Enter your key here"
+msgstr "Enter your key here"
 
 #: src/features/onboarding/ui/ProfileStep.tsx
 msgid "Enter your name"
@@ -8105,6 +8174,10 @@ msgstr "Failed to start agent."
 msgid "Failed to stop agent."
 msgstr "Failed to stop agent."
 
+#: src/features/moderation/ui/ReportMessageDialog.tsx
+msgid "Failed to submit report"
+msgstr "Failed to submit report"
+
 #: src/features/workflows/ui/WorkflowDetailPanel.tsx
 msgid "Failed to trigger workflow"
 msgstr "Failed to trigger workflow"
@@ -8637,6 +8710,7 @@ msgstr "Hide history"
 
 #: src/features/onboarding/ui/BackupTestFlow.tsx
 #: src/features/onboarding/ui/EncryptedBackupCreator.tsx
+#: src/features/onboarding/ui/NostrKeyImportForm.tsx
 #: src/features/settings/ui/BackupTestFlow.tsx
 #: src/features/settings/ui/EncryptedBackupCreator.tsx
 msgid "Hide password"
@@ -8646,6 +8720,7 @@ msgstr "Hide password"
 msgid "Hide per-row activity timestamps."
 msgstr "Hide per-row activity timestamps."
 
+#: src/features/onboarding/ui/NostrKeyImportForm.tsx
 #: src/features/onboarding/ui/NsecMaskedDisplay.tsx
 #: src/features/settings/ui/PrivateKeyBackupRow.tsx
 msgid "Hide private key"
@@ -8875,6 +8950,10 @@ msgstr "Idle · no one using it yet"
 msgid "If people are nearby, speakers can feed back into your mic. Headphones keep huddles clearer."
 msgstr "If people are nearby, speakers can feed back into your mic. Headphones keep huddles clearer."
 
+#: src/features/moderation/ui/ReportMessageDialog.tsx
+msgid "Illegal content"
+msgstr "Illegal content"
+
 #: src/features/agents/ui/agentSessionToolClassifier.ts
 msgid "image"
 msgstr "image"
@@ -8903,6 +8982,10 @@ msgstr "Image preview"
 #: src/shared/ui/markdown/ImageLightboxZoomControls.tsx
 msgid "Image zoom"
 msgstr "Image zoom"
+
+#: src/features/moderation/ui/ReportMessageDialog.tsx
+msgid "Impersonation"
+msgstr "Impersonation"
 
 #: src/features/agents/ui/AgentSnapshotImportDialog.tsx
 #: src/features/agents/ui/CommunityCatalogDialog.tsx
@@ -8947,6 +9030,7 @@ msgid "Importing a different nsec replaces the identity currently locked in the 
 msgstr "Importing a different nsec replaces the identity currently locked in the keyring for this install. The previous identity will no longer be accessible. Continue?"
 
 #: src/features/onboarding/ui/MembershipDenied.tsx
+#: src/features/onboarding/ui/NostrKeyImportForm.tsx
 msgid "Importing key"
 msgstr "Importing key"
 
@@ -9519,6 +9603,10 @@ msgstr "Keyboard shortcuts"
 msgid "Kick"
 msgstr "Kick"
 
+#: src/features/moderation/ui/MessageModerationMenuItems.tsx
+msgid "Kick from channel"
+msgstr "Kick from channel"
+
 #: src/features/local-archive/ui/localArchiveKinds.ts
 msgid "Kind {kind}"
 msgstr "Kind {kind}"
@@ -9656,6 +9744,7 @@ msgstr "Lifetime"
 
 #: src/features/admin-console/AdminConsoleStaffingTab.tsx
 #: src/features/channels/ui/MembersSidebarMemberCard.tsx
+#: src/features/moderation/ui/MessageModerationMenuItems.tsx
 msgid "Lift ban"
 msgstr "Lift ban"
 
@@ -9664,6 +9753,7 @@ msgid "Lift ban?"
 msgstr "Lift ban?"
 
 #: src/features/channels/ui/MembersSidebarMemberCard.tsx
+#: src/features/moderation/ui/MessageModerationMenuItems.tsx
 msgid "Lift timeout"
 msgstr "Lift timeout"
 
@@ -10116,6 +10206,10 @@ msgstr "Make member"
 #: src/features/community-members/ui/CommunityMembersCard.tsx
 msgid "Make Member"
 msgstr "Make Member"
+
+#: src/features/moderation/ui/ReportMessageDialog.tsx
+msgid "Malware or scam"
+msgstr "Malware or scam"
 
 #: src/features/agents/ui/ManagedAgentRow.tsx
 msgid "Manage"
@@ -10624,6 +10718,7 @@ msgid "Model switched for this session."
 msgstr "Model switched for this session."
 
 #: src/features/channels/ui/useMembersSidebarModeration.ts
+#: src/features/moderation/ui/MessageModerationMenuItems.tsx
 msgid "Moderation action failed"
 msgstr "Moderation action failed"
 
@@ -10944,6 +11039,7 @@ msgstr "Newest"
 #: src/features/onboarding/ui/CommunityOnboardingFlow.tsx
 #: src/features/onboarding/ui/DefaultConfigStep.tsx
 #: src/features/onboarding/ui/InviteRedeemForm.tsx
+#: src/features/onboarding/ui/NostrKeyImportForm.tsx
 msgid "Next"
 msgstr "Next"
 
@@ -11652,6 +11748,10 @@ msgstr "None yet"
 msgid "north-star"
 msgstr "north-star"
 
+#: src/features/onboarding/ui/NostrKeyImportForm.tsx
+msgid "Nostr identity found"
+msgstr "Nostr identity found"
+
 #: src/features/onboarding/ui/MembershipDenied.tsx
 msgid "Not a member yet"
 msgstr "Not a member yet"
@@ -11753,6 +11853,14 @@ msgstr "npub1… or abcdef0123…"
 #: src/features/workflows/ui/WorkflowStepCard.tsx
 msgid "npub1…, hex pubkey, or role"
 msgstr "npub1…, hex pubkey, or role"
+
+#: src/features/onboarding/ui/NostrKeyImportForm.tsx
+msgid "nsec1..."
+msgstr "nsec1..."
+
+#: src/features/moderation/ui/ReportMessageDialog.tsx
+msgid "Nudity or sexual content"
+msgstr "Nudity or sexual content"
 
 #. placeholder {0}: error.message
 #: src/features/agents/observerRelayStore.ts
@@ -12412,6 +12520,10 @@ msgstr "Origin resolved from relay config."
 msgid "Origin resolved from the database."
 msgstr "Origin resolved from the database."
 
+#: src/features/moderation/ui/ReportMessageDialog.tsx
+msgid "Other"
+msgstr "Other"
+
 #: src/features/admin-console/AdminConsoleSettingsCard.tsx
 msgid "Other possible causes: clock skew > 60 s or a relay config mismatch."
 msgstr "Other possible causes: clock skew > 60 s or a relay config mismatch."
@@ -12895,6 +13007,7 @@ msgid "private ephemeral channel"
 msgstr "private ephemeral channel"
 
 #: src/features/onboarding/ui/MembershipDenied.tsx
+#: src/features/onboarding/ui/NostrKeyImportForm.tsx
 #: src/features/settings/ui/PrivateKeyBackupRow.tsx
 msgid "Private key"
 msgstr "Private key"
@@ -12923,6 +13036,10 @@ msgstr "Processing recording"
 #: src/features/settings/ui/AppearanceSettingsControls.tsx
 msgid "Product updates — a fresh look at conversations"
 msgstr "Product updates — a fresh look at conversations"
+
+#: src/features/moderation/ui/ReportMessageDialog.tsx
+msgid "Profanity or hate speech"
+msgstr "Profanity or hate speech"
 
 #: src/features/profile/ui/UserProfilePanelUtils.ts
 #: src/features/settings/ui/ProfileSettingsCard.tsx
@@ -13907,6 +14024,7 @@ msgid "Report"
 msgstr "Report"
 
 #: src/features/messages/ui/MessageActionBar.tsx
+#: src/features/moderation/ui/ReportMessageDialog.tsx
 msgid "Report message"
 msgstr "Report message"
 
@@ -13917,6 +14035,10 @@ msgstr "Report reopened"
 #: src/features/admin-console/AdminConsoleReportsTab.tsx
 msgid "Report resolved: {outcome}"
 msgstr "Report resolved: {outcome}"
+
+#: src/features/moderation/ui/ReportMessageDialog.tsx
+msgid "Report submitted to community moderators"
+msgstr "Report submitted to community moderators"
 
 #: src/features/admin-console/AdminConsoleReportsTab.tsx
 msgid "Reported message"
@@ -13933,6 +14055,10 @@ msgstr "reporter: {reporterName}"
 #: src/features/admin-console/adminConsoleLabels.ts
 msgid "Reports"
 msgstr "Reports"
+
+#: src/features/moderation/ui/ReportMessageDialog.tsx
+msgid "Reports go to this community's moderators for review. The author is not notified of who reported them."
+msgstr "Reports go to this community's moderators for review. The author is not notified of who reported them."
 
 #: src/features/communities/ui/EditCommunityDialog.tsx
 msgid "Repos Directory"
@@ -14310,11 +14436,13 @@ msgstr "Reveal"
 
 #: src/features/onboarding/ui/BackupTestFlow.tsx
 #: src/features/onboarding/ui/EncryptedBackupCreator.tsx
+#: src/features/onboarding/ui/NostrKeyImportForm.tsx
 #: src/features/settings/ui/BackupTestFlow.tsx
 #: src/features/settings/ui/EncryptedBackupCreator.tsx
 msgid "Reveal password"
 msgstr "Reveal password"
 
+#: src/features/onboarding/ui/NostrKeyImportForm.tsx
 #: src/features/onboarding/ui/NsecMaskedDisplay.tsx
 #: src/features/settings/ui/PrivateKeyBackupRow.tsx
 msgid "Reveal private key"
@@ -15767,6 +15895,10 @@ msgstr "Spacing in conversations and Markdown content across {productName}"
 msgid "Spacious"
 msgstr "Spacious"
 
+#: src/features/moderation/ui/ReportMessageDialog.tsx
+msgid "Spam"
+msgstr "Spam"
+
 #: src/features/channels/ui/MembersSidebarAgentControls.tsx
 msgid "Spawn or respawn all"
 msgstr "Spawn or respawn all"
@@ -16104,6 +16236,10 @@ msgstr "Structured value"
 msgid "STT model: {0}"
 msgstr "STT model: {0}"
 
+#: src/features/moderation/ui/ReportMessageDialog.tsx
+msgid "Submit report"
+msgstr "Submit report"
+
 #: src/features/admin-console/AdminConsoleFeedbackTab.tsx
 msgid "Submitter"
 msgstr "Submitter"
@@ -16417,14 +16553,26 @@ msgstr "That Buzz address is already taken."
 msgid "That code doesn't match. Check the code and try again."
 msgstr "That code doesn't match. Check the code and try again."
 
+#: src/features/onboarding/ui/NostrKeyImportForm.tsx
+msgid "That doesn't look like a complete ncryptsec backup."
+msgstr "That doesn't look like a complete ncryptsec backup."
+
 #: src/features/onboarding/ui/BackupTestFlow.tsx
 #: src/features/settings/ui/BackupTestFlow.tsx
 msgid "That doesn't look like a key backup file."
 msgstr "That doesn't look like a key backup file."
 
+#: src/features/onboarding/ui/NostrKeyImportForm.tsx
+msgid "That doesn't look like a valid nsec. Paste an nsec1 key."
+msgstr "That doesn't look like a valid nsec. Paste an nsec1 key."
+
 #: src/features/onboarding/ui/BackupTestFlow.tsx
 msgid "That doesn't look like your key backup. Choose the file you just downloaded."
 msgstr "That doesn't look like your key backup. Choose the file you just downloaded."
+
+#: src/features/onboarding/ui/NostrKeyImportForm.tsx
+msgid "That file is too large to be a key backup or private key. Choose another file."
+msgstr "That file is too large to be a key backup or private key. Choose another file."
 
 #: src/features/workflows/ui/WorkflowMessagePicker.tsx
 msgid "That message is not available in this channel."
@@ -17102,6 +17250,7 @@ msgid "This will remove the active ban for <0>{liftTargetLabel}</0> in <1>{liftH
 msgstr "This will remove the active ban for <0>{liftTargetLabel}</0> in <1>{liftHostLabel}</1>. They will be able to post again."
 
 #: src/features/onboarding/ui/MembershipDenied.tsx
+#: src/features/onboarding/ui/NostrKeyImportForm.tsx
 msgid "This will use this Nostr identity:"
 msgstr "This will use this Nostr identity:"
 
@@ -17172,8 +17321,13 @@ msgstr "Tight fit"
 
 #: src/features/admin-console/AdminConsoleActionsTab.tsx
 #: src/features/channels/ui/MembersSidebarMemberCard.tsx
+#: src/features/moderation/ui/TimeoutDurationSubmenu.tsx
 msgid "Time out"
 msgstr "Time out"
+
+#: src/features/moderation/ui/MessageModerationMenuItems.tsx
+msgid "Time out author"
+msgstr "Time out author"
 
 #: src/features/admin-console/adminConsoleLabels.ts
 msgid "Time out member"
@@ -17197,6 +17351,7 @@ msgid "Timeout (optional)"
 msgstr "Timeout (optional)"
 
 #: src/features/channels/ui/useMembersSidebarModeration.ts
+#: src/features/moderation/ui/MessageModerationMenuItems.tsx
 msgid "Timeout lifted"
 msgstr "Timeout lifted"
 
@@ -18485,6 +18640,14 @@ msgstr "Wait for the video message to finish sending."
 msgid "waiting approval"
 msgstr "waiting approval"
 
+#: src/features/onboarding/ui/NostrKeyImportForm.tsx
+msgid "Waiting for a complete ncryptsec backup"
+msgstr "Waiting for a complete ncryptsec backup"
+
+#: src/features/onboarding/ui/NostrKeyImportForm.tsx
+msgid "Waiting for a valid nsec1 key"
+msgstr "Waiting for a valid nsec1 key"
+
 #: src/features/agents/ui/AgentSessionTranscriptList.tsx
 msgid "Waiting for ACP activity"
 msgstr "Waiting for ACP activity"
@@ -19129,7 +19292,12 @@ msgstr "You’re not a member of the channel that grants access to this reposito
 msgid "You're on the latest version."
 msgstr "You're on the latest version."
 
+#: src/features/moderation/ui/ComposerTimeoutBanner.tsx
+msgid "You're timed out by community moderators — {remaining} left."
+msgstr "You're timed out by community moderators — {remaining} left."
+
 #: src/features/channels/ui/ChannelPane.tsx
+#: src/features/moderation/ui/ComposerTimeoutBanner.tsx
 msgid "You're timed out by community moderators."
 msgstr "You're timed out by community moderators."
 

@@ -25,6 +25,7 @@ import { createRoot } from "react-dom/client";
 import { act } from "react";
 
 import { ComposerTimeoutBanner } from "@/features/moderation/ui/ComposerTimeoutBanner.tsx";
+import { withI18n } from "@/testing/withI18n.mjs";
 import {
   recordTimeoutFromRejection,
   clearTimeoutState,
@@ -86,7 +87,9 @@ function mountBanner() {
   return {
     render: async () => {
       await act(async () => {
-        root.render(React.createElement(ComposerTimeoutBanner));
+        // The banner's two sentences are <Trans> nodes, so its render needs
+        // the Lingui provider the app always has above it.
+        root.render(withI18n(React.createElement(ComposerTimeoutBanner)));
       });
     },
     unmount: async () => {

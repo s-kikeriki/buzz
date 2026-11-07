@@ -1,3 +1,4 @@
+import { useLingui } from "@lingui/react/macro";
 import { Clock } from "lucide-react";
 
 import {
@@ -20,12 +21,17 @@ import {
  * timeout resolution can share it and stay on one preset list.
  */
 export function TimeoutDurationSubmenu({
-  label = "Time out",
+  label,
   disabled = false,
   testIdPrefix,
   onSelect,
 }: {
-  /** Sub-trigger label; defaults to "Time out". */
+  /**
+   * Sub-trigger label as already-translated text; omitting it falls back to
+   * "Time out", resolved in the component. A prose default in the parameter
+   * list is copy no catalogue can hold, and the coverage detector does not
+   * look at defaults either, so that one sat unreported.
+   */
   label?: string;
   disabled?: boolean;
   /** Prefix for each preset item's `data-testid` (e.g. `moderation-timeout`). */
@@ -33,11 +39,13 @@ export function TimeoutDurationSubmenu({
   /** Called with the absolute expiry in epoch seconds for the chosen preset. */
   onSelect: (expiresAt: number) => void;
 }) {
+  const { i18n, t } = useLingui();
+
   return (
     <DropdownMenuSub>
       <DropdownMenuSubTrigger disabled={disabled}>
         <Clock className="h-4 w-4" />
-        {label}
+        {label ?? t`Time out`}
       </DropdownMenuSubTrigger>
       <DropdownMenuSubContent>
         {TIMEOUT_PRESETS.map((preset) => (
@@ -49,7 +57,7 @@ export function TimeoutDurationSubmenu({
             key={preset.seconds}
             onClick={() => onSelect(timeoutExpiresAt(preset.seconds))}
           >
-            {preset.label}
+            {i18n._(preset.label)}
           </DropdownMenuItem>
         ))}
       </DropdownMenuSubContent>

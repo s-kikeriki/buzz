@@ -9,6 +9,7 @@
 
 import assert from "node:assert/strict";
 import test from "node:test";
+import { i18n } from "@lingui/core";
 
 import { isTimeoutActive, formatTimeoutRemaining } from "./timeout.ts";
 import {
@@ -93,27 +94,27 @@ test("expired-overlay-guard: formatTimeoutRemaining returns null for past/bounda
 
   // Exactly at expiry (totalSeconds = 0 → null).
   assert.equal(
-    formatTimeoutRemaining(now, now),
+    formatTimeoutRemaining(i18n, now, now),
     null,
     "formatTimeoutRemaining must return null at exact expiry boundary",
   );
 
   // Past expiry.
   assert.equal(
-    formatTimeoutRemaining(now - 5_000, now),
+    formatTimeoutRemaining(i18n, now - 5_000, now),
     null,
     "formatTimeoutRemaining must return null for a past expiry",
   );
 
   // Unknown expiry.
   assert.equal(
-    formatTimeoutRemaining(null, now),
+    formatTimeoutRemaining(i18n, null, now),
     null,
     "formatTimeoutRemaining must return null for unknown expiry",
   );
 
   // Future expiry returns a non-null, non-empty string.
-  const s = formatTimeoutRemaining(now + 90_000, now);
+  const s = formatTimeoutRemaining(i18n, now + 90_000, now);
   assert.ok(
     s !== null && s !== "",
     `formatTimeoutRemaining must return a non-empty string for a future expiry; got: ${s}`,

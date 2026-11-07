@@ -1,3 +1,6 @@
+import type { I18n, MessageDescriptor } from "@lingui/core";
+import { msg } from "@lingui/core/macro";
+import { Trans, useLingui } from "@lingui/react/macro";
 import { Flag } from "lucide-react";
 import * as React from "react";
 import { toast } from "sonner";
@@ -16,32 +19,44 @@ import {
 import { Textarea } from "@/shared/ui/textarea";
 
 /** NIP-56 report categories, in the order shown to the reporter. `other` is
- *  last so it reads as the fallback rather than a first-class choice. */
-const REPORT_CATEGORIES: { value: ReportType; label: string }[] = [
-  { value: "spam", label: "Spam" },
-  { value: "profanity", label: "Profanity or hate speech" },
-  { value: "nudity", label: "Nudity or sexual content" },
-  { value: "impersonation", label: "Impersonation" },
-  { value: "malware", label: "Malware or scam" },
-  { value: "illegal", label: "Illegal content" },
-  { value: "other", label: "Other" },
+ *  last so it reads as the fallback rather than a first-class choice.
+ *
+ *  `msg` descriptors: the table is built at module load, before a catalogue is
+ *  active, so a resolved label would freeze in whichever locale booted first.
+ *  The component resolves each one with `i18n._()` on render. `value` is the
+ *  wire `ReportType` and stays the React key, so nothing in the DOM moves with
+ *  the locale. */
+const REPORT_CATEGORIES: { value: ReportType; label: MessageDescriptor }[] = [
+  { value: "spam", label: msg`Spam` },
+  { value: "profanity", label: msg`Profanity or hate speech` },
+  { value: "nudity", label: msg`Nudity or sexual content` },
+  { value: "impersonation", label: msg`Impersonation` },
+  { value: "malware", label: msg`Malware or scam` },
+  { value: "illegal", label: msg`Illegal content` },
+  { value: "other", label: msg`Other` },
 ];
 
 /**
  * Extract a human-readable reason from a report mutation error. Returns the
  * relay's own error message when present, falling back to a generic string.
  *
+ * Takes `i18n` rather than calling the global instance: this runs from a
+ * mutation callback, not from render, and the fallback is the only copy in it
+ * that belongs to the app rather than to the relay. The relay's own message is
+ * still surfaced verbatim and untranslated — it is a server string, not copy
+ * this catalogue owns.
+ *
  * Exported for testing.
  */
-export function reportErrorMessage(error: unknown): string {
+export function reportErrorMessage(i18n: I18n, error: unknown): string {
+  const fallback = i18n._(msg`Failed to submit report`);
   if (error instanceof Error) {
-    const msg = error.message;
     // Surface the relay's own reason verbatim. Strip any raw status prefix
     // (e.g. "400: ") so the copy reads naturally in a toast.
-    const stripped = msg.replace(/^[45]\d\d:\s?/, "").trim();
-    return stripped || "Failed to submit report";
+    const stripped = error.message.replace(/^[45]\d\d:\s?/, "").trim();
+    return stripped || fallback;
   }
-  return "Failed to submit report";
+  return fallback;
 }
 
 export function ReportMessageDialog({
@@ -57,6 +72,7 @@ export function ReportMessageDialog({
   /** Reported message event id (the `e` tag target). */
   eventId: string;
 }) {
+  const { i18n, t } = useLingui();
   const submitReport = useSubmitReportMutation();
   const [category, setCategory] = React.useState<ReportType | null>(null);
   const [note, setNote] = React.useState("");
@@ -81,10 +97,10 @@ export function ReportMessageDialog({
       },
       {
         onSuccess: () => {
-          toast.success("Report submitted to community moderators");
+          toast.success(t`Report submitted to community moderators`);
           onOpenChange(false);
         },
-        onError: (error) => toast.error(reportErrorMessage(error)),
+        onError: (error) => toast.error(reportErrorMessage(i18n, error)),
       },
     );
   };
@@ -95,11 +111,13 @@ export function ReportMessageDialog({
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <Flag className="h-4 w-4" />
-            Report message
+            <Trans>Report message</Trans>
           </DialogTitle>
           <DialogDescription>
-            Reports go to this community's moderators for review. The author is
-            not notified of who reported them.
+            <Trans>
+              Reports go to this community's moderators for review. The author
+              is not notified of who reported them.
+            </Trans>
           </DialogDescription>
         </DialogHeader>
 
@@ -112,7 +130,7 @@ export function ReportMessageDialog({
               disabled={submitReport.isPending}
               onClick={() => setCategory(item.value)}
             >
-              {item.label}
+              {i18n._(item.label)}
             </Button>
           ))}
         </div>
@@ -122,11 +140,11 @@ export function ReportMessageDialog({
             htmlFor="report-note"
             className="text-sm font-medium text-muted-foreground"
           >
-            Additional context (optional)
+            <Trans>Additional context (optional)</Trans>
           </label>
           <Textarea
             id="report-note"
-            placeholder="Add anything that helps moderators..."
+            placeholder={t`Add anything that helps moderators...`}
             value={note}
             onChange={(e) => setNote(e.target.value)}
             rows={3}
@@ -140,14 +158,14 @@ export function ReportMessageDialog({
             onClick={() => onOpenChange(false)}
             disabled={submitReport.isPending}
           >
-            Cancel
+            <Trans>Cancel</Trans>
           </Button>
           <Button
             variant="default"
             onClick={submit}
             disabled={!category || submitReport.isPending}
           >
-            Submit report
+            <Trans>Submit report</Trans>
           </Button>
         </DialogFooter>
       </DialogContent>
