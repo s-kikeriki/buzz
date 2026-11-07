@@ -21,6 +21,7 @@ import { installMockBridge, TEST_IDENTITIES } from "../helpers/bridge";
  */
 
 const SIDEKICK_PUBKEY = TEST_IDENTITIES.alice.pubkey;
+const SECOND_PUBKEY = TEST_IDENTITIES.bob.pubkey;
 const RELAY_URL = "ws://localhost:3000";
 const LOCALE_STORAGE_KEY = "buzz.appearance.locale";
 
@@ -45,14 +46,12 @@ async function openSidekickIn(page: Page, locale: "en" | "de") {
     page,
     {
       managedAgents: [
-        {
-          pubkey: SIDEKICK_PUBKEY,
-          name: "Mochi",
-          status: "stopped",
-        },
+        { pubkey: SIDEKICK_PUBKEY, name: "Mochi", status: "stopped" },
+        { pubkey: SECOND_PUBKEY, name: "Yuzu", status: "stopped" },
       ],
       managedAgentRuntimes: [
         { pubkey: SIDEKICK_PUBKEY, relayUrl: RELAY_URL, lifecycle: "stopped" },
+        { pubkey: SECOND_PUBKEY, relayUrl: RELAY_URL, lifecycle: "stopped" },
       ],
     },
     { seedPreviewFeatures: false },
@@ -69,10 +68,23 @@ async function openSidekickIn(page: Page, locale: "en" | "de") {
  * `de`. Reaching the Sidekick action means going through it, so the spec has
  * to speak the active locale here.
  */
-function agentProfileButton(page: Page, locale: "en" | "de") {
+function agentProfileButton(page: Page, locale: "en" | "de", name = "Mochi") {
   return page.getByRole("button", {
-    name: locale === "de" ? "Agentenprofil von Mochi" : "Mochi agent profile",
+    name:
+      locale === "de" ? `Agentenprofil von ${name}` : `${name} agent profile`,
   });
+}
+
+/** Walks the profile -> action -> confirm flow and returns the open dialog. */
+async function openAssignDialog(page: Page, name: string) {
+  await page.getByTestId("open-agents-view").click();
+  await agentProfileButton(page, "de", name).click();
+  const action = page.getByTestId("user-profile-bestie-action");
+  await action.click();
+  const dialog = page.getByTestId("bestie-confirm-dialog");
+  await expect(dialog).toBeVisible();
+  await waitForAnimations(page);
+  return { action, dialog };
 }
 
 /** German phrase → [English source, old wording] that must both be absent. */
@@ -207,4 +219,46 @@ test("the Sidekick surface still reads English when the locale is en", async ({
   const action = page.getByTestId("user-profile-bestie-action");
   await expect(action).toContainText("Make Sidekick");
   await expect(action).not.toContainText("Make Bestie");
+});
+
+/**
+ * The *replace* branch of the confirmation body.
+ *
+ * Without this, nothing exercises it: on a first assignment `previousName` is
+ * undefined, so both branches render the "will appear" sentence and inverting
+ * the condition changes nothing observable. A break test is what exposed that
+ * — the spec passed against a mutated condition.
+ */
+test("the confirmation names the agent being replaced, in German", async ({
+  page,
+}) => {
+  await openSidekickIn(page, "de");
+
+  const first = await openAssignDialog(page, "Mochi");
+  await first.dialog
+    .getByRole("button", { name: "Als Sidekick festlegen" })
+    .click();
+  await expect(first.action).toContainText("Als Sidekick entfernen");
+
+  // Yuzu now replaces Mochi, so the other sentence must render.
+  const second = await openAssignDialog(page, "Yuzu");
+  await expect(second.dialog).toContainText(
+    "Yuzu ersetzt Mochi im schwebenden Schnellzugriff und in den Nachrichtenaktionen.",
+  );
+  await expect(second.dialog).not.toContainText("Yuzu erscheint im");
+  await expect(second.dialog).not.toContainText("will replace");
+});
+
+/**
+ * The sidebar entry. "Sidekick" is the same word in both languages, so a
+ * positive German assertion here proves nothing — the negative on the old
+ * wording is the whole value, and it is what catches a label left unrenamed.
+ */
+test("the sidebar entry is renamed, not just translated", async ({ page }) => {
+  await openSidekickIn(page, "de");
+
+  const entry = page.getByTestId("bestie-sidebar-entry");
+  await expect(entry).toBeVisible();
+  await expect(entry).toContainText("Sidekick");
+  await expect(entry).not.toContainText("Bestie");
 });
