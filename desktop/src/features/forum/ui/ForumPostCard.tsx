@@ -1,3 +1,4 @@
+import { Plural, Trans } from "@lingui/react/macro";
 import { MessageSquare } from "lucide-react";
 import { useMemo } from "react";
 
@@ -61,6 +62,12 @@ export function ForumPostCard({
   // the browser never fires `click` and a file download is silently dropped.
   const imetaByUrl = useMemo(() => parseImetaTags(post.tags), [post.tags]);
   const summary = post.threadSummary;
+  // Bound to locals so the extracted plural keys on `replyCount` — the same
+  // msgid MessageThreadSummaryRow already ships a German translation for.
+  const replyCount = summary?.replyCount ?? 0;
+  const lastReply = summary?.lastReplyAt
+    ? formatRelativeTimeLabel(summary.lastReplyAt, locale)
+    : null;
   const previewContent =
     post.content.length > 200
       ? `${post.content.slice(0, 200)}...`
@@ -120,7 +127,7 @@ export function ForumPostCard({
             role="presentation"
           >
             <DeleteActionMenu
-              label="post"
+              kind="post"
               onConfirm={() => onDelete(post.eventId)}
             />
           </div>
@@ -140,18 +147,17 @@ export function ForumPostCard({
         />
       </div>
 
-      {summary && summary.replyCount > 0 ? (
+      {summary && replyCount > 0 ? (
         <div className="mt-3 flex items-center gap-1.5 text-xs text-muted-foreground">
           <MessageSquare className="h-4 w-4" />
           <span>
-            {summary.replyCount}{" "}
-            {summary.replyCount === 1 ? "reply" : "replies"}
+            <Plural one="# reply" other="# replies" value={replyCount} />
           </span>
-          {summary.lastReplyAt ? (
+          {lastReply ? (
             <>
               <span className="text-muted-foreground/50">·</span>
               <span>
-                last {formatRelativeTimeLabel(summary.lastReplyAt, locale)}
+                <Trans>last {lastReply}</Trans>
               </span>
             </>
           ) : null}

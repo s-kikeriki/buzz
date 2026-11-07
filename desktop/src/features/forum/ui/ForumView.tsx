@@ -1,3 +1,4 @@
+import { Trans, useLingui } from "@lingui/react/macro";
 import { MessageSquareText } from "lucide-react";
 import * as React from "react";
 
@@ -53,6 +54,7 @@ export function ForumView({
   targetSearchMessageId,
   targetSearchQuery,
 }: ForumViewProps) {
+  const { t } = useLingui();
   const [isComposerOpen, setIsComposerOpen] = React.useState(false);
   const postsScrollRef = React.useRef<HTMLDivElement>(null);
 
@@ -189,7 +191,7 @@ export function ForumView({
               });
               setIsComposerOpen(false);
             }}
-            placeholder="Write your post..."
+            placeholder={t`Write your post...`}
             profiles={profiles}
           />
         ) : (
@@ -199,11 +201,13 @@ export function ForumView({
             onClick={() => setIsComposerOpen(true)}
             type="button"
           >
-            {channel.archivedAt
-              ? "This forum is archived."
-              : !channel.isMember
-                ? "Join this forum to create posts."
-                : "Start a new post..."}
+            {channel.archivedAt ? (
+              <Trans>This forum is archived.</Trans>
+            ) : !channel.isMember ? (
+              <Trans>Join this forum to create posts.</Trans>
+            ) : (
+              <Trans>Start a new post...</Trans>
+            )}
           </button>
         )}
       </div>
@@ -225,10 +229,10 @@ export function ForumView({
             <MessageSquareText className="h-10 w-10 text-muted-foreground/40" />
             <div>
               <p className="text-sm font-medium text-foreground/70">
-                No posts yet
+                <Trans>No posts yet</Trans>
               </p>
               <p className="mt-1 text-xs text-muted-foreground">
-                Start a discussion by creating the first post.
+                <Trans>Start a discussion by creating the first post.</Trans>
               </p>
             </div>
           </div>

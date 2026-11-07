@@ -1,3 +1,5 @@
+import { i18n } from "@lingui/core";
+import { msg } from "@lingui/core/macro";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import { getForumPosts, getForumThread } from "@/shared/api/forum";
@@ -10,6 +12,15 @@ import type {
   ForumThreadResponse,
 } from "@/shared/api/types";
 import { KIND_FORUM_COMMENT, KIND_FORUM_POST } from "@/shared/constants/kinds";
+
+/**
+ * Thrown when a forum mutation runs without a channel. These hooks take
+ * `Channel | null`, and `ForumComposer` toasts `error.message` verbatim, so
+ * this reaches the screen — it is user-facing copy, not an internal invariant.
+ * Resolved at throw time rather than module scope so it follows the active
+ * locale instead of freezing in whichever one the app booted in.
+ */
+const NO_CHANNEL_SELECTED = msg`No channel selected.`;
 
 /** Keeps focused polling for forum posts at the established 15-second cadence. */
 export const FORUM_POSTS_REFETCH_INTERVAL_MS = 15_000;
@@ -95,7 +106,7 @@ export function useCreateForumPostMutation(channel: Channel | null) {
       mediaTags?: string[][];
     }) => {
       if (!channel) {
-        throw new Error("No channel selected.");
+        throw new Error(i18n._(NO_CHANNEL_SELECTED));
       }
 
       return sendChannelMessage(
@@ -123,7 +134,7 @@ export function useDeleteForumPostMutation(channel: Channel | null) {
   return useMutation({
     mutationFn: async ({ eventId }: { eventId: string }) => {
       if (!channel) {
-        throw new Error("No channel selected.");
+        throw new Error(i18n._(NO_CHANNEL_SELECTED));
       }
       await deleteMessage(channel.id, eventId);
     },
@@ -146,7 +157,7 @@ export function useDeleteForumReplyMutation(
   return useMutation({
     mutationFn: async ({ eventId }: { eventId: string }) => {
       if (!channel) {
-        throw new Error("No channel selected.");
+        throw new Error(i18n._(NO_CHANNEL_SELECTED));
       }
       await deleteMessage(channel.id, eventId);
     },
@@ -181,7 +192,7 @@ export function useCreateForumReplyMutation(channel: Channel | null) {
       mediaTags?: string[][];
     }) => {
       if (!channel) {
-        throw new Error("No channel selected.");
+        throw new Error(i18n._(NO_CHANNEL_SELECTED));
       }
 
       return sendChannelMessage(

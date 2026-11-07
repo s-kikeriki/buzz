@@ -841,6 +841,18 @@ const CONVERTED_FILES = [
   "src/features/moderation/ui/ReportMessageDialog.tsx",
   "src/features/moderation/ui/TimeoutDurationSubmenu.tsx",
   "src/features/onboarding/ui/NostrKeyImportForm.tsx",
+  // Forum: the post list, thread panel, composer chrome and the delete
+  // confirmation. `hooks.ts` is here because ForumComposer toasts its thrown
+  // `error.message` verbatim, which makes those strings user-facing.
+  "src/features/forum/hooks.ts",
+  "src/features/forum/ui/DeleteActionMenu.tsx",
+  "src/features/forum/ui/DeleteConfirmDialog.tsx",
+  "src/features/forum/ui/ForumComposer.tsx",
+  "src/features/forum/ui/ForumComposerCompactLayout.tsx",
+  "src/features/forum/ui/ForumComposerMediaStatus.tsx",
+  "src/features/forum/ui/ForumPostCard.tsx",
+  "src/features/forum/ui/ForumThreadPanel.tsx",
+  "src/features/forum/ui/ForumView.tsx",
 ];
 
 /**

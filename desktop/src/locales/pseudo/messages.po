@@ -1268,6 +1268,8 @@ msgstr ""
 msgid "{remote, plural, one {Used by another member · # request} other {Used by another member · # requests}}"
 msgstr ""
 
+#: src/features/forum/ui/ForumPostCard.tsx
+#: src/features/forum/ui/ForumThreadPanel.tsx
 #: src/features/messages/ui/MessageThreadSummaryRow.tsx
 msgid "{replyCount, plural, one {# reply} other {# replies}}"
 msgstr ""
@@ -3391,6 +3393,10 @@ msgstr ""
 msgid "Back to inbox list"
 msgstr ""
 
+#: src/features/forum/ui/ForumThreadPanel.tsx
+msgid "Back to posts"
+msgstr ""
+
 #: src/features/profile/ui/UserProfilePanelHeaderContent.tsx
 msgid "Back to profile"
 msgstr ""
@@ -3718,6 +3724,8 @@ msgstr ""
 #: src/features/communities/ui/CommunitySwitcher.tsx
 #: src/features/communities/ui/EditCommunityDialog.tsx
 #: src/features/community-members/ui/ConfirmRemoveDialog.tsx
+#: src/features/forum/ui/DeleteConfirmDialog.tsx
+#: src/features/forum/ui/ForumComposer.tsx
 #: src/features/local-archive/ui/LocalArchiveSettingsCard.tsx
 #: src/features/messages/lib/useLinkEditor.tsx
 #: src/features/messages/ui/ComposerImageEditor.tsx
@@ -4774,6 +4782,10 @@ msgstr ""
 #: src/features/onboarding/ui/EncryptedBackupCreator.tsx
 #: src/features/settings/ui/EncryptedBackupCreator.tsx
 msgid "Commas"
+msgstr ""
+
+#: src/features/forum/ui/ForumComposer.tsx
+msgid "Comment"
 msgstr ""
 
 #: src/shared/ui/VideoPlayer.tsx
@@ -6585,6 +6597,15 @@ msgstr ""
 msgid "Delete my data"
 msgstr ""
 
+#: src/features/forum/ui/DeleteActionMenu.tsx
+#: src/features/forum/ui/DeleteConfirmDialog.tsx
+msgid "Delete post"
+msgstr ""
+
+#: src/features/forum/ui/DeleteConfirmDialog.tsx
+msgid "Delete post?"
+msgstr ""
+
 #: src/features/projects/ui/ProjectCards.tsx
 #: src/features/sidebar/ui/SidebarProjectsSection.tsx
 msgid "Delete project"
@@ -6593,6 +6614,15 @@ msgstr ""
 #: src/features/projects/ui/ProjectCards.tsx
 #: src/features/sidebar/ui/SidebarProjectsSection.tsx
 msgid "Delete project?"
+msgstr ""
+
+#: src/features/forum/ui/DeleteActionMenu.tsx
+#: src/features/forum/ui/DeleteConfirmDialog.tsx
+msgid "Delete reply"
+msgstr ""
+
+#: src/features/forum/ui/DeleteConfirmDialog.tsx
+msgid "Delete reply?"
 msgstr ""
 
 #: src/features/sidebar/ui/ChannelSectionDialogs.tsx
@@ -6905,6 +6935,7 @@ msgstr ""
 msgid "Discussion linked"
 msgstr ""
 
+#: src/features/forum/ui/ForumComposerMediaStatus.tsx
 #: src/features/messages/ui/MessageComposer.tsx
 msgid "Dismiss"
 msgstr ""
@@ -9489,6 +9520,10 @@ msgstr ""
 msgid "Join or create a community"
 msgstr ""
 
+#: src/features/forum/ui/ForumView.tsx
+msgid "Join this forum to create posts."
+msgstr ""
+
 #: src/features/channels/ui/ChannelPane.tsx
 msgid "Join to participate"
 msgstr ""
@@ -9639,6 +9674,10 @@ msgstr ""
 
 #: src/features/settings/ui/AppearanceSettingsControls.tsx
 msgid "Larger"
+msgstr ""
+
+#: src/features/forum/ui/ForumPostCard.tsx
+msgid "last {lastReply}"
 msgstr ""
 
 #. placeholder {0}: formatLastChangedAt(file.lastChangedAt, locale)
@@ -11217,6 +11256,7 @@ msgstr ""
 
 #: src/features/channels/ui/MembersSidebar.tsx
 #: src/features/channels/ui/useMembersSidebarActions.ts
+#: src/features/forum/hooks.ts
 msgid "No channel selected."
 msgstr ""
 
@@ -11545,6 +11585,10 @@ msgstr ""
 msgid "No plan details."
 msgstr ""
 
+#: src/features/forum/ui/ForumView.tsx
+msgid "No posts yet"
+msgstr ""
+
 #: src/features/agents/ui/agentConfigOptions.tsx
 msgid "No preference (use app default)"
 msgstr ""
@@ -11597,6 +11641,10 @@ msgstr ""
 
 #: src/features/messages/ui/MessageThreadReplyState.tsx
 msgid "No replies in this branch yet"
+msgstr ""
+
+#: src/features/forum/ui/ForumThreadPanel.tsx
+msgid "No replies yet. Be the first to respond."
 msgstr ""
 
 #: src/features/admin-console/AdminConsoleReportsTab.tsx
@@ -13996,6 +14044,10 @@ msgstr ""
 msgid "Reply to {replyAuthor} in #{channelName}"
 msgstr ""
 
+#: src/features/forum/ui/ForumThreadPanel.tsx
+msgid "Reply to this post..."
+msgstr ""
+
 #: src/features/workflows/ui/WorkflowStepCard.tsx
 msgid "Reply to triggering message in thread"
 msgstr ""
@@ -15236,6 +15288,7 @@ msgstr ""
 msgid "Send feedback"
 msgstr ""
 
+#: src/features/forum/ui/ForumComposerCompactLayout.tsx
 #: src/features/messages/ui/ComposerAddressControls.tsx
 #: src/features/messages/ui/DraftsPanel.tsx
 #: src/shared/lib/keyboard-shortcuts.ts
@@ -15268,6 +15321,7 @@ msgstr ""
 msgid "Send without link previews"
 msgstr ""
 
+#: src/features/forum/ui/ForumComposerCompactLayout.tsx
 #: src/features/messages/ui/ComposerAddressControls.tsx
 msgid "Sending"
 msgstr ""
@@ -15949,8 +16003,16 @@ msgstr ""
 msgid "Start a conversation with the project agent."
 msgstr ""
 
+#: src/features/forum/ui/ForumView.tsx
+msgid "Start a discussion by creating the first post."
+msgstr ""
+
 #: src/features/messages/ui/WaveMessageAttachment.tsx
 msgid "Start a huddle to talk to them."
+msgstr ""
+
+#: src/features/forum/ui/ForumView.tsx
+msgid "Start a new post..."
 msgstr ""
 
 #: src/features/agents/lib/managedAgentControlActions.ts
@@ -17017,6 +17079,10 @@ msgstr ""
 msgid "This file type cannot be previewed in the app. Download it, or open it in whichever application your system uses for it."
 msgstr ""
 
+#: src/features/forum/ui/ForumView.tsx
+msgid "This forum is archived."
+msgstr ""
+
 #. placeholder {0}: BRAND.productName
 #: src/features/onboarding/ui/IdentityRecoveryPairing.tsx
 msgid "This gives this desktop permanent access to your {0} identity. Only continue if you trust it."
@@ -17239,6 +17305,14 @@ msgstr ""
 
 #: src/features/messages/ui/DeleteMessageConfirmDialog.tsx
 msgid "This will permanently delete this message and cannot be undone."
+msgstr ""
+
+#: src/features/forum/ui/DeleteConfirmDialog.tsx
+msgid "This will permanently delete this post and cannot be undone."
+msgstr ""
+
+#: src/features/forum/ui/DeleteConfirmDialog.tsx
+msgid "This will permanently delete this reply and cannot be undone."
 msgstr ""
 
 #: src/features/admin-console/AdminConsoleStaffingTab.tsx
@@ -18063,6 +18137,7 @@ msgstr ""
 #. placeholder {0}: err.message
 #. placeholder {0}: media.uploadState.message
 #: src/features/agents/ui/useSnapshotSendController.ts
+#: src/features/forum/ui/ForumComposerMediaStatus.tsx
 #: src/features/messages/ui/MessageComposer.tsx
 msgid "Upload failed: {0}"
 msgstr ""
@@ -19165,6 +19240,10 @@ msgstr ""
 
 #: src/features/channels/ui/ChannelCanvas.tsx
 msgid "Write your canvas content in Markdown..."
+msgstr ""
+
+#: src/features/forum/ui/ForumView.tsx
+msgid "Write your post..."
 msgstr ""
 
 #: src/features/agents/ui/agentSessionToolCatalog.ts

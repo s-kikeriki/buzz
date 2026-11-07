@@ -1,3 +1,4 @@
+import { Trans } from "@lingui/react/macro";
 import { MoreHorizontal, Trash2 } from "lucide-react";
 import * as React from "react";
 
@@ -9,14 +10,15 @@ import {
 } from "@/shared/ui/dropdown-menu";
 
 import { DeleteConfirmDialog } from "./DeleteConfirmDialog";
+import type { ForumDeletableKind } from "./forumDeletableKind";
 
 type DeleteActionMenuProps = {
-  label: string;
+  kind: ForumDeletableKind;
   onConfirm: () => void;
   iconSize?: "sm" | "md";
 };
 
-export function DeleteActionMenu({ label, onConfirm }: DeleteActionMenuProps) {
+export function DeleteActionMenu({ kind, onConfirm }: DeleteActionMenuProps) {
   const [isOpen, setIsOpen] = React.useState(false);
   const iconClass = "h-4 w-4";
 
@@ -38,12 +40,16 @@ export function DeleteActionMenu({ label, onConfirm }: DeleteActionMenuProps) {
             onClick={() => setIsOpen(true)}
           >
             <Trash2 className="mr-2 h-4 w-4" />
-            Delete {label}
+            {kind === "post" ? (
+              <Trans>Delete post</Trans>
+            ) : (
+              <Trans>Delete reply</Trans>
+            )}
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
       <DeleteConfirmDialog
-        label={label}
+        kind={kind}
         onConfirm={onConfirm}
         onOpenChange={setIsOpen}
         open={isOpen}
